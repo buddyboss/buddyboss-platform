@@ -5,7 +5,7 @@
  * Renders the standalone React app for the BuddyBoss → Integrations submenu.
  * The app is its own webpack bundle (BUILD_TARGET=integrations) so it never
  * loads on the Settings page and vice-versa. Data is fetched from buddyboss.com
- * through the same-origin proxy (BB_REST_Integrations_Endpoint).
+ * through the same-origin proxy (BBoss_REST_Integrations_Endpoint).
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.1.0
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Render the Integrations marketplace page.
  *
- * Mirrors bb_admin_settings_page(): resolves the build asset manifest, enqueues
+ * Mirrors bboss_admin_settings_page(): resolves the build asset manifest, enqueues
  * the bundle + CSS, localizes the `bbIntegrationsData` object the React app reads
  * (apiUrl + nonce), and prints the mount container.
  *
@@ -25,9 +25,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_admin_integrations_page() {
-	$build_dir = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/integrations/build';
-	$build_url = buddypress()->plugin_url . 'bp-core/admin/bb-settings/integrations/build';
+function bboss_admin_integrations_page() {
+	$build_dir = bboss()->plugin_dir . 'bp-core/admin/bb-settings/integrations/build';
+	$build_url = bboss()->plugin_url . 'bp-core/admin/bb-settings/integrations/build';
 
 	$asset_file = $build_dir . '/index.asset.php';
 	if ( ! file_exists( $asset_file ) ) {
@@ -38,7 +38,7 @@ function bb_admin_integrations_page() {
 					<?php
 					esc_html_e(
 						'BuddyBoss Integrations assets not found. Please run: npm run build:admin:integrations',
-						'buddyboss'
+						'buddyboss-platform'
 					);
 					?>
 				</p>
@@ -52,7 +52,7 @@ function bb_admin_integrations_page() {
 	// header, Knowledge Base modal, sanitizer). If the common build is missing, the
 	// bundle would load with an unresolvable 404 dependency and silently break —
 	// surface an actionable notice instead, mirroring the bundle check above.
-	$common_asset = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/common/build/index.asset.php';
+	$common_asset = bboss()->plugin_dir . 'bp-core/admin/bb-settings/common/build/index.asset.php';
 	if ( ! file_exists( $common_asset ) ) {
 		?>
 		<div class="wrap">
@@ -61,7 +61,7 @@ function bb_admin_integrations_page() {
 					<?php
 					esc_html_e(
 						'BuddyBoss shared admin assets not found. Please run: npm run build:admin:common',
-						'buddyboss'
+						'buddyboss-platform'
 					);
 					?>
 				</p>
@@ -72,14 +72,14 @@ function bb_admin_integrations_page() {
 	}
 
 	$asset = require $asset_file;
-	$min   = bp_core_get_minified_asset_suffix();
+	$min   = bboss_core_get_minified_asset_suffix();
 
 	// WordPress components style (Button, etc.) + BuddyBoss icon fonts.
 	wp_enqueue_style( 'wp-components' );
-	$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : bp_get_version();
+	$bb_icon_version = function_exists( 'bboss_icon_font_map_data' ) ? bboss_icon_font_map_data( 'version' ) : bboss_get_version();
 	wp_enqueue_style(
 		'bb-icons-rl-css',
-		buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
+		bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
 		array(),
 		$bb_icon_version
 	);
@@ -119,7 +119,7 @@ function bb_admin_integrations_page() {
 	foreach ( $css_candidates as $css_rel ) {
 		$css_file = $build_dir . $css_rel;
 		if ( file_exists( $css_file ) ) {
-			$css_url = str_replace( buddypress()->plugin_dir, buddypress()->plugin_url, $css_file );
+			$css_url = str_replace( bboss()->plugin_dir, bboss()->plugin_url, $css_file );
 			wp_register_style( 'bb-admin-integrations', $css_url, array( 'wp-components' ), $asset['version'] );
 			wp_style_add_data( 'bb-admin-integrations', 'rtl', 'replace' );
 			// Only advertise the .min suffix when we actually matched a minified
@@ -139,8 +139,8 @@ function bb_admin_integrations_page() {
 	// (wp_rest), adminUrl, version (busts the client localStorage cache on upgrade),
 	// logoUrl + ipnRootId (shared header), and ajaxUrl + searchNonce + settingsUrl
 	// (shared header's global "Search for settings" → Settings search AJAX).
-	$api_namespace = function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' )
-		? bp_rest_namespace() . '/' . bp_rest_version() . '/'
+	$api_namespace = function_exists( 'bboss_rest_namespace' ) && function_exists( 'bboss_rest_version' )
+		? bboss_rest_namespace() . '/' . bboss_rest_version() . '/'
 		: 'buddyboss/v1/';
 
 	// Resolve the Mothership IPN root element ID so the shared header can locate
@@ -148,20 +148,6 @@ function bb_admin_integrations_page() {
 	// ask the IPN View service for the actual ID; on failure the JS falls back to
 	// a structural [id$="_ipn_root"] selector. Mirrors the Settings page.
 	$ipn_root_id = '';
-	if (
-		class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
-		class_exists( '\BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View' )
-	) {
-		try {
-			$container   = \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance()->get_container();
-			$ipn_view    = $container->get( \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View::class );
-			$ipn_root_id = $ipn_view->getRootElementId();
-		} catch ( Throwable $e ) {
-			// Non-fatal: IPN service unavailable — $ipn_root_id stays empty and the
-			// JS falls back to a structural [id$="_ipn_root"] selector.
-			$ipn_root_id = '';
-		}
-	}
 
 	// "Works with" is fully driven by the buddyboss.com API — each integration's
 	// acf.works_with is a { slug: { name, met } } map derived from its ACF
@@ -174,8 +160,8 @@ function bb_admin_integrations_page() {
 			'apiUrl'       => rest_url( $api_namespace ),
 			'nonce'        => wp_create_nonce( 'wp_rest' ),
 			'adminUrl'     => esc_url( admin_url() ),
-			'version'      => defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0',
-			'logoUrl'      => esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ),
+			'version'      => defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0',
+			'logoUrl'      => esc_url( bboss()->plugin_url . 'bp-core/images/admin/BBLogo.png' ),
 			'ipnRootId'    => $ipn_root_id,
 			// Gates client-side diagnostic console logging; off in production.
 			'debug'        => defined( 'WP_DEBUG' ) && WP_DEBUG,

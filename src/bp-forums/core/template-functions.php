@@ -20,11 +20,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param string $slug
  * @param string $name Optional. Default null
- * @uses bbp_locate_template()
+ * @uses bboss_bbp_locate_template()
  * @uses load_template()
  * @uses get_template_part()
  */
-function bbp_get_template_part( $slug, $name = null ) {
+function bboss_bbp_get_template_part( $slug, $name = null ) {
 
 	// Execute code for this part
 	do_action( 'get_template_part_' . $slug, $slug, $name );
@@ -40,7 +40,7 @@ function bbp_get_template_part( $slug, $name = null ) {
 	$templates = apply_filters( 'bbp_get_template_part', $templates, $slug, $name );
 
 	// Return the part that is found
-	return bbp_locate_template( $templates, true, false );
+	return bboss_bbp_locate_template( $templates, true, false );
 }
 
 /**
@@ -58,7 +58,7 @@ function bbp_get_template_part( $slug, $name = null ) {
  *                                    Has no effect if $load is false.
  * @return string The template filename if one is located.
  */
-function bbp_locate_template( $template_names, $load = false, $require_once = true ) {
+function bboss_bbp_locate_template( $template_names, $load = false, $require_once = true ) {
 
 	/**
 	 * Filter here to update template name.
@@ -71,7 +71,7 @@ function bbp_locate_template( $template_names, $load = false, $require_once = tr
 
 	// No file found yet
 	$located            = false;
-	$template_locations = bbp_get_template_stack();
+	$template_locations = bboss_bbp_get_template_stack();
 
 	// Try to find a template file
 	foreach ( (array) $template_names as $template_name ) {
@@ -135,7 +135,7 @@ function bbp_locate_template( $template_names, $load = false, $require_once = tr
  *
  * @return boolean
  */
-function bbp_locate_enqueueable( $file = '' ) {
+function bboss_bbp_locate_enqueueable( $file = '' ) {
 
 	// Bail if no file to locate.
 	if ( empty( $file ) ) {
@@ -152,7 +152,7 @@ function bbp_locate_enqueueable( $file = '' ) {
 		: str_replace( '.min', '', $file );
 
 	// Are we debugging?
-	$script_debug = bbp_doing_script_debug();
+	$script_debug = bboss_bbp_doing_script_debug();
 
 	// Debugging, so prefer unminified files.
 	if ( true === $script_debug ) {
@@ -172,7 +172,7 @@ function bbp_locate_enqueueable( $file = '' ) {
 	}
 
 	// Return first found file location in the stack.
-	return bbp_locate_template( $files, false, false );
+	return bboss_bbp_locate_template( $files, false, false );
 }
 
 /**
@@ -185,7 +185,7 @@ function bbp_locate_enqueueable( $file = '' ) {
  *
  * @return string
  */
-function bbp_urlize_enqueueable( $file = '' ) {
+function bboss_bbp_urlize_enqueueable( $file = '' ) {
 
 	// Get DIR and URL.
 	$content_dir = constant( 'WP_CONTENT_DIR' );
@@ -221,21 +221,21 @@ function bbp_urlize_enqueueable( $file = '' ) {
  *
  * @return string The style filename if one is located.
  */
-function bbp_enqueue_style( $handle = '', $file = '', $deps = array(), $ver = false, $media = 'all' ) {
+function bboss_bbp_enqueue_style( $handle = '', $file = '', $deps = array(), $ver = false, $media = 'all' ) {
 
 	// Attempt to locate an enqueueable.
-	$located = bbp_locate_enqueueable( $file );
+	$located = bboss_bbp_locate_enqueueable( $file );
 
 	// Enqueue if located.
 	if ( ! empty( $located ) ) {
 
 		// Make sure there is always a version.
 		if ( empty( $ver ) ) {
-			$ver = bp_get_version();
+			$ver = bboss_get_version();
 		}
 
 		// Make path to file relative to site URL.
-		$located = bbp_urlize_enqueueable( $located );
+		$located = bboss_bbp_urlize_enqueueable( $located );
 
 		// Register the style.
 		wp_register_style( $handle, $located, $deps, $ver, $media );
@@ -265,21 +265,21 @@ function bbp_enqueue_style( $handle = '', $file = '', $deps = array(), $ver = fa
  *
  * @return string The script filename if one is located.
  */
-function bbp_enqueue_script( $handle = '', $file = '', $deps = array(), $ver = false, $in_footer = 'all' ) {
+function bboss_bbp_enqueue_script( $handle = '', $file = '', $deps = array(), $ver = false, $in_footer = 'all' ) {
 
 	// Attempt to locate an enqueueable.
-	$located = bbp_locate_enqueueable( $file );
+	$located = bboss_bbp_locate_enqueueable( $file );
 
 	// Enqueue if located.
 	if ( ! empty( $located ) ) {
 
 		// Make sure there is always a version.
 		if ( empty( $ver ) ) {
-			$ver = bp_get_version();
+			$ver = bboss_get_version();
 		}
 
 		// Make path to file relative to site URL.
-		$located = bbp_urlize_enqueueable( $located );
+		$located = bboss_bbp_urlize_enqueueable( $located );
 
 		// Register the style.
 		wp_register_script( $handle, $located, $deps, $ver, $in_footer );
@@ -297,14 +297,14 @@ function bbp_enqueue_script( $handle = '', $file = '', $deps = array(), $ver = f
  *
  * This allows for templates to live in places beyond just the parent/child
  * relationship, to allow for custom template locations. Used in conjunction
- * with bbp_locate_template(), this allows for easy template overrides.
+ * with bboss_bbp_locate_template(), this allows for easy template overrides.
  *
  * @since bbPress (r4323)
  *
  * @param string $location Callback function that returns the
  * @param int    $priority
  */
-function bbp_register_template_stack( $location_callback = '', $priority = 10 ) {
+function bboss_bbp_register_template_stack( $location_callback = '', $priority = 10 ) {
 
 	// Bail if no location, or function does not exist
 	if ( empty( $location_callback ) || ! function_exists( $location_callback ) ) {
@@ -322,9 +322,9 @@ function bbp_register_template_stack( $location_callback = '', $priority = 10 ) 
  *
  * @param string $location Callback function that returns the
  * @param int    $priority
- * @see bbp_register_template_stack()
+ * @see bboss_bbp_register_template_stack()
  */
-function bbp_deregister_template_stack( $location_callback = '', $priority = 10 ) {
+function bboss_bbp_deregister_template_stack( $location_callback = '', $priority = 10 ) {
 
 	// Bail if no location, or function does not exist
 	if ( empty( $location_callback ) || ! function_exists( $location_callback ) ) {
@@ -339,7 +339,7 @@ function bbp_deregister_template_stack( $location_callback = '', $priority = 10 
  * Call the functions added to the 'bbp_template_stack' filter hook, and return
  * an array of the template locations.
  *
- * @see bbp_register_template_stack()
+ * @see bboss_bbp_register_template_stack()
  *
  * @since bbPress (r4323)
  *
@@ -349,7 +349,7 @@ function bbp_deregister_template_stack( $location_callback = '', $priority = 10 
  *
  * @return array The filtered value after all hooked functions are applied to it.
  */
-function bbp_get_template_stack() {
+function bboss_bbp_get_template_stack() {
 	global $wp_filter, $merged_filters, $wp_current_filter;
 
 	// Setup some default variables.
@@ -407,17 +407,17 @@ function bbp_get_template_stack() {
  * @param string $name
  * @return string
  */
-function bbp_buffer_template_part( $slug, $name = null, $echo = true ) {
+function bboss_bbp_buffer_template_part( $slug, $name = null, $echo = true ) {
 	ob_start();
 
-	bbp_get_template_part( $slug, $name );
+	bboss_bbp_get_template_part( $slug, $name );
 
 	// Get the output buffer contents.
 	$output = ob_get_clean();
 
 	// Echo or return the output buffer contents.
 	if ( true === $echo ) {
-		echo $output;
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template-part output (may contain forms and scripts); every template escapes its own values.
 	} else {
 		return $output;
 	}
@@ -428,19 +428,19 @@ function bbp_buffer_template_part( $slug, $name = null, $echo = true ) {
  *
  * Used to quickly retrieve the path of a template without including the file
  * extension. It will also check the parent theme and theme-compat theme with
- * the use of {@link bbp_locate_template()}. Allows for more generic template
+ * the use of {@link bboss_bbp_locate_template()}. Allows for more generic template
  * locations without the use of the other get_*_template() functions.
  *
  * @since bbPress (r3629)
  *
  * @param string $type Filename without extension.
  * @param array  $templates An optional list of template candidates
- * @uses bbp_set_theme_compat_templates()
- * @uses bbp_locate_template()
- * @uses bbp_set_theme_compat_template()
+ * @uses bboss_bbp_set_theme_compat_templates()
+ * @uses bboss_bbp_locate_template()
+ * @uses bboss_bbp_set_theme_compat_template()
  * @return string Full path to file.
  */
-function bbp_get_query_template( $type, $templates = array() ) {
+function bboss_bbp_get_query_template( $type, $templates = array() ) {
 	$type = preg_replace( '|[^a-z0-9-]+|', '', $type );
 
 	if ( empty( $templates ) ) {
@@ -452,10 +452,10 @@ function bbp_get_query_template( $type, $templates = array() ) {
 	$templates = apply_filters( "bbp_get_{$type}_template", $templates );
 
 	// Stash the possible templates for this query, for later use.
-	$templates = bbp_set_theme_compat_templates( $templates );
+	$templates = bboss_bbp_set_theme_compat_templates( $templates );
 
 	// Try to locate a template in the stack.
-	$template = bbp_locate_template( $templates );
+	$template = bboss_bbp_locate_template( $templates );
 
 	/*
 	 * The current theme is using the WordPress Full Site Editing feature.
@@ -470,7 +470,7 @@ function bbp_get_query_template( $type, $templates = array() ) {
 	}
 
 	// Stash the located template for this query, for later use.
-	$template = bbp_set_theme_compat_template( $template );
+	$template = bboss_bbp_set_theme_compat_template( $template );
 
 	// Filter & return.
 	return apply_filters( "bbp_{$type}_template", $template );
@@ -483,7 +483,7 @@ function bbp_get_query_template( $type, $templates = array() ) {
  * @param array $templates Templates we are looking for
  * @return array Possible subfolders to look in
  */
-function bbp_get_template_locations( $templates = array() ) {
+function bboss_bbp_get_template_locations( $templates = array() ) {
 	$locations = array(
 		'bbpress',
 		'forums',
@@ -500,11 +500,11 @@ function bbp_get_template_locations( $templates = array() ) {
  * @param array $templates
  * @return array()
  */
-function bbp_add_template_stack_locations( $stacks = array() ) {
+function bboss_bbp_add_template_stack_locations( $stacks = array() ) {
 	$retval = array();
 
 	// Get alternate locations.
-	$locations = bbp_get_template_locations();
+	$locations = bboss_bbp_get_template_locations();
 
 	// Loop through locations and stacks and combine.
 	foreach ( (array) $stacks as $stack ) {
@@ -544,13 +544,13 @@ function bbp_add_template_stack_locations( $stacks = array() ) {
  * @uses is_user_member_of_blog() To check if user profile page exists
  * @uses WP_Query::set_404() To set a 404 status
  * @uses apply_filters() Calls 'enable_edit_any_user_configuration' with true
- * @uses bbp_get_view_query_args() To get the view query args
- * @uses bbp_get_forum_post_type() To get the forum post type
- * @uses bbp_get_topic_post_type() To get the topic post type
- * @uses bbp_get_reply_post_type() To get the reply post type
+ * @uses bboss_bbp_get_view_query_args() To get the view query args
+ * @uses bboss_bbp_get_forum_post_type() To get the forum post type
+ * @uses bboss_bbp_get_topic_post_type() To get the topic post type
+ * @uses bboss_bbp_get_reply_post_type() To get the reply post type
  * @uses remove_action() To remove the auto save post revision action
  */
-function bbp_parse_query( $posts_query ) {
+function bboss_bbp_parse_query( $posts_query ) {
 
 	// Bail if $posts_query is not the main loop
 	if ( ! $posts_query->is_main_query() ) {
@@ -568,10 +568,10 @@ function bbp_parse_query( $posts_query ) {
 	}
 
 	// Get query variables (default to null if not set).
-	$bbp_view  = $posts_query->get( bbp_get_view_rewrite_id(),   null );
-	$bbp_user  = $posts_query->get( bbp_get_user_rewrite_id(),   null );
-	$is_edit   = $posts_query->get( bbp_get_edit_rewrite_id(),   null );
-	$is_search = $posts_query->get( bbp_get_search_rewrite_id(), null );
+	$bbp_view  = $posts_query->get( bboss_bbp_get_view_rewrite_id(),   null );
+	$bbp_user  = $posts_query->get( bboss_bbp_get_user_rewrite_id(),   null );
+	$is_edit   = $posts_query->get( bboss_bbp_get_edit_rewrite_id(),   null );
+	$is_search = $posts_query->get( bboss_bbp_get_search_rewrite_id(), null );
 
 	// It is a user page - We'll also check if it is user edit
 	if ( ! is_null( $bbp_user ) ) {
@@ -591,17 +591,17 @@ function bbp_parse_query( $posts_query ) {
 		}
 
 		// 404 and bail if user does not have a profile
-		if ( empty( $the_user->ID ) || ! bbp_user_has_profile( $the_user->ID ) ) {
+		if ( empty( $the_user->ID ) || ! bboss_bbp_user_has_profile( $the_user->ID ) ) {
 			$posts_query->set_404();
 			return;
 		}
 
 		/** User Exists */
 
-		$is_favs    = $posts_query->get( bbp_get_user_favorites_rewrite_id() );
-		$is_subs    = $posts_query->get( bbp_get_user_subscriptions_rewrite_id() );
-		$is_topics  = $posts_query->get( bbp_get_user_topics_rewrite_id() );
-		$is_replies = $posts_query->get( bbp_get_user_replies_rewrite_id() );
+		$is_favs    = $posts_query->get( bboss_bbp_get_user_favorites_rewrite_id() );
+		$is_subs    = $posts_query->get( bboss_bbp_get_user_subscriptions_rewrite_id() );
+		$is_topics  = $posts_query->get( bboss_bbp_get_user_topics_rewrite_id() );
+		$is_replies = $posts_query->get( bboss_bbp_get_user_replies_rewrite_id() );
 
 		// View or edit?
 		if ( ! is_null( $is_edit ) ) {
@@ -669,13 +669,13 @@ function bbp_parse_query( $posts_query ) {
 		$posts_query->set( 'author_name', $the_user->user_nicename );
 
 		// Set the displayed user global to this user
-		bbpress()->displayed_user = $the_user;
+		bboss_forums()->displayed_user = $the_user;
 
 		// View Page
 	} elseif ( ! is_null( $bbp_view ) ) {
 
 		// Check if the view exists by checking if there are query args are set
-		$view_args = bbp_get_view_query_args( $bbp_view );
+		$view_args = bboss_bbp_get_view_query_args( $bbp_view );
 
 		// Bail if view args are empty.
 		if ( empty( $view_args ) ) {
@@ -693,7 +693,7 @@ function bbp_parse_query( $posts_query ) {
 	} elseif ( ! is_null( $is_search ) ) {
 
 		// Check if there are search query args set
-		$search_terms = bbp_get_search_terms();
+		$search_terms = bboss_bbp_get_search_terms();
 		if ( ! empty( $search_terms ) ) {
 			$posts_query->bbp_search_terms = $search_terms;
 		}
@@ -715,26 +715,26 @@ function bbp_parse_query( $posts_query ) {
 			switch ( $post_type ) {
 
 				// We are editing a forum
-				case bbp_get_forum_post_type():
+				case bboss_bbp_get_forum_post_type():
 					$posts_query->bbp_is_forum_edit = true;
 					$posts_query->bbp_is_edit       = true;
 					break;
 
 				// We are editing a topic
-				case bbp_get_topic_post_type():
+				case bboss_bbp_get_topic_post_type():
 					$posts_query->bbp_is_topic_edit = true;
 					$posts_query->bbp_is_edit       = true;
 					break;
 
 				// We are editing a reply
-				case bbp_get_reply_post_type():
+				case bboss_bbp_get_reply_post_type():
 					$posts_query->bbp_is_reply_edit = true;
 					$posts_query->bbp_is_edit       = true;
 					break;
 			}
 
 			// We are editing a topic tag
-		} elseif ( bbp_is_topic_tag() ) {
+		} elseif ( bboss_bbp_is_topic_tag() ) {
 			$posts_query->bbp_is_topic_tag_edit = true;
 			$posts_query->bbp_is_edit           = true;
 		}
@@ -743,20 +743,20 @@ function bbp_parse_query( $posts_query ) {
 		remove_action( 'pre_post_update', 'wp_save_post_revision' );
 
 		// Topic tag page
-	} elseif ( bbp_is_topic_tag() ) {
+	} elseif ( bboss_bbp_is_topic_tag() ) {
 		$posts_query->set( 'bbp_topic_tag', get_query_var( 'term' ) );
-		$posts_query->set( 'post_type', bbp_get_topic_post_type() );
-		$posts_query->set( 'posts_per_page', bbp_get_topics_per_page() );
+		$posts_query->set( 'post_type', bboss_bbp_get_topic_post_type() );
+		$posts_query->set( 'posts_per_page', bboss_bbp_get_topics_per_page() );
 
 		// Do topics on forums root
-	} elseif ( is_post_type_archive( array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ) ) && ( 'topics' === bbp_show_on_root() ) ) {
+	} elseif ( is_post_type_archive( array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type() ) ) && ( 'topics' === bboss_bbp_show_on_root() ) ) {
 		$posts_query->bbp_show_topics_on_root = true;
-	} elseif ( is_post_type_archive( bbp_get_forum_post_type() ) ) {
-		$posts_query->set( 'posts_per_page', bbp_get_forums_per_page() );
-	} elseif ( is_post_type_archive( bbp_get_topic_post_type() ) ) {
-		$posts_query->set( 'posts_per_page', bbp_get_topics_per_page() );
-	} elseif ( $posts_query->is_paged() && bbp_get_topic_archive_slug() === $posts_query->query_vars['name'] && $posts_query->query_vars['paged'] > 1 && 'topics' === bbp_show_on_root() ) {
+	} elseif ( is_post_type_archive( bboss_bbp_get_forum_post_type() ) ) {
+		$posts_query->set( 'posts_per_page', bboss_bbp_get_forums_per_page() );
+	} elseif ( is_post_type_archive( bboss_bbp_get_topic_post_type() ) ) {
+		$posts_query->set( 'posts_per_page', bboss_bbp_get_topics_per_page() );
+	} elseif ( $posts_query->is_paged() && bboss_bbp_get_topic_archive_slug() === $posts_query->query_vars['name'] && $posts_query->query_vars['paged'] > 1 && 'topics' === bboss_bbp_show_on_root() ) {
 		$posts_query->bbp_show_topics_on_root = true;
-		$posts_query->set( 'posts_per_page', bbp_get_topics_per_page() );
+		$posts_query->set( 'posts_per_page', bboss_bbp_get_topics_per_page() );
 	}
 }

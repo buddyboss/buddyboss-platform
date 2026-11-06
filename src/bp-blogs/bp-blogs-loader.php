@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
-function bp_setup_blogs() {
-	buddypress()->blogs = new BP_Blogs_Component();
+function bboss_setup_blogs() {
+	bboss()->blogs = new BBoss_Blogs_Component();
 }
-add_action( 'bp_setup_components', 'bp_setup_blogs', 6 );
+add_action( 'bp_setup_components', 'bboss_setup_blogs', 6 );

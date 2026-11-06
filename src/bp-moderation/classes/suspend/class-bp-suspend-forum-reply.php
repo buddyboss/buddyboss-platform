@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
+class BBoss_Suspend_Forum_Reply extends BBoss_Suspend_Abstract {
 
 	/**
 	 * Item type
@@ -24,13 +24,13 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	public static $type = 'forum_reply';
 
 	/**
-	 * BP_Suspend_Forum_Reply constructor.
+	 * BBoss_Suspend_Forum_Reply constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			return;
 		}
 
@@ -42,7 +42,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_reply' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_reply' ), 10, 4 );
 
-		$reply_post_type = bbp_get_reply_post_type();
+		$reply_post_type = bboss_bbp_get_reply_post_type();
 		// Add moderation data when reply is added.
 		add_action( "save_post_{$reply_post_type}", array( $this, 'sync_moderation_data_on_save' ), 10, 2 );
 
@@ -67,8 +67,8 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		// Blocked template.
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 
-		if ( bp_is_active( 'activity' ) ) {
-			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
+		if ( bboss_is_active( 'activity' ) ) {
+			add_filter( 'bb_moderation_restrict_single_item_' . BBoss_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
 		}
 	}
 
@@ -88,14 +88,14 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		$args = array(
 			'fields'                 => 'ids',
-			'post_type'              => bbp_get_reply_post_type(),
+			'post_type'              => bboss_bbp_get_reply_post_type(),
 			'post_status'            => 'publish',
 			'author'                 => $member_id,
 			'posts_per_page'         => - 1,
 			// Need to get all topics id of hidden forums.
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
-			'suppress_filters'       => true,
+			'suppress_filters'       => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 		);
 
 		if ( $page > 0 ) {
@@ -111,7 +111,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $reply_ids ) ) {
 			foreach ( $reply_ids as $k => $reply_id ) {
-				if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type, true ) ) {
+				if ( BBoss_Core_Suspend::check_suspended_content( $reply_id, self::$type, true ) ) {
 					unset( $reply_ids[ $k ] );
 				}
 			}
@@ -135,14 +135,14 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		$args = array(
 			'fields'                 => 'ids',
-			'post_type'              => bbp_get_reply_post_type(),
+			'post_type'              => bboss_bbp_get_reply_post_type(),
 			'post_status'            => 'publish',
 			'post_parent'            => $parent_id,
 			'posts_per_page'         => - 1,
 			// Need to get all topics id of hidden forums.
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
-			'suppress_filters'       => true,
+			'suppress_filters'       => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 		);
 
 		if ( $page > 0 ) {
@@ -188,7 +188,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			$join_sql = apply_filters( 'bp_suspend_forum_reply_get_join', $join_sql, $this );
 
 		} else {
-			$reply_slug = bbp_get_reply_post_type();
+			$reply_slug = bboss_bbp_get_reply_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 			if ( false === $wp_query->get( 'moderation_query' ) || ! empty( $post_types ) && in_array( $reply_slug, $post_types, true ) ) {
 				$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
@@ -223,7 +223,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		$action_name = current_filter();
 
 		if ( 'bp_forum_reply_search_where_sql' !== $action_name ) {
-			$reply_slug = bbp_get_reply_post_type();
+			$reply_slug = bboss_bbp_get_reply_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 			if ( false === $wp_query->get( 'moderation_query' ) || empty( $post_types ) || ! in_array( $reply_slug, $post_types, true ) ) {
 				return $where_conditions;
@@ -232,7 +232,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		$where                  = array();
 		// Remove suspended members reply from widget.
-		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
+		if ( function_exists( 'bboss_did_filter' ) && bboss_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
 			$where['suspend_where'] = $this->exclude_where_query();
 		}
 
@@ -273,7 +273,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $reply_id,
@@ -295,7 +295,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::add_suspend( $suspend_args );
+		BBoss_Core_Suspend::add_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $reply_id;
 		if ( empty( $args['disable_background'] ) ) {
@@ -334,7 +334,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $reply_id,
@@ -352,7 +352,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			isset( $suspend_args['type'] ) &&
 			$suspend_args['type'] !== self::$type
 		) {
-			$reply_author_id = BP_Moderation_Forum_Replies::get_content_owner_id( $reply_id );
+			$reply_author_id = BBoss_Moderation_Forum_Replies::get_content_owner_id( $reply_id );
 			if ( isset( $suspend_args['blocked_user'] ) && $reply_author_id === $suspend_args['blocked_user'] ) {
 				unset( $suspend_args['blocked_user'] );
 			}
@@ -368,7 +368,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::remove_suspend( $suspend_args );
+		BBoss_Core_Suspend::remove_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $reply_id;
 
@@ -408,14 +408,14 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			}
 		}
 
-		$reply_id = bbp_get_reply_id();
+		$reply_id = bboss_bbp_get_reply_id();
 
-		if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type, true ) ) {
+		if ( BBoss_Core_Suspend::check_suspended_content( $reply_id, self::$type, true ) ) {
 			return 'loop-blocked-single-reply.php';
 		}
 
-		$author_id = BP_Moderation_Forum_Replies::get_content_owner_id( $reply_id );
-		if ( bp_moderation_is_user_suspended( $author_id ) ) {
+		$author_id = BBoss_Moderation_Forum_Replies::get_content_owner_id( $reply_id );
+		if ( bboss_moderation_is_user_suspended( $author_id ) ) {
 			return 'loop-blocked-single-reply.php';
 		}
 
@@ -443,21 +443,21 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			$related_contents[ self::$type ] = self::get_topic_reply_replies( $reply_id, $page );
 		}
 
-		if ( bp_is_active( 'activity' ) && $page < 2 ) {
+		if ( bboss_is_active( 'activity' ) && $page < 2 ) {
 			$activity_id                                    = get_post_meta( $reply_id, '_bbp_activity_id', true );
-			$related_contents[ BP_Suspend_Activity::$type ] = array( $activity_id );
+			$related_contents[ BBoss_Suspend_Activity::$type ] = array( $activity_id );
 		}
 
-		if ( bp_is_active( 'document' ) && $page < 2 ) {
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $reply_id, 'get_post_meta', $action );
+		if ( bboss_is_active( 'document' ) && $page < 2 ) {
+			$related_contents[ BBoss_Suspend_Document::$type ] = BBoss_Suspend_Document::get_document_ids_meta( $reply_id, 'get_post_meta', $action );
 		}
 
-		if ( bp_is_active( 'media' ) && $page < 2 ) {
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $reply_id, 'get_post_meta', $action );
+		if ( bboss_is_active( 'media' ) && $page < 2 ) {
+			$related_contents[ BBoss_Suspend_Media::$type ] = BBoss_Suspend_Media::get_media_ids_meta( $reply_id, 'get_post_meta', $action );
 		}
 
-		if ( bp_is_active( 'video' ) && $page < 2 ) {
-			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $reply_id, 'get_post_meta', $action );
+		if ( bboss_is_active( 'video' ) && $page < 2 ) {
+			$related_contents[ BBoss_Suspend_Video::$type ] = BBoss_Suspend_Video::get_video_ids_meta( $reply_id, 'get_post_meta', $action );
 		}
 
 		return $related_contents;
@@ -477,14 +477,14 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$sub_items     = bp_moderation_get_sub_items( $post_id, BP_Moderation_Forum_Replies::$moderation_type );
+		$sub_items     = bboss_moderation_get_sub_items( $post_id, BBoss_Moderation_Forum_Replies::$moderation_type );
 		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $post_id;
-		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Forum_Replies::$moderation_type;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BBoss_Moderation_Forum_Replies::$moderation_type;
 
-		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+		$suspended_record = BBoss_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
 
 		if ( empty( $suspended_record ) ) {
-			$suspended_record = BP_Core_Suspend::get_recode( $post->post_author, BP_Moderation_Members::$moderation_type );
+			$suspended_record = BBoss_Core_Suspend::get_recode( $post->post_author, BBoss_Moderation_Members::$moderation_type );
 		}
 
 		if ( empty( $suspended_record ) ) {
@@ -509,11 +509,11 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		$post = get_post( $post_id );
 
-		if ( ! isset( $post->post_type ) || bbp_get_reply_post_type() !== $post->post_type ) {
+		if ( ! isset( $post->post_type ) || bboss_bbp_get_reply_post_type() !== $post->post_type ) {
 			return;
 		}
 
-		BP_Core_Suspend::delete_suspend( $post_id, $this->item_type );
+		BBoss_Core_Suspend::delete_suspend( $post_id, $this->item_type );
 	}
 
 	/**

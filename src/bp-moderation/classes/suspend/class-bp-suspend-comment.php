@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Suspend_Comment extends BP_Suspend_Abstract {
+class BBoss_Suspend_Comment extends BBoss_Suspend_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public static $type = 'comment';
 
 	/**
-	 * BP_Suspend_Comment constructor.
+	 * BBoss_Suspend_Comment constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -90,7 +90,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $comment_ids ) ) {
 			foreach ( $comment_ids as $k => $comment_id ) {
-				if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type, true ) ) {
+				if ( BBoss_Core_Suspend::check_suspended_content( $comment_id, self::$type, true ) ) {
 					unset( $comment_ids[ $k ] );
 				}
 			}
@@ -115,7 +115,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $comment_id,
@@ -137,7 +137,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::add_suspend( $suspend_args );
+		BBoss_Core_Suspend::add_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $comment_id;
 
@@ -177,7 +177,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $comment_id,
@@ -195,7 +195,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			isset( $suspend_args['type'] ) &&
 			$suspend_args['type'] !== self::$type
 		) {
-			$comment_author_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
+			$comment_author_id = BBoss_Moderation_Comment::get_content_owner_id( $comment_id );
 			if ( isset( $suspend_args['blocked_user'] ) && $comment_author_id === $suspend_args['blocked_user'] ) {
 				unset( $suspend_args['blocked_user'] );
 			}
@@ -211,7 +211,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::remove_suspend( $suspend_args );
+		BBoss_Core_Suspend::remove_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $comment_id;
 
@@ -251,11 +251,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
-			$is_user_suspended = bp_moderation_is_user_suspended( $comment_author_id );
+			$is_user_suspended = bboss_moderation_is_user_suspended( $comment_author_id );
 			if ( $is_user_suspended ) {
-				$comment_text = bb_moderation_is_suspended_message( $comment_text, $this->item_type, $comment->comment_ID );
+				$comment_text = bboss_moderation_is_suspended_message( $comment_text, $this->item_type, $comment->comment_ID );
 			} else {
-				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 			}
 		}
 
@@ -276,11 +276,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
-		$user_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
+		$user_id = BBoss_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$is_user_suspended = bp_moderation_is_user_suspended( $user_id );
+			$is_user_suspended = bboss_moderation_is_user_suspended( $user_id );
 			if ( $is_user_suspended ) {
-				$return = bb_moderation_is_suspended_label( $user_id );
+				$return = bboss_moderation_is_suspended_label( $user_id );
 			}
 		}
 
@@ -299,11 +299,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author( $author, $comment_id ) {
 
-		$user_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
+		$user_id = BBoss_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$is_user_suspended = bp_moderation_is_user_suspended( $user_id );
+			$is_user_suspended = bboss_moderation_is_user_suspended( $user_id );
 			if ( $is_user_suspended ) {
-				$author = bb_moderation_is_suspended_label( $user_id );
+				$author = bboss_moderation_is_suspended_label( $user_id );
 			}
 		}
 
@@ -445,17 +445,17 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $related_contents;
 		}
 
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$a_comment_id = get_comment_meta( $comment_id, 'bp_activity_comment_id', true );
-			$related_contents[ BP_Suspend_Activity_Comment::$type ] = array( $a_comment_id );
+			$related_contents[ BBoss_Suspend_Activity_Comment::$type ] = array( $a_comment_id );
 
 			if (
 				! empty( $a_comment_id ) &&
 				! empty( $args['action'] ) &&
 				in_array( $args['action'], array( 'hide', 'unhide' ), true )
 			) {
-				$activity_comment = new BP_Activity_Activity( $a_comment_id );
-				$parent_activity  = new BP_Activity_Activity( $activity_comment->item_id );
+				$activity_comment = new BBoss_Activity_Activity( $a_comment_id );
+				$parent_activity  = new BBoss_Activity_Activity( $activity_comment->item_id );
 				$post_type        = '';
 
 				if ( ! empty( $parent_activity->type ) ) {
@@ -463,7 +463,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 				}
 
 				$page           = $args['page'] ?? 1;
-				$child_comments = BP_Suspend_Activity::fetch_all_child_activity( $a_comment_id, $page );
+				$child_comments = BBoss_Suspend_Activity::fetch_all_child_activity( $a_comment_id, $page );
 
 				$document_ids = array();
 				$media_ids    = array();
@@ -472,37 +472,37 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 				if ( ! empty( $child_comments['comments'] ) ) {
 					foreach ( $child_comments['comments'] as $child_comment ) {
 						if ( 'activity_comment' === $child_comment->type ) {
-							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $child_comment->id;
+							$related_contents[ BBoss_Suspend_Activity_Comment::$type ][] = $child_comment->id;
 						} else {
-							$related_contents[ BP_Suspend_Activity::$type ][] = $child_comment->id;
+							$related_contents[ BBoss_Suspend_Activity::$type ][] = $child_comment->id;
 						}
 
 						if ( ! empty( $post_type ) ) {
-							$blog_comment_id = bp_activity_get_meta( $child_comment->id, "bp_blogs_{$post_type}_comment_id", true );
+							$blog_comment_id = bboss_activity_get_meta( $child_comment->id, "bp_blogs_{$post_type}_comment_id", true );
 							if ( ! empty( $blog_comment_id ) ) {
 								$related_contents[ self::$type ][] = $blog_comment_id;
 							}
 						}
 
-						if ( bp_is_active( 'document' ) ) {
-							$document_ids = array_merge( $document_ids, BP_Suspend_Document::get_document_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+						if ( bboss_is_active( 'document' ) ) {
+							$document_ids = array_merge( $document_ids, BBoss_Suspend_Document::get_document_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
 						}
-						if ( bp_is_active( 'media' ) ) {
-							$media_ids = array_merge( $media_ids, BP_Suspend_Media::get_media_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+						if ( bboss_is_active( 'media' ) ) {
+							$media_ids = array_merge( $media_ids, BBoss_Suspend_Media::get_media_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
 						}
-						if ( bp_is_active( 'video' ) ) {
-							$video_ids = array_merge( $video_ids, BP_Suspend_Video::get_video_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+						if ( bboss_is_active( 'video' ) ) {
+							$video_ids = array_merge( $video_ids, BBoss_Suspend_Video::get_video_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
 						}
 					}
 
 					$args['next_page'] = $child_comments['has_more'] ?? false;
 
-					if ( ! empty( $related_contents[ BP_Suspend_Activity::$type ] ) ) {
-						$related_contents[ BP_Suspend_Activity::$type ] = array_unique( $related_contents[ BP_Suspend_Activity::$type ] );
+					if ( ! empty( $related_contents[ BBoss_Suspend_Activity::$type ] ) ) {
+						$related_contents[ BBoss_Suspend_Activity::$type ] = array_unique( $related_contents[ BBoss_Suspend_Activity::$type ] );
 					}
 
-					if ( ! empty( $related_contents[ BP_Suspend_Activity_Comment::$type ] ) ) {
-						$related_contents[ BP_Suspend_Activity_Comment::$type ] = array_unique( $related_contents[ BP_Suspend_Activity_Comment::$type ] );
+					if ( ! empty( $related_contents[ BBoss_Suspend_Activity_Comment::$type ] ) ) {
+						$related_contents[ BBoss_Suspend_Activity_Comment::$type ] = array_unique( $related_contents[ BBoss_Suspend_Activity_Comment::$type ] );
 					}
 
 					unset( $child_comments );
@@ -541,18 +541,18 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$sub_items     = bp_moderation_get_sub_items( $comment_id, BP_Moderation_Comment::$moderation_type );
+		$sub_items     = bboss_moderation_get_sub_items( $comment_id, BBoss_Moderation_Comment::$moderation_type );
 		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $comment_id;
-		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Comment::$moderation_type;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BBoss_Moderation_Comment::$moderation_type;
 
-		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+		$suspended_record = BBoss_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
 		if ( is_object( $commentdata ) ) {
 			$commentdata_user_id = $commentdata->user_id;
 		} else {
 			$commentdata_user_id = $commentdata['user_id'];
 		}
 		if ( empty( $suspended_record ) ) {
-			$suspended_record = BP_Core_Suspend::get_recode( $commentdata_user_id, BP_Moderation_Members::$moderation_type );
+			$suspended_record = BBoss_Core_Suspend::get_recode( $commentdata_user_id, BBoss_Moderation_Members::$moderation_type );
 		}
 
 		if ( empty( $suspended_record ) ) {
@@ -575,7 +575,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return;
 		}
 
-		BP_Core_Suspend::delete_suspend( $comment_id, $this->item_type );
+		BBoss_Core_Suspend::delete_suspend( $comment_id, $this->item_type );
 	}
 
 	/**
@@ -587,11 +587,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	private function check_is_hidden( $comment_id ) {
 
-		$author_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
+		$author_id = BBoss_Moderation_Comment::get_content_owner_id( $comment_id );
 
 		if (
-			( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) ||
-			( ! empty( $author_id ) && bp_moderation_is_user_suspended( $author_id ) )
+			( BBoss_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) ||
+			( ! empty( $author_id ) && bboss_moderation_is_user_suspended( $author_id ) )
 		) {
 			return true;
 		}
@@ -610,9 +610,9 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 * @return mixed
 	 */
 	public function bb_blocked_comments_pre_query( $comment_data, $query ) {
-		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'widget_comments_args' ) ) {
+		if ( function_exists( 'bboss_did_filter' ) && bboss_did_filter( 'widget_comments_args' ) ) {
 			global $wpdb;
-			$comment_data['join']  .= ' ' . $this->exclude_joint_query( $wpdb->comments . '.user_id', BP_Moderation_Members::$moderation_type );
+			$comment_data['join']  .= ' ' . $this->exclude_joint_query( $wpdb->comments . '.user_id', BBoss_Moderation_Members::$moderation_type );
 			$comment_data['where'] .= ' AND ' . $this->exclude_where_query();
 		}
 
@@ -637,11 +637,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$is_user_suspended = bp_moderation_is_user_suspended( $comment_author_id );
+			$is_user_suspended = bboss_moderation_is_user_suspended( $comment_author_id );
 			if ( $is_user_suspended ) {
-				$excerpt = bb_moderation_is_suspended_message( $excerpt, $this->item_type, $comment->comment_ID );
+				$excerpt = bboss_moderation_is_suspended_message( $excerpt, $this->item_type, $comment->comment_ID );
 			} else {
-				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 			}
 		}
 

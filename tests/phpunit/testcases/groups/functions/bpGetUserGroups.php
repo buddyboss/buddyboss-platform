@@ -10,7 +10,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		groups_remove_member( self::$user, self::$groups[2] );
+		bboss_groups_remove_member( self::$user, self::$groups[2] );
 	}
 
 	public static function wpSetUpBeforeClass( $f ) {
@@ -41,7 +41,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 
 	public static function tearDownAfterClass() {
 		foreach ( self::$groups as $group ) {
-			groups_delete_group( $group );
+			bboss_groups_delete_group( $group );
 		}
 
 		if ( is_multisite() ) {
@@ -56,7 +56,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	}
 
 	public function test_default_params() {
-		$found = bp_get_user_groups( self::$user );
+		$found = bboss_get_user_groups( self::$user );
 
 		$this->assertEqualSets( array( self::$groups[0], self::$groups[1] ), wp_list_pluck( $found, 'group_id' ) );
 
@@ -74,7 +74,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[0], self::$groups[1] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => true,
 		) );
 
@@ -87,7 +87,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => false,
 		) );
 
@@ -100,7 +100,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[0], self::$groups[1], self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
@@ -109,11 +109,11 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 
 	public function test_is_banned_true() {
 		$this->add_user_to_group( self::$user, self::$groups[2] );
-		$member = new BP_Groups_Member( self::$user, self::$groups[2] );
+		$member = new BBoss_Groups_Member( self::$user, self::$groups[2] );
 		$member->ban();
 
 		$expected = array( self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_banned' => true,
 		) );
 
@@ -122,11 +122,11 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 
 	public function test_is_banned_false() {
 		$this->add_user_to_group( self::$user, self::$groups[2] );
-		$member = new BP_Groups_Member( self::$user, self::$groups[2] );
+		$member = new BBoss_Groups_Member( self::$user, self::$groups[2] );
 		$member->ban();
 
 		$expected = array( self::$groups[0], self::$groups[1] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_banned' => false,
 		) );
 
@@ -135,11 +135,11 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 
 	public function test_is_banned_null() {
 		$this->add_user_to_group( self::$user, self::$groups[2] );
-		$member = new BP_Groups_Member( self::$user, self::$groups[2] );
+		$member = new BBoss_Groups_Member( self::$user, self::$groups[2] );
 		$member->ban();
 
 		$expected = array( self::$groups[0], self::$groups[1], self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_banned' => null,
 		) );
 
@@ -152,7 +152,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_admin' => true,
 		) );
 
@@ -165,7 +165,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[0], self::$groups[1] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_admin' => false,
 		) );
 
@@ -178,7 +178,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[0], self::$groups[1], self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_admin' => null,
 		) );
 
@@ -191,7 +191,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_mod' => true,
 		) );
 
@@ -204,7 +204,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[0], self::$groups[1] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_mod' => false,
 		) );
 
@@ -217,7 +217,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[0], self::$groups[1], self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_mod' => null,
 		) );
 
@@ -225,8 +225,8 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	}
 
 	public function test_orderby_should_default_to_group_id() {
-		$expected = bp_get_user_groups( self::$user );
-		$found = bp_get_user_groups( self::$user, array(
+		$expected = bboss_get_user_groups( self::$user );
+		$found = bboss_get_user_groups( self::$user, array(
 			'orderby' => 'group_id',
 		) );
 
@@ -235,7 +235,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 
 	public function test_orderby_group_id() {
 		$expected = array( self::$groups[0], self::$groups[1] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'orderby' => 'group_id',
 		) );
 
@@ -244,7 +244,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 
 	public function test_orderby_id() {
 		$expected = array( self::$groups[1], self::$groups[0] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'orderby' => 'id',
 		) );
 
@@ -257,7 +257,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[2], self::$groups[1], self::$groups[0] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'orderby' => 'date_modified',
 		) );
 
@@ -266,7 +266,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 
 	public function test_orderby_group_id_with_order_desc() {
 		$expected = array( self::$groups[1], self::$groups[0] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'orderby' => 'group_id',
 			'order' => 'DESC',
 		) );
@@ -280,7 +280,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		) );
 
 		$expected = array( self::$groups[0], self::$groups[1], self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'orderby' => 'date_modified',
 			'order' => 'DESC',
 		) );
@@ -294,10 +294,10 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	public function test_results_should_be_cached() {
 		global $wpdb;
 
-		$g1 = bp_get_user_groups( self::$user );
+		$g1 = bboss_get_user_groups( self::$user );
 
 		$num_queries = $wpdb->num_queries;
-		$g2 = bp_get_user_groups( self::$user );
+		$g2 = bboss_get_user_groups( self::$user );
 
 		$this->assertSame( $num_queries, $wpdb->num_queries );
 		$this->assertEquals( $g1, $g2 );
@@ -308,12 +308,12 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 */
 	public function test_cache_should_be_invalidated_on_group_join() {
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user );
+		$g1 = bboss_get_user_groups( self::$user );
 
-		groups_join_group( self::$groups[2], self::$user );
+		bboss_groups_join_group( self::$groups[2], self::$user );
 
 		$expected = array( self::$groups[0], self::$groups[1], self::$groups[2] );
-		$found = bp_get_user_groups( self::$user );
+		$found = bboss_get_user_groups( self::$user );
 
 		$this->assertEqualSets( $expected, array_keys( $found ) );
 	}
@@ -323,12 +323,12 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 */
 	public function test_cache_should_be_invalidated_on_group_leave() {
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user );
+		$g1 = bboss_get_user_groups( self::$user );
 
-		groups_leave_group( self::$groups[1], self::$user );
+		bboss_groups_leave_group( self::$groups[1], self::$user );
 
 		$expected = array( self::$groups[0] );
-		$found = bp_get_user_groups( self::$user );
+		$found = bboss_get_user_groups( self::$user );
 
 		$this->assertEqualSets( $expected, array_keys( $found ) );
 	}
@@ -338,13 +338,13 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 */
 	public function test_cache_should_be_invalidated_on_group_remove() {
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user );
+		$g1 = bboss_get_user_groups( self::$user );
 
-		$m = new BP_Groups_Member( self::$user, self::$groups[1] );
+		$m = new BBoss_Groups_Member( self::$user, self::$groups[1] );
 		$m->remove();
 
 		$expected = array( self::$groups[0] );
-		$found = bp_get_user_groups( self::$user );
+		$found = bboss_get_user_groups( self::$user );
 
 		$this->assertEqualSets( $expected, array_keys( $found ) );
 	}
@@ -354,13 +354,13 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 */
 	public function test_cache_should_be_invalidated_on_group_ban() {
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user );
+		$g1 = bboss_get_user_groups( self::$user );
 
-		$m = new BP_Groups_Member( self::$user, self::$groups[1] );
+		$m = new BBoss_Groups_Member( self::$user, self::$groups[1] );
 		$m->ban();
 
 		$expected = array( self::$groups[0] );
-		$found = bp_get_user_groups( self::$user );
+		$found = bboss_get_user_groups( self::$user );
 
 		$this->assertEqualSets( $expected, array_keys( $found ) );
 	}
@@ -369,17 +369,17 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 * @group cache
 	 */
 	public function test_cache_should_be_invalidated_on_group_unban() {
-		$m1 = new BP_Groups_Member( self::$user, self::$groups[1] );
+		$m1 = new BBoss_Groups_Member( self::$user, self::$groups[1] );
 		$m1->ban();
 
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user );
+		$g1 = bboss_get_user_groups( self::$user );
 
-		$m2 = new BP_Groups_Member( self::$user, self::$groups[1] );
+		$m2 = new BBoss_Groups_Member( self::$user, self::$groups[1] );
 		$m2->unban();
 
 		$expected = array( self::$groups[0], self::$groups[1] );
-		$found = bp_get_user_groups( self::$user );
+		$found = bboss_get_user_groups( self::$user );
 
 		$this->assertEqualSets( $expected, array_keys( $found ) );
 	}
@@ -389,18 +389,18 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 */
 	public function test_cache_should_be_invalidated_on_group_invite() {
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user, array(
+		$g1 = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
-		groups_invite_user( array(
+		bboss_groups_invite_user( array(
 			'user_id' => self::$user,
 			'group_id' => self::$groups[2],
 			'inviter_id' => self::$admin_user,
 		) );
 
 		$expected = array( self::$groups[0], self::$groups[1], self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
@@ -411,21 +411,21 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 * @group cache
 	 */
 	public function test_cache_should_be_invalidated_on_group_uninvite() {
-		groups_invite_user( array(
+		bboss_groups_invite_user( array(
 			'user_id' => self::$user,
 			'group_id' => self::$groups[2],
 			'inviter_id' => self::$admin_user,
 		) );
 
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user, array(
+		$g1 = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
-		groups_uninvite_user( self::$user, self::$groups[2] );
+		bboss_groups_uninvite_user( self::$user, self::$groups[2] );
 
 		$expected = array( self::$groups[0], self::$groups[1] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
@@ -436,19 +436,19 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 * @group cache
 	 */
 	public function test_cache_should_be_invalidated_on_group_invite_acceptance() {
-		groups_invite_user( array(
+		bboss_groups_invite_user( array(
 			'user_id' => self::$user,
 			'group_id' => self::$groups[2],
 			'inviter_id' => self::$admin_user,
 		) );
 
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user );
+		$g1 = bboss_get_user_groups( self::$user );
 
-		groups_accept_invite( self::$user, self::$groups[2] );
+		bboss_groups_accept_invite( self::$user, self::$groups[2] );
 
 		$expected = array( self::$groups[0], self::$groups[1], self::$groups[2] );
-		$found = bp_get_user_groups( self::$user );
+		$found = bboss_get_user_groups( self::$user );
 
 		$this->assertEqualSets( $expected, array_keys( $found ) );
 	}
@@ -457,21 +457,21 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 * @group cache
 	 */
 	public function test_cache_should_be_invalidated_on_group_invite_reject() {
-		groups_invite_user( array(
+		bboss_groups_invite_user( array(
 			'user_id' => self::$user,
 			'group_id' => self::$groups[2],
 			'inviter_id' => self::$admin_user,
 		) );
 
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user, array(
+		$g1 = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
-		groups_reject_invite( self::$user, self::$groups[2] );
+		bboss_groups_reject_invite( self::$user, self::$groups[2] );
 
 		$expected = array( self::$groups[0], self::$groups[1] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
@@ -482,21 +482,21 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 * @group cache
 	 */
 	public function test_cache_should_be_invalidated_on_group_invite_delete() {
-		groups_invite_user( array(
+		bboss_groups_invite_user( array(
 			'user_id' => self::$user,
 			'group_id' => self::$groups[2],
 			'inviter_id' => self::$admin_user,
 		) );
 
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user, array(
+		$g1 = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
-		groups_delete_invite( self::$user, self::$groups[2] );
+		bboss_groups_delete_invite( self::$user, self::$groups[2] );
 
 		$expected = array( self::$groups[0], self::$groups[1] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
@@ -508,7 +508,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 	 */
 	public function test_cache_should_be_invalidated_on_group_request() {
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user, array(
+		$g1 = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
@@ -516,7 +516,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		$server_name = isset( $_SERVER['SERVER_NAME'] ) ? $_SERVER['SERVER_NAME'] : null;
 		$_SERVER['SERVER_NAME'] = '';
 
-		groups_send_membership_request( self::$user, self::$groups[2] );
+		bboss_groups_send_membership_request( self::$user, self::$groups[2] );
 
 		// For `wp_mail()`.
 		if ( is_null( $server_name ) ) {
@@ -526,7 +526,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		}
 
 		$expected = array( self::$groups[0], self::$groups[1], self::$groups[2] );
-		$found = bp_get_user_groups( self::$user, array(
+		$found = bboss_get_user_groups( self::$user, array(
 			'is_confirmed' => null,
 		) );
 
@@ -541,14 +541,14 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		$server_name = isset( $_SERVER['SERVER_NAME'] ) ? $_SERVER['SERVER_NAME'] : null;
 		$_SERVER['SERVER_NAME'] = '';
 
-		groups_send_membership_request( self::$user, self::$groups[2] );
+		bboss_groups_send_membership_request( self::$user, self::$groups[2] );
 
 		// Populate cache.
-		$g1 = bp_get_user_groups( self::$user );
+		$g1 = bboss_get_user_groups( self::$user );
 
-		$m = new BP_Groups_Member( self::$user, self::$groups[2] );
+		$m = new BBoss_Groups_Member( self::$user, self::$groups[2] );
 
-		groups_accept_membership_request( $m->id, self::$user, self::$groups[2] );
+		bboss_groups_accept_membership_request( $m->id, self::$user, self::$groups[2] );
 
 		// For `wp_mail()`.
 		if ( is_null( $server_name ) ) {
@@ -558,7 +558,7 @@ class BP_Tests_Groups_Functions_BpGetUserGroups extends BP_UnitTestCase {
 		}
 
 		$expected = array( self::$groups[0], self::$groups[1], self::$groups[2] );
-		$found = bp_get_user_groups( self::$user );
+		$found = bboss_get_user_groups( self::$user );
 
 		$this->assertEqualSets( $expected, array_keys( $found ) );
 	}

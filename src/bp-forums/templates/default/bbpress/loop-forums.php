@@ -6,19 +6,22 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <?php do_action( 'bbp_template_before_forums_loop' ); ?>
 
-<ul id="forums-list-<?php bbp_forum_id(); ?>" class="bbp-forums">
+<ul id="forums-list-<?php bboss_bbp_forum_id(); ?>" class="bbp-forums">
 
 	<li class="bbp-header">
 
 		<ul class="forum-titles">
-			<li class="bbp-forum-info"><?php _e( 'Forum', 'buddyboss' ); ?></li>
-			<li class="bbp-forum-topic-count"><?php _e( 'Discussions', 'buddyboss' ); ?></li>
-			<li class="bbp-forum-reply-count"><?php bbp_show_lead_topic() ? _e( 'Replies', 'buddyboss' ) : _e( 'Posts', 'buddyboss' ); ?></li>
-			<li class="bbp-forum-freshness"><?php _e( 'Last Post', 'buddyboss' ); ?></li>
+			<li class="bbp-forum-info"><?php esc_html_e( 'Forum', 'buddyboss-platform' ); ?></li>
+			<li class="bbp-forum-topic-count"><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?></li>
+			<li class="bbp-forum-reply-count"><?php bboss_bbp_show_lead_topic() ? esc_html_e( 'Replies', 'buddyboss-platform' ) : esc_html_e( 'Posts', 'buddyboss-platform' ); ?></li>
+			<li class="bbp-forum-freshness"><?php esc_html_e( 'Last Post', 'buddyboss-platform' ); ?></li>
 		</ul>
 
 	</li><!-- .bbp-header -->
@@ -26,11 +29,11 @@
 	<li class="bbp-body">
 
 		<?php
-		while ( bbp_forums() ) :
-			bbp_the_forum();
+		while ( bboss_bbp_forums() ) :
+			bboss_bbp_the_forum();
 			?>
 
-			<?php bbp_get_template_part( 'loop', 'single-forum' ); ?>
+			<?php bboss_bbp_get_template_part( 'loop', 'single-forum' ); ?>
 
 		<?php endwhile; ?>
 

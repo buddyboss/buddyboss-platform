@@ -17,11 +17,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_current_user_status( $user_id ) {
+function bboss_current_user_status( $user_id ) {
 
 	_deprecated_function( __FUNCTION__, '2.1.4', 'bb_get_user_presence_html' );
 
-	if ( bb_is_online_user( $user_id ) ) {
+	if ( bboss_is_online_user( $user_id ) ) {
 		echo wp_kses_post( apply_filters( 'bb_user_online_html', '<span class="member-status online"></span>', $user_id ) );
 
 	}

@@ -5,7 +5,7 @@
  * This template handles displaying member profile completion progress.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -13,7 +13,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_nouveau = bp_nouveau();
+$bp_nouveau = bboss_nouveau();
 
 // If no Profile Completion Progress found then stop.
 if ( ! isset( $bp_nouveau->xprofile->profile_completion_widget_para ) ) {
@@ -21,7 +21,7 @@ if ( ! isset( $bp_nouveau->xprofile->profile_completion_widget_para ) ) {
 }
 
 $user_progress        = $bp_nouveau->xprofile->profile_completion_widget_para;
-$progress_label       = ( $user_progress['completion_percentage'] == 100 ) ? esc_html__( 'Completed', 'buddyboss' ) : esc_html__( 'Complete', 'buddyboss' );
+$progress_label       = ( $user_progress['completion_percentage'] == 100 ) ? esc_html__( 'Completed', 'buddyboss-platform' ) : esc_html__( 'Complete', 'buddyboss-platform' );
 $user_progress_offset = 100 - $user_progress['completion_percentage'];
 
 ?>
@@ -30,7 +30,7 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 		<div class="progress_text_wrap">
 			<h3>
 				<span class="progress_text_value"><?php echo esc_html( $user_progress['completion_percentage'] ); ?></span>
-				<span class="progress_text_unit"><?php echo __( '%', 'buddyboss' ); ?></span>
+				<span class="progress_text_unit"><?php echo esc_html__( '%', 'buddyboss-platform' ); ?></span>
 				<span class="progress_text_label"><?php echo esc_html( $progress_label ); ?></span>
 			</h3>
 		</div>

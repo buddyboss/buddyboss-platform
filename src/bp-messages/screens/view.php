@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load an individual conversation screen.
  *
@@ -13,77 +16,78 @@
  *
  * @return false|null False on failure.
  */
-function messages_screen_conversation() {
+function bboss_messages_screen_conversation() {
 
 	// Bail if not viewing a single message.
-	if ( ! bp_is_messages_component() || ! bp_is_current_action( 'view' ) ) {
+	if ( ! bboss_is_messages_component() || ! bboss_is_current_action( 'view' ) ) {
 		return false;
 	}
 
-	$thread_id = (int) bp_action_variable( 0 );
+	$thread_id = (int) bboss_action_variable( 0 );
 
 	// Group threads cannot be opened while "Group Messages" is disabled: leave with a notice, as for other unavailable
 	// threads. Checked before the archived redirect below, and only for members who can see the thread.
 	if (
-		bb_messages_is_disabled_group_thread( $thread_id ) &&
-		bp_is_my_profile() &&
-		( bb_messages_is_active_thread_recipient( $thread_id ) || bp_current_user_can( 'bp_moderate' ) )
+		bboss_messages_is_disabled_group_thread( $thread_id ) &&
+		bboss_is_my_profile() &&
+		( bboss_messages_is_active_thread_recipient( $thread_id ) || bboss_current_user_can( 'bp_moderate' ) )
 	) {
 		// Inbox, or compose for members with no listed threads: straight to the final page, so the notice is shown there.
-		$redirect = bb_messages_get_disabled_group_thread_redirect_url( $thread_id );
+		$redirect = bboss_messages_get_disabled_group_thread_redirect_url( $thread_id );
 
-		bp_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
-		bp_core_redirect( $redirect );
+		bboss_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss-platform' ), 'warning' );
+		bboss_core_redirect( $redirect );
 	}
 
 	if ( ! empty( $thread_id ) && messages_is_valid_archived_thread( $thread_id ) ) {
-		if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
+		if ( bboss_has_message_threads( bboss_ajax_querystring( 'messages' ) ) ) {
 			$thread_id = 0;
-			while ( bp_message_threads() ) :
-				bp_message_thread();
-				$thread_id = bp_get_message_thread_id();
+			while ( bboss_message_threads() ) :
+				bboss_message_thread();
+				$thread_id = bboss_get_message_thread_id();
 				break;
 			endwhile;
 
 			if ( $thread_id ) {
-				wp_safe_redirect( bp_get_message_thread_view_link( $thread_id ) );
+				wp_safe_redirect( bboss_get_message_thread_view_link( $thread_id ) );
 				exit;
 			}
 		} else {
-			wp_safe_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/compose' ) );
+			wp_safe_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/compose' ) );
 			exit;
 		}
 	}
 
-	if ( empty( $thread_id ) || ! messages_is_valid_thread( $thread_id ) ) {
+	if ( empty( $thread_id ) || ! bboss_messages_is_valid_thread( $thread_id ) ) {
 		if ( is_user_logged_in() ) {
-			bp_core_add_message( __( 'The conversation you tried to access is no longer available', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'The conversation you tried to access is no longer available', 'buddyboss-platform' ), 'error' );
 		}
 
-		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ) );
+		bboss_core_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() ) );
 	}
 
 	// No access.
-	if ( ( ! messages_check_thread_access( $thread_id ) || ! bp_is_my_profile() ) ) {
+	if ( ( ! bboss_messages_check_thread_access( $thread_id ) || ! bboss_is_my_profile() ) ) {
 		// If not logged in, prompt for login.
 		if ( ! is_user_logged_in() ) {
-			bp_core_no_access();
+			bboss_core_no_access();
 			return;
 
 			// Redirect away.
 		} else {
-			bp_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
-			bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) );
+			bboss_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss-platform' ), 'error' );
+			bboss_core_redirect( trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() ) );
 		}
 	}
 
 	// Load up BuddyPress one time.
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Decrease the unread count in the nav before it's rendered.
-	$count    = bp_get_total_unread_messages_count();
+	$count    = bboss_get_total_unread_messages_count();
 	$class    = ( 0 === $count ) ? 'no-count' : 'count';
-	$nav_name = sprintf( __( 'Messages <span class="%1$s">%2$s</span>', 'buddyboss' ), esc_attr( $class ), bp_core_number_format( $count ) );
+	/* translators: 1: CSS class, 2: unread message count. */
+	$nav_name = sprintf( __( 'Messages <span class="%1$s">%2$s</span>', 'buddyboss-platform' ), esc_attr( $class ), bboss_core_number_format( $count ) );
 
 	// Edit the Navigation name.
 	$bp->members->nav->edit_nav(
@@ -107,6 +111,6 @@ function messages_screen_conversation() {
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */
-	bp_core_load_template( apply_filters( 'messages_template_view_message', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'messages_template_view_message', 'members/single/home' ) );
 }
-add_action( 'bp_screens', 'messages_screen_conversation' );
+add_action( 'bp_screens', 'bboss_messages_screen_conversation' );

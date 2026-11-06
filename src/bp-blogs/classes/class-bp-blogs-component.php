@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * Creates our Blogs component.
  */
 #[\AllowDynamicProperties]
-class BP_Blogs_Component extends BP_Component {
+class BBoss_Blogs_Component extends BBoss_Component {
 
 	/**
 	 * Start the blogs component creation process.
@@ -28,7 +28,7 @@ class BP_Blogs_Component extends BP_Component {
 		parent::start(
 			'blogs',
 			'Site Directory',
-			buddypress()->plugin_dir,
+			bboss()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 30,
 				'search_query_arg'         => 'sites_search',
@@ -45,15 +45,15 @@ class BP_Blogs_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::setup_globals() for description of parameters.
+	 * @see BBoss_Component::setup_globals() for description of parameters.
 	 *
-	 * @param array $args See {@link BP_Component::setup_globals()}.
+	 * @param array $args See {@link BBoss_Component::setup_globals()}.
 	 */
 	public function setup_globals( $args = array() ) {
-		$bp = buddypress();
+		$bp = bboss();
 
-		if ( ! defined( 'BP_BLOGS_SLUG' ) ) {
-			define( 'BP_BLOGS_SLUG', $this->id );
+		if ( ! defined( 'BBOSS_BLOGS_SLUG' ) ) {
+			define( 'BBOSS_BLOGS_SLUG', $this->id );
 		}
 
 		// Global tables for messaging component.
@@ -67,17 +67,17 @@ class BP_Blogs_Component extends BP_Component {
 		);
 
 		// Fetch the default directory title.
-		$default_directory_titles = bp_core_get_directory_page_default_titles();
+		$default_directory_titles = bboss_core_get_directory_page_default_titles();
 		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// All globals for blogs component.
 		$args = array(
-			'slug'                  => BP_BLOGS_SLUG,
-			'root_slug'             => isset( $bp->pages->blogs->slug ) ? $bp->pages->blogs->slug : BP_BLOGS_SLUG,
+			'slug'                  => BBOSS_BLOGS_SLUG,
+			'root_slug'             => isset( $bp->pages->blogs->slug ) ? $bp->pages->blogs->slug : BBOSS_BLOGS_SLUG,
 			'has_directory'         => false, // Non-multisite installs don't need a top-level Sites directory, since there's only one site.
 			'directory_title'       => isset( $bp->pages->blogs->title ) ? $bp->pages->blogs->title : $default_directory_title,
 			'notification_callback' => 'bp_blogs_format_notifications',
-			'search_string'         => __( 'Search sites&hellip;', 'buddyboss' ),
+			'search_string'         => __( 'Search sites&hellip;', 'buddyboss-platform' ),
 			'autocomplete_all'      => defined( 'BP_MESSAGES_AUTOCOMPLETE_ALL' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
@@ -105,7 +105,7 @@ class BP_Blogs_Component extends BP_Component {
 			 *
 			 * @param array $value Array of post types to track.
 			 */
-			$post_types = apply_filters( 'bp_blogs_record_post_post_types', bp_core_get_active_custom_post_type_feed() );
+			$post_types = apply_filters( 'bp_blogs_record_post_post_types', bboss_core_get_active_custom_post_type_feed() );
 
 			foreach ( $post_types as $post_type ) {
 				add_post_type_support( $post_type, 'buddypress-activity' );
@@ -116,9 +116,9 @@ class BP_Blogs_Component extends BP_Component {
 	/**
 	 * Include bp-blogs files.
 	 *
-	 * @see BP_Component::includes() for description of parameters.
+	 * @see BBoss_Component::includes() for description of parameters.
 	 *
-	 * @param array $includes See {@link BP_Component::includes()}.
+	 * @param array $includes See {@link BBoss_Component::includes()}.
 	 */
 	public function includes( $includes = array() ) {
 
@@ -130,7 +130,7 @@ class BP_Blogs_Component extends BP_Component {
 			'functions',
 		);
 
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$includes[] = 'activity';
 		}
 
@@ -156,7 +156,7 @@ class BP_Blogs_Component extends BP_Component {
 		}
 
 		// Bail if not on a blogs page or not multisite.
-		if ( ! bp_is_blogs_component() || ! is_multisite() ) {
+		if ( ! bboss_is_blogs_component() || ! is_multisite() ) {
 			return;
 		}
 
@@ -166,30 +166,30 @@ class BP_Blogs_Component extends BP_Component {
 		}
 
 		// Screens.
-		if ( bp_is_user() ) {
+		if ( bboss_is_user() ) {
 			require $this->path . 'bp-blogs/screens/my-blogs.php';
 		} else {
-			if ( bp_is_blogs_directory() ) {
+			if ( bboss_is_blogs_directory() ) {
 				require $this->path . 'bp-blogs/screens/directory.php';
 			}
 
-			if ( is_user_logged_in() && bp_is_current_action( 'create' ) ) {
+			if ( is_user_logged_in() && bboss_is_current_action( 'create' ) ) {
 				require $this->path . 'bp-blogs/screens/create.php';
 			}
 
 			// Theme compatibility.
-			new BP_Blogs_Theme_Compat();
+			new BBoss_Blogs_Theme_Compat();
 		}
 	}
 
 	/**
 	 * Set up component navigation for bp-blogs.
 	 *
-	 * @see BP_Component::setup_nav() for a description of arguments.
+	 * @see BBoss_Component::setup_nav() for a description of arguments.
 	 *
-	 * @param array $main_nav Optional. See BP_Component::setup_nav() for
+	 * @param array $main_nav Optional. See BBoss_Component::setup_nav() for
 	 *                        description.
-	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for
+	 * @param array $sub_nav  Optional. See BBoss_Component::setup_nav() for
 	 *                        description.
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
@@ -204,42 +204,42 @@ class BP_Blogs_Component extends BP_Component {
 		}
 
 		// Determine user to use.
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
-			$user_domain = bp_loggedin_user_domain();
+		if ( bboss_displayed_user_domain() ) {
+			$user_domain = bboss_displayed_user_domain();
+		} elseif ( bboss_loggedin_user_domain() ) {
+			$user_domain = bboss_loggedin_user_domain();
 		} else {
 			return;
 		}
 
-		$slug       = bp_get_blogs_slug();
+		$slug       = bboss_get_blogs_slug();
 		$parent_url = trailingslashit( $user_domain . $slug );
 
 		// Add 'Sites' to the main navigation.
-		$count    = (int) bp_get_total_blog_count_for_user();
+		$count    = (int) bboss_get_total_blog_count_for_user();
 		$class    = ( 0 === $count ) ? 'no-count' : 'count';
-		$nav_text = __( 'Sites', 'buddyboss' );
+		$nav_text = __( 'Sites', 'buddyboss-platform' );
 		$nav_text .= sprintf(
 			' <span class="%s">%s</span>',
 			esc_attr( $class ),
-			bp_core_number_format( $count )
+			bboss_core_number_format( $count )
 		);
 
 		$main_nav = array(
 			'name'                => $nav_text,
 			'slug'                => $slug,
 			'position'            => 30,
-			'screen_function'     => 'bp_blogs_screen_my_blogs',
+			'screen_function'     => 'bboss_blogs_screen_my_blogs',
 			'default_subnav_slug' => 'my-sites',
 			'item_css_id'         => $this->id,
 		);
 
 		$sub_nav[] = array(
-			'name'            => __( 'My Sites', 'buddyboss' ),
+			'name'            => __( 'My Sites', 'buddyboss-platform' ),
 			'slug'            => 'my-sites',
 			'parent_url'      => $parent_url,
 			'parent_slug'     => $slug,
-			'screen_function' => 'bp_blogs_screen_my_blogs',
+			'screen_function' => 'bboss_blogs_screen_my_blogs',
 			'position'        => 10,
 		);
 
@@ -252,9 +252,9 @@ class BP_Blogs_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::setup_admin_bar() for a description of arguments.
+	 * @see BBoss_Component::setup_admin_bar() for a description of arguments.
 	 *
-	 * @param array $wp_admin_nav See BP_Component::setup_admin_bar()
+	 * @param array $wp_admin_nav See BBoss_Component::setup_admin_bar()
 	 *                            for description.
 	 * @return bool
 	 */
@@ -273,13 +273,13 @@ class BP_Blogs_Component extends BP_Component {
 		if ( is_user_logged_in() ) {
 
 			// Setup the logged in user variables.
-			$blogs_link = trailingslashit( bp_loggedin_user_domain() . bp_get_blogs_slug() );
+			$blogs_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_blogs_slug() );
 
 			// Add the "Sites" sub menu.
 			$wp_admin_nav[] = array(
-				'parent' => buddypress()->my_account_menu_id,
+				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Sites', 'buddyboss' ),
+				'title'  => __( 'Sites', 'buddyboss-platform' ),
 				'href'   => $blogs_link,
 			);
 
@@ -287,18 +287,18 @@ class BP_Blogs_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-my-sites',
-				'title'    => __( 'My Sites', 'buddyboss' ),
+				'title'    => __( 'My Sites', 'buddyboss-platform' ),
 				'href'     => $blogs_link,
 				'position' => 10,
 			);
 
 			// Create a Site.
-			if ( bp_blog_signup_enabled() ) {
+			if ( bboss_blog_signup_enabled() ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-create',
-					'title'    => __( 'Create a Site', 'buddyboss' ),
-					'href'     => trailingslashit( bp_get_blogs_directory_permalink() . 'create' ),
+					'title'    => __( 'Create a Site', 'buddyboss-platform' ),
+					'href'     => trailingslashit( bboss_get_blogs_directory_permalink() . 'create' ),
 					'position' => 99,
 				);
 			}
@@ -313,25 +313,26 @@ class BP_Blogs_Component extends BP_Component {
 	public function setup_title() {
 
 		// Set up the component options navigation for Site.
-		if ( bp_is_blogs_component() ) {
-			$bp = buddypress();
+		if ( bboss_is_blogs_component() ) {
+			$bp = bboss();
 
-			if ( bp_is_my_profile() ) {
-				if ( bp_is_active( 'xprofile' ) ) {
-					$bp->bp_options_title = __( 'My Sites', 'buddyboss' );
+			if ( bboss_is_my_profile() ) {
+				if ( bboss_is_active( 'xprofile' ) ) {
+					$bp->bp_options_title = __( 'My Sites', 'buddyboss-platform' );
 				}
 
 				// If we are not viewing the logged in user, set up the current
 				// users avatar and name.
 			} else {
-				$bp->bp_options_avatar = bp_core_fetch_avatar(
+				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
-						'item_id' => bp_displayed_user_id(),
+						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						/* translators: %s: member display name. */
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
-				$bp->bp_options_title  = bp_get_displayed_user_fullname();
+				$bp->bp_options_title  = bboss_get_displayed_user_fullname();
 			}
 		}
 
@@ -359,19 +360,19 @@ class BP_Blogs_Component extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
 		if ( is_multisite() ) {
 			$controllers = array(
-				'BP_REST_Blogs_Endpoint',
+				'BBoss_REST_Blogs_Endpoint',
 			);
 
 			// Support to Blog Avatar.
-			if ( bp_is_active( 'blogs', 'site-icon' ) ) {
-				$controllers[] = 'BP_REST_Attachments_Blog_Avatar_Endpoint';
+			if ( bboss_is_active( 'blogs', 'site-icon' ) ) {
+				$controllers[] = 'BBoss_REST_Attachments_Blog_Avatar_Endpoint';
 			}
 		}
 
@@ -383,7 +384,7 @@ class BP_Blogs_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 	 */
 	public function blocks_init( $blocks = array() ) {
 		parent::blocks_init( array() );

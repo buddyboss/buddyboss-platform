@@ -59,6 +59,6 @@ class Tool extends BuddypressCommand {
 	 *     BuddyPress: 3.0.0
 	 */
 	public function version() {
-		WP_CLI::line( 'BuddyPress: ' . bp_get_version() );
+		WP_CLI::line( 'BuddyPress: ' . bboss_get_version() );
 	}
 }

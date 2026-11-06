@@ -58,12 +58,12 @@ class Email extends BuddypressCommand {
 	public function create( $args, $assoc_args ) {
 		$switched = false;
 
-		if ( false === bp_is_root_blog() ) {
+		if ( false === bboss_is_root_blog() ) {
 			$switched = true;
-			switch_to_blog( bp_get_root_blog_id() );
+			switch_to_blog( bboss_get_root_blog_id() );
 		}
 
-		$term = term_exists( $assoc_args['type'], bp_get_email_tax_type() );
+		$term = term_exists( $assoc_args['type'], bboss_get_email_tax_type() );
 
 		// Term already exists so don't do anything.
 		if ( 0 !== $term && null !== $term ) {
@@ -91,7 +91,7 @@ class Email extends BuddypressCommand {
 
 		$defaults = array(
 			'post_status' => 'publish',
-			'post_type'   => bp_get_email_post_type(),
+			'post_type'   => bboss_get_email_post_type(),
 		);
 
 		$email = array(
@@ -103,18 +103,18 @@ class Email extends BuddypressCommand {
 		$id = $assoc_args['type'];
 
 		// Email post content.
-		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ), true );
+		$post_id = wp_insert_post( bboss_parse_args( $email, $defaults, 'install_email_' . $id ), true );
 
 		// Save the situation.
 		if ( ! is_wp_error( $post_id ) ) {
-			$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+			$tt_ids = wp_set_object_terms( $post_id, $id, bboss_get_email_tax_type() );
 
 			// Situation description.
 			if ( ! is_wp_error( $tt_ids ) && ! empty( $assoc_args['type-description'] ) ) {
-				$term = get_term_by( 'term_taxonomy_id', (int) $tt_ids[0], bp_get_email_tax_type() );
+				$term = get_term_by( 'term_taxonomy_id', (int) $tt_ids[0], bboss_get_email_tax_type() );
 				wp_update_term(
 					(int) $term->term_id,
-					bp_get_email_tax_type(),
+					bboss_get_email_tax_type(),
 					array(
 						'description' => $assoc_args['type-description'],
 					)
@@ -169,7 +169,7 @@ class Email extends BuddypressCommand {
 	 * @alias see
 	 */
 	public function get_post( $args, $assoc_args ) {
-		$email = bp_get_email( $args[0] );
+		$email = bboss_get_email( $args[0] );
 
 		if ( is_wp_error( $email ) ) {
 			WP_CLI::error( sprintf( 'Email post for type %s does not exist.', $args[0] ) );
@@ -201,9 +201,9 @@ class Email extends BuddypressCommand {
 	public function reinstall( $args, $assoc_args ) {
 		WP_CLI::confirm( 'Are you sure you want to reinstall BuddyPress emails?', $assoc_args );
 
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-tools.php';
+		require_once bboss()->plugin_dir . 'bp-core/admin/bp-core-admin-tools.php';
 
-		$result = bp_admin_reinstall_emails();
+		$result = bboss_admin_reinstall_emails();
 
 		if ( 0 === $result[0] ) {
 			WP_CLI::success( $result[1] );

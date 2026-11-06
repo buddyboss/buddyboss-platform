@@ -81,7 +81,7 @@ class Notification extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$assoc_args,
 			array(
 				'component'         => '',
@@ -89,11 +89,11 @@ class Notification extends BuddypressCommand {
 				'user-id'           => 0,
 				'item-id'           => 0,
 				'secondary-item-id' => 0,
-				'date'              => bp_core_current_time(),
+				'date'              => bboss_core_current_time(),
 			)
 		);
 
-		$id = bp_notifications_add_notification(
+		$id = bboss_notifications_add_notification(
 			array(
 				'user_id'           => $r['user-id'],
 				'item_id'           => $r['item-id'],
@@ -152,7 +152,7 @@ class Notification extends BuddypressCommand {
 	 * @alias see
 	 */
 	public function get( $args, $assoc_args ) {
-		$notification = bp_notifications_get_notification( $args[0] );
+		$notification = bboss_notifications_get_notification( $args[0] );
 
 		if ( empty( $notification->id ) ) {
 			WP_CLI::error( 'No notification found by that ID.' );
@@ -213,7 +213,7 @@ class Notification extends BuddypressCommand {
 			$assoc_args,
 			function( $notification_id ) {
 
-				$notification = bp_notifications_get_notification( $notification_id );
+				$notification = bboss_notifications_get_notification( $notification_id );
 
 				if ( empty( $notification->id ) ) {
 					WP_CLI::error( sprintf( 'No notification found by ID %d.', $notification_id ) );
@@ -223,7 +223,7 @@ class Notification extends BuddypressCommand {
 					WP_CLI::error( sprintf( 'Could not find the notification %d.', $notification_id ) );
 				}
 
-				if ( \BP_Notifications_Notification::delete( array( 'id' => $notification_id ) ) ) {
+				if ( \BBoss_Notifications_Notification::delete( array( 'id' => $notification_id ) ) ) {
 					return array( 'success', sprintf( 'Deleted notification %d.', $notification_id ) );
 				} else {
 					return array( 'error', sprintf( 'Could not delete notification %d.', $notification_id ) );
@@ -326,7 +326,7 @@ class Notification extends BuddypressCommand {
 	public function _list( $args, $assoc_args ) {
 		$formatter = $this->get_formatter( $assoc_args );
 
-		$query_args = bp_parse_args(
+		$query_args = bboss_parse_args(
 			$assoc_args,
 			array(
 				'count' => 50,
@@ -350,14 +350,14 @@ class Notification extends BuddypressCommand {
 
 		$query_args = self::process_csv_arguments_to_arrays( $query_args );
 
-		$notifications = \BP_Notifications_Notification::get( $query_args );
+		$notifications = \BBoss_Notifications_Notification::get( $query_args );
 
 		if ( empty( $notifications ) ) {
 			WP_CLI::error( 'No notification items found.' );
 		}
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', wp_list_pluck( $notifications, 'id' ) ); // WPCS: XSS ok.
+			echo esc_html( implode( ' ', wp_list_pluck( $notifications, 'id' ) ) );
 		} elseif ( 'count' === $formatter->format ) {
 			$formatter->display_items( $notifications );
 		} else {
@@ -375,7 +375,7 @@ class Notification extends BuddypressCommand {
 	 * @return string
 	 */
 	protected function get_random_action( $component ) {
-		$bp      = buddypress();
+		$bp      = bboss();
 		$actions = '';
 
 		// Activity.

@@ -27,7 +27,7 @@ import { sanitizeHtml } from '../../utils/sanitize';
 
 export function MigrationModal({ isOpen, onClose, migrationData }) {
 	const [loading, setLoading] = useState(true);
-	const [wizardLabel, setWizardLabel] = useState(__('Migration wizard', 'buddyboss'));
+	const [wizardLabel, setWizardLabel] = useState(__('Migration wizard', 'buddyboss-platform'));
 	const [wizardContent, setWizardContent] = useState('');
 	const [error, setError] = useState('');
 
@@ -147,7 +147,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 
 		// Disable buttons and show loading state.
 		e.target.disabled = true;
-		e.target.textContent = __('Converting...', 'buddyboss');
+		e.target.textContent = __('Converting...', 'buddyboss-platform');
 		const cancelBtn = document.querySelector('.cancel_migration_wizard');
 		if (cancelBtn) {
 			cancelBtn.disabled = true;
@@ -191,7 +191,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 			})
 			.then((response) => {
 				if (response.success) {
-					e.target.textContent = __('Conversion started!', 'buddyboss');
+					e.target.textContent = __('Conversion started!', 'buddyboss-platform');
 
 					setTimeout(() => {
 						onCloseRef.current();
@@ -200,20 +200,20 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 					}, 1000);
 				} else {
 					e.target.disabled = false;
-					e.target.textContent = __('Start conversion', 'buddyboss');
+					e.target.textContent = __('Start conversion', 'buddyboss-platform');
 					if (cancelBtn) {
 						cancelBtn.disabled = false;
 					}
-					setError(response.data?.message || __('Migration failed. Please try again.', 'buddyboss'));
+					setError(response.data?.message || __('Migration failed. Please try again.', 'buddyboss-platform'));
 				}
 			})
 			.catch(() => {
 				e.target.disabled = false;
-				e.target.textContent = __('Start conversion', 'buddyboss');
+				e.target.textContent = __('Start conversion', 'buddyboss-platform');
 				if (cancelBtn) {
 					cancelBtn.disabled = false;
 				}
-				setError(__('Migration failed. Please try again.', 'buddyboss'));
+				setError(__('Migration failed. Please try again.', 'buddyboss-platform'));
 			});
 	}, [setError]);
 
@@ -264,7 +264,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 		setError('');
 
 		if (!window.bbReactionAdminVars || !window.bbReactionAdminVars.ajax_url) {
-			setError(__('Unable to load migration wizard.', 'buddyboss'));
+			setError(__('Unable to load migration wizard.', 'buddyboss-platform'));
 			setLoading(false);
 			return;
 		}
@@ -306,12 +306,12 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 				} else if (response.data && response.data.message) {
 					setError(response.data.message);
 				} else {
-					setError(__('Unable to load migration wizard.', 'buddyboss'));
+					setError(__('Unable to load migration wizard.', 'buddyboss-platform'));
 				}
 				setLoading(false);
 			},
 			error: () => {
-				setError(__('Unable to load migration wizard.', 'buddyboss'));
+				setError(__('Unable to load migration wizard.', 'buddyboss-platform'));
 				setLoading(false);
 			},
 		});

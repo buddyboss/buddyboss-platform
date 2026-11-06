@@ -11,12 +11,15 @@
  * @version 1.5.6
  */
 
-bp_nouveau_before_loop();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
-if ( bp_has_moderation( bp_ajax_querystring( 'moderation' ) ) ) :
-	bp_get_template_part( 'moderation/blocked-members-loop' );
+bboss_nouveau_before_loop();
+
+if ( bboss_has_moderation( bboss_ajax_querystring( 'moderation' ) ) ) :
+	bboss_get_template_part( 'moderation/blocked-members-loop' );
 else :
-	bp_nouveau_user_feedback( 'moderation-requests-none' );
+	bboss_nouveau_user_feedback( 'moderation-requests-none' );
 endif;
 
-bp_nouveau_after_loop();
+bboss_nouveau_after_loop();

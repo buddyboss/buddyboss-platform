@@ -9,13 +9,13 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_filter( 'the_content', 'bp_search_search_page_content', 9 );
+add_filter( 'the_content', 'bboss_search_search_page_content', 9 );
 /**
  * BuddyBoss Search page content.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_search_page_content( $content ) {
+function bboss_search_search_page_content( $content ) {
 	/**
 	 * Reportedly, on some installations, the remove_filter call below, doesn't work and this filter is called over and over again.
 	 * Possibly due to some other plugin/theme.
@@ -26,7 +26,7 @@ function bp_search_search_page_content( $content ) {
 	 */
 	global $bpgs_main_content_filter_has_run;
 
-	if ( bp_search_is_search() && 'yes' != $bpgs_main_content_filter_has_run ) {
+	if ( bboss_search_is_search() && 'yes' != $bpgs_main_content_filter_has_run ) {
 		if (
 			function_exists( 'wp_is_block_theme' ) &&
 			wp_is_block_theme()
@@ -34,11 +34,11 @@ function bp_search_search_page_content( $content ) {
 			$content = '';
 		}
 
-		remove_filter( 'the_content', 'bp_search_search_page_content', 9 );
+		remove_filter( 'the_content', 'bboss_search_search_page_content', 9 );
 		remove_filter( 'the_content', 'wpautop' );
 		$bpgs_main_content_filter_has_run = 'yes';
 		ob_start();
-		bp_get_template_part( 'search/results-page' );
+		bboss_get_template_part( 'search/results-page' );
 		$content .= ob_get_clean();
 	}
 
@@ -47,7 +47,7 @@ function bp_search_search_page_content( $content ) {
 
 add_action( 'wp_loaded', function () {
 	if ( ! is_admin() && isset( $_REQUEST['bp_search'] ) ) {
-		BP_Search::instance()->prepare_search_page();
+		BBoss_Search::instance()->prepare_search_page();
 	}
 } );
 
@@ -56,14 +56,14 @@ add_action( 'wp_loaded', function () {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_load_template( $template, $variation = false ) {
+function bboss_search_load_template( $template, $variation = false ) {
 	$file = $template;
 
 	if ( $variation ) {
 		$file .= '-' . $variation;
 	}
 
-	bp_get_template_part( 'search/' . $file );
+	bboss_get_template_part( 'search/' . $file );
 }
 
 /**
@@ -71,16 +71,16 @@ function bp_search_load_template( $template, $variation = false ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_buffer_template_part( $template, $variation = '', $echo = true ) {
+function bboss_search_buffer_template_part( $template, $variation = '', $echo = true ) {
 	ob_start();
 
-	bp_search_load_template( $template, $variation );
+	bboss_search_load_template( $template, $variation );
 	// Get the output buffer contents
 	$output = ob_get_clean();
 
 	// Echo or return the output buffer contents
 	if ( true === $echo ) {
-		echo $output;
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template part (may contain form/input/button); wp_kses_post would strip form controls.
 	} else {
 		return $output;
 	}
@@ -91,8 +91,8 @@ function bp_search_buffer_template_part( $template, $variation = '', $echo = tru
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_filters() {
-	BP_Search::instance()->print_tabs();
+function bboss_search_filters() {
+	BBoss_Search::instance()->print_tabs();
 }
 
 /**
@@ -100,8 +100,8 @@ function bp_search_filters() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_results() {
-	BP_Search::instance()->print_results();
+function bboss_search_results() {
+	BBoss_Search::instance()->print_results();
 }
 
 /**
@@ -123,10 +123,10 @@ function bp_search_results() {
  *
  * return WP_Block_Template[] $query_result
  */
-function bb_search_set_block_template_content( $query_result, $query, $template_type ) {
+function bboss_search_set_block_template_content( $query_result, $query, $template_type ) {
 	// Check if the current page is buddyboss search page.
 	if (
-		bp_search_is_search() &&
+		bboss_search_is_search() &&
 		function_exists( 'wp_is_block_theme' ) &&
 		wp_is_block_theme() &&
 		isset( $query['slug__in'] ) &&
@@ -139,10 +139,18 @@ function bb_search_set_block_template_content( $query_result, $query, $template_
 		$slug         = current( $query['slug__in'] );
 
 		$template_file    = array(
-			'path' => bp_get_template_part( 'search/blocks/search' ),
+			'path' => bboss_get_template_part( 'search/blocks/search' ),
 			'slug' => $slug,
 		);
 		$prepare_template = _build_block_template_result_from_file( $template_file, $template_type );
+
+		// The template is a PHP file (direct-access guard, template tags): run it and use the
+		// output as the block content; _build_block_template_result_from_file() only reads it as text.
+		if ( ! empty( $template_file['path'] ) && is_readable( $template_file['path'] ) ) {
+			ob_start();
+			include $template_file['path'];
+			$prepare_template->content = ob_get_clean();
+		}
 
 		// Set template to query results.
 		$query_result[] = $prepare_template;
@@ -152,7 +160,7 @@ function bb_search_set_block_template_content( $query_result, $query, $template_
 
 	return $query_result;
 }
-add_filter( 'get_block_templates', 'bb_search_set_block_template_content', 10, 3 );
+add_filter( 'get_block_templates', 'bboss_search_set_block_template_content', 10, 3 );
 
 /**
  * Force search non-empty for the block theme.
@@ -164,14 +172,14 @@ add_filter( 'get_block_templates', 'bb_search_set_block_template_content', 10, 3
  *
  * @return mixed|string
  */
-function bb_search_posts_search( $search, $wp_query ) {
+function bboss_search_posts_search( $search, $wp_query ) {
 	// Check if this is the main search query
 	if ( is_admin() || ! $wp_query->is_main_query() ) {
 		return $search;
 	}
 
 	if (
-		bp_search_is_search() &&
+		bboss_search_is_search() &&
 		function_exists( 'wp_is_block_theme' ) &&
 		wp_is_block_theme()
 	) {
@@ -194,4 +202,4 @@ function bb_search_posts_search( $search, $wp_query ) {
 	return $search;
 }
 
-add_filter( 'posts_search', 'bb_search_posts_search', 10, 2 );
+add_filter( 'posts_search', 'bboss_search_posts_search', 10, 2 );

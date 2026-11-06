@@ -8,17 +8,20 @@
  * @version 1.0.0
  */
 
-$bp_is_group_create   = bp_is_group_create();
-$group_has_avatar     = bp_get_group_has_avatar();
-$bp_avatar_admin_step = bp_get_avatar_admin_step();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+$bp_is_group_create   = bboss_is_group_create();
+$group_has_avatar     = bboss_get_group_has_avatar();
+$bp_avatar_admin_step = bboss_get_avatar_admin_step();
 
 if ( $bp_is_group_create ) : ?>
 	<h3 class="bp-screen-title creation-step-name">
-		<?php esc_html_e( 'Upload Group Avatar', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Upload Group Avatar', 'buddyboss-platform' ); ?>
 	</h3>
 <?php else : ?>
 	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Change Group Avatar', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Change Group Avatar', 'buddyboss-platform' ); ?>
 	</h2>
 <?php endif; ?>
 
@@ -26,9 +29,9 @@ if ( $bp_is_group_create ) : ?>
 if ( ! $bp_is_group_create ) :
 	if ( ! $group_has_avatar ) :
 		?>
-		<p class="bp-help-text"><?php esc_html_e( 'Add a photo that represents this group. The photo will be shown on the main group page and in search results.', 'buddyboss' ); ?></p>
+		<p class="bp-help-text"><?php esc_html_e( 'Add a photo that represents this group. The photo will be shown on the main group page and in search results.', 'buddyboss-platform' ); ?></p>
 	<?php else : ?>
-		<p class="bp-help-text"><?php esc_html_e( 'Edit or update your avatar photo for this group.', 'buddyboss' ); ?></p>
+		<p class="bp-help-text"><?php esc_html_e( 'Edit or update your avatar photo for this group.', 'buddyboss-platform' ); ?></p>
 		<?php
 	endif;
 endif;
@@ -41,36 +44,36 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 	if ( $bp_is_group_create ) :
 		?>
 		<div class="left-menu">
-			<?php bp_new_group_avatar(); ?>
+			<?php bboss_new_group_avatar(); ?>
 		</div><!-- .left-menu -->
 		<div class="main-column">
 	<?php endif; ?>
 
-			<p class="bp-help-text"><?php esc_html_e( 'Upload a photo that represents this group. The image will be shown on the main group page, and in search results.', 'buddyboss' ); ?></p>
+			<p class="bp-help-text"><?php esc_html_e( 'Upload a photo that represents this group. The image will be shown on the main group page, and in search results.', 'buddyboss-platform' ); ?></p>
 			<p>
-				<label for="file" class="bp-screen-reader-text"><?php esc_html_e( 'Select a photo', 'buddyboss' ); ?></label>
+				<label for="file" class="bp-screen-reader-text"><?php esc_html_e( 'Select a photo', 'buddyboss-platform' ); ?></label>
 				<input type="file" name="file" id="file" />
-				<input type="submit" name="upload" id="upload" value="<?php esc_attr_e( 'Upload Photo', 'buddyboss' ); ?>" />
+				<input type="submit" name="upload" id="upload" value="<?php esc_attr_e( 'Upload Photo', 'buddyboss-platform' ); ?>" />
 				<input type="hidden" name="action" id="action" value="bp_avatar_upload" />
 			</p>
 
 	<?php if ( $bp_is_group_create ) : ?>
-			<p class="bp-help-text"><?php esc_html_e( 'To skip the group photo upload process select "Next Step".', 'buddyboss' ); ?></p>
+			<p class="bp-help-text"><?php esc_html_e( 'To skip the group photo upload process select "Next Step".', 'buddyboss-platform' ); ?></p>
 		</div><!-- .main-column -->
 
 	<?php elseif ( $group_has_avatar ) : ?>
 
-		<p><?php esc_html_e( "To remove the existing group photo, please use the delete group profile photo button.", 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( "To remove the existing group photo, please use the delete group profile photo button.", 'buddyboss-platform' ); ?></p>
 		<?php
-		bp_button(
+		bboss_button(
 			array(
 				'id'         => 'delete_group_avatar',
 				'component'  => 'groups',
 				'wrapper_id' => 'delete-group-avatar-button',
 				'link_class' => 'edit',
-				'link_href'  => bp_get_group_avatar_delete_link(),
-				'link_title' => __( 'Delete Group Photo', 'buddyboss' ),
-				'link_text'  => __( 'Delete Group Photo', 'buddyboss' ),
+				'link_href'  => bboss_get_group_avatar_delete_link(),
+				'link_title' => __( 'Delete Group Photo', 'buddyboss-platform' ),
+				'link_text'  => __( 'Delete Group Photo', 'buddyboss-platform' ),
 			)
 		);
 
@@ -81,7 +84,7 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 	 *
 	 * @since BuddyPress 2.3.0
 	 */
-	bp_avatar_get_templates();
+	bboss_avatar_get_templates();
 
 	if ( ! $bp_is_group_create ) {
 		wp_nonce_field( 'bp_avatar_upload' );
@@ -91,13 +94,13 @@ endif;
 
 if ( 'crop-image' === $bp_avatar_admin_step ) {
 	?>
-	<h2><?php esc_html_e( 'Crop Group Photo', 'buddyboss' ); ?></h2>
-	<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Photo to crop', 'buddyboss' ); ?>" />
+	<h2><?php esc_html_e( 'Crop Group Photo', 'buddyboss-platform' ); ?></h2>
+	<img src="<?php bboss_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Photo to crop', 'buddyboss-platform' ); ?>" />
 	<div id="avatar-crop-pane">
-		<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-crop-preview" class="avatar" alt="<?php esc_attr_e( 'Crop preview', 'buddyboss' ); ?>" />
+		<img src="<?php bboss_avatar_to_crop(); ?>" id="avatar-crop-preview" class="avatar" alt="<?php esc_attr_e( 'Crop preview', 'buddyboss-platform' ); ?>" />
 	</div>
-	<input type="submit" name="avatar-crop-submit" id="avatar-crop-submit" value="<?php esc_attr_e( 'Crop Photo', 'buddyboss' ); ?>" />
-	<input type="hidden" name="image_src" id="image_src" value="<?php bp_avatar_to_crop_src(); ?>" />
+	<input type="submit" name="avatar-crop-submit" id="avatar-crop-submit" value="<?php esc_attr_e( 'Crop Photo', 'buddyboss-platform' ); ?>" />
+	<input type="hidden" name="image_src" id="image_src" value="<?php bboss_avatar_to_crop_src(); ?>" />
 	<input type="hidden" id="x" name="x" />
 	<input type="hidden" id="y" name="y" />
 	<input type="hidden" id="w" name="w" />

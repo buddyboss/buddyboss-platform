@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BP_Members_Notification class.
+ * Set up the BBoss_Members_Notification class.
  *
  * @since BuddyBoss 1.9.3
  */
-class BP_Members_Notification extends BP_Core_Notification_Abstract {
+class BBoss_Members_Notification extends BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
@@ -30,7 +30,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss 1.9.3
 	 *
-	 * @return null|BP_Activity_Notification|Controller|object
+	 * @return null|BBoss_Activity_Notification|Controller|object
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -58,11 +58,11 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		if ( bp_is_active( 'settings' ) ) {
+		if ( bboss_is_active( 'settings' ) ) {
 			$this->register_notification_group(
 				'members',
-				esc_html__( 'Account Settings', 'buddyboss' ),
-				esc_html__( 'Account Settings', 'buddyboss' ),
+				esc_html__( 'Account Settings', 'buddyboss-platform' ),
+				esc_html__( 'Account Settings', 'buddyboss-platform' ),
 				6
 			);
 
@@ -79,8 +79,8 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification_type(
 			'bb_account_password',
-			esc_html__( 'Your password is changed', 'buddyboss' ),
-			esc_html__( 'A member\'s password is updated', 'buddyboss' ),
+			esc_html__( 'Your password is changed', 'buddyboss-platform' ),
+			esc_html__( 'A member\'s password is updated', 'buddyboss-platform' ),
 			'members'
 		);
 
@@ -88,13 +88,13 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 			'settings-password-changed',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] Your password was changed', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] Your password was changed', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "Your password was changed on [{{{site.name}}}]. \n\n If you didn't make this change, please <a href=\"{{{reset.url}}}\">reset your password</a>.", 'buddyboss' ),
+				'email_content'       => __( "Your password was changed on [{{{site.name}}}]. \n\n If you didn't make this change, please <a href=\"{{{reset.url}}}\">reset your password</a>.", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "Your password was changed on [{{{site.name}}}] \n\n If you didn't make this change, please reset your password: {{{reset.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member\'s password is changed', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when your password is changed.', 'buddyboss' ),
+				'email_plain_content' => __( "Your password was changed on [{{{site.name}}}] \n\n If you didn't make this change, please reset your password: {{{reset.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A member\'s password is changed', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when your password is changed.', 'buddyboss-platform' ),
 				'group'               => 'account',
 			),
 			'bb_account_password'
@@ -108,7 +108,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'Password changed', 'buddyboss' ),
+			esc_html__( 'Password changed', 'buddyboss-platform' ),
 			array( 'bb_account_password' ),
 			125
 		);
@@ -133,29 +133,30 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
-		if ( ! bp_is_active( 'settings' ) ) {
+		if ( ! bboss_is_active( 'settings' ) ) {
 			return $content;
 		}
 
-		$notification = bp_notifications_get_notification( $notification_id );
+		$notification = bboss_notifications_get_notification( $notification_id );
 
 		if ( 'members' === $component_name && 'bb_account_password' === $component_action_name ) {
 			$amount = 'single';
 
 			if ( 'web_push' === $screen ) {
-				$settings_link = trailingslashit( bp_core_get_user_domain( $notification->user_id ) . bp_get_settings_slug() );
+				$settings_link = trailingslashit( bboss_core_get_user_domain( $notification->user_id ) . bboss_get_settings_slug() );
 				$settings_link = add_query_arg( 'rid', (int) $notification->id, $settings_link );
-				$text          = __( 'Your password was changed. If you didn\'t make this change, please reset your password.', 'buddyboss' );
+				$text          = __( 'Your password was changed. If you didn\'t make this change, please reset your password.', 'buddyboss-platform' );
 			} else {
-				$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
+				$settings_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_settings_slug() );
 				$settings_link = add_query_arg( 'rid', (int) $notification_id, $settings_link );
 
 				// Set up the string and the filter.
 				if ( (int) $total_items > 1 ) {
-					$text   = sprintf( __( '%d Your password was changed', 'buddyboss' ), (int) $total_items );
+					// translators: %d: number of password-change notifications.
+					$text   = sprintf( __( '%d Your password was changed', 'buddyboss-platform' ), (int) $total_items );
 					$amount = 'multiple';
 				} else {
-					$text = __( 'Your password was changed', 'buddyboss' );
+					$text = __( 'Your password was changed', 'buddyboss-platform' );
 				}
 			}
 
@@ -164,8 +165,8 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 				array(
 					'link'  => $settings_link,
 					'text'  => $text,
-					'title' => bp_get_site_name(),
-					'image' => bb_notification_avatar_url( $notification ),
+					'title' => bboss_get_site_name(),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$text,

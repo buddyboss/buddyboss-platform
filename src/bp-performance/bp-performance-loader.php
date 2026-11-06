@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.7
  */
-function bp_setup_performance() {
-	buddypress()->performance = new BP_Performance_Component();
+function bboss_setup_performance() {
+	bboss()->performance = new BBoss_Performance_Component();
 }
-add_action( 'bp_setup_components', 'bp_setup_performance', 1 );
+add_action( 'bp_setup_components', 'bboss_setup_performance', 1 );

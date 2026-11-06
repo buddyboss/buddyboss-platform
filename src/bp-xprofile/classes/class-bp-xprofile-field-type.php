@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.0.0
  */
-abstract class BP_XProfile_Field_Type {
+abstract class BBoss_XProfile_Field_Type {
 
 	/**
 	 * Validation regex rules for field type.
@@ -89,10 +89,10 @@ abstract class BP_XProfile_Field_Type {
 	protected $do_settings_section = null;
 
 	/**
-	 * If object is created by an BP_XProfile_Field object.
+	 * If object is created by an BBoss_XProfile_Field object.
 	 *
 	 * @since BuddyPress 2.0.0
-	 * @var BP_XProfile_Field If this object is created by instantiating a {@link BP_XProfile_Field},
+	 * @var BBoss_XProfile_Field If this object is created by instantiating a {@link BBoss_XProfile_Field},
 	 *                        this is a reference back to that object.
 	 */
 	public $field_obj = null;
@@ -105,11 +105,11 @@ abstract class BP_XProfile_Field_Type {
 	public function __construct() {
 
 		/**
-		 * Fires inside __construct() method for BP_XProfile_Field_Type class.
+		 * Fires inside __construct() method for BBoss_XProfile_Field_Type class.
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @param BP_XProfile_Field_Type $this Current instance of
+		 * @param BBoss_XProfile_Field_Type $this Current instance of
 		 *                                     the field type class.
 		 */
 		do_action( 'bp_xprofile_field_type', $this );
@@ -126,7 +126,7 @@ abstract class BP_XProfile_Field_Type {
 	 * @param string $format         Regex string.
 	 * @param string $replace_format Optional; if 'replace', replaces the format instead of adding to it.
 	 *                               Defaults to 'add'.
-	 * @return BP_XProfile_Field_Type
+	 * @return BBoss_XProfile_Field_Type
 	 */
 	public function set_format( $format, $replace_format = 'add' ) {
 
@@ -138,7 +138,7 @@ abstract class BP_XProfile_Field_Type {
 		 * @param string                 $format         Regex string.
 		 * @param string                 $replace_format Optional replace format If "replace", replaces the
 		 *                                               format instead of adding to it. Defaults to "add".
-		 * @param BP_XProfile_Field_Type $this           Current instance of the BP_XProfile_Field_Type class.
+		 * @param BBoss_XProfile_Field_Type $this           Current instance of the BBoss_XProfile_Field_Type class.
 		 */
 		$format = apply_filters( 'bp_xprofile_field_type_set_format', $format, $replace_format, $this );
 
@@ -160,7 +160,7 @@ abstract class BP_XProfile_Field_Type {
 	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string|array $values Whitelisted values.
-	 * @return BP_XProfile_Field_Type
+	 * @return BBoss_XProfile_Field_Type
 	 */
 	public function set_whitelist_values( $values ) {
 		foreach ( (array) $values as $value ) {
@@ -172,7 +172,7 @@ abstract class BP_XProfile_Field_Type {
 			 *
 			 * @param string                 $value  Field value.
 			 * @param array                  $values Original array of values.
-			 * @param BP_XProfile_Field_Type $this   Current instance of the BP_XProfile_Field_Type class.
+			 * @param BBoss_XProfile_Field_Type $this   Current instance of the BBoss_XProfile_Field_Type class.
 			 */
 			$this->validation_whitelist[] = apply_filters( 'bp_xprofile_field_type_set_whitelist_values', $value, $values, $this );
 		}
@@ -241,7 +241,7 @@ abstract class BP_XProfile_Field_Type {
 		 *
 		 * @param bool                   $validated Whether or not the field type is valid.
 		 * @param string|array           $values    Value to check against the registered formats.
-		 * @param BP_XProfile_Field_Type $this      Current instance of the BP_XProfile_Field_Type class.
+		 * @param BBoss_XProfile_Field_Type $this      Current instance of the BBoss_XProfile_Field_Type class.
 		 */
 		return (bool) apply_filters( 'bp_xprofile_field_type_is_valid', $validated, $values, $this );
 	}
@@ -266,7 +266,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * Output the edit field HTML for this field type.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
@@ -278,7 +278,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * Output HTML for this field type on the wp-admin Profile Fields screen.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
@@ -294,14 +294,14 @@ abstract class BP_XProfile_Field_Type {
 	 * These are stored separately in the database, and their templating is handled separately.
 	 * Populate this method in a child class if it's required. Otherwise, you can leave it out.
 	 *
-	 * This templating is separate from {@link BP_XProfile_Field_Type::edit_field_html()} because
+	 * This templating is separate from {@link BBoss_XProfile_Field_Type::edit_field_html()} because
 	 * it's also used in the wp-admin screens when creating new fields, and for backwards compatibility.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
-	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
+	 * @param array $args Optional. The arguments passed to {@link bboss_the_profile_field_options()}.
 	 */
 	public function edit_field_options_html( array $args = array() ) {}
 
@@ -312,33 +312,33 @@ abstract class BP_XProfile_Field_Type {
 	 * selectbox, multi selectbox, checkbox, and radio button fields, to allow the admin to
 	 * enter the child option values (e.g. the choices in a select box).
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
-	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
+	 * @param BBoss_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
 	 *                          field's child options.
 	 */
-	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = '' ) {
-		$type = array_search( get_class( $this ), bp_xprofile_get_field_types() );
+	public function admin_new_field_html( BBoss_XProfile_Field $current_field, $control_type = '' ) {
+		$type = array_search( get_class( $this ), bboss_xprofile_get_field_types() );
 		if ( false === $type ) {
 			return;
 		}
 
 		$class            = $current_field->type != $type ? 'display: none;' : '';
-		$current_type_obj = bp_xprofile_create_field_type( $type );
+		$current_type_obj = bboss_xprofile_create_field_type( $type );
 		?>
 
 		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
-			<h3><?php esc_html_e( 'Please enter options for this Field:', 'buddyboss' ); ?></h3>
+			<h3><?php esc_html_e( 'Please enter options for this Field:', 'buddyboss-platform' ); ?></h3>
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
 				<p>
-					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss' ); ?></label>
+					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss-platform' ); ?></label>
 					<select name="sort_order_<?php echo esc_attr( $type ); ?>" id="sort_order_<?php echo esc_attr( $type ); ?>" >
-						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
-						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss' ); ?></option>
-						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss' ); ?></option>
+						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss-platform' ); ?></option>
+						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss-platform' ); ?></option>
+						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss-platform' ); ?></option>
 					</select>
 				</p>
 
@@ -403,18 +403,18 @@ abstract class BP_XProfile_Field_Type {
 							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text">
 												   <?php
 													/* translators: accessibility text */
-													esc_html_e( 'Add an option', 'buddyboss' );
+													esc_html_e( 'Add an option', 'buddyboss-platform' );
 													?>
 							</label>
 							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[ $i ]->name ) ); ?>" />
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">
 								<input type="<?php echo esc_attr( $control_type ); ?>" id="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>" name="<?php echo esc_attr( "isDefault_{$type}_option{$default_name}" ); ?>" <?php checked( $options[ $i ]->is_default_option, true ); ?> value="<?php echo esc_attr( $j ); ?>" />
-								<?php _e( 'Default Value', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Default Value', 'buddyboss-platform' ); ?>
 							</label>
 
 							<?php if ( 1 !== $j ) : ?>
 								<div class ="delete-button">
-									<a href='javascript:hide("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+									<a href='javascript:hide("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></a>
 								</div>
 							<?php endif; ?>
 
@@ -426,7 +426,7 @@ abstract class BP_XProfile_Field_Type {
 				<?php } ?>
 
 				<div id="<?php echo esc_attr( "{$type}_more" ); ?>"></div>
-				<p><a href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option', 'buddyboss' ); ?></a></p>
+				<p><a href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option', 'buddyboss-platform' ); ?></a></p>
 
 				<?php
 
@@ -435,7 +435,7 @@ abstract class BP_XProfile_Field_Type {
 				 *
 				 * @since BuddyPress 2.3.0
 				 *
-				 * @param BP_XProfile_Field $current_field Current field being rendered.
+				 * @param BBoss_XProfile_Field $current_field Current field being rendered.
 				 */
 				do_action( 'bp_xprofile_admin_new_field_additional_settings', $current_field )
 				?>
@@ -453,7 +453,7 @@ abstract class BP_XProfile_Field_Type {
 	 * is_valid() method. For example, URL validation requires the
 	 * 'http://' scheme (so that the value saved in the database is always
 	 * a fully-formed URL), but in order to allow users to enter a URL
-	 * without this scheme, BP_XProfile_Field_Type_URL prepends 'http://'
+	 * without this scheme, BBoss_XProfile_Field_Type_URL prepends 'http://'
 	 * when it's not present.
 	 *
 	 * By default, this is a pass-through method that does nothing. Only
@@ -506,7 +506,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * Get a sanitised and escaped string of the edit field's HTML elements and attributes.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 * This method was intended to be static but couldn't be because php.net/lsb/ requires PHP >= 5.3.
 	 *
 	 * @since BuddyPress 2.0.0
@@ -516,15 +516,15 @@ abstract class BP_XProfile_Field_Type {
 	 */
 	protected function get_edit_field_html_elements( array $properties = array() ) {
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$properties,
 			array(
-				'id'   => bp_get_the_profile_field_input_name(),
-				'name' => bp_get_the_profile_field_input_name(),
+				'id'   => bboss_get_the_profile_field_input_name(),
+				'name' => bboss_get_the_profile_field_input_name(),
 			)
 		);
 
-		if ( bp_get_the_profile_field_is_required() ) {
+		if ( bboss_get_the_profile_field_is_required() ) {
 			$r['aria-required'] = 'true';
 
 			// Moderators can bypass field requirements.
@@ -543,6 +543,6 @@ abstract class BP_XProfile_Field_Type {
 		 */
 		$r = (array) apply_filters( 'bp_xprofile_field_edit_html_elements', $r, get_class( $this ) );
 
-		return bp_get_form_field_attributes( sanitize_key( bp_get_the_profile_field_name() ), $r );
+		return bboss_get_form_field_attributes( sanitize_key( bboss_get_the_profile_field_name() ), $r );
 	}
 }

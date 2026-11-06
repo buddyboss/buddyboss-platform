@@ -13,7 +13,7 @@ add_action( 'admin_init', function() {
 	$ajax_actions = array(
 		array(
 			'blogs_filter' => array(
-				'function' => 'bp_nouveau_ajax_object_template_loader',
+				'function' => 'bboss_nouveau_ajax_object_template_loader',
 				'nopriv'   => true,
 			),
 		),

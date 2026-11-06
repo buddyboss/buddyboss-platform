@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Message Thread Template Class
  */
 #[\AllowDynamicProperties]
-class BP_Messages_Thread_Template {
+class BBoss_Messages_Thread_Template {
 
 	/**
 	 * The loop iterator.
@@ -39,7 +39,7 @@ class BP_Messages_Thread_Template {
 	/**
 	 * Thread that the current messages belong to.
 	 *
-	 * @var BP_Messages_Thread
+	 * @var BBoss_Messages_Thread
 	 */
 	public $thread;
 
@@ -81,21 +81,21 @@ class BP_Messages_Thread_Template {
 	/**
 	 * Constructor method.
 	 *
-	 * @see BP_Messages_Thread::populate() for full parameter info.
+	 * @see BBoss_Messages_Thread::populate() for full parameter info.
 	 *
 	 * @param int    $thread_id ID of the message thread to display.
 	 * @param string $order     Order to show the thread's messages in.
 	 * @param array  $args      Array of arguments for the query.
 	 */
 	public function __construct( $thread_id = 0, $order = 'DESC', $args = array() ) {
-		$this->thread        = new BP_Messages_Thread( $thread_id, $order, $args );
+		$this->thread        = new BBoss_Messages_Thread( $thread_id, $order, $args );
 		$this->message_count = count( $this->thread->messages );
 	}
 
 	/**
 	 * Whether there are messages available in the loop.
 	 *
-	 * @see bp_thread_has_messages()
+	 * @see bboss_thread_has_messages()
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
@@ -132,11 +132,11 @@ class BP_Messages_Thread_Template {
 	/**
 	 * Whether there are messages left in the loop to iterate over.
 	 *
-	 * This method is used by {@link bp_thread_messages()} as part of the
+	 * This method is used by {@link bboss_thread_messages()} as part of the
 	 * while loop that controls iteration inside the messages loop, eg:
-	 *     while ( bp_thread_messages() ) { ...
+	 *     while ( bboss_thread_messages() ) { ...
 	 *
-	 * @see bp_thread_messages()
+	 * @see bboss_thread_messages()
 	 *
 	 * @return bool True if there are more messages to show, otherwise false.
 	 */
@@ -162,11 +162,11 @@ class BP_Messages_Thread_Template {
 	/**
 	 * Set up the current message inside the loop.
 	 *
-	 * Used by {@link bp_thread_the_message()} to set up the current
+	 * Used by {@link bboss_thread_the_message()} to set up the current
 	 * message data while looping, so that template tags used during
 	 * that iteration make reference to the current message.
 	 *
-	 * @see bp_thread_the_message()
+	 * @see bboss_thread_the_message()
 	 */
 	public function the_message() {
 		$this->in_the_loop = true;

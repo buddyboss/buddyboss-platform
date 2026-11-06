@@ -6,13 +6,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * BB_GFForms_Plugin_Compatibility Class
+ * BBoss_GFForms_Plugin_Compatibility Class
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
  * @since BuddyBoss 2.2.1
  */
-class BB_GFForms_Plugin_Compatibility {
+class BBoss_GFForms_Plugin_Compatibility {
 
 	/**
 	 * The single instance of the class.
@@ -24,7 +24,7 @@ class BB_GFForms_Plugin_Compatibility {
 	private static $instance = null;
 
 	/**
-	 * BB_GFForms_Plugin_Compatibility constructor.
+	 * BBoss_GFForms_Plugin_Compatibility constructor.
 	 */
 	public function __construct() {
 
@@ -65,11 +65,11 @@ class BB_GFForms_Plugin_Compatibility {
 	public function bb_fix_gfforms_gfur_email_activation_conflict() {
 
 		if ( class_exists( 'GF_User_Registration' ) && 1 === (int) gf_user_registration()->get_plugin_setting( 'custom_registration_page_enable' ) ) {
-			remove_filter( 'wpmu_signup_user_notification_email', 'bp_email_wpmu_signup_user_notification_email', 999, 5 );
+			remove_filter( 'wpmu_signup_user_notification_email', 'bboss_email_wpmu_signup_user_notification_email', 999, 5 );
 		}
 		
 	}
 
 }
 
-BB_GFForms_Plugin_Compatibility::instance();
+BBoss_GFForms_Plugin_Compatibility::instance();

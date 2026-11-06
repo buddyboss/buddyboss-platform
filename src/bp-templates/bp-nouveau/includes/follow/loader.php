@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Follow {
+class BBoss_Nouveau_Follow {
 	/**
 	 * Constructor
 	 *
@@ -50,7 +50,7 @@ class BP_Nouveau_Follow {
 		// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'follow_' ) ) {
+				if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'follow_' ) ) {
 					require $this->dir . 'ajax.php';
 				}
 			} );
@@ -75,7 +75,7 @@ class BP_Nouveau_Follow {
 		);
 
 		foreach ( $buttons as $button ) {
-			add_filter( 'bp_button_' . $button, 'bp_nouveau_ajax_button', 10, 5 );
+			add_filter( 'bp_button_' . $button, 'bboss_nouveau_ajax_button', 10, 5 );
 		}
 	}
 }
@@ -85,11 +85,11 @@ class BP_Nouveau_Follow {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_follow( $bp_nouveau = null ) {
+function bboss_nouveau_follow( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->follow = new BP_Nouveau_Follow();
+	$bp_nouveau->follow = new BBoss_Nouveau_Follow();
 }
-add_action( 'bp_nouveau_includes', 'bp_nouveau_follow', 10, 1 );
+add_action( 'bp_nouveau_includes', 'bboss_nouveau_follow', 10, 1 );

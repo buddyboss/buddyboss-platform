@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Mention_Endpoint class
+ * BP REST: BBoss_REST_Mention_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Mention_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Mention_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Variable to store the argument data.
@@ -28,7 +28,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'mention';
 	}
 
@@ -81,17 +81,17 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $request['only_friends'] ) ) {
 			$args['only_friends'] = absint( $request['only_friends'] );
 		} elseif (
-			bp_is_active( 'friends' )
+			bboss_is_active( 'friends' )
 			&& isset( $args['term'] )
 			&& empty( $args['term'] )
 			&& empty( trim( $args['term'] ) )
 		) {
 			$args['only_friends'] = isset( $request['only_friends'] ) ? absint( $request['only_friends'] ) : true;
 		} elseif (
-			bp_is_active( 'messages' )
-			&& bp_is_active( 'friends' )
-			&& function_exists( 'bp_force_friendship_to_message' )
-			&& bp_force_friendship_to_message()
+			bboss_is_active( 'messages' )
+			&& bboss_is_active( 'friends' )
+			&& function_exists( 'bboss_force_friendship_to_message' )
+			&& bboss_force_friendship_to_message()
 		) {
 			$args['only_friends'] = true;
 		}
@@ -105,7 +105,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 			add_filter( 'bp_members_suggestions_validate_args', array( $this, 'validate_member_suggestions' ), 10, 1 );
 		}
 
-		$results = bp_core_get_suggestions( $args );
+		$results = bboss_core_get_suggestions( $args );
 
 		if ( ! empty( $request['group_id'] ) ) {
 			remove_filter( 'bp_groups_member_suggestions_validate_args', array( $this, 'validate_member_suggestions' ), 10, 1 );
@@ -158,7 +158,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you do not have access to list mentions.', 'buddyboss' ),
+			__( 'Sorry, you do not have access to list mentions.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -182,7 +182,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares group data for return as an object.
 	 *
-	 * @param BP_Groups_Group $item    Group object.
+	 * @param BBoss_Groups_Group $item    Group object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -208,7 +208,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  Request used to generate the response.
-		 * @param BP_Groups_Group  $item     Group object.
+		 * @param BBoss_Groups_Group  $item     Group object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -246,31 +246,31 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Member.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Member.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'display_id'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Member\'s mention name.', 'buddyboss' ),
+					'description' => __( 'Member\'s mention name.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'user_nicename' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Member\'s nicename.', 'buddyboss' ),
+					'description' => __( 'Member\'s nicename.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'name'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Member\'s display name.', 'buddyboss' ),
+					'description' => __( 'Member\'s display name.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'image'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Member\'s avatar image.', 'buddyboss' ),
+					'description' => __( 'Member\'s avatar image.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -294,20 +294,20 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 	public function get_collection_params() {
 		$params = array(
 			'term'         => array(
-				'description'       => __( 'Members @name suggestions.', 'buddyboss' ),
+				'description'       => __( 'Members @name suggestions.', 'buddyboss-platform' ),
 				'required'          => true,
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 			'only_friends' => array(
-				'description'       => __( 'Limit result set to Friends only.', 'buddyboss' ),
+				'description'       => __( 'Limit result set to Friends only.', 'buddyboss-platform' ),
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 			'group_id'     => array(
-				'description'       => __( 'A unique numeric ID for the Group. Limit result set to the group.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the Group. Limit result set to the group.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
@@ -337,7 +337,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 		if (
 			is_wp_error( $valid ) &&
 			$valid->get_error_code() === 'missing_parameter' &&
-			bp_is_active( 'friends' ) &&
+			bboss_is_active( 'friends' ) &&
 			! empty( $args ) &&
 			isset( $args['term'] ) &&
 			empty( trim( $args['term'] ) ) &&

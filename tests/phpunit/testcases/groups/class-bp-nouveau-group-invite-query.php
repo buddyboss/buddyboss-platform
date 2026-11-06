@@ -15,23 +15,23 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! class_exists( 'BP_Nouveau_Group_Invite_Query' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-templates/bp-nouveau/includes/groups/classes.php';
+		if ( ! class_exists( 'BBoss_Nouveau_Group_Invite_Query' ) ) {
+			require_once bboss()->plugin_dir . 'bp-templates/bp-nouveau/includes/groups/classes.php';
 		}
 	}
 
 	/**
 	 * Run a potential-invites query and clean up the instance hooks afterwards.
 	 *
-	 * Each BP_Nouveau_Group_Invite_Query instance registers its callbacks on
+	 * Each BBoss_Nouveau_Group_Invite_Query instance registers its callbacks on
 	 * global hooks and never removes them, so instances leak into later
 	 * queries in the same request unless removed here.
 	 *
 	 * @param array $args Query args.
-	 * @return BP_Nouveau_Group_Invite_Query The completed query.
+	 * @return BBoss_Nouveau_Group_Invite_Query The completed query.
 	 */
 	protected function run_invite_query( $args ) {
-		$query = new BP_Nouveau_Group_Invite_Query( $args );
+		$query = new BBoss_Nouveau_Group_Invite_Query( $args );
 
 		remove_action( 'bp_pre_user_query_construct', array( $query, 'build_exclude_args' ) );
 		remove_action( 'bp_pre_user_query', array( $query, 'build_meta_query' ) );
@@ -42,7 +42,7 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 	/**
 	 * Get the sorted user IDs found by a query.
 	 *
-	 * @param BP_Nouveau_Group_Invite_Query $query The completed query.
+	 * @param BBoss_Nouveau_Group_Invite_Query $query The completed query.
 	 * @return array Sorted user IDs.
 	 */
 	protected function get_user_ids( $query ) {
@@ -59,10 +59,10 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 	 * fallback adds a usermeta LEFT JOIN to the SELECT clause.
 	 *
 	 * Matches the JOIN specifically rather than any mention of the usermeta
-	 * table: BP_User_Query selects *from* usermeta for `type => 'popular'`, so
+	 * table: BBoss_User_Query selects *from* usermeta for `type => 'popular'`, so
 	 * a bare table-name search would report a join that is not there.
 	 *
-	 * @param BP_Nouveau_Group_Invite_Query $query     The completed query.
+	 * @param BBoss_Nouveau_Group_Invite_Query $query     The completed query.
 	 * @param bool                          $fast_path Whether the fast path is expected.
 	 * @param string                        $message   Optional failure message.
 	 */
@@ -81,12 +81,12 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 	/**
 	 * Return the NOT IN clauses present in $query but not in $baseline.
 	 *
-	 * BP_User_Query emits its own NOT IN clauses (group members, moderation),
+	 * BBoss_User_Query emits its own NOT IN clauses (group members, moderation),
 	 * so comparing against a baseline built from identical args isolates the
 	 * clauses build_meta_query() appended.
 	 *
-	 * @param BP_Nouveau_Group_Invite_Query $baseline Query with no exclusion applied.
-	 * @param BP_Nouveau_Group_Invite_Query $query    Query under test.
+	 * @param BBoss_Nouveau_Group_Invite_Query $baseline Query with no exclusion applied.
+	 * @param BBoss_Nouveau_Group_Invite_Query $query    Query under test.
 	 * @return array Array of int arrays, one per appended clause.
 	 */
 	protected function added_not_in_clauses( $baseline, $query ) {
@@ -494,7 +494,7 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 		// Resolve the real cache key after the meta write, which retires the
 		// previous incrementor, so the assertion below targets the key this
 		// request would actually write to.
-		$list_key = 'bb_restrict_invites_ids_' . bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+		$list_key = 'bb_restrict_invites_ids_' . bboss_core_get_incrementor( 'bb_nouveau_group_invites' );
 
 		wp_cache_delete( $list_key, 'bb_nouveau_group_invites' );
 
@@ -666,7 +666,7 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 		$this->assertSame( 1, $cold, 'The first over-ceiling query issues the lookup.' );
 		$this->assertSame( 0, $warm, 'The over-ceiling verdict must be reused, not re-probed.' );
 		$this->assertFalse(
-			wp_cache_get( 'bb_restrict_invites_ids_' . bp_core_get_incrementor( 'bb_nouveau_group_invites' ), 'bb_nouveau_group_invites' ),
+			wp_cache_get( 'bb_restrict_invites_ids_' . bboss_core_get_incrementor( 'bb_nouveau_group_invites' ), 'bb_nouveau_group_invites' ),
 			'A truncated over-ceiling list must never be cached.'
 		);
 		$this->assertQueryPath( $first, false );
@@ -699,7 +699,7 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 		);
 
 		// A rebuild starts here and captures this incrementor.
-		$stale_key = 'bb_restrict_invites_ids_' . bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+		$stale_key = 'bb_restrict_invites_ids_' . bboss_core_get_incrementor( 'bb_nouveau_group_invites' );
 
 		// A member opts in mid-rebuild, which retires that incrementor.
 		update_user_meta( $users[0], self::$restrict_key, 1 );
@@ -731,7 +731,7 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 			'meta_query' => $this->not_exists_meta_query(),
 		);
 
-		$lock_key = 'bb_restrict_invites_lock_' . bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+		$lock_key = 'bb_restrict_invites_lock_' . bboss_core_get_incrementor( 'bb_nouveau_group_invites' );
 
 		// Owner path: acquires the lock, rebuilds, releases.
 		$this->run_invite_query( $args );
@@ -742,7 +742,7 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 		);
 
 		// Loser path: another request holds the lock and the list is cold.
-		wp_cache_delete( 'bb_restrict_invites_ids_' . bp_core_get_incrementor( 'bb_nouveau_group_invites' ), 'bb_nouveau_group_invites' );
+		wp_cache_delete( 'bb_restrict_invites_ids_' . bboss_core_get_incrementor( 'bb_nouveau_group_invites' ), 'bb_nouveau_group_invites' );
 		wp_cache_set( $lock_key, 1, 'bb_nouveau_group_invites', 30 );
 
 		$found = $this->get_user_ids( $this->run_invite_query( $args ) );
@@ -765,7 +765,7 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 	 * invalidator must match the filtered form as well as the raw one.
 	 *
 	 * Note the known, pre-existing limitation this pins: the reader does *not*
-	 * apply that filter — `bp_nouveau_get_group_potential_invites()` hardcodes
+	 * apply that filter — `bboss_nouveau_get_group_potential_invites()` hardcodes
 	 * the raw key in the meta_query — so on a site that filters it, rows are
 	 * stored under one key and queried under another and the exclusion does not
 	 * apply. That is true of the `WP_Meta_Query` path too, and predates this
@@ -788,20 +788,20 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 			'meta_query' => $this->not_exists_meta_query(),
 		) );
 
-		$before = bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+		$before = bboss_core_get_incrementor( 'bb_nouveau_group_invites' );
 
 		$prefix_key = function ( $key ) {
 			return 'bbtest_' . $key;
 		};
 		add_filter( 'bp_get_user_meta_key', $prefix_key );
 
-		bp_update_user_meta( $users[0], self::$restrict_key, 1 );
+		bboss_update_user_meta( $users[0], self::$restrict_key, 1 );
 
 		remove_filter( 'bp_get_user_meta_key', $prefix_key );
 
 		$this->assertNotSame(
 			$before,
-			bp_core_get_incrementor( 'bb_nouveau_group_invites' ),
+			bboss_core_get_incrementor( 'bb_nouveau_group_invites' ),
 			'A write under the filtered key must retire the cached list.'
 		);
 
@@ -920,16 +920,16 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 		$this->assertContains( $users[2], $found );
 
 		// ...but nothing was stored.
-		$incrementor = bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+		$incrementor = bboss_core_get_incrementor( 'bb_nouveau_group_invites' );
 		$this->assertFalse(
 			wp_cache_get( 'bb_restrict_invites_ids_' . $incrementor, 'bb_nouveau_group_invites' ),
 			'A list over the cacheable size must not be stored.'
 		);
 
 		// The default imposes no second ceiling: the same list caches normally.
-		bp_core_reset_incrementor( 'bb_nouveau_group_invites' );
+		bboss_core_reset_incrementor( 'bb_nouveau_group_invites' );
 		$this->run_invite_query( $args );
-		$incrementor = bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+		$incrementor = bboss_core_get_incrementor( 'bb_nouveau_group_invites' );
 		$this->assertIsArray(
 			wp_cache_get( 'bb_restrict_invites_ids_' . $incrementor, 'bb_nouveau_group_invites' ),
 			'By default the list must still be cached.'

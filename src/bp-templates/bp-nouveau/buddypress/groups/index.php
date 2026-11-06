@@ -8,23 +8,26 @@
  * @version 1.0.0
  */
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_before_groups_directory_content();
-bp_nouveau_template_notices();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 
-if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
-	bp_get_template_part( 'common/nav/directory-nav' );
+bboss_nouveau_before_groups_directory_content();
+bboss_nouveau_template_notices();
+
+if ( ! bboss_nouveau_is_object_nav_in_sidebar() ) {
+	bboss_get_template_part( 'common/nav/directory-nav' );
 }
 ?>
 <div class="screen-content">
 	<?php
-	if ( bb_enable_content_counts() ) {
+	if ( bboss_enable_content_counts() ) {
 		?>
 			<div class="bb-item-count">
 			<?php
 			if ( ! $is_send_ajax_request ) {
-				$count = bp_get_total_group_count();
+				$count = bboss_get_total_group_count();
 				printf(
 					wp_kses(
 						/* translators: %d is the group count */
@@ -32,7 +35,7 @@ if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 							'<span class="bb-count">%d</span> Group',
 							'<span class="bb-count">%d</span> Groups',
 							$count,
-							'buddyboss'
+							'buddyboss-platform'
 						),
 						array( 'span' => array( 'class' => true ) )
 					),
@@ -46,20 +49,20 @@ if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 		<?php
 	}
 
-	bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+	bboss_get_template_part( 'common/search-and-filters-bar' ); ?>
 
 	<div id="groups-dir-list" class="groups dir-list" data-bp-list="groups" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php
 		if ( $is_send_ajax_request ) {
 			echo '<div id="bp-ajax-loader">';
-			bp_nouveau_user_feedback( 'directory-groups-loading' );
+			bboss_nouveau_user_feedback( 'directory-groups-loading' );
 			echo '</div>';
 		} else {
-			bp_get_template_part( 'groups/groups-loop' );
+			bboss_get_template_part( 'groups/groups-loop' );
 		}
 		?>
 	</div><!-- #groups-dir-list -->
 
-	<?php bp_nouveau_after_groups_directory_content(); ?>
+	<?php bboss_nouveau_after_groups_directory_content(); ?>
 
 </div><!-- // .screen-content -->

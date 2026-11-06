@@ -18,14 +18,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since bbPress (r3203)
  *
- * @uses bbp_get_form_option()
+ * @uses bboss_bbp_get_form_option()
  *
  * @param string $option
  * @param string $default
  * @param bool   $slug
  */
-function bbp_form_option( $option, $default = '', $slug = false ) {
-	echo bbp_get_form_option( $option, $default, $slug );
+function bboss_bbp_form_option( $option, $default = '', $slug = false ) {
+	echo esc_attr( bboss_bbp_get_form_option( $option, $default, $slug ) );
 }
 
 /**
@@ -43,7 +43,7 @@ function bbp_form_option( $option, $default = '', $slug = false ) {
  *
  * @return string
  */
-function bbp_get_form_option( $option, $default = '', $slug = false ) {
+function bboss_bbp_get_form_option( $option, $default = '', $slug = false ) {
 
 	// Get the option and sanitize it.
 	$value = get_option( $option, $default );
@@ -75,7 +75,7 @@ function bbp_get_form_option( $option, $default = '', $slug = false ) {
  *
  * @param array $args Array of section data.
  */
-function bbp_converter_setting_callback_main_section( $args ) {
+function bboss_bbp_converter_setting_callback_main_section( $args ) {
 	?>
 	<h2>
 		<?php
@@ -84,11 +84,11 @@ function bbp_converter_setting_callback_main_section( $args ) {
 			<i class="<?php echo esc_attr( $args['icon'] ); ?>"></i>
 			<?php
 		}
-		esc_html_e( 'Import Forums', 'buddyboss' );
+		esc_html_e( 'Import Forums', 'buddyboss-platform' );
 		?>
 	</h2>
-	<h3><?php esc_html_e( 'Database Settings', 'buddyboss' ); ?></h3>
-	<p><?php _e( 'Information about your previous forums database so that they can be converted. <strong>Backup your database before proceeding.</strong>', 'buddyboss' ); ?></p>
+	<h3><?php esc_html_e( 'Database Settings', 'buddyboss-platform' ); ?></h3>
+	<p><?php echo wp_kses_post( __( 'Information about your previous forums database so that they can be converted. <strong>Backup your database before proceeding.</strong>', 'buddyboss-platform' ) ); ?></p>
 
 	<?php
 }
@@ -98,16 +98,16 @@ function bbp_converter_setting_callback_main_section( $args ) {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_platform() {
+function bboss_bbp_converter_setting_callback_platform() {
 
-	$current          = bbp_get_form_option( '_bbp_converter_platform' );
+	$current          = bboss_bbp_get_form_option( '_bbp_converter_platform' );
 	$platform_options = '';
 
-	if ( ! file_exists( bbpress()->admin->admin_dir . 'converters/' ) ) {
+	if ( ! file_exists( bboss_forums()->admin->admin_dir . 'converters/' ) ) {
 		return;
 	}
 
-	$curdir = opendir( bbpress()->admin->admin_dir . 'converters/' );
+	$curdir = opendir( bboss_forums()->admin->admin_dir . 'converters/' );
 
 	// Bail if no directory was found (how did this happen?)
 	if ( empty( $curdir ) ) {
@@ -125,8 +125,8 @@ function bbp_converter_setting_callback_platform() {
 	closedir( $curdir );
 	?>
 
-	<select name="_bbp_converter_platform" id="_bbp_converter_platform"><?php echo $platform_options; ?></select>
-	<label for="_bbp_converter_platform"><?php esc_html_e( 'is the previous forum software', 'buddyboss' ); ?></label>
+	<select name="_bbp_converter_platform" id="_bbp_converter_platform"><?php echo $platform_options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- <option> markup built with esc_attr()/esc_html() per platform; wp_kses_post() strips <option>. ?></select>
+	<label for="_bbp_converter_platform"><?php esc_html_e( 'is the previous forum software', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -136,11 +136,11 @@ function bbp_converter_setting_callback_platform() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_dbserver() {
+function bboss_bbp_converter_setting_callback_dbserver() {
 	?>
 
-	<input name="_bbp_converter_db_server" id="_bbp_converter_db_server" type="text" value="<?php bbp_form_option( '_bbp_converter_db_server', 'localhost' ); ?>" class="medium-text" />
-	<label for="_bbp_converter_db_server"><?php esc_html_e( 'IP or hostname', 'buddyboss' ); ?></label>
+	<input name="_bbp_converter_db_server" id="_bbp_converter_db_server" type="text" value="<?php bboss_bbp_form_option( '_bbp_converter_db_server', 'localhost' ); ?>" class="medium-text" />
+	<label for="_bbp_converter_db_server"><?php esc_html_e( 'IP or hostname', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -150,11 +150,11 @@ function bbp_converter_setting_callback_dbserver() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_dbport() {
+function bboss_bbp_converter_setting_callback_dbport() {
 	?>
 
-	<input name="_bbp_converter_db_port" id="_bbp_converter_db_port" type="text" value="<?php bbp_form_option( '_bbp_converter_db_port', '3306' ); ?>" class="small-text" />
-	<label for="_bbp_converter_db_port"><?php esc_html_e( 'Use default 3306 if unsure', 'buddyboss' ); ?></label>
+	<input name="_bbp_converter_db_port" id="_bbp_converter_db_port" type="text" value="<?php bboss_bbp_form_option( '_bbp_converter_db_port', '3306' ); ?>" class="small-text" />
+	<label for="_bbp_converter_db_port"><?php esc_html_e( 'Use default 3306 if unsure', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -164,11 +164,11 @@ function bbp_converter_setting_callback_dbport() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_dbuser() {
+function bboss_bbp_converter_setting_callback_dbuser() {
 	?>
 
-	<input name="_bbp_converter_db_user" id="_bbp_converter_db_user" type="text" value="<?php bbp_form_option( '_bbp_converter_db_user' ); ?>" class="medium-text" />
-	<label for="_bbp_converter_db_user"><?php esc_html_e( 'User for your database connection', 'buddyboss' ); ?></label>
+	<input name="_bbp_converter_db_user" id="_bbp_converter_db_user" type="text" value="<?php bboss_bbp_form_option( '_bbp_converter_db_user' ); ?>" class="medium-text" />
+	<label for="_bbp_converter_db_user"><?php esc_html_e( 'User for your database connection', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -178,14 +178,14 @@ function bbp_converter_setting_callback_dbuser() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_dbpass() {
+function bboss_bbp_converter_setting_callback_dbpass() {
 	?>
 
 	<div class="_bbp_converter_db_pass_wrap">
-		<input name="_bbp_converter_db_pass" id="_bbp_converter_db_pass" type="password" value="<?php bbp_form_option( '_bbp_converter_db_pass' ); ?>" class="medium-text" />
+		<input name="_bbp_converter_db_pass" id="_bbp_converter_db_pass" type="password" value="<?php bboss_bbp_form_option( '_bbp_converter_db_pass' ); ?>" class="medium-text" />
 		<i class="bb-icon-l bb-icon-eye bbp-db-pass-toggle"></i>
 	</div>
-	<label for="_bbp_converter_db_pass"><?php esc_html_e( 'Password to access the database', 'buddyboss' ); ?></label>
+	<label for="_bbp_converter_db_pass"><?php esc_html_e( 'Password to access the database', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -195,11 +195,11 @@ function bbp_converter_setting_callback_dbpass() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_dbname() {
+function bboss_bbp_converter_setting_callback_dbname() {
 	?>
 
-	<input name="_bbp_converter_db_name" id="_bbp_converter_db_name" type="text" value="<?php bbp_form_option( '_bbp_converter_db_name' ); ?>" class="medium-text" />
-	<label for="_bbp_converter_db_name"><?php esc_html_e( 'Name of the database with your old forum data', 'buddyboss' ); ?></label>
+	<input name="_bbp_converter_db_name" id="_bbp_converter_db_name" type="text" value="<?php bboss_bbp_form_option( '_bbp_converter_db_name' ); ?>" class="medium-text" />
+	<label for="_bbp_converter_db_name"><?php esc_html_e( 'Name of the database with your old forum data', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -209,10 +209,10 @@ function bbp_converter_setting_callback_dbname() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_options_section() {
+function bboss_bbp_converter_setting_callback_options_section() {
 	?>
-	<h3><?php _e( 'Options', 'buddyboss' ); ?></h3>
-	<p><?php esc_html_e( 'Some optional parameters to help tune the conversion process.', 'buddyboss' ); ?></p>
+	<h3><?php esc_html_e( 'Options', 'buddyboss-platform' ); ?></h3>
+	<p><?php esc_html_e( 'Some optional parameters to help tune the conversion process.', 'buddyboss-platform' ); ?></p>
 
 	<?php
 }
@@ -222,11 +222,11 @@ function bbp_converter_setting_callback_options_section() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_dbprefix() {
+function bboss_bbp_converter_setting_callback_dbprefix() {
 	?>
 
-	<input name="_bbp_converter_db_prefix" id="_bbp_converter_db_prefix" type="text" value="<?php bbp_form_option( '_bbp_converter_db_prefix' ); ?>" class="medium-text" />
-	<label for="_bbp_converter_db_prefix"><?php esc_html_e( '(If converting from BuddyBoss Forums, use "wp_bb_" or your custom prefix)', 'buddyboss' ); ?></label>
+	<input name="_bbp_converter_db_prefix" id="_bbp_converter_db_prefix" type="text" value="<?php bboss_bbp_form_option( '_bbp_converter_db_prefix' ); ?>" class="medium-text" />
+	<label for="_bbp_converter_db_prefix"><?php esc_html_e( '(If converting from BuddyBoss Forums, use "wp_bb_" or your custom prefix)', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -236,12 +236,12 @@ function bbp_converter_setting_callback_dbprefix() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_rows() {
+function bboss_bbp_converter_setting_callback_rows() {
 	?>
 
-	<input name="_bbp_converter_rows" id="_bbp_converter_rows" type="text" value="<?php bbp_form_option( '_bbp_converter_rows', '100' ); ?>" class="small-text" />
-	<label for="_bbp_converter_rows"><?php esc_html_e( 'rows to process at a time', 'buddyboss' ); ?></label>
-	<p class="description"><?php esc_html_e( 'Keep this low if you experience out-of-memory issues.', 'buddyboss' ); ?></p>
+	<input name="_bbp_converter_rows" id="_bbp_converter_rows" type="text" value="<?php bboss_bbp_form_option( '_bbp_converter_rows', '100' ); ?>" class="small-text" />
+	<label for="_bbp_converter_rows"><?php esc_html_e( 'rows to process at a time', 'buddyboss-platform' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Keep this low if you experience out-of-memory issues.', 'buddyboss-platform' ); ?></p>
 
 	<?php
 }
@@ -251,12 +251,12 @@ function bbp_converter_setting_callback_rows() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_delay_time() {
+function bboss_bbp_converter_setting_callback_delay_time() {
 	?>
 
-	<input name="_bbp_converter_delay_time" id="_bbp_converter_delay_time" type="text" value="<?php bbp_form_option( '_bbp_converter_delay_time', '1' ); ?>" class="small-text" />
-	<label for="_bbp_converter_delay_time"><?php esc_html_e( 'second(s) delay between each group of rows', 'buddyboss' ); ?></label>
-	<p class="description"><?php esc_html_e( 'Keep this high to prevent too-many-connection issues.', 'buddyboss' ); ?></p>
+	<input name="_bbp_converter_delay_time" id="_bbp_converter_delay_time" type="text" value="<?php bboss_bbp_form_option( '_bbp_converter_delay_time', '1' ); ?>" class="small-text" />
+	<label for="_bbp_converter_delay_time"><?php esc_html_e( 'second(s) delay between each group of rows', 'buddyboss-platform' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Keep this high to prevent too-many-connection issues.', 'buddyboss-platform' ); ?></p>
 
 	<?php
 }
@@ -266,12 +266,12 @@ function bbp_converter_setting_callback_delay_time() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_restart() {
+function bboss_bbp_converter_setting_callback_restart() {
 	?>
 
 	<input name="_bbp_converter_restart" id="_bbp_converter_restart" type="checkbox" value="1" <?php checked( get_option( '_bbp_converter_restart', false ) ); ?> />
-	<label for="_bbp_converter_restart"><?php esc_html_e( 'Start a fresh conversion from the beginning', 'buddyboss' ); ?></label>
-	<p class="description"><?php esc_html_e( 'You should clean old conversion information before starting over.', 'buddyboss' ); ?></p>
+	<label for="_bbp_converter_restart"><?php esc_html_e( 'Start a fresh conversion from the beginning', 'buddyboss-platform' ); ?></label>
+	<p class="description"><?php esc_html_e( 'You should clean old conversion information before starting over.', 'buddyboss-platform' ); ?></p>
 
 	<?php
 }
@@ -281,12 +281,12 @@ function bbp_converter_setting_callback_restart() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_clean() {
+function bboss_bbp_converter_setting_callback_clean() {
 	?>
 
 	<input name="_bbp_converter_clean" id="_bbp_converter_clean" type="checkbox" value="1" <?php checked( get_option( '_bbp_converter_clean', false ) ); ?> />
-	<label for="_bbp_converter_clean"><?php esc_html_e( 'Purge all information from a previously attempted import', 'buddyboss' ); ?></label>
-	<p class="description"><?php esc_html_e( 'Use this if an import failed and you want to remove that incomplete data.', 'buddyboss' ); ?></p>
+	<label for="_bbp_converter_clean"><?php esc_html_e( 'Purge all information from a previously attempted import', 'buddyboss-platform' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Use this if an import failed and you want to remove that incomplete data.', 'buddyboss-platform' ); ?></p>
 
 	<?php
 }
@@ -296,12 +296,12 @@ function bbp_converter_setting_callback_clean() {
  *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_convert_users() {
+function bboss_bbp_converter_setting_callback_convert_users() {
 	?>
 
 	<input name="_bbp_converter_convert_users" id="_bbp_converter_convert_users" type="checkbox" value="1" <?php checked( get_option( '_bbp_converter_convert_users', false ) ); ?> />
-	<label for="_bbp_converter_convert_users"><?php esc_html_e( 'Attempt to import user accounts from previous forums', 'buddyboss' ); ?></label>
-	<p class="description"><?php esc_html_e( 'Non-Forums passwords cannot be automatically converted. They will be converted as each user logs in.', 'buddyboss' ); ?></p>
+	<label for="_bbp_converter_convert_users"><?php esc_html_e( 'Attempt to import user accounts from previous forums', 'buddyboss-platform' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Non-Forums passwords cannot be automatically converted. They will be converted as each user logs in.', 'buddyboss-platform' ); ?></p>
 
 	<?php
 }
@@ -313,7 +313,7 @@ function bbp_converter_setting_callback_convert_users() {
  *
  * @since bbPress (r2613)
  *
- * @uses bbp_admin_repair_list() To get the recount list
+ * @uses bboss_bbp_admin_repair_list() To get the recount list
  * @uses check_admin_referer() To verify the nonce and the referer
  * @uses wp_cache_flush() To flush the cache
  * @uses do_action() Calls 'admin_notices' to display the notices
@@ -339,30 +339,30 @@ function bbp_converter_setting_callback_convert_users() {
  * @uses apply_filters() Calls 'bbp_repair_list' with the list array
  * @return array Repair list of options
  */
-function bbp_admin_repair_list() {
+function bboss_bbp_admin_repair_list() {
 	$repair_list = array(
-		0   => array( 'bbp-sync-topic-meta', __( 'Recalculate the parent discussion for each post', 'buddyboss' ), 'bbp_admin_repair_topic_meta' ),
-		5   => array( 'bbp-sync-forum-meta', __( 'Recalculate the parent forum for each post', 'buddyboss' ), 'bbp_admin_repair_forum_meta' ),
-		10  => array( 'bbp-sync-forum-visibility', __( 'Recalculate private and hidden forums', 'buddyboss' ), 'bbp_admin_repair_forum_visibility' ),
-		15  => array( 'bbp-sync-all-topics-forums', __( 'Recalculate last activity in each discussion and forum', 'buddyboss' ), 'bbp_admin_repair_freshness' ),
-		20  => array( 'bbp-sync-all-topics-sticky', __( 'Recalculate the sticky relationship of each discussion', 'buddyboss' ), 'bbp_admin_repair_sticky' ),
-		25  => array( 'bbp-sync-all-reply-positions', __( 'Recalculate the position of each reply', 'buddyboss' ), 'bbp_admin_repair_reply_menu_order' ),
-		30  => array( 'bbp-group-forums', __( 'Repair social group forum relationships', 'buddyboss' ), 'bbp_admin_repair_group_forum_relationship' ),
-		35  => array( 'bbp-forum-topics', __( 'Count discussions in each forum', 'buddyboss' ), 'bbp_admin_repair_forum_topic_count' ),
-		40  => array( 'bbp-forum-replies', __( 'Count replies in each forum', 'buddyboss' ), 'bbp_admin_repair_forum_reply_count' ),
-		45  => array( 'bbp-topic-replies', __( 'Count replies in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_reply_count' ),
-		50  => array( 'bbp-topic-members', __( 'Count members in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_voice_count' ),
-		55  => array( 'bbp-topic-hidden-replies', __( 'Count spammed & trashed replies in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_hidden_reply_count' ),
-		60  => array( 'bbp-user-topics', __( 'Count discussions for each user', 'buddyboss' ), 'bbp_admin_repair_user_topic_count' ),
-		65  => array( 'bbp-user-replies', __( 'Count replies for each user', 'buddyboss' ), 'bbp_admin_repair_user_reply_count' ),
-		70  => array( 'bbp-user-favorites', __( 'Remove trashed discussions from user favorites', 'buddyboss' ), 'bbp_admin_repair_user_favorites' ),
-		75  => array( 'bbp-user-topic-subscriptions', __( 'Remove trashed discussions from user subscriptions', 'buddyboss' ), 'bbp_admin_repair_user_topic_subscriptions' ),
-		80  => array( 'bbp-user-forum-subscriptions', __( 'Remove trashed forums from user subscriptions', 'buddyboss' ), 'bbp_admin_repair_user_forum_subscriptions' ),
-		85  => array( 'bbp-user-role-map', __( 'Remap existing users to default forum roles', 'buddyboss' ), 'bbp_admin_repair_user_roles' ),
-		90  => array( 'bbp-wp-role-restore', __( 'Remove and restore Wordpress default role capabilities', 'buddyboss' ), 'bbp_restore_caps_from_wp_roles' ),
-		95  => array( 'bbp-migrate-buddyboss-forum-topic-subscription', __( 'Migrate BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
-		100 => array( 'bbp-migrate-bbpress-forum-topic-subscription', __( 'Migrate BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss', 'buddyboss' ), 'bbp_migrate_forum_topic_subscription' ),
-		105 => array( 'bb-migrate-bbpress-user-topic-favorites', __( 'Migrate members discussions \'marked as favorites\' data to improve performance', 'buddyboss' ), 'bb_migrate_user_topic_favorites' ),
+		0   => array( 'bbp-sync-topic-meta', __( 'Recalculate the parent discussion for each post', 'buddyboss-platform' ), 'bbp_admin_repair_topic_meta' ),
+		5   => array( 'bbp-sync-forum-meta', __( 'Recalculate the parent forum for each post', 'buddyboss-platform' ), 'bbp_admin_repair_forum_meta' ),
+		10  => array( 'bbp-sync-forum-visibility', __( 'Recalculate private and hidden forums', 'buddyboss-platform' ), 'bbp_admin_repair_forum_visibility' ),
+		15  => array( 'bbp-sync-all-topics-forums', __( 'Recalculate last activity in each discussion and forum', 'buddyboss-platform' ), 'bbp_admin_repair_freshness' ),
+		20  => array( 'bbp-sync-all-topics-sticky', __( 'Recalculate the sticky relationship of each discussion', 'buddyboss-platform' ), 'bbp_admin_repair_sticky' ),
+		25  => array( 'bbp-sync-all-reply-positions', __( 'Recalculate the position of each reply', 'buddyboss-platform' ), 'bbp_admin_repair_reply_menu_order' ),
+		30  => array( 'bbp-group-forums', __( 'Repair social group forum relationships', 'buddyboss-platform' ), 'bbp_admin_repair_group_forum_relationship' ),
+		35  => array( 'bbp-forum-topics', __( 'Count discussions in each forum', 'buddyboss-platform' ), 'bbp_admin_repair_forum_topic_count' ),
+		40  => array( 'bbp-forum-replies', __( 'Count replies in each forum', 'buddyboss-platform' ), 'bbp_admin_repair_forum_reply_count' ),
+		45  => array( 'bbp-topic-replies', __( 'Count replies in each discussion', 'buddyboss-platform' ), 'bbp_admin_repair_topic_reply_count' ),
+		50  => array( 'bbp-topic-members', __( 'Count members in each discussion', 'buddyboss-platform' ), 'bbp_admin_repair_topic_voice_count' ),
+		55  => array( 'bbp-topic-hidden-replies', __( 'Count spammed & trashed replies in each discussion', 'buddyboss-platform' ), 'bbp_admin_repair_topic_hidden_reply_count' ),
+		60  => array( 'bbp-user-topics', __( 'Count discussions for each user', 'buddyboss-platform' ), 'bbp_admin_repair_user_topic_count' ),
+		65  => array( 'bbp-user-replies', __( 'Count replies for each user', 'buddyboss-platform' ), 'bbp_admin_repair_user_reply_count' ),
+		70  => array( 'bbp-user-favorites', __( 'Remove trashed discussions from user favorites', 'buddyboss-platform' ), 'bbp_admin_repair_user_favorites' ),
+		75  => array( 'bbp-user-topic-subscriptions', __( 'Remove trashed discussions from user subscriptions', 'buddyboss-platform' ), 'bbp_admin_repair_user_topic_subscriptions' ),
+		80  => array( 'bbp-user-forum-subscriptions', __( 'Remove trashed forums from user subscriptions', 'buddyboss-platform' ), 'bbp_admin_repair_user_forum_subscriptions' ),
+		85  => array( 'bbp-user-role-map', __( 'Remap existing users to default forum roles', 'buddyboss-platform' ), 'bbp_admin_repair_user_roles' ),
+		90  => array( 'bbp-wp-role-restore', __( 'Remove and restore Wordpress default role capabilities', 'buddyboss-platform' ), 'bbp_restore_caps_from_wp_roles' ),
+		95  => array( 'bbp-migrate-buddyboss-forum-topic-subscription', __( 'Migrate BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss', 'buddyboss-platform' ), 'bbp_migrate_forum_topic_subscription' ),
+		100 => array( 'bbp-migrate-bbpress-forum-topic-subscription', __( 'Migrate BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss', 'buddyboss-platform' ), 'bbp_migrate_forum_topic_subscription' ),
+		105 => array( 'bb-migrate-bbpress-user-topic-favorites', __( 'Migrate members discussions \'marked as favorites\' data to improve performance', 'buddyboss-platform' ), 'bb_migrate_user_topic_favorites' ),
 	);
 	ksort( $repair_list );
 
@@ -376,7 +376,7 @@ function bbp_admin_repair_list() {
  *
  * @return mixed|void
  */
-function bbp_get_network_sites() {
+function bboss_bbp_get_network_sites() {
 	$sites = get_sites();
 
 	return apply_filters( 'bbp_get_network_sites', ( $sites ) ? $sites : array() );
@@ -387,22 +387,23 @@ function bbp_get_network_sites() {
  *
  * @since bbPress (r2613)
  *
- * @uses bbp_get_reply_post_type() To get the reply post type
- * @uses bbp_db() To run our recount sql queries
+ * @uses bboss_bbp_get_reply_post_type() To get the reply post type
+ * @uses bboss_bbp_db() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_topic_reply_count() {
+function bboss_bbp_admin_repair_topic_reply_count() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Counting the number of replies in each discussion &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Counting the number of replies in each discussion &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	// Post types and status
-	$tpt = bbp_get_topic_post_type();
-	$rpt = bbp_get_reply_post_type();
-	$pps = bbp_get_public_status_id();
-	$cps = bbp_get_closed_status_id();
+	$tpt = bboss_bbp_get_topic_post_type();
+	$rpt = bboss_bbp_get_reply_post_type();
+	$pps = bboss_bbp_get_public_status_id();
+	$cps = bboss_bbp_get_closed_status_id();
 
 	// Delete the meta key _bbp_reply_count for each topic
 	$sql_delete = "DELETE `postmeta` FROM `{$bbp_db->postmeta}` AS `postmeta`
@@ -442,9 +443,9 @@ function bbp_admin_repair_topic_reply_count() {
 
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -453,16 +454,17 @@ function bbp_admin_repair_topic_reply_count() {
  *
  * @since bbPress (r2613)
  *
- * @uses bbp_get_reply_post_type() To get the reply post type
- * @uses bbp_db() To run our recount sql queries
+ * @uses bboss_bbp_get_reply_post_type() To get the reply post type
+ * @uses bboss_bbp_db() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_topic_voice_count() {
+function bboss_bbp_admin_repair_topic_voice_count() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Counting the number of members in each discussion &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Counting the number of members in each discussion &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	$sql_delete = "DELETE FROM `{$bbp_db->postmeta}` WHERE `meta_key` = '_bbp_voice_count';";
 	if ( is_wp_error( $bbp_db->query( $sql_delete ) ) ) {
@@ -475,10 +477,10 @@ function bbp_admin_repair_topic_voice_count() {
 	}
 
 	// Post types and status
-	$tpt = bbp_get_topic_post_type();
-	$rpt = bbp_get_reply_post_type();
-	$pps = bbp_get_public_status_id();
-	$cps = bbp_get_closed_status_id();
+	$tpt = bboss_bbp_get_topic_post_type();
+	$rpt = bboss_bbp_get_reply_post_type();
+	$pps = bboss_bbp_get_public_status_id();
+	$cps = bboss_bbp_get_closed_status_id();
 
 	$sql = "INSERT INTO `{$bbp_db->postmeta}` (`post_id`, `meta_key`, `meta_value`) (
 			SELECT `postmeta`.`meta_value`, '_bbp_voice_count', COUNT(DISTINCT `post_author`) as `meta_value`
@@ -502,9 +504,9 @@ function bbp_admin_repair_topic_voice_count() {
 
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -513,15 +515,16 @@ function bbp_admin_repair_topic_voice_count() {
  *
  * @since bbPress (r2747)
  *
- * @uses bbp_db() To run our recount sql queries
+ * @uses bboss_bbp_db() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_topic_hidden_reply_count() {
+function bboss_bbp_admin_repair_topic_hidden_reply_count() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Counting the number of spammed and trashed replies in each discussion &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Counting the number of spammed and trashed replies in each discussion &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	$sql_delete = "DELETE FROM `{$bbp_db->postmeta}` WHERE `meta_key` = '_bbp_reply_count_hidden';";
 	if ( is_wp_error( $bbp_db->query( $sql_delete ) ) ) {
@@ -534,8 +537,8 @@ function bbp_admin_repair_topic_hidden_reply_count() {
 	}
 
 	// Post types and status.
-	$rpt = bbp_get_reply_post_type();
-	$sta = bbp_get_non_public_topic_statuses();
+	$rpt = bboss_bbp_get_reply_post_type();
+	$sta = bboss_bbp_get_non_public_topic_statuses();
 
 	// Status.
 	$sql_status = "'" . implode( "','", $sta ) . "'";
@@ -552,9 +555,9 @@ function bbp_admin_repair_topic_hidden_reply_count() {
 
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -565,10 +568,11 @@ function bbp_admin_repair_topic_hidden_reply_count() {
  *
  * @return If a wp_error() occurs and no converted forums are found
  */
-function bbp_admin_repair_group_forum_relationship() {
+function bboss_bbp_admin_repair_group_forum_relationship() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Repairing social group forum relationships &hellip; %s', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Repairing social group forum relationships &hellip; %s', 'buddyboss-platform' );
 	$g_count   = 0;
 	$f_count   = 0;
 	$s_count   = 0;
@@ -593,15 +597,15 @@ function bbp_admin_repair_group_forum_relationship() {
 	if ( is_wp_error( $forum_ids ) ) {
 		return array(
 			2,
-			sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+			sprintf( $statement, __( 'Failed!', 'buddyboss-platform' ) ),
 			'status'  => 0,
-			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss-platform' ) ),
 		);
 	}
 
 	// Nothing to repair when there are no converted forums on the site.
 	if ( empty( $bbp_db->last_result ) ) {
-		$nothing = __( 'Nothing to repair!', 'buddyboss' );
+		$nothing = __( 'Nothing to repair!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $nothing ),
@@ -644,7 +648,7 @@ function bbp_admin_repair_group_forum_relationship() {
 
 				// Public groups have public forums
 				case 'public':
-					bbp_publicize_forum( $group_forums->ID );
+					bboss_bbp_publicize_forum( $group_forums->ID );
 
 					// Bump the count for output later
 					++$s_count;
@@ -653,7 +657,7 @@ function bbp_admin_repair_group_forum_relationship() {
 				// Private/hidden groups have hidden forums
 				case 'private':
 				case 'hidden':
-					bbp_hide_forum( $group_forums->ID );
+					bboss_bbp_hide_forum( $group_forums->ID );
 
 					// Bump the count for output later
 					++$s_count;
@@ -666,10 +670,10 @@ function bbp_admin_repair_group_forum_relationship() {
 	}
 
 	// Make some logical guesses at the old group root forum
-	if ( function_exists( 'bp_forums_parent_forum_id' ) ) {
-		$old_default_forum_id = bp_forums_parent_forum_id();
-	} elseif ( defined( 'BP_FORUMS_PARENT_FORUM_ID' ) ) {
-		$old_default_forum_id = (int) BP_FORUMS_PARENT_FORUM_ID;
+	if ( function_exists( 'bboss_forums_parent_forum_id' ) ) {
+		$old_default_forum_id = bboss_forums_parent_forum_id();
+	} elseif ( defined( 'BBOSS_FORUMS_PARENT_FORUM_ID' ) ) {
+		$old_default_forum_id = (int) BBOSS_FORUMS_PARENT_FORUM_ID;
 	} else {
 		$old_default_forum_id = 1;
 	}
@@ -677,7 +681,7 @@ function bbp_admin_repair_group_forum_relationship() {
 	// Try to get the group root forum
 	$posts = get_posts(
 		array(
-			'post_type'              => bbp_get_forum_post_type(),
+			'post_type'              => bboss_bbp_get_forum_post_type(),
 			'meta_key'               => '_bbp_old_forum_id',
 			'meta_type'              => 'NUMERIC',
 			'meta_value'             => $old_default_forum_id,
@@ -695,8 +699,8 @@ function bbp_admin_repair_group_forum_relationship() {
 			wp_update_post(
 				array(
 					'ID'         => $posts[0]->ID,
-					'post_title' => __( 'Group Forums', 'buddyboss' ),
-					'post_name'  => __( 'group-forums', 'buddyboss' ),
+					'post_title' => __( 'Group Forums', 'buddyboss-platform' ),
+					'post_name'  => __( 'group-forums', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -713,7 +717,8 @@ function bbp_admin_repair_group_forum_relationship() {
 	remove_role( 'keymaster' );
 
 	// Complete results
-	$result = sprintf( __( 'Complete! %1$s groups updated; %2$s forums updated; %3$s forum statuses synced.', 'buddyboss' ), bbp_number_format( $g_count ), bbp_number_format( $f_count ), bbp_number_format( $s_count ) );
+	/* translators: 1: number of groups updated, 2: number of forums updated, 3: number of forum statuses synced. */
+	$result = sprintf( __( 'Complete! %1$s groups updated; %2$s forums updated; %3$s forum statuses synced.', 'buddyboss-platform' ), bboss_bbp_number_format( $g_count ), bboss_bbp_number_format( $f_count ), bboss_bbp_number_format( $s_count ) );
 	return array(
 		0,
 		sprintf( $statement, $result ),
@@ -729,16 +734,17 @@ function bbp_admin_repair_group_forum_relationship() {
  *
  * @uses wpdb::query() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
- * @uses bbp_get_forum_post_type() To get the forum post type
+ * @uses bboss_bbp_get_forum_post_type() To get the forum post type
  * @uses get_posts() To get the forums
- * @uses bbp_update_forum_topic_count() To update the forum topic count
+ * @uses bboss_bbp_update_forum_topic_count() To update the forum topic count
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_forum_topic_count() {
+function bboss_bbp_admin_repair_forum_topic_count() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Counting the number of discussions in each forum &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Counting the number of discussions in each forum &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	$sql_delete = "DELETE FROM {$bbp_db->postmeta} WHERE meta_key IN ( '_bbp_topic_count', '_bbp_total_topic_count' );";
 	if ( is_wp_error( $bbp_db->query( $sql_delete ) ) ) {
@@ -752,7 +758,7 @@ function bbp_admin_repair_forum_topic_count() {
 
 	$forums = get_posts(
 		array(
-			'post_type'              => bbp_get_forum_post_type(),
+			'post_type'              => bboss_bbp_get_forum_post_type(),
 			'numberposts'            => - 1,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
@@ -760,10 +766,10 @@ function bbp_admin_repair_forum_topic_count() {
 	);
 	if ( ! empty( $forums ) ) {
 		foreach ( $forums as $forum ) {
-			bbp_update_forum_topic_count( $forum->ID );
+			bboss_bbp_update_forum_topic_count( $forum->ID );
 		}
 	} else {
-		$result = __( 'No forums to count!', 'buddyboss' );
+		$result = __( 'No forums to count!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -774,9 +780,9 @@ function bbp_admin_repair_forum_topic_count() {
 
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -787,19 +793,20 @@ function bbp_admin_repair_forum_topic_count() {
  *
  * @uses wpdb::query() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
- * @uses bbp_get_forum_post_type() To get the forum post type
+ * @uses bboss_bbp_get_forum_post_type() To get the forum post type
  * @uses get_posts() To get the forums
- * @uses bbp_update_forum_reply_count() To update the forum reply count
+ * @uses bboss_bbp_update_forum_reply_count() To update the forum reply count
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_forum_reply_count() {
+function bboss_bbp_admin_repair_forum_reply_count() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Counting the number of replies in each forum &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Counting the number of replies in each forum &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	// Post type
-	$fpt = bbp_get_forum_post_type();
+	$fpt = bboss_bbp_get_forum_post_type();
 
 	// Delete the meta keys _bbp_reply_count and _bbp_total_reply_count for each forum
 	$sql_delete = "DELETE `postmeta` FROM `{$bbp_db->postmeta}` AS `postmeta`
@@ -820,7 +827,7 @@ function bbp_admin_repair_forum_reply_count() {
 	// Recalculate the metas key _bbp_reply_count and _bbp_total_reply_count for each forum
 	$forums = get_posts(
 		array(
-			'post_type'              => bbp_get_forum_post_type(),
+			'post_type'              => bboss_bbp_get_forum_post_type(),
 			'numberposts'            => - 1,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
@@ -828,10 +835,10 @@ function bbp_admin_repair_forum_reply_count() {
 	);
 	if ( ! empty( $forums ) ) {
 		foreach ( $forums as $forum ) {
-			bbp_update_forum_reply_count( $forum->ID );
+			bboss_bbp_update_forum_reply_count( $forum->ID );
 		}
 	} else {
-		$result = __( 'No forums to count!', 'buddyboss' );
+		$result = __( 'No forums to count!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -842,9 +849,9 @@ function bbp_admin_repair_forum_reply_count() {
 
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -853,17 +860,18 @@ function bbp_admin_repair_forum_reply_count() {
  *
  * @since bbPress (r3889)
  *
- * @uses bbp_get_reply_post_type() To get the reply post type
- * @uses bbp_db() To run our recount sql queries
+ * @uses bboss_bbp_get_reply_post_type() To get the reply post type
+ * @uses bboss_bbp_db() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_user_topic_count() {
+function bboss_bbp_admin_repair_user_topic_count() {
 
-	$bbp_db      = bbp_db();
-	$statement   = __( 'Counting the number of discussions for each user &hellip; %s', 'buddyboss' );
-	$result      = __( 'Failed!', 'buddyboss' );
-	$sql_select  = "SELECT `post_author`, COUNT(DISTINCT `ID`) as `_count` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bbp_get_topic_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "' GROUP BY `post_author`;";
+	$bbp_db      = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement   = __( 'Counting the number of discussions for each user &hellip; %s', 'buddyboss-platform' );
+	$result      = __( 'Failed!', 'buddyboss-platform' );
+	$sql_select  = "SELECT `post_author`, COUNT(DISTINCT `ID`) as `_count` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bboss_bbp_get_topic_post_type() . "' AND `post_status` = '" . bboss_bbp_get_public_status_id() . "' GROUP BY `post_author`;";
 	$insert_rows = $bbp_db->get_results( $sql_select );
 
 	if ( is_wp_error( $insert_rows ) ) {
@@ -882,7 +890,7 @@ function bbp_admin_repair_user_topic_count() {
 	}
 
 	if ( ! count( $insert_values ) ) {
-		$result = __( 'No discussions to count!', 'buddyboss' );
+		$result = __( 'No discussions to count!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -919,7 +927,7 @@ function bbp_admin_repair_user_topic_count() {
 		0,
 		sprintf( $statement, $result ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -928,17 +936,18 @@ function bbp_admin_repair_user_topic_count() {
  *
  * @since bbPress (r2613)
  *
- * @uses bbp_get_reply_post_type() To get the reply post type
+ * @uses bboss_bbp_get_reply_post_type() To get the reply post type
  * @uses wpdb::query() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_user_reply_count() {
+function bboss_bbp_admin_repair_user_reply_count() {
 
-	$bbp_db      = bbp_db();
-	$statement   = __( 'Counting the number of replies for each user &hellip; %s', 'buddyboss' );
-	$result      = __( 'Failed!', 'buddyboss' );
-	$sql_select  = "SELECT `post_author`, COUNT(DISTINCT `ID`) as `_count` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bbp_get_reply_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "' GROUP BY `post_author`;";
+	$bbp_db      = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement   = __( 'Counting the number of replies for each user &hellip; %s', 'buddyboss-platform' );
+	$result      = __( 'Failed!', 'buddyboss-platform' );
+	$sql_select  = "SELECT `post_author`, COUNT(DISTINCT `ID`) as `_count` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bboss_bbp_get_reply_post_type() . "' AND `post_status` = '" . bboss_bbp_get_public_status_id() . "' GROUP BY `post_author`;";
 	$insert_rows = $bbp_db->get_results( $sql_select );
 
 	if ( is_wp_error( $insert_rows ) ) {
@@ -957,7 +966,7 @@ function bbp_admin_repair_user_reply_count() {
 	}
 
 	if ( ! count( $insert_values ) ) {
-		$result = __( 'No replies to count!', 'buddyboss' );
+		$result = __( 'No replies to count!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -992,9 +1001,9 @@ function bbp_admin_repair_user_reply_count() {
 
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -1003,16 +1012,17 @@ function bbp_admin_repair_user_reply_count() {
  *
  * @since bbPress (r2613)
  *
- * @uses bbp_get_topic_post_type() To get the topic post type
+ * @uses bboss_bbp_get_topic_post_type() To get the topic post type
  * @uses wpdb::query() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_user_favorites() {
+function bboss_bbp_admin_repair_user_favorites() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Removing trashed discussions from user favorites &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Removing trashed discussions from user favorites &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 	$key       = $bbp_db->prefix . '_bbp_favorites';
 	$users     = $bbp_db->get_results( "SELECT `user_id`, `meta_value` AS `favorites` FROM `{$bbp_db->usermeta}` WHERE `meta_key` = '{$key}';" );
 
@@ -1025,7 +1035,7 @@ function bbp_admin_repair_user_favorites() {
 		);
 	}
 
-	$topics = $bbp_db->get_col( "SELECT `ID` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bbp_get_topic_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "';" );
+	$topics = $bbp_db->get_col( "SELECT `ID` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bboss_bbp_get_topic_post_type() . "' AND `post_status` = '" . bboss_bbp_get_public_status_id() . "';" );
 
 	if ( is_wp_error( $topics ) ) {
 		return array(
@@ -1055,7 +1065,7 @@ function bbp_admin_repair_user_favorites() {
 	}
 
 	if ( ! count( $values ) ) {
-		$result = __( 'Nothing to remove!', 'buddyboss' );
+		$result = __( 'Nothing to remove!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -1089,9 +1099,9 @@ function bbp_admin_repair_user_favorites() {
 
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -1100,16 +1110,17 @@ function bbp_admin_repair_user_favorites() {
  *
  * @since bbPress (r2668)
  *
- * @uses bbp_get_topic_post_type() To get the topic post type
+ * @uses bboss_bbp_get_topic_post_type() To get the topic post type
  * @uses wpdb::query() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_user_topic_subscriptions() {
+function bboss_bbp_admin_repair_user_topic_subscriptions() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Removing trashed discussions from user subscriptions &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Removing trashed discussions from user subscriptions &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 	$key       = $bbp_db->prefix . '_bbp_subscriptions';
 	$users     = $bbp_db->get_results( "SELECT `user_id`, `meta_value` AS `subscriptions` FROM `{$bbp_db->usermeta}` WHERE `meta_key` = '{$key}';" );
 
@@ -1122,7 +1133,7 @@ function bbp_admin_repair_user_topic_subscriptions() {
 		);
 	}
 
-	$topics = $bbp_db->get_col( "SELECT `ID` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bbp_get_topic_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "';" );
+	$topics = $bbp_db->get_col( "SELECT `ID` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bboss_bbp_get_topic_post_type() . "' AND `post_status` = '" . bboss_bbp_get_public_status_id() . "';" );
 	if ( is_wp_error( $topics ) ) {
 		return array(
 			2,
@@ -1151,7 +1162,7 @@ function bbp_admin_repair_user_topic_subscriptions() {
 	}
 
 	if ( ! count( $values ) ) {
-		$result = __( 'Nothing to remove!', 'buddyboss' );
+		$result = __( 'Nothing to remove!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -1185,9 +1196,9 @@ function bbp_admin_repair_user_topic_subscriptions() {
 
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -1196,16 +1207,17 @@ function bbp_admin_repair_user_topic_subscriptions() {
  *
  * @since bbPress (r5155)
  *
- * @uses bbp_get_forum_post_type() To get the topic post type
+ * @uses bboss_bbp_get_forum_post_type() To get the topic post type
  * @uses wpdb::query() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_user_forum_subscriptions() {
+function bboss_bbp_admin_repair_user_forum_subscriptions() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Removing trashed forums from user subscriptions &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Removing trashed forums from user subscriptions &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 	$key       = $bbp_db->prefix . '_bbp_forum_subscriptions';
 	$users     = $bbp_db->get_results( "SELECT `user_id`, `meta_value` AS `subscriptions` FROM `{$bbp_db->usermeta}` WHERE `meta_key` = '{$key}';" );
 
@@ -1218,7 +1230,7 @@ function bbp_admin_repair_user_forum_subscriptions() {
 		);
 	}
 
-	$forums = $bbp_db->get_col( "SELECT `ID` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bbp_get_forum_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "';" );
+	$forums = $bbp_db->get_col( "SELECT `ID` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bboss_bbp_get_forum_post_type() . "' AND `post_status` = '" . bboss_bbp_get_public_status_id() . "';" );
 	if ( is_wp_error( $forums ) ) {
 		return array(
 			2,
@@ -1247,7 +1259,7 @@ function bbp_admin_repair_user_forum_subscriptions() {
 	}
 
 	if ( ! count( $values ) ) {
-		$result = __( 'Nothing to remove!', 'buddyboss' );
+		$result = __( 'Nothing to remove!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -1281,9 +1293,9 @@ function bbp_admin_repair_user_forum_subscriptions() {
 
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -1294,30 +1306,31 @@ function bbp_admin_repair_user_forum_subscriptions() {
  *
  * @since bbPress (r4340)
  *
- * @uses bbp_get_user_role_map() To get the map of user roles
+ * @uses bboss_bbp_get_user_role_map() To get the map of user roles
  * @uses get_editable_roles() To get the current WordPress roles
  * @uses get_users() To get the users of each role (limited to ID field)
- * @uses bbp_set_user_role() To set each user's forums role
+ * @uses bboss_bbp_set_user_role() To set each user's forums role
  */
-function bbp_admin_repair_user_roles() {
+function bboss_bbp_admin_repair_user_roles() {
 
-	$statement    = __( 'Remapping existing users to default forum roles &hellip; %s', 'buddyboss' );
+	/* translators: %s: result message. */
+	$statement    = __( 'Remapping existing users to default forum roles &hellip; %s', 'buddyboss-platform' );
 	$changed      = 0;
-	$role_map     = bbp_get_user_role_map();
-	$default_role = bbp_get_default_role();
+	$role_map     = bboss_bbp_get_user_role_map();
+	$default_role = bboss_bbp_get_default_role();
 
 	// Bail if no role map exists
 	if ( empty( $role_map ) ) {
 		return array(
 			1,
-			sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+			sprintf( $statement, __( 'Failed!', 'buddyboss-platform' ) ),
 			'status'  => 0,
-			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss-platform' ) ),
 		);
 	}
 
 	// Iterate through each role...
-	foreach ( array_keys( bbp_get_blog_roles() ) as $role ) {
+	foreach ( array_keys( bboss_bbp_get_blog_roles() ) as $role ) {
 
 		// Reset the offset
 		$offset = 0;
@@ -1337,7 +1350,7 @@ function bbp_admin_repair_user_roles() {
 
 			// Iterate through each user of $role and try to set it
 			foreach ( (array) $users as $user_id ) {
-				if ( bbp_set_user_role( $user_id, $new_role ) ) {
+				if ( bboss_bbp_set_user_role( $user_id, $new_role ) ) {
 					++$changed; // Keep a count to display at the end
 				}
 			}
@@ -1347,7 +1360,8 @@ function bbp_admin_repair_user_roles() {
 		}
 	}
 
-	$result = sprintf( __( 'Complete! %s users updated.', 'buddyboss' ), bbp_number_format( $changed ) );
+	/* translators: %s: number of users updated. */
+	$result = sprintf( __( 'Complete! %s users updated.', 'buddyboss-platform' ), bboss_bbp_number_format( $changed ) );
 	return array(
 		0,
 		sprintf( $statement, $result ),
@@ -1365,11 +1379,12 @@ function bbp_admin_repair_user_roles() {
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_freshness() {
+function bboss_bbp_admin_repair_freshness() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Recalculating last activity in each discussion and forum &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Recalculating last activity in each discussion and forum &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	// First, delete everything.
 	if ( is_wp_error( $bbp_db->query( "DELETE FROM `$bbp_db->postmeta` WHERE `meta_key` IN ( '_bbp_last_reply_id', '_bbp_last_topic_id', '_bbp_last_active_id', '_bbp_last_active_time' );" ) ) ) {
@@ -1387,7 +1402,7 @@ function bbp_admin_repair_freshness() {
 			"INSERT INTO `$bbp_db->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `topic`.`ID`, '_bbp_last_reply_id', MAX( `reply`.`ID` )
 			FROM `$bbp_db->posts` AS `topic` INNER JOIN `$bbp_db->posts` AS `reply` ON `topic`.`ID` = `reply`.`post_parent`
-			WHERE `reply`.`post_status` IN ( '" . bbp_get_public_status_id() . "' ) AND `topic`.`post_type` = 'topic' AND `reply`.`post_type` = 'reply'
+			WHERE `reply`.`post_status` IN ( '" . bboss_bbp_get_public_status_id() . "' ) AND `topic`.`post_type` = 'topic' AND `reply`.`post_type` = 'reply'
 			GROUP BY `topic`.`ID` );"
 		)
 	) ) {
@@ -1423,7 +1438,7 @@ function bbp_admin_repair_freshness() {
 			"INSERT INTO `$bbp_db->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `forum`.`ID`, '_bbp_last_topic_id', `topic`.`ID`
 			FROM `$bbp_db->posts` AS `forum` INNER JOIN `$bbp_db->posts` AS `topic` ON `forum`.`ID` = `topic`.`post_parent`
-			WHERE `topic`.`post_status` IN ( '" . bbp_get_public_status_id() . "' ) AND `forum`.`post_type` = 'forum' AND `topic`.`post_type` = 'topic'
+			WHERE `topic`.`post_status` IN ( '" . bboss_bbp_get_public_status_id() . "' ) AND `forum`.`post_type` = 'forum' AND `topic`.`post_type` = 'topic'
 			GROUP BY `forum`.`ID` );"
 		)
 	) ) {
@@ -1459,7 +1474,7 @@ function bbp_admin_repair_freshness() {
 			"INSERT INTO `$bbp_db->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `topic`.`ID`, '_bbp_last_active_id', MAX( `reply`.`ID` )
 			FROM `$bbp_db->posts` AS `topic` INNER JOIN `$bbp_db->posts` AS `reply` ON `topic`.`ID` = `reply`.`post_parent`
-			WHERE `reply`.`post_status` IN ( '" . bbp_get_public_status_id() . "' ) AND `topic`.`post_type` = 'topic' AND `reply`.`post_type` = 'reply'
+			WHERE `reply`.`post_status` IN ( '" . bboss_bbp_get_public_status_id() . "' ) AND `topic`.`post_type` = 'topic' AND `reply`.`post_type` = 'reply'
 			GROUP BY `topic`.`ID` );"
 		)
 	) ) {
@@ -1495,7 +1510,7 @@ function bbp_admin_repair_freshness() {
 			"INSERT INTO `$bbp_db->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `topic`.`ID`, '_bbp_last_active_time', MAX( `reply`.`post_date` )
 			FROM `$bbp_db->posts` AS `topic` INNER JOIN `$bbp_db->posts` AS `reply` ON `topic`.`ID` = `reply`.`post_parent`
-			WHERE `reply`.`post_status` IN ( '" . bbp_get_public_status_id() . "' ) AND `topic`.`post_type` = 'topic' AND `reply`.`post_type` = 'reply'
+			WHERE `reply`.`post_status` IN ( '" . bboss_bbp_get_public_status_id() . "' ) AND `topic`.`post_type` = 'topic' AND `reply`.`post_type` = 'reply'
 			GROUP BY `topic`.`ID` );"
 		)
 	) ) {
@@ -1538,24 +1553,24 @@ function bbp_admin_repair_freshness() {
 
 	// Loop through forums
 	foreach ( $forums as $forum_id ) {
-		if ( ! bbp_is_forum_category( $forum_id ) ) {
-			bbp_update_forum( array( 'forum_id' => $forum_id ) );
+		if ( ! bboss_bbp_is_forum_category( $forum_id ) ) {
+			bboss_bbp_update_forum( array( 'forum_id' => $forum_id ) );
 		}
 	}
 
 	// Loop through categories when forums are done
 	foreach ( $forums as $forum_id ) {
-		if ( bbp_is_forum_category( $forum_id ) ) {
-			bbp_update_forum( array( 'forum_id' => $forum_id ) );
+		if ( bboss_bbp_is_forum_category( $forum_id ) ) {
+			bboss_bbp_update_forum( array( 'forum_id' => $forum_id ) );
 		}
 	}
 
 	// Complete results
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -1568,11 +1583,12 @@ function bbp_admin_repair_freshness() {
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_sticky() {
+function bboss_bbp_admin_repair_sticky() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Recalculating the sticky relationship of each discussion &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Recalculating the sticky relationship of each discussion &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 	$forums    = $bbp_db->get_col( "SELECT ID FROM `{$bbp_db->posts}` WHERE `post_type` = 'forum';" );
 
 	// Bail if the query errored.
@@ -1587,7 +1603,7 @@ function bbp_admin_repair_sticky() {
 
 	// Nothing to recalculate when no forums exist on the site.
 	if ( empty( $forums ) ) {
-		$result = __( 'No stickies to recalculate!', 'buddyboss' );
+		$result = __( 'No stickies to recalculate!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -1617,7 +1633,7 @@ function bbp_admin_repair_sticky() {
 
 			// If the topic is not a super sticky, and the forum ID does not
 			// match the topic's forum ID, unset the forum's sticky meta.
-			if ( ! bbp_is_topic_super_sticky( $topic_id ) && $forum_id !== bbp_get_topic_forum_id( $topic_id ) ) {
+			if ( ! bboss_bbp_is_topic_super_sticky( $topic_id ) && $forum_id !== bboss_bbp_get_topic_forum_id( $topic_id ) ) {
 				unset( $forum_stickies[ $forum_id ][ $id ] );
 			}
 		}
@@ -1632,9 +1648,9 @@ function bbp_admin_repair_sticky() {
 	// Complete results
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -1649,25 +1665,26 @@ function bbp_admin_repair_sticky() {
  * @uses update_option() To update the private and hidden post ID pointers
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_forum_visibility() {
-	$statement = __( 'Recalculating private and hidden forums &hellip; %s', 'buddyboss' );
+function bboss_bbp_admin_repair_forum_visibility() {
+	/* translators: %s: result message. */
+	$statement = __( 'Recalculating private and hidden forums &hellip; %s', 'buddyboss-platform' );
 
 	// Bail if queries returned errors
-	if ( ! bbp_repair_forum_visibility() ) {
+	if ( ! bboss_bbp_repair_forum_visibility() ) {
 		return array(
 			2,
-			sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+			sprintf( $statement, __( 'Failed!', 'buddyboss-platform' ) ),
 			'status'  => 0,
-			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss-platform' ) ),
 		);
 
 		// Complete results
 	} else {
 		return array(
 			0,
-			sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
@@ -1681,11 +1698,12 @@ function bbp_admin_repair_forum_visibility() {
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_forum_meta() {
+function bboss_bbp_admin_repair_forum_meta() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Recalculating the parent forum for each post &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Recalculating the parent forum for each post &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	// First, delete everything.
 	if ( is_wp_error( $bbp_db->query( "DELETE FROM `$bbp_db->postmeta` WHERE `meta_key` = '_bbp_forum_id';" ) ) ) {
@@ -1761,9 +1779,9 @@ function bbp_admin_repair_forum_meta() {
 	// Complete results
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -1776,11 +1794,12 @@ function bbp_admin_repair_forum_meta() {
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_topic_meta() {
+function bboss_bbp_admin_repair_topic_meta() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Recalculating the parent discussion for each post &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Recalculating the parent discussion for each post &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	// First, delete everything.
 	if ( is_wp_error( $bbp_db->query( "DELETE FROM `$bbp_db->postmeta` WHERE `meta_key` = '_bbp_topic_id';" ) ) ) {
@@ -1837,9 +1856,9 @@ function bbp_admin_repair_topic_meta() {
 	// Complete results
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -1850,15 +1869,16 @@ function bbp_admin_repair_topic_meta() {
  *
  * @uses wpdb::query() To run our recount sql queries
  * @uses is_wp_error() To check if the executed query returned {@link WP_Error}
- * @uses bbp_get_reply_post_type() To get the reply post type
- * @uses bbp_update_reply_position() To update the reply position
+ * @uses bboss_bbp_get_reply_post_type() To get the reply post type
+ * @uses bboss_bbp_update_reply_position() To update the reply position
  * @return array An array of the status code and the message
  */
-function bbp_admin_repair_reply_menu_order() {
+function bboss_bbp_admin_repair_reply_menu_order() {
 
-	$bbp_db    = bbp_db();
-	$statement = __( 'Recalculating the position of each reply &hellip; %s', 'buddyboss' );
-	$result    = __( 'No reply positions to recalculate!', 'buddyboss' );
+	$bbp_db    = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement = __( 'Recalculating the position of each reply &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'No reply positions to recalculate!', 'buddyboss-platform' );
 
 	// Delete cases where `_bbp_reply_to` was accidentally set to itself
 	if ( is_wp_error( $bbp_db->query( "DELETE FROM `{$bbp_db->postmeta}` WHERE `meta_key` = '_bbp_reply_to' AND `post_id` = `meta_value`;" ) ) ) {
@@ -1871,7 +1891,7 @@ function bbp_admin_repair_reply_menu_order() {
 	}
 
 	// Post type
-	$rpt = bbp_get_reply_post_type();
+	$rpt = bboss_bbp_get_reply_post_type();
 
 	// Get an array of reply id's to update the menu oder for each reply
 	$replies = $bbp_db->get_results(
@@ -1900,7 +1920,7 @@ function bbp_admin_repair_reply_menu_order() {
 
 	// Recalculate the menu order position for each reply
 	foreach ( $replies as $reply ) {
-		bbp_update_reply_position( $reply->ID );
+		bboss_bbp_update_reply_position( $reply->ID );
 	}
 
 	// Cleanup
@@ -1911,9 +1931,9 @@ function bbp_admin_repair_reply_menu_order() {
 
 	return array(
 		0,
-		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -1928,48 +1948,48 @@ function bbp_admin_repair_reply_menu_order() {
  * @uses do_action() Calls 'admin_notices' to display the notices
  * @uses wp_nonce_field() To add a hidden nonce field
  */
-function bbp_admin_reset() {
+function bboss_bbp_admin_reset() {
 	?>
 
 	<div class="wrap">
 
-		<p><?php esc_html_e( 'Revert your forums back to a brand new installation. This process cannot be undone.', 'buddyboss' ); ?></p>
-		<p><strong><?php esc_html_e( 'Backup your database before proceeding.', 'buddyboss' ); ?></strong></p>
+		<p><?php esc_html_e( 'Revert your forums back to a brand new installation. This process cannot be undone.', 'buddyboss-platform' ); ?></p>
+		<p><strong><?php esc_html_e( 'Backup your database before proceeding.', 'buddyboss-platform' ); ?></strong></p>
 
 		<form class="settings" method="post" action="">
 			<table class="form-table">
 				<tbody>
 					<tr valign="top">
-						<th scope="row"><?php esc_html_e( 'The following data will be removed:', 'buddyboss' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'The following data will be removed:', 'buddyboss-platform' ); ?></th>
 						<td>
-							<?php esc_html_e( 'Forums', 'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Discussions', 'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Replies', 'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Discussion Tags', 'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Related Meta Data', 'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Forum Settings', 'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Forum Activity', 'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Forum User Roles', 'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Importer Helper Data', 'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Forums', 'buddyboss-platform' ); ?><br />
+							<?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?><br />
+							<?php esc_html_e( 'Replies', 'buddyboss-platform' ); ?><br />
+							<?php esc_html_e( 'Discussion Tags', 'buddyboss-platform' ); ?><br />
+							<?php esc_html_e( 'Related Meta Data', 'buddyboss-platform' ); ?><br />
+							<?php esc_html_e( 'Forum Settings', 'buddyboss-platform' ); ?><br />
+							<?php esc_html_e( 'Forum Activity', 'buddyboss-platform' ); ?><br />
+							<?php esc_html_e( 'Forum User Roles', 'buddyboss-platform' ); ?><br />
+							<?php esc_html_e( 'Importer Helper Data', 'buddyboss-platform' ); ?><br />
 						</td>
 					</tr>
 					<tr valign="top">
-						<th scope="row"><?php esc_html_e( 'Delete imported users?', 'buddyboss' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Delete imported users?', 'buddyboss-platform' ); ?></th>
 						<td>
 							<fieldset>
-								<legend class="screen-reader-text"><span><?php esc_html_e( "Say it ain't so!", 'buddyboss' ); ?></span></legend>
-								<label><input type="checkbox" class="checkbox" name="bbpress-delete-imported-users" id="bbpress-delete-imported-users" value="1" /> <?php esc_html_e( 'This option will delete all previously imported users, and cannot be undone.', 'buddyboss' ); ?></label>
-								<p class="description"><?php esc_html_e( 'Note: Resetting without this checked will delete the meta-data necessary to delete these users.', 'buddyboss' ); ?></p>
+								<legend class="screen-reader-text"><span><?php esc_html_e( "Say it ain't so!", 'buddyboss-platform' ); ?></span></legend>
+								<label><input type="checkbox" class="checkbox" name="bbpress-delete-imported-users" id="bbpress-delete-imported-users" value="1" /> <?php esc_html_e( 'This option will delete all previously imported users, and cannot be undone.', 'buddyboss-platform' ); ?></label>
+								<p class="description"><?php esc_html_e( 'Note: Resetting without this checked will delete the meta-data necessary to delete these users.', 'buddyboss-platform' ); ?></p>
 							</fieldset>
 						</td>
 					</tr>
 					<tr valign="top">
-						<th scope="row"><?php esc_html_e( 'Are you sure you want to do this?', 'buddyboss' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Are you sure you want to do this?', 'buddyboss-platform' ); ?></th>
 						<td>
 							<fieldset>
-								<legend class="screen-reader-text"><span><?php esc_html_e( "Say it ain't so!", 'buddyboss' ); ?></span></legend>
-								<label><input type="checkbox" class="checkbox" name="bbpress-are-you-sure" id="bbpress-are-you-sure" value="1" /> <?php esc_html_e( 'This process cannot be undone.', 'buddyboss' ); ?></label>
-								<p class="description"><?php esc_html_e( 'Human sacrifice, dogs and cats living together&hellip;mass hysteria!', 'buddyboss' ); ?></p>
+								<legend class="screen-reader-text"><span><?php esc_html_e( "Say it ain't so!", 'buddyboss-platform' ); ?></span></legend>
+								<label><input type="checkbox" class="checkbox" name="bbpress-are-you-sure" id="bbpress-are-you-sure" value="1" /> <?php esc_html_e( 'This process cannot be undone.', 'buddyboss-platform' ); ?></label>
+								<p class="description"><?php esc_html_e( 'Human sacrifice, dogs and cats living together&hellip;mass hysteria!', 'buddyboss-platform' ); ?></p>
 							</fieldset>
 						</td>
 					</tr>
@@ -1977,7 +1997,7 @@ function bbp_admin_reset() {
 			</table>
 
 			<fieldset class="submit">
-				<input class="button-primary" type="submit" name="submit" value="<?php esc_attr_e( 'Reset Forums', 'buddyboss' ); ?>" />
+				<input class="button-primary" type="submit" name="submit" value="<?php esc_attr_e( 'Reset Forums', 'buddyboss-platform' ); ?>" />
 				<?php wp_nonce_field( 'bbpress-reset' ); ?>
 			</fieldset>
 		</form>
@@ -1994,21 +2014,21 @@ function bbp_admin_reset() {
  * @uses check_admin_referer() To verify the nonce and the referer
  * @uses wp_cache_flush() To flush the cache
  */
-function bbp_admin_reset_handler() {
+function bboss_bbp_admin_reset_handler() {
 
 	// Bail if not resetting
-	if ( ! bbp_is_post_request() || empty( $_POST['bbpress-are-you-sure'] ) ) {
+	if ( ! bboss_bbp_is_post_request() || empty( $_POST['bbpress-are-you-sure'] ) ) {
 		return;
 	}
 
 	// Only keymasters can proceed
-	if ( ! bbp_is_user_keymaster() ) {
+	if ( ! bboss_bbp_is_user_keymaster() ) {
 		return;
 	}
 
 	check_admin_referer( 'bbpress-reset' );
 
-	bbp_admin_reset_database();
+	bboss_bbp_admin_reset_database();
 }
 
 /**
@@ -2017,18 +2037,19 @@ function bbp_admin_reset_handler() {
  * @since bbPress 2.6.0
  * @since BuddyBoss 2.4.00
  */
-function bbp_admin_reset_database() {
+function bboss_bbp_admin_reset_database() {
 	// Stores messages
 	$messages = array();
-	$failed   = __( 'Failed', 'buddyboss' );
-	$success  = __( 'Success!', 'buddyboss' );
+	$failed   = __( 'Failed', 'buddyboss-platform' );
+	$success  = __( 'Success!', 'buddyboss-platform' );
 
 	// Flush the cache; things are about to get ugly.
 	wp_cache_flush();
 
 	/** Posts */
-	$bbp_db     = bbp_db();
-	$statement  = __( 'Deleting Posts&hellip; %s', 'buddyboss' );
+	$bbp_db     = bboss_bbp_db();
+	/* translators: %s: result message. */
+	$statement  = __( 'Deleting Posts&hellip; %s', 'buddyboss-platform' );
 	$sql_posts  = $bbp_db->get_results( "SELECT `ID` FROM `{$bbp_db->posts}` WHERE `post_type` IN ('forum', 'topic', 'reply')", OBJECT_K );
 	$sql_delete = "DELETE FROM `{$bbp_db->posts}` WHERE `post_type` IN ('forum', 'topic', 'reply')";
 	$result     = is_wp_error( $bbp_db->query( $sql_delete ) ) ? $failed : $success;
@@ -2041,7 +2062,8 @@ function bbp_admin_reset_database() {
 		foreach ( $sql_posts as $key => $value ) {
 			$sql_meta[] = $key;
 		}
-		$statement  = __( 'Deleting Post Meta&hellip; %s', 'buddyboss' );
+		/* translators: %s: result message. */
+		$statement  = __( 'Deleting Post Meta&hellip; %s', 'buddyboss-platform' );
 		$sql_meta   = implode( "', '", $sql_meta );
 		$sql_delete = "DELETE FROM `{$bbp_db->postmeta}` WHERE `post_id` IN ('{$sql_meta}');";
 		$result     = is_wp_error( $bbp_db->query( $sql_delete ) ) ? $failed : $success;
@@ -2050,7 +2072,8 @@ function bbp_admin_reset_database() {
 
 	/** Topic Tags */
 
-	$statement  = __( 'Deleting Discussions Tags&hellip; %s', 'buddyboss' );
+	/* translators: %s: result message. */
+	$statement  = __( 'Deleting Discussions Tags&hellip; %s', 'buddyboss-platform' );
 	$sql_delete = "DELETE a,b,c FROM `{$bbp_db->terms}` AS a LEFT JOIN `{$bbp_db->term_taxonomy}` AS c ON a.term_id = c.term_id LEFT JOIN `{$bbp_db->term_relationships}` AS b ON b.term_taxonomy_id = c.term_taxonomy_id WHERE c.taxonomy = 'topic-tag';";
 	$result     = is_wp_error( $bbp_db->query( $sql_delete ) ) ? $failed : $success;
 	$messages[] = sprintf( $statement, $result );
@@ -2065,12 +2088,14 @@ function bbp_admin_reset_database() {
 			foreach ( $sql_users as $key => $value ) {
 				$sql_meta[] = $key;
 			}
-			$statement  = __( 'Deleting User&hellip; %s', 'buddyboss' );
+			/* translators: %s: result message. */
+			$statement  = __( 'Deleting User&hellip; %s', 'buddyboss-platform' );
 			$sql_meta   = implode( "', '", $sql_meta );
 			$sql_delete = "DELETE FROM `{$bbp_db->users}` WHERE `ID` IN ('{$sql_meta}');";
 			$result     = is_wp_error( $bbp_db->query( $sql_delete ) ) ? $failed : $success;
 			$messages[] = sprintf( $statement, $result );
-			$statement  = __( 'Deleting User Meta&hellip; %s', 'buddyboss' );
+			/* translators: %s: result message. */
+			$statement  = __( 'Deleting User Meta&hellip; %s', 'buddyboss-platform' );
 			$sql_delete = "DELETE FROM `{$bbp_db->usermeta}` WHERE `user_id` IN ('{$sql_meta}');";
 			$result     = is_wp_error( $bbp_db->query( $sql_delete ) ) ? $failed : $success;
 			$messages[] = sprintf( $statement, $result );
@@ -2078,7 +2103,8 @@ function bbp_admin_reset_database() {
 
 		// Delete imported user metadata
 	} else {
-		$statement  = __( 'Deleting User Meta&hellip; %s', 'buddyboss' );
+		/* translators: %s: result message. */
+		$statement  = __( 'Deleting User Meta&hellip; %s', 'buddyboss-platform' );
 		$sql_delete = "DELETE FROM `{$bbp_db->usermeta}` WHERE `meta_key` LIKE '%%_bbp_%%';";
 		$result     = is_wp_error( $bbp_db->query( $sql_delete ) ) ? $failed : $success;
 		$messages[] = sprintf( $statement, $result );
@@ -2086,7 +2112,8 @@ function bbp_admin_reset_database() {
 
 	/** Converter */
 
-	$statement  = __( 'Deleting Conversion Table&hellip; %s', 'buddyboss' );
+	/* translators: %s: result message. */
+	$statement  = __( 'Deleting Conversion Table&hellip; %s', 'buddyboss-platform' );
 	$table_name = $bbp_db->prefix . 'bbp_converter_translator';
 	if ( $bbp_db->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name ) {
 		$bbp_db->query( "DROP TABLE {$table_name}" );
@@ -2098,22 +2125,24 @@ function bbp_admin_reset_database() {
 
 	/** Options */
 
-	$statement = __( 'Deleting Settings&hellip; %s', 'buddyboss' );
-	bbp_delete_options();
+	/* translators: %s: result message. */
+	$statement = __( 'Deleting Settings&hellip; %s', 'buddyboss-platform' );
+	bboss_bbp_delete_options();
 	$messages[] = sprintf( $statement, $success );
 
 	/** Roles */
 
-	$statement = __( 'Deleting Roles and Capabilities&hellip; %s', 'buddyboss' );
-	bbp_remove_roles();
-	bbp_remove_caps();
+	/* translators: %s: result message. */
+	$statement = __( 'Deleting Roles and Capabilities&hellip; %s', 'buddyboss-platform' );
+	bboss_bbp_remove_roles();
+	bboss_bbp_remove_caps();
 	$messages[] = sprintf( $statement, $success );
 
 	/** Output */
 
 	if ( count( $messages ) ) {
 		foreach ( $messages as $message ) {
-			bbp_admin_tools_feedback( $message );
+			bboss_bbp_admin_tools_feedback( $message );
 		}
 	}
 }
@@ -2123,7 +2152,7 @@ function bbp_admin_reset_database() {
  *
  * @since BuddyBoss 1.1.8
  */
-function bp_admin_forum_repair_tools_wrapper_function() {
+function bboss_admin_forum_repair_tools_wrapper_function() {
 
 	$type    = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 	$site_id = isset( $_POST['site_id'] ) ? sanitize_text_field( wp_unslash( $_POST['site_id'] ) ) : 0;
@@ -2131,17 +2160,17 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
 	// Capability check — repair tools require admin privileges.
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error( $response );
 	}
 
 	// Bail if not a POST action.
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $response );
 	}
 
@@ -2158,57 +2187,57 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		wp_send_json_error( $response );
 	}
 
-	if ( is_multisite() && bp_is_network_activated() ) {
+	if ( is_multisite() && bboss_is_network_activated() ) {
 		switch_to_blog( $site_id );
 	}
 
 	if ( 'bbp-sync-topic-meta' === $type ) {
-		$status = bbp_admin_repair_topic_meta();
+		$status = bboss_bbp_admin_repair_topic_meta();
 	} elseif ( 'bbp-sync-forum-meta' === $type ) {
-		$status = bbp_admin_repair_forum_meta();
+		$status = bboss_bbp_admin_repair_forum_meta();
 	} elseif ( 'bbp-sync-forum-visibility' === $type ) {
-		$status = bbp_admin_repair_forum_visibility();
+		$status = bboss_bbp_admin_repair_forum_visibility();
 	} elseif ( 'bbp-sync-all-topics-forums' === $type ) {
-		$status = bbp_admin_repair_freshness();
+		$status = bboss_bbp_admin_repair_freshness();
 	} elseif ( 'bbp-sync-all-topics-sticky' === $type ) {
-		$status = bbp_admin_repair_sticky();
+		$status = bboss_bbp_admin_repair_sticky();
 	} elseif ( 'bbp-sync-all-reply-positions' === $type ) {
-		$status = bbp_admin_repair_reply_menu_order();
+		$status = bboss_bbp_admin_repair_reply_menu_order();
 	} elseif ( 'bbp-group-forums' === $type ) {
-		$status = bbp_admin_repair_group_forum_relationship();
+		$status = bboss_bbp_admin_repair_group_forum_relationship();
 	} elseif ( 'bbp-forum-topics' === $type ) {
-		$status = bbp_admin_repair_forum_topic_count();
+		$status = bboss_bbp_admin_repair_forum_topic_count();
 	} elseif ( 'bbp-forum-replies' === $type ) {
-		$status = bbp_admin_repair_forum_reply_count();
+		$status = bboss_bbp_admin_repair_forum_reply_count();
 	} elseif ( 'bbp-topic-replies' === $type ) {
-		$status = bbp_admin_repair_topic_reply_count();
+		$status = bboss_bbp_admin_repair_topic_reply_count();
 	} elseif ( 'bbp-topic-members' === $type ) {
-		$status = bbp_admin_repair_topic_voice_count();
+		$status = bboss_bbp_admin_repair_topic_voice_count();
 	} elseif ( 'bbp-topic-hidden-replies' === $type ) {
-		$status = bbp_admin_repair_topic_hidden_reply_count();
+		$status = bboss_bbp_admin_repair_topic_hidden_reply_count();
 	} elseif ( 'bbp-user-topics' === $type ) {
-		$status = bbp_admin_repair_user_topic_count();
+		$status = bboss_bbp_admin_repair_user_topic_count();
 	} elseif ( 'bbp-user-replies' === $type ) {
-		$status = bbp_admin_repair_user_reply_count();
+		$status = bboss_bbp_admin_repair_user_reply_count();
 	} elseif ( 'bbp-user-favorites' === $type ) {
-		$status = bbp_admin_repair_user_favorites();
+		$status = bboss_bbp_admin_repair_user_favorites();
 	} elseif ( 'bbp-user-topic-subscriptions' === $type ) {
-		$status = bbp_admin_repair_user_topic_subscriptions();
+		$status = bboss_bbp_admin_repair_user_topic_subscriptions();
 	} elseif ( 'bbp-user-forum-subscriptions' === $type ) {
-		$status = bbp_admin_repair_user_forum_subscriptions();
+		$status = bboss_bbp_admin_repair_user_forum_subscriptions();
 	} elseif ( 'bbp-user-role-map' === $type ) {
-		$status = bbp_admin_repair_user_roles();
+		$status = bboss_bbp_admin_repair_user_roles();
 	} elseif ( 'bbp-wp-role-restore' === $type ) {
-		$status = bbp_restore_caps_from_wp_roles();
+		$status = bboss_bbp_restore_caps_from_wp_roles();
 	} elseif ( 'bbp-migrate-buddyboss-forum-topic-subscription' === $type ) {
-		$status = bb_subscriptions_migrate_users_forum_topic();
+		$status = bboss_subscriptions_migrate_users_forum_topic();
 	} elseif ( 'bbp-migrate-bbpress-forum-topic-subscription' === $type ) {
-		$status = bb_subscriptions_migrate_bbpress_users_forum_topic( false, $site_id );
+		$status = bboss_subscriptions_migrate_bbpress_users_forum_topic( false, $site_id );
 	} elseif ( 'bb-migrate-bbpress-user-topic-favorites' === $type ) {
-		$status = bb_admin_upgrade_user_favorites( false, $site_id );
+		$status = bboss_admin_upgrade_user_favorites( false, $site_id );
 	}
 
-	if ( is_multisite() && bp_is_network_activated() ) {
+	if ( is_multisite() && bboss_is_network_activated() ) {
 		restore_current_blog();
 	}
 
@@ -2218,8 +2247,8 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 	// and `feedback` for a count. LOCKED-BC preserved (additive).
 	//
 	// @since BuddyBoss 3.1.0
-	if ( is_array( $status ) && function_exists( 'bb_admin_repair_extract_count_summary' ) ) {
-		$enrichment = bb_admin_repair_extract_count_summary( $status );
+	if ( is_array( $status ) && function_exists( 'bboss_admin_repair_extract_count_summary' ) ) {
+		$enrichment = bboss_admin_repair_extract_count_summary( $status );
 		$status     = array_merge( $status, $enrichment );
 	}
 
@@ -2229,7 +2258,7 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		wp_send_json_success( $status );
 	}
 }
-add_action( 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function', 'bp_admin_forum_repair_tools_wrapper_function' );
+add_action( 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function', 'bboss_admin_forum_repair_tools_wrapper_function' );
 
 /**
  * Migration to update user favorites to post meta table.
@@ -2241,10 +2270,10 @@ add_action( 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function', 'bp_admin_fo
  *
  * @return array|void An array of the status code and the message.
  */
-function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
+function bboss_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 	global $bp_background_updater;
 
-	$bbp_db = bbp_db();
+	$bbp_db = bboss_bbp_db();
 
 	if ( $is_background ) {
 		$offset = get_site_option( 'bb_upgrade_user_favorites_offset', 0 );
@@ -2265,7 +2294,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 					$bp_background_updater->data(
 						array(
 							array(
-								'callback' => 'bb_migrate_users_topic_favorites',
+								'callback' => 'bboss_migrate_users_topic_favorites',
 								'args'     => array( $chunk_result, $blog_id ),
 							),
 						)
@@ -2277,7 +2306,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 
 			$bp_background_updater->dispatch();
 		} else {
-			bb_migrate_users_topic_favorites( $results, $blog_id );
+			bboss_migrate_users_topic_favorites( $results, $blog_id );
 			++$offset;
 		}
 
@@ -2291,13 +2320,13 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 				'offset'  => $final_offset,
 				'records' => sprintf(
 				/* translators: total members */
-					__( 'Copies %s favorites from user meta to topic meta.', 'buddyboss' ),
-					bp_core_number_format( $final_offset )
+					__( 'Copies %s favorites from user meta to topic meta.', 'buddyboss-platform' ),
+					bboss_core_number_format( $final_offset )
 				),
 			);
 		} else {
 			update_site_option( 'bb_upgrade_user_favorites_offset', $final_offset );
-			bb_admin_upgrade_user_favorites( $is_background, $blog_id );
+			bboss_admin_upgrade_user_favorites( $is_background, $blog_id );
 		}
 	} else {
 		delete_site_option( 'bb_upgrade_user_favorites_offset' );
@@ -2306,7 +2335,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 			// All done!
 			return array(
 				'status'  => 1,
-				'message' => __( 'Copies favorites from user meta to topic meta&hellip; Complete!', 'buddyboss' ),
+				'message' => __( 'Copies favorites from user meta to topic meta&hellip; Complete!', 'buddyboss-platform' ),
 			);
 		}
 	}
@@ -2322,8 +2351,8 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
  *
  * @return void
  */
-function bb_migrate_users_topic_favorites( $user_ids, $blog_id ) {
-	$bbp_db = bbp_db();
+function bboss_migrate_users_topic_favorites( $user_ids, $blog_id ) {
+	$bbp_db = bboss_bbp_db();
 	$switch = false;
 	if ( is_multisite() && get_current_blog_id() !== $blog_id ) {
 		$switch = true;

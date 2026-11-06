@@ -45,12 +45,12 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->format_backup   = bp_get_option( 'bp-display-name-format' );
-		$this->ln_allow_backup   = bp_xprofile_get_meta( bp_xprofile_lastname_field_id(), 'field', 'allow_custom_visibility' );
-		$this->ln_default_backup = bp_xprofile_get_meta( bp_xprofile_lastname_field_id(), 'field', 'default_visibility' );
+		$this->format_backup   = bboss_get_option( 'bp-display-name-format' );
+		$this->ln_allow_backup   = bboss_xprofile_get_meta( bboss_xprofile_lastname_field_id(), 'field', 'allow_custom_visibility' );
+		$this->ln_default_backup = bboss_xprofile_get_meta( bboss_xprofile_lastname_field_id(), 'field', 'default_visibility' );
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
-		bp_xprofile_update_meta( bp_xprofile_lastname_field_id(), 'field', 'allow_custom_visibility', 'allowed' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_xprofile_update_meta( bboss_xprofile_lastname_field_id(), 'field', 'allow_custom_visibility', 'allowed' );
 
 		$this->flush_visibility_caches();
 	}
@@ -59,9 +59,9 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	 * Restore what the harness started with.
 	 */
 	public function tearDown(): void {
-		bp_update_option( 'bp-display-name-format', $this->format_backup );
-		bp_xprofile_update_meta( bp_xprofile_lastname_field_id(), 'field', 'allow_custom_visibility', $this->ln_allow_backup );
-		bp_xprofile_update_meta( bp_xprofile_lastname_field_id(), 'field', 'default_visibility', $this->ln_default_backup );
+		bboss_update_option( 'bp-display-name-format', $this->format_backup );
+		bboss_xprofile_update_meta( bboss_xprofile_lastname_field_id(), 'field', 'allow_custom_visibility', $this->ln_allow_backup );
+		bboss_xprofile_update_meta( bboss_xprofile_lastname_field_id(), 'field', 'default_visibility', $this->ln_default_backup );
 
 		$this->flush_visibility_caches();
 
@@ -74,8 +74,8 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	protected function flush_visibility_caches() {
 		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
 
-		if ( class_exists( 'BB_XProfile_Visibility' ) ) {
-			BB_XProfile_Visibility::flush_field_ids_cache();
+		if ( class_exists( 'BBoss_XProfile_Visibility' ) ) {
+			BBoss_XProfile_Visibility::flush_field_ids_cache();
 		}
 	}
 
@@ -103,10 +103,10 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 			)
 		);
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $first_name );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $surname );
-		xprofile_set_field_visibility_level( bp_xprofile_firstname_field_id(), $user_id, 'public' );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'public' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, $first_name );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, $surname );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_firstname_field_id(), $user_id, 'public' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $user_id, 'public' );
 
 		// Last, because writing a name field syncs the column back to "First Last".
 		wp_update_user(
@@ -140,7 +140,7 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	/**
 	 * Restricting a field that is NOT a name field must not touch the visible name.
 	 *
-	 * bp_xprofile_get_hidden_fields_for_user() reports every restricted field on the profile, so
+	 * bboss_xprofile_get_hidden_fields_for_user() reports every restricted field on the profile, so
 	 * gating the rebuild on that list being non-empty let one friends-only Phone or Address field
 	 * discard the stored display_name for a member whose name parts are entirely public. On drifted
 	 * data that did not merely rebuild the name, it DISCLOSED a surname the column withheld.
@@ -149,15 +149,15 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 		$user_id  = $this->create_member_with_drifted_display_name( 'Corin', 'Ashdown', 'Corin A.' );
 		$field_id = $this->create_non_name_field();
 
-		xprofile_set_field_data( $field_id, $user_id, 'a private note' );
-		xprofile_set_field_visibility_level( $field_id, $user_id, 'friends' );
+		bboss_xprofile_set_field_data( $field_id, $user_id, 'a private note' );
+		bboss_xprofile_set_field_visibility_level( $field_id, $user_id, 'friends' );
 		$this->flush_visibility_caches();
 
 		// Precondition: the field really is hidden from a guest, so this test cannot pass simply
 		// because nothing was restricted.
 		$this->assertContains(
 			(int) $field_id,
-			array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, 0 ) ),
+			array_map( 'intval', (array) bboss_xprofile_get_hidden_fields_for_user( $user_id, 0 ) ),
 			'precondition: the non-name field is not actually hidden from a guest'
 		);
 
@@ -165,7 +165,7 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'Corin A.',
-			bp_core_get_user_displayname( $user_id, 0 ),
+			bboss_core_get_user_displayname( $user_id, 0 ),
 			'a restricted NON-name field rebuilt the display name and disclosed the surname'
 		);
 	}
@@ -176,14 +176,14 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	public function test_hidden_last_name_field_still_withholds_the_surname() {
 		$user_id = $this->create_member_with_drifted_display_name( 'Rowan', 'Bellhaven', 'Rowan B.' );
 
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
 		$this->flush_visibility_caches();
 
 		$this->set_current_user( 0 );
 
 		$this->assertSame(
 			'Rowan',
-			bp_core_get_user_displayname( $user_id, 0 ),
+			bboss_core_get_user_displayname( $user_id, 0 ),
 			'an admins-only surname was not withheld from a guest'
 		);
 	}
@@ -212,7 +212,7 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Build the row set bb_xprofile_filter_field_search_matches() receives.
+	 * Build the row set bboss_xprofile_filter_field_search_matches() receives.
 	 *
 	 * @param array $user_ids Matched user IDs.
 	 * @param int   $field_id Field the match came from.
@@ -239,20 +239,20 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	 * search - 600 members with a public first name returned 500 to a logged-out visitor.
 	 */
 	public function test_candidate_budget_does_not_drop_unrestricted_members() {
-		$field_id = bp_xprofile_lastname_field_id();
+		$field_id = bboss_xprofile_lastname_field_id();
 		$user_ids = array();
 
 		for ( $i = 0; $i < 5; $i++ ) {
 			$user_id = self::factory()->user->create();
-			xprofile_set_field_data( $field_id, $user_id, 'Wexcombe' . $i );
-			xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
+			bboss_xprofile_set_field_data( $field_id, $user_id, 'Wexcombe' . $i );
+			bboss_xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
 			$user_ids[] = $user_id;
 		}
 
 		$this->flush_visibility_caches();
 
 		add_filter( 'bb_xprofile_user_search_visibility_candidate_limit', array( $this, 'force_candidate_limit_of_two' ) );
-		$kept = bb_xprofile_filter_field_search_matches( $user_ids, $this->matched_rows_for( $user_ids, $field_id ), 0 );
+		$kept = bboss_xprofile_filter_field_search_matches( $user_ids, $this->matched_rows_for( $user_ids, $field_id ), 0 );
 		remove_filter( 'bb_xprofile_user_search_visibility_candidate_limit', array( $this, 'force_candidate_limit_of_two' ) );
 
 		$this->assertCount( 5, $kept, 'the candidate budget dropped members with nothing restricted' );
@@ -267,30 +267,30 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	 * when they sort past the budget.
 	 */
 	public function test_candidate_budget_still_drops_a_restricted_member() {
-		$field_id = bp_xprofile_lastname_field_id();
+		$field_id = bboss_xprofile_lastname_field_id();
 		$user_ids = array();
 
 		for ( $i = 0; $i < 5; $i++ ) {
 			$user_id = self::factory()->user->create();
-			xprofile_set_field_data( $field_id, $user_id, 'Harrowmere' . $i );
-			xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
+			bboss_xprofile_set_field_data( $field_id, $user_id, 'Harrowmere' . $i );
+			bboss_xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
 			$user_ids[] = $user_id;
 		}
 
 		// Last in the list, so the old budget would have dropped them for the wrong reason and the
 		// assertion would pass without testing anything.
 		$restricted = $user_ids[4];
-		xprofile_set_field_visibility_level( $field_id, $restricted, 'adminsonly' );
+		bboss_xprofile_set_field_visibility_level( $field_id, $restricted, 'adminsonly' );
 		$this->flush_visibility_caches();
 
 		$this->assertContains(
 			(int) $field_id,
-			array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $restricted, 0 ) ),
+			array_map( 'intval', (array) bboss_xprofile_get_hidden_fields_for_user( $restricted, 0 ) ),
 			'precondition: the surname is not actually hidden from a guest'
 		);
 
 		add_filter( 'bb_xprofile_user_search_visibility_candidate_limit', array( $this, 'force_candidate_limit_of_two' ) );
-		$kept = bb_xprofile_filter_field_search_matches( $user_ids, $this->matched_rows_for( $user_ids, $field_id ), 0 );
+		$kept = bboss_xprofile_filter_field_search_matches( $user_ids, $this->matched_rows_for( $user_ids, $field_id ), 0 );
 		remove_filter( 'bb_xprofile_user_search_visibility_candidate_limit', array( $this, 'force_candidate_limit_of_two' ) );
 
 		$kept = array_map( 'intval', $kept );
@@ -302,21 +302,21 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	/**
 	 * A restricted field default does NOT reach a member who has their own visibility row.
 	 *
-	 * bp_xprofile_get_fields_by_visibility_levels() resolves such a member from the visibility table,
+	 * bboss_xprofile_get_fields_by_visibility_levels() resolves such a member from the visibility table,
 	 * where a field they never set is simply not hidden. Treating the default as community-wide swept
 	 * fully-permitted members into the candidate budget, and whatever sorted past it was dropped.
 	 */
 	public function test_restricted_default_does_not_capture_members_with_their_own_row() {
-		$field_id = bp_xprofile_lastname_field_id();
+		$field_id = bboss_xprofile_lastname_field_id();
 		$user_id  = self::factory()->user->create();
 
-		xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
+		bboss_xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
 
-		bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
-		bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'allowed' );
 		$this->flush_visibility_caches();
 
-		$possible = bb_xprofile_filter_possible_hidden_users( array( $user_id ) );
+		$possible = bboss_xprofile_filter_possible_hidden_users( array( $user_id ) );
 
 		$this->assertIsArray( $possible, 'a restricted default with custom visibility allowed must still narrow' );
 		$this->assertNotContains(
@@ -331,17 +331,17 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	 * where an unset field falls back to that default.
 	 */
 	public function test_restricted_default_captures_members_without_any_row() {
-		$field_id = bp_xprofile_lastname_field_id();
+		$field_id = bboss_xprofile_lastname_field_id();
 		$user_id  = self::factory()->user->create();
 
 		// Deliberately no visibility row and no levels meta for this member.
 		delete_user_meta( $user_id, 'bp_xprofile_visibility_levels' );
 
-		bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
-		bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'allowed' );
 		$this->flush_visibility_caches();
 
-		$possible = bb_xprofile_filter_possible_hidden_users( array( $user_id ) );
+		$possible = bboss_xprofile_filter_possible_hidden_users( array( $user_id ) );
 
 		$this->assertIsArray( $possible );
 		$this->assertContains(
@@ -357,17 +357,17 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	 * stand down rather than return a partial answer.
 	 */
 	public function test_disabled_custom_visibility_disables_narrowing() {
-		$field_id = bp_xprofile_lastname_field_id();
+		$field_id = bboss_xprofile_lastname_field_id();
 		$user_id  = self::factory()->user->create();
 
-		xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
+		bboss_xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
 
-		bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
-		bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'disabled' );
+		bboss_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'disabled' );
 		$this->flush_visibility_caches();
 
 		$this->assertNull(
-			bb_xprofile_filter_possible_hidden_users( array( $user_id ) ),
+			bboss_xprofile_filter_possible_hidden_users( array( $user_id ) ),
 			'a community-wide forced default must disable narrowing, not return a partial set'
 		);
 	}
@@ -377,19 +377,19 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	 * rather than a memo that could outlive the write.
 	 */
 	public function test_narrowing_sees_a_new_restriction_immediately() {
-		$field_id = bp_xprofile_lastname_field_id();
+		$field_id = bboss_xprofile_lastname_field_id();
 		$user_id  = self::factory()->user->create();
 
-		xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
+		bboss_xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
 		$this->flush_visibility_caches();
 
-		$before = bb_xprofile_filter_possible_hidden_users( array( $user_id ) );
+		$before = bboss_xprofile_filter_possible_hidden_users( array( $user_id ) );
 		$this->assertIsArray( $before, 'precondition: narrowing is unexpectedly disabled' );
 		$this->assertNotContains( (int) $user_id, array_map( 'intval', $before ) );
 
-		xprofile_set_field_visibility_level( $field_id, $user_id, 'adminsonly' );
+		bboss_xprofile_set_field_visibility_level( $field_id, $user_id, 'adminsonly' );
 
-		$after = bb_xprofile_filter_possible_hidden_users( array( $user_id ) );
+		$after = bboss_xprofile_filter_possible_hidden_users( array( $user_id ) );
 		$this->assertIsArray( $after );
 		$this->assertContains(
 			(int) $user_id,
@@ -416,25 +416,25 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	 * back exactly the two members who restricted nothing.
 	 */
 	public function test_budget_exceeded_withholds_the_field_search_candidates_not_the_whole_leg() {
-		$last_name_field_id = bp_xprofile_lastname_field_id();
+		$last_name_field_id = bboss_xprofile_lastname_field_id();
 		$public_field_id    = $this->create_non_name_field();
 
 		// The Last Name default must stay public, or the members who restricted nothing become
 		// candidates too and the two groups below stop being distinguishable.
-		bp_xprofile_update_meta( $last_name_field_id, 'field', 'default_visibility', 'public' );
+		bboss_xprofile_update_meta( $last_name_field_id, 'field', 'default_visibility', 'public' );
 
 		$restricted_ids = array();
 		for ( $i = 0; $i < 3; $i++ ) {
 			$user_id = self::factory()->user->create();
-			xprofile_set_field_data( $public_field_id, $user_id, 'Cardingley' . $i );
-			xprofile_set_field_visibility_level( $last_name_field_id, $user_id, 'adminsonly' );
+			bboss_xprofile_set_field_data( $public_field_id, $user_id, 'Cardingley' . $i );
+			bboss_xprofile_set_field_visibility_level( $last_name_field_id, $user_id, 'adminsonly' );
 			$restricted_ids[] = (int) $user_id;
 		}
 
 		$unrestricted_ids = array();
 		for ( $i = 0; $i < 2; $i++ ) {
 			$user_id = self::factory()->user->create();
-			xprofile_set_field_data( $public_field_id, $user_id, 'Cardingley' . ( 3 + $i ) );
+			bboss_xprofile_set_field_data( $public_field_id, $user_id, 'Cardingley' . ( 3 + $i ) );
 			$unrestricted_ids[] = (int) $user_id;
 		}
 
@@ -446,7 +446,7 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 		// Fixture: the narrowing is live and names exactly the three members who restricted
 		// something. If it stood down, every match would be a candidate and the assertions below
 		// could not tell "withhold the candidates" from "withhold the leg".
-		$possible_hidden = bb_xprofile_filter_possible_hidden_users( $user_ids );
+		$possible_hidden = bboss_xprofile_filter_possible_hidden_users( $user_ids );
 		$this->assertIsArray( $possible_hidden, 'Fixture: the narrowing stood down, so the candidate set is the whole match set.' );
 		sort( $possible_hidden );
 		$expected_candidates = $restricted_ids;
@@ -455,14 +455,14 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 
 		// Control: under the shipped budget nothing is withheld at all, because every member matched
 		// on a field that is public to this viewer.
-		$unbounded = bb_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
+		$unbounded = bboss_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
 		sort( $unbounded );
 		$all_ids = $user_ids;
 		sort( $all_ids );
 		$this->assertSame( $all_ids, array_map( 'intval', $unbounded ), 'Fixture: an unbounded run must keep every match, or the bounded run below proves nothing.' );
 
 		add_filter( 'bb_xprofile_user_search_visibility_candidate_limit', array( $this, 'force_candidate_limit_of_two' ) );
-		$kept = bb_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
+		$kept = bboss_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
 		remove_filter( 'bb_xprofile_user_search_visibility_candidate_limit', array( $this, 'force_candidate_limit_of_two' ) );
 
 		sort( $kept );
@@ -483,7 +483,7 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	 * the direction that is easy to get wrong: a read that FAILED cannot be resolved and the leg is
 	 * withheld, while a table that is not there yet resolves perfectly well - every member's
 	 * visibility comes from the `bp_xprofile_visibility_levels` user meta, which is exactly what
-	 * BB_XProfile_Visibility::user_data_exists() reports for such a site. Failing closed on the
+	 * BBoss_XProfile_Visibility::user_data_exists() reports for such a site. Failing closed on the
 	 * absent table would withhold member search on every install that has not migrated yet.
 	 *
 	 * Both directions are asserted here, against the same input, so they cannot be confused: table
@@ -492,12 +492,12 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	public function test_a_missing_visibility_table_filters_normally_through_the_user_meta_branch() {
 		global $wpdb;
 
-		$field_id   = bp_xprofile_lastname_field_id();
+		$field_id   = bboss_xprofile_lastname_field_id();
 		$restricted = self::factory()->user->create();
 		$permitted  = self::factory()->user->create();
 
-		xprofile_set_field_visibility_level( $field_id, $restricted, 'adminsonly' );
-		xprofile_set_field_visibility_level( $field_id, $permitted, 'public' );
+		bboss_xprofile_set_field_visibility_level( $field_id, $restricted, 'adminsonly' );
+		bboss_xprofile_set_field_visibility_level( $field_id, $permitted, 'public' );
 		$this->flush_visibility_caches();
 
 		$levels   = array( 'friends', 'loggedin', 'adminsonly' );
@@ -508,7 +508,7 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 		$table_memo->setValue( null, false );
 
 		try {
-			$narrowed = bb_xprofile_filter_possible_hidden_users( $user_ids, $levels );
+			$narrowed = bboss_xprofile_filter_possible_hidden_users( $user_ids, $levels );
 
 			$this->assertIsArray(
 				$narrowed,
@@ -537,7 +537,7 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 		// and the test went green against a leg that was never broken. `FROM` keeps
 		// BB_XProfile_Visibility::visibility_table_exists() out of scope: it probes with
 		// `SHOW TABLES LIKE`, and breaking that is the missing-table path, not the failed-read path.
-		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+		$visibility_table = BBoss_XProfile_Visibility::get_visibility_table_name();
 
 		$break_query = function ( $query ) use ( $visibility_table ) {
 			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
@@ -551,7 +551,7 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 		add_filter( 'query', $break_query );
 
 		try {
-			$failed = bb_xprofile_filter_possible_hidden_users( $user_ids, $levels );
+			$failed = bboss_xprofile_filter_possible_hidden_users( $user_ids, $levels );
 		} finally {
 			remove_filter( 'query', $break_query );
 			$wpdb->suppress_errors( $suppress );

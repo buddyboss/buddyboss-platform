@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BB_REST_Subscriptions_Endpoint class
+ * BP REST: BBoss_REST_Subscriptions_Endpoint class
  *
  * @since   2.2.6
  * @package BuddyBoss
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 2.2.6
  */
-class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Allow batch.
@@ -28,7 +28,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	 * @since 2.2.6
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'subscriptions';
 	}
 
@@ -65,7 +65,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the Subscription.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Subscription.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -140,7 +140,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			'secondary_item_id' => $request->get_param( 'secondary_item_id' ),
 			'per_page'          => $request->get_param( 'per_page' ),
 			'page'              => $request->get_param( 'page' ),
-			'user_id'           => bp_loggedin_user_id(),
+			'user_id'           => bboss_loggedin_user_id(),
 			'order_by'          => $request->get_param( 'order_by' ),
 			'order'             => $request->get_param( 'order' ),
 			'include'           => $request->get_param( 'include' ),
@@ -149,7 +149,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			'count'             => true,
 		);
 
-		$subscriptions = bb_get_subscriptions( $args );
+		$subscriptions = bboss_get_subscriptions( $args );
 		$retval        = array();
 		foreach ( $subscriptions['subscriptions'] as $subscription ) {
 			$retval[] = $this->prepare_response_for_collection(
@@ -158,7 +158,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, $subscriptions['total'], $args['per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, $subscriptions['total'], $args['per_page'] );
 
 		/**
 		 * Fires after a list of subscriptions is fetched via the REST API.
@@ -182,7 +182,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to view subscription.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to view subscription.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -225,14 +225,14 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
 
-		$subscription_id = bb_create_subscription( $this->prepare_item_for_database( $request ) );
+		$subscription_id = bboss_create_subscription( $this->prepare_item_for_database( $request ) );
 
 		if ( is_wp_error( $subscription_id ) ) {
 			return $subscription_id;
 		} elseif ( ! is_numeric( $subscription_id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_subscription',
-				__( 'There is an error while adding the subscription.', 'buddyboss' ),
+				__( 'There is an error while adding the subscription.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -250,7 +250,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a subscription is created via the REST API.
 		 *
-		 * @param BB_Subscriptions $subscription The created subscription.
+		 * @param BBoss_Subscriptions $subscription The created subscription.
 		 * @param WP_REST_Response $response     The response data.
 		 * @param WP_REST_Request  $request      The request sent to the API.
 		 */
@@ -270,7 +270,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create subscription.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to create subscription.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -315,7 +315,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a subscription is fetched via the REST API.
 		 *
-		 * @param BB_Subscriptions $subscription Fetched subscription.
+		 * @param BBoss_Subscriptions $subscription Fetched subscription.
 		 * @param WP_REST_Response $response     The response data.
 		 * @param WP_REST_Request  $request      The request sent to the API.
 		 */
@@ -334,7 +334,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to view subscription.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to view subscription.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -343,7 +343,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		if ( is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view the subscription.', 'buddyboss' ),
+				__( 'Sorry, you cannot view the subscription.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -353,7 +353,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			if ( empty( $subscription->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_subscription_invalid_id',
-					__( 'Invalid subscription ID.', 'buddyboss' ),
+					__( 'Invalid subscription ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -395,12 +395,12 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		$subscription = $this->get_subscription_object( $request );
 		$previous     = $this->prepare_item_for_response( $subscription, $request );
 
-		if ( ! bb_delete_subscription( $subscription->id ) ) {
-			$error = __( 'There was a problem unsubscribing.', 'buddyboss' );
+		if ( ! bboss_delete_subscription( $subscription->id ) ) {
+			$error = __( 'There was a problem unsubscribing.', 'buddyboss-platform' );
 			if ( isset( $previous->data, $previous->data['title'] ) && ! empty( $previous->data['title'] ) ) {
 				$error = sprintf(
 				/* translators: %s is forum/discussion title */
-					__( 'There was a problem unsubscribing from %s', 'buddyboss' ),
+					__( 'There was a problem unsubscribing from %s', 'buddyboss-platform' ),
 					$previous->data['title']
 				);
 			}
@@ -425,11 +425,11 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 				'type'     => $type,
 				'per_page' => (int) $request->get_param( 'per_page' ),
 				'page'     => (int) $request->get_param( 'page' ),
-				'user_id'  => bp_loggedin_user_id(),
+				'user_id'  => bboss_loggedin_user_id(),
 				'count'    => true,
 			);
 
-			$subscriptions = bb_get_subscriptions( $args );
+			$subscriptions = bboss_get_subscriptions( $args );
 			$total_items   = (int) $subscriptions['total'];
 			$max_pages     = ceil( $total_items / (int) $args['per_page'] );
 
@@ -477,7 +477,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this subscription.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to delete this subscription.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -486,7 +486,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		if ( is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this subscription.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to delete this subscription.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -497,7 +497,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			if ( empty( $subscription->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_subscription_invalid_id',
-					__( 'Invalid subscription ID.', 'buddyboss' ),
+					__( 'Invalid subscription ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -531,7 +531,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 */
 	public function get_type_items( $request ) {
-		$subscription_types = bb_get_subscriptions_types();
+		$subscription_types = bboss_get_subscriptions_types();
 
 		$retval = array();
 		foreach ( $subscription_types as $key => $type ) {
@@ -544,7 +544,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, count( $subscription_types ), count( $subscription_types ) );
+		$response = bboss_rest_response_add_total_headers( $response, count( $subscription_types ), count( $subscription_types ) );
 
 		/**
 		 * Fires after a list of subscription type is fetched via the REST API.
@@ -568,7 +568,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	public function get_type_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to view subscription types.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to view subscription types.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -592,7 +592,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Request|int|array $request Full details about the request.
 	 *
-	 * @return bool|BB_Subscriptions
+	 * @return bool|BBoss_Subscriptions
 	 */
 	public function get_subscription_object( $request ) {
 		if ( is_numeric( $request ) ) {
@@ -605,7 +605,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		$subscription = bboss_subscriptions_get_subscription( $subscription_id );
 
 		if ( empty( $subscription ) || empty( $subscription->id ) ) {
 			return false;
@@ -650,7 +650,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 
 			// Fallback on the current user otherwise.
 		} else {
-			$prepared_subscription->user_id = bp_loggedin_user_id();
+			$prepared_subscription->user_id = bboss_loggedin_user_id();
 		}
 
 		// Subscription type.
@@ -701,7 +701,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares subscription data for return as an object.
 	 *
-	 * @param BB_Subscriptions $item    Subscription object.
+	 * @param BBoss_Subscriptions $item    Subscription object.
 	 * @param WP_REST_Request  $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -714,7 +714,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			'type'              => $item->type,
 			'item_id'           => (int) $item->item_id,
 			'secondary_item_id' => (int) $item->secondary_item_id,
-			'date_recorded'     => bp_rest_prepare_date_response( $item->date_recorded ),
+			'date_recorded'     => bboss_rest_prepare_date_response( $item->date_recorded ),
 			'status'            => (bool) $item->status,
 			'title'             => html_entity_decode( $item->title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'description_html'  => $item->description_html,
@@ -735,7 +735,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  Request used to generate the response.
-		 * @param BB_Subscriptions $item     Subscription object.
+		 * @param BBoss_Subscriptions $item     Subscription object.
 		 */
 		return apply_filters( 'bb_rest_subscriptions_prepare_value', $response, $request, $item );
 	}
@@ -749,7 +749,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response
 	 */
 	public function prepare_type_item_for_response( $item, $request ) {
-		$subscriptions = bb_get_subscriptions(
+		$subscriptions = bboss_get_subscriptions(
 			array(
 				'type'     => array( $item->type ),
 				'per_page' => 1,
@@ -777,7 +777,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  Request used to generate the response.
-		 * @param BB_Subscriptions $item     Subscription object.
+		 * @param BBoss_Subscriptions $item     Subscription object.
 		 */
 		return apply_filters( 'bb_rest_subscriptions_type_prepare_value', $response, $request, $item );
 	}
@@ -785,7 +785,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BB_Subscriptions $item    Subscription object.
+	 * @param BBoss_Subscriptions $item    Subscription object.
 	 * @param WP_REST_Request  $request Full details about the request.
 	 *
 	 * @return array
@@ -793,12 +793,12 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	protected function prepare_links( $item, $request ) {
 		$links = array(
 			'user' => array(
-				'href'       => rest_url( bp_rest_get_user_url( $item->user_id ) ),
+				'href'       => rest_url( bboss_rest_get_user_url( $item->user_id ) ),
 				'embeddable' => true,
 			),
 		);
 
-		if ( bp_is_active( 'forums' ) ) {
+		if ( bboss_is_active( 'forums' ) ) {
 			if ( 'forum' === $item->type ) {
 				$links['forum'] = array(
 					'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, 'forums', $item->item_id ) ),
@@ -818,7 +818,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		 * Filter links prepared for the REST response.
 		 *
 		 * @param array            $links   The prepared links of the REST response.
-		 * @param BB_Subscriptions $item    Subscription object.
+		 * @param BBoss_Subscriptions $item    Subscription object.
 		 * @param WP_REST_Request  $request Full details about the request.
 		 */
 		return apply_filters( 'bb_rest_subscriptions_prepare_links', $links, $item, $request );
@@ -866,7 +866,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'view';
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -875,7 +875,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -884,7 +884,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -893,7 +893,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order_by'] = array(
-			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
+			'description'       => __( 'Order by a specific parameter.', 'buddyboss-platform' ),
 			'default'           => 'date_recorded',
 			'type'              => 'string',
 			'enum'              => array( 'id', 'type', 'item_id', 'date_recorded' ),
@@ -901,7 +901,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['blog_id'] = array(
-			'description'       => __( 'The ID of the current blog site.', 'buddyboss' ),
+			'description'       => __( 'The ID of the current blog site.', 'buddyboss-platform' ),
 			'default'           => get_current_blog_id(),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -909,15 +909,15 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['type'] = array(
-			'description'       => __( 'Limit result set to items with a specific subscription type.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific subscription type.', 'buddyboss-platform' ),
 			'type'              => 'string',
-			'enum'              => array_keys( bb_get_subscriptions_types() ),
+			'enum'              => array_keys( bboss_get_subscriptions_types() ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['item_id'] = array(
-			'description'       => __( 'Limit result set to items with a specific prime association ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific prime association ID.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -925,7 +925,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['secondary_id'] = array(
-			'description'       => __( 'Limit result set to items with a specific secondary association ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific secondary association ID.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -933,7 +933,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['status'] = array(
-			'description'       => __( 'Limit result set to active subscriptions or not.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to active subscriptions or not.', 'buddyboss-platform' ),
 			'default'           => 1,
 			'type'              => 'integer',
 			'enum'              => array( 0, 1 ),
@@ -993,83 +993,83 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the subscription.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the subscription.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'blog_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the current blog site.', 'buddyboss' ),
+					'description' => __( 'The ID of the current blog site.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'default'     => get_current_blog_id(),
 				),
 				'user_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the user who created the subscription.', 'buddyboss' ),
+					'description' => __( 'The ID of the user who created the subscription.', 'buddyboss-platform' ),
 					'type'        => 'integer',
-					'default'     => bp_loggedin_user_id(),
+					'default'     => bboss_loggedin_user_id(),
 				),
 				'type'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The type of the subscription.', 'buddyboss' ),
-					'enum'        => array_keys( bb_get_subscriptions_types() ),
+					'description' => __( 'The type of the subscription.', 'buddyboss-platform' ),
+					'enum'        => array_keys( bboss_get_subscriptions_types() ),
 					'type'        => 'string',
 				),
 				'item_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of subscription item.', 'buddyboss' ),
+					'description' => __( 'The ID of subscription item.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'secondary_item_id' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'ID of the subscription item parent.', 'buddyboss' ),
+					'description' => __( 'ID of the subscription item parent.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'date_created'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The date the Subscription was created, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the Subscription was created, in the site\'s timezone.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'status'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether to check the subscription is active or not.', 'buddyboss' ),
+					'description' => __( 'Whether to check the subscription is active or not.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'title'             => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Subscription item title.', 'buddyboss' ),
+					'description' => __( 'Subscription item title.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'description_html'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Subscription item description.', 'buddyboss' ),
+					'description' => __( 'Subscription item description.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'parent_html'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Subscription item parent title.', 'buddyboss' ),
+					'description' => __( 'Subscription item parent title.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'icon'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Avatar/Image URLs of the item.', 'buddyboss' ),
+					'description' => __( 'Avatar/Image URLs of the item.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'properties'  => array(
 						'full'  => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Avatar/Image URL with full image size.', 'buddyboss' ),
+							'description' => __( 'Avatar/Image URL with full image size.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'format'      => 'uri',
 						),
 						'thumb' => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Avatar/Image URL with thumb image size.', 'buddyboss' ),
+							'description' => __( 'Avatar/Image URL with thumb image size.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'format'      => 'uri',
 						),
@@ -1077,7 +1077,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 				),
 				'link'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Subscription item link.', 'buddyboss' ),
+					'description' => __( 'Subscription item link.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1105,19 +1105,19 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'type'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The type of the subscription.', 'buddyboss' ),
+					'description' => __( 'The type of the subscription.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'label' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Label of subscription type.', 'buddyboss' ),
+					'description' => __( 'Label of subscription type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'count' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Count of the subscription items.', 'buddyboss' ),
+					'description' => __( 'Count of the subscription items.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1135,13 +1135,13 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	/**
 	 * Whether user can able to access the subscription or not.
 	 *
-	 * @param BB_Subscriptions $subscription Subscription object.
+	 * @param BBoss_Subscriptions $subscription Subscription object.
 	 *
 	 * @return bool
 	 */
 	public function can_user_see_or_delete( $subscription ) {
 		// Check for moderators or if user is subscribed to this item.
-		return ( bp_current_user_can( 'bp_moderate' ) || bp_loggedin_user_id() === $subscription->user_id );
+		return ( bboss_current_user_can( 'bp_moderate' ) || bboss_loggedin_user_id() === $subscription->user_id );
 	}
 
 	/**
@@ -1158,21 +1158,21 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create subscription.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to create subscription.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
 		);
 
 		if ( empty( $user_id ) ) {
-			$user_id = bp_loggedin_user_id();
+			$user_id = bboss_loggedin_user_id();
 		}
 
 		// Checked loggedin member.
-		if ( bp_loggedin_user_id() !== $user_id ) {
+		if ( bboss_loggedin_user_id() !== $user_id ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create subscription.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to create subscription.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -1180,7 +1180,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		} elseif ( empty( $item_id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_subscription_required_item_id',
-				__( 'The item ID is required.', 'buddyboss' ),
+				__( 'The item ID is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1188,7 +1188,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		} elseif ( empty( $type ) ) {
 			$retval = new WP_Error(
 				'bp_rest_subscription_required_item_type',
-				__( 'The item type is required.', 'buddyboss' ),
+				__( 'The item type is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)

@@ -19,11 +19,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_admin_setting_callback_activity_akismet() {
+function bboss_admin_setting_callback_activity_akismet() {
 	?>
 
-	<input id="_bp_enable_akismet" name="_bp_enable_akismet" type="checkbox" value="1" <?php checked( bp_is_akismet_active( true ) ); ?> />
-	<label for="_bp_enable_akismet"><?php esc_html_e( 'Enable Akismet spam protection for activity feed', 'buddyboss' ); ?></label>
+	<input id="_bp_enable_akismet" name="_bp_enable_akismet" type="checkbox" value="1" <?php checked( bboss_is_akismet_active( true ) ); ?> />
+	<label for="_bp_enable_akismet"><?php esc_html_e( 'Enable Akismet spam protection for activity feed', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -33,11 +33,11 @@ function bp_admin_setting_callback_activity_akismet() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_admin_setting_callback_blogforum_comments() {
+function bboss_admin_setting_callback_blogforum_comments() {
 	?>
 
-	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( ! bp_disable_blogforum_comments( false ) ); ?> />
-	<label for="bp-disable-blogforum-comments"><?php esc_html_e( 'Allow activity feed commenting on blog posts, custom post types, and forum discussions', 'buddyboss' ); ?></label>
+	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( ! bboss_disable_blogforum_comments( false ) ); ?> />
+	<label for="bp-disable-blogforum-comments"><?php esc_html_e( 'Allow activity feed commenting on blog posts, custom post types, and forum discussions', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -47,13 +47,13 @@ function bp_admin_setting_callback_blogforum_comments() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_posts_in_activity_tutorial() {
+function bboss_posts_in_activity_tutorial() {
 	?>
 	<p>
 		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
-			bp_get_admin_url(
+			bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -64,7 +64,7 @@ function bp_posts_in_activity_tutorial() {
 			)
 		);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }
@@ -74,11 +74,11 @@ function bp_posts_in_activity_tutorial() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_admin_setting_callback_enable_activity_link_preview() {
+function bboss_admin_setting_callback_enable_activity_link_preview() {
 	?>
 
-	<input id="_bp_enable_activity_link_preview" name="_bp_enable_activity_link_preview" type="checkbox" value="1" <?php checked( bp_is_activity_link_preview_active( false ) ); ?> />
-	<label for="_bp_enable_activity_link_preview"><?php esc_html_e( 'When links are used in activity posts, display an image and excerpt from the site', 'buddyboss' ); ?></label>
+	<input id="_bp_enable_activity_link_preview" name="_bp_enable_activity_link_preview" type="checkbox" value="1" <?php checked( bboss_is_activity_link_preview_active( false ) ); ?> />
+	<label for="_bp_enable_activity_link_preview"><?php esc_html_e( 'When links are used in activity posts, display an image and excerpt from the site', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -88,13 +88,13 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_activity_settings_tutorial() {
+function bboss_activity_settings_tutorial() {
 	?>
 	<p>
 		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
-				bp_get_admin_url(
+				bboss_get_admin_url(
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
@@ -105,7 +105,7 @@ function bp_activity_settings_tutorial() {
 				)
 			);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }
@@ -123,7 +123,7 @@ function bp_activity_settings_tutorial() {
  * @param bool $value Whether or not to sanitize.
  * @return bool
  */
-function bp_admin_sanitize_callback_blogforum_comments( $value = false ) {
+function bboss_admin_sanitize_callback_blogforum_comments( $value = false ) {
 	return $value ? 0 : 1;
 }
 
@@ -134,21 +134,21 @@ function bp_admin_sanitize_callback_blogforum_comments( $value = false ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_settings() {
-	$active_tab  = bp_core_get_admin_active_tab();
-	$form_action = bp_core_admin_setting_url( $active_tab );
+function bboss_core_admin_settings() {
+	$active_tab  = bboss_core_get_admin_active_tab();
+	$form_action = bboss_core_admin_setting_url( $active_tab );
 	?>
 
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Settings', 'buddyboss' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bboss_core_admin_tabs( __( 'Settings', 'buddyboss-platform' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
-				<?php bp_core_settings_admin_tabs(); ?>
+				<?php bboss_core_settings_admin_tabs(); ?>
 			</ul>
 		</div>
 		<form action="<?php echo esc_url( $form_action ); ?>" method="post" enctype="multipart/form-data">
 			<?php
-			$tab_object = bp_core_get_admin_active_tab_object();
+			$tab_object = bboss_core_get_admin_active_tab_object();
 			if ( $tab_object ) {
 				$tab_object->form_html();
 			}
@@ -173,11 +173,11 @@ function bp_core_admin_settings() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_buddyboss_app() {
+function bboss_core_admin_buddyboss_app() {
 	?>
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
-		<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
+		<h2 class="nav-tab-wrapper"><?php bboss_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss-platform' ) ); ?></h2>
+		<?php require bboss()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
 	</div>
 	<?php
 }
@@ -191,8 +191,8 @@ function bp_core_admin_buddyboss_app() {
  * @param string $default Form option default.
  * @param bool   $slug    Form option slug.
  */
-function bp_form_option( $option, $default = '', $slug = false ) {
-	echo bp_get_form_option( $option, $default, $slug );
+function bboss_form_option( $option, $default = '', $slug = false ) {
+	echo esc_attr( bboss_get_form_option( $option, $default, $slug ) );
 }
 
 /**
@@ -205,10 +205,10 @@ function bp_form_option( $option, $default = '', $slug = false ) {
  * @param bool   $slug    Form option slug.
  * @return string
  */
-function bp_get_form_option( $option, $default = '', $slug = false ) {
+function bboss_get_form_option( $option, $default = '', $slug = false ) {
 
 	// Get the option and sanitize it.
-	$value = bp_get_option( $option, $default );
+	$value = bboss_get_option( $option, $default );
 
 	// Slug?
 	if ( true === $slug ) {
@@ -250,16 +250,16 @@ function bp_get_form_option( $option, $default = '', $slug = false ) {
  *
  * @uses checked() To display the checked attribute
  */
-function bp_feed_settings_callback_post_type( $args ) {
+function bboss_feed_settings_callback_post_type( $args ) {
 
 	$post_type     = $args['post_type'];
-	$option_name   = bb_post_type_feed_option_name( $post_type );
+	$option_name   = bboss_post_type_feed_option_name( $post_type );
 	$post_type_obj = get_post_type_object( $post_type );
 
 	// Description for the last option of CPT.
 	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
-		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss-platform' ); ?></p>
 		<?php
 	}
 	?>
@@ -270,17 +270,17 @@ function bp_feed_settings_callback_post_type( $args ) {
 		id="<?php echo esc_attr( $option_name ); ?>"
 		type="checkbox"
 		value="1"
-		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ); ?>
+		<?php checked( bboss_is_post_type_feed_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
-		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
+		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss-platform' ) : esc_html( $post_type_obj->labels->name ); ?>
 	</label>
 	<?php
 
 	// Description for the WordPress Blog Posts
 	if ( 'post' === $post_type ) {
 		?>
-		<p class="description"><?php esc_html_e( 'When members publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'When members publish new blog posts, show them in the activity feed.', 'buddyboss-platform' ); ?></p>
 		<?php
 	}
 }
@@ -294,19 +294,19 @@ function bp_feed_settings_callback_post_type( $args ) {
  *
  * @return void
  */
-function bb_feed_settings_callback_post_type_comments( $args ) {
+function bboss_feed_settings_callback_post_type_comments( $args ) {
 	$post_type              = $args['post_type'];
-	$option_name            = bb_post_type_feed_comment_option_name( $post_type );
+	$option_name            = bboss_post_type_feed_comment_option_name( $post_type );
 	$post_type_obj          = get_post_type_object( $post_type );
-	$is_cpt_comment_enabled = bb_activity_is_enabled_cpt_global_comment( $post_type );
+	$is_cpt_comment_enabled = bboss_activity_is_enabled_cpt_global_comment( $post_type );
 
-	if ( in_array( $post_type, bb_feed_not_allowed_comment_post_types(), true ) ) {
+	if ( in_array( $post_type, bboss_feed_not_allowed_comment_post_types(), true ) ) {
 		?>
 			<p class="description <?php echo esc_attr( 'bp-feed-post-type-comment-' . $post_type ); ?>">
 				<?php
 				printf(
 				/* translators: %s: comment post type */
-					esc_html__( 'Comments are not supported for %s.', 'buddyboss' ),
+					esc_html__( 'Comments are not supported for %s.', 'buddyboss-platform' ),
 					esc_html( $post_type_obj->labels->name )
 				);
 				?>
@@ -322,18 +322,19 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 		id="<?php echo esc_attr( $option_name ); ?>"
 		type="checkbox"
 		value="1"
-		<?php checked( bb_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
+		<?php checked( bboss_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
 		<?php disabled( $is_cpt_comment_enabled, false ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
-		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
+		<?php /* translators: %s: custom post type label. */ ?>
+		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss-platform' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss-platform' ), esc_html( $post_type_obj->labels->name ) ); ?>
 	</label>
 	<?php
 
 	// Description for the WordPress Blog Posts.
 	if ( 'post' === $post_type ) {
 		?>
-		<p class="description"><?php esc_html_e( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss-platform' ); ?></p>
 		<?php
 	}
 }
@@ -347,11 +348,11 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
  *
  * @uses checked() To display the checked attribute
  */
-function bp_feed_settings_callback_platform( $args ) {
+function bboss_feed_settings_callback_platform( $args ) {
 
 		$option_name = $args['activity_name'];
 	?>
-		<input name="<?php echo esc_attr( 'bp-feed-platform-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-' . $option_name, true ) ); ?>/>
+		<input name="<?php echo esc_attr( 'bp-feed-platform-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bboss_platform_is_feed_enable( 'bp-feed-platform-' . $option_name, true ) ); ?>/>
 		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'] ); ?></label>
 	<?php
 
@@ -372,13 +373,13 @@ function bp_feed_settings_callback_platform( $args ) {
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_admin_moderation_block_setting_tutorial() {
+function bboss_admin_moderation_block_setting_tutorial() {
 	?>
 	<p>
 		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
-				bp_get_admin_url(
+				bboss_get_admin_url(
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
@@ -389,7 +390,7 @@ function bp_admin_moderation_block_setting_tutorial() {
 				)
 			);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }
@@ -399,13 +400,13 @@ function bp_admin_moderation_block_setting_tutorial() {
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_admin_moderation_report_setting_tutorial() {
+function bboss_admin_moderation_report_setting_tutorial() {
 	?>
 	<p>
 		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
-				bp_get_admin_url(
+				bboss_get_admin_url(
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
@@ -416,7 +417,7 @@ function bp_admin_moderation_report_setting_tutorial() {
 				)
 			);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }
@@ -428,34 +429,34 @@ function bp_admin_moderation_report_setting_tutorial() {
  *
  * @param string $tab_name  Settings tab name.
  *
- * @uses bb_feed_post_types()                    Get all post type name.
- * @uses bb_post_type_feed_option_name()         Settings option name for post type.
- * @uses bb_post_type_feed_comment_option_name() Settings option name for post type comment.
+ * @uses bboss_feed_post_types()                    Get all post type name.
+ * @uses bboss_post_type_feed_option_name()         Settings option name for post type.
+ * @uses bboss_post_type_feed_comment_option_name() Settings option name for post type comment.
  *
  * @return void
  */
-function bb_after_update_activity_settings( $tab_name ) {
+function bboss_after_update_activity_settings( $tab_name ) {
 	if ( 'bp-activity' !== $tab_name ) {
 		return;
 	}
 
-	foreach ( bb_feed_post_types() as $key => $post_type ) {
+	foreach ( bboss_feed_post_types() as $key => $post_type ) {
 		// Post type option name.
-		$pt_opt_name = bb_post_type_feed_option_name( $post_type );
+		$pt_opt_name = bboss_post_type_feed_option_name( $post_type );
 
 		// Post type comment option name.
-		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
+		$ptc_opt_name = bboss_post_type_feed_comment_option_name( $post_type );
 
 		// Get the post type activity status.
-		$opt_value = bp_get_option( $pt_opt_name, '' );
+		$opt_value = bboss_get_option( $pt_opt_name, '' );
 
 		// If the post type activity disable then its comment also make disable.
 		if ( empty( $opt_value ) ) {
-			bp_update_option( $ptc_opt_name, 0 );
+			bboss_update_option( $ptc_opt_name, 0 );
 		}
 	}
 }
-add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 1 );
+add_action( 'bp_admin_tab_setting_save', 'bboss_after_update_activity_settings', 10, 1 );
 
 // Legacy Privacy callbacks (REST APIs, RSS Feeds) removed — migrated to Settings 2.0 Advanced feature.
 // See: settings/advanced/settings-privacy.php
@@ -476,7 +477,7 @@ add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10
  * @return array Associative array of page id and page title of pages,
  *               or indexed array of {value, label} when $for_json is true.
  */
-function bb_get_published_pages( $as_options = false ) {
+function bboss_get_published_pages( $as_options = false ) {
 	static $published_pages = null;
 
 	if ( null === $published_pages ) {
@@ -511,13 +512,13 @@ function bb_get_published_pages( $as_options = false ) {
  *
  * @since BuddyBoss 2.5.80
  */
-function bb_admin_performance_general_setting_tutorial() {
+function bboss_admin_performance_general_setting_tutorial() {
 	?>
 	<p>
 		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
-			bp_get_admin_url(
+			bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -528,7 +529,7 @@ function bb_admin_performance_general_setting_tutorial() {
 			)
 		);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }
@@ -538,13 +539,13 @@ function bb_admin_performance_general_setting_tutorial() {
  *
  * @since BuddyBoss 2.5.80
  */
-function bb_admin_performance_activity_setting_tutorial() {
+function bboss_admin_performance_activity_setting_tutorial() {
 	?>
 	<p>
 		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
-			bp_get_admin_url(
+			bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -555,7 +556,7 @@ function bb_admin_performance_activity_setting_tutorial() {
 			)
 		);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }

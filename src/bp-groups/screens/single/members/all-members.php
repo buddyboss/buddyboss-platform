@@ -6,6 +6,9 @@
  * @since BuddyBoss 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of a group's members/all-members page.
  *
@@ -15,17 +18,17 @@ function groups_screen_group_members_all_members() {
 
 	// should also not accessible if members slug is removed
 	$members_menu_removed = true;
-	foreach ( bp_get_nav_menu_items('groups') as $nav_item ) {
+	foreach ( bboss_get_nav_menu_items('groups') as $nav_item ) {
 		if( 'members' === $nav_item->css_id ) {
 			$members_menu_removed = false;
 		}
 	}
 
-	if ( 'all-members' !== bp_get_group_current_members_tab() || $members_menu_removed ) {
+	if ( 'all-members' !== bboss_get_group_current_members_tab() || $members_menu_removed ) {
 		return false;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	/**
 	 * Fires before the loading of the group members/all-members page template.
@@ -43,6 +46,6 @@ function groups_screen_group_members_all_members() {
 	 *
 	 * @param string $value Path to a group's members/all-members template.
 	 */
-	bp_core_load_template( apply_filters( 'groups_template_group_members', 'groups/single/home' ) );
+	bboss_core_load_template( apply_filters( 'groups_template_group_members', 'groups/single/home' ) );
 }
 add_action( 'bp_screens', 'groups_screen_group_members_all_members' );

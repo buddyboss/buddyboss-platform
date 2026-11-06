@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Post user/group activity update.
  *
@@ -13,9 +16,9 @@
  *
  * @return bool False on failure.
  */
-function bp_activity_action_post_update() {
+function bboss_activity_action_post_update() {
 	// Do not proceed if user is not logged in, not viewing activity, or not posting.
-	if ( ! is_user_logged_in() || ! bp_is_activity_component() || ! bp_is_current_action( 'post' ) ) {
+	if ( ! is_user_logged_in() || ! bboss_is_activity_component() || ! bboss_is_current_action( 'post' ) ) {
 		return false;
 	}
 
@@ -57,18 +60,18 @@ function bp_activity_action_post_update() {
 
 	// No activity content so provide feedback and redirect.
 	if ( empty( $content ) ) {
-		bp_core_add_message( __( 'Please enter some content to post.', 'buddyboss' ), 'error' );
-		bp_core_redirect( wp_get_referer() );
+		bboss_core_add_message( __( 'Please enter some content to post.', 'buddyboss-platform' ), 'error' );
+		bboss_core_redirect( wp_get_referer() );
 	}
 
 	// No existing item_id.
 	if ( empty( $item_id ) ) {
-		$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+		$activity_id = bboss_activity_post_update( array( 'content' => $content ) );
 
 		// Post to groups object.
-	} elseif ( 'groups' == $object && bp_is_active( 'groups' ) ) {
+	} elseif ( 'groups' == $object && bboss_is_active( 'groups' ) ) {
 		if ( (int) $item_id ) {
-			$activity_id = groups_post_update(
+			$activity_id = bboss_groups_post_update(
 				array(
 					'content'  => $content,
 					'group_id' => $item_id,
@@ -91,12 +94,12 @@ function bp_activity_action_post_update() {
 
 	// Provide user feedback.
 	if ( ! empty( $activity_id ) ) {
-		bp_core_add_message( __( 'Update Posted!', 'buddyboss' ) );
+		bboss_core_add_message( __( 'Update Posted!', 'buddyboss-platform' ) );
 	} else {
-		bp_core_add_message( __( 'There was an error when posting your update. Please try again.', 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( 'There was an error when posting your update. Please try again.', 'buddyboss-platform' ), 'error' );
 	}
 
 	// Redirect.
-	bp_core_redirect( wp_get_referer() );
+	bboss_core_redirect( wp_get_referer() );
 }
-add_action( 'bp_actions', 'bp_activity_action_post_update' );
+add_action( 'bp_actions', 'bboss_activity_action_post_update' );

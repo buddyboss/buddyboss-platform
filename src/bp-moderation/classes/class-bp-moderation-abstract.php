@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-abstract class BP_Moderation_Abstract {
+abstract class BBoss_Moderation_Abstract {
 
 	/**
 	 * Moderation classes
@@ -116,28 +116,28 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @param array $args Content data.
 	 *
-	 * @return BP_Moderation|WP_Error
+	 * @return BBoss_Moderation|WP_Error
 	 */
 	public static function report( $args ) {
-		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+		$moderation = new BBoss_Moderation( $args['content_id'], $args['content_type'] );
 
 		// Get Moderation settings.
-		if ( BP_Moderation_Members::$moderation_type === $args['content_type'] ) {
-			$is_allow = bp_is_moderation_member_blocking_enable();
-		} elseif ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
-			$is_allow = bb_is_moderation_member_reporting_enable();
+		if ( BBoss_Moderation_Members::$moderation_type === $args['content_type'] ) {
+			$is_allow = bboss_is_moderation_member_blocking_enable();
+		} elseif ( BBoss_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
+			$is_allow = bboss_is_moderation_member_reporting_enable();
 		} else {
-			$is_allow = bp_is_moderation_content_reporting_enable( 0, $args['content_type'] );
+			$is_allow = bboss_is_moderation_content_reporting_enable( 0, $args['content_type'] );
 		}
 
 		// Return error is moderation setting not enabled.
 		if ( empty( $is_allow ) ) {
-			return new WP_Error( 'moderation_not_enable', __( 'Moderation not enabled.', 'buddyboss' ) );
+			return new WP_Error( 'moderation_not_enable', __( 'Moderation not enabled.', 'buddyboss-platform' ) );
 		}
 
 		if ( empty( $moderation->id ) ) {
 			$moderation->item_id   = $args['content_id'];
-			$moderation->item_type = ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ? BP_Moderation_Members::$moderation_type : $args['content_type'] );
+			$moderation->item_type = ( BBoss_Moderation_Members::$moderation_type_report === $args['content_type'] ? BBoss_Moderation_Members::$moderation_type : $args['content_type'] );
 		}
 
 		$moderation->category_id  = isset( $args['category_id'] ) ? $args['category_id'] : 0;
@@ -157,10 +157,10 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @param array $args Content data.
 	 *
-	 * @return BP_Moderation|WP_Error
+	 * @return BBoss_Moderation|WP_Error
 	 */
 	public static function hide( $args ) {
-		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+		$moderation = new BBoss_Moderation( $args['content_id'], $args['content_type'] );
 
 		$moderation->hide();
 
@@ -174,10 +174,10 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @param array $args Content data.
 	 *
-	 * @return BP_Moderation|WP_Error
+	 * @return BBoss_Moderation|WP_Error
 	 */
 	public static function unhide( $args ) {
-		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+		$moderation = new BBoss_Moderation( $args['content_id'], $args['content_type'] );
 
 		$moderation->unhide();
 
@@ -191,10 +191,10 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @param array $args Content data.
 	 *
-	 * @return BP_Moderation|WP_Error
+	 * @return BBoss_Moderation|WP_Error
 	 */
 	public static function delete( $args ) {
-		$moderation        = new BP_Moderation( $args['content_id'], $args['content_type'] );
+		$moderation        = new BBoss_Moderation( $args['content_id'], $args['content_type'] );
 		$args['force_all'] = isset( $args['force_all'] ) ? $args['force_all'] : false;
 		$moderation->delete( $args['force_all'] );
 
@@ -209,7 +209,7 @@ abstract class BP_Moderation_Abstract {
 	 * @param string $type         Moderation items type.
 	 * @param bool   $user_include Include item which report by current user even if it's not hidden.
 	 *
-	 * @return array $moderation See BP_Moderation::get() for description.
+	 * @return array $moderation See BBoss_Moderation::get() for description.
 	 */
 	public static function get_sitewide_hidden_item_ids( $type, $user_include = false ) {
 		$hidden_ids = array();
@@ -253,11 +253,11 @@ abstract class BP_Moderation_Abstract {
 	 * @return false|string
 	 */
 	protected function blocked_user_query() {
-		$bp = buddypress();
+		$bp = bboss();
 
-		if ( bp_is_moderation_member_blocking_enable( 0 ) ) {
+		if ( bboss_is_moderation_member_blocking_enable( 0 ) ) {
 
-			$hidden_users_ids = bp_moderation_get_hidden_user_ids();
+			$hidden_users_ids = bboss_moderation_get_hidden_user_ids();
 			if ( ! empty( $hidden_users_ids ) ) {
 				return "SELECT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ')';
 			}
@@ -282,11 +282,11 @@ abstract class BP_Moderation_Abstract {
 	 * @return string|bool Where sql on success, false otherwise.
 	 */
 	protected function blocked_author_query( $column ) {
-		if ( empty( $column ) || ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+		if ( empty( $column ) || ! bboss_is_moderation_member_blocking_enable( 0 ) ) {
 			return false;
 		}
 
-		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
+		$hidden_users_ids = bboss_moderation_get_hidden_user_ids();
 
 		if ( empty( $hidden_users_ids ) ) {
 			return false;
@@ -303,7 +303,7 @@ abstract class BP_Moderation_Abstract {
 	 * @return bool
 	 */
 	protected function is_reporting_enabled() {
-		return bp_is_moderation_content_reporting_enable( 0, $this->item_type );
+		return bboss_is_moderation_content_reporting_enable( 0, $this->item_type );
 	}
 
 	/**
@@ -314,7 +314,7 @@ abstract class BP_Moderation_Abstract {
 	 * @return bool
 	 */
 	protected function is_member_blocking_enabled() {
-		return bp_is_moderation_member_blocking_enable( 0 );
+		return bboss_is_moderation_member_blocking_enable( 0 );
 	}
 
 	/**
@@ -327,8 +327,8 @@ abstract class BP_Moderation_Abstract {
 	 * @return bool
 	 */
 	protected function is_content_hidden( $item_id ) {
-		if ( ( $this->is_member_blocking_enabled() && BP_Core_Suspend::check_blocked_content( $item_id, $this->item_type ) ) ||
-			( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+		if ( ( $this->is_member_blocking_enabled() && BBoss_Core_Suspend::check_blocked_content( $item_id, $this->item_type ) ) ||
+			( $this->is_reporting_enabled() && BBoss_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
 			return true;
 		}
 		return false;

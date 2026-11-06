@@ -6,18 +6,21 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of a group's Change cover photo page.
  *
  * @since BuddyPress 2.4.0
  */
-function groups_screen_group_admin_cover_image() {
-	if ( 'group-cover-image' != bp_get_group_current_admin_tab() ) {
+function bboss_groups_screen_group_admin_cover_image() {
+	if ( 'group-cover-image' != bboss_get_group_current_admin_tab() ) {
 		return false;
 	}
 
 	// If the logged-in user doesn't have permission or if cover photo uploads are disabled, then stop here.
-	if ( ! bp_is_item_admin() || ! bp_group_use_cover_image_header() ) {
+	if ( ! bboss_is_item_admin() || ! bboss_group_use_cover_image_header() ) {
 		return false;
 	}
 
@@ -28,7 +31,7 @@ function groups_screen_group_admin_cover_image() {
 	 *
 	 * @param int $id ID of the group that is being displayed.
 	 */
-	do_action( 'groups_screen_group_admin_cover_image', bp_get_current_group_id() );
+	do_action( 'groups_screen_group_admin_cover_image', bboss_get_current_group_id() );
 
 	/**
 	 * Filters the template to load for a group's Change cover photo page.
@@ -37,6 +40,6 @@ function groups_screen_group_admin_cover_image() {
 	 *
 	 * @param string $value Path to a group's Change cover photo template.
 	 */
-	bp_core_load_template( apply_filters( 'groups_template_group_admin_cover_image', 'groups/single/home' ) );
+	bboss_core_load_template( apply_filters( 'groups_template_group_admin_cover_image', 'groups/single/home' ) );
 }
-add_action( 'bp_screens', 'groups_screen_group_admin_cover_image' );
+add_action( 'bp_screens', 'bboss_groups_screen_group_admin_cover_image' );

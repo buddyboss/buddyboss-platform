@@ -6,11 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * BB_Pmpro_Helpers Class
+ * BBoss_Pmpro_Helpers Class
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  */
-class BB_Pmpro_Helpers {
+class BBoss_Pmpro_Helpers {
 
 	/**
 	 * The single instance of the class.
@@ -20,7 +20,7 @@ class BB_Pmpro_Helpers {
 	private static $instance = null;
 
 	/**
-	 * BB_Pmpro_Helpers constructor.
+	 * BBoss_Pmpro_Helpers constructor.
 	 */
 	public function __construct() {
 
@@ -62,7 +62,7 @@ class BB_Pmpro_Helpers {
 	public function bb_remove_pmpro_shortcodes( $content ) {
 		if (
 			defined( 'PMPRO_VERSION' ) &&
-			bp_is_active( 'search' ) &&
+			bboss_is_active( 'search' ) &&
 			(
 				isset( $_GET['bp_search'] ) || // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				(
@@ -90,4 +90,4 @@ class BB_Pmpro_Helpers {
 	}
 }
 
-BB_Pmpro_Helpers::instance();
+BBoss_Pmpro_Helpers::instance();

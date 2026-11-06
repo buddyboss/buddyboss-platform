@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Members_Admin' ) ) :
+if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 
 	/**
 	 * Load Members admin area.
@@ -17,7 +17,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 	 * @since BuddyPress 2.0.0
 	 */
 	#[\AllowDynamicProperties]
-	class BP_Members_Admin {
+	class BBoss_Members_Admin {
 
 		/** Directory *************************************************************/
 
@@ -65,14 +65,14 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @return BP_Members_Admin
+		 * @return BBoss_Members_Admin
 		 */
 		public static function register_members_admin() {
 			if ( ! is_admin() ) {
 				return;
 			}
 
-			$bp = buddypress();
+			$bp = bboss();
 
 			if ( empty( $bp->members->admin ) ) {
 				$bp->members->admin = new self();
@@ -97,7 +97,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 * @since BuddyPress 2.0.0
 		 */
 		private function setup_globals() {
-			$bp = buddypress();
+			$bp = bboss();
 
 			// Paths and URLs
 			$this->admin_dir = trailingslashit( $bp->plugin_dir . 'bp-members/admin' ); // Admin path.
@@ -106,7 +106,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			$this->js_url    = trailingslashit( $this->admin_url . 'js' ); // Admin CSS URL.
 
 			// Capability depends on config.
-			$this->capability = bp_core_do_network_admin() ? 'manage_network_users' : 'edit_users';
+			$this->capability = bboss_core_do_network_admin() ? 'manage_network_users' : 'edit_users';
 
 			// The Edit Profile Screen id.
 			$this->user_page = '';
@@ -137,11 +137,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			// Data specific to signups.
 			$this->users_page   = '';
 			$this->signups_page = '';
-			$this->users_url    = bp_get_admin_url( 'users.php' );
-			$this->users_screen = bp_core_do_network_admin() ? 'users-network' : 'users';
+			$this->users_url    = bboss_get_admin_url( 'users.php' );
+			$this->users_screen = bboss_core_do_network_admin() ? 'users-network' : 'users';
 
 			// Specific config: BuddyPress is not network activated.
-			$this->subsite_activated = (bool) is_multisite() && ! bp_is_network_activated();
+			$this->subsite_activated = (bool) is_multisite() && ! bboss_is_network_activated();
 
 			// When BuddyPress is not network activated, only Super Admin can moderate signups.
 			if ( ! empty( $this->subsite_activated ) ) {
@@ -178,7 +178,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			add_action( 'admin_head-site-users.php', array( $this, 'profile_admin_head' ) );
 
 			// Add a row action to users listing.
-			if ( bp_core_do_network_admin() ) {
+			if ( bboss_core_do_network_admin() ) {
 				add_filter( 'ms_user_row_actions', array( $this, 'row_actions' ), 10, 2 );
 				add_action( 'admin_init', array( $this, 'add_edit_profile_url_filter' ) );
 				add_action( 'wp_after_admin_bar_render', array( $this, 'remove_edit_profile_url_filter' ) );
@@ -219,7 +219,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					 * Users screen on multiblog is users, but signups
 					 * need to be managed in the network for this case
 					 */
-					if ( bp_is_network_activated() && bp_is_multiblog_mode() && false === strpos( $user_screen, '-network' ) ) {
+					if ( bboss_is_network_activated() && bboss_is_multiblog_mode() && false === strpos( $user_screen, '-network' ) ) {
 						$user_screen .= '-network';
 					}
 
@@ -238,7 +238,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			/** Users List - Members Types ***************************************
 			 */
 
-			if ( is_admin() && bp_get_member_types() ) {
+			if ( is_admin() && bboss_get_member_types() ) {
 
 				// Add "Change type" <select> to WP admin users list table and process bulk members type changes.
 				add_action( 'restrict_manage_users', array( $this, 'users_table_output_type_change_select' ) );
@@ -265,11 +265,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			if ( is_multisite() ) {
 				$check_current_wp = $value;
-				$check_current_bp = (bool) bp_enable_site_registration();
+				$check_current_bp = (bool) bboss_enable_site_registration();
 				if ( ( 'all' === $check_current_wp || 'user' === $check_current_wp ) && false === $check_current_bp ) {
-					bp_update_option( 'bp-enable-site-registration', 1 );
+					bboss_update_option( 'bp-enable-site-registration', 1 );
 				} elseif ( ( 'none' === $check_current_wp || 'registration' === $check_current_wp ) && true === $check_current_bp ) {
-					bp_update_option( 'bp-enable-site-registration', 1 );
+					bboss_update_option( 'bp-enable-site-registration', 1 );
 				}
 			}
 
@@ -286,21 +286,21 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		function bp_update_registration_update_option() {
 
 			if ( ! is_multisite() ) {
-				$check_current_wp = (bool) bp_get_option( 'users_can_register', 0 );
-				$check_current_bp = (bool) bp_enable_site_registration();
+				$check_current_wp = (bool) bboss_get_option( 'users_can_register', 0 );
+				$check_current_bp = (bool) bboss_enable_site_registration();
 				if ( true === $check_current_wp && false === $check_current_bp ) {
-					bp_update_option( 'bp-enable-site-registration', 1 );
+					bboss_update_option( 'bp-enable-site-registration', 1 );
 				} elseif ( false === $check_current_wp && true === $check_current_bp ) {
 					update_option( 'users_can_register', 1 );
-					bp_update_option( 'bp-enable-site-registration', 1 );
+					bboss_update_option( 'bp-enable-site-registration', 1 );
 				}
 			} else {
 				$check_current_wp = get_site_option( 'registration', 'none' );
-				$check_current_bp = (bool) bp_enable_site_registration();
+				$check_current_bp = (bool) bboss_enable_site_registration();
 				if ( ( 'all' === $check_current_wp || 'user' === $check_current_wp ) && false === $check_current_bp ) {
-					bp_update_option( 'bp-enable-site-registration', 1 );
+					bboss_update_option( 'bp-enable-site-registration', 1 );
 				} elseif ( ( 'none' === $check_current_wp || 'registration' === $check_current_wp ) && true === $check_current_bp ) {
-					bp_update_option( 'bp-enable-site-registration', 1 );
+					bboss_update_option( 'bp-enable-site-registration', 1 );
 				}
 			}
 
@@ -351,7 +351,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function multisite_registration_on( $option_name, $value ) {
 			if ( 'user' === $value || 'all' === $value ) {
-				bp_core_add_page_mappings(
+				bboss_core_add_page_mappings(
 					array(
 						'register' => 1,
 						'activate' => 1,
@@ -359,12 +359,12 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				);
 
 				// Update site registrations options based on the BuddyBoss general registration settings.
-				bp_update_option( 'bp-enable-site-registration', 1 );
+				bboss_update_option( 'bp-enable-site-registration', 1 );
 
 			} else {
 
 				// Update site registrations options based on the BuddyBoss general registration settings.
-				bp_update_option( 'bp-enable-site-registration', 0 );
+				bboss_update_option( 'bp-enable-site-registration', 0 );
 
 			}
 		}
@@ -380,7 +380,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		public function single_site_registration_on( $old_value, $value ) {
 			// Single site.
 			if ( ! is_multisite() && ! empty( $value ) ) {
-				bp_core_add_page_mappings(
+				bboss_core_add_page_mappings(
 					array(
 						'register' => 1,
 						'activate' => 1,
@@ -388,12 +388,12 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				);
 
 				// Update site registrations options based on the BuddyBoss general registration settings.
-				bp_update_option( 'bp-enable-site-registration', 1 );
+				bboss_update_option( 'bp-enable-site-registration', 1 );
 
 			} else {
 
 				// Update site registrations options based on the BuddyBoss general registration settings.
-				bp_update_option( 'bp-enable-site-registration', 0 );
+				bboss_update_option( 'bp-enable-site-registration', 0 );
 
 			}
 		}
@@ -450,7 +450,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 				// Trust the 'bp_moderate' capability.
 			} else {
-				$retval = bp_current_user_can( 'bp_moderate' );
+				$retval = bboss_current_user_can( 'bp_moderate' );
 			}
 
 			return $retval;
@@ -474,25 +474,25 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					case 'avatar':
 						$notice = array(
 							'class'   => 'updated',
-							'message' => __( 'Profile photo was deleted.', 'buddyboss' ),
+							'message' => __( 'Profile photo was deleted.', 'buddyboss-platform' ),
 						);
 						break;
 					case 'ham':
 						$notice = array(
 							'class'   => 'updated',
-							'message' => __( 'User removed as spammer.', 'buddyboss' ),
+							'message' => __( 'User removed as spammer.', 'buddyboss-platform' ),
 						);
 						break;
 					case 'spam':
 						$notice = array(
 							'class'   => 'updated',
-							'message' => __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddyboss' ),
+							'message' => __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddyboss-platform' ),
 						);
 						break;
 					case 1:
 						$notice = array(
 							'class'   => 'updated',
-							'message' => __( 'Profile updated.', 'buddyboss' ),
+							'message' => __( 'Profile updated.', 'buddyboss-platform' ),
 						);
 						break;
 				}
@@ -504,37 +504,37 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					case 'avatar':
 						$notice = array(
 							'class'   => 'error',
-							'message' => __( 'There was a problem deleting that profile photo. Please try again.', 'buddyboss' ),
+							'message' => __( 'There was a problem deleting that profile photo. Please try again.', 'buddyboss-platform' ),
 						);
 						break;
 					case 'ham':
 						$notice = array(
 							'class'   => 'error',
-							'message' => __( 'User could not be removed as spammer.', 'buddyboss' ),
+							'message' => __( 'User could not be removed as spammer.', 'buddyboss-platform' ),
 						);
 						break;
 					case 'spam':
 						$notice = array(
 							'class'   => 'error',
-							'message' => __( 'User could not be marked as spammer.', 'buddyboss' ),
+							'message' => __( 'User could not be marked as spammer.', 'buddyboss-platform' ),
 						);
 						break;
 					case 1:
 						$notice = array(
 							'class'   => 'error',
-							'message' => __( 'An error occurred while trying to update the profile.', 'buddyboss' ),
+							'message' => __( 'An error occurred while trying to update the profile.', 'buddyboss-platform' ),
 						);
 						break;
 					case 2:
 						$notice = array(
 							'class'   => 'error',
-							'message' => __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss' ),
+							'message' => __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss-platform' ),
 						);
 						break;
 					case 3:
 						$notice = array(
 							'class'   => 'error',
-							'message' => __( 'There was a problem updating some of your profile information. Please try again.', 'buddyboss' ),
+							'message' => __( 'There was a problem updating some of your profile information. Please try again.', 'buddyboss-platform' ),
 						);
 						break;
 					case 4:
@@ -562,8 +562,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			// Add the faux "Edit Profile" submenu page.
 			$hooks['user'] = $this->user_page = add_submenu_page(
 				'profile.php',
-				__( 'Edit Profile', 'buddyboss' ),
-				__( 'Edit Profile', 'buddyboss' ),
+				__( 'Edit Profile', 'buddyboss-platform' ),
+				__( 'Edit Profile', 'buddyboss-platform' ),
 				'exist',
 				'bp-profile-edit',
 				array( $this, 'user_admin' )
@@ -598,20 +598,20 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			// Manage user's profile.
 			$hooks['user'] = $this->user_page = add_submenu_page(
 				$this->user_profile . '.php',
-				__( 'Edit Profile', 'buddyboss' ),
-				__( 'Edit Profile', 'buddyboss' ),
+				__( 'Edit Profile', 'buddyboss-platform' ),
+				__( 'Edit Profile', 'buddyboss-platform' ),
 				'read',
 				'bp-profile-edit',
 				array( $this, 'user_admin' )
 			);
 
 			// Only show sign-ups where they belong.
-			if ( ( ! bp_is_network_activated() && ! is_network_admin() ) || ( is_network_admin() && bp_is_network_activated() ) ) {
+			if ( ( ! bboss_is_network_activated() && ! is_network_admin() ) || ( is_network_admin() && bboss_is_network_activated() ) ) {
 
 				// Manage signups.
 				$hooks['signups'] = $this->signups_page = add_users_page(
-					__( 'Pending Signups', 'buddyboss' ),
-					__( 'Pending Signups', 'buddyboss' ),
+					__( 'Pending Signups', 'buddyboss-platform' ),
+					__( 'Pending Signups', 'buddyboss-platform' ),
 					$this->capability,
 					'bp-signups',
 					array( $this, 'signups_admin' )
@@ -738,7 +738,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				return;
 			}
 
-			$min = bp_core_get_minified_asset_suffix();
+			$min = bboss_core_get_minified_asset_suffix();
 			$css = $this->css_url . "admin{$min}.css";
 
 			/**
@@ -750,7 +750,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			 */
 			$css = apply_filters( 'bp_members_admin_css', $css );
 
-			wp_enqueue_style( 'bp-members-css', $css, array(), bp_get_version() );
+			wp_enqueue_style( 'bp-members-css', $css, array(), bboss_get_version() );
 
 			wp_style_add_data( 'bp-members-css', 'rtl', true );
 			if ( $min ) {
@@ -769,14 +769,14 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				 * @param string $js URL to the JavaScript admin file to load.
 				 */
 				$js = apply_filters( 'bp_members_admin_js', $js );
-				wp_enqueue_script( 'bp-members-js', $js, array( 'jquery', 'jquery-ui-sortable' ), bp_get_version(), true );
+				wp_enqueue_script( 'bp-members-js', $js, array( 'jquery', 'jquery-ui-sortable' ), bboss_get_version(), true );
 
 				wp_localize_script(
 					'bp-members-js',
 					'BB_Member_Admin',
 					array(
-						'confirm_delete_set' => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-						'empty_field'        => __( 'New Field', 'buddyboss' ),
+						'confirm_delete_set' => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss-platform' ),
+						'empty_field'        => __( 'New Field', 'buddyboss-platform' ),
 					)
 				);
 			}
@@ -848,11 +848,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			if ( current_user_can( 'edit_user', $user->ID ) ) :
 				?>
 
-				<a class="nav-tab<?php echo esc_attr( $wp_active ); ?>" href="<?php echo esc_url( $wordpress_url ); ?>"><?php _e( 'Profile', 'buddyboss' ); ?></a>
+				<a class="nav-tab<?php echo esc_attr( $wp_active ); ?>" href="<?php echo esc_url( $wordpress_url ); ?>"><?php esc_html_e( 'Profile', 'buddyboss-platform' ); ?></a>
 
 			<?php endif; ?>
 
-			<a class="nav-tab<?php echo esc_attr( $bp_active ); ?>" href="<?php echo esc_url( $community_url ); ?>"><?php _e( 'Extended Profile', 'buddyboss' ); ?></a>
+			<a class="nav-tab<?php echo esc_attr( $bp_active ); ?>" href="<?php echo esc_url( $community_url ); ?>"><?php esc_html_e( 'Extended Profile', 'buddyboss-platform' ); ?></a>
 
 			<?php
 			/**
@@ -886,18 +886,20 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			// Can current user edit this profile?
 			if ( ! $this->member_can_edit( $user_id ) ) {
-				wp_die( __( 'You cannot edit the requested user.', 'buddyboss' ) );
+				wp_die( esc_html__( 'You cannot edit the requested user.', 'buddyboss-platform' ) );
 			}
 
 			// Build redirection URL.
-			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham', 'delete_avatar' ), $_SERVER['REQUEST_URI'] );
-			$doaction    = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : false;
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham', 'delete_avatar' ), $request_uri );
+			$doaction    = ! empty( $_REQUEST['action'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) : false;
 
 			if ( ! empty( $_REQUEST['user_status'] ) ) {
-				$spam = (bool) ( 'spam' === $_REQUEST['user_status'] );
+				$user_status = sanitize_text_field( wp_unslash( $_REQUEST['user_status'] ) );
+				$spam        = (bool) ( 'spam' === $user_status );
 
-				if ( $spam !== bp_is_user_spammer( $user_id ) ) {
-					$doaction = $_REQUEST['user_status'];
+				if ( $spam !== bboss_is_user_spammer( $user_id ) ) {
+					$doaction = $user_status;
 				}
 			}
 
@@ -933,24 +935,24 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				get_current_screen()->add_help_tab(
 					array(
 						'id'      => 'bp-profile-edit-overview',
-						'title'   => __( 'Overview', 'buddyboss' ),
+						'title'   => __( 'Overview', 'buddyboss-platform' ),
 						'content' =>
-						'<p>' . __( 'This is the admin view of a user\'s profile.', 'buddyboss' ) . '</p>' .
-						'<p>' . __( 'In the main column, you can edit the fields of the user\'s extended profile.', 'buddyboss' ) . '</p>' .
-						'<p>' . __( 'In the right-hand column, you can update the user\'s status, delete the user\'s avatar, and view recent statistics.', 'buddyboss' ) . '</p>',
+						'<p>' . __( 'This is the admin view of a user\'s profile.', 'buddyboss-platform' ) . '</p>' .
+						'<p>' . __( 'In the main column, you can edit the fields of the user\'s extended profile.', 'buddyboss-platform' ) . '</p>' .
+						'<p>' . __( 'In the right-hand column, you can update the user\'s status, delete the user\'s avatar, and view recent statistics.', 'buddyboss-platform' ) . '</p>',
 					)
 				);
 
 				// Help panel - sidebar links.
 				get_current_screen()->set_help_sidebar(
-					'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-					'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
+					'<p><strong>' . __( 'For more information:', 'buddyboss-platform' ) . '</strong></p>' .
+					'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss-platform' ) . '</p>'
 				);
 
 				// Register metaboxes for the edit screen.
 				add_meta_box(
 					'submitdiv',
-					__( 'Status', 'buddyboss' ),
+					__( 'Status', 'buddyboss-platform' ),
 					array( $this, 'user_admin_status_metabox' ),
 					get_current_screen()->id,
 					'side',
@@ -976,15 +978,16 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 				// If xProfile is inactive, difficult to know what's profile we're on.
 				if ( 'normal' === $this->stats_metabox->context ) {
-					$display_name = bp_core_get_user_displayname( $user_id );
+					$display_name = bboss_core_get_user_displayname( $user_id );
 				} else {
-					$display_name = __( 'Member', 'buddyboss' );
+					$display_name = __( 'Member', 'buddyboss-platform' );
 				}
 
 				// User Stat metabox.
 				add_meta_box(
 					'bp_members_admin_user_stats',
-					sprintf( __( "%s's Stats", 'buddyboss' ), $display_name ),
+					/* translators: %s: member display name. */
+					sprintf( __( "%s's Stats", 'buddyboss-platform' ), $display_name ),
 					array( $this, 'user_admin_stats_metabox' ),
 					get_current_screen()->id,
 					sanitize_key( $this->stats_metabox->context ),
@@ -992,11 +995,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				);
 
 				// profile type metabox. Only added if profile types have been registered.
-				$member_types = bp_get_member_types();
+				$member_types = bboss_get_member_types();
 				if ( ! empty( $member_types ) ) {
 					add_meta_box(
 						'bp_members_admin_member_type',
-						__( 'Profile Type', 'buddyboss' ),
+						__( 'Profile Type', 'buddyboss-platform' ),
 						array( $this, 'user_admin_member_type_metabox' ),
 						get_current_screen()->id,
 						'side',
@@ -1028,13 +1031,13 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 				check_admin_referer( 'edit-bp-profile_' . $user_id );
 
-				if ( bp_core_process_spammer_status( $user_id, $doaction ) ) {
-					$redirect_to = add_query_arg( 'updated', $doaction, $redirect_to );
+				if ( bboss_core_process_spammer_status( $user_id, $doaction ) ) {
+					$redirect_to = add_query_arg( 'updated', rawurlencode( $doaction ), $redirect_to );
 				} else {
-					$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+					$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 				}
 
-				bp_core_redirect( $redirect_to );
+				bboss_core_redirect( $redirect_to );
 
 				// Update other stuff once above ones are done.
 			} else {
@@ -1052,7 +1055,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				 */
 				do_action_ref_array( 'bp_members_admin_update_user', array( $doaction, $user_id, $_REQUEST, $this->redirect ) );
 
-				bp_core_redirect( $this->redirect );
+				bboss_core_redirect( $this->redirect );
 			}
 		}
 
@@ -1063,7 +1066,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin() {
 
-			if ( ! bp_current_user_can( 'bp_moderate' ) && empty( $this->is_self_profile ) ) {
+			if ( ! bboss_current_user_can( 'bp_moderate' ) && empty( $this->is_self_profile ) ) {
 				die( '-1' );
 			}
 
@@ -1073,13 +1076,14 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			// Construct title.
 			if ( true === $this->is_self_profile ) {
-				$title = __( 'Profile', 'buddyboss' );
+				$title = __( 'Profile', 'buddyboss-platform' );
 			} else {
-				$title = __( 'Edit User', 'buddyboss' );
+				$title = __( 'Edit User', 'buddyboss-platform' );
 			}
 
 			// Construct URL for form.
-			$request_url     = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham' ), $_SERVER['REQUEST_URI'] );
+			$request_uri     = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$request_url     = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham' ), $request_uri );
 			$form_action_url = add_query_arg( 'action', 'update', $request_url );
 			$wp_http_referer = false;
 			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
@@ -1104,7 +1108,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 					<?php if ( ! empty( $wp_http_referer ) && ( 'updated' === $notice['class'] ) ) : ?>
 
-					<p><a href="<?php echo esc_url( $wp_http_referer ); ?>"><?php esc_html_e( '&larr; Back to Users', 'buddyboss' ); ?></a></p>
+					<p><a href="<?php echo esc_url( $wp_http_referer ); ?>"><?php esc_html_e( '&larr; Back to Users', 'buddyboss-platform' ); ?></a></p>
 
 				<?php endif; ?>
 
@@ -1121,11 +1125,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-						<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add New', 'buddyboss' ); ?></a>
+						<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add New', 'buddyboss-platform' ); ?></a>
 
 					<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-						<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add Existing', 'buddyboss' ); ?></a>
+						<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add Existing', 'buddyboss-platform' ); ?></a>
 
 					<?php endif; ?>
 
@@ -1141,11 +1145,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-							<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add New', 'buddyboss' ); ?></a>
+							<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add New', 'buddyboss-platform' ); ?></a>
 
 						<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-							<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add Existing', 'buddyboss' ); ?></a>
+							<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add Existing', 'buddyboss-platform' ); ?></a>
 
 						<?php endif; ?>
 
@@ -1189,9 +1193,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					<?php
 					printf(
 						'%1$s <a href="%2$s">%3$s</a>',
-						__( 'No user found with this ID.', 'buddyboss' ),
-						esc_url( bp_get_admin_url( 'users.php' ) ),
-						__( 'Go back and try again.', 'buddyboss' )
+						esc_html__( 'No user found with this ID.', 'buddyboss-platform' ),
+						esc_url( bboss_get_admin_url( 'users.php' ) ),
+						esc_html__( 'Go back and try again.', 'buddyboss-platform' )
 					);
 					?>
 				</p>
@@ -1224,7 +1228,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			if ( isset( $user->user_status ) && ( 2 == $user->user_status ) ) :
 				?>
 
-			<p class="not-activated"><?php esc_html_e( 'User account has not yet been activated', 'buddyboss' ); ?></p><br/>
+			<p class="not-activated"><?php esc_html_e( 'User account has not yet been activated', 'buddyboss-platform' ); ?></p><br/>
 
 				<?php
 				return;
@@ -1238,7 +1242,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					<?php
 
 					// Get the spam status once here to compare against below.
-					$is_spammer = bp_is_user_spammer( $user->ID );
+					$is_spammer = bboss_is_user_spammer( $user->ID );
 
 					/**
 					 * In configs where BuddyPress is not network activated,
@@ -1252,13 +1256,13 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 						?>
 
 						<div class="misc-pub-section" id="comment-status-radio">
-							<label class="approved"><input type="radio" name="user_status" value="ham" <?php checked( $is_spammer, false ); ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></label><br />
+							<label class="approved"><input type="radio" name="user_status" value="ham" <?php checked( $is_spammer, false ); ?>><?php esc_html_e( 'Active', 'buddyboss-platform' ); ?></label><br />
 
 							<?php
-							if ( bp_is_active( 'moderation' ) ) {
-								$is_suspend = bp_moderation_is_user_suspended( $user->ID );
+							if ( bboss_is_active( 'moderation' ) ) {
+								$is_suspend = bboss_moderation_is_user_suspended( $user->ID );
 								?>
-								<label class="suspend"><input type="radio" name="user_status" id="user_status" value="suspend" <?php checked( $is_suspend, true ); ?>><?php esc_html_e( 'Suspend', 'buddyboss' ); ?></label>
+								<label class="suspend"><input type="radio" name="user_status" id="user_status" value="suspend" <?php checked( $is_suspend, true ); ?>><?php esc_html_e( 'Suspend', 'buddyboss-platform' ); ?></label>
 								<?php
 							}
 							?>
@@ -1268,9 +1272,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 					<div class="misc-pub-section curtime misc-pub-section-last">
 							<?php
-							$date = bp_format_time( strtotime( $user->user_registered ), false, true );
+							$date = bboss_format_time( strtotime( $user->user_registered ), false, true );
 							?>
-						<span id="timestamp"><?php printf( __( 'Registered on: %s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></span>
+						<span id="timestamp"><?php /* translators: %s: registration date. */ echo wp_kses_post( sprintf( esc_html__( 'Registered on: %s', 'buddyboss-platform' ), '<strong>' . esc_html( $date ) . '</strong>' ) ); ?></span>
 					</div>
 				</div> <!-- #misc-publishing-actions -->
 
@@ -1280,8 +1284,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			<div id="major-publishing-actions">
 
 				<div id="publishing-action">
-					<a class="button bp-view-profile" href="<?php echo esc_url( bp_core_get_user_domain( $user->ID ) ); ?>" target="_blank"><?php esc_html_e( 'View Profile', 'buddyboss' ); ?></a>
-						<?php submit_button( esc_html__( 'Update Profile', 'buddyboss' ), 'primary', 'save', false ); ?>
+					<a class="button bp-view-profile" href="<?php echo esc_url( bboss_core_get_user_domain( $user->ID ) ); ?>" target="_blank"><?php esc_html_e( 'View Profile', 'buddyboss-platform' ); ?></a>
+						<?php submit_button( esc_html__( 'Update Profile', 'buddyboss-platform' ), 'primary', 'save', false ); ?>
 				</div>
 				<div class="clear"></div>
 			</div><!-- #major-publishing-actions -->
@@ -1300,7 +1304,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php /* translators: %s: member display name. */ printf( esc_html__( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss-platform' ), esc_html( bboss_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -1313,7 +1317,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin_suspended_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php /* translators: %s: member display name. */ printf( esc_html__( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss-platform' ), esc_html( bboss_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -1337,14 +1341,14 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 				// Account is activated, getting user's last activity.
 			} else {
-				$last_active = bp_get_user_last_activity( $user->ID );
+				$last_active = bboss_get_user_last_activity( $user->ID );
 			}
 
-			$date = bp_format_time( strtotime( $last_active ), false, true );
+			$date = bboss_format_time( strtotime( $last_active ), false, true );
 			?>
 
 		<ul>
-			<li class="bp-members-profile-stats"><?php printf( __( 'Last active: %1$s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></li>
+			<li class="bp-members-profile-stats"><?php /* translators: %s: last active date. */ echo wp_kses_post( sprintf( esc_html__( 'Last active: %1$s', 'buddyboss-platform' ), '<strong>' . esc_html( $date ) . '</strong>' ) ); ?></li>
 
 				<?php
 				// Loading other stats only if user has activated their account.
@@ -1380,21 +1384,21 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				return;
 			}
 
-			$types        = bp_get_member_types( array(), 'objects' );
-			$current_type = bp_get_member_type( $user->ID );
+			$types        = bboss_get_member_types( array(), 'objects' );
+			$current_type = bboss_get_member_type( $user->ID );
 			?>
 
 		<label for="bp-members-profile-member-type" class="screen-reader-text">
 			<?php
 			/* translators: accessibility text */
-			esc_html_e( 'Select profile type', 'buddyboss' );
+			esc_html_e( 'Select profile type', 'buddyboss-platform' );
 			?>
 		</label>
 		<select name="bp-members-profile-member-type" id="bp-members-profile-member-type">
 			<option value="" <?php selected( '', $current_type ); ?>>
 											 <?php
 												/* translators: no option picked in select box */
-												esc_attr_e( '----', 'buddyboss' );
+												esc_attr_e( '----', 'buddyboss-platform' );
 												?>
 			</option>
 			<?php foreach ( $types as $type ) : ?>
@@ -1422,20 +1426,20 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			check_admin_referer( 'bp-member-type-change-' . $user_id, 'bp-member-type-nonce' );
 
 			// Permission check.
-			if ( ! bp_current_user_can( 'bp_moderate' ) && $user_id != bp_loggedin_user_id() ) {
+			if ( ! bboss_current_user_can( 'bp_moderate' ) && $user_id != bboss_loggedin_user_id() ) {
 				return;
 			}
 
 			// profile type string must either reference a valid profile type, or be empty.
 			$member_type = stripslashes( $_POST['bp-members-profile-member-type'] );
-			if ( ! empty( $member_type ) && ! bp_get_member_type_object( $member_type ) ) {
+			if ( ! empty( $member_type ) && ! bboss_get_member_type_object( $member_type ) ) {
 				return;
 			}
 
 			if ( '' !== $member_type ) {
 
 				// Get post id of selected profile type.
-				$post_id = bp_member_type_post_by_type( $member_type );
+				$post_id = bboss_member_type_post_by_type( $member_type );
 
 				// Get selected profile type role.
 				$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
@@ -1450,11 +1454,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 							 * If an invalid profile type is passed, someone's doing something
 							 * fishy with the POST request, so we can fail silently.
 							 */
-							if ( bp_set_member_type( $user_id, $member_type ) ) {
+							if ( bboss_set_member_type( $user_id, $member_type ) ) {
 								// @todo Success messages can't be posted because other stuff happens on the page load.
 							}
 						} else {
-							$bp_error_message_string = __( 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.', 'buddyboss' );
+							$bp_error_message_string = __( 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.', 'buddyboss-platform' );
 							$error_message           = apply_filters( 'bp_invalid_role_selection_extended_profile', $bp_error_message_string );
 							// Define the settings error to display
 							add_settings_error(
@@ -1498,17 +1502,17 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			 * If an invalid profile type is passed, someone's doing something
 			 * fishy with the POST request, so we can fail silently.
 			 */
-			if ( bp_set_member_type( $user_id, $member_type ) ) {
+			if ( bboss_set_member_type( $user_id, $member_type ) ) {
 				// @todo Success messages can't be posted because other stuff happens on the page load.
 			}
 
-			if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
-				$id = (int) bp_member_type_post_by_type( $member_type );
+			if ( function_exists( 'bboss_get_xprofile_member_type_field_id' ) && bboss_get_xprofile_member_type_field_id() > 0 ) {
+				$id = (int) bboss_member_type_post_by_type( $member_type );
 				if ( $id > 0 ) {
-					xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, $id );
+					bboss_xprofile_set_field_data( bboss_get_xprofile_member_type_field_id(), $user_id, $id );
 				}
 				if ( '' === $member_type ) {
-					xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, '' );
+					bboss_xprofile_set_field_data( bboss_get_xprofile_member_type_field_id(), $user_id, '' );
 				}
 			}
 
@@ -1531,7 +1535,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				check_admin_referer( 'edit-bp-profile_' . $user_id );
 
 				// Permission check.
-				if ( ! bp_current_user_can( 'bp_moderate' ) && $user_id != bp_loggedin_user_id() ) {
+				if ( ! bboss_current_user_can( 'bp_moderate' ) && $user_id != bboss_loggedin_user_id() ) {
 					return;
 				}
 
@@ -1539,9 +1543,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				$is_suspend = isset( $_POST['user_status'] ) ? stripslashes( $_POST['user_status'] ) : '';
 
 				if ( ! empty( $is_suspend ) && 'suspend' === $is_suspend ) {
-					BP_Suspend_Member::suspend_user( $user_id );
-				} elseif ( bp_is_active( 'moderation' ) && bp_moderation_is_user_suspended( $user_id ) ) {
-					BP_Suspend_Member::unsuspend_user( $user_id );
+					BBoss_Suspend_Member::suspend_user( $user_id );
+				} elseif ( bboss_is_active( 'moderation' ) && bboss_moderation_is_user_suspended( $user_id ) ) {
+					BBoss_Suspend_Member::unsuspend_user( $user_id );
 				}
 			}
 		}
@@ -1577,11 +1581,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			$args['wp_http_referer'] = urlencode( $wp_http_referer );
 
 			// Add the "Extended" link if the current user can edit this user.
-			if ( current_user_can( 'edit_user', $user->ID ) || bp_current_user_can( 'bp_moderate' ) ) {
+			if ( current_user_can( 'edit_user', $user->ID ) || bboss_current_user_can( 'bp_moderate' ) ) {
 
 				// Add query args and setup the Extended link.
 				$edit_profile      = add_query_arg( $args, $this->edit_profile_url );
-				$edit_profile_link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_profile ), esc_html__( 'Extended', 'buddyboss' ) );
+				$edit_profile_link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_profile ), esc_html__( 'Extended', 'buddyboss-platform' ) );
 
 				/**
 				 * Check the edit action is available
@@ -1686,12 +1690,12 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			global $wpdb;
 
 			// Bail if this is an ajax request.
-			if ( defined( 'DOING_AJAX' ) ) {
+			if ( defined( 'BBOSS_DOING_AJAX' ) ) {
 				return;
 			}
 
 			// Bail if updating BuddyPress.
-			if ( bp_is_update() ) {
+			if ( bboss_is_update() ) {
 				return;
 			}
 
@@ -1736,16 +1740,17 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				$class = '';
 			}
 
-			$signups = BP_Signup::count_signups();
+			$signups = BBoss_Signup::count_signups();
 
 			if ( is_network_admin() ) {
 				$base_url = network_admin_url( 'users.php' );
 			} else {
-				$base_url = bp_get_admin_url( 'users.php' );
+				$base_url = bboss_get_admin_url( 'users.php' );
 			}
 
 			$url  = add_query_arg( 'page', 'bp-signups', $base_url );
-			$text = sprintf( __( 'Pending %s', 'buddyboss' ), '<span class="count">(' . bp_core_number_format( $signups ) . ')</span>' );
+			/* translators: %s: pending signup count markup. */
+			$text = sprintf( __( 'Pending %s', 'buddyboss-platform' ), '<span class="count">(' . bboss_core_number_format( $signups ) . ')</span>' );
 
 			$views['registered'] = sprintf( '<a href="%1$s" class="%2$s">%3$s</a>', esc_url( $url ), $class, $text );
 
@@ -1789,8 +1794,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			global $bp_members_signup_list_table;
 
 			// Build redirection URL.
-			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'activated', 'notactivated', 'deleted', 'notdeleted', 'resent', 'notresent', 'do_delete', 'do_resend', 'do_activate', '_wpnonce', 'signup_ids' ), $_SERVER['REQUEST_URI'] );
-			$doaction    = bp_admin_list_table_current_bulk_action();
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'activated', 'notactivated', 'deleted', 'notdeleted', 'resent', 'notresent', 'do_delete', 'do_resend', 'do_activate', '_wpnonce', 'signup_ids' ), $request_uri );
+			$doaction    = bboss_admin_list_table_current_bulk_action();
 
 			/**
 			 * Fires at the start of the signups admin load.
@@ -1821,48 +1827,48 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				}
 
 				// The per_page screen option.
-				add_screen_option( 'per_page', array( 'label' => __( 'Pending Accounts', 'buddyboss' ) ) );
+				add_screen_option( 'per_page', array( 'label' => __( 'Pending Accounts', 'buddyboss-platform' ) ) );
 
 				get_current_screen()->add_help_tab(
 					array(
 						'id'      => 'bp-signups-overview',
-						'title'   => __( 'Overview', 'buddyboss' ),
+						'title'   => __( 'Overview', 'buddyboss-platform' ),
 						'content' =>
-						'<p>' . __( 'This is the administration screen for pending accounts on your site.', 'buddyboss' ) . '</p>' .
-						'<p>' . __( 'From the screen options, you can customize the displayed columns and the pagination of this screen.', 'buddyboss' ) . '</p>' .
-						'<p>' . __( 'You can reorder the list of your pending accounts by clicking on the Username, Email or Registered column headers.', 'buddyboss' ) . '</p>' .
-						'<p>' . __( 'Using the search form, you can find pending accounts more easily. The Username and Email fields will be included in the search.', 'buddyboss' ) . '</p>',
+						'<p>' . __( 'This is the administration screen for pending accounts on your site.', 'buddyboss-platform' ) . '</p>' .
+						'<p>' . __( 'From the screen options, you can customize the displayed columns and the pagination of this screen.', 'buddyboss-platform' ) . '</p>' .
+						'<p>' . __( 'You can reorder the list of your pending accounts by clicking on the Username, Email or Registered column headers.', 'buddyboss-platform' ) . '</p>' .
+						'<p>' . __( 'Using the search form, you can find pending accounts more easily. The Username and Email fields will be included in the search.', 'buddyboss-platform' ) . '</p>',
 					)
 				);
 
 				get_current_screen()->add_help_tab(
 					array(
 						'id'      => 'bp-signups-actions',
-						'title'   => __( 'Actions', 'buddyboss' ),
+						'title'   => __( 'Actions', 'buddyboss-platform' ),
 						'content' =>
-						'<p>' . __( 'Hovering over a row in the pending accounts list will display action links that allow you to manage pending accounts. You can perform the following actions:', 'buddyboss' ) . '</p>' .
-						'<ul><li>' . __( '"Email" takes you to the confirmation screen before being able to send the activation link to the desired pending account. You can only send the activation email once per day.', 'buddyboss' ) . '</li>' .
-						'<li>' . __( '"Delete" allows you to delete a pending account from your site. You will be asked to confirm this deletion.', 'buddyboss' ) . '</li></ul>' .
-						'<p>' . __( 'By clicking on a Username you will be able to activate a pending account from the confirmation screen.', 'buddyboss' ) . '</p>' .
-						'<p>' . __( 'Bulk actions allow you to perform these 3 actions for the selected rows.', 'buddyboss' ) . '</p>',
+						'<p>' . __( 'Hovering over a row in the pending accounts list will display action links that allow you to manage pending accounts. You can perform the following actions:', 'buddyboss-platform' ) . '</p>' .
+						'<ul><li>' . __( '"Email" takes you to the confirmation screen before being able to send the activation link to the desired pending account. You can only send the activation email once per day.', 'buddyboss-platform' ) . '</li>' .
+						'<li>' . __( '"Delete" allows you to delete a pending account from your site. You will be asked to confirm this deletion.', 'buddyboss-platform' ) . '</li></ul>' .
+						'<p>' . __( 'By clicking on a Username you will be able to activate a pending account from the confirmation screen.', 'buddyboss-platform' ) . '</p>' .
+						'<p>' . __( 'Bulk actions allow you to perform these 3 actions for the selected rows.', 'buddyboss-platform' ) . '</p>',
 					)
 				);
 
 				// Help panel - sidebar links.
 				get_current_screen()->set_help_sidebar(
-					'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-					'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
+					'<p><strong>' . __( 'For more information:', 'buddyboss-platform' ) . '</strong></p>' .
+					'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss-platform' ) . '</p>'
 				);
 
 				// Add accessible hidden headings and text for the Pending Users screen.
 				get_current_screen()->set_screen_reader_content(
 					array(
 						/* translators: accessibility text */
-						'heading_views'      => __( 'Filter users list', 'buddyboss' ),
+						'heading_views'      => __( 'Filter users list', 'buddyboss-platform' ),
 						/* translators: accessibility text */
-						'heading_pagination' => __( 'Pending users list navigation', 'buddyboss' ),
+						'heading_pagination' => __( 'Pending users list navigation', 'buddyboss-platform' ),
 						/* translators: accessibility text */
-						'heading_list'       => __( 'Pending users list', 'buddyboss' ),
+						'heading_list'       => __( 'Pending users list', 'buddyboss-platform' ),
 					)
 				);
 
@@ -1877,10 +1883,10 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					// Nonce check.
 					check_admin_referer( 'signups_resend' );
 
-					$resent = BP_Signup::resend( $signups );
+					$resent = BBoss_Signup::resend( $signups );
 
 					if ( empty( $resent ) ) {
-						$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+						$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 					} else {
 						$query_arg = array( 'updated' => 'resent' );
 
@@ -1896,7 +1902,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 						$redirect_to = add_query_arg( $query_arg, $redirect_to );
 					}
 
-					bp_core_redirect( $redirect_to );
+					bboss_core_redirect( $redirect_to );
 
 					// Handle activated accounts.
 				} elseif ( 'do_activate' == $doaction ) {
@@ -1904,10 +1910,10 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					// Nonce check.
 					check_admin_referer( 'signups_activate' );
 
-					$activated = BP_Signup::activate( $signups );
+					$activated = BBoss_Signup::activate( $signups );
 
 					if ( empty( $activated ) ) {
-						$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+						$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 					} else {
 						$query_arg = array( 'updated' => 'activated' );
 
@@ -1923,7 +1929,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 						$redirect_to = add_query_arg( $query_arg, $redirect_to );
 					}
 
-					bp_core_redirect( $redirect_to );
+					bboss_core_redirect( $redirect_to );
 
 					// Handle sign-ups delete.
 				} elseif ( 'do_delete' == $doaction ) {
@@ -1931,10 +1937,10 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					// Nonce check.
 					check_admin_referer( 'signups_delete' );
 
-					$deleted = BP_Signup::delete( $signups );
+					$deleted = BBoss_Signup::delete( $signups );
 
 					if ( empty( $deleted ) ) {
-						$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+						$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 					} else {
 						$query_arg = array( 'updated' => 'deleted' );
 
@@ -1950,7 +1956,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 						$redirect_to = add_query_arg( $query_arg, $redirect_to );
 					}
 
-					bp_core_redirect( $redirect_to );
+					bboss_core_redirect( $redirect_to );
 
 					// Plugins can update other stuff from here.
 				} else {
@@ -1967,7 +1973,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					 */
 					do_action( 'bp_members_admin_update_signups', $doaction, $_REQUEST, $this->redirect );
 
-					bp_core_redirect( $this->redirect );
+					bboss_core_redirect( $this->redirect );
 				}
 			}
 		}
@@ -2023,25 +2029,27 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['resent'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of activation emails successfully sent.
 								_n(
 									'%s activation email successfully sent! ',
 									'%s activation emails successfully sent! ',
 									absint( $_REQUEST['resent'] ),
-									'buddyboss'
+									'buddyboss-platform'
 								),
-								bp_core_number_format( absint( $_REQUEST['resent'] ) )
+								bboss_core_number_format( absint( $_REQUEST['resent'] ) )
 							);
 						}
 
 						if ( ! empty( $_REQUEST['notsent'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of activation emails that were not sent.
 								_n(
 									'%s activation email was not sent.',
 									'%s activation emails were not sent.',
 									absint( $_REQUEST['notsent'] ),
-									'buddyboss'
+									'buddyboss-platform'
 								),
-								bp_core_number_format( absint( $_REQUEST['notsent'] ) )
+								bboss_core_number_format( absint( $_REQUEST['notsent'] ) )
 							);
 
 							if ( empty( $_REQUEST['resent'] ) ) {
@@ -2059,25 +2067,27 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['activated'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of accounts successfully activated.
 								_n(
 									'%s account successfully activated! ',
 									'%s accounts successfully activated! ',
 									absint( $_REQUEST['activated'] ),
-									'buddyboss'
+									'buddyboss-platform'
 								),
-								bp_core_number_format( absint( $_REQUEST['activated'] ) )
+								bboss_core_number_format( absint( $_REQUEST['activated'] ) )
 							);
 						}
 
 						if ( ! empty( $_REQUEST['notactivated'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of accounts that were not activated.
 								_n(
 									'%s account was not activated.',
 									'%s accounts were not activated.',
 									absint( $_REQUEST['notactivated'] ),
-									'buddyboss'
+									'buddyboss-platform'
 								),
-								bp_core_number_format( absint( $_REQUEST['notactivated'] ) )
+								bboss_core_number_format( absint( $_REQUEST['notactivated'] ) )
 							);
 
 							if ( empty( $_REQUEST['activated'] ) ) {
@@ -2095,25 +2105,27 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['deleted'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of sign-ups successfully deleted.
 								_n(
 									'%s sign-up successfully deleted!',
 									'%s sign-ups successfully deleted!',
 									absint( $_REQUEST['deleted'] ),
-									'buddyboss'
+									'buddyboss-platform'
 								),
-								bp_core_number_format( absint( $_REQUEST['deleted'] ) )
+								bboss_core_number_format( absint( $_REQUEST['deleted'] ) )
 							);
 						}
 
 						if ( ! empty( $_REQUEST['notdeleted'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of sign-ups that were not deleted.
 								_n(
 									'%s sign-up was not deleted.',
 									'%s sign-ups were not deleted.',
 									absint( $_REQUEST['notdeleted'] ),
-									'buddyboss'
+									'buddyboss-platform'
 								),
-								bp_core_number_format( absint( $_REQUEST['notdeleted'] ) )
+								bboss_core_number_format( absint( $_REQUEST['notdeleted'] ) )
 							);
 
 							if ( empty( $_REQUEST['deleted'] ) ) {
@@ -2131,21 +2143,21 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					case 'do_resend':
 						$notice = array(
 							'class'   => 'error',
-							'message' => esc_html__( 'There was a problem sending the activation emails. Please try again.', 'buddyboss' ),
+							'message' => esc_html__( 'There was a problem sending the activation emails. Please try again.', 'buddyboss-platform' ),
 						);
 						break;
 
 					case 'do_activate':
 						$notice = array(
 							'class'   => 'error',
-							'message' => esc_html__( 'There was a problem activating accounts. Please try again.', 'buddyboss' ),
+							'message' => esc_html__( 'There was a problem activating accounts. Please try again.', 'buddyboss-platform' ),
 						);
 						break;
 
 					case 'do_delete':
 						$notice = array(
 							'class'   => 'error',
-							'message' => esc_html__( 'There was a problem deleting sign-ups. Please try again.', 'buddyboss' ),
+							'message' => esc_html__( 'There was a problem deleting sign-ups. Please try again.', 'buddyboss-platform' ),
 						);
 						break;
 				}
@@ -2168,7 +2180,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 * @since BuddyPress 2.0.0
 		 */
 		public function signups_admin() {
-			$doaction = bp_admin_list_table_current_bulk_action();
+			$doaction = bboss_admin_list_table_current_bulk_action();
 
 			// Prepare notices for admin.
 			$notice = $this->get_signup_notice();
@@ -2186,7 +2198,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			<?php endif; ?>
 
-				<p><?php echo $notice['message']; ?></p>
+				<p><?php echo wp_kses_post( $notice['message'] ); ?></p>
 
 					<?php if ( ! empty( $_REQUEST['notactivated'] ) || ! empty( $_REQUEST['notdeleted'] ) || ! empty( $_REQUEST['notsent'] ) ) : ?>
 
@@ -2225,7 +2237,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		public function signups_admin_index() {
 			global $plugin_page, $bp_members_signup_list_table;
 
-			$usersearch = ! empty( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
+			$usersearch = ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
 
 			// Prepare the group items for display.
 			$bp_members_signup_list_table->prepare_items();
@@ -2233,7 +2245,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			if ( is_network_admin() ) {
 				$form_url = network_admin_url( 'users.php' );
 			} else {
-				$form_url = bp_get_admin_url( 'users.php' );
+				$form_url = bboss_get_admin_url( 'users.php' );
 			}
 
 			$form_url = add_query_arg(
@@ -2264,7 +2276,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					'_wpnonce',
 					'signup_ids',
 				),
-				$_SERVER['REQUEST_URI']
+				isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : ''
 			);
 
 			?>
@@ -2272,21 +2284,22 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		<div class="wrap">
 			<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
-				<h1 class="wp-heading-inline"><?php _e( 'Users', 'buddyboss' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php esc_html_e( 'Users', 'buddyboss-platform' ); ?></h1>
 
 				<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-					<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add New', 'buddyboss' ); ?></a>
+					<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add New', 'buddyboss-platform' ); ?></a>
 
 				<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-					<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add Existing', 'buddyboss' ); ?></a>
+					<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add Existing', 'buddyboss-platform' ); ?></a>
 
 					<?php
 				endif;
 
 				if ( $usersearch ) {
-					printf( '<span class="subtitle">' . __( 'Search results for "%s"', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
+					/* translators: %s: user search query. */
+					printf( '<span class="subtitle">' . esc_html__( 'Search results for "%s"', 'buddyboss-platform' ) . '</span>', esc_html( $usersearch ) );
 				}
 				?>
 
@@ -2294,21 +2307,22 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			<?php else : ?>
 
-				<h1><?php _e( 'Users', 'buddyboss' ); ?>
+				<h1><?php esc_html_e( 'Users', 'buddyboss-platform' ); ?>
 
 					<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-						<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add New', 'buddyboss' ); ?></a>
+						<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add New', 'buddyboss-platform' ); ?></a>
 
 					<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-						<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add Existing', 'buddyboss' ); ?></a>
+						<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add Existing', 'buddyboss-platform' ); ?></a>
 
 						<?php
 					endif;
 
 					if ( $usersearch ) {
-						printf( '<span class="subtitle">' . __( 'Search results for "%s"', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
+						/* translators: %s: user search query. */
+						printf( '<span class="subtitle">' . esc_html__( 'Search results for "%s"', 'buddyboss-platform' ) . '</span>', esc_html( $usersearch ) );
 					}
 
 					?>
@@ -2321,7 +2335,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			<form id="bp-signups-search-form" action="<?php echo esc_url( $search_form_url ); ?>">
 				<input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>" />
-					<?php $bp_members_signup_list_table->search_box( __( 'Search Pending Users', 'buddyboss' ), 'bp-signups' ); ?>
+					<?php $bp_members_signup_list_table->search_box( __( 'Search Pending Users', 'buddyboss-platform' ), 'bp-signups' ); ?>
 			</form>
 
 			<form id="bp-signups-form" action="<?php echo esc_url( $form_url ); ?>" method="post">
@@ -2359,7 +2373,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			// Query for signups, and filter out those IDs that don't
 			// correspond to an actual signup.
-			$signups_query = BP_Signup::get(
+			$signups_query = BBoss_Signup::get(
 				array(
 					'include' => $ids,
 				)
@@ -2371,29 +2385,29 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			// Set up strings.
 			switch ( $action ) {
 				case 'delete':
-					$header_text = __( 'Delete Pending Accounts', 'buddyboss' );
+					$header_text = __( 'Delete Pending Accounts', 'buddyboss-platform' );
 					if ( 1 == count( $signup_ids ) ) {
-						$helper_text = __( 'You are about to delete the following account:', 'buddyboss' );
+						$helper_text = __( 'You are about to delete the following account:', 'buddyboss-platform' );
 					} else {
-						$helper_text = __( 'You are about to delete the following accounts:', 'buddyboss' );
+						$helper_text = __( 'You are about to delete the following accounts:', 'buddyboss-platform' );
 					}
 					break;
 
 				case 'activate':
-					$header_text = __( 'Activate Pending Accounts', 'buddyboss' );
+					$header_text = __( 'Activate Pending Accounts', 'buddyboss-platform' );
 					if ( 1 == count( $signup_ids ) ) {
-						$helper_text = __( 'You are about to activate the following account:', 'buddyboss' );
+						$helper_text = __( 'You are about to activate the following account:', 'buddyboss-platform' );
 					} else {
-						$helper_text = __( 'You are about to activate the following accounts:', 'buddyboss' );
+						$helper_text = __( 'You are about to activate the following accounts:', 'buddyboss-platform' );
 					}
 					break;
 
 				case 'resend':
-					$header_text = __( 'Resend Activation Emails', 'buddyboss' );
+					$header_text = __( 'Resend Activation Emails', 'buddyboss-platform' );
 					if ( 1 == count( $signup_ids ) ) {
-						$helper_text = __( 'You are about to resend an activation email to the following account:', 'buddyboss' );
+						$helper_text = __( 'You are about to resend an activation email to the following account:', 'buddyboss-platform' );
 					} else {
-						$helper_text = __( 'You are about to resend an activation email to the following accounts:', 'buddyboss' );
+						$helper_text = __( 'You are about to resend an activation email to the following accounts:', 'buddyboss-platform' );
 					}
 					break;
 			}
@@ -2410,7 +2424,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			if ( is_network_admin() ) {
 				$base_url = network_admin_url( 'users.php' );
 			} else {
-				$base_url = bp_get_admin_url( 'users.php' );
+				$base_url = bboss_get_admin_url( 'users.php' );
 			}
 
 			$cancel_url = add_query_arg( $url_args, $base_url );
@@ -2424,8 +2438,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			// Prefetch registration field data.
 			$fdata = array();
-			if ( 'activate' === $action && bp_is_active( 'xprofile' ) ) {
-				$field_groups = bp_xprofile_get_groups(
+			if ( 'activate' === $action && bboss_is_active( 'xprofile' ) ) {
+				$field_groups = bboss_xprofile_get_groups(
 					array(
 						'exclude_fields'    => 1,
 						'update_meta_cache' => false,
@@ -2466,20 +2480,20 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 						<table class="wp-list-table widefat fixed striped">
 							<tbody>
 								<tr>
-									<td class="column-fields"><?php esc_html_e( 'Display Name', 'buddyboss' ); ?></td>
+									<td class="column-fields"><?php esc_html_e( 'Display Name', 'buddyboss-platform' ); ?></td>
 									<td><?php echo esc_html( $signup->user_name ); ?></td>
 								</tr>
 
 								<tr>
-									<td class="column-fields"><?php esc_html_e( 'Email', 'buddyboss' ); ?></td>
-									<td><?php echo sanitize_email( $signup->user_email ); ?></td>
+									<td class="column-fields"><?php esc_html_e( 'Email', 'buddyboss-platform' ); ?></td>
+									<td><?php echo esc_html( sanitize_email( $signup->user_email ) ); ?></td>
 								</tr>
 
 								<?php
-								if ( bp_is_active( 'xprofile' ) && ! empty( $profile_field_ids ) ) :
+								if ( bboss_is_active( 'xprofile' ) && ! empty( $profile_field_ids ) ) :
 									foreach ( $profile_field_ids as $pid => $noop ) :
 										$field_value = isset( $signup->meta[ "field_{$pid}" ] ) ? $signup->meta[ "field_{$pid}" ] : '';
-										if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 && bp_get_xprofile_member_type_field_id() === (int) $pid ) {
+										if ( function_exists( 'bboss_get_xprofile_member_type_field_id' ) && bboss_get_xprofile_member_type_field_id() > 0 && bboss_get_xprofile_member_type_field_id() === (int) $pid ) {
 											$member_type_name = get_post_meta( $field_value, '_bp_member_type_label_singular_name', true );
 											?>
 											<tr>
@@ -2487,7 +2501,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 												<td><?php echo esc_html( $member_type_name ); ?></td>
 											</tr>
 											<?php
-										} elseif ( function_exists( 'bp_get_xprofile_gender_type_field_id' ) && bp_get_xprofile_gender_type_field_id() > 0 && bp_get_xprofile_gender_type_field_id() === (int) $pid ) {
+										} elseif ( function_exists( 'bboss_get_xprofile_gender_type_field_id' ) && bboss_get_xprofile_gender_type_field_id() > 0 && bboss_get_xprofile_gender_type_field_id() === (int) $pid ) {
 											$split_string = explode( '_', $field_value, 2 );
 											$field_value  = $split_string[1];
 											?>
@@ -2500,7 +2514,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 											?>
 											<tr>
 												<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
-												<td><?php echo $this->format_xprofile_field_for_display( $field_value ); ?></td>
+												<td><?php echo $this->format_xprofile_field_for_display( $field_value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- format_xprofile_field_for_display() returns esc_html()-escaped value. ?></td>
 											</tr>
 											<?php
 										}
@@ -2514,11 +2528,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					<?php if ( 'resend' == $action ) : ?>
 
 						<p class="description">
-							<?php printf( esc_html__( 'Last notified: %s', 'buddyboss' ), $last_notified ); ?>
+							<?php /* translators: %s: last notified date. */ printf( esc_html__( 'Last notified: %s', 'buddyboss-platform' ), esc_html( $last_notified ) ); ?>
 
 							<?php if ( ! empty( $signup->recently_sent ) ) : ?>
 
-								<span class="attention wp-ui-text-notification"> <?php esc_html_e( '(less than 24 hours ago)', 'buddyboss' ); ?></span>
+								<span class="attention wp-ui-text-notification"> <?php esc_html_e( '(less than 24 hours ago)', 'buddyboss-platform' ); ?></span>
 
 							<?php endif; ?>
 						</p>
@@ -2532,12 +2546,12 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 				<?php if ( 'delete' === $action ) : ?>
 
-				<p><strong><?php esc_html_e( 'This action cannot be undone.', 'buddyboss' ); ?></strong></p>
+				<p><strong><?php esc_html_e( 'This action cannot be undone.', 'buddyboss-platform' ); ?></strong></p>
 
 			<?php endif; ?>
 
-			<a class="button-primary" href="<?php echo esc_url( $action_url ); ?>"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
-			<a class="button" href="<?php echo esc_url( $cancel_url ); ?>"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+			<a class="button-primary" href="<?php echo esc_url( $action_url ); ?>"><?php esc_html_e( 'Confirm', 'buddyboss-platform' ); ?></a>
+			<a class="button" href="<?php echo esc_url( $cancel_url ); ?>"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
 		</div>
 
 			<?php
@@ -2555,25 +2569,25 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		public function users_table_output_type_change_select( $which = 'top' ) {
 
 			// Bail if current user cannot promote users.
-			if ( ! bp_current_user_can( 'promote_users' ) ) {
+			if ( ! bboss_current_user_can( 'promote_users' ) ) {
 				return;
 			}
 
 			// `$which` is only passed in WordPress 4.6+. Avoid duplicating controls in earlier versions.
 			static $displayed = false;
-			if ( version_compare( bp_get_major_wp_version(), '4.6', '<' ) && $displayed ) {
+			if ( version_compare( bboss_get_major_wp_version(), '4.6', '<' ) && $displayed ) {
 				return;
 			}
 			$displayed = true;
 
 			$id_name = 'bottom' === $which ? 'bp_change_type2' : 'bp_change_type';
 
-			$types = bp_get_member_types( array(), 'objects' );
+			$types = bboss_get_member_types( array(), 'objects' );
 			?>
 
-		<label class="screen-reader-text" for="<?php echo $id_name; ?>"><?php _e( 'Change profile type to&hellip;', 'buddyboss' ); ?></label>
-		<select name="<?php echo $id_name; ?>" id="<?php echo $id_name; ?>" style="display:inline-block;float:none;">
-			<option value=""><?php _e( 'Change profile type to&hellip;', 'buddyboss' ); ?></option>
+		<label class="screen-reader-text" for="<?php echo esc_attr( $id_name ); ?>"><?php echo wp_kses_post( __( 'Change profile type to&hellip;', 'buddyboss-platform' ) ); ?></label>
+		<select name="<?php echo esc_attr( $id_name ); ?>" id="<?php echo esc_attr( $id_name ); ?>" style="display:inline-block;float:none;">
+			<option value=""><?php echo wp_kses_post( __( 'Change profile type to&hellip;', 'buddyboss-platform' ) ); ?></option>
 
 				<?php foreach ( $types as $type ) : ?>
 
@@ -2581,12 +2595,12 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			<?php endforeach; ?>
 
-			<option value="remove_member_type"><?php _e( 'No Profile Type', 'buddyboss' ); ?></option>
+			<option value="remove_member_type"><?php esc_html_e( 'No Profile Type', 'buddyboss-platform' ); ?></option>
 
 		</select>
 			<?php
-			wp_nonce_field( 'bp-bulk-users-change-type-' . bp_loggedin_user_id(), 'bp-bulk-users-change-type-nonce' );
-			submit_button( __( 'Change', 'buddyboss' ), 'button', 'bp_change_member_type', false );
+			wp_nonce_field( 'bp-bulk-users-change-type-' . bboss_loggedin_user_id(), 'bp-bulk-users-change-type-nonce' );
+			submit_button( __( 'Change', 'buddyboss-platform' ), 'button', 'bp_change_member_type', false );
 		}
 
 		/**
@@ -2610,10 +2624,10 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			}
 
 			// Bail if nonce check fails.
-			check_admin_referer( 'bp-bulk-users-change-type-' . bp_loggedin_user_id(), 'bp-bulk-users-change-type-nonce' );
+			check_admin_referer( 'bp-bulk-users-change-type-' . bboss_loggedin_user_id(), 'bp-bulk-users-change-type-nonce' );
 
 			// Bail if current user cannot promote users.
-			if ( ! bp_current_user_can( 'promote_users' ) ) {
+			if ( ! bboss_current_user_can( 'promote_users' ) ) {
 				return;
 			}
 
@@ -2625,7 +2639,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			}
 
 			// Check that the selected type actually exists.
-			if ( 'remove_member_type' != $new_type && null === bp_get_member_type_object( $new_type ) ) {
+			if ( 'remove_member_type' != $new_type && null === bboss_get_member_type_object( $new_type ) ) {
 				$error = true;
 			} else {
 				// Run through user ids.
@@ -2634,17 +2648,17 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					$user_id = (int) $user_id;
 
 					// Get the old profile type to check against.
-					$member_type = bp_get_member_type( $user_id );
+					$member_type = bboss_get_member_type( $user_id );
 
 					if ( 'remove_member_type' === $new_type ) {
 						// Remove the current profile type, if there's one to remove.
 						if ( $member_type ) {
-							$removed = bp_remove_member_type( $user_id, $member_type );
+							$removed = bboss_remove_member_type( $user_id, $member_type );
 							if ( false === $removed || is_wp_error( $removed ) ) {
 								$error = true;
 							} else {
-								if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
-									xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, '' );
+								if ( function_exists( 'bboss_get_xprofile_member_type_field_id' ) && bboss_get_xprofile_member_type_field_id() > 0 ) {
+									bboss_xprofile_set_field_data( bboss_get_xprofile_member_type_field_id(), $user_id, '' );
 								}
 							}
 						}
@@ -2656,17 +2670,17 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 							if ( $new_type !== $member_type ) {
 
 								// Get post id of selected profile type.
-								$post_id = bp_member_type_post_by_type( $new_type );
+								$post_id = bboss_member_type_post_by_type( $new_type );
 
 								// Get selected profile type role.
 								$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 								if ( empty( $selected_member_type_wp_roles ) ) {
-									$set = bp_set_member_type( $user_id, $new_type );
+									$set = bboss_set_member_type( $user_id, $new_type );
 									if ( false === $set || is_wp_error( $set ) ) {
 										$error = true;
 									} else {
-										if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
-											xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, bp_member_type_post_by_type( $new_type ) );
+										if ( function_exists( 'bboss_get_xprofile_member_type_field_id' ) && bboss_get_xprofile_member_type_field_id() > 0 ) {
+											bboss_xprofile_set_field_data( bboss_get_xprofile_member_type_field_id(), $user_id, bboss_member_type_post_by_type( $new_type ) );
 										}
 									}
 								} else {
@@ -2674,12 +2688,12 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 										$bp_error_message = true;
 										$error            = true;
 									} else {
-										$set = bp_set_member_type( $user_id, $new_type );
+										$set = bboss_set_member_type( $user_id, $new_type );
 										if ( false === $set || is_wp_error( $set ) ) {
 											$error = true;
 										} else {
-											if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
-												xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, bp_member_type_post_by_type( $new_type ) );
+											if ( function_exists( 'bboss_get_xprofile_member_type_field_id' ) && bboss_get_xprofile_member_type_field_id() > 0 ) {
+												bboss_xprofile_set_field_data( bboss_get_xprofile_member_type_field_id(), $user_id, bboss_member_type_post_by_type( $new_type ) );
 											}
 										}
 									}
@@ -2689,12 +2703,12 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 							// Set the new profile type.
 							if ( $new_type !== $member_type ) {
-								$set = bp_set_member_type( $user_id, $new_type );
+								$set = bboss_set_member_type( $user_id, $new_type );
 								if ( false === $set || is_wp_error( $set ) ) {
 									$error = true;
 								} else {
-									if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
-										xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, bp_member_type_post_by_type( $new_type ) );
+									if ( function_exists( 'bboss_get_xprofile_member_type_field_id' ) && bboss_get_xprofile_member_type_field_id() > 0 ) {
+										bboss_xprofile_set_field_data( bboss_get_xprofile_member_type_field_id(), $user_id, bboss_member_type_post_by_type( $new_type ) );
 									}
 								}
 							}
@@ -2705,7 +2719,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 						 */
 						if ( ! $error ) {
 							// Get post id of selected profile type.
-							$post_id = bp_member_type_post_by_type( $new_type );
+							$post_id = bboss_member_type_post_by_type( $new_type );
 
 							// Get selected profile type role.
 							$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
@@ -2721,11 +2735,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 										 * If an invalid profile type is passed, someone's doing something
 										 * fishy with the POST request, so we can fail silently.
 										 */
-										if ( bp_set_member_type( $user_id, $member_type ) ) {
+										if ( bboss_set_member_type( $user_id, $member_type ) ) {
 											// @todo Success messages can't be posted because other stuff happens on the page load.
 										}
 									} else {
-										$bp_error_message_string = __( 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.', 'buddyboss' );
+										$bp_error_message_string = __( 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.', 'buddyboss-platform' );
 										$error_message           = apply_filters( 'bp_invalid_role_selection_extended_profile', $bp_error_message_string );
 										// Define the settings error to display.
 										add_settings_error(
@@ -2801,17 +2815,17 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			if ( $updated && in_array( $updated, array( 'member-type-change-error', 'member-type-change-success', 'member-type-change-owner-error' ), true ) ) {
 
 				if ( 'member-type-change-error' === $updated ) {
-					$notice = __( 'There was an error while changing the profile type. Please try again.', 'buddyboss' );
+					$notice = __( 'There was an error while changing the profile type. Please try again.', 'buddyboss-platform' );
 					$type   = 'error';
 				} elseif ( 'member-type-change-owner-error' === $updated ) {
-					$notice = __( 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.', 'buddyboss' );
+					$notice = __( 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.', 'buddyboss-platform' );
 					$type   = 'error';
 				} else {
-					$notice = __( 'Profile type was changed successfully.', 'buddyboss' );
+					$notice = __( 'Profile type was changed successfully.', 'buddyboss-platform' );
 					$type   = 'updated';
 				}
 
-				bp_core_add_admin_notice( $notice, $type );
+				bboss_core_add_admin_notice( $notice, $type );
 			}
 		}
 
@@ -2825,7 +2839,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 * @return array $columns
 		 */
 		public function users_table_add_type_column( $columns = array() ) {
-			$columns[ bp_get_member_type_tax_name() ] = __( 'Profile Type', 'buddyboss' );
+			$columns[ bboss_get_member_type_tax_name() ] = __( 'Profile Type', 'buddyboss-platform' );
 
 			return $columns;
 		}
@@ -2843,15 +2857,15 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function users_table_populate_type_cell( $retval = '', $column_name = '', $user_id = 0 ) {
 			// Only looking for profile type column.
-			if ( bp_get_member_type_tax_name() !== $column_name ) {
+			if ( bboss_get_member_type_tax_name() !== $column_name ) {
 				return $retval;
 			}
 
 			// Get the profile type.
-			$type = bp_get_member_type( $user_id );
+			$type = bboss_get_member_type( $user_id );
 
 			// Output the profile type link.
-			if ( $type_obj = bp_get_member_type_object( $type ) ) {
+			if ( $type_obj = bboss_get_member_type_object( $type ) ) {
 				$url    = add_query_arg( array( 'bp-member-type' => urlencode( $type ) ) );
 				$retval = '<a href="' . esc_url( $url ) . '">' . esc_html( $type_obj->labels['singular_name'] ) . '</a>';
 			}
@@ -2873,18 +2887,18 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				$type_slug = sanitize_text_field( $_REQUEST['bp-member-type'] );
 
 				// Check that the type is registered.
-				if ( null == bp_get_member_type_object( $type_slug ) ) {
+				if ( null == bboss_get_member_type_object( $type_slug ) ) {
 					return;
 				}
 
 				// Get the list of users that are assigned to this profile type.
-				$type = bp_get_term_by( 'slug', $type_slug, bp_get_member_type_tax_name() );
+				$type = bboss_get_term_by( 'slug', $type_slug, bboss_get_member_type_tax_name() );
 
 				if ( empty( $type->term_id ) ) {
 					return;
 				}
 
-				$user_ids = bp_get_objects_in_term( $type->term_id, bp_get_member_type_tax_name() );
+				$user_ids = bboss_get_objects_in_term( $type->term_id, bboss_get_member_type_tax_name() );
 
 				if ( $user_ids && ! is_wp_error( $user_ids ) ) {
 					$query->set( 'include', (array) $user_ids );

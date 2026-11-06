@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Media_Details_Endpoint class
+ * BP REST: BBoss_REST_Media_Details_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,12 +13,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Media_Details_Endpoint extends WP_REST_Controller {
 
 	/**
-	 * BP_REST_Media_Endpoint Instance.
+	 * BBoss_REST_Media_Endpoint Instance.
 	 *
-	 * @var BP_REST_Media_Endpoint
+	 * @var BBoss_REST_Media_Endpoint
 	 */
 	protected $media_endpoint;
 
@@ -28,10 +28,10 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'media';
 
-		$this->media_endpoint = new BP_REST_Media_Endpoint();
+		$this->media_endpoint = new BBoss_REST_Media_Endpoint();
 	}
 
 	/**
@@ -149,7 +149,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 		if ( empty( $request['media_ids'] ) ) {
 			return new WP_Error(
 				'bp_rest_no_media_found',
-				__( 'Sorry, you are not allowed to move a Media item.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to move a Media item.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -160,17 +160,17 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 		$album_id = isset( $request['album_id'] ) && ! empty( $request['album_id'] ) ? $request['album_id'] : 0;
 
 		if ( ! empty( $album_id ) ) {
-			$album    = new BP_Media_Album( $album_id );
+			$album    = new BBoss_Media_Album( $album_id );
 			$group_id = $album->group_id;
 		}
 
 		if (
-			function_exists( 'bb_media_user_can_upload' ) &&
-			! bb_media_user_can_upload( bp_loggedin_user_id(), (int) $group_id )
+			function_exists( 'bboss_media_user_can_upload' ) &&
+			! bboss_media_user_can_upload( bboss_loggedin_user_id(), (int) $group_id )
 		) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to move a media.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to move a media.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -185,27 +185,27 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 		);
 
 		foreach ( $media_ids as $media_id ) {
-			$media = new BP_Media( $media_id );
+			$media = new BBoss_Media( $media_id );
 			if ( (int) $media->group_id !== (int) $group_id ) {
 				$retval['failed'][ $media_id ] = new WP_Error(
 					'bp_rest_invalid_move_with_album',
-					__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
 				);
 			} else {
-				$moved_media_id = bp_media_move_media_to_album( $media_id, $album_id, $group_id );
+				$moved_media_id = bboss_media_move_media_to_album( $media_id, $album_id, $group_id );
 				if ( empty( (int) $moved_media_id ) || is_wp_error( $moved_media_id ) ) {
 					$retval['failed'][ $media_id ] = new WP_Error(
 						'bp_rest_invalid_move_with_album',
-						__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss' ),
+						__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
 					);
 				} else {
-					$media              = new BP_Media( $moved_media_id );
+					$media              = new BBoss_Media( $moved_media_id );
 					$retval['medias'][] = $this->prepare_response_for_collection(
 						$this->media_endpoint->prepare_item_for_response( $media, $request )
 					);
@@ -239,7 +239,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 	public function move_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create a media.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to create a media.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -248,10 +248,10 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 		if (
 			is_user_logged_in() &&
 			(
-				! function_exists( 'bb_media_user_can_upload' ) ||
+				! function_exists( 'bboss_media_user_can_upload' ) ||
 				(
-					function_exists( 'bb_media_user_can_upload' ) &&
-					bb_media_user_can_upload( bp_loggedin_user_id(), $request->get_param( 'group_id' ) )
+					function_exists( 'bboss_media_user_can_upload' ) &&
+					bboss_media_user_can_upload( bboss_loggedin_user_id(), $request->get_param( 'group_id' ) )
 				)
 			)
 		) {
@@ -261,36 +261,36 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 				isset( $request['group_id'] ) &&
 				! empty( $request['group_id'] ) &&
 				(
-					! bp_is_active( 'groups' )
-					|| ! groups_can_user_manage_media( bp_loggedin_user_id(), (int) $request['group_id'] )
-					|| ! function_exists( 'bp_is_group_media_support_enabled' )
-					|| ( function_exists( 'bp_is_group_media_support_enabled' ) && false === bp_is_group_media_support_enabled() )
+					! bboss_is_active( 'groups' )
+					|| ! groups_can_user_manage_media( bboss_loggedin_user_id(), (int) $request['group_id'] )
+					|| ! function_exists( 'bboss_is_group_media_support_enabled' )
+					|| ( function_exists( 'bboss_is_group_media_support_enabled' ) && false === bboss_is_group_media_support_enabled() )
 				)
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to move a media inside this group.', 'buddyboss' ),
+					__( 'You don\'t have a permission to move a media inside this group.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
 				);
 			} elseif ( isset( $request['album_id'] ) && ! empty( $request['album_id'] ) ) {
-				$parent_album = new BP_Media_Album( $request['album_id'] );
+				$parent_album = new BBoss_Media_Album( $request['album_id'] );
 				if ( empty( $parent_album->id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_album_id',
-						__( 'Invalid Album ID.', 'buddyboss' ),
+						__( 'Invalid Album ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
 					);
 				}
 
-				$album_privacy = bb_media_user_can_access( $parent_album->id, 'album' );
+				$album_privacy = bboss_media_user_can_access( $parent_album->id, 'album' );
 				if ( true === $retval && true !== (bool) $album_privacy['can_move'] ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'You don\'t have a permission to move a media inside this album.', 'buddyboss' ),
+						__( 'You don\'t have a permission to move a media inside this album.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -324,7 +324,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['media_ids'] = array(
-				'description'       => __( 'Media specific IDs.', 'buddyboss' ),
+				'description'       => __( 'Media specific IDs.', 'buddyboss-platform' ),
 				'default'           => array(),
 				'type'              => 'array',
 				'required'          => true,
@@ -334,14 +334,14 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['group_id'] = array(
-				'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
 			$args['album_id'] = array(
-				'description'       => __( 'A unique numeric ID for the Media Album.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the Media Album.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -374,7 +374,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'tabs'    => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Media directory tabs.', 'buddyboss' ),
+					'description' => __( 'Media directory tabs.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'items'       => array(
@@ -383,7 +383,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 				),
 				'privacy' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Media privacy.', 'buddyboss' ),
+					'description' => __( 'Media privacy.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 				),
@@ -410,16 +410,16 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		add_filter( 'bp_get_total_media_count', array( $this, 'bp_rest_get_total_media_count' ) );
 
-		$tabs_items = function_exists( 'bp_nouveau_get_media_directory_nav_items' ) ? bp_nouveau_get_media_directory_nav_items() : array();
+		$tabs_items = function_exists( 'bboss_nouveau_get_media_directory_nav_items' ) ? bboss_nouveau_get_media_directory_nav_items() : array();
 
 		remove_filter( 'bp_get_total_media_count', array( $this, 'bp_rest_get_total_media_count' ) );
 		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 
 		if ( ! empty( $tabs_items ) ) {
-			$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+			$enable_count = function_exists( 'bboss_enable_content_counts' ) ? bboss_enable_content_counts() : true;
 			
 			foreach ( $tabs_items as $key => $item ) {
-				$count = $enable_count ? bp_core_number_format( $item['count'] ) : '';
+				$count = $enable_count ? bboss_core_number_format( $item['count'] ) : '';
 				if ( 'group' === $key ) {
 					$key = 'groups';
 				}
@@ -442,7 +442,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function get_media_privacy() {
-		$privacy = apply_filters( 'bp_media_get_visibility_levels', buddypress()->media->visibility_levels );
+		$privacy = apply_filters( 'bp_media_get_visibility_levels', bboss()->media->visibility_levels );
 		$retval  = array();
 
 		if ( ! empty( $privacy ) ) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Group_Membership_Export class
+ * Export API: BBoss_Group_Membership_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Group_Membership_Export
+ * Class BBoss_Group_Membership_Export
  */
-final class BP_Group_Membership_Export extends BP_Export {
+final class BBoss_Group_Membership_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -23,8 +23,8 @@ final class BP_Group_Membership_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Group_Membership_Export();
-			$instance->setup( 'bp_group_memberships', __( 'Group Memberships', 'buddyboss' ) );
+			$instance = new BBoss_Group_Membership_Export();
+			$instance->setup( 'bp_group_memberships', __( 'Group Memberships', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -53,27 +53,27 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 		foreach ( $data_items['items'] as $item ) {
 
-			$group = groups_get_group( $item->group_id );
+			$group = bboss_groups_get_group( $item->group_id );
 
 			$group_id    = 'bp_group_membership';
-			$group_label = __( 'Group Membership', 'buddyboss' );
+			$group_label = __( 'Group Membership', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
-			$group_permalink = bp_get_group_permalink( $group );
+			$group_permalink = bboss_get_group_permalink( $group );
 
 			$membership_type = false;
 
 			if ( $item->user_id === $user->ID && '0' === $item->is_confirmed && '0' === $item->inviter_id ) {
-				$group_label     = __( 'Group Pending Requests', 'buddyboss' );
+				$group_label     = __( 'Group Pending Requests', 'buddyboss-platform' );
 				$membership_type = 'pending_request';
 			} elseif ( $item->user_id === $user->ID && '0' === $item->is_confirmed && '0' === $item->inviter_id ) {
-				$group_label     = __( 'Group Pending Received Invitation Requests', 'buddyboss' );
+				$group_label     = __( 'Group Pending Received Invitation Requests', 'buddyboss-platform' );
 				$membership_type = 'pending_received_invitation';
 			} elseif ( $item->inviter_id === $user->ID && '0' === $item->is_confirmed ) {
-				$group_label     = __( 'Group Pending Sent Invitation Requests', 'buddyboss' );
+				$group_label     = __( 'Group Pending Sent Invitation Requests', 'buddyboss-platform' );
 				$membership_type = 'pending_sent_invitation';
 			} elseif ( $item->user_id === $user->ID && '1' === $item->is_confirmed ) {
-				$group_label     = __( 'Group Membership', 'buddyboss' );
+				$group_label     = __( 'Group Membership', 'buddyboss-platform' );
 				$membership_type = 'membership';
 			}
 
@@ -81,38 +81,38 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 			$data = array(
 				array(
-					'name'  => __( 'Group Name', 'buddyboss' ),
-					'value' => bp_get_group_name( $group ),
+					'name'  => __( 'Group Name', 'buddyboss-platform' ),
+					'value' => bboss_get_group_name( $group ),
 				),
 				array(
-					'name'  => __( 'Sent Date (GMT)', 'buddyboss' ),
+					'name'  => __( 'Sent Date (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_modified,
 				),
 				array(
-					'name'  => __( 'Group URL', 'buddyboss' ),
+					'name'  => __( 'Group URL', 'buddyboss-platform' ),
 					'value' => $group_permalink,
 				),
 			);
 
 			if ( 'pending_received_invitation' === $membership_type ) {
 				$data[] = array(
-					'name'  => __( 'Sent by', 'buddyboss' ),
+					'name'  => __( 'Sent by', 'buddyboss-platform' ),
 					// Resolve for the data subject ($user) so a hidden last name is not exported raw.
-					'value' => bp_core_get_user_displayname( $item->inviter_id, $user->ID ),
+					'value' => bboss_core_get_user_displayname( $item->inviter_id, $user->ID ),
 				);
 			}
 
 			if ( 'pending_sent_invitation' === $membership_type ) {
 				$data[] = array(
-					'name'  => __( 'Sent to', 'buddyboss' ),
+					'name'  => __( 'Sent to', 'buddyboss-platform' ),
 					// Resolve for the data subject ($user) so a hidden last name is not exported raw.
-					'value' => bp_core_get_user_displayname( $item->user_id, $user->ID ),
+					'value' => bboss_core_get_user_displayname( $item->user_id, $user->ID ),
 				);
 			}
 
 			if ( ! empty( $item->comments ) ) {
 				$data[] = array(
-					'name'  => __( 'Group Comments', 'buddyboss' ),
+					'name'  => __( 'Group Comments', 'buddyboss-platform' ),
 					'value' => $item->comments,
 				);
 			}
@@ -158,20 +158,15 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 		$table = "{$group_table} item";
 
-		$query_select       = 'item.*';
-		$query_select_count = 'COUNT(item.id)';
-		$query_where        = 'item.user_id=%d OR item.inviter_id=%d';
-
 		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
 
-		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID, $user->ID );
-		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID, $user->ID );
-
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		// Table name from $bp->groups; user IDs, LIMIT and OFFSET bound as %d.
+		$count = (int) $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(item.id) FROM {$table} WHERE item.user_id=%d OR item.inviter_id=%d", $user->ID, $user->ID )
+		);
+		$items = $wpdb->get_results(
+			$wpdb->prepare( "SELECT item.* FROM {$table} WHERE item.user_id=%d OR item.inviter_id=%d LIMIT %d OFFSET %d", $user->ID, $user->ID, (int) $this->items_per_batch, (int) $offset )
+		);
 
 		return array(
 			'total'  => $count,

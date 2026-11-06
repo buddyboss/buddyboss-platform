@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Group_Export class
+ * Export API: BBoss_Group_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Group_Export
+ * Class BBoss_Group_Export
  */
-final class BP_Group_Export extends BP_Export {
+final class BBoss_Group_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -23,8 +23,8 @@ final class BP_Group_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Group_Export();
-			$instance->setup( 'bp_groups', __( 'Groups', 'buddyboss' ) );
+			$instance = new BBoss_Group_Export();
+			$instance->setup( 'bp_groups', __( 'Groups', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -54,13 +54,13 @@ final class BP_Group_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_groups';
-			$group_label = __( 'Groups', 'buddyboss' );
+			$group_label = __( 'Groups', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 			$avatar      = false;
 			$cover_photo = false;
 
-			if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-				$avatar = bp_core_fetch_avatar(
+			if ( function_exists( 'bboss_core_fetch_avatar' ) ) {
+				$avatar = bboss_core_fetch_avatar(
 					array(
 						'item_id' => $item->id,
 						'object'  => 'group',
@@ -70,8 +70,8 @@ final class BP_Group_Export extends BP_Export {
 				);
 			}
 
-			if ( function_exists( 'bp_attachments_get_attachment' ) ) {
-				$cover_photo = bp_attachments_get_attachment(
+			if ( function_exists( 'bboss_attachments_get_attachment' ) ) {
+				$cover_photo = bboss_attachments_get_attachment(
 					'url',
 					array(
 						'item_id'    => $item->id,
@@ -82,52 +82,52 @@ final class BP_Group_Export extends BP_Export {
 			}
 
 			if ( empty( $avatar ) || ! $avatar ) {
-				$avatar = __( 'N/A', 'buddyboss' );
+				$avatar = __( 'N/A', 'buddyboss-platform' );
 			}
 			if ( empty( $cover_photo ) || ! $cover_photo ) {
-				$cover_photo = __( 'N/A', 'buddyboss' );
+				$cover_photo = __( 'N/A', 'buddyboss-platform' );
 			}
 
-			$group_permalink = bp_get_group_permalink( $item );
+			$group_permalink = bboss_get_group_permalink( $item );
 
 			$data = array(
 				array(
-					'name'  => __( 'Group Name', 'buddyboss' ),
+					'name'  => __( 'Group Name', 'buddyboss-platform' ),
 					'value' => $item->name,
 				),
 				array(
-					'name'  => __( 'Group Description', 'buddyboss' ),
+					'name'  => __( 'Group Description', 'buddyboss-platform' ),
 					'value' => $item->description,
 				),
 				array(
-					'name'  => __( 'Group slug', 'buddyboss' ),
+					'name'  => __( 'Group slug', 'buddyboss-platform' ),
 					'value' => $item->slug,
 				),
 				array(
-					'name'  => __( 'Created Date (GMT)', 'buddyboss' ),
+					'name'  => __( 'Created Date (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_created,
 				),
 				array(
-					'name'  => __( 'Group Status', 'buddyboss' ),
+					'name'  => __( 'Group Status', 'buddyboss-platform' ),
 					'value' => ucfirst( $item->status ),
 				),
 				array(
-					'name'  => __( 'Group Avatar', 'buddyboss' ),
+					'name'  => __( 'Group Avatar', 'buddyboss-platform' ),
 					'value' => $avatar,
 				),
 				array(
-					'name'  => __( 'Group Cover Photo', 'buddyboss' ),
+					'name'  => __( 'Group Cover Photo', 'buddyboss-platform' ),
 					'value' => $cover_photo,
 				),
 				array(
-					'name'  => __( 'Group URL', 'buddyboss' ),
+					'name'  => __( 'Group URL', 'buddyboss-platform' ),
 					'value' => $group_permalink,
 				),
 			);
 
 			$metas2export                       = array();
-			$metas2export['total_member_count'] = __( 'Total Members', 'buddyboss' );
-			$metas2export['last_activity']      = __( 'Last Activity', 'buddyboss' );
+			$metas2export['total_member_count'] = __( 'Total Members', 'buddyboss-platform' );
+			$metas2export['last_activity']      = __( 'Last Activity', 'buddyboss-platform' );
 
 			/**
 			 * Filter allow to add additional metas without issues.
@@ -192,7 +192,7 @@ final class BP_Group_Export extends BP_Export {
 		add_action( 'groups_delete_group', array( $this, 'additional_group_items_delete' ) );
 
 		// Remove Group Data for User.
-		groups_remove_data_for_user( $user->ID );
+		bboss_groups_remove_data_for_user( $user->ID );
 
 		$group_table = $bp->groups->table_name_members;
 
@@ -221,7 +221,7 @@ final class BP_Group_Export extends BP_Export {
 		do_action( 'buddyboss_bp_gdpr_group_additional_group_items_delete', $group_id );
 
 		// delete cover photo
-		bp_attachments_delete_file(
+		bboss_attachments_delete_file(
 			array(
 				'item_id'    => $group_id,
 				'object_dir' => 'groups',
@@ -230,7 +230,7 @@ final class BP_Group_Export extends BP_Export {
 		);
 
 		// delete group avatar
-		bp_core_delete_existing_avatar(
+		bboss_core_delete_existing_avatar(
 			array(
 				'item_id' => $group_id,
 				'object'  => 'group',
@@ -258,21 +258,15 @@ final class BP_Group_Export extends BP_Export {
 
 		$table = "{$group_table} item, {$group_members_table} item2";
 
-		$query_select       = '*';
-		$query_select_count = 'COUNT(item.id)';
-		$query_where        = 'item2.user_id=%d AND item2.group_id=item.id AND item2.is_admin=1';
-
 		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
 
-		$query = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query = $wpdb->prepare( $query, $user->ID );
-
-		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID );
-
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		// Table names from $bp->groups; user ID, LIMIT and OFFSET bound as %d.
+		$count = (int) $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(item.id) FROM {$table} WHERE item2.user_id=%d AND item2.group_id=item.id AND item2.is_admin=1", $user->ID )
+		);
+		$items = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE item2.user_id=%d AND item2.group_id=item.id AND item2.is_admin=1 LIMIT %d OFFSET %d", $user->ID, (int) $this->items_per_batch, (int) $offset )
+		);
 		// Merge the metas.
 		$items = $this->merge_metas( $items );
 
@@ -312,9 +306,8 @@ final class BP_Group_Export extends BP_Export {
 		$ids_in = array_fill( 0, count( $group_ids ), '%s' );
 		$ids_in = join( ',', $ids_in );
 
-		$query = $wpdb->prepare( "SELECT *FROM {$group_meta_table} WHERE group_id in ({$ids_in})", $group_ids );
-
-		$results = $wpdb->get_results( $query );
+		// Table name from $bp->groups; one %s placeholder per group ID (IDs read from the groups table in get_data()).
+		$results = $wpdb->get_results( $wpdb->prepare( "SELECT *FROM {$group_meta_table} WHERE group_id in ({$ids_in})", $group_ids ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $group_meta_table is the groupmeta table name from buddypress(); $ids_in is the placeholder list built above.
 
 		$metas_by_group = array();
 

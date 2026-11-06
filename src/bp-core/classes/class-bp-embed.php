@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @see WP_Embed
  */
-class BP_Embed extends WP_Embed {
+class BBoss_Embed extends WP_Embed {
 
 	/**
 	 * Constructor
@@ -34,17 +34,17 @@ class BP_Embed extends WP_Embed {
 		// Used in WP_Embed::shortcode().
 		$this->handlers = $wp_embed->handlers;
 
-		if ( bp_use_embed_in_activity() ) {
+		if ( bboss_use_embed_in_activity() ) {
 			add_filter( 'bp_get_activity_content_body', array( &$this, 'autoembed' ), 8, 2 );
 			add_filter( 'bp_get_activity_content_body', array( &$this, 'run_shortcode' ), 7, 2 );
 		}
 
-		if ( bp_use_embed_in_activity_replies() ) {
+		if ( bboss_use_embed_in_activity_replies() ) {
 			add_filter( 'bp_get_activity_content', array( &$this, 'autoembed' ), 8, 2 );
 			add_filter( 'bp_get_activity_content', array( &$this, 'run_shortcode' ), 7, 2 );
 		}
 
-		if ( bp_use_embed_in_private_messages() ) {
+		if ( bboss_use_embed_in_private_messages() ) {
 			add_filter( 'bp_get_the_thread_message_content', array( &$this, 'autoembed' ), 8 );
 			add_filter( 'bp_get_the_thread_message_content', array( &$this, 'run_shortcode' ), 7 );
 		}
@@ -54,7 +54,7 @@ class BP_Embed extends WP_Embed {
 		 *
 		 * @since BuddyPress 1.5.0
 		 *
-		 * @param BP_Embed $this Current instance of the BP_Embed. Passed by reference.
+		 * @param BBoss_Embed $this Current instance of the BBoss_Embed. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_core_setup_oembed', array( &$this ) );
 	}
@@ -66,7 +66,7 @@ class BP_Embed extends WP_Embed {
 	 * URL against the regex of the registered embed handlers. Next, checks
 	 * the URL against the regex of registered {@link WP_oEmbed} providers
 	 * if oEmbed discovery is false. If none of the regex matches and it's
-	 * enabled, then the URL will be passed to {@link BP_Embed::parse_oembed()}
+	 * enabled, then the URL will be passed to {@link BBoss_Embed::parse_oembed()}
 	 * for oEmbed parsing.
 	 *
 	 * @param array  $attr Shortcode attributes.
@@ -79,7 +79,7 @@ class BP_Embed extends WP_Embed {
 		}
 
 		$rawattr = $attr;
-		$attr    = bp_parse_args( $attr, wp_embed_defaults() );
+		$attr    = bboss_parse_args( $attr, wp_embed_defaults() );
 
 		// Use kses to convert & into &amp; and we need to undo this
 		// See https://core.trac.wordpress.org/ticket/11311.
@@ -169,7 +169,7 @@ class BP_Embed extends WP_Embed {
 	/**
 	 * Base function so BP components/plugins can parse links to be embedded.
 	 *
-	 * View an example to add support in {@link bp_activity_embed()}.
+	 * View an example to add support in {@link bboss_activity_embed()}.
 	 *
 	 *       on success.
 	 *       oEmbed failure.
@@ -278,7 +278,7 @@ class BP_Embed extends WP_Embed {
 				) ||
 				(
 					// Check the type of activity and return if bbPress activity and link preview is disable.
-					false === bbp_use_autoembed()
+					false === bboss_bbp_use_autoembed()
 				)
 			)
 		) {
@@ -292,11 +292,11 @@ class BP_Embed extends WP_Embed {
 			}
 
 			// check if preview url was used or not, if not return content without embed
-			$link_embed = bp_activity_get_meta( $type->id, '_link_embed', true );
+			$link_embed = bboss_activity_get_meta( $type->id, '_link_embed', true );
 			if ( '0' === $link_embed ) {
 				return $content;
 			} elseif ( ! empty( $link_embed ) ) {
-				$embed_data = bp_core_parse_url( $link_embed );
+				$embed_data = bboss_core_parse_url( $link_embed );
 
 				if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
 					$embed_code = $embed_data['description'];
@@ -334,7 +334,7 @@ class BP_Embed extends WP_Embed {
 			} else {
 
 				// check if preview url saved or not for activity, if saved we don't need embed
-				$preview_data = bp_activity_get_meta( $type->id, '_link_preview_data', true );
+				$preview_data = bboss_activity_get_meta( $type->id, '_link_preview_data', true );
 				if ( ! empty( $preview_data['url'] ) ) {
 					return $content;
 				}

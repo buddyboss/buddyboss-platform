@@ -34,11 +34,11 @@ abstract class BuddypressCommand extends CommandWithDBObject {
 	protected function get_group_id_from_identifier( $group_id ) {
 		// Group ID or slug.
 		if ( ! is_numeric( $group_id ) ) {
-			$group_id = groups_get_id( $group_id );
+			$group_id = bboss_groups_get_id( $group_id );
 		}
 
 		// Get group object.
-		$group_obj = groups_get_group(
+		$group_obj = bboss_groups_get_group(
 			array(
 				'group_id' => $group_id,
 			)
@@ -94,7 +94,7 @@ abstract class BuddypressCommand extends CommandWithDBObject {
 	 */
 	protected function get_field_id( $field_id ) {
 		if ( ! is_numeric( $field_id ) ) {
-			return xprofile_get_field_id_from_name( $field_id );
+			return bboss_xprofile_get_field_id_from_name( $field_id );
 		}
 
 		return absint( $field_id );
@@ -120,7 +120,7 @@ abstract class BuddypressCommand extends CommandWithDBObject {
 	 * @return string
 	 */
 	protected function get_random_component() {
-		$c  = buddypress()->active_components;
+		$c  = bboss()->active_components;
 		$ca = $this->get_components_and_actions();
 
 		return array_rand( array_flip( array_intersect( array_keys( $c ), array_keys( $ca ) ) ) );

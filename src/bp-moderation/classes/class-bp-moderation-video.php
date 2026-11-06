@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.7.0
  */
-class BP_Moderation_Video extends BP_Moderation_Abstract {
+class BBoss_Moderation_Video extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	public static $moderation_type = 'video';
 
 	/**
-	 * BP_Moderation_Video constructor.
+	 * BBoss_Moderation_Video constructor.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
@@ -49,7 +49,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_video_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
-		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		if ( ! bboss_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 
@@ -67,12 +67,12 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 
 		// Prepare report button for video when activity moderation is disabled.
-		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
+		if ( bboss_is_active( 'activity' ) && ! bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Activity::$moderation_type ) ) {
 			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
 		}
 
 		// Prepare report button for video when activity comment moderation is disabled.
-		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity_Comment::$moderation_type ) ) {
+		if ( bboss_is_active( 'activity' ) && ! bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Activity_Comment::$moderation_type ) ) {
 			add_filter( 'bp_activity_comment_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
 		}
 	}
@@ -116,7 +116,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Videos', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Videos', 'buddyboss-platform' );
 
 		return $content_types;
 	}
@@ -142,7 +142,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
 			$where['moderation_where'] .= ' AND ';
 		}
-		$where['moderation_where'] .= '( m.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) OR ( m.privacy = "comment" OR m.privacy = "forums" ) )';
+		$where['moderation_where'] .= '( m.user_id NOT IN ( ' . bboss_moderation_get_blocked_by_sql() . ' ) OR ( m.privacy = "comment" OR m.privacy = "forums" ) )';
 
 		return $where;
 	}
@@ -203,7 +203,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_button_text( $button_text, $item_id ) {
-		return esc_html__( 'Report Video', 'buddyboss' );
+		return esc_html__( 'Report Video', 'buddyboss-platform' );
 	}
 
 	/**
@@ -217,7 +217,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_content_type( $content_type, $item_id ) {
-		return esc_html__( 'Video', 'buddyboss' );
+		return esc_html__( 'Video', 'buddyboss-platform' );
 	}
 
 	/**
@@ -232,14 +232,14 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 */
 	public function update_report_button_args( $report_button, $args ) {
 
-		$activity = new BP_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
+		$activity = new BBoss_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
 
 		if ( empty( $activity->id ) ) {
 			return $report_button;
 		}
 
-		$video_id  = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_video_id', true );
-		$video_ids = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_video_ids', true );
+		$video_id  = bboss_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_video_id', true );
+		$video_ids = bboss_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_video_ids', true );
 
 		if (
 			(
@@ -265,7 +265,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 				$args['button_attr']['data-bp-content-id']   = current( $explode_videos );
 				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
 			}
-			$report_button = bp_moderation_get_report_button( $args, false );
+			$report_button = bboss_moderation_get_report_button( $args, false );
 		}
 
 		return $report_button;

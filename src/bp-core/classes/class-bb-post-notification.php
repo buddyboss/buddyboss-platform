@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BB_Post_Notification class.
+ * Set up the BBoss_Post_Notification class.
  *
  * @since BuddyBoss 2.3.50
  */
-class BB_Post_Notification extends BP_Core_Notification_Abstract {
+class BBoss_Post_Notification extends BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
@@ -30,7 +30,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss 2.3.50
 	 *
-	 * @return null|BB_Post_Notification|Controller|object
+	 * @return null|BBoss_Post_Notification|Controller|object
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -58,11 +58,11 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$this->register_notification_group(
 				'posts',
-				esc_html__( 'Posts', 'buddyboss' ),
-				esc_html__( 'Posts', 'buddyboss' ),
+				esc_html__( 'Posts', 'buddyboss-platform' ),
+				esc_html__( 'Posts', 'buddyboss-platform' ),
 				5
 			);
 
@@ -79,8 +79,8 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification_type(
 			'bb_posts_new_comment_reply',
-			esc_html__( 'A member replies to your post comment', 'buddyboss' ),
-			esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
+			esc_html__( 'A member replies to your post comment', 'buddyboss-platform' ),
+			esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss-platform' ),
 			'posts'
 		);
 
@@ -88,13 +88,13 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 			'new-comment-reply',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to your comments.', 'buddyboss' ),
+				'email_plain_content' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A member receives a reply to their WordPress post comment', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to your comments.', 'buddyboss-platform' ),
 				'group'               => 'activity',
 			),
 			'bb_posts_new_comment_reply'
@@ -126,7 +126,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
-		$notification = bp_notifications_get_notification( $notification_id );
+		$notification = bboss_notifications_get_notification( $notification_id );
 
 		if ( ! empty( $notification ) && 'bb_posts_new_comment_reply' === $notification->component_action &&
 			in_array( $notification->component_name, array( 'core' ), true ) ) {
@@ -134,16 +134,16 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 			$excerpt           = wp_strip_all_tags( $comment->comment_content );
 			$notification_link = add_query_arg( 'cid', (int) $notification_id, get_comment_link( $comment ) );
 			$comment_author    = get_user_by( 'email', $comment->comment_author_email );
-			$commenter_name    = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
+			$commenter_name    = ! empty( $comment_author ) ? bboss_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
 
 			if ( '&nbsp;' === $excerpt ) {
 				$excerpt = '';
 			} else {
-				$excerpt = '"' . bp_create_excerpt(
+				$excerpt = '"' . bboss_create_excerpt(
 					$excerpt,
 					50,
 					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
+						'ending' => __( '&hellip;', 'buddyboss-platform' ),
 					)
 				) . '"';
 
@@ -157,17 +157,17 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 				if ( ! empty( $excerpt ) ) {
 					$text = sprintf(
 						/* translators: Excerpt. */
-						__( 'Replied to your comment: %s', 'buddyboss' ),
+						__( 'Replied to your comment: %s', 'buddyboss-platform' ),
 						$excerpt
 					);
 				} else {
-					$text = __( 'Replied to your comment', 'buddyboss' );
+					$text = __( 'Replied to your comment', 'buddyboss-platform' );
 				}
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text   = sprintf(
 					/* translators: %s: Total new comment reply count. */
-						__( 'You have %1$d new comment reply', 'buddyboss' ),
+						__( 'You have %1$d new comment reply', 'buddyboss-platform' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
@@ -175,14 +175,14 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 					if ( ! empty( $excerpt ) ) {
 						$text = sprintf(
 						/* translators: 1: Commenter name, 2: Excerpt. */
-							esc_html__( '%1$s replied to your comment: %2$s', 'buddyboss' ),
+							esc_html__( '%1$s replied to your comment: %2$s', 'buddyboss-platform' ),
 							$commenter_name,
 							$excerpt
 						);
 					} else {
 						$text = sprintf(
 						/* translators: %s: Commenter name. */
-							esc_html__( '%1$s replied to your comment', 'buddyboss' ),
+							esc_html__( '%1$s replied to your comment', 'buddyboss-platform' ),
 							$commenter_name
 						);
 					}
@@ -195,7 +195,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $commenter_name,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$notification_link,

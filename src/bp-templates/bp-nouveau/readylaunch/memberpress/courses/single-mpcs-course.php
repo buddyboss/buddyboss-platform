@@ -9,6 +9,9 @@
  * @package BuddyBoss\MemberpressLMS
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use memberpress\courses\helpers;
 use memberpress\courses\models as models;
 
@@ -35,7 +38,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 		<div class="bb-rl-course-banner flex">
 			<div class="bb-rl-course-overview">
 				<?php
-				$course_category_names = bb_rl_mpcs_get_course_category_names( $post->ID );
+				$course_category_names = bboss_rl_mpcs_get_course_category_names( $post->ID );
 				if ( ! empty( $course_category_names ) ) {
 					?>
 					<div class="bb-rl-course-category">
@@ -60,7 +63,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 						if ( ! empty( $course_author_fullname ) ) {
 							?>
 							<div class="bb-rl-author-name">
-								<span class="bb-rl-author-name-label"><?php echo esc_html__( 'By ', 'buddyboss' ); ?></span><?php echo esc_html( trim( $course_author_fullname ) ); ?>
+								<span class="bb-rl-author-name-label"><?php echo esc_html__( 'By ', 'buddyboss-platform' ); ?></span><?php echo esc_html( trim( $course_author_fullname ) ); ?>
 							</div>
 							<?php
 						}
@@ -70,11 +73,11 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 
 				<div class="bb-rl-course-meta bb-rl-course-meta--updated">
 					<div class="bb-rl-course-meta-label">
-						<?php echo esc_html__( 'This course was last updated on', 'buddyboss' ); ?>
+						<?php echo esc_html__( 'This course was last updated on', 'buddyboss-platform' ); ?>
 					</div>
 					<div class="bb-rl-course-meta-value">
 						<?php
-						$course_update_date = BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
+						$course_update_date = BBoss_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
 						echo esc_html( $course_update_date );
 						?>
 					</div>
@@ -85,7 +88,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 				if ( ! empty( $memberships ) ) {
 					$membership = $memberships[0];
 					if ( isset( $membership->price ) && floatval( $membership->price ) <= 0 ) {
-						$course_price = __( 'Free', 'buddyboss' );
+						$course_price = __( 'Free', 'buddyboss-platform' );
 					} else {
 						$course_price = \MeprAppHelper::format_currency( $membership->price );
 						// Add period type if it's recurring.
@@ -110,7 +113,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					<div class="bb-rl-course-purchase-button">
 						<a href="<?php echo esc_url( get_permalink( $primary_membership->ID ) ); ?>" 
 							class="button">
-							<?php esc_html_e( 'Get Access', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Get Access', 'buddyboss-platform' ); ?>
 						</a>
 					</div>
 					<?php
@@ -122,7 +125,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					$next_lesson = models\UserProgress::next_lesson( $current_user_id, $post->ID );
 					if ( $next_lesson && is_object( $next_lesson ) ) {
 						$bookmark_url = get_permalink( $next_lesson->ID );
-						$button_text  = $user_has_progress ? __( 'Continue', 'buddyboss' ) : __( 'Start', 'buddyboss' );
+						$button_text  = $user_has_progress ? __( 'Continue', 'buddyboss-platform' ) : __( 'Start', 'buddyboss-platform' );
 						?>
 						<div class="bb-rl-course-continue-button">
 							<a href="<?php echo esc_url( $bookmark_url ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
@@ -138,7 +141,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 				<div class="bb-rl-course-overview-footer">
 					<div class="mpcs-sidebar-wrapper">
 						<div class="course-progress">
-							<?php echo helpers\Courses::classroom_sidebar_progress( $post ); ?>
+							<?php echo helpers\Courses::classroom_sidebar_progress( $post ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- MemberPress Courses sidebar markup (third-party, contains progress controls). ?>
 						</div>
 					</div>
 					<div class="bb-rl-course-enrolled"></div>
@@ -151,7 +154,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 							<img src="<?php echo esc_url( models\Lesson::get_thumbnail( $post ) ); ?>" alt="">
 						</a>
 					<?php } else { ?>
-						<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
+						<img src="<?php echo esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss-platform' ); ?>">
 					<?php } ?>
 				</div>
 			</div>
@@ -164,7 +167,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 				<div id="mpcs-main" class="bb-rl-course-content-module">
 					<?php
 					setup_postdata( $post->ID );
-					echo wp_kses_post( BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu() );
+					echo wp_kses_post( BBoss_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu() );
 					the_content();
 					?>
 				</div>

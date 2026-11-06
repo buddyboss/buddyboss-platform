@@ -6,10 +6,13 @@
  * @package BuddyBoss
  */
 
-$current_tab       = bb_filter_input_string( INPUT_GET, 'tab' );
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+$current_tab       = bboss_filter_input_string( INPUT_GET, 'tab' );
 $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_tab;
 $error             = isset( $_REQUEST['error'] ) ? $_REQUEST['error'] : false; // phpcs:ignore
-$user_id           = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
+$user_id           = bboss_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
 $admins            = array_map(
 	'intval',
 	get_users(
@@ -27,20 +30,20 @@ $admins            = array_map(
 			printf(
 				/* translators: 1: URL, 2: Title */
 				'<a class="bb-back" href="%1$s"><i class="bb-icon-f bb-icon-arrow-left"></i>%2$s</a>',
-				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation&tab=reported-content' ) ),
-				esc_html__( 'Back to Reported Content', 'buddyboss' )
+				esc_url( bboss_get_admin_url( 'admin.php?page=bp-moderation&tab=reported-content' ) ),
+				esc_html__( 'Back to Reported Content', 'buddyboss-platform' )
 			);
 		} else {
 			printf(
 				/* translators: 1: URL, 2: Title */
 				'<a class="bb-back" href="%1$s"><i class="bb-icon-f bb-icon-arrow-left"></i>%2$s</a>',
-				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
-				esc_html__( 'Back to Flagged Members', 'buddyboss' )
+				esc_url( bboss_get_admin_url( 'admin.php?page=bp-moderation' ) ),
+				esc_html__( 'Back to Flagged Members', 'buddyboss-platform' )
 			);
 		}
 		?>
 	</p>
-	<h1> <?php esc_html_e( 'View Report', 'buddyboss' ); ?></h1>
+	<h1> <?php esc_html_e( 'View Report', 'buddyboss-platform' ); ?></h1>
 
 	<?php if ( ! empty( $moderation_request_data ) ) : ?>
 		<div id="poststuff">
@@ -68,22 +71,22 @@ $admins            = array_map(
 										<div class="report-header_details">
 											<div class="report-header_content_id">
 												<?php
-												echo esc_html( bp_moderation_get_content_type( $moderation_request_data->item_type ) );
-												$view_content_url = bp_moderation_get_permalink( $moderation_request_data->item_id, $moderation_request_data->item_type );
+												echo esc_html( bboss_moderation_get_content_type( $moderation_request_data->item_type ) );
+												$view_content_url = bboss_moderation_get_permalink( $moderation_request_data->item_id, $moderation_request_data->item_type );
 												if ( ! empty( $view_content_url ) ) {
 													printf(
 													/* translators: 1: View content URL, 2: Attribute title, 3: Title */
 														'<span>#%s</span> <a target="_blank" href="%s" title="%s"><i class="bb-icon-external-link bb-icon-l"></i></a>',
 														esc_html( $moderation_request_data->item_id ),
 														esc_url( $view_content_url ),
-														esc_attr__( 'View', 'buddyboss' )
+														esc_attr__( 'View', 'buddyboss-platform' )
 													);
 												}
 												?>
 											</div>
 											<div class="report-header_user">
 												<?php
-												$user_ids = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
+												$user_ids = bboss_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
 												if ( ! is_array( $user_ids ) ) {
 													$user_ids = array( $user_ids );
 												}
@@ -92,9 +95,9 @@ $admins            = array_map(
 													printf(
 														/* translators: 1: Avtar, 2: Title with link */
 														'<strong><a target="_blank" href="%s">%s %s</a></strong>',
-														esc_url( BP_Moderation_Members::get_permalink( $user_id ) ),
+														esc_url( BBoss_Moderation_Members::get_permalink( $user_id ) ),
 														get_avatar( $user_id, '32' ),
-														esc_html( bp_core_get_userlink( $user_id, true ) )
+														esc_html( bboss_core_get_userlink( $user_id, true ) )
 													);
 												}
 												?>
@@ -102,16 +105,16 @@ $admins            = array_map(
 										</div>
 										<div class="report-header_content">
 											<strong class="report-header_number">
-												<?php echo esc_html( bp_core_number_format( $moderation_request_data->count ) ); ?>
+												<?php echo esc_html( bboss_core_number_format( $moderation_request_data->count ) ); ?>
 											</strong>
-											<?php echo ( 1 === $moderation_request_data->count ) ? esc_html__( 'Report', 'buddyboss' ) : esc_html__( 'Reports', 'buddyboss' ); ?>
+											<?php echo ( 1 === $moderation_request_data->count ) ? esc_html__( 'Report', 'buddyboss-platform' ) : esc_html__( 'Reports', 'buddyboss-platform' ); ?>
 										</div>
 										<div class="report-header_action">
 											<?php
 											$action_type  = ( 1 === (int) $moderation_request_data->hide_sitewide ) ? 'unhide' : 'hide';
-											$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss' ) : esc_html__( 'Hide Content', 'buddyboss' );
+											$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss-platform' ) : esc_html__( 'Hide Content', 'buddyboss-platform' );
 
-											if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
+											if ( ! bboss_moderation_is_user_suspended( $user_id ) ) {
 												?>
 												<a href="javascript:void(0);" class="button report-header_button bp-hide-request single-report-btn <?php echo ( 'unhide' === $action_type ) ? esc_attr( 'green' ) : ''; ?>" data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>" data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $action_type ); ?>" title="<?php echo esc_attr( $action_label ); ?>">
 													<?php
@@ -121,18 +124,18 @@ $admins            = array_map(
 												<?php
 											}
 											if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
-												$user_action_type = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
-												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
+												$user_action_type = ( bboss_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
+												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss-platform' ) : esc_html__( 'Suspend Owner', 'buddyboss-platform' );
 
-												$suspend_id = BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type );
+												$suspend_id = BBoss_Core_Suspend::get_suspend_id( $user_id, BBoss_Moderation_Members::$moderation_type );
 												$meta_key   = 'unsuspend' === $user_action_type ? 'suspend' : 'unsuspend';
-												$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
+												$meta_value = bboss_suspend_get_meta( $suspend_id, $meta_key );
 
 												$classes   = array();
 												$classes[] = ! empty( $meta_value ) ? 'disabled' : '';
 												$classes[] = ( 'unsuspend' === $user_action_type ) ? esc_attr( 'green' ) : '';
 
-												$tooltip = ! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '';
+												$tooltip = ! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss-platform' ) . '"' : '';
 												?>
 												<a href="javascript:void(0);" class="button report-header_button bp-block-user single-report-btn content-author <?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>" <?php echo wp_kses_post( $tooltip ); ?>>
 													<?php
@@ -153,39 +156,39 @@ $admins            = array_map(
 											printf(
 												/* translators: 1: Member avtar, 2: Member avtar URL, 3: Member Name */
 												'<strong><a target="_blank" href="%s">%s %s</a></strong>',
-												esc_url( BP_Moderation_Members::get_permalink( $moderation_request_data->item_id ) ),
+												esc_url( BBoss_Moderation_Members::get_permalink( $moderation_request_data->item_id ) ),
 												get_avatar( $moderation_request_data->item_id, '32' ),
-												esc_html( bp_core_get_userlink( $moderation_request_data->item_id, true ) )
+												esc_html( bboss_core_get_userlink( $moderation_request_data->item_id, true ) )
 											);
 											?>
 										</div>
 										<div class="report-header_content">
 											<strong class="report-header_number">
-												<?php echo esc_html( bp_core_number_format( $moderation_request_data->count ) ); ?>
+												<?php echo esc_html( bboss_core_number_format( $moderation_request_data->count ) ); ?>
 											</strong>
-											<?php echo ( 1 === $moderation_request_data->count ) ? esc_html__( 'Block', 'buddyboss' ) : esc_html__( 'Blocks', 'buddyboss' ); ?>
+											<?php echo ( 1 === $moderation_request_data->count ) ? esc_html__( 'Block', 'buddyboss-platform' ) : esc_html__( 'Blocks', 'buddyboss-platform' ); ?>
 										</div>
 										<div class="report-header_content">
 											<strong class="report-header_number">
-												<?php echo esc_html( bp_core_number_format( $moderation_request_data->count_report ) ); ?>
+												<?php echo esc_html( bboss_core_number_format( $moderation_request_data->count_report ) ); ?>
 											</strong>
-											<?php echo ( 1 === $moderation_request_data->count_report ) ? esc_html__( 'Report', 'buddyboss' ) : esc_html__( 'Reports', 'buddyboss' ); ?>
+											<?php echo ( 1 === $moderation_request_data->count_report ) ? esc_html__( 'Report', 'buddyboss-platform' ) : esc_html__( 'Reports', 'buddyboss-platform' ); ?>
 										</div>
 										<div class="report-header_action">
 											<?php
 											if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
-												$user_action_type = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
-												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
+												$user_action_type = ( bboss_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
+												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss-platform' ) : esc_html__( 'Suspend Member', 'buddyboss-platform' );
 
-												$suspend_id = BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type );
+												$suspend_id = BBoss_Core_Suspend::get_suspend_id( $user_id, BBoss_Moderation_Members::$moderation_type );
 												$meta_key   = 'unsuspend' === $user_action_type ? 'suspend' : 'unsuspend';
-												$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
+												$meta_value = bboss_suspend_get_meta( $suspend_id, $meta_key );
 
 												$classes   = array();
 												$classes[] = ! empty( $meta_value ) ? 'disabled' : '';
 												$classes[] = ( 'unsuspend' === $user_action_type ) ? esc_attr( 'green' ) : '';
 
-												$tooltip = ! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '';
+												$tooltip = ! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss-platform' ) . '"' : '';
 
 												?>
 												<a href="javascript:void(0);" class="button report-header_button <?php echo esc_attr( implode( ' ', $classes ) ); ?> bp-block-user single-report-btn123 content-author123" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>" <?php echo wp_kses_post( $tooltip ); ?>>
@@ -213,7 +216,7 @@ $admins            = array_map(
 												<td scope="row" style="width: 20%;">
 													<strong>
 														<label>
-															<?php esc_html_e( 'Blocked By', 'buddyboss' ); ?>
+															<?php esc_html_e( 'Blocked By', 'buddyboss-platform' ); ?>
 														</label>
 													</strong>
 												</td>
@@ -223,7 +226,7 @@ $admins            = array_map(
 								</table>
 								<?php if ( ! $is_content_screen ) { ?>
 									<?php
-									$bp_moderation_report_list_table = new BP_Moderation_Report_List_Table( 'blocked' );
+									$bp_moderation_report_list_table = new BBoss_Moderation_Report_List_Table( 'blocked' );
 									// Prepare the group items for display.
 									$bp_moderation_report_list_table->prepare_items();
 									$bp_moderation_report_list_table->views();
@@ -236,7 +239,7 @@ $admins            = array_map(
 												<td scope="row" style="width: 20%;">
 													<strong>
 														<label>
-															<?php esc_html_e( 'Reported By', 'buddyboss' ); ?>
+															<?php esc_html_e( 'Reported By', 'buddyboss-platform' ); ?>
 														</label>
 													</strong>
 												</td>
@@ -245,14 +248,14 @@ $admins            = array_map(
 									</table>
 								<?php } ?>
 								<?php
-								$bp_moderation_report_list_table = new BP_Moderation_Report_List_Table();
+								$bp_moderation_report_list_table = new BBoss_Moderation_Report_List_Table();
 								// Prepare the group items for display.
 								$bp_moderation_report_list_table->prepare_items();
 								$bp_moderation_report_list_table->views();
 								$bp_moderation_report_list_table->display();
 
 								$action_type  = ( 1 === (int) $moderation_request_data->hide_sitewide ) ? 'unhide' : 'hide';
-								$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss' ) : esc_html__( 'Hide Content', 'buddyboss' );
+								$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss-platform' ) : esc_html__( 'Hide Content', 'buddyboss-platform' );
 								?>
 							</div>
 						</div>
@@ -266,9 +269,9 @@ $admins            = array_map(
 			printf(
 				/* translators: 1: Text, 2: Link, 3: Text */
 				'%1$s <a href="%2$s">%3$s</a>',
-				esc_html__( 'No moderation found with this ID.', 'buddyboss' ),
-				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
-				esc_html__( 'Go back and try again.', 'buddyboss' )
+				esc_html__( 'No moderation found with this ID.', 'buddyboss-platform' ),
+				esc_url( bboss_get_admin_url( 'admin.php?page=bp-moderation' ) ),
+				esc_html__( 'Go back and try again.', 'buddyboss-platform' )
 			);
 			?>
 		</p>

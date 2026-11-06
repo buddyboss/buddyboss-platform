@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_moderation_add_admin_menu() {
+function bboss_moderation_add_admin_menu() {
 	global $submenu;
 
 	// Sidebar link points directly at the Settings 2.0 Moderation panel.
@@ -27,18 +27,18 @@ function bp_moderation_add_admin_menu() {
 	// third-party links) are caught upstream by
 	// `bb_redirect_bp_settings_before_permission_check()` at
 	// `admin_menu @ PHP_INT_MAX` so they don't 403.
-	$settings_url = function_exists( 'bb_get_feature_settings_url' )
-		? bb_get_feature_settings_url( 'moderation', 'flagged_members' )
+	$settings_url = function_exists( 'bboss_get_feature_settings_url' )
+		? bboss_get_feature_settings_url( 'moderation', 'flagged_members' )
 		: admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' );
 
 	$submenu['buddyboss-platform'][] = array(
-		esc_html__( 'Moderation', 'buddyboss' ),
+		esc_html__( 'Moderation', 'buddyboss-platform' ),
 		'bp_moderate',
 		$settings_url,
 	);
 }
 
-add_action( bp_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
+add_action( bboss_core_admin_hook(), 'bboss_moderation_add_admin_menu', 100 );
 
 /**
  * Add moderation component to custom menus array.
@@ -53,31 +53,31 @@ add_action( bp_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
  *
  * @return array $custom_menus List of top-level BP menu items, with Moderation added.
  */
-function bp_moderation_admin_menu_order( $custom_menus = array() ) {
+function bboss_moderation_admin_menu_order( $custom_menus = array() ) {
 	array_push( $custom_menus, 'bp-moderation' );
 
 	return $custom_menus;
 }
 
-add_filter( 'bp_admin_menu_order', 'bp_moderation_admin_menu_order' );
+add_filter( 'bp_admin_menu_order', 'bboss_moderation_admin_menu_order' );
 
 /**
  * Highlight the "Moderation" admin menu item when on Settings 2.0 moderation pages.
  *
- * Outputs inline JS on all bb-settings pages. The script checks the current URL
+ * Prints inline JS on all bb-settings pages. The script checks the current URL
  * for tab=moderation and swaps the WordPress `current` class accordingly.
  * Also observes URL changes from SPA navigation (history.replaceState).
  *
  * @since BuddyBoss 3.0.0
  */
-function bp_moderation_highlight_admin_menu() {
+function bboss_moderation_highlight_admin_menu() {
 	// Only output on bb-settings pages (covers all SPA-navigated tabs).
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if ( ! isset( $_GET['page'] ) || 'bb-settings' !== $_GET['page'] ) {
 		return;
 	}
-	?>
-	<script>
+
+	$inline_js = <<<'JS'
 	( function() {
 		var bbModLastUrl = '';
 
@@ -141,8 +141,14 @@ function bp_moderation_highlight_admin_menu() {
 			}
 		};
 	} )();
-	</script>
-	<?php
+JS;
+
+	// Printed in place on admin_head: it patches history.replaceState before the settings SPA starts navigating.
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+	}
 }
 
-add_action( 'admin_head', 'bp_moderation_highlight_admin_menu' );
+add_action( 'admin_head', 'bboss_moderation_highlight_admin_menu' );

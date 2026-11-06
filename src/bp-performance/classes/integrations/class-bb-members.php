@@ -198,7 +198,7 @@ class BB_Members extends Integration_Abstract {
 	 */
 	public function event_bp_core_signup_after_delete( $signup_ids ) {
 		if ( ! empty( $signup_ids ) && is_array( $signup_ids ) ) {
-			$to_delete = \BP_Signup::get(
+			$to_delete = \BBoss_Signup::get(
 				array(
 					'include' => $signup_ids,
 				)
@@ -221,7 +221,7 @@ class BB_Members extends Integration_Abstract {
 	/**
 	 * When user start following.
 	 *
-	 * @param BP_Activity_Follow $follow Object of Follow.
+	 * @param BBoss_Activity_Follow $follow Object of Follow.
 	 */
 	public function event_bp_start_following( $follow ) {
 		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bp-activity' );
@@ -232,7 +232,7 @@ class BB_Members extends Integration_Abstract {
 	/**
 	 * When user start following using BuddyPress Follow.
 	 *
-	 * @param BP_Activity_Follow $follow Object of Follow.
+	 * @param BBoss_Activity_Follow $follow Object of Follow.
 	 */
 	public function event_bp_follow_start_following( $follow ) {
 		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bp-activity' );
@@ -243,7 +243,7 @@ class BB_Members extends Integration_Abstract {
 	/**
 	 * When user stop following.
 	 *
-	 * @param BP_Activity_Follow $follow Object of Follow.
+	 * @param BBoss_Activity_Follow $follow Object of Follow.
 	 */
 	public function event_bp_stop_following( $follow ) {
 		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bp-activity' );
@@ -254,7 +254,7 @@ class BB_Members extends Integration_Abstract {
 	/**
 	 * When user stop following using BuddyPress Follow.
 	 *
-	 * @param BP_Activity_Follow $follow Object of Follow.
+	 * @param BBoss_Activity_Follow $follow Object of Follow.
 	 */
 	public function event_bp_follow_stop_following( $follow ) {
 		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bp-activity' );
@@ -314,7 +314,7 @@ class BB_Members extends Integration_Abstract {
 	 * When friendship request rejected
 	 *
 	 * @param int                   $friendship_id ID of the pending friendship.
-	 * @param BP_Friends_Friendship $friendship    Friendship object. Passed by reference.
+	 * @param BBoss_Friends_Friendship $friendship    Friendship object. Passed by reference.
 	 */
 	public function event_friends_friendship_rejected( $friendship_id, $friendship ) {
 		$this->purge_item_cache_by_item_id( $friendship->initiator_user_id );
@@ -344,7 +344,7 @@ class BB_Members extends Integration_Abstract {
 	 * When friendship withdrawn
 	 *
 	 * @param int                   $friendship_id ID of the friendship.
-	 * @param BP_Friends_Friendship $friendship    Friendship object. Passed by reference.
+	 * @param BBoss_Friends_Friendship $friendship    Friendship object. Passed by reference.
 	 */
 	public function event_friends_friendship_withdrawn( $friendship_id, $friendship ) {
 		$this->purge_item_cache_by_item_id( $friendship->initiator_user_id );
@@ -367,7 +367,7 @@ class BB_Members extends Integration_Abstract {
 	/**
 	 * When user xprofile update using API.
 	 *
-	 * @param BP_XProfile_ProfileData $field Current instance of the profile data being saved.
+	 * @param BBoss_XProfile_ProfileData $field Current instance of the profile data being saved.
 	 */
 	public function event_xprofile_data_after_save( $field ) {
 		if ( ! empty( $field->user_id ) ) {
@@ -467,7 +467,7 @@ class BB_Members extends Integration_Abstract {
 	 */
 	private function purge_item_cache_by_item_id( $member_id, $clear_subscription = true ) {
 		Cache::instance()->purge_by_group( 'bp-members_' . $member_id );
-		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_core_get_user_domain( $member_id ) ) );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bboss_core_get_user_domain( $member_id ) ) );
 		if ( $clear_subscription ) {
 			$this->purge_subscription_cache_by_user_id( $member_id );
 		}
@@ -496,7 +496,7 @@ class BB_Members extends Integration_Abstract {
 	 * @return string
 	 */
 	public function prepare_user_deeplink( $user_id ) {
-		return 'bbapp-deeplinking_' . untrailingslashit( bp_core_get_user_domain( $user_id ) );
+		return 'bbapp-deeplinking_' . untrailingslashit( bboss_core_get_user_domain( $user_id ) );
 	}
 
 	/**
@@ -653,7 +653,7 @@ class BB_Members extends Integration_Abstract {
 			'status'  => null,
 		);
 
-		$all_subscription = bb_get_subscriptions(
+		$all_subscription = bboss_get_subscriptions(
 			$args,
 			true
 		);

@@ -25,7 +25,7 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 	 * @return int Created field ID.
 	 */
 	protected function create_bio_field( $group_id ) {
-		$field            = new BP_XProfile_Field();
+		$field            = new BBoss_XProfile_Field();
 		$field->group_id  = $group_id;
 		$field->parent_id = 0;
 		$field->type      = 'biography';
@@ -47,7 +47,7 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 	 * @return void
 	 */
 	protected function force_repeater_on( $group_id ) {
-		bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' );
+		bboss_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' );
 		wp_cache_delete( 'all', 'bp_xprofile_groups' );
 		wp_cache_delete( $group_id, 'bp_xprofile_groups' );
 	}
@@ -56,7 +56,7 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 		$group_id = self::factory()->xprofile_group->create();
 		$this->force_repeater_on( $group_id );
 
-		$field             = new BP_XProfile_Field();
+		$field             = new BBoss_XProfile_Field();
 		$field->group_id   = $group_id;
 		$field->parent_id  = 0;
 		$field->type       = 'biography';
@@ -74,7 +74,7 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 		$field_id = $this->create_bio_field( $plain_group_id );
 		$this->assertNotEmpty( $field_id );
 
-		$field           = xprofile_get_field( $field_id, null, false );
+		$field           = bboss_xprofile_get_field( $field_id, null, false );
 		$field->group_id = $repeat_group_id;
 
 		$this->assertFalse( $field->save() );
@@ -87,7 +87,7 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 		// Only now does the set start repeating — the pre-guard state.
 		$this->force_repeater_on( $group_id );
 
-		$field       = xprofile_get_field( $field_id, null, false );
+		$field       = bboss_xprofile_get_field( $field_id, null, false );
 		$field->name = 'About me';
 
 		$this->assertEquals( $field_id, $field->save() );
@@ -99,12 +99,12 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 
 		$_POST['group_is_repeater'] = 'on';
 
-		$group = new BP_XProfile_Group( $group_id );
+		$group = new BBoss_XProfile_Group( $group_id );
 		$group->save();
 
 		unset( $_POST['group_is_repeater'] );
 
-		$this->assertNotEquals( 'on', BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) );
+		$this->assertNotEquals( 'on', BBoss_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) );
 	}
 
 	public function test_group_save_still_allows_the_repeater_without_a_bio_field() {
@@ -112,12 +112,12 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 
 		$_POST['group_is_repeater'] = 'on';
 
-		$group = new BP_XProfile_Group( $group_id );
+		$group = new BBoss_XProfile_Group( $group_id );
 		$group->save();
 
 		unset( $_POST['group_is_repeater'] );
 
-		$this->assertEquals( 'on', BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) );
+		$this->assertEquals( 'on', BBoss_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) );
 	}
 
 	public function test_group_has_bio_field_detects_the_field() {
@@ -126,20 +126,20 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 
 		$this->create_bio_field( $with_bio );
 
-		$this->assertTrue( bb_xprofile_group_has_bio_field( $with_bio ) );
-		$this->assertFalse( bb_xprofile_group_has_bio_field( $without_bio ) );
-		$this->assertFalse( bb_xprofile_group_has_bio_field( 0 ) );
+		$this->assertTrue( bboss_xprofile_group_has_bio_field( $with_bio ) );
+		$this->assertFalse( bboss_xprofile_group_has_bio_field( $without_bio ) );
+		$this->assertFalse( bboss_xprofile_group_has_bio_field( 0 ) );
 	}
 
 	public function test_is_repeater_group() {
 		$group_id = self::factory()->xprofile_group->create();
 
-		$this->assertFalse( bb_xprofile_is_repeater_group( $group_id ) );
+		$this->assertFalse( bboss_xprofile_is_repeater_group( $group_id ) );
 
 		$this->force_repeater_on( $group_id );
 
-		$this->assertTrue( bb_xprofile_is_repeater_group( $group_id ) );
-		$this->assertFalse( bb_xprofile_is_repeater_group( 0 ) );
+		$this->assertTrue( bboss_xprofile_is_repeater_group( $group_id ) );
+		$this->assertFalse( bboss_xprofile_is_repeater_group( 0 ) );
 	}
 
 	public function test_repeater_template_mirror_is_skipped_for_a_bio_field() {
@@ -153,18 +153,18 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 			)
 		);
 
-		$this->assertTrue( bb_xprofile_skip_repeater_template_mirror( $bio_id ) );
-		$this->assertFalse( bb_xprofile_skip_repeater_template_mirror( $text_id ) );
+		$this->assertTrue( bboss_xprofile_skip_repeater_template_mirror( $bio_id ) );
+		$this->assertFalse( bboss_xprofile_skip_repeater_template_mirror( $text_id ) );
 
 		// A missing field must not be mirrored either.
-		$this->assertTrue( bb_xprofile_skip_repeater_template_mirror( 0 ) );
+		$this->assertTrue( bboss_xprofile_skip_repeater_template_mirror( 0 ) );
 	}
 
 	/**
 	 * Build member-facing profile-loop args for a user.
 	 *
 	 * `repeater_show_main_fields_only` has to be explicit. Left unset,
-	 * `bp_xprofile_get_groups()` defaults it to true outside a profile page — the
+	 * `bboss_xprofile_get_groups()` defaults it to true outside a profile page — the
 	 * mode that deliberately shows templates and hides clones, the opposite of what
 	 * a member sees. The leak only exists in the member-facing mode.
 	 *
@@ -201,43 +201,43 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 		update_user_meta( $after_user, 'description', 'A1 Bio A2 Bio' );
 
 		// Not repeating yet: the read-through restore is expected to fire.
-		$field_ids = $this->collect_field_ids( bp_xprofile_get_groups( $this->profile_loop_args( $before_user, $group_id ) ) );
+		$field_ids = $this->collect_field_ids( bboss_xprofile_get_groups( $this->profile_loop_args( $before_user, $group_id ) ) );
 		$this->assertContains( $bio_id, $field_ids );
 
 		$this->force_repeater_on( $group_id );
 
-		$field_ids = $this->collect_field_ids( bp_xprofile_get_groups( $this->profile_loop_args( $after_user, $group_id ) ) );
+		$field_ids = $this->collect_field_ids( bboss_xprofile_get_groups( $this->profile_loop_args( $after_user, $group_id ) ) );
 		$this->assertNotContains( $bio_id, $field_ids );
 	}
 
 	public function test_rest_update_refuses_to_enable_the_repeater_on_a_bio_set() {
-		if ( ! class_exists( 'BP_REST_XProfile_Field_Groups_Endpoint' ) ) {
+		if ( ! class_exists( 'BBoss_REST_XProfile_Field_Groups_Endpoint' ) ) {
 			$this->markTestSkipped( 'REST field-groups endpoint not loaded.' );
 		}
 
 		$group_id = self::factory()->xprofile_group->create();
 		$this->create_bio_field( $group_id );
 
-		$original_name = xprofile_get_field_group( $group_id )->name;
+		$original_name = bboss_xprofile_get_field_group( $group_id )->name;
 
 		$request = new WP_REST_Request( 'PATCH', '/buddyboss/v1/xprofile/groups/' . $group_id );
 		$request->set_param( 'id', $group_id );
 		$request->set_param( 'name', 'Renamed by the rejected request' );
 		$request->set_param( 'repeater_enabled', true );
 
-		$endpoint = new BP_REST_XProfile_Field_Groups_Endpoint();
+		$endpoint = new BBoss_REST_XProfile_Field_Groups_Endpoint();
 		$result   = $endpoint->update_item( $request );
 
 		$this->assertWPError( $result );
 		$this->assertEquals( 'bp_rest_xprofile_field_group_repeater_bio_conflict', $result->get_error_code() );
-		$this->assertFalse( bb_xprofile_is_repeater_group( $group_id ) );
+		$this->assertFalse( bboss_xprofile_is_repeater_group( $group_id ) );
 
 		// Rejected before any write: the rest of the payload must not have landed.
-		$this->assertEquals( $original_name, xprofile_get_field_group( $group_id )->name );
+		$this->assertEquals( $original_name, bboss_xprofile_get_field_group( $group_id )->name );
 	}
 
 	public function test_rest_update_still_enables_the_repeater_without_a_bio_field() {
-		if ( ! class_exists( 'BP_REST_XProfile_Field_Groups_Endpoint' ) ) {
+		if ( ! class_exists( 'BBoss_REST_XProfile_Field_Groups_Endpoint' ) ) {
 			$this->markTestSkipped( 'REST field-groups endpoint not loaded.' );
 		}
 
@@ -247,17 +247,17 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 		$request->set_param( 'id', $group_id );
 		$request->set_param( 'repeater_enabled', true );
 
-		$endpoint = new BP_REST_XProfile_Field_Groups_Endpoint();
+		$endpoint = new BBoss_REST_XProfile_Field_Groups_Endpoint();
 		$result   = $endpoint->update_item( $request );
 
 		$this->assertNotWPError( $result );
-		$this->assertTrue( bb_xprofile_is_repeater_group( $group_id ) );
+		$this->assertTrue( bboss_xprofile_is_repeater_group( $group_id ) );
 	}
 
 	/**
 	 * Flatten the field IDs out of a profile-loop group list.
 	 *
-	 * @param array $groups Groups returned by `bp_xprofile_get_groups()`.
+	 * @param array $groups Groups returned by `bboss_xprofile_get_groups()`.
 	 *
 	 * @return array Field IDs.
 	 */

@@ -19,12 +19,12 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Plugin file of the Two Factor plugin, relative to the plugins directory.
  *
- * Also the `required_plugin` value passed to BP_Integration.
+ * Also the `required_plugin` value passed to BBoss_Integration.
  *
  * @since BuddyBoss 3.6.0
  */
-if ( ! defined( 'BB_TWO_FACTOR_PLUGIN_BASENAME' ) ) {
-	define( 'BB_TWO_FACTOR_PLUGIN_BASENAME', 'two-factor/two-factor.php' );
+if ( ! defined( 'BBOSS_TWO_FACTOR_PLUGIN_BASENAME' ) ) {
+	define( 'BBOSS_TWO_FACTOR_PLUGIN_BASENAME', 'two-factor/two-factor.php' );
 }
 
 /**
@@ -36,8 +36,8 @@ if ( ! defined( 'BB_TWO_FACTOR_PLUGIN_BASENAME' ) ) {
  *
  * @since BuddyBoss 3.6.0
  */
-if ( ! defined( 'BB_TWO_FACTOR_MIN_VERSION' ) ) {
-	define( 'BB_TWO_FACTOR_MIN_VERSION', '0.16.0' );
+if ( ! defined( 'BBOSS_TWO_FACTOR_MIN_VERSION' ) ) {
+	define( 'BBOSS_TWO_FACTOR_MIN_VERSION', '0.16.0' );
 }
 
 /**
@@ -47,7 +47,7 @@ if ( ! defined( 'BB_TWO_FACTOR_MIN_VERSION' ) ) {
  *
  * @return string Plugin basename, e.g. 'two-factor/two-factor.php'.
  */
-function bb_two_factor_plugin_basename() {
+function bboss_two_factor_plugin_basename() {
 
 	/**
 	 * Filters the Two Factor plugin file this integration looks for.
@@ -58,7 +58,7 @@ function bb_two_factor_plugin_basename() {
 	 *
 	 * @param string $basename Plugin basename.
 	 */
-	return (string) apply_filters( 'bb_two_factor_plugin_basename', BB_TWO_FACTOR_PLUGIN_BASENAME );
+	return (string) apply_filters( 'bb_two_factor_plugin_basename', BBOSS_TWO_FACTOR_PLUGIN_BASENAME );
 }
 
 /**
@@ -71,7 +71,7 @@ function bb_two_factor_plugin_basename() {
  *
  * @return string Version string.
  */
-function bb_two_factor_min_plugin_version() {
+function bboss_two_factor_min_plugin_version() {
 
 	/**
 	 * Filters the minimum supported Two Factor version.
@@ -82,10 +82,10 @@ function bb_two_factor_min_plugin_version() {
 	 *
 	 * @param string $version Minimum supported version.
 	 */
-	$version = (string) apply_filters( 'bb_two_factor_min_plugin_version', BB_TWO_FACTOR_MIN_VERSION );
+	$version = (string) apply_filters( 'bb_two_factor_min_plugin_version', BBOSS_TWO_FACTOR_MIN_VERSION );
 
-	if ( '' === $version || version_compare( $version, BB_TWO_FACTOR_MIN_VERSION, '<' ) ) {
-		return BB_TWO_FACTOR_MIN_VERSION;
+	if ( '' === $version || version_compare( $version, BBOSS_TWO_FACTOR_MIN_VERSION, '<' ) ) {
+		return BBOSS_TWO_FACTOR_MIN_VERSION;
 	}
 
 	return $version;

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  * @return int
  */
-function bp_profile_field_set_max_cap() {
+function bboss_profile_field_set_max_cap() {
 	return 100;
 }
 
@@ -27,24 +27,28 @@ function bp_profile_field_set_max_cap() {
  * @param type $field_group_id
  * @return type
  */
-function bp_get_repeater_template_field_ids( $field_group_id ) {
+function bboss_get_repeater_template_field_ids( $field_group_id ) {
 	static $bp_group_template_field_ids = array();
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	$cache_key = 'bp_group_template_field_ids_' . $field_group_id;
 	if ( isset( $bp_group_template_field_ids[ $cache_key ] ) ) {
 		return $bp_group_template_field_ids[ $cache_key ];
 	}
 
-	$group_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$field_group_id} AND parent_id = 0" );
+	$group_field_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND parent_id = 0", $field_group_id ) );
 	if ( empty( $group_field_ids ) || is_wp_error( $group_field_ids ) ) {
 		return array();
 	}
 
+	// Table name from $bp->profile; one %d placeholder per field ID (IDs read from the fields table above).
 	$clone_field_ids = $wpdb->get_col(
-		"SELECT object_id FROM {$bp->profile->table_name_meta} "
-		. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', $group_field_ids ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1"
+		$wpdb->prepare(
+			"SELECT object_id FROM {$bp->profile->table_name_meta} "
+			. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', array_fill( 0, count( $group_field_ids ), '%d' ) ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1",
+			$group_field_ids
+		)
 	);
 
 	if ( empty( $clone_field_ids ) || is_wp_error( $clone_field_ids ) ) {
@@ -69,10 +73,10 @@ function bp_get_repeater_template_field_ids( $field_group_id ) {
  *
  * @return array
  */
-function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
+function bboss_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 	static $bp_clone_ids_subset = array();
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	$ids = array();
 
@@ -82,7 +86,7 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 		return $bp_clone_ids_subset[ $cache_key ];
 	}
 
-	$template_field_ids = bp_get_repeater_template_field_ids( $field_group_id );
+	$template_field_ids = bboss_get_repeater_template_field_ids( $field_group_id );
 
 	if ( empty( $template_field_ids ) ) {
 		return $ids;
@@ -93,7 +97,7 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 		   JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
 		   WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
 		   AND m2.meta_key = '_clone_number' ORDER BY m2.object_id, m2.meta_value ASC", $template_field_id );
-		$results = $wpdb->get_results( $sql, ARRAY_A );
+		$results = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d on the preceding lines.
 
 
 		for ( $i = 1; $i <= $count; $i++ ) {
@@ -111,9 +115,9 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 
 			// if not create one!
 			if ( ! $clone_id ) {
-				$checked_cloned_from = bp_xprofile_get_meta( $template_field_id, 'field', '_is_repeater_clone' );
+				$checked_cloned_from = bboss_xprofile_get_meta( $template_field_id, 'field', '_is_repeater_clone' );
 				if ( ! $checked_cloned_from ) {
-					$clone_id = bp_clone_field_for_repeater_sets( $template_field_id, $field_group_id, $i );
+					$clone_id = bboss_clone_field_for_repeater_sets( $template_field_id, $field_group_id, $i );
 				}
 			}
 
@@ -138,10 +142,10 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
  * @return array
  * @global wpdb $wpdb           WordPress database abstraction object.
  */
-function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
+function bboss_get_repeater_clone_field_ids_all( $field_group_id ) {
 	static $bp_clone_field_ids_all = array();
 	global $wpdb;
-	$bp        = buddypress();
+	$bp        = bboss();
 	$cache_key = 'group_' . $field_group_id;
 
 	$ids = array();
@@ -150,7 +154,7 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 		return $bp_clone_field_ids_all[ $cache_key ];
 	}
 
-	$template_field_ids = bp_get_repeater_template_field_ids( $field_group_id );
+	$template_field_ids = bboss_get_repeater_template_field_ids( $field_group_id );
 
 	if ( empty( $template_field_ids ) ) {
 		return $ids;
@@ -158,7 +162,7 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 
 	foreach ( $template_field_ids as $template_field_id ) {
 		$sql     = $wpdb->prepare( "select m1.object_id FROM {$bp->profile->table_name_meta} as m1 WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d", $template_field_id );
-		$results = $wpdb->get_col( $sql );
+		$results = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d on the preceding line.
 
 		if ( ! empty( $results ) && ! is_wp_error( $results ) ) {
 			$ids = array_merge( $ids, $results );
@@ -170,22 +174,22 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 	return $ids;
 }
 
-add_action( 'xprofile_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
-add_action( 'bb_xprofile_error_on_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
+add_action( 'xprofile_updated_profile', 'bboss_profile_repeaters_update_field_data', 11, 5 );
+add_action( 'bb_xprofile_error_on_updated_profile', 'bboss_profile_repeaters_update_field_data', 11, 5 );
 
 /**
  * Update/Sort repeater fields when profile data is updated.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+function bboss_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
 
 	if ( is_admin() ) {
 		return;
 	}
 
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	$field_group_id = 0;
 
@@ -193,7 +197,7 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 		$field_group_id = $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = %d", $posted_field_ids[0] ) );
 	}
 
-	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' == BBoss_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( ! $is_repeater_enabled ) {
 		return;
 	}
@@ -202,7 +206,7 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 	if ( isset( $_POST['deleted_field_ids'] ) && ! empty( $_POST['deleted_field_ids'] ) ) {
 		$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
 		foreach ( $deleted_field_ids as $deleted_field_id ) {
-			xprofile_delete_field_data( $deleted_field_id, $user_id );
+			bboss_xprofile_delete_field_data( $deleted_field_id, $user_id );
 		}
 	}
 
@@ -212,34 +216,45 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 	// This is done to ensure that search etc, work smoothly.
 	$main_field_data = array();
 
+	// Posted field IDs go into an IN() list: integers only.
+	$posted_field_ids_in = implode( ',', array_map( 'absint', (array) $posted_field_ids ) );
+
 	$counter = 1;
 	foreach ( (array) $field_set_sequence as $field_set_number ) {
 		// Find all fields in this set, take their values and update the data for corresponding fields in set number $counter
 		$fields_of_current_set = $wpdb->get_col(
-			"SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = {$field_set_number} "
-			. ' AND object_id IN (' . implode( ',', $posted_field_ids ) . ") and object_type = 'field' "
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- internal table name; $posted_field_ids_in is absint-mapped above.
+				"SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = %d AND object_id IN (" . $posted_field_ids_in . ") and object_type = 'field' ",
+				absint( $field_set_number )
+			)
 		);
 
 		if ( ! empty( $fields_of_current_set ) && ! is_wp_error( $fields_of_current_set ) ) {
 			foreach ( $fields_of_current_set as $field_of_current_set ) {
-				$cloned_from = $wpdb->get_var( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = {$field_of_current_set} AND meta_key = '_cloned_from' " );
+				$cloned_from = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND meta_key = '_cloned_from' ", $field_of_current_set ) );
 
-				$sql                    = "SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
-					. " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = {$cloned_from} "
-					. " AND m2.meta_key = '_clone_number' AND m2.meta_value = {$counter} ";
-				$corresponding_field_id = $wpdb->get_var( $sql );
+				$sql                    = $wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->profile->table_name_meta; values bound via %d below.
+					"SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
+					. " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = %d "
+					. ' AND m2.meta_key = \'_clone_number\' AND m2.meta_value = %d ',
+					absint( $cloned_from ),
+					absint( $counter )
+				);
+				$corresponding_field_id = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 				if ( ! empty( $corresponding_field_id ) ) {
 					$new_data             = isset( $new_values[ $field_of_current_set ]['value'] ) ? $new_values[ $field_of_current_set ]['value'] : '';
 					$new_visibility_level = isset( $new_values[ $field_of_current_set ]['visibility'] ) ? $new_values[ $field_of_current_set ]['visibility'] : '';
-					xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
+					bboss_xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
 
-					$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
+					$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $bp->table_prefix is the BuddyBoss table prefix; the id is bound (%d).
 
 					if ( 'datebox' === $type && ! empty( $new_data ) ) {
-						$new_data = date( 'Y-m-d 00:00:00', strtotime( $new_data ) );
+						$new_data = gmdate( 'Y-m-d 00:00:00', strtotime( $new_data ) );
 					}
 
-					xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
+					bboss_xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
 
 					if ( ! isset( $main_field_data[ $cloned_from ] ) ) {
 						$main_field_data[ $cloned_from ] = array();
@@ -255,21 +270,21 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 
 	if ( ! empty( $main_field_data ) ) {
 		foreach ( $main_field_data as $main_field_id => $values ) {
-			if ( bb_xprofile_skip_repeater_template_mirror( $main_field_id ) ) {
+			if ( bboss_xprofile_skip_repeater_template_mirror( $main_field_id ) ) {
 				continue;
 			}
 
 			$values_str = implode( ' ', $values );
-			xprofile_set_field_data( $main_field_id, $user_id, $values_str );
+			bboss_xprofile_set_field_data( $main_field_id, $user_id, $values_str );
 		}
 	}
 
 	if ( isset( $_POST['repeater_set_sequence'] ) ) {
-		bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
+		bboss_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
 	}
 }
 
-add_filter( 'bp_xprofile_set_field_data_pre_validate', 'bp_repeater_set_field_data_pre_validate', 10, 2 );
+add_filter( 'bp_xprofile_set_field_data_pre_validate', 'bboss_repeater_set_field_data_pre_validate', 10, 2 );
 
 /**
  * Prevalidate repeater set data.
@@ -282,17 +297,17 @@ add_filter( 'bp_xprofile_set_field_data_pre_validate', 'bp_repeater_set_field_da
  *
  * @global \BP_XProfile_Field $bp_profile_repeater_last_field
  * @param mixed              $value
- * @param \BP_XProfile_Field $field
+ * @param \BBoss_XProfile_Field $field
  *
  * @return mixed
  */
-function bp_repeater_set_field_data_pre_validate( $value, $field ) {
+function bboss_repeater_set_field_data_pre_validate( $value, $field ) {
 	global $bp_profile_repeater_last_field;
 	$bp_profile_repeater_last_field = $field;
 	return $value;
 }
 
-add_filter( 'bp_xprofile_field_type_is_valid', 'bp_profile_repeater_is_data_valid_for_template_fields', 10, 3 );
+add_filter( 'bp_xprofile_field_type_is_valid', 'bboss_profile_repeater_is_data_valid_for_template_fields', 10, 3 );
 
 /**
  * @todo Add Title/Description
@@ -301,9 +316,9 @@ add_filter( 'bp_xprofile_field_type_is_valid', 'bp_profile_repeater_is_data_vali
  *
  * @param boolean                 $validated
  * @param array                   $values
- * @param \BP_XProfile_Field_Type $field_type_obj
+ * @param \BBoss_XProfile_Field_Type $field_type_obj
  */
-function bp_profile_repeater_is_data_valid_for_template_fields( $validated, $values, $field_type_obj ) {
+function bboss_profile_repeater_is_data_valid_for_template_fields( $validated, $values, $field_type_obj ) {
 	global $bp_profile_repeater_last_field;
 
 	if ( empty( $bp_profile_repeater_last_field ) ) {
@@ -318,14 +333,14 @@ function bp_profile_repeater_is_data_valid_for_template_fields( $validated, $val
 	$field_id = $bp_profile_repeater_last_field->id;
 
 	$field_group_id      = $bp_profile_repeater_last_field->group_id;
-	$is_repeater_enabled = 'on' == bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' == bboss_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
 
 	if ( ! $is_repeater_enabled ) {
 		$bp_profile_repeater_last_field = false;// reset
 		return $validated;
 	}
 
-	$cloned_from = bp_xprofile_get_meta( $field_id, 'field', '_cloned_from', true );
+	$cloned_from = bboss_xprofile_get_meta( $field_id, 'field', '_cloned_from', true );
 	if ( ! empty( $cloned_from ) ) {
 		// This is a clone field. We needn't do anything
 		$bp_profile_repeater_last_field = false;// reset
@@ -368,12 +383,12 @@ function bp_profile_repeater_is_data_valid_for_template_fields( $validated, $val
  *
  * @return false|int
  */
-function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_count = 0 ) {
+function bboss_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_count = 0 ) {
 	static $metas_cache = array();
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
-	$user_id = bp_loggedin_user_id();
+	$user_id = bboss_loggedin_user_id();
 	if ( ! $user_id ) {
 		return false;
 	}
@@ -411,10 +426,14 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 			$new_field_column_data_types
 		);
 		if ( $inserted ) {
-			$new_field_id    = $wpdb->insert_id;
+			$new_field_id = $wpdb->insert_id;
+
+			// A field was added: invalidate every cached bp_profile_get_field_groups() key.
+			wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
+
 			$metas_cache_key = 'field_meta_' . $template_field_id;
 			if ( ! isset( $metas_cache[ $metas_cache_key ] ) ) {
-				$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
+				$metas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND object_type = 'field'", $template_field_id ), ARRAY_A );
 
 				$metas_cache[ $metas_cache_key ] = $metas;
 			} else {
@@ -424,14 +443,14 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 				foreach ( $metas as $meta ) {
 					if ( ! empty( $meta['meta_key'] ) && $meta['meta_key'] === 'member_type' ) {
-						$meta_data = bp_xprofile_get_meta( $new_field_id, 'field', $meta['meta_key'] );
+						$meta_data = bboss_xprofile_get_meta( $new_field_id, 'field', $meta['meta_key'] );
 						if ( ! empty( $meta_data ) && ! in_array( $meta['meta_value'], (array) $meta_data ) ) {
-							bp_xprofile_add_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+							bboss_xprofile_add_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 						} else {
-							bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+							bboss_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 						}
 					} else {
-						bp_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+						bboss_xprofile_update_meta( $new_field_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 					}
 				}
 			}
@@ -441,22 +460,26 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 			} else {
 				$current_clone_number = 1;
 				// get all clones of the template field.
-				$all_clones = $wpdb->get_col( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = {$template_field_id}" );
+				$all_clones = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = %d", $template_field_id ) );
 				if ( ! empty( $all_clones ) && ! is_wp_error( $all_clones ) ) {
+					// Table name from $bp->profile; one %d placeholder per clone field ID (IDs read from the meta table above).
 					$last_max_clone_number = $wpdb->get_var(
-						"SELECT MAX( meta_value ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', $all_clones ) . ')'
+						$wpdb->prepare(
+							"SELECT MAX( meta_value ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', array_fill( 0, count( $all_clones ), '%d' ) ) . ')',
+							$all_clones
+						)
 					);
 					$last_max_clone_number = ! empty( $last_max_clone_number ) ? absint( $last_max_clone_number ) : 0;
 					$current_clone_number  = $last_max_clone_number + 1;
 				}
 			}
 
-			bp_xprofile_update_meta( $new_field_id, 'field', '_is_repeater_clone', true );
-			bp_xprofile_update_meta( $new_field_id, 'field', '_cloned_from', $template_field_id );
-			bp_xprofile_update_meta( $new_field_id, 'field', '_clone_number', $current_clone_number );
+			bboss_xprofile_update_meta( $new_field_id, 'field', '_is_repeater_clone', true );
+			bboss_xprofile_update_meta( $new_field_id, 'field', '_cloned_from', $template_field_id );
+			bboss_xprofile_update_meta( $new_field_id, 'field', '_clone_number', $current_clone_number );
 
 			// fix field order.
-			$field_order = ( (int) $current_clone_number * bp_profile_field_set_max_cap() ) + (int) $db_row->field_order;
+			$field_order = ( (int) $current_clone_number * bboss_profile_field_set_max_cap() ) + (int) $db_row->field_order;
 			$wpdb->update(
 				$bp->profile->table_name_fields,
 				array( 'field_order' => $field_order ),
@@ -477,11 +500,11 @@ add_action( 'xprofile_fields_saved_field', 'xprofile_update_clones_on_template_u
 /**
  * Update repeater/clone fields when the main/template field is updated.
  *
- * @param \BP_XProfile_Field $field Description
+ * @param \BBoss_XProfile_Field $field Description
  */
 function xprofile_update_clones_on_template_update( $field ) {
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	// get all clone field ids
 	$clone_ids = $wpdb->get_col(
@@ -505,11 +528,10 @@ function xprofile_update_clones_on_template_update( $field ) {
 	}
 
 	if ( ! empty( $db_row ) && ! is_wp_error( $db_row ) ) {
-		$sql = $wpdb->prepare(
-			"UPDATE {$bp->profile->table_name_fields} SET "
-			. ' group_id = %d, parent_id = %d, type = %s, name = %s, description = %s, is_required = %d, '
-			. ' is_default_option = %d, option_order = %d, order_by = %d, can_delete = %d '
-			. ' WHERE id IN ( ' . implode( ',', $clone_ids ) . ' )',
+		$clone_ids_in = implode( ',', array_map( 'absint', $clone_ids ) );
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_fields (internal); IN() list is absint-mapped above; scalars bound via placeholders.
+		$sql          = $wpdb->prepare(
+			"UPDATE {$bp->profile->table_name_fields} SET group_id = %d, parent_id = %d, type = %s, name = %s, description = %s, is_required = %d, is_default_option = %d, option_order = %d, order_by = %d, can_delete = %d WHERE id IN ( " . $clone_ids_in . ' )',
 			$db_row->group_id,
 			$db_row->parent_id,
 			$db_row->type,
@@ -523,17 +545,18 @@ function xprofile_update_clones_on_template_update( $field ) {
 		);
 
 		$wpdb->query( $sql );
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-		$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->id} AND object_type = 'field'", ARRAY_A );
+		$metas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND object_type = 'field'", $field->id ), ARRAY_A );
 		if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 			$field_member_types = array();
 			foreach ( $clone_ids as $clone_id ) {
 				foreach ( $metas as $meta ) {
 					if ( $meta['meta_key'] != 'member_type' ) {
-						bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+						bboss_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 					} else {
 						$field_member_types[] = $meta;
-						bp_xprofile_delete_meta( $clone_id, 'field', 'member_type' );
+						bboss_xprofile_delete_meta( $clone_id, 'field', 'member_type' );
 					}
 				}
 			}
@@ -541,7 +564,7 @@ function xprofile_update_clones_on_template_update( $field ) {
 			if ( ! empty( $field_member_types ) ) {
 				foreach ( $clone_ids as $clone_id ) {
 					foreach ( $field_member_types as $meta ) {
-						bp_xprofile_add_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+						bboss_xprofile_add_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
 					}
 				}
 			}
@@ -554,11 +577,11 @@ add_action( 'xprofile_fields_deleted_field', 'xprofile_delete_clones_on_template
 /**
  * Delete repeater/clone fields when the main/template field is deleted.
  *
- * @param \BP_XProfile_Field $field Description
+ * @param \BBoss_XProfile_Field $field Description
  */
 function xprofile_delete_clones_on_template_delete( $field ) {
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	// get all clone field ids
 	$clone_ids = $wpdb->get_col(
@@ -574,7 +597,7 @@ function xprofile_delete_clones_on_template_delete( $field ) {
 	}
 
 	foreach ( $clone_ids as $clone_id ) {
-		$clone_field = xprofile_get_field( $clone_id );
+		$clone_field = bboss_xprofile_get_field( $clone_id );
 		$clone_field->delete( true );
 	}
 }
@@ -604,7 +627,7 @@ function xprofile_update_clone_positions_on_template_position_update( $template_
 	//
 
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	$clone_field_ids = $wpdb->get_col(
 		$wpdb->prepare(
@@ -628,16 +651,18 @@ function xprofile_update_clone_positions_on_template_position_update( $template_
 
 	if ( $old_group_id != $template_field_group_id ) {
 		// tempalte field has been moved to a new field group
-		$is_repeater_enabled = 'on' == bp_xprofile_get_meta( $template_field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+		$is_repeater_enabled = 'on' == bboss_xprofile_get_meta( $template_field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
 
 		if ( $is_repeater_enabled ) {
 			// update group id for all clone fields
-			$sql = $wpdb->prepare(
-				"UPDATE {$bp->profile->table_name_fields} SET group_id = %d WHERE id IN ( " . implode( ',', $clone_field_ids ) . ' )',
+			$clone_field_ids_in = implode( ',', array_map( 'absint', $clone_field_ids ) );
+			$sql                = $wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_fields; IN() list is absint-mapped above.
+				"UPDATE {$bp->profile->table_name_fields} SET group_id = %d WHERE id IN ( " . $clone_field_ids_in . ' )',
 				$template_field_group_id
 			);
 
-			$wpdb->query( $sql );
+			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 
 			$update_field_orders = true;
 		}
@@ -647,10 +672,10 @@ function xprofile_update_clone_positions_on_template_position_update( $template_
 	}
 
 	if ( $update_field_orders ) {
-		$max_cap = bp_profile_field_set_max_cap();
+		$max_cap = bboss_profile_field_set_max_cap();
 
 		foreach ( $clone_field_ids as $clone_field_id ) {
-			$clone_number = (int) bp_xprofile_get_meta( $clone_field_id, 'field', '_clone_number', true );
+			$clone_number = (int) bboss_xprofile_get_meta( $clone_field_id, 'field', '_clone_number', true );
 			$field_order  = ( $clone_number * $max_cap ) + $new_position;
 			$wpdb->update(
 				$bp->profile->table_name_fields,
@@ -663,7 +688,7 @@ function xprofile_update_clone_positions_on_template_position_update( $template_
 	}
 }
 
-add_filter( 'bp_xprofile_field_get_children', 'bp_xprofile_repeater_field_get_children', 10, 3 );
+add_filter( 'bp_xprofile_field_get_children', 'bboss_xprofile_repeater_field_get_children', 10, 3 );
 
 /**
  * Return children of repeated field sets.
@@ -671,24 +696,24 @@ add_filter( 'bp_xprofile_field_get_children', 'bp_xprofile_repeater_field_get_ch
  * @since BuddyBoss 1.0.0
  * @param array              $children
  * @param boolean            $for_editing
- * @param \BP_XProfile_Field $field
+ * @param \BBoss_XProfile_Field $field
  */
-function bp_xprofile_repeater_field_get_children( $children, $for_editing, $field ) {
+function bboss_xprofile_repeater_field_get_children( $children, $for_editing, $field ) {
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
-	if ( ! bp_xprofile_get_meta( $field->id, 'field', '_is_repeater_clone', true ) ) {
+	if ( ! bboss_xprofile_get_meta( $field->id, 'field', '_is_repeater_clone', true ) ) {
 		return $children;
 	}
 
 	// If the current field is a clone,
 	// we'll query template field for children/field-options
-	$template_field_id = bp_xprofile_get_meta( $field->id, 'field', '_cloned_from', true );
+	$template_field_id = bboss_xprofile_get_meta( $field->id, 'field', '_cloned_from', true );
 	if ( empty( $template_field_id ) ) {
 		return $children;
 	}
 
-	$template_field = xprofile_get_field( $template_field_id );
+	$template_field = bboss_xprofile_get_field( $template_field_id );
 	if ( $template_field == null ) {
 		return $children;
 	}
@@ -705,10 +730,10 @@ function bp_xprofile_repeater_field_get_children( $children, $for_editing, $fiel
 
 		$parent_id = $template_field_id;
 
-		$bp  = buddypress();
-		$sql = $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $template_field->group_id );
+		$bp  = bboss();
+		$sql = $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $template_field->group_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_fields; $sort_sql is a hardcoded ORDER BY whitelist; ids bound via %d.
 
-		$template_children = $wpdb->get_results( $sql );
+		$template_children = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 
 		wp_cache_set( $template_field_id, $template_children, 'field_children_options' );
 	}
@@ -719,7 +744,7 @@ function bp_xprofile_repeater_field_get_children( $children, $for_editing, $fiel
 		// there are duplicate radiobutton/checkbox ids and hence associated labels behave incorreclty.
 		// we'll need to manipuate children ids
 		$temp         = array();
-		$clone_number = (int) bp_xprofile_get_meta( $field->id, 'field', '_clone_number', true );
+		$clone_number = (int) bboss_xprofile_get_meta( $field->id, 'field', '_clone_number', true );
 		foreach ( $template_children as $child ) {
 			$child->id .= '_' . $clone_number;
 			$temp[]     = $child;
@@ -739,7 +764,7 @@ function bp_xprofile_repeater_field_get_children( $children, $for_editing, $fiel
  * @since BuddyBoss 1.0.0
  * @return type
  */
-function bp_get_profile_field_set_count( $field_group_id, $user_id ) {
+function bboss_get_profile_field_set_count( $field_group_id, $user_id ) {
 	$count = get_user_meta( $user_id, 'field_set_count_' . $field_group_id, true );
 	return $count > 0 ? $count : 1;
 }
@@ -753,14 +778,14 @@ function bp_get_profile_field_set_count( $field_group_id, $user_id ) {
  * @since BuddyBoss 1.0.0
  * @return type
  */
-function bp_set_profile_field_set_count( $field_group_id, $user_id, $count ) {
-	$max   = bp_profile_field_set_max_cap();
+function bboss_set_profile_field_set_count( $field_group_id, $user_id, $count ) {
+	$max   = bboss_profile_field_set_max_cap();
 	$count = $count <= $max ? $count : $max;
 
 	return update_user_meta( $user_id, 'field_set_count_' . $field_group_id, $count );
 }
 
-add_action( 'bp_after_profile_field_content', 'bp_print_add_repeater_set_button' );
+add_action( 'bp_after_profile_field_content', 'bboss_print_add_repeater_set_button' );
 
 /**
  * Output button to add repeater field set.
@@ -771,15 +796,15 @@ add_action( 'bp_after_profile_field_content', 'bp_print_add_repeater_set_button'
  *
  * @param array $args Array of arguments.
  */
-function bp_print_add_repeater_set_button( $args = array() ) {
-	if ( 'edit' !== bp_current_action() && empty( $args ) ) {
+function bboss_print_add_repeater_set_button( $args = array() ) {
+	if ( 'edit' !== bboss_current_action() && empty( $args ) ) {
 		return false;
 	}
 
-	$args = bp_parse_args(
+	$args = bboss_parse_args(
 		$args,
 		array(
-			'group_id' => bp_get_current_profile_group_id(),
+			'group_id' => bboss_get_current_profile_group_id(),
 		),
 		'add_repeater_button'
 	);
@@ -790,7 +815,7 @@ function bp_print_add_repeater_set_button( $args = array() ) {
 
 	$group_id = $args['group_id'];
 
-	$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' === BBoss_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
 		if ( is_admin() ) {
 			$nonce = wp_create_nonce( 'bb_admin_xprofile_add_repeater_set' );
@@ -801,24 +826,24 @@ function bp_print_add_repeater_set_button( $args = array() ) {
 		echo '<i class="bb-icon-f bb-icon-plus"></i>';
 		printf(
 			/* translators: %s = profile field group name */
-			__( 'Add Another', 'buddyboss' ),
-			bp_get_the_profile_group_name()
+			esc_html__( 'Add Another', 'buddyboss-platform' ),
+			esc_html( bboss_get_the_profile_group_name() )
 		);
 		echo '</button>';
 	}
 }
 
-add_action( 'wp_ajax_bp_xprofile_add_repeater_set', 'bp_xprofile_ajax_add_repeater_set' );
+add_action( 'wp_ajax_bp_xprofile_add_repeater_set', 'bboss_xprofile_ajax_add_repeater_set' );
 
 /**
  * Adds a repeater set.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_ajax_add_repeater_set() {
+function bboss_xprofile_ajax_add_repeater_set() {
 	check_ajax_referer( 'bp_xprofile_add_repeater_set', '_wpnonce' );
 
-	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$user_id = bboss_displayed_user_id() ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 	if ( ! $user_id ) {
 		die();
 	}
@@ -829,13 +854,13 @@ function bp_xprofile_ajax_add_repeater_set() {
 		die();
 	}
 
-	$count = bp_get_profile_field_set_count( $field_group_id, $user_id );
+	$count = bboss_get_profile_field_set_count( $field_group_id, $user_id );
 	$count++;
-	bp_set_profile_field_set_count( $field_group_id, $user_id, $count );
+	bboss_set_profile_field_set_count( $field_group_id, $user_id, $count );
 	die( 'ok' );
 }
 
-add_action( 'bp_before_profile_field_html', 'bp_profile_repeaters_print_group_html_start' );
+add_action( 'bp_before_profile_field_html', 'bboss_profile_repeaters_print_group_html_start' );
 
 /**
  * Open wrapper of repeater set - on edit profile screen
@@ -847,11 +872,11 @@ add_action( 'bp_before_profile_field_html', 'bp_profile_repeaters_print_group_ht
  *
  * @param array $args Array of arguments.
  */
-function bp_profile_repeaters_print_group_html_start( $args = array() ) {
-	$args = bp_parse_args(
+function bboss_profile_repeaters_print_group_html_start( $args = array() ) {
+	$args = bboss_parse_args(
 		$args,
 		array(
-			'group_id' => bp_get_current_profile_group_id(),
+			'group_id' => bboss_get_current_profile_group_id(),
 		),
 		'repeaters_print_group_html'
 	);
@@ -862,14 +887,14 @@ function bp_profile_repeaters_print_group_html_start( $args = array() ) {
 
 	$group_id = $args['group_id'];
 
-	$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' === BBoss_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
 		global $first_xpfield_in_repeater;
-		$current_field_id   = bp_get_the_profile_field_id();
-		$current_set_number = bp_xprofile_get_meta( $current_field_id, 'field', '_clone_number', true );
-		$template_field_id  = bp_xprofile_get_meta( $current_field_id, 'field', '_cloned_from', true );
+		$current_field_id   = bboss_get_the_profile_field_id();
+		$current_set_number = bboss_xprofile_get_meta( $current_field_id, 'field', '_clone_number', true );
+		$template_field_id  = bboss_xprofile_get_meta( $current_field_id, 'field', '_cloned_from', true );
 
-		$is_required = xprofile_check_is_required_field( $current_field_id );
+		$is_required = bboss_xprofile_check_is_required_field( $current_field_id );
 
 		$can_delete = ( '1' === $current_set_number && true === $is_required ) ? false : true;
 
@@ -882,16 +907,16 @@ function bp_profile_repeaters_print_group_html_start( $args = array() ) {
 
 				<div class="repeater_tools">
 					<span class="repeater_set_title"></span>
-					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
+					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss-platform' ); ?>">
 						<i class="dashicons dashicons-edit"></i>
-						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
 					</a>
 					<?php
 					if ( true === $can_delete ) {
 						?>
-						<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>">
+						<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss-platform' ); ?>">
 							<i class="dashicons dashicons-trash"></i>
-							<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+							<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></span>
 						</a>
 						<?php
 					}
@@ -911,16 +936,16 @@ function bp_profile_repeaters_print_group_html_start( $args = array() ) {
 
 				<div class="repeater_tools">
 					<span class="repeater_set_title"></span>
-					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
+					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss-platform' ); ?>">
 						<i class="dashicons dashicons-edit"></i>
-						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
 					</a>
 				<?php
 				if ( true === $can_delete ) {
 					?>
-					<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>">
+					<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss-platform' ); ?>">
 						<i class="dashicons dashicons-trash"></i>
-						<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></span>
 					</a>
 					<?php
 				}
@@ -934,7 +959,7 @@ function bp_profile_repeaters_print_group_html_start( $args = array() ) {
 	}
 }
 
-add_action( 'bp_after_profile_field_content', 'bp_profile_repeaters_print_group_html_end', 4 );
+add_action( 'bp_after_profile_field_content', 'bboss_profile_repeaters_print_group_html_end', 4 );
 
 /**
  * Close wrapper of repeater set - on edit profile screen
@@ -942,7 +967,7 @@ add_action( 'bp_after_profile_field_content', 'bp_profile_repeaters_print_group_
  * @since BuddyBoss 1.0.0
  * @global boolean $first_xpfield_in_repeater
  */
-function bp_profile_repeaters_print_group_html_end() {
+function bboss_profile_repeaters_print_group_html_end() {
 	global $first_xpfield_in_repeater;
 	if ( ! empty( $first_xpfield_in_repeater ) ) {
 		echo '</div></div><!-- .repeater_group_outer -->';
@@ -952,7 +977,7 @@ function bp_profile_repeaters_print_group_html_end() {
 }
 
 
-add_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_group_html_start' );
+add_action( 'bp_before_profile_field_item', 'bboss_view_profile_repeaters_print_group_html_start' );
 
 /**
  * Open wrapper of repeater set - on View profile screen
@@ -960,14 +985,14 @@ add_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_gro
  * @since BuddyBoss 1.0.0
  * @global type $first_xpfield_in_repeater
  */
-function bp_view_profile_repeaters_print_group_html_start() {
-	$group_id            = bp_get_the_profile_group_id();
-	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+function bboss_view_profile_repeaters_print_group_html_start() {
+	$group_id            = bboss_get_the_profile_group_id();
+	$is_repeater_enabled = 'on' == BBoss_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
 		global $repeater_set_being_displayed;
 
-		$current_field_id   = bp_get_the_profile_field_id();
-		$current_set_number = bp_xprofile_get_meta( $current_field_id, 'field', '_clone_number', true );
+		$current_field_id   = bboss_get_the_profile_field_id();
+		$current_set_number = bboss_xprofile_get_meta( $current_field_id, 'field', '_clone_number', true );
 
 		if ( empty( $repeater_set_being_displayed ) ) {
 			// start of first set
@@ -980,7 +1005,7 @@ function bp_view_profile_repeaters_print_group_html_start() {
 	}
 }
 
-add_action( 'bp_after_profile_field_items', 'bp_view_profile_repeaters_print_group_html_end', 4 );
+add_action( 'bp_after_profile_field_items', 'bboss_view_profile_repeaters_print_group_html_end', 4 );
 
 /**
  * Close wrapper of repeater set - on edit profile screen
@@ -988,7 +1013,7 @@ add_action( 'bp_after_profile_field_items', 'bp_view_profile_repeaters_print_gro
  * @since BuddyBoss 1.0.0
  * @global boolean $first_xpfield_in_repeater
  */
-function bp_view_profile_repeaters_print_group_html_end() {
+function bboss_view_profile_repeaters_print_group_html_end() {
 	global $repeater_set_being_displayed;
 	if ( ! empty( $repeater_set_being_displayed ) ) {
 		// end of previous set
@@ -998,14 +1023,14 @@ function bp_view_profile_repeaters_print_group_html_end() {
 	}
 }
 
-add_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filter' );
+add_filter( 'bp_ps_field_before_query', 'bboss_profile_repeaters_search_change_filter' );
 
 /**
  * If the field is a main/template field for a repeater set, search should have a like '%s keyword %s' query.
  *
  * @param object $f Passed by reference.
  */
-function bp_profile_repeaters_search_change_filter( $f ) {
+function bboss_profile_repeaters_search_change_filter( $f ) {
 	if ( ! isset( $f->id ) ) {
 		return $f;
 	}
@@ -1013,16 +1038,16 @@ function bp_profile_repeaters_search_change_filter( $f ) {
 	$field_id = (int) $f->id;
 
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	$field_group_id      = $wpdb->get_var( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = {$field_id} AND type != 'option' " );
-	$is_repeater_enabled = 'on' == bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' == bboss_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
 
 	if ( ! $is_repeater_enabled ) {
 		return $f;
 	}
 
-	$cloned_from = bp_xprofile_get_meta( $field_id, 'field', '_cloned_from', true );
+	$cloned_from = bboss_xprofile_get_meta( $field_id, 'field', '_cloned_from', true );
 	if ( ! empty( $cloned_from ) ) {
 		// This is a clone field. We needn't do anything.
 		return $f;
@@ -1041,10 +1066,10 @@ function bp_profile_repeaters_search_change_filter( $f ) {
  *
  * @return mixed
  */
-function bb_xprofile_top_most_template_field_id( $field_id ) {
-	$main_field = bp_xprofile_get_meta( (int) $field_id, 'field', '_cloned_from' );
+function bboss_xprofile_top_most_template_field_id( $field_id ) {
+	$main_field = bboss_xprofile_get_meta( (int) $field_id, 'field', '_cloned_from' );
 	if ( ! empty( $main_field ) ) {
-		$main_field = bb_xprofile_top_most_template_field_id( $main_field );
+		$main_field = bboss_xprofile_top_most_template_field_id( $main_field );
 	}
 
 	if ( empty( $main_field ) ) {
@@ -1059,10 +1084,10 @@ function bb_xprofile_top_most_template_field_id( $field_id ) {
  *
  * @since BuddyBoss 2.6.00
  */
-function bb_admin_xprofile_add_repeater_set() {
+function bboss_admin_xprofile_add_repeater_set() {
 	check_ajax_referer( 'bb_admin_xprofile_add_repeater_set', '_wpnonce' );
 
-	$user_id = bb_filter_input_string( INPUT_POST, 'user_id' );
+	$user_id = bboss_filter_input_string( INPUT_POST, 'user_id' );
 
 	if ( ! $user_id ) {
 		die();
@@ -1075,7 +1100,7 @@ function bb_admin_xprofile_add_repeater_set() {
 	}
 
 	// Check for repeater field.
-	$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' );
+	$is_repeater_enabled = 'on' === BBoss_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' );
 
 	if ( ! $is_repeater_enabled ) {
 		die();
@@ -1084,15 +1109,15 @@ function bb_admin_xprofile_add_repeater_set() {
 	$profile_field_class  = 'bp-profile-field';
 	$profile_field_class .= ' editfield';
 
-	$set_no             = bb_filter_input_string( INPUT_POST, 'set_no' );
+	$set_no             = bboss_filter_input_string( INPUT_POST, 'set_no' );
 	$set_no_values      = ! empty( $set_no ) ? explode( ',', $set_no ) : array();
 	$current_set_number = count( $set_no_values ) + 1;
 	$set_no_values[]    = $current_set_number;
 
-	bp_set_profile_field_set_count( $field_group_id, $user_id, $current_set_number );
+	bboss_set_profile_field_set_count( $field_group_id, $user_id, $current_set_number );
 
-	$user_field_set_count     = bp_get_profile_field_set_count( $field_group_id, $user_id );
-	$clone_field_ids_has_data = bp_get_repeater_clone_field_ids_subset( $field_group_id, $user_field_set_count );
+	$user_field_set_count     = bboss_get_profile_field_set_count( $field_group_id, $user_id );
+	$clone_field_ids_has_data = bboss_get_repeater_clone_field_ids_subset( $field_group_id, $user_field_set_count );
 	$existing_field_ids       = isset( $_POST['existing_field_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['existing_field_ids'] ) ) : array();
 	$existing_field_ids       = ( ! empty( $existing_field_ids ) && is_string( $existing_field_ids ) ) ? explode( ',', $existing_field_ids ) : $existing_field_ids;
 
@@ -1105,13 +1130,13 @@ function bb_admin_xprofile_add_repeater_set() {
 		$deleted_field_ids = wp_parse_id_list( sanitize_text_field( wp_unslash( $_POST['deleted_field_ids'] ) ) );
 		if ( ! empty( $deleted_field_ids ) ) {
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
-				xprofile_delete_field_data( $deleted_field_id, $user_id );
+				bboss_xprofile_delete_field_data( $deleted_field_id, $user_id );
 			}
 		}
 	}
 	$sortable_fields = array();
 	foreach ( $clone_field_ids_has_data as $key => $field_id ) {
-		$field_data              = xprofile_get_field( $field_id, $user_id, false );
+		$field_data              = bboss_xprofile_get_field( $field_id, $user_id, false );
 		$sortable_fields[ $key ] = $field_data;
 	}
 	// Sort field_id based on field_order.
@@ -1127,13 +1152,13 @@ function bb_admin_xprofile_add_repeater_set() {
 		<div class="repeater_group_outer" data-set_no="<?php echo esc_attr( $current_set_number ); ?>">
 			<div class="repeater_tools">
 				<span class="repeater_set_title"></span>
-				<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
+				<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss-platform' ); ?>">
 					<i class="dashicons dashicons-edit"></i>
-					<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+					<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
 				</a>
-				<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>">
+				<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss-platform' ); ?>">
 					<i class="dashicons dashicons-trash"></i>
-					<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+					<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></span>
 				</a>
 			</div>
 			<div class='repeater_group_inner'>
@@ -1146,34 +1171,35 @@ function bb_admin_xprofile_add_repeater_set() {
 					$profile_template->current_field = $key;
 					$profile_template->in_the_loop   = false;
 					?>
-					<div<?php bp_field_css_class( $profile_field_class ); ?>>
+					<div<?php bboss_field_css_class( $profile_field_class ); ?>>
 						<fieldset>
 							<?php
-							$field_type = bp_xprofile_create_field_type( $field->type );
+							$field_type = bboss_xprofile_create_field_type( $field->type );
 							$field_type->edit_field_html( array( 'user_id' => $user_id ) );
 							do_action( 'bp_custom_profile_edit_fields_pre_visibility' );
-							$can_change_visibility = bp_current_user_can( 'bp_xprofile_change_field_visibility' );
+							$can_change_visibility = bboss_current_user_can( 'bp_xprofile_change_field_visibility' );
 							?>
-							<p class="field-visibility-settings-<?php echo $can_change_visibility ? 'toggle' : 'notoggle'; ?>" id="field-visibility-settings-toggle-<?php bp_the_profile_field_input_name(); ?>">
+							<p class="field-visibility-settings-<?php echo $can_change_visibility ? 'toggle' : 'notoggle'; ?>" id="field-visibility-settings-toggle-<?php bboss_the_profile_field_input_name(); ?>">
 									<span id="<?php echo esc_attr( $field->id ); ?>-2">
 									<?php
 									printf(
-										__( 'This field can be seen by: %s', 'buddyboss' ),
-										'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
+										/* translators: %s: visibility level label (wrapped in <span>). */
+										esc_html__( 'This field can be seen by: %s', 'buddyboss-platform' ),
+										'<span class="current-visibility-level">' . esc_html( bboss_get_the_profile_field_visibility_level_label() ) . '</span>'
 									);
 									?>
 									</span>
 								<?php if ( $can_change_visibility ) : ?>
-									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php echo bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
+									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bboss_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss-platform' ); ?></button>
 								<?php endif; ?>
 							</p>
 							<?php if ( $can_change_visibility ) : ?>
-								<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">
+								<div class="field-visibility-settings" id="field-visibility-settings-<?php bboss_the_profile_field_id(); ?>">
 									<fieldset>
-										<legend><?php _e( 'Who can see this field?', 'buddyboss' ); ?></legend>
-										<?php bp_profile_visibility_radio_buttons(); ?>
+										<legend><?php esc_html_e( 'Who can see this field?', 'buddyboss-platform' ); ?></legend>
+										<?php bboss_profile_visibility_radio_buttons(); ?>
 									</fieldset>
-									<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>
+									<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss-platform' ); ?></button>
 								</div>
 							<?php endif;
 							do_action( 'bp_custom_profile_edit_fields' );
@@ -1204,7 +1230,7 @@ function bb_admin_xprofile_add_repeater_set() {
 		)
 	);
 }
-add_action( 'wp_ajax_bb_admin_xprofile_add_repeater_set', 'bb_admin_xprofile_add_repeater_set' );
+add_action( 'wp_ajax_bb_admin_xprofile_add_repeater_set', 'bboss_admin_xprofile_add_repeater_set' );
 
 /**
  * Function to save repeater data in the admin screen.
@@ -1219,19 +1245,19 @@ add_action( 'wp_ajax_bb_admin_xprofile_add_repeater_set', 'bb_admin_xprofile_add
  *
  * @return void
  */
-function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+function bboss_admin_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
 
 	if ( ! is_admin() ) {
 		return;
 	}
 
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Check for admin side repeater field.
 	if ( isset( $_POST['group'] ) && is_array( $_POST['group'] ) ) {
 		foreach ( $_POST['group'] as $field_group_id ) {
-			$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' ) ? true : false;
+			$is_repeater_enabled = 'on' === BBoss_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' ) ? true : false;
 			if ( ! $is_repeater_enabled ) {
 				return;
 			}
@@ -1244,7 +1270,7 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 				$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'][ $field_group_id ] );
 				foreach ( $deleted_field_ids as $deleted_field_id ) {
 					if ( ! in_array( $deleted_field_id, $posted_field_ids, true ) ) {
-						xprofile_delete_field_data( $deleted_field_id, $user_id );
+						bboss_xprofile_delete_field_data( $deleted_field_id, $user_id );
 					}
 				}
 			}
@@ -1255,34 +1281,47 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 			// This is done to ensure that search etc, work smoothly.
 			$main_field_data = array();
 
+			// Posted field IDs go into an IN() list: integers only.
+			$posted_field_ids_in = implode( ',', array_map( 'absint', (array) $posted_field_ids ) );
+
 			$counter = 1;
 			foreach ( (array) $field_set_sequence as $field_set_number ) {
 				// Find all fields in this set, take their values and update the data for corresponding fields in set number $counter
 				$fields_of_current_set = $wpdb->get_col(
-					"SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = {$field_set_number} "
-					. ' AND object_id IN (' . implode( ',', $posted_field_ids ) . ") and object_type = 'field' "
+					$wpdb->prepare(
+						"SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = %d "
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- internal table name; $posted_field_ids_in is absint-mapped above.
+						. ' AND object_id IN (' . $posted_field_ids_in . ") and object_type = 'field' ",
+						absint( $field_set_number )
+					)
 				);
 
 				if ( ! empty( $fields_of_current_set ) && ! is_wp_error( $fields_of_current_set ) ) {
 					foreach ( $fields_of_current_set as $field_of_current_set ) {
-						$cloned_from = $wpdb->get_var( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = {$field_of_current_set} AND meta_key = '_cloned_from' " );
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_meta (internal); object_id bound via %d.
+						$cloned_from = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND meta_key = '_cloned_from' ", $field_of_current_set ) );
 
-						$sql                    = "SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
-													. " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = {$cloned_from} "
-													. " AND m2.meta_key = '_clone_number' AND m2.meta_value = {$counter} ";
-						$corresponding_field_id = $wpdb->get_var( $sql );
+						$sql                    = $wpdb->prepare(
+							// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->profile->table_name_meta; values bound via %d below.
+							"SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
+							. " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = %d "
+							. ' AND m2.meta_key = \'_clone_number\' AND m2.meta_value = %d ',
+							absint( $cloned_from ),
+							absint( $counter )
+						);
+						$corresponding_field_id = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 						if ( ! empty( $corresponding_field_id ) ) {
 							$new_data             = isset( $new_values[ $field_of_current_set ]['value'] ) ? $new_values[ $field_of_current_set ]['value'] : '';
 							$new_visibility_level = isset( $new_values[ $field_of_current_set ]['visibility'] ) ? $new_values[ $field_of_current_set ]['visibility'] : '';
-							xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
+							bboss_xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
 
-							$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
+							$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $bp->table_prefix is the BuddyBoss table prefix; the id is bound (%d).
 
 							if ( 'datebox' === $type && ! empty( $new_data ) ) {
-								$new_data = date( 'Y-m-d 00:00:00', strtotime( $new_data ) );
+								$new_data = gmdate( 'Y-m-d 00:00:00', strtotime( $new_data ) );
 							}
 
-							xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
+							bboss_xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
 
 							if ( ! isset( $main_field_data[ $cloned_from ] ) ) {
 								$main_field_data[ $cloned_from ] = array();
@@ -1298,22 +1337,22 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 
 			if ( ! empty( $main_field_data ) ) {
 				foreach ( $main_field_data as $main_field_id => $values ) {
-					if ( bb_xprofile_skip_repeater_template_mirror( $main_field_id ) ) {
+					if ( bboss_xprofile_skip_repeater_template_mirror( $main_field_id ) ) {
 						continue;
 					}
 
 					$values_str = implode( ' ', $values );
-					xprofile_set_field_data( $main_field_id, $user_id, $values_str );
+					bboss_xprofile_set_field_data( $main_field_id, $user_id, $values_str );
 				}
 			}
 
 			if ( isset( $_POST['repeater_set_sequence'][ $field_group_id ] ) ) {
-				bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
+				bboss_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
 			}
 		}
 	}
 }
-add_action( 'xprofile_updated_profile', 'bb_admin_profile_repeaters_update_field_data', 11, 5 );
+add_action( 'xprofile_updated_profile', 'bboss_admin_profile_repeaters_update_field_data', 11, 5 );
 
 /**
  * Check whether a profile field set repeats its fields.
@@ -1324,14 +1363,14 @@ add_action( 'xprofile_updated_profile', 'bb_admin_profile_repeaters_update_field
  *
  * @return bool True when the repeater set is enabled for the group.
  */
-function bb_xprofile_is_repeater_group( $field_group_id ) {
+function bboss_xprofile_is_repeater_group( $field_group_id ) {
 	$field_group_id = (int) $field_group_id;
 
 	if ( empty( $field_group_id ) ) {
 		return false;
 	}
 
-	return 'on' === BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' );
+	return 'on' === BBoss_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' );
 }
 
 /**
@@ -1347,7 +1386,7 @@ function bb_xprofile_is_repeater_group( $field_group_id ) {
  *
  * @return bool True when the group holds at least one `biography` field.
  */
-function bb_xprofile_group_has_bio_field( $field_group_id ) {
+function bboss_xprofile_group_has_bio_field( $field_group_id ) {
 	global $wpdb;
 
 	$field_group_id = (int) $field_group_id;
@@ -1356,7 +1395,7 @@ function bb_xprofile_group_has_bio_field( $field_group_id ) {
 		return false;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Admin-only validation, runs once per save.
 	$exists = $wpdb->get_var(
@@ -1382,7 +1421,7 @@ function bb_xprofile_group_has_bio_field( $field_group_id ) {
  * repeat set, on the profile, in wp-admin, in the blog author box and in REST.
  *
  * Losing the mirror costs the Bio field nothing but profile search matching
- * across repeat sets, which it should never have had: `bb_xprofile_bio_field_id()`
+ * across repeat sets, which it should never have had: `bboss_xprofile_bio_field_id()`
  * treats the Bio field as a singleton precisely because one WordPress user field
  * backs it.
  *
@@ -1392,12 +1431,12 @@ function bb_xprofile_group_has_bio_field( $field_group_id ) {
  *
  * @return bool True when the mirror must be skipped for this field.
  */
-function bb_xprofile_skip_repeater_template_mirror( $template_field_id ) {
+function bboss_xprofile_skip_repeater_template_mirror( $template_field_id ) {
 	$template_field_id = (int) $template_field_id;
 
 	if ( empty( $template_field_id ) ) {
 		return true;
 	}
 
-	return 'biography' === BP_XProfile_Field::get_type( $template_field_id );
+	return 'biography' === BBoss_XProfile_Field::get_type( $template_field_id );
 }

@@ -231,7 +231,7 @@ wp.hooks.addFilter(
 			return createElement(
 				'div',
 				{ className: 'bb-admin-verify-modal__status' },
-				createElement( 'p', null, __( 'Verifying reCAPTCHA token…', 'buddyboss' ) )
+				createElement( 'p', null, __( 'Verifying reCAPTCHA token…', 'buddyboss-platform' ) )
 			);
 		}
 
@@ -246,7 +246,7 @@ wp.hooks.addFilter(
 			return createElement(
 				'div',
 				{ className: 'bb-admin-verify-modal__status' },
-				createElement( 'p', null, __( 'reCAPTCHA token is ready, click Submit to verify.', 'buddyboss' ) )
+				createElement( 'p', null, __( 'reCAPTCHA token is ready, click Submit to verify.', 'buddyboss-platform' ) )
 			);
 		}
 

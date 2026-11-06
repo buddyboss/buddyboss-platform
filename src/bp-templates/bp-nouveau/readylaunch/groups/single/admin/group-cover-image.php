@@ -6,7 +6,7 @@
  * for both group creation and editing workflows.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -15,17 +15,17 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 
-<?php if ( bp_is_group_create() ) : ?>
+<?php if ( bboss_is_group_create() ) : ?>
 
 	<h2 class="bp-screen-title creation-step-name">
-		<?php esc_html_e( 'Upload Cover Photo', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Upload Cover Photo', 'buddyboss-platform' ); ?>
 	</h2>
 
 	<?php
 	$group_cover_image       = '';
-	$bp_get_current_group_id = bp_get_current_group_id();
-	if ( bp_attachments_get_group_has_cover_image( $bp_get_current_group_id ) ) {
-		$group_cover_image = bp_attachments_get_attachment(
+	$bp_get_current_group_id = bboss_get_current_group_id();
+	if ( bboss_attachments_get_group_has_cover_image( $bp_get_current_group_id ) ) {
+		$group_cover_image = bboss_attachments_get_attachment(
 			'url',
 			array(
 				'object_dir' => 'groups',
@@ -40,10 +40,10 @@ defined( 'ABSPATH' ) || exit;
 <?php else : ?>
 
 	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Change Cover Photo', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Change Cover Photo', 'buddyboss-platform' ); ?>
 	</h2>
 
 <?php endif; ?>
 
 <?php
-bp_attachments_get_template_part( 'cover-images/index' );
+bboss_attachments_get_template_part( 'cover-images/index' );

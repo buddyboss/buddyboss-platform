@@ -7,6 +7,10 @@
  * @since   1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-single-list">
@@ -202,7 +206,7 @@
 											<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 										</a>
 										<div class="document-action_list bb_more_dropdown">
-											<?php bp_get_template_part( 'common/more-options-view' ); ?>
+											<?php bboss_get_template_part( 'common/more-options-view' ); ?>
 											<ul>
 												<li class="copy_download_file_url">
 													<a href="{{data.document[i].url}}">{{data.document[i].copy_download_link}}</a>
@@ -225,7 +229,7 @@
 								<video preload="auto" playsinline poster="{{data.gif.preview_url}}" loop muted>
 									<source src="{{data.gif.video_url}}" type="video/mp4">
 								</video>
-								<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
+								<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss-platform' ); ?>">
 									<span class="bb-icon-bl bb-icon-play"></span>
 								</a>
 								<span class="gif-icon"></span>

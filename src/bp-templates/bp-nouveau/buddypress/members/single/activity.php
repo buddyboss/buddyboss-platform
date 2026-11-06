@@ -8,14 +8,17 @@
  * @version 1.0.0
  */
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_activity_member_post_form();
+$is_send_ajax_request = bboss_is_send_ajax_request();
+
+bboss_nouveau_activity_member_post_form();
 ?>
 <div class="activity-head-bar">
-	<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+	<?php bboss_get_template_part( 'common/search-and-filters-bar' ); ?>
 </div>
-<?php  bp_nouveau_member_hook( 'before', 'activity_content' ); ?>
+<?php  bboss_nouveau_member_hook( 'before', 'activity_content' ); ?>
 
 	<div id="activity-stream" class="activity single-user" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php
@@ -62,11 +65,11 @@ bp_nouveau_activity_member_post_form();
 			echo '</div>';
 		}
 		if ( ! $is_send_ajax_request ) {
-			bp_get_template_part( 'activity/activity-loop' );
+			bboss_get_template_part( 'activity/activity-loop' );
 		}
 		?>
 	</div><!-- .activity -->
 
 <?php
-bp_nouveau_member_hook( 'after', 'activity_content' );
-bp_get_template_part( 'common/js-templates/activity/comments' );
+bboss_nouveau_member_hook( 'after', 'activity_content' );
+bboss_get_template_part( 'common/js-templates/activity/comments' );

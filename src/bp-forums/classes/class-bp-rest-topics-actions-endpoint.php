@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Topics_Actions_Endpoint class
+ * BP REST: BBoss_REST_Topics_Actions_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,12 +13,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
+class BBoss_REST_Topics_Actions_Endpoint extends BBoss_REST_Topics_Endpoint {
 
 	/**
-	 * BP_REST_Groups_Endpoint Instance.
+	 * BBoss_REST_Groups_Endpoint Instance.
 	 *
-	 * @var BP_REST_Forums_Endpoint
+	 * @var BBoss_REST_Forums_Endpoint
 	 */
 	protected $forum_endpoint;
 
@@ -28,9 +28,9 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace      = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace      = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base      = 'topics';
-		$this->forum_endpoint = new BP_REST_Forums_Endpoint();
+		$this->forum_endpoint = new BBoss_REST_Forums_Endpoint();
 	}
 
 	/**
@@ -46,27 +46,27 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			array(
 				'args'   => array(
 					'id'             => array(
-						'description' => __( 'A unique numeric ID for the topic.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the topic.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'destination_id' => array(
-						'description' => __( 'A unique numeric ID for the destination topic.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the destination topic.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'subscribers'    => array(
-						'description' => __( 'Whether to migrate subscriptions or not.', 'buddyboss' ),
+						'description' => __( 'Whether to migrate subscriptions or not.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 						'default'     => true,
 					),
 					'favorites'      => array(
-						'description' => __( 'Whether to migrate favorites or not.', 'buddyboss' ),
+						'description' => __( 'Whether to migrate favorites or not.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 						'default'     => true,
 					),
 					'tags'           => array(
-						'description' => __( 'Whether to migrate tags or not.', 'buddyboss' ),
+						'description' => __( 'Whether to migrate tags or not.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 						'default'     => true,
 					),
@@ -86,43 +86,43 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			array(
 				'args'   => array(
 					'id'                    => array(
-						'description' => __( 'A unique numeric ID for the topic.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the topic.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'reply_id'              => array(
-						'description' => __( 'A unique numeric ID for the topic\'s reply.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the topic\'s reply.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'split_option'          => array(
-						'description' => __( 'Choose a valid split option.', 'buddyboss' ),
+						'description' => __( 'Choose a valid split option.', 'buddyboss-platform' ),
 						'type'        => 'string',
 						'required'    => true,
 						'enum'        => array( 'reply', 'existing' ),
 					),
 					'new_destination_title' => array(
-						'description'       => __( 'New Topic title for the split with option reply.', 'buddyboss' ),
+						'description'       => __( 'New Topic title for the split with option reply.', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'destination_id'        => array(
-						'description' => __( 'A unique numeric ID for the destination topic.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the destination topic.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 					'subscribers'           => array(
-						'description' => __( 'Whether to migrate subscriptions or not.', 'buddyboss' ),
+						'description' => __( 'Whether to migrate subscriptions or not.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 						'default'     => true,
 					),
 					'favorites'             => array(
-						'description' => __( 'Whether to migrate favorites or not.', 'buddyboss' ),
+						'description' => __( 'Whether to migrate favorites or not.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 						'default'     => true,
 					),
 					'tags'                  => array(
-						'description' => __( 'Whether to migrate tags or not.', 'buddyboss' ),
+						'description' => __( 'Whether to migrate tags or not.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 						'default'     => true,
 					),
@@ -142,12 +142,12 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			array(
 				'args'   => array(
 					'id'     => array(
-						'description' => __( 'A unique numeric ID for the topic.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the topic.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'action' => array(
-						'description'       => __( 'Action name to perform on the topic', 'buddyboss' ),
+						'description'       => __( 'Action name to perform on the topic', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'required'          => true,
 						'enum'              => array(
@@ -163,7 +163,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'value'  => array(
-						'description'       => __( 'Value for the action on topic.', 'buddyboss' ),
+						'description'       => __( 'Value for the action on topic.', 'buddyboss-platform' ),
 						'type'              => 'boolean',
 						'sanitize_callback' => 'rest_sanitize_boolean',
 						'validate_callback' => 'rest_validate_request_arg',
@@ -184,14 +184,14 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			array(
 				'args'   => array(
 					'id'       => array(
-						'description' => __( 'A unique numeric ID for the topic.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the topic.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'page'     => array(
 						'required'          => false,
 						'default'           => 1,
-						'description'       => __( 'Current page of the collection.', 'buddyboss' ),
+						'description'       => __( 'Current page of the collection.', 'buddyboss-platform' ),
 						'type'              => 'integer',
 						'sanitize_callback' => 'absint',
 						'validate_callback' => 'rest_validate_request_arg',
@@ -199,7 +199,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 					'per_page' => array(
 						'required'          => false,
 						'default'           => 10,
-						'description'       => __( 'Maximum number of items to be returned in result set.', 'buddyboss' ),
+						'description'       => __( 'Maximum number of items to be returned in result set.', 'buddyboss-platform' ),
 						'type'              => 'integer',
 						'sanitize_callback' => 'absint',
 						'maximum'           => 9999999,
@@ -251,7 +251,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( empty( $request['id'] ) ) {
 			return new WP_Error(
 				'bp_rest_topic_invalid_id',
-				__( 'Invalid topic ID.', 'buddyboss' ),
+				__( 'Invalid topic ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -261,11 +261,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		}
 
 		// Source topic not found.
-		$source_topic = bbp_get_topic( $source_topic_id );
+		$source_topic = bboss_bbp_get_topic( $source_topic_id );
 		if ( empty( $source_topic ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_merge_topic_source_not_found',
-				__( 'The topic you want to merge was not found.', 'buddyboss' ),
+				__( 'The topic you want to merge was not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -276,7 +276,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! current_user_can( 'edit_topic', $source_topic->ID ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_merge_topic_source_permission',
-				__( 'Sorry, You do not have permission to edit the source topic.', 'buddyboss' ),
+				__( 'Sorry, You do not have permission to edit the source topic.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -288,7 +288,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( empty( $request['destination_id'] ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_merge_topic_destination_id',
-				__( 'Sorry, Destination discussion ID not found.', 'buddyboss' ),
+				__( 'Sorry, Destination discussion ID not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -298,11 +298,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		}
 
 		// Destination topic not found.
-		$destination_topic = bbp_get_topic( $destination_topic_id );
+		$destination_topic = bboss_bbp_get_topic( $destination_topic_id );
 		if ( empty( $destination_topic ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_merge_topic_destination_not_found',
-				__( 'Sorry, The discussion you want to merge to was not found.', 'buddyboss' ),
+				__( 'Sorry, The discussion you want to merge to was not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -313,7 +313,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! current_user_can( 'edit_topic', $destination_topic->ID ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_merge_topic_destination_permission',
-				__( 'Sorry, You do not have the permissions to edit the destination discussion.', 'buddyboss' ),
+				__( 'Sorry, You do not have the permissions to edit the destination discussion.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -343,7 +343,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
 		/** Subscriptions */
 		// Get subscribers from source topic.
-		$subscribers = bbp_get_topic_subscribers( $source_topic->ID );
+		$subscribers = bboss_bbp_get_topic_subscribers( $source_topic->ID );
 
 		// Remove the topic from everybody's subscriptions.
 		if ( ! empty( $subscribers ) ) {
@@ -352,18 +352,18 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			foreach ( (array) $subscribers as $subscriber ) {
 
 				// Shift the subscriber if told to.
-				if ( ! empty( $request['subscribers'] ) && ( true === $request['subscribers'] ) && bb_is_enabled_subscription( 'topic' ) ) {
-					bbp_add_user_subscription( $subscriber, $destination_topic->ID );
+				if ( ! empty( $request['subscribers'] ) && ( true === $request['subscribers'] ) && bboss_is_enabled_subscription( 'topic' ) ) {
+					bboss_bbp_add_user_subscription( $subscriber, $destination_topic->ID );
 				}
 
 				// Remove old subscription.
-				bbp_remove_user_subscription( $subscriber, $source_topic->ID );
+				bboss_bbp_remove_user_subscription( $subscriber, $source_topic->ID );
 			}
 		}
 
 		/** Favorites */
 		// Get favoriters from source topic.
-		$favoriters = bbp_get_topic_favoriters( $source_topic->ID );
+		$favoriters = bboss_bbp_get_topic_favoriters( $source_topic->ID );
 
 		// Remove the topic from everybody's favorites.
 		if ( ! empty( $favoriters ) ) {
@@ -373,36 +373,36 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
 				// Shift the favoriter if told to.
 				if ( ! empty( $request['favorites'] ) && true === $request['favorites'] ) {
-					bbp_add_user_favorite( $favoriter, $destination_topic->ID );
+					bboss_bbp_add_user_favorite( $favoriter, $destination_topic->ID );
 				}
 
 				// Remove old favorite.
-				bbp_remove_user_favorite( $favoriter, $source_topic->ID );
+				bboss_bbp_remove_user_favorite( $favoriter, $source_topic->ID );
 			}
 		}
 
 		/** Tags */
 		// Get the source topic tags.
-		$source_topic_tags = wp_get_post_terms( $source_topic->ID, bbp_get_topic_tag_tax_id(), array( 'fields' => 'names' ) );
+		$source_topic_tags = wp_get_post_terms( $source_topic->ID, bboss_bbp_get_topic_tag_tax_id(), array( 'fields' => 'names' ) );
 
 		// Tags to possibly merge.
 		if ( ! empty( $source_topic_tags ) && ! is_wp_error( $source_topic_tags ) ) {
 
 			// Shift the tags if told to.
 			if ( ! empty( $request['tags'] ) && ( true === $request['tags'] ) ) {
-				wp_set_post_terms( $destination_topic->ID, $source_topic_tags, bbp_get_topic_tag_tax_id(), true );
+				wp_set_post_terms( $destination_topic->ID, $source_topic_tags, bboss_bbp_get_topic_tag_tax_id(), true );
 			}
 
 			// Delete the tags from the source topic.
-			wp_delete_object_term_relationships( $source_topic->ID, bbp_get_topic_tag_tax_id() );
+			wp_delete_object_term_relationships( $source_topic->ID, bboss_bbp_get_topic_tag_tax_id() );
 		}
 
 		/** Source Topic */
 		// Status.
-		bbp_open_topic( $source_topic->ID );
+		bboss_bbp_open_topic( $source_topic->ID );
 
 		// Sticky.
-		bbp_unstick_topic( $source_topic->ID );
+		bboss_bbp_unstick_topic( $source_topic->ID );
 
 		// Delete source topic's last & count meta data.
 		delete_post_meta( $source_topic->ID, '_bbp_last_reply_id' );
@@ -423,7 +423,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		$replies = (array) get_posts(
 			array(
 				'post_parent'            => $source_topic->ID,
-				'post_type'              => bbp_get_reply_post_type(),
+				'post_type'              => bboss_bbp_get_reply_post_type(),
 				'posts_per_page'         => - 1,
 				'order'                  => 'ASC',
 				'update_post_meta_cache' => false,
@@ -446,22 +446,22 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 						'ID'          => $reply->ID,
 						'post_title'  => sprintf(
 							/* translators: Topic Title. */
-							__( 'Reply To: %s', 'buddyboss' ),
+							__( 'Reply To: %s', 'buddyboss-platform' ),
 							$destination_topic->post_title
 						),
 						'post_name'   => false,
-						'post_type'   => bbp_get_reply_post_type(),
+						'post_type'   => bboss_bbp_get_reply_post_type(),
 						'post_parent' => $destination_topic->ID,
 						'guid'        => '',
 					)
 				);
 
 				// Adjust reply meta values.
-				bbp_update_reply_topic_id( $reply->ID, $destination_topic->ID );
-				bbp_update_reply_forum_id( $reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
+				bboss_bbp_update_reply_topic_id( $reply->ID, $destination_topic->ID );
+				bboss_bbp_update_reply_forum_id( $reply->ID, bboss_bbp_get_topic_forum_id( $destination_topic->ID ) );
 
 				// Update the reply position.
-				bbp_update_reply_position( $reply->ID );
+				bboss_bbp_update_reply_position( $reply->ID );
 
 				// Do additional actions per merged reply.
 				do_action( 'bbp_merged_topic_reply', $reply->ID, $destination_topic->ID );
@@ -474,9 +474,9 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
 		/** Successful Merge */
 		// Update topic's last meta data.
-		bbp_update_topic_last_reply_id( $destination_topic->ID );
-		bbp_update_topic_last_active_id( $destination_topic->ID );
-		bbp_update_topic_last_active_time( $destination_topic->ID );
+		bboss_bbp_update_topic_last_reply_id( $destination_topic->ID );
+		bboss_bbp_update_topic_last_active_id( $destination_topic->ID );
+		bboss_bbp_update_topic_last_active_time( $destination_topic->ID );
 
 		// Update parent reply count with destination topic_id.
 		if ( ! empty( $destination_topic->ID ) && 0 !== $parent_replies ) {
@@ -518,7 +518,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	public function merge_item_permissions_check( $request ) {
 		$error = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to merge this topic.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to merge this topic.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -580,7 +580,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( empty( $request['reply_id'] ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_split_topic_reply_id',
-				__( 'Reply ID to split the topic from not found!', 'buddyboss' ),
+				__( 'Reply ID to split the topic from not found!', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -589,13 +589,13 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			$from_reply_id = (int) $request['reply_id'];
 		}
 
-		$from_reply = bbp_get_reply( $from_reply_id );
+		$from_reply = bboss_bbp_get_reply( $from_reply_id );
 
 		// Reply exists.
 		if ( empty( $from_reply ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_split_topic_r_not_found',
-				__( 'The reply you want to split from was not found.', 'buddyboss' ),
+				__( 'The reply you want to split from was not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -604,13 +604,13 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
 		/** Topic to Split */
 		// Get the topic being split.
-		$source_topic = bbp_get_topic( $from_reply->post_parent );
+		$source_topic = bboss_bbp_get_topic( $from_reply->post_parent );
 
 		// No topic.
 		if ( empty( $source_topic ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_split_topic_source_not_found',
-				__( 'The topic you want to split was not found.', 'buddyboss' ),
+				__( 'The topic you want to split was not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -621,7 +621,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! current_user_can( 'edit_topic', $source_topic->ID ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_split_topic_source_permission',
-				__( 'Sorry, You do not have the permissions to edit the source discussion.', 'buddyboss' ),
+				__( 'Sorry, You do not have the permissions to edit the source discussion.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -636,7 +636,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( empty( $split_option ) || ! in_array( $split_option, array( 'existing', 'reply' ), true ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_split_topic_option',
-				__( 'Sorry, You need to choose a valid split option.', 'buddyboss' ),
+				__( 'Sorry, You need to choose a valid split option.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -653,7 +653,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 					if ( empty( $request['destination_id'] ) ) {
 						return new WP_Error(
 							'bp_rest_bbp_split_topic_destination_id',
-							__( 'Sorry, Destination discussion ID not found!', 'buddyboss' ),
+							__( 'Sorry, Destination discussion ID not found!', 'buddyboss-platform' ),
 							array(
 								'status' => 404,
 							)
@@ -663,13 +663,13 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 					}
 
 					// Get the destination topic.
-					$destination_topic = bbp_get_topic( $destination_topic_id );
+					$destination_topic = bboss_bbp_get_topic( $destination_topic_id );
 
 					// No destination topic.
 					if ( empty( $destination_topic ) ) {
 						return new WP_Error(
 							'bp_rest_bbp_split_topic_destination_not_found',
-							__( 'Sorry, The discussion you want to split to was not found!', 'buddyboss' ),
+							__( 'Sorry, The discussion you want to split to was not found!', 'buddyboss-platform' ),
 							array(
 								'status' => 404,
 							)
@@ -680,7 +680,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 					if ( ! current_user_can( 'edit_topic', $destination_topic->ID ) ) {
 						return new WP_Error(
 							'bp_rest_bbp_split_topic_destination_permission',
-							__( 'Sorry, You do not have the permissions to edit the destination discussion!', 'buddyboss' ),
+							__( 'Sorry, You do not have the permissions to edit the destination discussion!', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)
@@ -710,17 +710,17 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 								'ID'          => $from_reply->ID,
 								'post_title'  => $destination_topic_title,
 								'post_name'   => false,
-								'post_type'   => bbp_get_topic_post_type(),
+								'post_type'   => bboss_bbp_get_topic_post_type(),
 								'post_parent' => $source_topic->post_parent,
 								'menu_order'  => 0,
 								'guid'        => '',
 							)
 						);
 
-						$destination_topic = bbp_get_topic( $destination_topic_id );
+						$destination_topic = bboss_bbp_get_topic( $destination_topic_id );
 
 						// Make sure the new topic knows its a topic.
-						bbp_update_topic_topic_id( $from_reply->ID );
+						bboss_bbp_update_topic_topic_id( $from_reply->ID );
 
 						// Shouldn't happen.
 						if (
@@ -730,7 +730,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 						) {
 							return new WP_Error(
 								'bp_rest_bbp_split_topic_destination_reply',
-								__( 'Sorry, There was a problem converting the reply into the discussion. Please try again.', 'buddyboss' ),
+								__( 'Sorry, There was a problem converting the reply into the discussion. Please try again.', 'buddyboss-platform' ),
 								array(
 									'status' => 404,
 								)
@@ -741,7 +741,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 					} else {
 						return new WP_Error(
 							'bp_rest_bbp_split_topic_destination_permission',
-							__( 'Sorry, You do not have the permissions to create new topics. The reply could not be converted into a discussion.', 'buddyboss' ),
+							__( 'Sorry, You do not have the permissions to create new topics. The reply could not be converted into a discussion.', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)
@@ -775,16 +775,16 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
 		/** Subscriptions */
 		// Copy the subscribers.
-		if ( ! empty( $request['subscribers'] ) && true === $request['subscribers'] && bb_is_enabled_subscription( 'topic' ) ) {
+		if ( ! empty( $request['subscribers'] ) && true === $request['subscribers'] && bboss_is_enabled_subscription( 'topic' ) ) {
 
 			// Get the subscribers.
-			$subscribers = bbp_get_topic_subscribers( $source_topic->ID );
+			$subscribers = bboss_bbp_get_topic_subscribers( $source_topic->ID );
 
 			if ( ! empty( $subscribers ) ) {
 
 				// Add subscribers to new topic.
 				foreach ( (array) $subscribers as $subscriber ) {
-					bbp_add_user_subscription( $subscriber, $destination_topic->ID );
+					bboss_bbp_add_user_subscription( $subscriber, $destination_topic->ID );
 				}
 			}
 		}
@@ -794,13 +794,13 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! empty( $request['favorites'] ) && ( true === $request['favorites'] ) ) {
 
 			// Get the favoriters.
-			$favoriters = bbp_get_topic_favoriters( $source_topic->ID );
+			$favoriters = bboss_bbp_get_topic_favoriters( $source_topic->ID );
 
 			if ( ! empty( $favoriters ) ) {
 
 				// Add the favoriters to new topic.
 				foreach ( (array) $favoriters as $favoriter ) {
-					bbp_add_user_favorite( $favoriter, $destination_topic->ID );
+					bboss_bbp_add_user_favorite( $favoriter, $destination_topic->ID );
 				}
 			}
 		}
@@ -810,10 +810,10 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! empty( $request['tags'] ) && ( true === $request['tags'] ) ) {
 
 			// Get the source topic tags.
-			$source_topic_tags = wp_get_post_terms( $source_topic->ID, bbp_get_topic_tag_tax_id(), array( 'fields' => 'names' ) );
+			$source_topic_tags = wp_get_post_terms( $source_topic->ID, bboss_bbp_get_topic_tag_tax_id(), array( 'fields' => 'names' ) );
 
 			if ( ! empty( $source_topic_tags ) ) {
-				wp_set_post_terms( $destination_topic->ID, $source_topic_tags, bbp_get_topic_tag_tax_id(), true );
+				wp_set_post_terms( $destination_topic->ID, $source_topic_tags, bboss_bbp_get_topic_tag_tax_id(), true );
 			}
 		}
 
@@ -821,7 +821,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		// get_posts() is not used because it doesn't allow us to use '>='.
 		// comparision without a filter.
 		// phpcs:ignore
-		$replies = (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_date >= %s AND {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_type = %s ORDER BY {$wpdb->posts}.post_date ASC", $from_reply->post_date, $source_topic->ID, bbp_get_reply_post_type() ) );
+		$replies = (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_date >= %s AND {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_type = %s ORDER BY {$wpdb->posts}.post_date ASC", $from_reply->post_date, $source_topic->ID, bboss_bbp_get_reply_post_type() ) );
 
 		$source_parent_replies      = 0;
 		$destination_parent_replies = 0;
@@ -845,7 +845,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 						'ID'          => $reply->ID,
 						'post_title'  => sprintf(
 							/* translators: Topic Title. */
-							__( 'Reply To: %s', 'buddyboss' ),
+							__( 'Reply To: %s', 'buddyboss-platform' ),
 							$destination_topic->post_title
 						),
 						'post_name'   => false, // will be automatically generated.
@@ -858,23 +858,23 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 				$reply_ids[] = (int) $reply->ID;
 
 				// Adjust reply meta values.
-				bbp_update_reply_topic_id( $reply->ID, $destination_topic->ID );
-				bbp_update_reply_forum_id( $reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
+				bboss_bbp_update_reply_topic_id( $reply->ID, $destination_topic->ID );
+				bboss_bbp_update_reply_forum_id( $reply->ID, bboss_bbp_get_topic_forum_id( $destination_topic->ID ) );
 
 				// Adjust reply position.
-				bbp_update_reply_position( $reply->ID );
+				bboss_bbp_update_reply_position( $reply->ID );
 
 				// Adjust reply to values.
-				$reply_to = bbp_get_reply_to( $reply->ID );
+				$reply_to = bboss_bbp_get_reply_to( $reply->ID );
 
 				// Not a reply to a reply that moved over.
 				if ( ! in_array( $reply_to, $reply_ids, true ) ) {
-					bbp_update_reply_to( $reply->ID, 0 );
+					bboss_bbp_update_reply_to( $reply->ID, 0 );
 				}
 
 				// New topic from reply can't be a reply to.
 				if ( ( $from_reply->ID === $destination_topic->ID ) && ( $from_reply->ID === $reply_to ) ) {
-					bbp_update_reply_to( $reply->ID, 0 );
+					bboss_bbp_update_reply_to( $reply->ID, 0 );
 				}
 
 				// Do additional actions per split reply.
@@ -915,15 +915,15 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		// It is a new topic and we need to set some default metas to make.
 		// the topic display in bbp_has_topics() list.
 		if ( 'reply' === $split_option ) {
-			bbp_update_topic_last_reply_id( $destination_topic->ID, $last_reply_id );
-			bbp_update_topic_last_active_id( $destination_topic->ID, $last_reply_id );
-			bbp_update_topic_last_active_time( $destination_topic->ID, $freshness );
+			bboss_bbp_update_topic_last_reply_id( $destination_topic->ID, $last_reply_id );
+			bboss_bbp_update_topic_last_active_id( $destination_topic->ID, $last_reply_id );
+			bboss_bbp_update_topic_last_active_time( $destination_topic->ID, $freshness );
 		}
 
 		// Update source topic ID last active.
-		bbp_update_topic_last_reply_id( $source_topic->ID );
-		bbp_update_topic_last_active_id( $source_topic->ID );
-		bbp_update_topic_last_active_time( $source_topic->ID );
+		bboss_bbp_update_topic_last_reply_id( $source_topic->ID );
+		bboss_bbp_update_topic_last_active_id( $source_topic->ID );
+		bboss_bbp_update_topic_last_active_time( $source_topic->ID );
 
 		/** Successful Split */
 		// Update counts, etc...
@@ -959,7 +959,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	public function split_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to split a topic.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to split a topic.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -971,7 +971,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			if ( true === $retval && ! current_user_can( 'edit_topic', $request->get_param( 'id' ) ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to split this topic.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to split this topic.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1016,7 +1016,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		$action   = $request->get_param( 'action' );
 		$value    = $request->get_param( 'value' );
 		$topic_id = $request->get_param( 'id' );
-		$user_id  = bbp_get_user_id( 0, true, true );
+		$user_id  = bboss_bbp_get_user_id( 0, true, true );
 		$retval   = '';
 
 		switch ( $action ) {
@@ -1063,7 +1063,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	public function action_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform the action on the topic.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform the action on the topic.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1103,13 +1103,13 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	public function dropdown_items( $request ) {
 
 		$topic_id = $request->get_param( 'id' );
-		$parent   = bbp_get_topic_forum_id( $topic_id );
+		$parent   = bboss_bbp_get_topic_forum_id( $topic_id );
 		$page     = $request->get_param( 'page' );
 		$per_page = $request->get_param( 'per_page' );
 
 		$topics_query = new WP_Query(
 			array(
-				'post_type'          => bbp_get_topic_post_type(),
+				'post_type'          => bboss_bbp_get_topic_post_type(),
 				'post_status'        => 'publish',
 				'post__not_in'       => array( $topic_id ),
 				'post_parent'        => $parent,
@@ -1126,7 +1126,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( empty( $topics ) ) {
 			$retval = new WP_Error(
 				'bp_rest_no_other_topics',
-				__( 'No discussions available', 'buddyboss' ),
+				__( 'No discussions available', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1138,13 +1138,13 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 				'id'    => $topic->ID,
 				'title' => array(
 					'raw'      => $topic->post_title,
-					'rendered' => bbp_get_topic_title( $topic->ID ),
+					'rendered' => bboss_bbp_get_topic_title( $topic->ID ),
 				),
 			);
 		}
 
 		$response = rest_ensure_response( $data );
-		$response = bp_rest_response_add_total_headers( $response, $topics_query->found_posts, $per_page );
+		$response = bboss_rest_response_add_total_headers( $response, $topics_query->found_posts, $per_page );
 
 		/**
 		 * Fires after a list of topics is fetched via the REST API.
@@ -1171,7 +1171,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	public function dropdown_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform the action.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform the action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1180,11 +1180,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( is_user_logged_in() ) {
 			$retval = true;
 
-			$topic = bbp_get_topic( $request->get_param( 'id' ) );
+			$topic = bboss_bbp_get_topic( $request->get_param( 'id' ) );
 			if ( empty( $topic ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_invalid_id',
-					__( 'Invalid topic ID.', 'buddyboss' ),
+					__( 'Invalid topic ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -1216,23 +1216,23 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			'type'       => 'object',
 			'properties' => array(
 				'id'    => array(
-					'description' => __( 'Unique identifier for the topic.', 'buddyboss' ),
+					'description' => __( 'Unique identifier for the topic.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'title' => array(
-					'description' => __( 'The title of the topic.', 'buddyboss' ),
+					'description' => __( 'The title of the topic.', 'buddyboss-platform' ),
 					'context'     => array( 'view', 'edit' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the title of the topic, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the title of the topic, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'The title of the topic, transformed for display.', 'buddyboss' ),
+							'description' => __( 'The title of the topic, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 						),
@@ -1259,10 +1259,10 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @return bool|WP_Error
 	 */
 	protected function rest_update_favorite( $topic_id, $value, $user_id ) {
-		if ( ! bbp_is_favorites_active() ) {
+		if ( ! bboss_bbp_is_favorites_active() ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_action_disabled',
-				__( 'Favorites are no longer active.', 'buddyboss' ),
+				__( 'Favorites are no longer active.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1273,22 +1273,22 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! current_user_can( 'edit_user', $user_id ) ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'You do not have permission to do this.', 'buddyboss' ),
+				__( 'You do not have permission to do this.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
 			);
 		}
 
-		$favorited = bbp_is_user_favorite( $user_id, $topic_id );
+		$favorited = bboss_bbp_is_user_favorite( $user_id, $topic_id );
 
 		$status = true;
 
 		if ( true === $favorited && empty( $value ) ) {
-			$status = bbp_remove_user_favorite( $user_id, $topic_id );
+			$status = bboss_bbp_remove_user_favorite( $user_id, $topic_id );
 
 		} elseif ( false === $favorited && ! empty( $value ) ) {
-			$status = bbp_add_user_favorite( $user_id, $topic_id );
+			$status = bboss_bbp_add_user_favorite( $user_id, $topic_id );
 		}
 
 		return $status;
@@ -1307,21 +1307,21 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! current_user_can( 'moderate', $topic_id ) ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'You do not have permission to do this.', 'buddyboss' ),
+				__( 'You do not have permission to do this.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
 			);
 		}
 
-		$is_open = bbp_is_topic_open( $topic_id );
+		$is_open = bboss_bbp_is_topic_open( $topic_id );
 		$status  = true;
 
 		if ( true === $is_open && ! empty( $value ) ) {
-			$status = bbp_close_topic( $topic_id );
+			$status = bboss_bbp_close_topic( $topic_id );
 
 		} elseif ( false === $is_open && empty( $value ) ) {
-			$status = bbp_open_topic( $topic_id );
+			$status = bboss_bbp_open_topic( $topic_id );
 		}
 
 		return $status;
@@ -1337,10 +1337,10 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @return bool|WP_Error
 	 */
 	protected function rest_update_subscribe( $topic_id, $value, $user_id ) {
-		if ( ! bb_is_enabled_subscription( 'topic' ) ) {
+		if ( ! bboss_is_enabled_subscription( 'topic' ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_action_disabled',
-				__( 'Subscriptions are no longer active.', 'buddyboss' ),
+				__( 'Subscriptions are no longer active.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1351,7 +1351,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! current_user_can( 'edit_user', $user_id ) ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'You do not have permission to do this.', 'buddyboss' ),
+				__( 'You do not have permission to do this.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1359,15 +1359,15 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		}
 
 		$status     = true;
-		$subscribed = bbp_is_user_subscribed( $user_id, $topic_id );
+		$subscribed = bboss_bbp_is_user_subscribed( $user_id, $topic_id );
 
 		// Subscribed and unsubscribing.
 		if ( true === $subscribed && empty( $value ) ) {
-			$status = bbp_remove_user_subscription( $user_id, $topic_id );
+			$status = bboss_bbp_remove_user_subscription( $user_id, $topic_id );
 
 			// Not subscribed and subscribing.
 		} elseif ( false === $subscribed && ! empty( $value ) ) {
-			$status = bbp_add_user_subscription( $user_id, $topic_id );
+			$status = bboss_bbp_add_user_subscription( $user_id, $topic_id );
 		}
 
 		return $status;
@@ -1387,7 +1387,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! current_user_can( 'moderate', $topic_id ) ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'You do not have permission to do this.', 'buddyboss' ),
+				__( 'You do not have permission to do this.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1396,14 +1396,14 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
 		$is_super = ( 'super_sticky' === $action ) ? true : false;
 
-		$is_sticky = bbp_is_topic_sticky( $topic_id );
+		$is_sticky = bboss_bbp_is_topic_sticky( $topic_id );
 		$status    = true;
 
 		if ( true === $is_sticky && empty( $value ) ) {
-			$status = bbp_unstick_topic( $topic_id );
+			$status = bboss_bbp_unstick_topic( $topic_id );
 
 		} elseif ( false === $is_sticky && ! empty( $value ) ) {
-			$status = bbp_stick_topic( $topic_id, $is_super );
+			$status = bboss_bbp_stick_topic( $topic_id, $is_super );
 		}
 
 		return $status;
@@ -1422,21 +1422,21 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! current_user_can( 'moderate', $topic_id ) ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'You do not have permission to do this.', 'buddyboss' ),
+				__( 'You do not have permission to do this.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
 			);
 		}
 
-		$is_spam = bbp_is_topic_spam( $topic_id );
+		$is_spam = bboss_bbp_is_topic_spam( $topic_id );
 		$status  = true;
 
 		if ( true === $is_spam && empty( $value ) ) {
-			$status = bbp_unspam_topic( $topic_id );
+			$status = bboss_bbp_unspam_topic( $topic_id );
 
 		} elseif ( false === $is_spam && ! empty( $value ) ) {
-			$status = bbp_spam_topic( $topic_id );
+			$status = bboss_bbp_spam_topic( $topic_id );
 		}
 
 		return $status;
@@ -1455,7 +1455,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( ! current_user_can( 'moderate', $topic_id ) ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'You do not have permission to do this.', 'buddyboss' ),
+				__( 'You do not have permission to do this.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)

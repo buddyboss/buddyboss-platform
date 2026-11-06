@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * BB_BG_Process_Log class.
+ * BBoss_BG_Process_Log class.
  */
-class BB_BG_Process_Log {
+class BBoss_BG_Process_Log {
 
 	/**
 	 * Class instance.
@@ -74,7 +74,7 @@ class BB_BG_Process_Log {
 	 * @throws Exception
 	 */
 	public function load() {
-		$bp_prefix = bp_core_get_table_prefix();
+		$bp_prefix = bboss_core_get_table_prefix();
 
 		$this->table_name = $bp_prefix . 'bb_background_process_logs';
 
@@ -257,7 +257,7 @@ class BB_BG_Process_Log {
 			'process_end_date'       => '0000-00-00 00:00:00',
 		);
 
-		$args = bp_parse_args( $args, $defaults );
+		$args = bboss_parse_args( $args, $defaults );
 
 		if ( empty( $args['bg_process_name'] ) || empty( $args['bg_process_from'] ) || empty( $args['callback_function'] ) ) {
 			return false;
@@ -433,7 +433,7 @@ class BB_BG_Process_Log {
 	public function create_table() {
 		global $wpdb;
 
-		$bp_prefix       = bp_core_get_table_prefix();
+		$bp_prefix       = bboss_core_get_table_prefix();
 		$log_table_name  = $bp_prefix . 'bb_background_process_logs';
 		$charset_collate = $wpdb->get_charset_collate();
 		$has_table       = $wpdb->query( $wpdb->prepare( 'show tables like %s', $log_table_name ) ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching

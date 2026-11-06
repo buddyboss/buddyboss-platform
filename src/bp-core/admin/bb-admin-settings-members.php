@@ -20,17 +20,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_members_feature() {
+function bboss_admin_settings_register_members_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'members',
 		array(
-			'label'              => __( 'Member Profiles', 'buddyboss' ),
-			'description'        => __( 'Create customizable member profiles with extended fields, avatars, cover images, profile types, and member directories.', 'buddyboss' ),
+			'label'              => __( 'Member Profiles', 'buddyboss-platform' ),
+			'description'        => __( 'Create customizable member profiles with extended fields, avatars, cover images, profile types, and member directories.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-square',
@@ -41,7 +41,7 @@ function bb_admin_settings_register_members_feature() {
 			'required'           => true,
 			'components'         => array( 'members', 'xprofile', 'friends' ),
 			'is_active_callback' => function () {
-				return bp_is_active( 'xprofile' );
+				return bboss_is_active( 'xprofile' );
 			},
 			'settings_route'     => '/settings/members',
 			'order'              => 60,
@@ -50,7 +50,7 @@ function bb_admin_settings_register_members_feature() {
 
 	// When xprofile is disabled, only the feature card is needed (so admin can re-enable).
 	// Side panels, sections, and fields depend on xprofile functions that aren't loaded.
-	if ( ! bp_is_active( 'xprofile' ) ) {
+	if ( ! bboss_is_active( 'xprofile' ) ) {
 		return;
 	}
 
@@ -72,11 +72,11 @@ function bb_admin_settings_register_members_feature() {
 	// =========================================================================
 
 	// Side Panel 1: Profile Name (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'members',
 		'profile_name',
 		array(
-			'title'      => __( 'Profile Name', 'buddyboss' ),
+			'title'      => __( 'Profile Name', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-identification-card',
@@ -88,16 +88,16 @@ function bb_admin_settings_register_members_feature() {
 	);
 
 	// Side Panel 2: Profile Image.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'members',
 		'profile_image',
 		array(
-			'title'      => __( 'Profile Image', 'buddyboss' ),
+			'title'      => __( 'Profile Image', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -112,11 +112,11 @@ function bb_admin_settings_register_members_feature() {
 	);
 
 	// Side Panel 3: Profile Headers.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'members',
 		'profile_headers',
 		array(
-			'title'      => __( 'Profile Headers', 'buddyboss' ),
+			'title'      => __( 'Profile Headers', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrows-out-simple',
@@ -128,11 +128,11 @@ function bb_admin_settings_register_members_feature() {
 	);
 
 	// Side Panel 4: Member Directory.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'members',
 		'member_directory',
 		array(
-			'title'      => __( 'Member Directory', 'buddyboss' ),
+			'title'      => __( 'Member Directory', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-grid-nine',
@@ -145,16 +145,16 @@ function bb_admin_settings_register_members_feature() {
 
 	// Side Panel 5: Member Connection.
 	// Always registered — the panel contains a toggle to enable/disable the friends component.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'members',
 		'member_connection',
 		array(
-			'title'      => __( 'Member Connection', 'buddyboss' ),
+			'title'      => __( 'Member Connection', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-plus',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -171,16 +171,16 @@ function bb_admin_settings_register_members_feature() {
 	// Divider before custom screen panels.
 
 	// Side Panel 6: Profile Fields (custom screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'members',
 		'profile_fields',
 		array(
-			'title'      => __( 'Profile Fields', 'buddyboss' ),
+			'title'      => __( 'Profile Fields', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-list',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -196,16 +196,16 @@ function bb_admin_settings_register_members_feature() {
 	);
 
 	// Side Panel 7: Profile Types (custom screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'members',
 		'profile_types',
 		array(
-			'title'    => __( 'Profile Types', 'buddyboss' ),
+			'title'    => __( 'Profile Types', 'buddyboss-platform' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tag',
 			),
-			'help_url' => bp_get_admin_url(
+			'help_url' => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -219,11 +219,11 @@ function bb_admin_settings_register_members_feature() {
 	);
 
 	// Side Panel 8: Profile Search.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'members',
 		'profile_search',
 		array(
-			'title'      => __( 'Profile Search', 'buddyboss' ),
+			'title'      => __( 'Profile Search', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass-plus',
@@ -235,11 +235,11 @@ function bb_admin_settings_register_members_feature() {
 	);
 
 	// Side Panel 9: Profile Navigation.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'members',
 		'profile_navigation',
 		array(
-			'title'      => __( 'Profile Navigation', 'buddyboss' ),
+			'title'      => __( 'Profile Navigation', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tabs',
@@ -255,32 +255,32 @@ function bb_admin_settings_register_members_feature() {
 	// =========================================================================
 
 	// Panel 1: Profile Name.
-	bb_members_register_profile_name_panel_fields();
+	bboss_members_register_profile_name_panel_fields();
 
 	// Panel 2: Profile Image.
-	bb_members_register_profile_image_panel_fields();
+	bboss_members_register_profile_image_panel_fields();
 
 	// Panel 3: Profile Headers.
-	bb_members_register_profile_headers_panel_fields();
+	bboss_members_register_profile_headers_panel_fields();
 
 	// Panel 4: Member Directory.
-	bb_members_register_member_directory_panel_fields();
+	bboss_members_register_member_directory_panel_fields();
 
 	// Panel 5: Member Connection.
 	// Always registered — toggle field inside controls friends component activation.
-	bb_members_register_member_connection_panel_fields();
+	bboss_members_register_member_connection_panel_fields();
 
 	// Access Controls (Connection Access) — follows same pattern as Groups/Activity.
-	bb_members_register_access_control_fields();
+	bboss_members_register_access_control_fields();
 
 	// Panel 6: Profile Types.
-	bb_members_register_profile_types_panel_fields();
+	bboss_members_register_profile_types_panel_fields();
 
 	// Panel 7: Profile Search.
-	bb_members_register_profile_search_panel_fields();
+	bboss_members_register_profile_search_panel_fields();
 
 	// Panel 8: Profile Navigation.
-	bb_members_register_profile_navigation_panel_fields();
+	bboss_members_register_profile_navigation_panel_fields();
 
 	/**
 	 * Fires after all Members settings panels are registered.
@@ -291,4 +291,4 @@ function bb_admin_settings_register_members_feature() {
 	do_action( 'bb_members_after_register_settings_fields' );
 }
 
-add_action( 'bb_register_features', 'bb_admin_settings_register_members_feature', 15 );
+add_action( 'bb_register_features', 'bboss_admin_settings_register_members_feature', 15 );

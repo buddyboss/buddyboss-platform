@@ -9,18 +9,18 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_filter( 'bp_sent_invite_email_avatar', 'bb_sent_invite_email_avatar_default_avatar', 10 );
+add_filter( 'bp_sent_invite_email_avatar', 'bboss_sent_invite_email_avatar_default_avatar', 10 );
 
 // Settings 2.0: Register invites nav item in profile navigation order.
-add_filter( 'bb_member_profile_nav_items', 'bb_invites_register_profile_nav_item' );
-add_filter( 'bb_member_inactive_nav_slugs', 'bb_invites_register_inactive_nav_slug' );
+add_filter( 'bb_member_profile_nav_items', 'bboss_invites_register_profile_nav_item' );
+add_filter( 'bb_member_inactive_nav_slugs', 'bboss_invites_register_inactive_nav_slug' );
 
 // Add invites field in wp registration form.
-add_action( 'register_form', 'bb_invites_add_invite_fields_after_wp_registration_fields' );
+add_action( 'register_form', 'bboss_invites_add_invite_fields_after_wp_registration_fields' );
 
 // Perform validation before new user is registered.
-add_filter( 'registration_errors', 'bb_invites_validate_invitation_before_wp_registration', PHP_INT_MAX, 3 );
-add_action( 'bp_signup_pre_validate', 'bb_invites_validate_invitation_before_bb_registration', PHP_INT_MAX );
+add_filter( 'registration_errors', 'bboss_invites_validate_invitation_before_wp_registration', PHP_INT_MAX, 3 );
+add_action( 'bp_signup_pre_validate', 'bboss_invites_validate_invitation_before_bb_registration', PHP_INT_MAX );
 
 /**
  * Set default avatar when sent invite.
@@ -30,14 +30,14 @@ add_action( 'bp_signup_pre_validate', 'bb_invites_validate_invitation_before_bb_
  * @param string $avatar Default avatar.
  * @return string The default avatar URL based on backend setting.
  */
-function bb_sent_invite_email_avatar_default_avatar( $avatar = '' ) {
+function bboss_sent_invite_email_avatar_default_avatar( $avatar = '' ) {
 
 	if ( empty( $avatar ) ) {
-		$show_avatar                 = bp_get_option( 'show_avatars' );
-		$profile_avatar_type         = bb_get_profile_avatar_type();
-		$default_profile_avatar_type = bb_get_default_profile_avatar_type();
+		$show_avatar                 = bboss_get_option( 'show_avatars' );
+		$profile_avatar_type         = bboss_get_profile_avatar_type();
+		$default_profile_avatar_type = bboss_get_default_profile_avatar_type();
 
-		if ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' !== bp_get_option( 'avatar_default', 'mystery' ) ) {
+		if ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' !== bboss_get_option( 'avatar_default', 'mystery' ) ) {
 			$avatar = get_avatar_url(
 				'',
 				array(
@@ -55,10 +55,10 @@ function bb_sent_invite_email_avatar_default_avatar( $avatar = '' ) {
  *
  * @since BuddyBoss 2.3.4
  */
-function bb_invites_add_invite_fields_after_wp_registration_fields() {
+function bboss_invites_add_invite_fields_after_wp_registration_fields() {
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( bp_is_active( 'invites' ) && isset( $_GET ) && isset( $_GET['bp-invites'] ) && 'accept-member-invitation' === $_GET['bp-invites'] && ! empty( $_GET['action'] ) && 'register' === $_GET['action'] ) {
+	if ( bboss_is_active( 'invites' ) && isset( $_GET ) && isset( $_GET['bp-invites'] ) && 'accept-member-invitation' === $_GET['bp-invites'] && ! empty( $_GET['action'] ) && 'register' === $_GET['action'] ) {
 		$bp_invites = sanitize_text_field( wp_unslash( $_GET['bp-invites'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$inviter    = sanitize_text_field( wp_unslash( $_GET['inviter'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
@@ -79,10 +79,10 @@ function bb_invites_add_invite_fields_after_wp_registration_fields() {
  *
  * @return bool|string True if valid invitation otherwise return error.
  */
-function bb_invites_validate_invitation_before_registration( $email, $inviter ) {
+function bboss_invites_validate_invitation_before_registration( $email, $inviter ) {
 	if ( ! empty( $email ) ) {
 		$args = array(
-			'post_type'      => bp_get_invite_post_type(),
+			'post_type'      => bboss_get_invite_post_type(),
 			'posts_per_page' => -1,
 			'meta_query'     => array(
 				array(
@@ -105,7 +105,7 @@ function bb_invites_validate_invitation_before_registration( $email, $inviter ) 
 		$bp_get_invitee_email = new WP_Query( $args );
 
 		if ( ! $bp_get_invitee_email->have_posts() ) {
-			return __( "We couldn't find any invitations associated with this email address.", 'buddyboss' );
+			return __( "We couldn't find any invitations associated with this email address.", 'buddyboss-platform' );
 		}
 	}
 
@@ -117,16 +117,16 @@ function bb_invites_validate_invitation_before_registration( $email, $inviter ) 
  *
  * @since BuddyBoss 2.3.4
  */
-function bb_invites_validate_invitation_before_bb_registration() {
+function bboss_invites_validate_invitation_before_bb_registration() {
 
 	if ( ! empty( $_REQUEST['inviter'] ) && ! empty( $_REQUEST['signup_email'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		$email    = sanitize_text_field( wp_unslash( $_REQUEST['signup_email'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$inviter  = sanitize_text_field( wp_unslash( $_REQUEST['inviter'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$is_valid = bb_invites_validate_invitation_before_registration( $email, $inviter );
+		$is_valid = bboss_invites_validate_invitation_before_registration( $email, $inviter );
 
 		if ( is_string( $is_valid ) ) {
-			$bp                                 = buddypress();
+			$bp                                 = bboss();
 			$bp->signup->errors['signup_email'] = $is_valid;
 		}
 	}
@@ -143,11 +143,11 @@ function bb_invites_validate_invitation_before_bb_registration() {
  *
  * @return WP_Error
  */
-function bb_invites_validate_invitation_before_wp_registration( $errors, $sanitized_user_login, $user_email ) {
+function bboss_invites_validate_invitation_before_wp_registration( $errors, $sanitized_user_login, $user_email ) {
 
 	if ( ! empty( $_REQUEST['inviter'] ) && ! empty( $user_email ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$inviter  = sanitize_text_field( wp_unslash( $_REQUEST['inviter'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$is_valid = bb_invites_validate_invitation_before_registration( $user_email, $inviter );
+		$is_valid = bboss_invites_validate_invitation_before_registration( $user_email, $inviter );
 
 		if ( is_string( $is_valid ) ) {
 			$errors->add( 'email_error', $is_valid );
@@ -165,9 +165,9 @@ function bb_invites_validate_invitation_before_wp_registration( $errors, $saniti
  * @param array $items Associative array of slug => item data.
  * @return array Modified items with invites added.
  */
-function bb_invites_register_profile_nav_item( $items ) {
+function bboss_invites_register_profile_nav_item( $items ) {
 	$items['invites'] = array(
-		'label'     => __( 'Email Invites', 'buddyboss' ),
+		'label'     => __( 'Email Invites', 'buddyboss-platform' ),
 		'component' => 'invites',
 	);
 
@@ -182,8 +182,8 @@ function bb_invites_register_profile_nav_item( $items ) {
  * @param array $inactive Array of inactive nav slugs.
  * @return array Modified array with invites slug if component is inactive.
  */
-function bb_invites_register_inactive_nav_slug( $inactive ) {
-	if ( ! bp_is_active( 'invites' ) ) {
+function bboss_invites_register_inactive_nav_slug( $inactive ) {
+	if ( ! bboss_is_active( 'invites' ) ) {
 		$inactive[] = 'invites';
 	}
 

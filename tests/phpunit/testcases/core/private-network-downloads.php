@@ -3,10 +3,10 @@
  * Private Website and file download links.
  *
  * Document, folder, photo and video download links are handled on `init`, before
- * bp_private_network_template_redirect() runs on `template_redirect`, so they
+ * bboss_private_network_template_redirect() runs on `template_redirect`, so they
  * need their own Private Website check.
  *
- * Note: bp_enable_private_network() returns TRUE for a PUBLIC site.
+ * Note: bboss_enable_private_network() returns TRUE for a PUBLIC site.
  *
  * @package BuddyBoss\Tests\Core
  */
@@ -138,20 +138,20 @@ class BB_Tests_Core_Private_Network_Downloads extends BP_UnitTestCase {
 
 		foreach ( array( 'document', 'folder', 'photo', 'video' ) as $type ) {
 			$this->assertTrue(
-				bb_is_private_network_download_restricted( $type ),
+				bboss_is_private_network_download_restricted( $type ),
 				"Guest was not blocked for type '{$type}'."
 			);
 		}
 	}
 
 	/**
-	 * Members still download; bb_media_user_can_access() decides what they get.
+	 * Members still download; bboss_media_user_can_access() decides what they get.
 	 */
 	public function test_logged_in_member_is_not_restricted() {
 		$this->enable_private_website();
 		self::set_current_user( self::factory()->user->create() );
 
-		$this->assertFalse( bb_is_private_network_download_restricted( 'document' ) );
+		$this->assertFalse( bboss_is_private_network_download_restricted( 'document' ) );
 	}
 
 	/**
@@ -161,7 +161,7 @@ class BB_Tests_Core_Private_Network_Downloads extends BP_UnitTestCase {
 		$this->disable_private_website();
 		self::set_current_user( 0 );
 
-		$this->assertFalse( bb_is_private_network_download_restricted( 'document' ) );
+		$this->assertFalse( bboss_is_private_network_download_restricted( 'document' ) );
 	}
 
 	/**
@@ -173,7 +173,7 @@ class BB_Tests_Core_Private_Network_Downloads extends BP_UnitTestCase {
 		self::set_current_user( 0 );
 		add_filter( 'bp_private_network_pre_check', '__return_true' );
 
-		$this->assertTrue( bb_is_private_network_download_restricted( 'document' ) );
+		$this->assertTrue( bboss_is_private_network_download_restricted( 'document' ) );
 	}
 
 	/**
@@ -195,8 +195,8 @@ class BB_Tests_Core_Private_Network_Downloads extends BP_UnitTestCase {
 			2
 		);
 
-		$this->assertTrue( bb_is_private_network_download_restricted( 'document' ) );
-		$this->assertFalse( bb_is_private_network_download_restricted( 'video' ) );
+		$this->assertTrue( bboss_is_private_network_download_restricted( 'document' ) );
+		$this->assertFalse( bboss_is_private_network_download_restricted( 'video' ) );
 		$this->assertSame(
 			array(
 				array( true, 'document' ),
@@ -215,7 +215,7 @@ class BB_Tests_Core_Private_Network_Downloads extends BP_UnitTestCase {
 		self::set_current_user( self::factory()->user->create() );
 		add_filter( 'bb_is_private_network_download_restricted', '__return_true' );
 
-		$this->assertFalse( bb_is_private_network_download_restricted( 'document' ) );
+		$this->assertFalse( bboss_is_private_network_download_restricted( 'document' ) );
 	}
 
 	/**

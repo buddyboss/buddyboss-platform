@@ -17,11 +17,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_setup_xprofile() {
-	$bp = buddypress();
+function bboss_setup_xprofile() {
+	$bp = bboss();
 
 	if ( ! isset( $bp->profile->id ) ) {
-		$bp->profile = new BP_XProfile_Component();
+		$bp->profile = new BBoss_XProfile_Component();
 	}
 }
-add_action( 'bp_setup_components', 'bp_setup_xprofile', 2 );
+add_action( 'bp_setup_components', 'bboss_setup_xprofile', 2 );

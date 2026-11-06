@@ -16,19 +16,19 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	public function set_up() {
 		parent::set_up();
 
-		$this->xprofile_was_active = bp_is_active( 'xprofile' );
-		buddypress()->active_components['xprofile'] = '1';
+		$this->xprofile_was_active = bboss_is_active( 'xprofile' );
+		bboss()->active_components['xprofile'] = '1';
 
-		$this->format_backup = bp_get_option( 'bp-display-name-format' );
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->format_backup = bboss_get_option( 'bp-display-name-format' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 	}
 
 	public function tear_down() {
 		$GLOBALS['bb_default_display_avatar'] = false;
-		bp_update_option( 'bp-display-name-format', $this->format_backup );
+		bboss_update_option( 'bp-display-name-format', $this->format_backup );
 
 		if ( ! $this->xprofile_was_active ) {
-			unset( buddypress()->active_components['xprofile'] );
+			unset( bboss()->active_components['xprofile'] );
 		}
 
 		parent::tear_down();
@@ -56,12 +56,12 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		);
 
 		// Set the visibility last: the sync above re-saves the default levels.
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 
 		// The format layer memoises the member's name per request; the first resolution
 		// happened during user creation, before the names existed. Refresh it once.
 		$GLOBALS['bb_default_display_avatar'] = true;
-		bp_core_get_user_displayname( $u, $u );
+		bboss_core_get_user_displayname( $u, $u );
 
 		return $u;
 	}
@@ -78,10 +78,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$item->display_name = 'Alex Quillfeather'; // Raw WP column, as joined by the activity query.
 
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Alex', bb_activity_get_item_user_displayname( $item ) );
+		$this->assertSame( 'Alex', bboss_activity_get_item_user_displayname( $item ) );
 
 		$this->set_current_user( $member );
-		$this->assertSame( 'Alex Quillfeather', bb_activity_get_item_user_displayname( $item ) );
+		$this->assertSame( 'Alex Quillfeather', bboss_activity_get_item_user_displayname( $item ) );
 	}
 
 	/**
@@ -93,12 +93,12 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$item->display_name  = 'Raw Column';
 		$item->user_fullname = 'Already Resolved';
 
-		$this->assertSame( 'Already Resolved', bb_activity_get_item_user_displayname( $item ) );
-		$this->assertSame( '', bb_activity_get_item_user_displayname( null ) );
+		$this->assertSame( 'Already Resolved', bboss_activity_get_item_user_displayname( $item ) );
+		$this->assertSame( '', bboss_activity_get_item_user_displayname( null ) );
 	}
 
 	/**
-	 * bp_core_get_user_displayname() must strip a hidden last name wherever it sits in the
+	 * bboss_core_get_user_displayname() must strip a hidden last name wherever it sits in the
 	 * stored display_name - a bare "Last", a "Last First" order, or any value not written by
 	 * BuddyBoss's "First Last" sync (the wp-admin "Display name publicly as" dropdown,
 	 * importers, other plugins). A plain str_replace of ' ' . $last_name only matched a
@@ -115,26 +115,26 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		wp_update_user( array( 'ID' => $u1, 'display_name' => 'Quillfeather' ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertStringNotContainsString( 'Quillfeather', bp_core_get_user_displayname( $u1, 0 ) );
+		$this->assertStringNotContainsString( 'Quillfeather', bboss_core_get_user_displayname( $u1, 0 ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
-		$this->assertSame( 'Alex', bp_core_get_user_displayname( $u1, 0 ) );
+		$this->assertSame( 'Alex', bboss_core_get_user_displayname( $u1, 0 ) );
 
 		// Last-first order.
 		$u2 = $this->create_member_with_hidden_last_name();
 		wp_update_user( array( 'ID' => $u2, 'display_name' => 'Quillfeather Alex' ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Alex', bp_core_get_user_displayname( $u2, 0 ) );
+		$this->assertSame( 'Alex', bboss_core_get_user_displayname( $u2, 0 ) );
 
 		// Control: normal "First Last" still redacts to the first name for a guest and stays
 		// full for a logged-in member.
 		$u3 = $this->create_member_with_hidden_last_name();
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Alex', bp_core_get_user_displayname( $u3, 0 ) );
+		$this->assertSame( 'Alex', bboss_core_get_user_displayname( $u3, 0 ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( $member );
-		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $u3, $member ) );
+		$this->assertSame( 'Alex Quillfeather', bboss_core_get_user_displayname( $u3, $member ) );
 	}
 
 	/**
@@ -152,17 +152,17 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		wp_update_user( array( 'ID' => $u1, 'display_name' => 'ALEX QUILLFEATHER' ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', bp_core_get_user_displayname( $u1, 0 ) );
+		$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', bboss_core_get_user_displayname( $u1, 0 ) );
 
 		// Control: casing already agrees - unchanged behaviour (guest first-name-only, member full).
 		$member = self::factory()->user->create();
 		$u2     = $this->create_member_with_hidden_last_name();
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Alex', bp_core_get_user_displayname( $u2, 0 ) );
+		$this->assertSame( 'Alex', bboss_core_get_user_displayname( $u2, 0 ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( $member );
-		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $u2, $member ) );
+		$this->assertSame( 'Alex Quillfeather', bboss_core_get_user_displayname( $u2, $member ) );
 	}
 
 	/**
@@ -186,14 +186,14 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				'display_name' => 'Smithers Smith',
 			)
 		);
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 		$GLOBALS['bb_default_display_avatar'] = true;
-		bp_core_get_user_displayname( $u, $u );
+		bboss_core_get_user_displayname( $u, $u );
 
 		wp_update_user( array( 'ID' => $u, 'display_name' => 'SMITHERS SMITH' ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$guest = bp_core_get_user_displayname( $u, 0 );
+		$guest = bboss_core_get_user_displayname( $u, 0 );
 
 		$this->assertSame( 'Smithers', $guest );
 		$this->assertStringStartsWith( 'Smithers', $guest );
@@ -215,7 +215,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$drifted = array( 'Anna Smith-Jones', 'Anna Smith, PhD', 'Anna (Smith)', 'O.Smith', 'AnnaSmith', 'SmithAnna' );
 
 		foreach ( $formats as $format ) {
-			bp_update_option( 'bp-display-name-format', $format );
+			bboss_update_option( 'bp-display-name-format', $format );
 			foreach ( $drifted as $display ) {
 				$u = self::factory()->user->create();
 				wp_update_user(
@@ -226,11 +226,11 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 						'display_name' => $display,
 					)
 				);
-				xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+				bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 
 				$GLOBALS['bb_default_display_avatar'] = true;
 				$this->set_current_user( 0 );
-				$guest = bp_core_get_user_displayname( $u, 0 );
+				$guest = bboss_core_get_user_displayname( $u, 0 );
 				// The essential privacy property: the hidden surname never surfaces. The visible
 				// name always starts with the first name; adjacent non-surname tokens (a suffix
 				// like "PhD") may legitimately remain.
@@ -278,11 +278,11 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 					'display_name' => $display,
 				)
 			);
-			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+			bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( 0 );
-			$this->assertSame( $first, bp_core_get_user_displayname( $u, 0 ), "wrong name for '{$display}'" );
+			$this->assertSame( $first, bboss_core_get_user_displayname( $u, 0 ), "wrong name for '{$display}'" );
 		}
 	}
 
@@ -317,13 +317,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		// Nothing hidden from a guest yet: the custom column is the public name and is kept.
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'The Boss', bp_core_get_user_displayname( $u, 0 ) );
+		$this->assertSame( 'The Boss', bboss_core_get_user_displayname( $u, 0 ) );
 
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Anna', bp_core_get_user_displayname( $u, 0 ) );
+		$this->assertSame( 'Anna', bboss_core_get_user_displayname( $u, 0 ) );
 	}
 
 	/**
@@ -345,7 +345,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$guest = bp_core_get_user_displayname( $u, 0 );
+		$guest = bboss_core_get_user_displayname( $u, 0 );
 		$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', $guest );
 		$this->assertSame( 'Alex', $guest );
 	}
@@ -358,7 +358,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @group bb_activity_get_item_user_displayname
 	 */
 	public function test_get_user_displayname_nickname_format_uses_nickname_not_stripped_column() {
-		bp_update_option( 'bp-display-name-format', 'nickname' );
+		bboss_update_option( 'bp-display-name-format', 'nickname' );
 
 		// Drift: the stored column holds the full name, but the visible value is the nickname.
 		$u = self::factory()->user->create();
@@ -371,10 +371,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				'display_name' => 'Peter Zebrastripe',
 			)
 		);
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$guest = bp_core_get_user_displayname( $u, 0 );
+		$guest = bboss_core_get_user_displayname( $u, 0 );
 		$this->assertSame( 'peternick', $guest );
 		$this->assertStringNotContainsStringIgnoringCase( 'zebrastripe', $guest );
 	}
@@ -396,10 +396,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				'display_name' => 'Arianna Julie',
 			)
 		);
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'public' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'public' );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Arianna Julie', bp_core_get_user_displayname( $u, 0 ) );
+		$this->assertSame( 'Arianna Julie', bboss_core_get_user_displayname( $u, 0 ) );
 	}
 
 	/**
@@ -422,11 +422,11 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 					'display_name' => 'Alex Quillfeather',
 				)
 			);
-			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, $level );
+			bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, $level );
 
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( 0 );
-			$guest = bp_core_get_user_displayname( $u, 0 );
+			$guest = bboss_core_get_user_displayname( $u, 0 );
 			$this->assertSame( 'Alex', $guest, "guest leak under visibility level '{$level}'" );
 			$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', $guest, "surname leaked under '{$level}'" );
 		}
@@ -441,10 +441,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				'display_name' => 'Alex Quillfeather',
 			)
 		);
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $pub, 'public' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $pub, 'public' );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $pub, 0 ), 'public last name should show to guest' );
+		$this->assertSame( 'Alex Quillfeather', bboss_core_get_user_displayname( $pub, 0 ), 'public last name should show to guest' );
 	}
 
 	/**
@@ -468,10 +468,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			)
 		);
 		// adminsonly => hidden from a logged-in, non-admin, non-self viewer.
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'adminsonly' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'adminsonly' );
 
 		$stranger = self::factory()->user->create(); // logged-in, non-friend, non-admin.
-		$fn_id    = (int) bp_xprofile_firstname_field_id();
+		$fn_id    = (int) bboss_xprofile_firstname_field_id();
 		$hide_first = static function ( $hidden, $displayed_user_id, $viewer_id ) use ( $u, $stranger, $fn_id ) {
 			if ( (int) $displayed_user_id === (int) $u && (int) $viewer_id === (int) $stranger ) {
 				$hidden[] = $fn_id;
@@ -483,7 +483,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		try {
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( $stranger );
-			$resolved = bp_core_get_user_displayname( $u, $stranger );
+			$resolved = bboss_core_get_user_displayname( $u, $stranger );
 			$this->assertStringNotContainsString( 'Quillfeather', $resolved, 'last name leaked to logged-in stranger' );
 			$this->assertStringNotContainsString( 'Alex', $resolved, 'first name leaked to logged-in stranger' );
 			$this->assertSame( 'quillnick', $resolved );
@@ -504,7 +504,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @group bb_activity_get_item_user_displayname
 	 */
 	public function test_get_user_displayname_hides_last_name_under_first_name_and_nickname_formats() {
-		$format_backup = bp_get_option( 'bp-display-name-format' );
+		$format_backup = bboss_get_option( 'bp-display-name-format' );
 		$member        = self::factory()->user->create();
 
 		try {
@@ -515,7 +515,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			);
 
 			foreach ( $cases as $format => $expected ) {
-				bp_update_option( 'bp-display-name-format', $format );
+				bboss_update_option( 'bp-display-name-format', $format );
 				// Last Name field ENABLED (default) - do NOT disable it; that is the config that leaked.
 
 				$u = self::factory()->user->create();
@@ -527,10 +527,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 						'nickname'   => 'quillnick',
 					)
 				);
-				xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Quillfeather' );
-				xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Alex' );
+				bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $u, 'Quillfeather' );
+				bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $u, 'Alex' );
 				// Per-field visibility PUBLIC - only the site format hides the last name.
-				xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'public' );
+				bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'public' );
 				// Drift the stored column to the full name, as a pre-repair / imported site would have.
 				global $wpdb;
 				$wpdb->update( $wpdb->users, array( 'display_name' => 'Alex Quillfeather' ), array( 'ID' => $u ) );
@@ -538,24 +538,24 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 				$GLOBALS['bb_default_display_avatar'] = true;
 				$this->set_current_user( 0 );
-				$guest = bp_core_get_user_displayname( $u, 0 );
+				$guest = bboss_core_get_user_displayname( $u, 0 );
 				$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', $guest, "{$format} format leaked the last name to a guest" );
 				$this->assertSame( $expected, $guest, "{$format} guest label" );
 
 				// No inverted gradient: a logged-in member sees the same (format-appropriate) value.
 				$GLOBALS['bb_default_display_avatar'] = true;
 				$this->set_current_user( $member );
-				$this->assertSame( $expected, bp_core_get_user_displayname( $u, $member ), "{$format} member label matches guest" );
+				$this->assertSame( $expected, bboss_core_get_user_displayname( $u, $member ), "{$format} member label matches guest" );
 			}
 		} finally {
-			bp_update_option( 'bp-display-name-format', $format_backup );
+			bboss_update_option( 'bp-display-name-format', $format_backup );
 		}
 	}
 
 	/**
 	 * A WP personal-data export runs as an administrator but must reflect the DATA SUBJECT's view:
 	 * a connection who hid their last name from the data subject must not have it exported. Because
-	 * bp_xprofile_get_hidden_field_types_for_user() evaluated the moderator override against the
+	 * bboss_xprofile_get_hidden_field_types_for_user() evaluated the moderator override against the
 	 * global actor (the admin), the redaction was a no-op; the moderator check must use the viewer.
 	 *
 	 * @group bb_activity_get_item_user_displayname
@@ -572,7 +572,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			)
 		);
 		// $other hides the last name from non-friends (the data subject is not a friend).
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $other, 'friends' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $other, 'friends' );
 
 		// The export tool runs as an administrator (maps to bp_moderate).
 		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -580,7 +580,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( $admin );
 		// Resolve as the export does: displayed = $other, viewer = the data subject.
-		$exported = bp_core_get_user_displayname( $other, $subject );
+		$exported = bboss_core_get_user_displayname( $other, $subject );
 		$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', $exported, 'export leaked a connection last name hidden from the data subject' );
 		$this->assertSame( 'Alex', $exported );
 	}
@@ -601,10 +601,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				'display_name' => 'Peter PETER',
 			)
 		);
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Peter', bp_core_get_user_displayname( $u, 0 ) );
+		$this->assertSame( 'Peter', bboss_core_get_user_displayname( $u, 0 ) );
 	}
 
 	/**
@@ -626,7 +626,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		foreach ( $cases as $format => $case ) {
 			list( $display, $expected_guest ) = $case;
-			bp_update_option( 'bp-display-name-format', $format );
+			bboss_update_option( 'bp-display-name-format', $format );
 
 			$u = self::factory()->user->create();
 			wp_update_user(
@@ -638,18 +638,18 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 					'display_name' => $display,
 				)
 			);
-			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+			bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( 0 );
-			$guest = bp_core_get_user_displayname( $u, 0 );
+			$guest = bboss_core_get_user_displayname( $u, 0 );
 			$this->assertStringNotContainsStringIgnoringCase( 'Zebrastripe', $guest, "guest leak under format {$format}" );
 			$this->assertSame( $expected_guest, $guest, "guest label under format {$format}" );
 
 			// A permitted viewer sees the format-appropriate full value (unchanged behaviour).
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( $member );
-			$this->assertSame( $display, bp_core_get_user_displayname( $u, $member ), "member label under format {$format}" );
+			$this->assertSame( $display, bboss_core_get_user_displayname( $u, $member ), "member label under format {$format}" );
 		}
 	}
 
@@ -663,7 +663,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 */
 	public function test_get_user_displayname_no_last_name_leak_when_display_name_drifts_from_format() {
 		foreach ( array( 'first_name', 'nickname' ) as $format ) {
-			bp_update_option( 'bp-display-name-format', $format );
+			bboss_update_option( 'bp-display-name-format', $format );
 
 			$u = self::factory()->user->create();
 			wp_update_user(
@@ -675,13 +675,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 					'display_name' => 'Peter Zebrastripe', // Stale full name, drifted from the format.
 				)
 			);
-			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+			bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( 0 );
 			$this->assertStringNotContainsStringIgnoringCase(
 				'Zebrastripe',
-				bp_core_get_user_displayname( $u, 0 ),
+				bboss_core_get_user_displayname( $u, 0 ),
 				"drift leak under format {$format}"
 			);
 		}
@@ -699,7 +699,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$u = $this->create_member_with_hidden_last_name();
 		wp_update_user( array( 'ID' => $u, 'display_name' => 'Quillfeather', 'nickname' => 'quillnick' ) );
 
-		$first_name_field_id = (int) bp_xprofile_firstname_field_id();
+		$first_name_field_id = (int) bboss_xprofile_firstname_field_id();
 		$hide_first = static function ( $hidden, $displayed_user_id, $viewer_id ) use ( $u, $first_name_field_id ) {
 			if ( (int) $displayed_user_id === (int) $u && 0 === (int) $viewer_id ) {
 				$hidden[] = $first_name_field_id;
@@ -710,7 +710,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$resolved = bp_core_get_user_displayname( $u, 0 );
+		$resolved = bboss_core_get_user_displayname( $u, 0 );
 
 		$this->assertStringNotContainsString( 'Quillfeather', $resolved );
 		$this->assertStringNotContainsString( 'Alex', $resolved );
@@ -730,7 +730,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$u = $this->create_member_with_hidden_last_name();
 		wp_update_user( array( 'ID' => $u, 'display_name' => 'AlexQuillfeather', 'nickname' => 'quillnick' ) );
 
-		$first_name_field_id = (int) bp_xprofile_firstname_field_id();
+		$first_name_field_id = (int) bboss_xprofile_firstname_field_id();
 		$hide_first = static function ( $hidden, $displayed_user_id, $viewer_id ) use ( $u, $first_name_field_id ) {
 			if ( (int) $displayed_user_id === (int) $u && 0 === (int) $viewer_id ) {
 				$hidden[] = $first_name_field_id;
@@ -741,7 +741,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$resolved = bp_core_get_user_displayname( $u, 0 );
+		$resolved = bboss_core_get_user_displayname( $u, 0 );
 
 		$this->assertStringNotContainsString( 'Quillfeather', $resolved );
 		$this->assertStringNotContainsString( 'Alex', $resolved );
@@ -760,7 +760,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @group bb_activity_get_item_user_displayname
 	 */
 	public function test_get_user_displayname_plain_first_last_does_not_leak_when_both_hidden() {
-		$first_name_field_id = (int) bp_xprofile_firstname_field_id();
+		$first_name_field_id = (int) bboss_xprofile_firstname_field_id();
 		$hide_first          = static function ( $hidden, $displayed_user_id, $viewer_id ) use ( &$target, $first_name_field_id ) {
 			if ( ! empty( $target ) && (int) $displayed_user_id === (int) $target && 0 === (int) $viewer_id ) {
 				$hidden[] = $first_name_field_id;
@@ -791,7 +791,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 				$GLOBALS['bb_default_display_avatar'] = true;
 				$this->set_current_user( 0 );
-				$resolved = bp_core_get_user_displayname( $target, 0 );
+				$resolved = bboss_core_get_user_displayname( $target, 0 );
 
 				foreach ( $absent as $needle ) {
 					$this->assertStringNotContainsString( $needle, $resolved, "{$label}: '{$needle}' leaked" );
@@ -820,11 +820,11 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				'display_name' => 'Alex VanDerBerg',
 			)
 		);
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$guest = bp_core_get_user_displayname( $u, 0 );
+		$guest = bboss_core_get_user_displayname( $u, 0 );
 		$this->assertStringNotContainsStringIgnoringCase( 'vanderberg', preg_replace( '/\s+/', '', $guest ) );
 		$this->assertSame( 'Alex', $guest );
 	}
@@ -841,9 +841,9 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	public function test_get_user_displayname_redacts_surname_with_nbsp_separator() {
 		$nbsp = "\xc2\xa0"; // U+00A0.
 		$u    = self::factory()->user->create();
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Anna' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Van' . $nbsp . 'Der' . $nbsp . 'Berg' );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $u, 'Anna' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $u, 'Van' . $nbsp . 'Der' . $nbsp . 'Berg' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 		// Drift the column to the glued form directly, bypassing the format sync.
 		global $wpdb;
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'AnnaVanDerBerg' ), array( 'ID' => $u ) );
@@ -851,7 +851,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$guest = bp_core_get_user_displayname( $u, 0 );
+		$guest = bboss_core_get_user_displayname( $u, 0 );
 		$this->assertStringNotContainsStringIgnoringCase( 'vanderberg', preg_replace( '/[\s\p{Zs}]+/u', '', $guest ), 'NBSP-separated surname leaked' );
 		$this->assertSame( 'Anna', $guest );
 	}
@@ -885,9 +885,9 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		// given deliberately different values so this leg cannot pass by reading the wrong one - they
 		// drift apart on any site running with profile syncing off, and the product ships a repair
 		// tool for exactly that drift.
-		$fn_id   = bp_xprofile_firstname_field_id();
-		$ln_id   = bp_xprofile_lastname_field_id();
-		$nick_id = bp_xprofile_nickname_field_id();
+		$fn_id   = bboss_xprofile_firstname_field_id();
+		$ln_id   = bboss_xprofile_lastname_field_id();
+		$nick_id = bboss_xprofile_nickname_field_id();
 		$labels  = array(
 			'first_name'      => 'annanick',
 			'first_last_name' => 'annanick',
@@ -899,7 +899,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		);
 
 		foreach ( $labels as $format => $expected ) {
-			bp_update_option( 'bp-display-name-format', $format );
+			bboss_update_option( 'bp-display-name-format', $format );
 
 			foreach ( $glues as $display ) {
 				$u = self::factory()->user->create();
@@ -907,14 +907,14 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 				// Set the profile fields directly (no profile_update sync): last name present + hidden,
 				// first name genuinely empty.
-				xprofile_set_field_data( $ln_id, $u, 'Smith' );
-				xprofile_set_field_data( $fn_id, $u, '' );
-				xprofile_set_field_data( $nick_id, $u, 'annafield' );
-				xprofile_set_field_visibility_level( $ln_id, $u, 'loggedin' );
+				bboss_xprofile_set_field_data( $ln_id, $u, 'Smith' );
+				bboss_xprofile_set_field_data( $fn_id, $u, '' );
+				bboss_xprofile_set_field_data( $nick_id, $u, 'annafield' );
+				bboss_xprofile_set_field_visibility_level( $ln_id, $u, 'loggedin' );
 
 				// Fixture: the field and the meta really do hold different values, so the Nickname
 				// leg below is answered by one source and not the other.
-				$this->assertSame( 'annafield', xprofile_get_field_data( $nick_id, $u ), 'Fixture: the Nickname field was not stored.' );
+				$this->assertSame( 'annafield', bboss_xprofile_get_field_data( $nick_id, $u ), 'Fixture: the Nickname field was not stored.' );
 				$this->assertSame( 'annanick', get_user_meta( $u, 'nickname', true ), 'Fixture: the nickname meta was not stored.' );
 
 				// Drift the stored column exactly as a direct SQL import would, bypassing every sync.
@@ -923,7 +923,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 				$GLOBALS['bb_default_display_avatar'] = true;
 				$this->set_current_user( 0 );
-				$guest = bp_core_get_user_displayname( $u, 0 );
+				$guest = bboss_core_get_user_displayname( $u, 0 );
 
 				$this->assertStringNotContainsStringIgnoringCase( 'smith', $guest, "leak for '{$display}' under format '{$format}'" );
 				$this->assertSame( $expected, $guest, "fallback for '{$display}' under format '{$format}'" );
@@ -936,7 +936,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 					$member                               = self::factory()->user->create();
 					$GLOBALS['bb_default_display_avatar'] = true;
 					$this->assertSame(
-						bp_core_get_user_displayname( $u, $member ),
+						bboss_core_get_user_displayname( $u, $member ),
 						$guest,
 						"the guest and member labels disagree under format '{$format}'"
 					);
@@ -952,7 +952,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * guest from whom the last name is hidden must not receive the drifted surname. There is no
 	 * stored surname string to strip, so the visible name is resolved from the format's own fields
 	 * - matching what a logged-in viewer already sees (proven by
-	 * xprofile_filter_get_user_display_name() rebuilding from bp_xprofile_get_member_display_name())
+	 * xprofile_filter_get_user_display_name() rebuilding from bboss_xprofile_get_member_display_name())
 	 * - rather than falling through to the raw column. Covers all three Display Name Format options.
 	 *
 	 * Regression: the round-15/16 "empty last-name field" case, previously deferred as
@@ -966,9 +966,9 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	public function test_get_user_displayname_empty_last_name_field_does_not_leak_drifted_surname() {
 		global $wpdb;
 
-		$fn_id   = bp_xprofile_firstname_field_id();
-		$ln_id   = bp_xprofile_lastname_field_id();
-		$nick_id = bp_xprofile_nickname_field_id();
+		$fn_id   = bboss_xprofile_firstname_field_id();
+		$ln_id   = bboss_xprofile_lastname_field_id();
+		$nick_id = bboss_xprofile_nickname_field_id();
 
 		// format => expected guest label for a hidden, EMPTY last name with a drifted column. The
 		// xprofile Nickname FIELD and the `nickname` user META are given different values on
@@ -982,7 +982,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		);
 
 		foreach ( $cases as $format => $expected ) {
-			bp_update_option( 'bp-display-name-format', $format );
+			bboss_update_option( 'bp-display-name-format', $format );
 
 			$u = self::factory()->user->create();
 			update_user_meta( $u, 'nickname', 'petenick' );
@@ -990,14 +990,14 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			// First name present + visible; last name field genuinely EMPTY; last name hidden from
 			// guests (redundant under first_name/nickname, which hide it by format, but required for
 			// the first_last_name case). Set directly, no profile_update sync.
-			xprofile_set_field_data( $fn_id, $u, 'Peter' );
-			xprofile_set_field_data( $ln_id, $u, '' );
-			xprofile_set_field_data( $nick_id, $u, 'petefield' );
-			xprofile_set_field_visibility_level( $ln_id, $u, 'loggedin' );
+			bboss_xprofile_set_field_data( $fn_id, $u, 'Peter' );
+			bboss_xprofile_set_field_data( $ln_id, $u, '' );
+			bboss_xprofile_set_field_data( $nick_id, $u, 'petefield' );
+			bboss_xprofile_set_field_visibility_level( $ln_id, $u, 'loggedin' );
 
 			// Fixture: the two nickname sources really do differ, so the Nickname leg is answered by
 			// one of them and not the other.
-			$this->assertSame( 'petefield', xprofile_get_field_data( $nick_id, $u ), 'Fixture: the Nickname field was not stored.' );
+			$this->assertSame( 'petefield', bboss_xprofile_get_field_data( $nick_id, $u ), 'Fixture: the Nickname field was not stored.' );
 			$this->assertSame( 'petenick', get_user_meta( $u, 'nickname', true ), 'Fixture: the nickname meta was not stored.' );
 
 			// Drift the stored column exactly as a direct SQL import would, bypassing every sync.
@@ -1006,7 +1006,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( 0 );
-			$guest = bp_core_get_user_displayname( $u, 0 );
+			$guest = bboss_core_get_user_displayname( $u, 0 );
 
 			$this->assertStringNotContainsStringIgnoringCase( 'zebrastripe', $guest, "empty-last-name leak under format '{$format}'" );
 			$this->assertSame( $expected, $guest, "empty-last-name resolution under format '{$format}'" );
@@ -1017,7 +1017,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				$member                               = self::factory()->user->create();
 				$GLOBALS['bb_default_display_avatar'] = true;
 				$this->assertSame(
-					bp_core_get_user_displayname( $u, $member ),
+					bboss_core_get_user_displayname( $u, $member ),
 					$guest,
 					"the guest and member labels disagree under format '{$format}'"
 				);
@@ -1036,36 +1036,36 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	public function test_get_user_displayname_visible_empty_last_name_preserves_custom_display_name() {
 		global $wpdb;
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 
-		$fn_id = bp_xprofile_firstname_field_id();
-		$ln_id = bp_xprofile_lastname_field_id();
+		$fn_id = bboss_xprofile_firstname_field_id();
+		$ln_id = bboss_xprofile_lastname_field_id();
 
 		$u = self::factory()->user->create();
-		xprofile_set_field_data( $fn_id, $u, 'Peter' );
-		xprofile_set_field_data( $ln_id, $u, '' );
-		xprofile_set_field_visibility_level( $ln_id, $u, 'public' );
+		bboss_xprofile_set_field_data( $fn_id, $u, 'Peter' );
+		bboss_xprofile_set_field_data( $ln_id, $u, '' );
+		bboss_xprofile_set_field_visibility_level( $ln_id, $u, 'public' );
 
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'The Legend' ), array( 'ID' => $u ) );
 		clean_user_cache( $u );
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'The Legend', bp_core_get_user_displayname( $u, 0 ) );
+		$this->assertSame( 'The Legend', bboss_core_get_user_displayname( $u, 0 ) );
 	}
 
 	/**
 	 * The comment tree is cached per activity with no viewer in the key. Every name-bearing value
 	 * on a cached node has to be re-resolved for whoever is reading it - `user_fullname`, and the
 	 * rendered `action` sentence the REST endpoint returns as `title`, which embeds the name via
-	 * bp_activity_generate_action_string() -> bp_core_get_userlink().
+	 * bboss_activity_generate_action_string() -> bboss_core_get_userlink().
 	 *
 	 * @group bp_activity_comments_cache
 	 */
 	public function test_cached_comment_tree_reresolves_names_for_current_viewer() {
 		global $wpdb;
 
-		$bp                = buddypress();
+		$bp                = bboss();
 		$reset_component   = $bp->current_component;
 		$reset_action      = $bp->current_action;
 
@@ -1080,7 +1080,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			)
 		);
 
-		$comment_id = bp_activity_new_comment(
+		$comment_id = bboss_activity_new_comment(
 			array(
 				'user_id'     => $author,
 				'activity_id' => $activity_id,
@@ -1088,7 +1088,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			)
 		);
 
-		$reply_id = bp_activity_new_comment(
+		$reply_id = bboss_activity_new_comment(
 			array(
 				'user_id'     => $author,
 				'activity_id' => $activity_id,
@@ -1103,7 +1103,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		try {
 			$bp->current_component = 'activity';
 			$bp->current_action    = (string) $activity_id;
-			$this->assertTrue( bp_is_single_activity() );
+			$this->assertTrue( bboss_is_single_activity() );
 
 			// 1) A logged-in member views the permalink first and primes the cache with the full name.
 			$this->set_current_user( $viewer );
@@ -1185,7 +1185,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				'user_id' => $author,
 			)
 		);
-		$comment_id  = bp_activity_new_comment(
+		$comment_id  = bboss_activity_new_comment(
 			array(
 				'user_id'     => $author,
 				'activity_id' => $activity_id,
@@ -1198,20 +1198,20 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		// try/finally so a failing assertion cannot leave $activities_template pointing at the
 		// fixture for every later test in this process.
 		try {
-			$this->assertTrue( bp_has_activities( array( 'include' => $activity_id, 'display_comments' => 'threaded', 'show_hidden' => true ) ) );
-			bp_the_activity();
+			$this->assertTrue( bboss_has_activities( array( 'include' => $activity_id, 'display_comments' => 'threaded', 'show_hidden' => true ) ) );
+			bboss_the_activity();
 
 			$this->assertSame( 'Alex Quillfeather', $activities_template->activity->display_name, 'Fixture: the raw joined column holds the full name.' );
-			$this->assertSame( 'Alex', bp_get_activity_member_display_name() );
-			$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_activity_avatar() );
-			$this->assertStringNotContainsString( 'Quillfeather', bp_get_activity_avatar() );
-			$this->assertStringNotContainsString( 'Quillfeather', bp_get_activity_secondary_avatar() );
+			$this->assertSame( 'Alex', bboss_get_activity_member_display_name() );
+			$this->assertStringContainsString( 'alt="Profile photo of Alex"', bboss_get_activity_avatar() );
+			$this->assertStringNotContainsString( 'Quillfeather', bboss_get_activity_avatar() );
+			$this->assertStringNotContainsString( 'Quillfeather', bboss_get_activity_secondary_avatar() );
 
 			// Inside the comment loop the tags read from `current_comment`.
 			$this->assertArrayHasKey( $comment_id, $activities_template->activity->children );
 			$activities_template->activity->current_comment = $activities_template->activity->children[ $comment_id ];
-			$this->assertSame( 'Alex', bp_get_activity_comment_name() );
-			$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_activity_avatar() );
+			$this->assertSame( 'Alex', bboss_get_activity_comment_name() );
+			$this->assertStringContainsString( 'alt="Profile photo of Alex"', bboss_get_activity_avatar() );
 			unset( $activities_template->activity->current_comment );
 		} finally {
 			$activities_template = $template_backup;
@@ -1226,7 +1226,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	public function test_group_members_loop_hides_last_name_from_guest() {
 		global $members_template;
 
-		if ( ! bp_is_active( 'groups' ) ) {
+		if ( ! bboss_is_active( 'groups' ) ) {
 			$this->markTestSkipped( 'Groups component is not active.' );
 		}
 
@@ -1234,25 +1234,25 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$author          = $this->create_member_with_hidden_last_name();
 		$creator         = self::factory()->user->create();
 		$group           = self::factory()->group->create( array( 'creator_id' => $creator ) );
-		groups_join_group( $group, $author );
+		bboss_groups_join_group( $group, $author );
 
 		$this->set_current_user( 0 );
 
 		// try/finally so a failing assertion cannot leave $members_template set for later tests.
 		try {
-			$this->assertTrue( bp_group_has_members( array( 'group_id' => $group, 'exclude_admins_mods' => false ) ) );
+			$this->assertTrue( bboss_group_has_members( array( 'group_id' => $group, 'exclude_admins_mods' => false ) ) );
 
 			$found = false;
-			while ( bp_group_members() ) {
-				bp_group_the_member();
-				if ( (int) bp_get_group_member_id() !== $author ) {
+			while ( bboss_group_members() ) {
+				bboss_group_the_member();
+				if ( (int) bboss_get_group_member_id() !== $author ) {
 					continue;
 				}
 				$found = true;
-				$this->assertSame( 'Alex', bp_get_group_member_name() );
-				$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_group_member_avatar() );
-				$this->assertStringNotContainsString( 'Quillfeather', bp_get_group_member_avatar_thumb() );
-				$this->assertStringNotContainsString( 'Quillfeather', bp_get_group_member_avatar_mini() );
+				$this->assertSame( 'Alex', bboss_get_group_member_name() );
+				$this->assertStringContainsString( 'alt="Profile photo of Alex"', bboss_get_group_member_avatar() );
+				$this->assertStringNotContainsString( 'Quillfeather', bboss_get_group_member_avatar_thumb() );
+				$this->assertStringNotContainsString( 'Quillfeather', bboss_get_group_member_avatar_mini() );
 			}
 			$this->assertTrue( $found, 'The member with the hidden last name must be in the loop.' );
 		} finally {
@@ -1267,9 +1267,9 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @return array Comment tree keyed by comment ID.
 	 */
 	protected function get_comment_tree( $activity_id ) {
-		$activity = new BP_Activity_Activity( $activity_id );
+		$activity = new BBoss_Activity_Activity( $activity_id );
 
-		return BP_Activity_Activity::get_activity_comments( $activity_id, $activity->mptt_left, $activity->mptt_right );
+		return BBoss_Activity_Activity::get_activity_comments( $activity_id, $activity->mptt_left, $activity->mptt_right );
 	}
 	/**
 	 * The bbPress profile screens (`/forums/user/{slug}/`) read the displayed user's name via
@@ -1286,7 +1286,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$author = $this->create_member_with_hidden_last_name();
 		$viewer = self::factory()->user->create();
 
-		$bbp            = bbpress();
+		$bbp            = bboss_forums();
 		$displayed_back = isset( $bbp->displayed_user ) ? $bbp->displayed_user : null;
 
 		try {
@@ -1297,29 +1297,29 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 			// Guest: the hidden last name must not be returned.
 			$this->set_current_user( 0 );
-			$this->assertSame( 'Alex', bbp_get_displayed_user_field( 'display_name' ) );
+			$this->assertSame( 'Alex', bboss_bbp_get_displayed_user_field( 'display_name' ) );
 
 			// A logged-in member is entitled to the full name.
 			$this->set_current_user( $viewer );
-			$this->assertSame( 'Alex Quillfeather', bbp_get_displayed_user_field( 'display_name' ) );
+			$this->assertSame( 'Alex Quillfeather', bboss_bbp_get_displayed_user_field( 'display_name' ) );
 
 			// The member themself always sees their own full name.
 			$this->set_current_user( $author );
-			$this->assertSame( 'Alex Quillfeather', bbp_get_displayed_user_field( 'display_name' ) );
+			$this->assertSame( 'Alex Quillfeather', bboss_bbp_get_displayed_user_field( 'display_name' ) );
 
 			// Unrelated fields are untouched by the redaction.
 			$this->set_current_user( 0 );
-			$this->assertSame( get_userdata( $author )->user_nicename, bbp_get_displayed_user_field( 'user_nicename' ) );
+			$this->assertSame( get_userdata( $author )->user_nicename, bboss_bbp_get_displayed_user_field( 'user_nicename' ) );
 
 			// The documented "raw" filter still returns the stored column.
-			$this->assertSame( 'Alex Quillfeather', bbp_get_displayed_user_field( 'display_name', 'raw' ) );
+			$this->assertSame( 'Alex Quillfeather', bboss_bbp_get_displayed_user_field( 'display_name', 'raw' ) );
 		} finally {
 			$bbp->displayed_user = $displayed_back;
 		}
 	}
 
 	/**
-	 * bbp_get_reply_author() printed the raw WP display_name for a reply's author, leaking a last
+	 * bboss_bbp_get_reply_author() printed the raw WP display_name for a reply's author, leaking a last
 	 * name hidden by profile-field visibility on every reply in a topic. It now resolves the name
 	 * for the current viewer.
 	 *
@@ -1327,7 +1327,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @group bbp_get_reply_author
 	 */
 	public function test_bbp_reply_author_hides_last_name_from_guest() {
-		if ( ! function_exists( 'bbp_get_reply_author' ) ) {
+		if ( ! function_exists( 'bboss_bbp_get_reply_author' ) ) {
 			$this->markTestSkipped( 'Forums component not loaded.' );
 		}
 
@@ -1337,23 +1337,23 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$guest = bbp_get_reply_author( $reply );
+		$guest = bboss_bbp_get_reply_author( $reply );
 		$this->assertStringContainsString( 'Alex', $guest );
 		$this->assertStringNotContainsString( 'Quillfeather', $guest );
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( $member );
-		$this->assertStringContainsString( 'Alex Quillfeather', bbp_get_reply_author( $reply ) );
+		$this->assertStringContainsString( 'Alex Quillfeather', bboss_bbp_get_reply_author( $reply ) );
 	}
 
 	/**
-	 * bbp_get_topic_author() had the same raw-display_name leak for a topic's author.
+	 * bboss_bbp_get_topic_author() had the same raw-display_name leak for a topic's author.
 	 *
 	 * @group bb_activity_get_item_user_displayname
 	 * @group bbp_get_topic_author
 	 */
 	public function test_bbp_topic_author_hides_last_name_from_guest() {
-		if ( ! function_exists( 'bbp_get_topic_author' ) ) {
+		if ( ! function_exists( 'bboss_bbp_get_topic_author' ) ) {
 			$this->markTestSkipped( 'Forums component not loaded.' );
 		}
 
@@ -1363,24 +1363,24 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$guest = bbp_get_topic_author( $topic );
+		$guest = bboss_bbp_get_topic_author( $topic );
 		$this->assertStringContainsString( 'Alex', $guest );
 		$this->assertStringNotContainsString( 'Quillfeather', $guest );
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( $member );
-		$this->assertStringContainsString( 'Alex Quillfeather', bbp_get_topic_author( $topic ) );
+		$this->assertStringContainsString( 'Alex Quillfeather', bboss_bbp_get_topic_author( $topic ) );
 	}
 
 	/**
-	 * bbp_get_user_profile_edit_link() built its anchor text from the raw display_name; the linked
+	 * bboss_bbp_get_user_profile_edit_link() built its anchor text from the raw display_name; the linked
 	 * name now honours the viewer's visibility of the last name.
 	 *
 	 * @group bb_activity_get_item_user_displayname
 	 * @group bbp_get_user_profile_edit_link
 	 */
 	public function test_bbp_user_profile_edit_link_hides_last_name_from_guest() {
-		if ( ! function_exists( 'bbp_get_user_profile_edit_link' ) ) {
+		if ( ! function_exists( 'bboss_bbp_get_user_profile_edit_link' ) ) {
 			$this->markTestSkipped( 'Forums component not loaded.' );
 		}
 
@@ -1389,19 +1389,19 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$guest_link = bbp_get_user_profile_edit_link( $author );
+		$guest_link = bboss_bbp_get_user_profile_edit_link( $author );
 		$this->assertStringContainsString( 'Alex', $guest_link );
 		$this->assertStringNotContainsString( 'Quillfeather', $guest_link );
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( $member );
-		$this->assertStringContainsString( 'Alex Quillfeather', bbp_get_user_profile_edit_link( $author ) );
+		$this->assertStringContainsString( 'Alex Quillfeather', bboss_bbp_get_user_profile_edit_link( $author ) );
 	}
 
 	/**
 	 * Regression for the round-19 review Finding #2: the LOGGED-IN redaction filter
 	 * (xprofile_filter_get_user_display_name, priority 15) rebuilds the name from
-	 * bp_xprofile_get_member_display_name() and strips the hidden last name. When the first name is
+	 * bboss_xprofile_get_member_display_name() and strips the hidden last name. When the first name is
 	 * empty in every source the rebuild consults (xprofile field, first_name usermeta, nickname
 	 * usermeta - the direct-import case), that rebuild is the BARE surname with no leading space, so
 	 * the old str_replace( ' ' . $last_name, ... ) matched nothing and returned the hidden surname
@@ -1420,7 +1420,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$viewer = self::factory()->user->create(); // a logged-in non-friend, non-admin stranger
 		update_user_meta( $author, 'nickname', 'quillnick' );
 
-		$ln = (int) bp_xprofile_lastname_field_id();
+		$ln = (int) bboss_xprofile_lastname_field_id();
 
 		// Force the exact reachable state (bb_default_display_avatar bypasses both name caches, so
 		// these apply on the call under test): the logged-in filter's rebuild is the BARE surname
@@ -1447,7 +1447,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		try {
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( $viewer );
-			$seen = bp_core_get_user_displayname( $author, $viewer );
+			$seen = bboss_core_get_user_displayname( $author, $viewer );
 
 			$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', (string) $seen, 'logged-in stranger got the bare hidden surname' );
 			$this->assertSame( 'quillnick', $seen, 'should fall back to the nickname, not a blank or the surname' );
@@ -1467,13 +1467,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * word processor ("Zebrastripe ", or a U+00A0 that PHP's trim() leaves alone) produced a pattern
 	 * that could not match the rebuilt name, and the surname was served to a viewer denied it while
 	 * the guest path - which trims - redacted correctly. Both paths now assemble the name through
-	 * bb_core_build_visible_display_name(), which never reads the hidden field at all - so the
+	 * bboss_core_build_visible_display_name(), which never reads the hidden field at all - so the
 	 * padding cannot reach the answer by any route.
 	 *
 	 * @group bb_name_privacy
 	 */
 	public function test_get_user_displayname_padded_last_name_is_stripped_for_logged_in_viewer() {
-		$ln = (int) bp_xprofile_lastname_field_id();
+		$ln = (int) bboss_xprofile_lastname_field_id();
 
 		foreach ( array( 'ascii' => "Zebrastripe \t ", 'nbsp' => "\xC2\xA0Zebrastripe\xC2\xA0" ) as $label => $padded ) {
 			$author = self::factory()->user->create();
@@ -1487,9 +1487,9 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				)
 			);
 			update_user_meta( $author, 'nickname', 'peternick' );
-			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $author, 'Peter' );
-			xprofile_set_field_data( $ln, $author, 'Zebrastripe' );
-			xprofile_set_field_visibility_level( $ln, $author, 'adminsonly' );
+			bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $author, 'Peter' );
+			bboss_xprofile_set_field_data( $ln, $author, 'Zebrastripe' );
+			bboss_xprofile_set_field_visibility_level( $ln, $author, 'adminsonly' );
 
 			// xprofile_set_field_data() sanitises the padding away on save, so the padded value can
 			// only be reached by feeding it in at read time - which is exactly the shape an import
@@ -1502,7 +1502,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			try {
 				$GLOBALS['bb_default_display_avatar'] = true;
 				$this->set_current_user( $viewer );
-				$seen = bp_core_get_user_displayname( $author, $viewer );
+				$seen = bboss_core_get_user_displayname( $author, $viewer );
 
 				$this->assertStringNotContainsStringIgnoringCase(
 					'zebrastripe',
@@ -1531,8 +1531,8 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @group bb_name_privacy
 	 */
 	public function test_hidden_surname_glued_to_visible_first_name_keeps_the_first_name() {
-		$ln_id = (int) bp_xprofile_lastname_field_id();
-		$fn_id = (int) bp_xprofile_firstname_field_id();
+		$ln_id = (int) bboss_xprofile_lastname_field_id();
+		$fn_id = (int) bboss_xprofile_firstname_field_id();
 
 		$pairs = array(
 			array( 'Lisa', 'Li' ),         // surname is a prefix of the first name.
@@ -1560,19 +1560,19 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			);
 			$nickname = 'nick' . $author;
 			update_user_meta( $author, 'nickname', $nickname );
-			xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, $nickname );
-			xprofile_set_field_data( $fn_id, $author, $first );
-			xprofile_set_field_data( $ln_id, $author, $last );
-			xprofile_set_field_visibility_level( $fn_id, $author, 'public' );
-			xprofile_set_field_visibility_level( $ln_id, $author, 'adminsonly' );
+			bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $author, $nickname );
+			bboss_xprofile_set_field_data( $fn_id, $author, $first );
+			bboss_xprofile_set_field_data( $ln_id, $author, $last );
+			bboss_xprofile_set_field_visibility_level( $fn_id, $author, 'public' );
+			bboss_xprofile_set_field_visibility_level( $ln_id, $author, 'adminsonly' );
 
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( 0 );
-			$guest = bp_core_get_user_displayname( $author );
+			$guest = bboss_core_get_user_displayname( $author );
 
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( $viewer );
-			$logged_in = bp_core_get_user_displayname( $author, $viewer );
+			$logged_in = bboss_core_get_user_displayname( $author, $viewer );
 
 			$this->assertSame(
 				$first,
@@ -1602,7 +1602,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	/**
 	 * Losing the Last Name field id must not lose the site-wide format hide.
 	 *
-	 * bp_xprofile_lastname_field_id() returns 0 when its option was never written - the getter
+	 * bboss_xprofile_lastname_field_id() returns 0 when its option was never written - the getter
 	 * defaults to 0 - or when a third-party filter says so, and it is filterable. The
 	 * format-level hide was appended to the hidden-field list only when that id was truthy, so
 	 * with the id missing the resolver fell through to the stored display_name: under a "First
@@ -1613,14 +1613,14 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @group bb_name_privacy
 	 */
 	public function test_missing_last_name_field_id_still_honours_the_format_hide() {
-		$format_backup = bp_get_option( 'bp-display-name-format' );
+		$format_backup = bboss_get_option( 'bp-display-name-format' );
 		$zero          = function () {
 			return 0;
 		};
 
 		try {
 			foreach ( array( 'first_name', 'nickname' ) as $display_format ) {
-				bp_update_option( 'bp-display-name-format', $display_format );
+				bboss_update_option( 'bp-display-name-format', $display_format );
 
 				$author = self::factory()->user->create();
 				wp_update_user(
@@ -1634,16 +1634,16 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				);
 				$nickname = 'peternick' . $author;
 				update_user_meta( $author, 'nickname', $nickname );
-				xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, $nickname );
-				xprofile_set_field_data( bp_xprofile_firstname_field_id(), $author, 'Peter' );
-				xprofile_set_field_data( bp_xprofile_lastname_field_id(), $author, 'Zebrastripe' );
+				bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $author, $nickname );
+				bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $author, 'Peter' );
+				bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $author, 'Zebrastripe' );
 
 				// Now take the field id away, as a site with the option unset would have it.
 				add_filter( 'bp_xprofile_lastname_field_id', $zero, 99 );
 
 				$GLOBALS['bb_default_display_avatar'] = true;
 				$this->set_current_user( 0 );
-				$guest = bp_core_get_user_displayname( $author );
+				$guest = bboss_core_get_user_displayname( $author );
 
 				remove_filter( 'bp_xprofile_lastname_field_id', $zero, 99 );
 
@@ -1661,7 +1661,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		} finally {
 			remove_filter( 'bp_xprofile_lastname_field_id', $zero, 99 );
 			$GLOBALS['bb_default_display_avatar'] = false;
-			bp_update_option( 'bp-display-name-format', $format_backup );
+			bboss_update_option( 'bp-display-name-format', $format_backup );
 		}
 	}
 
@@ -1705,13 +1705,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 					'display_name' => $display,
 				)
 			);
-			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, $first );
-			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, $last );
-			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'adminsonly' );
+			bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $u, $first );
+			bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $u, $last );
+			bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'adminsonly' );
 
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( 0 );
-			$actual = (string) bp_core_get_user_displayname( $u, 0 );
+			$actual = (string) bboss_core_get_user_displayname( $u, 0 );
 
 			$this->assertSame( $expected, $actual, "unexpected result for '{$display}'" );
 			$this->assertFalse(
@@ -1742,9 +1742,9 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		// The rebuilt name IS the hidden surname and there is no nickname to fall back to.
 		update_user_meta( $author, 'nickname', '' );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, '' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $author, '' );
 
-		$ln        = (int) bp_xprofile_lastname_field_id();
+		$ln        = (int) bboss_xprofile_lastname_field_id();
 		$force     = function () {
 			return 'Zebrastripe';
 		};
@@ -1766,7 +1766,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		try {
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( 0 );
-			$seen = bp_core_get_user_displayname( $author );
+			$seen = bboss_core_get_user_displayname( $author );
 
 			$this->assertStringNotContainsStringIgnoringCase( 'zebrastripe', (string) $seen );
 			$this->assertNotSame( '', trim( (string) $seen ), 'must never resolve to a blank label' );
@@ -1787,16 +1787,16 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * asserted: with just the negative test, an implementation that stripped the surname
 	 * unconditionally would stay green while silently taking capability out of the picture. This
 	 * locks the bp_user_can( $viewer_id, 'bp_moderate' ) branch of
-	 * bp_xprofile_get_hidden_field_types_for_user(), which is evaluated against the viewer that was
+	 * bboss_xprofile_get_hidden_field_types_for_user(), which is evaluated against the viewer that was
 	 * passed in rather than the acting session - so it must hold whoever is logged in.
 	 *
 	 * @group bb_name_privacy
 	 */
 	public function test_moderator_as_explicit_viewer_still_receives_the_full_name() {
-		$format_backup = bp_get_option( 'bp-display-name-format' );
+		$format_backup = bboss_get_option( 'bp-display-name-format' );
 
 		try {
-			bp_update_option( 'bp-display-name-format', 'first_last_name' );
+			bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 
 			$subject = self::factory()->user->create();
 			wp_update_user(
@@ -1807,10 +1807,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 					'display_name' => 'Alex Quillfeather',
 				)
 			);
-			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $subject, 'Alex' );
-			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $subject, 'Quillfeather' );
+			bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $subject, 'Alex' );
+			bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $subject, 'Quillfeather' );
 			// Hidden from everyone who is not self or a moderator.
-			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $subject, 'adminsonly' );
+			bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $subject, 'adminsonly' );
 
 			$moderator = self::factory()->user->create( array( 'role' => 'administrator' ) );
 			$stranger  = self::factory()->user->create();
@@ -1821,7 +1821,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			$this->set_current_user( $stranger );
 			$this->assertSame(
 				'Alex',
-				(string) bp_core_get_user_displayname( $subject, $stranger ),
+				(string) bboss_core_get_user_displayname( $subject, $stranger ),
 				'fixture: a plain member must be denied the surname'
 			);
 
@@ -1831,7 +1831,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			$this->set_current_user( $stranger );
 			$this->assertSame(
 				'Alex Quillfeather',
-				(string) bp_core_get_user_displayname( $subject, $moderator ),
+				(string) bboss_core_get_user_displayname( $subject, $moderator ),
 				'a moderator passed as the explicit viewer must still receive the full name'
 			);
 
@@ -1840,22 +1840,22 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			$this->set_current_user( $moderator );
 			$this->assertSame(
 				'Alex Quillfeather',
-				(string) bp_core_get_user_displayname( $subject ),
+				(string) bboss_core_get_user_displayname( $subject ),
 				'a logged-in moderator must still receive the full name'
 			);
 		} finally {
 			$GLOBALS['bb_default_display_avatar'] = false;
-			bp_update_option( 'bp-display-name-format', $format_backup );
+			bboss_update_option( 'bp-display-name-format', $format_backup );
 		}
 	}
 
 	/**
 	 * The Display Name Format gate subsumes the "Display Name Fields" Last Name toggle.
 	 *
-	 * bp_core_hide_display_name_field() reports only that the Last Name FIELD is switched off
+	 * bboss_core_hide_display_name_field() reports only that the Last Name FIELD is switched off
 	 * (bp-hide-last-name), and an earlier revision gated the redaction on it - which missed the
 	 * far more common case of the field being enabled while the format still excludes the surname.
-	 * The resolver now gates on bp_core_display_name_format() alone. This asserts the two settings
+	 * The resolver now gates on bboss_core_display_name_format() alone. This asserts the two settings
 	 * cannot disagree: under "First Name" or "Nickname" the surname is absent whichever way the
 	 * toggle is set, and under "First Name & Last Name" a public surname is still shown - so the
 	 * broader gate did not become a blanket strip.
@@ -1863,14 +1863,14 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @group bb_name_privacy
 	 */
 	public function test_display_name_format_gate_subsumes_the_last_name_field_toggle() {
-		$format_backup = bp_get_option( 'bp-display-name-format' );
-		$hide_backup   = bp_get_option( 'bp-hide-last-name' );
+		$format_backup = bboss_get_option( 'bp-display-name-format' );
+		$hide_backup   = bboss_get_option( 'bp-hide-last-name' );
 
 		try {
 			foreach ( array( 'first_last_name', 'first_name', 'nickname' ) as $display_format ) {
 				foreach ( array( 0, 1 ) as $hide_last_name ) {
-					bp_update_option( 'bp-display-name-format', $display_format );
-					bp_update_option( 'bp-hide-last-name', $hide_last_name );
+					bboss_update_option( 'bp-display-name-format', $display_format );
+					bboss_update_option( 'bp-hide-last-name', $hide_last_name );
 
 					$u = self::factory()->user->create();
 					wp_update_user(
@@ -1883,15 +1883,15 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 					);
 					$nickname = 'peternick' . $u;
 					update_user_meta( $u, 'nickname', $nickname );
-					xprofile_set_field_data( bp_xprofile_nickname_field_id(), $u, $nickname );
-					xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Peter' );
-					xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Zebrastripe' );
+					bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $u, $nickname );
+					bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $u, 'Peter' );
+					bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $u, 'Zebrastripe' );
 					// Visibility deliberately PUBLIC: the only thing under test here is the format.
-					xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'public' );
+					bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'public' );
 
 					$GLOBALS['bb_default_display_avatar'] = true;
 					$this->set_current_user( 0 );
-					$guest = (string) bp_core_get_user_displayname( $u );
+					$guest = (string) bboss_core_get_user_displayname( $u );
 
 					$expected = 'first_last_name' === $display_format
 						? 'Peter Zebrastripe'
@@ -1906,13 +1906,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			}
 		} finally {
 			$GLOBALS['bb_default_display_avatar'] = false;
-			bp_update_option( 'bp-display-name-format', $format_backup );
-			bp_update_option( 'bp-hide-last-name', $hide_backup );
+			bboss_update_option( 'bp-display-name-format', $format_backup );
+			bboss_update_option( 'bp-hide-last-name', $hide_backup );
 		}
 	}
 
 	/**
-	 * bb_core_guest_viewer_id() must resolve a name exactly as a real logged-out request does.
+	 * bboss_core_guest_viewer_id() must resolve a name exactly as a real logged-out request does.
 	 *
 	 * Emails addressed to a plain email address (member invitations) are composed inside the
 	 * inviter's own session, where the request viewer is the inviter and every visibility check
@@ -1924,12 +1924,12 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @group bb_name_privacy
 	 */
 	public function test_guest_viewer_sentinel_matches_a_real_logged_out_request() {
-		$ln     = (int) bp_xprofile_lastname_field_id();
-		$format = bp_get_option( 'bp-display-name-format' );
+		$ln     = (int) bboss_xprofile_lastname_field_id();
+		$format = bboss_get_option( 'bp-display-name-format' );
 
 		try {
 			foreach ( array( 'first_last_name', 'first_name', 'nickname' ) as $display_format ) {
-				bp_update_option( 'bp-display-name-format', $display_format );
+				bboss_update_option( 'bp-display-name-format', $display_format );
 
 				foreach ( array( 'public', 'loggedin', 'friends', 'adminsonly' ) as $level ) {
 					// A fresh author per combination. xprofile_filter_get_user_display_name() memoizes
@@ -1951,24 +1951,24 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 					// rather than the sentinel's behaviour.
 					$nickname = 'peternick' . $author;
 					update_user_meta( $author, 'nickname', $nickname );
-					xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, $nickname );
-					xprofile_set_field_data( bp_xprofile_firstname_field_id(), $author, 'Peter' );
-					xprofile_set_field_data( $ln, $author, 'Zebrastripe' );
-					xprofile_set_field_visibility_level( $ln, $author, $level );
+					bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $author, $nickname );
+					bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $author, 'Peter' );
+					bboss_xprofile_set_field_data( $ln, $author, 'Zebrastripe' );
+					bboss_xprofile_set_field_visibility_level( $ln, $author, $level );
 
 					// The reference: what an anonymous visitor actually gets.
 					$GLOBALS['bb_default_display_avatar'] = true;
 					$this->set_current_user( 0 );
-					$anonymous = bp_core_get_user_displayname( $author );
+					$anonymous = bboss_core_get_user_displayname( $author );
 
 					// The same question asked while the profile owner is the one logged in - the
 					// invitation case. Without the sentinel this returns the self view, in full.
 					$GLOBALS['bb_default_display_avatar'] = true;
 					$this->set_current_user( $author );
-					$self = bp_core_get_user_displayname( $author );
+					$self = bboss_core_get_user_displayname( $author );
 
 					$GLOBALS['bb_default_display_avatar'] = true;
-					$sentinel = bp_core_get_user_displayname( $author, bb_core_guest_viewer_id() );
+					$sentinel = bboss_core_get_user_displayname( $author, bboss_core_guest_viewer_id() );
 
 					$this->assertSame(
 						(string) $anonymous,
@@ -1990,7 +1990,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			}
 		} finally {
 			$GLOBALS['bb_default_display_avatar'] = false;
-			bp_update_option( 'bp-display-name-format', $format );
+			bboss_update_option( 'bp-display-name-format', $format );
 		}
 	}
 
@@ -2026,7 +2026,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			// --- A guest: every surface shows the redacted name. ---
 			$this->set_current_user( 0 );
 
-			$this->assertSame( 'Alex', bb_core_get_redacted_core_author_name( $author ) );
+			$this->assertSame( 'Alex', bboss_core_get_redacted_core_author_name( $author ) );
 			$this->assertSame( 'Alex', get_the_author_meta( 'display_name', $author ) );
 
 			$GLOBALS['authordata'] = get_userdata( $author );
@@ -2037,7 +2037,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			$this->assertStringContainsString( 'Alex', wp_get_document_title() );
 
 			$response = new WP_REST_Response( array( 'id' => $author, 'name' => 'Alex Quillfeather' ) );
-			$response = bb_core_filter_rest_prepare_user( $response, get_userdata( $author ) );
+			$response = bboss_core_filter_rest_prepare_user( $response, get_userdata( $author ) );
 			$this->assertSame( 'Alex', $response->get_data()['name'] );
 
 			// --- The opt-out filter hands the surfaces back to WordPress unchanged. ---
@@ -2048,7 +2048,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			// --- A member who may see the surname: core output is left exactly as it was. ---
 			$this->set_current_user( $viewer );
 			$this->assertNull(
-				bb_core_get_redacted_core_author_name( $author ),
+				bboss_core_get_redacted_core_author_name( $author ),
 				'Nothing is hidden from this viewer, so core output must not be touched at all.'
 			);
 			$this->assertSame( 'Alex Quillfeather', get_the_author_meta( 'display_name', $author ) );
@@ -2061,8 +2061,8 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			// name redacted for the CURRENT request's viewer instead of the column, and would
 			// answer for the wrong viewer whenever one is passed explicitly.
 			$this->set_current_user( 0 );
-			$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $author, $viewer ) );
-			$this->assertFalse( bb_core_is_resolving_user_displayname(), 'The marker must not stay raised.' );
+			$this->assertSame( 'Alex Quillfeather', bboss_core_get_user_displayname( $author, $viewer ) );
+			$this->assertFalse( bboss_core_is_resolving_user_displayname(), 'The marker must not stay raised.' );
 		} finally {
 			if ( null === $authordata_backup ) {
 				unset( $GLOBALS['authordata'] );
@@ -2094,7 +2094,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			)
 		);
 
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'adminsonly' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'adminsonly' );
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 
@@ -2112,7 +2112,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * name on a page and another in the AJAX call that page fires.
 	 *
 	 * The fixture is a SUBSCRIBER granted `list_users`, because an administrator is invariant here -
-	 * bb_bypass_name_privacy_for_admin() exempts them from name privacy before this decision is
+	 * bboss_bypass_name_privacy_for_admin() exempts them from name privacy before this decision is
 	 * reached, so every row would read null and prove nothing.
 	 *
 	 * Each row uses its own author: the answer is memoised per member, viewer and format, so reusing
@@ -2169,7 +2169,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				$this->assertSame( 'front' !== $screen, is_admin(), "Fixture: is_admin() is wrong for '{$label}'." );
 				$this->assertSame( $doing_ajax, wp_doing_ajax(), "Fixture: wp_doing_ajax() is wrong for '{$label}'." );
 
-				$answer = bb_core_get_redacted_core_author_name( $author );
+				$answer = bboss_core_get_redacted_core_author_name( $author );
 
 				if ( $doing_ajax ) {
 					remove_filter( 'wp_doing_ajax', '__return_true' );
@@ -2220,7 +2220,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @group bb_name_privacy
 	 */
 	public function test_admin_name_privacy_bypass_survives_a_non_member_viewer() {
-		if ( ! function_exists( 'bb_bypass_name_privacy_for_admin' ) ) {
+		if ( ! function_exists( 'bboss_bypass_name_privacy_for_admin' ) ) {
 			$this->markTestSkipped( 'The Messages component is not loaded in this configuration.' );
 		}
 
@@ -2232,44 +2232,44 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$ghost = self::factory()->user->create();
 		wp_delete_user( $ghost );
 
-		foreach ( array( bb_core_guest_viewer_id(), 0, $ghost ) as $viewer ) {
+		foreach ( array( bboss_core_guest_viewer_id(), 0, $ghost ) as $viewer ) {
 			$this->assertSame(
 				$levels,
-				bb_bypass_name_privacy_for_admin( $levels, $member, $viewer ),
+				bboss_bypass_name_privacy_for_admin( $levels, $member, $viewer ),
 				"viewer {$viewer} cleared the hidden levels without being an administrator"
 			);
 		}
 
 		// A real member is not an administrator either.
-		$this->assertSame( $levels, bb_bypass_name_privacy_for_admin( $levels, $member, $member ) );
+		$this->assertSame( $levels, bboss_bypass_name_privacy_for_admin( $levels, $member, $member ) );
 
 		// ... and the bypass still does what it exists for.
-		$this->assertSame( array(), bb_bypass_name_privacy_for_admin( $levels, $member, $admin ) );
+		$this->assertSame( array(), bboss_bypass_name_privacy_for_admin( $levels, $member, $admin ) );
 	}
 
 	/**
 	 * The invitation message on the PUBLIC registration page must name the inviter as a stranger
 	 * sees them.
 	 *
-	 * bp_invites_member_invite_register_screen_message() runs on bp_before_register_page and
+	 * bboss_invites_member_invite_register_screen_message() runs on bp_before_register_page and
 	 * prints "You've been invited to join the site by: X" to whoever opens the invitation link.
 	 * The audience is by definition not a member yet, but the name was resolved with the default
 	 * viewer - the current request - so an admin previewing the page, or the inviter opening their
 	 * own link, put name parts the site hides from everyone else into a page served to a stranger.
 	 *
-	 * bp_get_member_invites_wildcard_replace() in the same file already pins the invitation EMAIL
-	 * to bb_core_guest_viewer_id() for exactly this reason; this asserts the register screen gives
+	 * bboss_get_member_invites_wildcard_replace() in the same file already pins the invitation EMAIL
+	 * to bboss_core_guest_viewer_id() for exactly this reason; this asserts the register screen gives
 	 * the same answer. The positive assertion is the point of the test as much as the negative one:
 	 * without it the test would pass just as well if the message never rendered at all.
 	 *
 	 * @group bb_name_privacy
 	 */
 	public function test_register_screen_invite_message_names_the_inviter_as_a_guest_sees_them() {
-		$invites_was_active = bp_is_active( 'invites' );
-		buddypress()->active_components['invites'] = '1';
+		$invites_was_active = bboss_is_active( 'invites' );
+		bboss()->active_components['invites'] = '1';
 
-		if ( ! post_type_exists( bp_get_invite_post_type() ) ) {
-			register_post_type( bp_get_invite_post_type(), array( 'public' => false ) );
+		if ( ! post_type_exists( bboss_get_invite_post_type() ) ) {
+			register_post_type( bboss_get_invite_post_type(), array( 'public' => false ) );
 		}
 
 		$inviter = self::factory()->user->create();
@@ -2283,15 +2283,15 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		);
 		$nickname = 'peternick' . $inviter;
 		update_user_meta( $inviter, 'nickname', $nickname );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $inviter, $nickname );
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $inviter, 'Peter' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $inviter, 'Zebrastripe' );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $inviter, 'adminsonly' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $inviter, $nickname );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $inviter, 'Peter' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $inviter, 'Zebrastripe' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $inviter, 'adminsonly' );
 
 		$invitee_email = 'invitee' . $inviter . '@example.com';
 		$invite_id     = self::factory()->post->create(
 			array(
-				'post_type'   => bp_get_invite_post_type(),
+				'post_type'   => bboss_get_invite_post_type(),
 				'post_status' => 'publish',
 				'post_author' => $inviter,
 				'post_title'  => 'Invite',
@@ -2312,9 +2312,9 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$get_backup          = $_GET;
 		$_GET['bp-invites']  = 'accept-member-invitation';
 		$_GET['email']       = $invitee_email;
-		$signup_backup       = isset( buddypress()->signup ) ? buddypress()->signup : null;
-		buddypress()->signup = new stdClass();
-		buddypress()->signup->step = 'request-details';
+		$signup_backup       = isset( bboss()->signup ) ? bboss()->signup : null;
+		bboss()->signup = new stdClass();
+		bboss()->signup->step = 'request-details';
 
 		try {
 			foreach ( array( 'admin' => $admin, 'inviter' => $inviter ) as $label => $viewer ) {
@@ -2322,7 +2322,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				$this->set_current_user( $viewer );
 
 				ob_start();
-				bp_invites_member_invite_register_screen_message();
+				bboss_invites_member_invite_register_screen_message();
 				$output = ob_get_clean();
 				wp_reset_postdata();
 
@@ -2343,13 +2343,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			$_GET = $get_backup;
 
 			if ( null === $signup_backup ) {
-				unset( buddypress()->signup );
+				unset( bboss()->signup );
 			} else {
-				buddypress()->signup = $signup_backup;
+				bboss()->signup = $signup_backup;
 			}
 
 			if ( ! $invites_was_active ) {
-				unset( buddypress()->active_components['invites'] );
+				unset( bboss()->active_components['invites'] );
 			}
 		}
 	}
@@ -2358,11 +2358,11 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * An email body rendered without a usable `receiver-user.id` token must resolve member names
 	 * for the PUBLIC viewer, never for whoever's request is sending the mail.
 	 *
-	 * Every token callback in BP_Email_Tokens runs once per recipient, but inside the request of
+	 * Every token callback in BBoss_Email_Tokens runs once per recipient, but inside the request of
 	 * whoever triggered the send - usually the author, who is never denied any part of their own
 	 * name. Passing 0 as the viewer means "resolve the viewer from the current request", which is
 	 * that sender's session, so a token set carrying no recipient would render the SENDER'S view of
-	 * a name into a stranger's inbox. bb_get_receiver_user_id() answers bb_core_guest_viewer_id()
+	 * a name into a stranger's inbox. bb_get_receiver_user_id() answers bboss_core_guest_viewer_id()
 	 * instead, and a recipient token that is present but empty is the same absence.
 	 *
 	 * No bundled fan-out omits the token today - each one sets it from a recipient row - so the
@@ -2376,14 +2376,14 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		// The request belongs to the sender: a logged-in member, who may see the hidden surname.
 		$this->set_current_user( $sender );
-		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $author, 0 ) );
+		$this->assertSame( 'Alex Quillfeather', bboss_core_get_user_displayname( $author, 0 ) );
 
-		$method = new ReflectionMethod( 'BP_Email_Tokens', 'bb_get_receiver_user_id' );
+		$method = new ReflectionMethod( 'BBoss_Email_Tokens', 'bb_get_receiver_user_id' );
 		$method->setAccessible( true );
 
 		// Built without the constructor: it registers the live email filters, which this has no use
 		// for and must not leave behind.
-		$reflection   = new ReflectionClass( 'BP_Email_Tokens' );
+		$reflection   = new ReflectionClass( 'BBoss_Email_Tokens' );
 		$email_tokens = $reflection->newInstanceWithoutConstructor();
 
 		$no_recipient = array(
@@ -2396,20 +2396,20 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			$viewer = (int) $method->invoke( $email_tokens, $token_set );
 
 			$this->assertSame(
-				bb_core_guest_viewer_id(),
+				bboss_core_guest_viewer_id(),
 				$viewer,
 				"a {$label} recipient token resolved a viewer other than the guest"
 			);
 			$this->assertSame(
 				'Alex',
-				bp_core_get_user_displayname( $author, $viewer ),
+				bboss_core_get_user_displayname( $author, $viewer ),
 				"a {$label} recipient token rendered the sender's view of the name"
 			);
 		}
 
 		// A real recipient is still resolved as themselves, and still sees what a member may see.
 		$this->assertSame( $sender, (int) $method->invoke( $email_tokens, array( 'receiver-user.id' => $sender ) ) );
-		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $author, $sender ) );
+		$this->assertSame( 'Alex Quillfeather', bboss_core_get_user_displayname( $author, $sender ) );
 	}
 	/**
 	 * The SAME email block, rendered for two recipients, must carry a different name in each.
@@ -2419,7 +2419,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * the rendered body actually differs per recipient. Those are different claims, and only the
 	 * second one is the feature.
 	 *
-	 * BP_Email_Tokens::token__group_card() is the surface with the sharpest edge: it writes the
+	 * BBoss_Email_Tokens::token__group_card() is the surface with the sharpest edge: it writes the
 	 * member name into an `<img alt="">`, which renders invisibly and so survives every visual
 	 * check, while still being readable by a mail client and by anyone the mail is forwarded to.
 	 *
@@ -2430,7 +2430,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * @group bb_activity_name_privacy
 	 */
 	public function test_email_group_card_resolves_the_member_name_per_recipient() {
-		if ( ! class_exists( 'BP_Email_Tokens' ) || ! bp_is_active( 'groups' ) ) {
+		if ( ! class_exists( 'BBoss_Email_Tokens' ) || ! bboss_is_active( 'groups' ) ) {
 			$this->markTestSkipped( 'BP_Email_Tokens or the groups component is unavailable.' );
 		}
 
@@ -2447,13 +2447,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				'status'     => 'public',
 			)
 		);
-		groups_join_group( $group_id, $member );
+		bboss_groups_join_group( $group_id, $member );
 
 		// The avatar strip in token__group_card() is built from the GROUP ACTIVITY table, not the
 		// member list, so a group with members but no activity renders an empty strip and the alt
 		// assertions below would prove nothing.
-		if ( bp_is_active( 'activity' ) && function_exists( 'groups_post_update' ) ) {
-			groups_post_update(
+		if ( bboss_is_active( 'activity' ) && function_exists( 'bboss_groups_post_update' ) ) {
+			bboss_groups_post_update(
 				array(
 					'user_id'  => $member,
 					'group_id' => $group_id,
@@ -2462,8 +2462,8 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			);
 		}
 
-		$tokens_class = new BP_Email_Tokens();
-		$email        = new BP_Email( 'groups-invitation' );
+		$tokens_class = new BBoss_Email_Tokens();
+		$email        = new BBoss_Email( 'groups-invitation' );
 
 		$render = function ( $receiver_id ) use ( $tokens_class, $email, $group_id ) {
 			// Only `group.id` - the shape the bundled fan-outs pass. Supplying the `group` object

@@ -10,21 +10,21 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BBP_Users_Admin' ) ) :
+if ( ! class_exists( 'BBoss_BBP_Users_Admin' ) ) :
 	/**
 	 * Loads Forums users admin area
 	 *
 	 * @since bbPress (r2464)
 	 */
-	class BBP_Users_Admin {
+	class BBoss_BBP_Users_Admin {
 
 		/**
 		 * The Forums users admin loader
 		 *
 		 * @since bbPress (r2515)
 		 *
-		 * @uses BBP_Users_Admin::setup_globals() Setup the globals needed
-		 * @uses BBP_Users_Admin::setup_actions() Setup the hooks and actions
+		 * @uses BBoss_BBP_Users_Admin::setup_globals() Setup the globals needed
+		 * @uses BBoss_BBP_Users_Admin::setup_actions() Setup the hooks and actions
 		 */
 		public function __construct() {
 			$this->setup_actions();
@@ -55,10 +55,10 @@ if ( ! class_exists( 'BBP_Users_Admin' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function remove_forum_roles( $role_list, $user_object ) {
-			$bbp_roles = array_map( '__return_zero', bbp_get_dynamic_roles() );
+			$bbp_roles = array_map( '__return_zero', bboss_bbp_get_dynamic_roles() );
 
 			return array_diff_key( $role_list, $bbp_roles );
 		}
 	}
-	new BBP_Users_Admin();
+	new BBoss_BBP_Users_Admin();
 endif; // class exists

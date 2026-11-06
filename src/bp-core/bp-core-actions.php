@@ -29,21 +29,21 @@ defined( 'ABSPATH' ) || exit;
  *
  *           v--WordPress Actions       v--BuddyPress Sub-actions
  */
-add_action( 'plugins_loaded', 'bp_loaded', 10 );
-add_action( 'init', 'bp_init', 10 );
-add_action( 'rest_api_init', 'bp_rest_api_init', 20 ); // After WP core.
-add_action( 'customize_register', 'bp_customize_register', 20 ); // After WP core.
-add_action( 'parse_query', 'bp_parse_query', 2 ); // Early for overrides.
-add_action( 'wp', 'bp_ready', 10 );
-add_action( 'set_current_user', 'bp_setup_current_user', 10 );
-add_action( 'setup_theme', 'bp_setup_theme', 10 );
-add_action( 'after_setup_theme', 'bp_after_setup_theme', 100 ); // After WP themes.
-add_action( 'wp_enqueue_scripts', 'bp_enqueue_scripts', 10 );
-add_action( 'enqueue_embed_scripts', 'bp_enqueue_embed_scripts', 10 );
-add_action( 'admin_bar_menu', 'bp_setup_admin_bar', 20 ); // After WP core.
-add_action( 'template_redirect', 'bp_template_redirect', 10 );
-add_action( 'widgets_init', 'bp_widgets_init', 10 );
-add_action( 'generate_rewrite_rules', 'bp_generate_rewrite_rules', 10 );
+add_action( 'plugins_loaded', 'bboss_loaded', 10 );
+add_action( 'init', 'bboss_init', 10 );
+add_action( 'rest_api_init', 'bboss_rest_api_init', 20 ); // After WP core.
+add_action( 'customize_register', 'bboss_customize_register', 20 ); // After WP core.
+add_action( 'parse_query', 'bboss_parse_query', 2 ); // Early for overrides.
+add_action( 'wp', 'bboss_ready', 10 );
+add_action( 'set_current_user', 'bboss_setup_current_user', 10 );
+add_action( 'setup_theme', 'bboss_setup_theme', 10 );
+add_action( 'after_setup_theme', 'bboss_after_setup_theme', 100 ); // After WP themes.
+add_action( 'wp_enqueue_scripts', 'bboss_enqueue_scripts', 10 );
+add_action( 'enqueue_embed_scripts', 'bboss_enqueue_embed_scripts', 10 );
+add_action( 'admin_bar_menu', 'bboss_setup_admin_bar', 20 ); // After WP core.
+add_action( 'template_redirect', 'bboss_template_redirect', 10 );
+add_action( 'widgets_init', 'bboss_widgets_init', 10 );
+add_action( 'generate_rewrite_rules', 'bboss_generate_rewrite_rules', 10 );
 
 /**
  * The bp_loaded hook - Attached to 'plugins_loaded' above.
@@ -52,13 +52,13 @@ add_action( 'generate_rewrite_rules', 'bp_generate_rewrite_rules', 10 );
  * The load order helps to execute code at the correct time.
  *                                                      v---Load order
  */
-add_action( 'bp_loaded', 'bp_setup_components', 2 );
-add_action( 'bp_loaded', 'bp_setup_integrations', 3 );
-add_action( 'bp_loaded', 'bp_include', 4 );
-add_action( 'bp_loaded', 'bp_setup_option_filters', 5 );
-add_action( 'bp_loaded', 'bp_setup_cache_groups', 5 );
-add_action( 'bp_loaded', 'bp_setup_widgets', 6 );
-add_action( 'bp_loaded', 'bp_register_theme_packages', 12 );
+add_action( 'bp_loaded', 'bboss_setup_components', 2 );
+add_action( 'bp_loaded', 'bboss_setup_integrations', 3 );
+add_action( 'bp_loaded', 'bboss_include', 4 );
+add_action( 'bp_loaded', 'bboss_setup_option_filters', 5 );
+add_action( 'bp_loaded', 'bboss_setup_cache_groups', 5 );
+add_action( 'bp_loaded', 'bboss_setup_widgets', 6 );
+add_action( 'bp_loaded', 'bboss_register_theme_packages', 12 );
 
 /**
  * The bp_init hook - Attached to 'init' above.
@@ -67,28 +67,28 @@ add_action( 'bp_loaded', 'bp_register_theme_packages', 12 );
  * The load order helps to execute code at the correct time.
  *                                                   v---Load order
  */
-add_action( 'bp_init', 'bp_register_post_types', 2 );
-add_action( 'bp_init', 'bp_register_taxonomies', 2 );
-add_action( 'bp_init', 'bp_core_set_uri_globals', 2 );
-add_action( 'bp_init', 'bp_setup_globals', 4 );
-add_action( 'bp_init', 'bp_setup_canonical_stack', 5 );
-add_action( 'bp_init', 'bp_setup_nav', 6 );
-add_action( 'bp_init', 'bp_setup_title', 8 );
-add_action( 'bp_init', 'bb_blocks_init', 10 );
-add_action( 'bp_init', 'bp_core_load_admin_bar_css', 12 );
-add_action( 'bp_init', 'bp_add_rewrite_tags', 20 );
-add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
-add_action( 'bp_init', 'bp_add_permastructs', 40 );
-add_action( 'bp_init', 'bp_init_background_updater', 50 );
-add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
-add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
-add_action( 'bp_init', 'bb_init_background_updater', 50 );
-add_action( 'bp_init', 'bb_load_topics_manager' );
+add_action( 'bp_init', 'bboss_register_post_types', 2 );
+add_action( 'bp_init', 'bboss_register_taxonomies', 2 );
+add_action( 'bp_init', 'bboss_core_set_uri_globals', 2 );
+add_action( 'bp_init', 'bboss_setup_globals', 4 );
+add_action( 'bp_init', 'bboss_setup_canonical_stack', 5 );
+add_action( 'bp_init', 'bboss_setup_nav', 6 );
+add_action( 'bp_init', 'bboss_setup_title', 8 );
+add_action( 'bp_init', 'bboss_blocks_init', 10 );
+add_action( 'bp_init', 'bboss_core_load_admin_bar_css', 12 );
+add_action( 'bp_init', 'bboss_add_rewrite_tags', 20 );
+add_action( 'bp_init', 'bboss_add_rewrite_rules', 30 );
+add_action( 'bp_init', 'bboss_add_permastructs', 40 );
+add_action( 'bp_init', 'bboss_init_background_updater', 50 );
+add_action( 'bp_init', 'bboss_init_email_background_updater', 51 );
+add_action( 'bp_init', 'bboss_init_notifications_background_updater', 52 );
+add_action( 'bp_init', 'bboss_bb_init_background_updater', 50 );
+add_action( 'bp_init', 'bboss_load_topics_manager' );
 
 /**
  * The bp_register_taxonomies hook - Attached to 'bp_init' @ priority 2 above.
  */
-add_action( 'bp_register_taxonomies', 'bp_register_member_types' );
+add_action( 'bp_register_taxonomies', 'bboss_register_member_types' );
 
 /**
  * Late includes.
@@ -96,7 +96,7 @@ add_action( 'bp_register_taxonomies', 'bp_register_member_types' );
  * Run after the canonical stack is setup to allow for conditional includes
  * on certain pages.
  */
-add_action( 'bp_setup_canonical_stack', 'bp_late_include', 20 );
+add_action( 'bp_setup_canonical_stack', 'bboss_late_include', 20 );
 
 /**
  * The bp_template_redirect hook - Attached to 'template_redirect' above.
@@ -109,46 +109,46 @@ add_action( 'bp_setup_canonical_stack', 'bp_late_include', 20 );
  * places. This won't always be this way, we promise.
  *                                                           v---Load order
  */
-add_action( 'bp_template_redirect', 'bp_redirect_canonical', 2 );
-add_action( 'bp_template_redirect', 'bp_actions', 4 );
-add_action( 'bp_template_redirect', 'bp_screens', 6 );
-add_action( 'bp_template_redirect', 'bp_post_request', 10 );
-add_action( 'bp_template_redirect', 'bp_get_request', 10 );
-add_action( 'bp_template_redirect', 'bp_private_network_template_redirect', 10 );
+add_action( 'bp_template_redirect', 'bboss_redirect_canonical', 2 );
+add_action( 'bp_template_redirect', 'bboss_actions', 4 );
+add_action( 'bp_template_redirect', 'bboss_screens', 6 );
+add_action( 'bp_template_redirect', 'bboss_post_request', 10 );
+add_action( 'bp_template_redirect', 'bboss_get_request', 10 );
+add_action( 'bp_template_redirect', 'bboss_private_network_template_redirect', 10 );
 
 /**
  * Add the BuddyPress functions file and the Theme Compat Default features.
  */
-add_action( 'bp_after_setup_theme', 'bp_check_theme_template_pack_dependency', -10 );
-add_action( 'bp_after_setup_theme', 'bp_load_theme_functions', 1 );
-add_action( 'bp_after_setup_theme', 'bp_show_hide_toolbar', 9999999 );
+add_action( 'bp_after_setup_theme', 'bboss_check_theme_template_pack_dependency', -10 );
+add_action( 'bp_after_setup_theme', 'bboss_load_theme_functions', 1 );
+add_action( 'bp_after_setup_theme', 'bboss_show_hide_toolbar', 9999999 );
 
 // Restrict user when view media/document from url.
-add_action( 'template_redirect', 'bp_restrict_single_attachment', 999 );
+add_action( 'template_redirect', 'bboss_restrict_single_attachment', 999 );
 
 // Load Post Notifications.
-add_action( 'bp_loaded', 'bb_load_post_notifications' );
-add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 20, 3 );
-add_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
-add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 20, 3 );
+add_action( 'bp_loaded', 'bboss_load_post_notifications' );
+add_action( 'comment_post', 'bboss_post_new_comment_reply_notification', 20, 3 );
+add_action( 'wp_insert_comment', 'bboss_post_new_comment_reply_notification_helper', 20, 2 );
+add_action( 'transition_comment_status', 'bboss_post_comment_on_status_change', 20, 3 );
 
 // Load the admin.
 if ( is_admin() ) {
-	add_action( 'bp_loaded', 'bp_admin' );
+	add_action( 'bp_loaded', 'bboss_admin' );
 }
 
 // Activation redirect.
-add_action( 'bp_activation', 'bp_add_activation_redirect' );
+add_action( 'bp_activation', 'bboss_add_activation_redirect' );
 
 // Email unsubscribe.
-add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
+add_action( 'bp_get_request_unsubscribe', 'bboss_email_unsubscribe_handler' );
 
 add_action(
 	'bp_init',
 	function() {
-		if ( false === bb_enabled_legacy_email_preference() ) {
+		if ( false === bboss_enabled_legacy_email_preference() ) {
 			// Render notifications on frontend.
-			add_action( 'bp_notification_settings', 'bb_render_notification_settings', 1 );
+			add_action( 'bp_notification_settings', 'bboss_render_notification_settings', 1 );
 		}
 	}
 );
@@ -156,7 +156,7 @@ add_action(
 add_action(
 	'bp_init',
 	function() {
-		$component = bp_get_option( 'bp-active-components' );
+		$component = bboss_get_option( 'bp-active-components' );
 
 		if ( ! is_array( $component ) ) {
 			return;
@@ -164,7 +164,7 @@ add_action(
 
 		// The option lives on the root blog, while code availability depends on the plugins
 		// active on the current site. On multisite only the root blog decides, as in BP_Core.
-		if ( is_multisite() && ! bp_is_root_blog() ) {
+		if ( is_multisite() && ! bboss_is_root_blog() ) {
 			return;
 		}
 
@@ -183,11 +183,11 @@ add_action(
 		 * directory page is created at the same time, as the Media toggle did
 		 * when it owned these components.
 		 */
-		$auto_enabled = bp_get_option( 'bb_media_auto_enabled_components', false );
+		$auto_enabled = bboss_get_option( 'bb_media_auto_enabled_components', false );
 		if ( false === $auto_enabled ) {
 			// Seed it so later reads come from autoloaded options instead of a query per request.
 			$auto_enabled = array();
-			bp_update_option( 'bb_media_auto_enabled_components', $auto_enabled );
+			bboss_update_option( 'bb_media_auto_enabled_components', $auto_enabled );
 		}
 
 		$auto_enabled  = (array) $auto_enabled;
@@ -201,7 +201,7 @@ add_action(
 					$added_or_seen[] = $media_child;
 				} elseif (
 					! in_array( $media_child, $auto_enabled, true ) &&
-					bb_is_component_directory_available( $media_child )
+					bboss_is_component_directory_available( $media_child )
 				) {
 					$component[ $media_child ] = '1';
 					$added[ $media_child ]     = 1;
@@ -215,14 +215,14 @@ add_action(
 		}
 
 		if ( $updated ) {
-			bp_update_option( 'bp-active-components', $component );
+			bboss_update_option( 'bp-active-components', $component );
 		}
 
 		$new_auto_enabled = empty( $component['media'] )
 			? array()
 			: array_values( array_unique( array_merge( $auto_enabled, $added_or_seen ) ) );
 		if ( $new_auto_enabled !== $auto_enabled ) {
-			bp_update_option( 'bb_media_auto_enabled_components', $new_auto_enabled );
+			bboss_update_option( 'bb_media_auto_enabled_components', $new_auto_enabled );
 		}
 
 		if ( ! empty( $added ) ) {
@@ -230,7 +230,7 @@ add_action(
 			if ( ! function_exists( 'post_exists' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/post.php';
 			}
-			bp_core_add_page_mappings( $added, 'keep', false );
+			bboss_core_add_page_mappings( $added, 'keep', false );
 			add_action( 'shutdown', 'flush_rewrite_rules' );
 		}
 	},
@@ -239,7 +239,7 @@ add_action(
 );
 
 // remove admin notices for the ReadyLaunch screen.
-add_action( 'admin_head', 'bb_remove_admin_notices', 99 );
+add_action( 'admin_head', 'bboss_remove_admin_notices', 99 );
 
 /**
  * Restrict user when visit attachment url from media/document.
@@ -247,7 +247,7 @@ add_action( 'admin_head', 'bb_remove_admin_notices', 99 );
  *
  * @since BuddyBoss 1.5.5
  */
-function bp_restrict_single_attachment() {
+function bboss_restrict_single_attachment() {
 	if ( is_attachment() ) {
 		global $post;
 		if ( ! empty( $post ) ) {
@@ -257,7 +257,7 @@ function bp_restrict_single_attachment() {
 				! empty( $media_meta ) ||
 				! empty( $document_meta )
 			) {
-				bp_do_404();
+				bboss_do_404();
 				return;
 			}
 		}
@@ -271,7 +271,7 @@ function bp_restrict_single_attachment() {
  *
  * @param int $updated_value Current value of options.
  */
-function bb_media_symlink_validate( $updated_value ) {
+function bboss_media_symlink_validate( $updated_value ) {
 	$keys = array(
 		'bb_media_symlink_type',
 		'bb_document_symlink_type',
@@ -280,10 +280,10 @@ function bb_media_symlink_validate( $updated_value ) {
 		'bb_video_thumb_symlink_type',
 	);
 
-	if ( true === bb_check_server_disabled_symlink() ) {
-		bp_update_option( 'bp_media_symlink_support', 0 );
+	if ( true === bboss_check_server_disabled_symlink() ) {
+		bboss_update_option( 'bp_media_symlink_support', 0 );
 		foreach ( $keys as $k ) {
-			bp_delete_option( $k );
+			bboss_delete_option( $k );
 		}
 		return;
 	}
@@ -296,24 +296,24 @@ function bb_media_symlink_validate( $updated_value ) {
 	$platform_previews_path = $upload_dir . '/bb-platform-previews';
 	if ( ! is_dir( $platform_previews_path ) ) {
 		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
 	}
 
 	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
 	if ( ! is_dir( $media_symlinks_path ) ) {
 		wp_mkdir_p( $media_symlinks_path );
-		chmod( $media_symlinks_path, 0755 );
+		chmod( $media_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
 	}
 
 	foreach ( $keys as $k ) {
-		bp_delete_option( $k );
+		bboss_delete_option( $k );
 	}
 
 	if ( empty( $updated_value ) || 0 === $updated_value ) {
 		return;
 	}
 
-	$attachment_id = bb_core_upload_dummy_attachment();
+	$attachment_id = bboss_core_upload_dummy_attachment();
 
 	if ( ! empty( $attachment_id ) ) {
 
@@ -333,12 +333,12 @@ function bb_media_symlink_validate( $updated_value ) {
 		$upload_directory        = wp_get_upload_dir();
 		$key                     = 'bb_media_symlink_type';
 		$preview_attachment_path = $symlinks_path . '/' . $symlink_name;
-		$symlink_url             = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
+		$symlink_url             = bboss_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
 
 		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
 			if ( ! is_link( $attachment_path ) ) {
 
-				$sym_status = bp_get_option( $key, '' );
+				$sym_status = bboss_get_option( $key, '' );
 				$status     = false;
 
 				if ( empty( $sym_status ) || 'default' === $sym_status ) {
@@ -358,24 +358,24 @@ function bb_media_symlink_validate( $updated_value ) {
 							$status     = true;
 							$sym_status = 'default';
 							foreach ( $keys as $k ) {
-								bp_update_option( $k, $sym_status );
+								bboss_update_option( $k, $sym_status );
 							}
-							bp_delete_option( 'bb_display_support_error' );
+							bboss_delete_option( 'bb_display_support_error' );
 						} else {
-							bp_update_option( 'bb_display_support_error', 1 );
+							bboss_update_option( 'bb_display_support_error', 1 );
 						}
 					}
 
 					if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-						unlink( $attachment_path );
-						bp_update_option( 'bp_media_symlink_support', 0 );
+						wp_delete_file( $attachment_path );
+						bboss_update_option( 'bp_media_symlink_support', 0 );
 
 						foreach ( $keys as $k ) {
-							bp_delete_option( $k );
+							bboss_delete_option( $k );
 						}
-						bp_update_option( 'bb_display_support_error', 1 );
+						bboss_update_option( 'bb_display_support_error', 1 );
 					} else {
-						bp_delete_option( 'bb_display_support_error' );
+						bboss_delete_option( 'bb_display_support_error' );
 					}
 				}
 
@@ -411,23 +411,23 @@ function bb_media_symlink_validate( $updated_value ) {
 								$status     = true;
 								$sym_status = 'relative';
 								foreach ( $keys as $k ) {
-									bp_update_option( $k, $sym_status );
+									bboss_update_option( $k, $sym_status );
 								}
-								bp_delete_option( 'bb_display_support_error' );
+								bboss_delete_option( 'bb_display_support_error' );
 							} else {
-								bp_update_option( 'bb_display_support_error', 1 );
+								bboss_update_option( 'bb_display_support_error', 1 );
 							}
 						}
 
 						if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-							unlink( $attachment_path );
-							bp_update_option( 'bp_media_symlink_support', 0 );
-							bp_update_option( 'bb_display_support_error', 1 );
+							wp_delete_file( $attachment_path );
+							bboss_update_option( 'bp_media_symlink_support', 0 );
+							bboss_update_option( 'bb_display_support_error', 1 );
 							foreach ( $keys as $k ) {
-								bp_delete_option( $k );
+								bboss_delete_option( $k );
 							}
 						} else {
-							bp_delete_option( 'bb_display_support_error' );
+							bboss_delete_option( 'bb_display_support_error' );
 						}
 					}
 				}
@@ -437,11 +437,11 @@ function bb_media_symlink_validate( $updated_value ) {
 	} else {
 
 		foreach ( $keys as $k ) {
-			bp_delete_option( $k );
+			bboss_delete_option( $k );
 		}
 
-		bp_update_option( 'bp_media_symlink_support', 0 );
-		bp_core_remove_temp_directory( $upload_dir . '/bb-platform-previews' );
+		bboss_update_option( 'bp_media_symlink_support', 0 );
+		bboss_core_remove_temp_directory( $upload_dir . '/bb-platform-previews' );
 	}
 }
 
@@ -453,48 +453,48 @@ function bb_media_symlink_validate( $updated_value ) {
  * @param mixed $old_value The old option value.
  * @param mixed $value     The new option value.
  */
-function bb_update_media_symlink_support( $old_value, $value ) {
+function bboss_update_media_symlink_support( $old_value, $value ) {
 	if ( $old_value !== $value ) {
-		bb_media_symlink_validate( $value );
+		bboss_media_symlink_validate( $value );
 	}
 }
 
-add_action( 'update_option_bp_media_symlink_support', 'bb_update_media_symlink_support', 10, 2 );
+add_action( 'update_option_bp_media_symlink_support', 'bboss_update_media_symlink_support', 10, 2 );
 
 /**
  * Check and re-start the background process if queue is not empty.
  *
  * @since BuddyBoss 1.8.1
  */
-function bb_email_handle_cron_healthcheck() {
+function bboss_email_handle_cron_healthcheck() {
 	global $bb_email_background_updater;
 	if ( $bb_email_background_updater->is_updating() ) {
 		$bb_email_background_updater->handle_cron_healthcheck();
 	}
 }
 
-add_action( 'bb_init_email_background_updater', 'bb_email_handle_cron_healthcheck' );
+add_action( 'bb_init_email_background_updater', 'bboss_email_handle_cron_healthcheck' );
 
 /**
  * Check and reschedule the background process if queue is not empty.
  *
  * @since BuddyBoss 1.8.3
  */
-function bb_handle_cron_healthcheck() {
+function bboss_handle_cron_healthcheck() {
 	global $bp_background_updater;
 	if ( $bp_background_updater->is_updating() ) {
 		$bp_background_updater->schedule_event();
 	}
 }
 
-add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );
+add_action( 'bp_init_background_updater', 'bboss_handle_cron_healthcheck' );
 
 /**
  * Check and reschedule the newly added background process if queue is not empty.
  *
  * @since BuddyBoss 2.4.20
  */
-function bb_updater_handle_cron_healthcheck() {
+function bboss_updater_handle_cron_healthcheck() {
 	global $bb_background_updater;
 	if (
 		is_object( $bb_background_updater ) &&
@@ -504,47 +504,47 @@ function bb_updater_handle_cron_healthcheck() {
 	}
 }
 
-add_action( 'bb_init_background_updater', 'bb_updater_handle_cron_healthcheck' );
+add_action( 'bb_init_background_updater', 'bboss_updater_handle_cron_healthcheck' );
 
 /**
  * Function will remove RSS Feeds.
  *
  * @since BuddyBoss 1.8.6
  */
-function bb_restricate_rss_feed_callback() {
+function bboss_restricate_rss_feed_callback() {
 	if ( is_user_logged_in() ) {
 		return;
 	}
-	if ( true === bp_enable_private_rss_feeds() ) {
-		bb_restricate_rss_feed();
+	if ( true === bboss_enable_private_rss_feeds() ) {
+		bboss_restricate_rss_feed();
 	}
 }
-add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
+add_action( 'init', 'bboss_restricate_rss_feed_callback', 10 );
 
 /**
  * Restrict RSS feeds once WordPress has parsed the request.
  *
- * The `init` check in bb_restricate_rss_feed_callback() runs before the query is parsed, so it can only
+ * The `init` check in bboss_restricate_rss_feed_callback() runs before the query is parsed, so it can only
  * recognise a feed from its URL and misses feed URLs such as `/members/rss2`. This catches every
  * feed WordPress serves through its template loader. It runs before `bp_template_redirect`, whose
  * Private Website redirect leaves feeds to this setting. Forum feeds are printed earlier and are
- * restricted by bb_restricate_rss_feed_forums_request().
+ * restricted by bboss_restricate_rss_feed_forums_request().
  *
  * @since BuddyBoss 3.6.1
  */
-function bb_restricate_rss_feed_template_redirect() {
-	if ( is_user_logged_in() || ! is_feed() || true !== bp_enable_private_rss_feeds() ) {
+function bboss_restricate_rss_feed_template_redirect() {
+	if ( is_user_logged_in() || ! is_feed() || true !== bboss_enable_private_rss_feeds() ) {
 		return;
 	}
 
-	bb_restricate_rss_feed( true );
+	bboss_restricate_rss_feed( true );
 }
-add_action( 'template_redirect', 'bb_restricate_rss_feed_template_redirect', 1 );
+add_action( 'template_redirect', 'bboss_restricate_rss_feed_template_redirect', 1 );
 
 /**
  * Restrict forum feeds, which are printed while WordPress is still parsing the request.
  *
- * Forum, topic, reply and view feeds are output by bbp_request_feed_trap() on the `request`
+ * Forum, topic, reply and view feeds are output by bboss_bbp_request_feed_trap() on the `request`
  * filter, before REST routing and before `template_redirect`. The `init` check exempts REST
  * requests and cannot see feed URLs such as `/forums/rss2/`, and the `template_redirect`
  * check never runs, so these feeds are checked here, just before the trap and on the same
@@ -556,30 +556,30 @@ add_action( 'template_redirect', 'bb_restricate_rss_feed_template_redirect', 1 )
  *
  * @return array
  */
-function bb_restricate_rss_feed_forums_request( $query_vars ) {
+function bboss_restricate_rss_feed_forums_request( $query_vars ) {
 	if (
 		! isset( $query_vars['feed'] ) ||
 		is_user_logged_in() ||
-		true !== bp_enable_private_rss_feeds() ||
-		! function_exists( 'bbp_get_forum_post_type' )
+		true !== bboss_enable_private_rss_feeds() ||
+		! function_exists( 'bboss_bbp_get_forum_post_type' )
 	) {
 		return $query_vars;
 	}
 
-	$is_forum_feed = ! empty( $query_vars[ bbp_get_view_rewrite_id() ] );
+	$is_forum_feed = ! empty( $query_vars[ bboss_bbp_get_view_rewrite_id() ] );
 
 	if ( ! $is_forum_feed && isset( $query_vars['post_type'] ) ) {
-		$forum_post_types = array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+		$forum_post_types = array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
 		$is_forum_feed    = (bool) array_intersect( $forum_post_types, (array) $query_vars['post_type'] );
 	}
 
 	if ( $is_forum_feed ) {
-		bb_restricate_rss_feed( true );
+		bboss_restricate_rss_feed( true );
 	}
 
 	return $query_vars;
 }
-add_filter( 'bbp_request', 'bb_restricate_rss_feed_forums_request', 9 );
+add_filter( 'bbp_request', 'bboss_restricate_rss_feed_forums_request', 9 );
 
 /**
  * Function will remove REST APIs endpoint.
@@ -593,7 +593,7 @@ add_filter( 'bbp_request', 'bb_restricate_rss_feed_forums_request', 9 );
  *
  * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
  */
-function bb_restricate_rest_api_callback( $response, $handler, $request ) {
+function bboss_restricate_rest_api_callback( $response, $handler, $request ) {
 	if ( is_wp_error( $response ) ) {
 		return $response;
 	}
@@ -605,21 +605,21 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 			(
 				function_exists( 'bbapp_is_private_app_enabled' ) && // buddyboss-app is active.
 				true === bbapp_is_private_app_enabled() && // private app is enabled.
-				true === bp_enable_private_rest_apis() // BB private rest api is enabled.
+				true === bboss_enable_private_rest_apis() // BB private rest api is enabled.
 			) ||
 			(
 				! function_exists( 'bbapp_is_private_app_enabled' ) && // buddyboss-app is not active.
-				true === bp_enable_private_rest_apis() // BB private rest api is enabled.
+				true === bboss_enable_private_rest_apis() // BB private rest api is enabled.
 			)
 		)
 	) {
-		return bb_restricate_rest_api( $response, $handler, $request );
+		return bboss_restricate_rest_api( $response, $handler, $request );
 	}
 
 	return $response;
 }
 
-add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );
+add_filter( 'rest_request_before_callbacks', 'bboss_restricate_rest_api_callback', 100, 3 );
 
 /**
  * Function will run after plugin successfully update.
@@ -629,7 +629,7 @@ add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 
  * @param object $upgrader_object WP_Upgrader instance.
  * @param array  $options         Array of bulk item update data.
  */
-function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
+function bboss_plugin_upgrade_function_callback( $upgrader_object, $options ) {
 	$show_display_popup = false;
 	// The path to our plugin's main file.
 	$our_plugin = 'buddyboss-platform/bp-loader.php';
@@ -642,23 +642,23 @@ function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
 		}
 	}
 }
-add_action( 'upgrader_process_complete', 'bb_plugin_upgrade_function_callback', 10, 2 );
+add_action( 'upgrader_process_complete', 'bboss_plugin_upgrade_function_callback', 10, 2 );
 
 /**
  * Render registered notifications into frontend.
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_render_notification_settings() {
-	$registered_notification = bb_register_notification_preferences();
+function bboss_render_notification_settings() {
+	$registered_notification = bboss_register_notification_preferences();
 
-	bb_render_enable_notification_options();
+	bboss_render_enable_notification_options();
 
-	bb_render_manual_notification();
+	bboss_render_manual_notification();
 
 	if ( ! empty( $registered_notification ) ) {
 		foreach ( $registered_notification as $group => $data ) {
-			bb_render_notification( $group );
+			bboss_render_notification( $group );
 		}
 	}
 }
@@ -673,13 +673,13 @@ function bb_render_notification_settings() {
  *
  * @return void
  */
-function bb_clear_interval_on_enable_disabled_heartbeat( $old_value, $value ) {
+function bboss_clear_interval_on_enable_disabled_heartbeat( $old_value, $value ) {
 	if ( $old_value !== $value ) {
-		bp_delete_option( 'bb_presence_interval' );
+		bboss_delete_option( 'bb_presence_interval' );
 	}
 }
 
-add_action( 'update_option_bp_wp_heartbeat_disabled', 'bb_clear_interval_on_enable_disabled_heartbeat', 10, 2 );
+add_action( 'update_option_bp_wp_heartbeat_disabled', 'bboss_clear_interval_on_enable_disabled_heartbeat', 10, 2 );
 
 /**
  * Redirect old forums subscriptions links to new one.
@@ -688,22 +688,22 @@ add_action( 'update_option_bp_wp_heartbeat_disabled', 'bb_clear_interval_on_enab
  *
  * @return void
  */
-function bb_forums_subscriptions_redirect() {
+function bboss_forums_subscriptions_redirect() {
 
-	if ( bp_is_my_profile() && function_exists( 'bbp_get_user_subscriptions_slug' ) ) {
+	if ( bboss_is_my_profile() && function_exists( 'bboss_bbp_get_user_subscriptions_slug' ) ) {
 		global $wp;
 		$url = explode( '/', untrailingslashit( $wp->request ) );
 		if (
 			! empty( $url ) &&
-			end( $url ) === bbp_get_user_subscriptions_slug() &&
-			isset( buddypress()->forums ) &&
-			! empty( buddypress()->forums->id ) &&
-			buddypress()->forums->id === $url[ count( $url ) - 2 ] &&
-			bp_is_active( 'settings' ) &&
-			! empty( bb_get_subscriptions_types() )
+			end( $url ) === bboss_bbp_get_user_subscriptions_slug() &&
+			isset( bboss()->forums ) &&
+			! empty( bboss()->forums->id ) &&
+			bboss()->forums->id === $url[ count( $url ) - 2 ] &&
+			bboss_is_active( 'settings' ) &&
+			! empty( bboss_get_subscriptions_types() )
 		) {
-			$user_domain   = bp_loggedin_user_domain();
-			$slug          = bp_get_settings_slug();
+			$user_domain   = bboss_loggedin_user_domain();
+			$slug          = bboss_get_settings_slug();
 			$settings_link = trailingslashit( $user_domain . $slug ) . 'notifications/subscriptions';
 			if ( wp_safe_redirect( $settings_link ) ) {
 				exit;
@@ -712,42 +712,42 @@ function bb_forums_subscriptions_redirect() {
 	}
 }
 
-add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
+add_action( 'bp_ready', 'bboss_forums_subscriptions_redirect' );
 
 /**
  * Load Presence API mu plugin.
  *
  * @since BuddyBoss 2.3.1
  */
-function bb_load_presence_api_mu() {
-	if ( class_exists( 'BB_Presence' ) ) {
-		BB_Presence::bb_load_presence_api_mu_plugin( false );
+function bboss_load_presence_api_mu() {
+	if ( class_exists( 'BBoss_Presence' ) ) {
+		BBoss_Presence::bb_load_presence_api_mu_plugin( false );
 	}
 }
 
-add_action( 'bp_admin_init', 'bb_load_presence_api_mu' );
+add_action( 'bp_admin_init', 'bboss_load_presence_api_mu' );
 
 /**
  * Function to check server allow to load php file directly or not.
  *
  * @since BuddyBoss 2.3.1
  */
-function bb_check_presence_load_directly() {
-	if ( class_exists( 'BB_Presence' ) ) {
-		BB_Presence::bb_check_native_presence_load_directly();
+function bboss_check_presence_load_directly() {
+	if ( class_exists( 'BBoss_Presence' ) ) {
+		BBoss_Presence::bb_check_native_presence_load_directly();
 	}
 }
 
-add_action( 'bp_admin_init', 'bb_check_presence_load_directly' );
+add_action( 'bp_admin_init', 'bboss_check_presence_load_directly' );
 
 /**
  * Register the post comment reply notifications.
  *
  * @since BuddyBoss 2.3.50
  */
-function bb_load_post_notifications() {
-	if ( class_exists( 'BB_Post_Notification' ) ) {
-		BB_Post_Notification::instance();
+function bboss_load_post_notifications() {
+	if ( class_exists( 'BBoss_Post_Notification' ) ) {
+		BBoss_Post_Notification::instance();
 	}
 }
 
@@ -760,7 +760,7 @@ function bb_load_post_notifications() {
  * @param int|string $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam.
  * @param array      $commentdata      Comment data.
  */
-function bb_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
+function bboss_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
 
 	// Don't send notification if the comment hasn't been approved.
 	if ( empty( $comment_approved ) ) {
@@ -810,21 +810,21 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 	$comment_content          = $commentdata['comment_content'];
 	$comment_link             = get_comment_link( $comment_id );
 	$parent_comment_author_id = (int) $parent_comment->user_id;
-	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID, $parent_comment_author_id ) : $commentdata['comment_author'];
+	$comment_author_name      = ! empty( $comment_author ) ? bboss_core_get_user_displayname( $comment_author->ID, $parent_comment_author_id ) : $commentdata['comment_author'];
 
 	// Send an email if the user hasn't opted-out.
 	if ( ! empty( $parent_comment_author_id ) ) {
 
-		$usernames = bp_find_mentions_by_at_sign( array(), $comment_content );
+		$usernames = bboss_find_mentions_by_at_sign( array(), $comment_content );
 		$send_mail = true;
 
 		if ( ! empty( $usernames ) && array_key_exists( $parent_comment_author_id, $usernames ) ) {
-			if ( true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_new_mention' ) ) {
+			if ( true === bboss_is_notification_enabled( $parent_comment_author_id, 'bb_new_mention' ) ) {
 				$send_mail = false;
 			}
 		}
 
-		if ( true === $send_mail && true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
+		if ( true === $send_mail && true === bboss_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment_author_id,
@@ -838,11 +838,11 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 					'commenter.name' => $comment_author_name,
 					'comment_reply'  => wp_strip_all_tags( $comment_content ),
 					'comment.url'    => esc_url( $comment_link ),
-					'unsubscribe'    => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					'unsubscribe'    => esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) ),
 				),
 			);
 
-			bp_send_email( 'new-comment-reply', $parent_comment_author_id, $args );
+			bboss_send_email( 'new-comment-reply', $parent_comment_author_id, $args );
 
 		}
 
@@ -870,7 +870,7 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
  * @param string     $old_status Previous comment status.
  * @param WP_Comment $comment Comment data.
  */
-function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) {
+function bboss_post_comment_on_status_change( $new_status, $old_status, $comment ) {
 
 	$notification_already_sent = get_comment_meta( $comment->comment_ID, 'bb_comment_notified_after_approved', true );
 	if (
@@ -879,7 +879,7 @@ function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) 
 		in_array( $old_status, array( 'unapproved', 'spam' ), true )
 	) {
 		$commentdata = get_object_vars( $comment );
-		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
+		bboss_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
 	}
 }
 
@@ -891,11 +891,11 @@ function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) 
  * @param string     $comment_ID Comment id.
  * @param WP_Comment $comment    Comment data.
  */
-function bb_post_new_comment_reply_notification_helper( $comment_ID, $comment ) {
+function bboss_post_new_comment_reply_notification_helper( $comment_ID, $comment ) {
 	$commentdata               = get_object_vars( $comment );
 	$notification_already_sent = get_comment_meta( $comment_ID, 'bb_comment_notified_after_approved', true );
 	if ( empty( $notification_already_sent ) && 1 === (int) $commentdata['comment_approved'] ) {
-		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
+		bboss_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
 	}
 }
 
@@ -904,7 +904,7 @@ function bb_post_new_comment_reply_notification_helper( $comment_ID, $comment ) 
  *
  * @since BuddyBoss 2.3.50
  */
-function bb_core_read_blog_comment_notification() {
+function bboss_core_read_blog_comment_notification() {
 	if ( ! is_user_logged_in() ) {
 		return;
 	}
@@ -915,7 +915,7 @@ function bb_core_read_blog_comment_notification() {
 	// autoloader (src/class-buddypress.php) returns early for inactive
 	// components, and the function file (bp-notifications-functions.php) is
 	// not loaded — so calling either would fatal.
-	if ( ! bp_is_active( 'notifications' ) ) {
+	if ( ! bboss_is_active( 'notifications' ) ) {
 		return;
 	}
 
@@ -927,39 +927,39 @@ function bb_core_read_blog_comment_notification() {
 
 	// Mark individual notification as read.
 	if ( ! empty( $comment_id ) ) {
-		$updated = BP_Notifications_Notification::update(
+		$updated = BBoss_Notifications_Notification::update(
 			array(
 				'is_new' => false,
 			),
 			array(
-				'user_id' => bp_loggedin_user_id(),
+				'user_id' => bboss_loggedin_user_id(),
 				'id'      => $comment_id,
 			)
 		);
 
 		if ( 1 === $updated ) {
-			$notifications_data = bp_notifications_get_notification( $comment_id );
+			$notifications_data = bboss_notifications_get_notification( $comment_id );
 			if ( isset( $notifications_data->item_id ) ) {
-				BP_Notifications_Notification::update(
+				BBoss_Notifications_Notification::update(
 					array(
 						'is_new' => false,
 					),
 					array(
-						'user_id'        => bp_loggedin_user_id(),
+						'user_id'        => bboss_loggedin_user_id(),
 						'item_id'        => $notifications_data->item_id,
 						'component_name' => $notifications_data->component_name,
 					)
 				);
 
-				if ( bp_is_active( 'activity' ) ) {
+				if ( bboss_is_active( 'activity' ) ) {
 					$activity_id = get_comment_meta( $notifications_data->item_id, 'bp_activity_comment_id', true );
 					if ( ! empty( $activity_id ) ) {
-						BP_Notifications_Notification::update(
+						BBoss_Notifications_Notification::update(
 							array(
 								'is_new' => false,
 							),
 							array(
-								'user_id'        => bp_loggedin_user_id(),
+								'user_id'        => bboss_loggedin_user_id(),
 								'item_id'        => $activity_id,
 								'component_name' => 'activity',
 							)
@@ -971,7 +971,7 @@ function bb_core_read_blog_comment_notification() {
 	}
 }
 
-add_action( 'template_redirect', 'bb_core_read_blog_comment_notification', 99 );
+add_action( 'template_redirect', 'bboss_core_read_blog_comment_notification', 99 );
 
 /**
  * Fire an email when someone mentioned users into the blog post comment and post published.
@@ -981,9 +981,9 @@ add_action( 'template_redirect', 'bb_core_read_blog_comment_notification', 99 );
  * @param int  $comment_id  ID of the comment.
  * @param bool $is_approved Whether the comment is approved or not.
  */
-function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
+function bboss_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 
-	if ( ! function_exists( 'bp_find_mentions_by_at_sign' ) ) {
+	if ( ! function_exists( 'bboss_find_mentions_by_at_sign' ) ) {
 		return;
 	}
 
@@ -1025,12 +1025,12 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 
 	if (
 		! empty( $post->post_type ) &&
-		bp_is_active( 'activity' ) &&
+		bboss_is_active( 'activity' ) &&
 		(
-			bp_is_post_type_feed_enable( $post->post_type ) ||
+			bboss_is_post_type_feed_enable( $post->post_type ) ||
 			(
-				bp_is_post_type_feed_enable( $post->post_type ) &&
-				! bb_is_post_type_feed_comment_enable( $post->post_type )
+				bboss_is_post_type_feed_enable( $post->post_type ) &&
+				! bboss_is_post_type_feed_comment_enable( $post->post_type )
 			)
 		)
 	) {
@@ -1038,7 +1038,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 	}
 
 	// Try to find mentions.
-	$usernames = bp_find_mentions_by_at_sign( array(), $post_type_comment->comment_content );
+	$usernames = bboss_find_mentions_by_at_sign( array(), $post_type_comment->comment_content );
 
 	if ( empty( $usernames ) ) {
 		return;
@@ -1065,17 +1065,17 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 		// User Mentions email.
 		if (
 			(
-				! bb_enabled_legacy_email_preference() &&
-				true === bb_is_notification_enabled( $user_id, 'bb_new_mention' )
+				! bboss_enabled_legacy_email_preference() &&
+				true === bboss_is_notification_enabled( $user_id, 'bb_new_mention' )
 			) ||
 			(
-				bb_enabled_legacy_email_preference() &&
-				true === bb_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
+				bboss_enabled_legacy_email_preference() &&
+				true === bboss_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
 			)
 		) {
 
 			// Poster name.
-			$reply_author_name = bp_core_get_user_displayname( $comment_user_id, $user_id );
+			$reply_author_name = bboss_core_get_user_displayname( $comment_user_id, $user_id );
 			$author_id         = $comment_user_id;
 
 			/** Mail */
@@ -1090,12 +1090,12 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 			// as plain text into mention notification emails, and rendering a
 			// non-functional dropdown inside the HTML email body. The dropdown
 			// is a frontend display affordance, not an email one.
-			if ( class_exists( 'BP_Moderation_Comment' ) ) {
-				BP_Moderation_Comment::bb_set_skip_report_button( true );
+			if ( class_exists( 'BBoss_Moderation_Comment' ) ) {
+				BBoss_Moderation_Comment::bb_set_skip_report_button( true );
 			}
 			$reply_content = apply_filters( 'comment_text', $post_type_comment->comment_content, $post_type_comment, array() );
-			if ( class_exists( 'BP_Moderation_Comment' ) ) {
-				BP_Moderation_Comment::bb_set_skip_report_button( false );
+			if ( class_exists( 'BBoss_Moderation_Comment' ) ) {
+				BBoss_Moderation_Comment::bb_set_skip_report_button( false );
 			}
 			$reply_url     = get_comment_link( $post_type_comment );
 			$title_text    = get_the_title( $post );
@@ -1107,7 +1107,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 				'notification_type' => $email_type,
 			);
 
-			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+			$notification_type_html = esc_html__( 'comment', 'buddyboss-platform' );
 
 			$args = array(
 				'tokens' => array(
@@ -1115,42 +1115,42 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 					'mentioned.url'     => $reply_url,
 					'poster.name'       => $reply_author_name,
 					'receiver-user.id'  => $user_id,
-					'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					'unsubscribe'       => esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) ),
 					'mentioned.type'    => $notification_type_html,
 					'mentioned.content' => $reply_content,
 					'author_id'         => $author_id,
-					'reply_text'        => esc_html__( 'View Comment', 'buddyboss' ),
+					'reply_text'        => esc_html__( 'View Comment', 'buddyboss-platform' ),
 					'title_text'        => $title_text,
 				),
 			);
 
-			bp_send_email( $email_type, $user_id, $args );
+			bboss_send_email( $email_type, $user_id, $args );
 		}
 
-		if ( bp_is_active( 'notifications' ) ) {
+		if ( bboss_is_active( 'notifications' ) ) {
 			// Specify the Notification type.
 			$component_action = 'bb_new_mention';
 			$component_name   = 'core';
 
-			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
-			bp_notifications_add_notification(
+			add_filter( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
+			bboss_notifications_add_notification(
 				array(
 					'user_id'           => $user_id,
 					'item_id'           => $comment_id,
 					'secondary_item_id' => $comment_user_id,
 					'component_name'    => $component_name,
 					'component_action'  => $component_action,
-					'date_notified'     => bp_core_current_time(),
+					'date_notified'     => bboss_core_current_time(),
 					'is_new'            => 1,
 				)
 			);
-			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			remove_filter( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
 		}
 	}
 
 }
 
-add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
+add_action( 'comment_post', 'bboss_mention_post_type_comment', 10, 2 );
 
 /**
  * Fired and mention email when comment has been approved.
@@ -1163,18 +1163,18 @@ add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
  *
  * @return void
  */
-function bb_mention_post_type_comment_status_change( $new_status, $old_status, $comment ) {
+function bboss_mention_post_type_comment_status_change( $new_status, $old_status, $comment ) {
 
 	if (
 		'approved' === $new_status &&
 		in_array( $old_status, array( 'unapproved', 'spam' ), true )
 	) {
 		$commentdata = get_object_vars( $comment );
-		bb_mention_post_type_comment( $commentdata['comment_ID'], $commentdata['comment_approved'] );
+		bboss_mention_post_type_comment( $commentdata['comment_ID'], $commentdata['comment_approved'] );
 	}
 }
 
-add_action( 'transition_comment_status', 'bb_mention_post_type_comment_status_change', 10, 3 );
+add_action( 'transition_comment_status', 'bboss_mention_post_type_comment_status_change', 10, 3 );
 
 /**
  * Registered component name for the core.
@@ -1185,7 +1185,7 @@ add_action( 'transition_comment_status', 'bb_mention_post_type_comment_status_ch
  *
  * @return mixed
  */
-function bb_core_registered_notification_components( $component_names ) {
+function bboss_core_registered_notification_components( $component_names ) {
 	if ( ! in_array( 'core', $component_names, true ) ) {
 		$component_names[] = 'core';
 	}
@@ -1193,7 +1193,7 @@ function bb_core_registered_notification_components( $component_names ) {
 	return $component_names;
 }
 
-add_action( 'bp_notifications_get_registered_components', 'bb_core_registered_notification_components', 20, 1 );
+add_action( 'bp_notifications_get_registered_components', 'bboss_core_registered_notification_components', 20, 1 );
 
 /**
  * Removed duplicate background jobs from the table if exists.
@@ -1204,7 +1204,7 @@ add_action( 'bp_notifications_get_registered_components', 'bb_core_registered_no
  *
  * @return void
  */
-function bb_background_remove_duplicate_async_request_batch_process( $batch ) {
+function bboss_background_remove_duplicate_async_request_batch_process( $batch ) {
 	global $bb_background_updater, $wpdb;
 
 	if (
@@ -1233,10 +1233,10 @@ function bb_background_remove_duplicate_async_request_batch_process( $batch ) {
 		)
 	);
 
-	$wpdb->query( $del_sql );
+	$wpdb->query( $del_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $del_sql is $wpdb->prepare()'d above (every value bound with %s/%d); table name from the background updater class.
 }
 
-add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_async_request_batch_process', 1, 1 );
+add_action( 'bb_async_request_batch_process', 'bboss_background_remove_duplicate_async_request_batch_process', 1, 1 );
 
 /**
  * Save directory layout settings for BuddyBoss.
@@ -1247,32 +1247,32 @@ add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_as
  * @since BuddyBoss 2.5.11
  */
 function buddyboss_directory_save_layout() {
-	$object = bb_filter_input_string( INPUT_POST, 'object' );
+	$object = bboss_filter_input_string( INPUT_POST, 'object' );
 	if ( empty( $object ) ) {
 		wp_send_json_error( array(
-			'message' => __( 'Invalid object.', 'buddyboss' ),
+			'message' => __( 'Invalid object.', 'buddyboss-platform' ),
 		) );
 	}
 
-	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
+	$nonce = bboss_filter_input_string( INPUT_POST, 'nonce' );
 	if ( ! wp_verify_nonce( $nonce, 'bp_nouveau_' . $object ) ) {
 		wp_send_json_error( array(
-			'message' => __( 'Invalid request.', 'buddyboss' ),
+			'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 		) );
 	}
 
-	$option_name = bb_filter_input_string( INPUT_POST, 'option' );
+	$option_name = bboss_filter_input_string( INPUT_POST, 'option' );
 	if ( empty( $option_name ) || 'bb_layout_view' !== $option_name ) {
 		wp_send_json_error( array(
-			'message' => __( 'Not a valid option', 'buddyboss' ),
+			'message' => __( 'Not a valid option', 'buddyboss-platform' ),
 		) );
 		wp_die();
 	}
 
-	$option_value = bb_filter_input_string( INPUT_POST, 'type' );
+	$option_value = bboss_filter_input_string( INPUT_POST, 'type' );
 	if ( ! in_array( $option_value, array( 'grid', 'list' ), true ) ) {
 		wp_send_json_error( array(
-			'message' => __( 'Not a valid value', 'buddyboss' ),
+			'message' => __( 'Not a valid value', 'buddyboss-platform' ),
 		) );
 		wp_die();
 	}
@@ -1306,20 +1306,20 @@ add_action( 'wp_ajax_nopriv_buddyboss_directory_save_layout', 'buddyboss_directo
  *
  * @since BuddyBoss 2.5.60
  */
-function bb_bg_process_log_load() {
-	if ( class_exists( 'BB_BG_Process_Log' ) ) {
-		BB_BG_Process_Log::instance();
+function bboss_bg_process_log_load() {
+	if ( class_exists( 'BBoss_BG_Process_Log' ) ) {
+		BBoss_BG_Process_Log::instance();
 	}
 }
 
-add_action( 'bp_init', 'bb_bg_process_log_load' );
+add_action( 'bp_init', 'bboss_bg_process_log_load' );
 
 /**
  * Remove notices from the ReadyLaunch screen.
  *
  * @since BuddyBoss 2.6.30
  */
-function bb_remove_admin_notices() {
+function bboss_remove_admin_notices() {
 	$screen = get_current_screen();
 	// `bb-readylaunch` screen retired in BuddyBoss 3.0.0; Settings 2.0
 	// (`buddyboss_page_bb-settings`) is now the home for appearance settings
@@ -1337,46 +1337,14 @@ function bb_remove_admin_notices() {
  *
  * @since BuddyBoss 2.7.40
  */
-function bb_telemetry_load() {
-	if ( class_exists( 'BB_Telemetry' ) ) {
-		BB_Telemetry::instance();
+function bboss_telemetry_load() {
+	if ( class_exists( 'BBoss_Telemetry' ) ) {
+		BBoss_Telemetry::instance();
 	}
 }
 
-add_action( 'bp_init', 'bb_telemetry_load' );
+add_action( 'bp_init', 'bboss_telemetry_load' );
 
-/**
- * Force telemetry into "complete" mode on sites with a paid BuddyBoss product.
- *
- * Telemetry defaults to "disable" and is opt-in, which leaves most paid sites
- * unreported. Paid products are expected to report, so the mode is raised for
- * any site holding a licence key or running a paid add-on — not only for sites
- * with the Pro plugin installed.
- *
- * Platform Pro registers `bb_pro_force_telemetry_complete()` on this same
- * filter. Both return 'complete', so the two are idempotent; Pro's copy is kept
- * for now so an older Platform paired with a newer Pro does not lose forced
- * reporting. It can be dropped once this version is the supported floor.
- *
- * @since BuddyBoss 3.4.3
- *
- * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
- *
- * @return string Telemetry mode.
- */
-function bb_force_telemetry_for_licensed_sites( $mode ) {
-	if ( 'complete' === $mode ) {
-		return $mode;
-	}
-
-	if ( bb_has_paid_product() ) {
-		return 'complete';
-	}
-
-	return $mode;
-}
-
-add_filter( 'bb_advanced_telemetry_reporting_value', 'bb_force_telemetry_for_licensed_sites' );
 
 /**
  * Initialize the Topics Manager.
@@ -1386,17 +1354,17 @@ add_filter( 'bb_advanced_telemetry_reporting_value', 'bb_force_telemetry_for_lic
  *
  * @return void True if the topics manager is loaded, false otherwise.
  */
-function bb_load_topics_manager() {
+function bboss_load_topics_manager() {
 	// @todo: Only load if activity topics are enabled for now.
 	if (
-		! bp_is_active( 'activity' ) ||
-		! function_exists( 'bb_is_enabled_activity_topics' ) ||
-		! bb_is_enabled_activity_topics()
+		! bboss_is_active( 'activity' ) ||
+		! function_exists( 'bboss_is_enabled_activity_topics' ) ||
+		! bboss_is_enabled_activity_topics()
 	) {
 		return;
 	}
 
-	bb_topics_manager_instance();
+	bboss_topics_manager_instance();
 }
 
 /**
@@ -1404,10 +1372,10 @@ function bb_load_topics_manager() {
  *
  * @since BuddyBoss 2.9.00
  */
-function bb_load_readylaunch() {
-	if ( class_exists( 'BB_Readylaunch' ) ) {
-		return BB_Readylaunch::instance();
+function bboss_load_readylaunch() {
+	if ( class_exists( 'BBoss_Readylaunch' ) ) {
+		return BBoss_Readylaunch::instance();
 	}
 }
 
-add_action( 'bp_init', 'bb_load_readylaunch', 1 );
+add_action( 'bp_init', 'bboss_load_readylaunch', 1 );

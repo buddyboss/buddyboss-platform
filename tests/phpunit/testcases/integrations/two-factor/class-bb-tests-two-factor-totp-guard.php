@@ -101,7 +101,7 @@ class BB_Tests_Two_Factor_Totp_Guard extends BB_Two_Factor_UnitTestCase {
 	 * The guard is registered on the REST pre-dispatch filter.
 	 */
 	public function test_guard_is_hooked() {
-		$this->assertSame( 10, has_filter( 'rest_request_before_callbacks', 'bb_two_factor_guard_totp_enable' ) );
+		$this->assertSame( 10, has_filter( 'rest_request_before_callbacks', 'bboss_two_factor_guard_totp_enable' ) );
 	}
 
 	/**
@@ -119,11 +119,11 @@ class BB_Tests_Two_Factor_Totp_Guard extends BB_Two_Factor_UnitTestCase {
 	 * Control: without the guard the same request turns the authenticator on.
 	 */
 	public function test_control_without_guard_verify_enables_totp() {
-		remove_filter( 'rest_request_before_callbacks', 'bb_two_factor_guard_totp_enable', 10 );
+		remove_filter( 'rest_request_before_callbacks', 'bboss_two_factor_guard_totp_enable', 10 );
 
 		$response = $this->verify( $this->member );
 
-		add_filter( 'rest_request_before_callbacks', 'bb_two_factor_guard_totp_enable', 10, 3 );
+		add_filter( 'rest_request_before_callbacks', 'bboss_two_factor_guard_totp_enable', 10, 3 );
 
 		$this->assertSame( 200, $response->get_status() );
 		$this->assertSame( array( 'Two_Factor_Totp' ), $this->stored_enabled( $this->member ) );
@@ -138,7 +138,7 @@ class BB_Tests_Two_Factor_Totp_Guard extends BB_Two_Factor_UnitTestCase {
 		$this->verify( $this->member );
 
 		$this->assertSame( array(), array_filter( $this->stored_enabled( $this->member ) ) );
-		$this->assertTrue( bb_two_factor_check_recovery_method( $this->member, array( 'Two_Factor_Totp', 'Two_Factor_Backup_Codes' ) ) );
+		$this->assertTrue( bboss_two_factor_check_recovery_method( $this->member, array( 'Two_Factor_Totp', 'Two_Factor_Backup_Codes' ) ) );
 	}
 
 	/**
@@ -152,7 +152,7 @@ class BB_Tests_Two_Factor_Totp_Guard extends BB_Two_Factor_UnitTestCase {
 		$request->set_param( 'user_id', $this->member );
 		$request->set_param( 'enable_provider', true );
 
-		bb_two_factor_guard_totp_enable( null, array(), $request );
+		bboss_two_factor_guard_totp_enable( null, array(), $request );
 
 		$this->assertTrue( $request->get_param( 'enable_provider' ) );
 	}
@@ -199,12 +199,12 @@ class BB_Tests_Two_Factor_Totp_Guard extends BB_Two_Factor_UnitTestCase {
 		$delete = new WP_REST_Request( 'DELETE', '/two-factor/1.0/totp' );
 		$delete->set_param( 'user_id', $this->member );
 		$delete->set_param( 'enable_provider', true );
-		bb_two_factor_guard_totp_enable( null, array(), $delete );
+		bboss_two_factor_guard_totp_enable( null, array(), $delete );
 
 		$codes = new WP_REST_Request( 'POST', '/two-factor/1.0/generate-backup-codes' );
 		$codes->set_param( 'user_id', $this->member );
 		$codes->set_param( 'enable_provider', true );
-		bb_two_factor_guard_totp_enable( null, array(), $codes );
+		bboss_two_factor_guard_totp_enable( null, array(), $codes );
 
 		$this->assertTrue( $delete->get_param( 'enable_provider' ) );
 		$this->assertTrue( $codes->get_param( 'enable_provider' ) );
@@ -219,7 +219,7 @@ class BB_Tests_Two_Factor_Totp_Guard extends BB_Two_Factor_UnitTestCase {
 		$request->set_param( 'user_id', $this->member );
 		$request->set_param( 'enable_provider', true );
 
-		$this->assertSame( $error, bb_two_factor_guard_totp_enable( $error, array(), $request ) );
+		$this->assertSame( $error, bboss_two_factor_guard_totp_enable( $error, array(), $request ) );
 		$this->assertTrue( $request->get_param( 'enable_provider' ) );
 	}
 }

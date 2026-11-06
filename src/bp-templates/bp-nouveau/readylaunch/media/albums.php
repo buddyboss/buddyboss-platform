@@ -5,7 +5,7 @@
  * This template handles displaying media albums listing and management.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -13,24 +13,24 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_is_group = bp_is_group();
-if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) {
-	$bp_is_group_albums_support_enabled   = bp_is_group_albums_support_enabled();
-	$bp_is_profile_albums_support_enabled = bp_is_profile_albums_support_enabled();
+$bp_is_group = bboss_is_group();
+if ( ( ( bboss_is_my_profile() && bboss_user_can_create_media() ) || ( $bp_is_group && groups_can_user_manage_albums( bboss_loggedin_user_id(), bboss_get_current_group_id() ) ) ) ) {
+	$bp_is_group_albums_support_enabled   = bboss_is_group_albums_support_enabled();
+	$bp_is_profile_albums_support_enabled = bboss_is_profile_albums_support_enabled();
 	?>
 
 	<?php
-	if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) {
+	if ( bboss_has_albums( bboss_ajax_querystring( 'albums' ) ) ) {
 		?>
 		<div class="bb-media-actions-wrap album-actions-wrap bb-rl-media-actions-wrap">
 			<h2 class="bb-title">
 				<div class="bb-item-count">
 					<?php
 					$count = 0;
-					if ( bp_is_group() ) {
-						$count = bp_media_get_total_group_album_count();
-					} elseif ( bp_is_my_profile() ) {
-						$count = bb_media_get_total_album_count();
+					if ( bboss_is_group() ) {
+						$count = bboss_media_get_total_group_album_count();
+					} elseif ( bboss_is_my_profile() ) {
+						$count = bboss_media_get_total_album_count();
 					}
 					printf(
 						wp_kses(
@@ -39,7 +39,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 								'<span class="bb-count">%d</span> Album',
 								'<span class="bb-count">%d</span> Albums',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),
@@ -52,7 +52,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 			if ( ( $bp_is_group && $bp_is_group_albums_support_enabled ) || $bp_is_profile_albums_support_enabled ) {
 				?>
 				<div class="bb-media-actions">
-					<a href="#" id="bb-create-album" class="bb-create-album button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-images"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+					<a href="#" id="bb-create-album" class="bb-create-album button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-images"></i> <?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?></a>
 				</div>
 				<?php
 			}
@@ -61,20 +61,20 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 
 		<?php
 		if ( ( $bp_is_group && $bp_is_group_albums_support_enabled ) || $bp_is_profile_albums_support_enabled ) {
-			bp_get_template_part( 'media/create-album' );
+			bboss_get_template_part( 'media/create-album' );
 		}
 	}
 } else {
 	?>
 	<div class="bb-media-actions-wrap album-actions-wrap">
-		<h2 class="bb-title"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></h2>
+		<h2 class="bb-title"><?php esc_html_e( 'Albums', 'buddyboss-platform' ); ?></h2>
 	</div>
 	<?php
 }
 
-bp_nouveau_media_hook( 'before', 'media_album_content' );
+bboss_nouveau_media_hook( 'before', 'media_album_content' );
 
-if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) :
+if ( bboss_has_albums( bboss_ajax_querystring( 'albums' ) ) ) :
 	?>
 	<div id="albums-dir-list" class="bb-albums bb-albums-dir-list">
 		<?php
@@ -85,17 +85,17 @@ if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) :
 		endif;
 
 
-		while ( bp_album() ) :
-			bp_the_album();
+		while ( bboss_album() ) :
+			bboss_the_album();
 
-			bp_get_template_part( 'media/album-entry' );
+			bboss_get_template_part( 'media/album-entry' );
 
 		endwhile;
 
-		if ( bp_album_has_more_items() ) :
+		if ( bboss_album_has_more_items() ) :
 			?>
 			<li class="load-more">
-				<a class="button outline" href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				<a class="button outline" href="<?php bboss_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 			</li>
 			<?php
 		endif;
@@ -110,7 +110,7 @@ if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) :
 	<?php
 
 else :
-	bp_get_template_part( 'media/no-media' );
+	bboss_get_template_part( 'media/no-media' );
 endif;
 
-bp_nouveau_media_hook( 'after', 'media_album_content' );
+bboss_nouveau_media_hook( 'after', 'media_album_content' );

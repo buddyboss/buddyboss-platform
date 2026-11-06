@@ -19,10 +19,10 @@ defined( 'ABSPATH' ) || exit;
  *                      Default: false.
  * @return bool True if group forums are active, otherwise false.
  */
-function bp_is_group_forums_active( $default = false ) {
+function bboss_is_group_forums_active( $default = false ) {
 	_deprecated_function( __FUNCTION__, '3.0', 'groups_get_group( $id )->enable_forum' );
 
-	$is_active = function_exists( 'bbp_is_group_forums_active' ) ? bbp_is_group_forums_active( $default ) : $default;
+	$is_active = function_exists( 'bboss_bbp_is_group_forums_active' ) ? bboss_bbp_is_group_forums_active( $default ) : $default;
 
 	/**
 	 * Filters whether or not bbPress plugin-powered Group Forums are enabled.
@@ -45,7 +45,7 @@ function bp_is_group_forums_active( $default = false ) {
  *
  * @return false
  */
-function bp_is_user_forums() {
+function bboss_is_user_forums() {
 	_deprecated_function( __FUNCTION__, '3.0', 'legacy forum support removed' );
 	return false;
 }
@@ -59,7 +59,7 @@ function bp_is_user_forums() {
  *
  * @return bool
  */
-function bp_is_group_forum() {
+function bboss_is_group_forum() {
 	_deprecated_function( __FUNCTION__, '3.0', 'legacy forum support removed' );
 	return false;
 }
@@ -71,9 +71,9 @@ function bp_is_group_forum() {
  * @since BuddyPress 1.2.7
  * @deprecated BuddyPress 3.0.0 No longer used in core, but supported for third-party code.
  *
- * @param BP_Groups_Group|bool $group The BP Groups_Group object if passed, boolean false if not passed.
+ * @param BBoss_Groups_Group|bool $group The BP Groups_Group object if passed, boolean false if not passed.
  */
-function bp_group_new_topic_button( $group = false ) {
+function bboss_group_new_topic_button( $group = false ) {
 	_deprecated_function( __FUNCTION__, '3.0', 'legacy forum support removed' );
 }
 
@@ -83,11 +83,11 @@ function bp_group_new_topic_button( $group = false ) {
 	 * @since BuddyPress 1.2.7
 	 * @deprecated BuddyPress 3.0.0 No longer used in core, but supported for third-party code.
 	 *
-	 * @param BP_Groups_Group|bool $group The BP Groups_Group object if passed, boolean false if not passed.
+	 * @param BBoss_Groups_Group|bool $group The BP Groups_Group object if passed, boolean false if not passed.
 	 *
 	 * @return false
 	 */
-function bp_get_group_new_topic_button( $group = false ) {
+function bboss_get_group_new_topic_button( $group = false ) {
 	_deprecated_function( __FUNCTION__, '3.0', 'legacy forum support removed' );
 	return false;
 }
@@ -107,44 +107,44 @@ function bp_get_group_new_topic_button( $group = false ) {
  *
  * @param int $user_id Optional. User ID to mark as spam. Defaults to displayed user.
  */
-function bp_core_action_set_spammer_status( $user_id = 0 ) {
+function bboss_core_action_set_spammer_status( $user_id = 0 ) {
 	_deprecated_function( __FUNCTION__, '3.0' );
 
 	// Only super admins can currently spam users (but they can't spam
 	// themselves).
-	if ( ! is_super_admin() || bp_is_my_profile() ) {
+	if ( ! is_super_admin() || bboss_is_my_profile() ) {
 		return;
 	}
 
 	// Use displayed user if it's not yourself.
 	if ( empty( $user_id ) ) {
-		$user_id = bp_displayed_user_id();
+		$user_id = bboss_displayed_user_id();
 	}
 
-	if ( bp_is_current_component( 'admin' ) && ( in_array( bp_current_action(), array( 'mark-spammer', 'unmark-spammer' ) ) ) ) {
+	if ( bboss_is_current_component( 'admin' ) && ( in_array( bboss_current_action(), array( 'mark-spammer', 'unmark-spammer' ) ) ) ) {
 
 		// Check the nonce.
 		check_admin_referer( 'mark-unmark-spammer' );
 
 		// To spam or not to spam.
-		$status = bp_is_current_action( 'mark-spammer' ) ? 'spam' : 'ham';
+		$status = bboss_is_current_action( 'mark-spammer' ) ? 'spam' : 'ham';
 
 		// The heavy lifting.
-		bp_core_process_spammer_status( $user_id, $status );
+		bboss_core_process_spammer_status( $user_id, $status );
 
 		// Add feedback message. @todo - Error reporting.
 		if ( 'spam' == $status ) {
-			bp_core_add_message( __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddyboss-platform' ) );
 		} else {
-			bp_core_add_message( __( 'User removed as spammer.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'User removed as spammer.', 'buddyboss-platform' ) );
 		}
 
 		// Deprecated. Use bp_core_process_spammer_status.
 		$is_spam = 'spam' == $status;
-		do_action( 'bp_core_action_set_spammer_status', bp_displayed_user_id(), $is_spam );
+		do_action( 'bp_core_action_set_spammer_status', bboss_displayed_user_id(), $is_spam );
 
 		// Redirect back to where we came from.
-		bp_core_redirect( wp_get_referer() );
+		bboss_core_redirect( wp_get_referer() );
 	}
 }
 
@@ -157,14 +157,14 @@ function bp_core_action_set_spammer_status( $user_id = 0 ) {
  * @since BuddyPress 1.6.0 No longer used, unhooked.
  * @since BuddyPress 3.0.0 Formally marked as deprecated.
  */
-function bp_core_action_delete_user() {
+function bboss_core_action_delete_user() {
 	_deprecated_function( __FUNCTION__, '3.0' );
 
-	if ( ! bp_current_user_can( 'bp_moderate' ) || bp_is_my_profile() || ! bp_displayed_user_id() ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) || bboss_is_my_profile() || ! bboss_displayed_user_id() ) {
 		return false;
 	}
 
-	if ( bp_is_current_component( 'admin' ) && bp_is_current_action( 'delete-user' ) ) {
+	if ( bboss_is_current_component( 'admin' ) && bboss_is_current_action( 'delete-user' ) ) {
 
 		// Check the nonce.
 		check_admin_referer( 'delete-user' );
@@ -172,19 +172,21 @@ function bp_core_action_delete_user() {
 		$errors = false;
 		do_action( 'bp_core_before_action_delete_user', $errors );
 
-		if ( bp_core_delete_account( bp_displayed_user_id() ) ) {
-			bp_core_add_message( sprintf( __( '%s has been deleted from the system.', 'buddyboss' ), bp_get_displayed_user_fullname() ) );
+		if ( bboss_core_delete_account( bboss_displayed_user_id() ) ) {
+			/* translators: %s: Display name of the deleted user. */
+			bboss_core_add_message( sprintf( __( '%s has been deleted from the system.', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ) );
 		} else {
-			bp_core_add_message( sprintf( __( 'There was an error deleting %s from the system. Please try again.', 'buddyboss' ), bp_get_displayed_user_fullname() ), 'error' );
+			/* translators: %s: Display name of the user that could not be deleted. */
+			bboss_core_add_message( sprintf( __( 'There was an error deleting %s from the system. Please try again.', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ), 'error' );
 			$errors = true;
 		}
 
 		do_action( 'bp_core_action_delete_user', $errors );
 
 		if ( $errors ) {
-			bp_core_redirect( bp_displayed_user_domain() );
+			bboss_core_redirect( bboss_displayed_user_domain() );
 		} else {
-			bp_core_redirect( bp_loggedin_user_domain() );
+			bboss_core_redirect( bboss_loggedin_user_domain() );
 		}
 	}
 }

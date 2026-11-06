@@ -16,67 +16,67 @@ add_action(
 		$ajax_actions = array(
 			array(
 				'groups_filter' => array(
-					'function' => 'bp_nouveau_ajax_object_template_loader',
+					'function' => 'bboss_nouveau_ajax_object_template_loader',
 					'nopriv'   => true,
 				),
 			),
 			array(
 				'groups_join_group' => array(
-					'function' => 'bp_nouveau_ajax_joinleave_group',
+					'function' => 'bboss_nouveau_ajax_joinleave_group',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'groups_leave_group' => array(
-					'function' => 'bp_nouveau_ajax_joinleave_group',
+					'function' => 'bboss_nouveau_ajax_joinleave_group',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'groups_accept_invite' => array(
-					'function' => 'bp_nouveau_ajax_joinleave_group',
+					'function' => 'bboss_nouveau_ajax_joinleave_group',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'groups_reject_invite' => array(
-					'function' => 'bp_nouveau_ajax_joinleave_group',
+					'function' => 'bboss_nouveau_ajax_joinleave_group',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'groups_request_membership' => array(
-					'function' => 'bp_nouveau_ajax_joinleave_group',
+					'function' => 'bboss_nouveau_ajax_joinleave_group',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'groups_get_group_potential_invites' => array(
-					'function' => 'bp_nouveau_ajax_get_users_to_invite',
+					'function' => 'bboss_nouveau_ajax_get_users_to_invite',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'groups_get_group_members_listing' => array(
-					'function' => 'bp_nouveau_ajax_groups_get_group_members_listing',
+					'function' => 'bboss_nouveau_ajax_groups_get_group_members_listing',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'groups_get_group_members_send_message' => array(
-					'function' => 'bp_nouveau_ajax_groups_send_message',
+					'function' => 'bboss_nouveau_ajax_groups_send_message',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'groups_send_group_invites' => array(
-					'function' => 'bp_nouveau_ajax_send_group_invites',
+					'function' => 'bboss_nouveau_ajax_send_group_invites',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'groups_delete_group_invite' => array(
-					'function' => 'bp_nouveau_ajax_remove_group_invite',
+					'function' => 'bboss_nouveau_ajax_remove_group_invite',
 					'nopriv'   => false,
 				),
 			),
@@ -101,28 +101,28 @@ add_action(
  * @since BuddyPress 3.0.0
  * @return string HTML
  */
-function bp_nouveau_ajax_joinleave_group() {
+function bboss_nouveau_ajax_joinleave_group() {
 	$response = array(
-		'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ) ),
+		'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' ) ),
 	);
 
 	// Bail if not a POST action.
-	if ( ! bp_is_post_request() || empty( $_POST['action'] ) ) {
+	if ( ! bboss_is_post_request() || empty( $_POST['action'] ) ) {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['nonce'] ) || empty( $_POST['item_id'] ) || ! bp_is_active( 'groups' ) ) {
+	if ( empty( $_POST['nonce'] ) || empty( $_POST['item_id'] ) || ! bboss_is_active( 'groups' ) ) {
 		wp_send_json_error( $response );
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 	$check = 'bp_nouveau_groups';
 
 	// Use a specific one for actions needed it
 	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
-		$nonce = $_POST['_wpnonce'];
-		$check = $_POST['action'];
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+		$check = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 	}
 
 	// Nonce check!
@@ -134,18 +134,18 @@ function bp_nouveau_ajax_joinleave_group() {
 	$group_id = (int) $_POST['item_id'];
 
 	$errors = array(
-		'cannot' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You cannot join this group.', 'buddyboss' ) ),
-		'member' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You are already a member of the group.', 'buddyboss' ) ),
+		'cannot' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You cannot join this group.', 'buddyboss-platform' ) ),
+		'member' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You are already a member of the group.', 'buddyboss-platform' ) ),
 	);
 
-	if ( groups_is_user_banned( bp_loggedin_user_id(), $group_id ) ) {
+	if ( bboss_groups_is_user_banned( bboss_loggedin_user_id(), $group_id ) ) {
 		$response['feedback'] = $errors['cannot'];
 
 		wp_send_json_error( $response );
 	}
 
 	// Validate and get the group
-	$group = groups_get_group( array( 'group_id' => $group_id ) );
+	$group = bboss_groups_get_group( array( 'group_id' => $group_id ) );
 
 	if ( empty( $group->id ) ) {
 		wp_send_json_error( $response );
@@ -155,19 +155,19 @@ function bp_nouveau_ajax_joinleave_group() {
 	switch ( $_POST['action'] ) {
 
 		case 'groups_accept_invite':
-			if ( ! groups_check_user_has_invite( bp_loggedin_user_id(), $group_id ) ) {
+			if ( ! bboss_groups_check_user_has_invite( bboss_loggedin_user_id(), $group_id ) ) {
 				wp_send_json_error( $response );
 			}
 
-			if ( ! groups_accept_invite( bp_loggedin_user_id(), $group_id ) ) {
+			if ( ! bboss_groups_accept_invite( bboss_loggedin_user_id(), $group_id ) ) {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invitation could not be accepted.', 'buddyboss' ) ),
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invitation could not be accepted.', 'buddyboss-platform' ) ),
 					'type'     => 'error',
 				);
 
 			} else {
-				if ( bp_is_active( 'activity' ) ) {
-					groups_record_activity(
+				if ( bboss_is_active( 'activity' ) ) {
+					bboss_groups_record_activity(
 						array(
 							'type'    => 'joined_group',
 							'item_id' => $group->id,
@@ -179,34 +179,34 @@ function bp_nouveau_ajax_joinleave_group() {
 				$group->is_member = '1';
 
 				$response = array(
-					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite accepted.', 'buddyboss' ) ),
+					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite accepted.', 'buddyboss-platform' ) ),
 					'type'      => 'success',
-					'is_user'   => bp_is_user(),
-					'contents'  => bp_get_group_join_button( $group ),
-					'is_group'  => bp_is_group(),
-					'group_url' => bp_get_group_permalink( $group ),
+					'is_user'   => bboss_is_user(),
+					'contents'  => bboss_get_group_join_button( $group ),
+					'is_group'  => bboss_is_group(),
+					'group_url' => bboss_get_group_permalink( $group ),
 				);
 			}
 			break;
 
 		case 'groups_reject_invite':
-			if ( ! groups_reject_invite( bp_loggedin_user_id(), $group_id ) ) {
+			if ( ! bboss_groups_reject_invite( bboss_loggedin_user_id(), $group_id ) ) {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite could not be rejected', 'buddyboss' ) ),
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite could not be rejected', 'buddyboss-platform' ) ),
 					'type'     => 'error',
 				);
 			} else {
 				$response = array(
-					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite rejected', 'buddyboss' ) ),
+					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite rejected', 'buddyboss-platform' ) ),
 					'type'      => 'success',
-					'is_user'   => bp_is_user(),
-					'group_url' => bp_get_group_permalink( $group ),
+					'is_user'   => bboss_is_user(),
+					'group_url' => bboss_get_group_permalink( $group ),
 				);
 			}
 			break;
 
 		case 'groups_join_group':
-			if ( groups_is_user_member( bp_loggedin_user_id(), $group->id ) ) {
+			if ( bboss_groups_is_user_member( bboss_loggedin_user_id(), $group->id ) ) {
 				$response = array(
 					'feedback' => $errors['member'],
 					'type'     => 'error',
@@ -216,9 +216,9 @@ function bp_nouveau_ajax_joinleave_group() {
 					'feedback' => $errors['cannot'],
 					'type'     => 'error',
 				);
-			} elseif ( ! groups_join_group( $group->id ) ) {
+			} elseif ( ! bboss_groups_join_group( $group->id ) ) {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error joining this group.', 'buddyboss' ) ),
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error joining this group.', 'buddyboss-platform' ) ),
 					'type'     => 'error',
 				);
 			} else {
@@ -226,24 +226,24 @@ function bp_nouveau_ajax_joinleave_group() {
 				$group->is_member = '1';
 
 				$response = array(
-					'contents' => bp_get_group_join_button( $group ),
-					'is_group' => bp_is_group(),
+					'contents' => bboss_get_group_join_button( $group ),
+					'is_group' => bboss_is_group(),
 					'type'     => 'success',
 				);
 			}
 			break;
 
 		case 'groups_request_membership':
-			if ( ! groups_send_membership_request(
+			if ( ! bboss_groups_send_membership_request(
 				array(
-					'user_id'  => bp_loggedin_user_id(),
+					'user_id'  => bboss_loggedin_user_id(),
 					'group_id' => $group->id,
 				)
 			) ) {
 				$response = array(
 					'feedback' => sprintf(
 						'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-						esc_html__( 'Error requesting membership.', 'buddyboss' )
+						esc_html__( 'Error requesting membership.', 'buddyboss-platform' )
 					),
 					'type'     => 'error',
 				);
@@ -252,40 +252,40 @@ function bp_nouveau_ajax_joinleave_group() {
 				$group->is_pending = '1';
 
 				$response = array(
-					'contents'  => bp_get_group_join_button( $group ),
-					'is_group'  => bp_is_group(),
+					'contents'  => bboss_get_group_join_button( $group ),
+					'is_group'  => bboss_is_group(),
 					'type'      => 'success',
-					'group_url' => ( bp_is_group() ? bp_get_group_permalink( $group ) : '' ),
+					'group_url' => ( bboss_is_group() ? bboss_get_group_permalink( $group ) : '' ),
 				);
 			}
 			break;
 
 		case 'groups_leave_group':
-			if ( ! groups_leave_group( $group->id ) ) {
+			if ( ! bboss_groups_leave_group( $group->id ) ) {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error leaving group.', 'buddyboss' ) ),
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error leaving group.', 'buddyboss-platform' ) ),
 					'type'     => 'error',
 				);
 			} else {
 				// User is no more a member of the group
 				$group->is_member = '0';
-				$bp               = buddypress();
+				$bp               = bboss();
 
 				/**
 				 * When inside the group or in the loggedin user's group memberships screen
 				 * we need to reload the page.
 				 */
-				$bp_is_group = bp_is_group() || ( bp_is_user_groups() && bp_is_my_profile() );
+				$bp_is_group = bboss_is_group() || ( bboss_is_user_groups() && bboss_is_my_profile() );
 
 				$response = array(
-					'contents'  => bp_get_group_join_button( $group ),
+					'contents'  => bboss_get_group_join_button( $group ),
 					'is_group'  => $bp_is_group,
-					'is_parent' => ! empty( bp_get_descendent_groups( $group->id ) ) ? true : false,
+					'is_parent' => ! empty( bboss_get_descendent_groups( $group->id ) ) ? true : false,
 					'type'      => 'success',
 				);
 
 				if ( 'hidden' === $group->status ) {
-					$response['group_url'] = esc_url( bp_get_groups_directory_permalink() );
+					$response['group_url'] = esc_url( bboss_get_groups_directory_permalink() );
 				}
 
 				// Reset the message if not in a Group or in a loggedin user's group memberships one!
@@ -321,11 +321,11 @@ function bp_nouveau_ajax_joinleave_group() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_ajax_get_users_to_invite() {
-	$bp = buddypress();
+function bboss_nouveau_ajax_get_users_to_invite() {
+	$bp = bboss();
 
 	$response = array(
-		'feedback' => __( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+		'feedback' => __( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' ),
 		'type'     => 'error',
 	);
 
@@ -334,13 +334,13 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 	$check = 'bp_nouveau_groups';
 
 	// Use a specific one for actions needed it
 	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
-		$nonce = $_POST['_wpnonce'];
-		$check = $_POST['action'];
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+		$check = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 	}
 
 	// Nonce check!
@@ -348,7 +348,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		wp_send_json_error( $response );
 	}
 
-	$request = bp_parse_args(
+	$request = bboss_parse_args(
 		$_POST,
 		array(
 			'scope' => 'members',
@@ -357,11 +357,11 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	if ( 'groups_get_group_potential_invites' === $request['action'] ) {
 
-		$group_type = bp_groups_get_group_type( $request['group_id'] );
+		$group_type = bboss_groups_get_group_type( $request['group_id'] );
 
 		// Include profile type if in Group Types > E.g Team > Group Invites ( Meta Box ) specific profile type selected.
 		if ( false !== $group_type ) {
-			$group_type_id             = bp_group_get_group_type_id( $group_type );
+			$group_type_id             = bboss_group_get_group_type_id( $group_type );
 			$get_selected_member_types = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_group_invites', true );
 			if ( isset( $get_selected_member_types ) && ! empty( $get_selected_member_types ) ) {
 				if ( is_array( $get_selected_member_types ) ) {
@@ -375,11 +375,11 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 		// Include users ( Restrict group invites to only members of who already exists in parent group ) in BuddyBoss > Settings > Social Groups > Group Hierarchies
 		// if ( false !== $group_type ) {
-		if ( true === bp_enable_group_hierarchies() ) {
-			if ( true === bp_enable_group_restrict_invites() ) {
-				$parent_group_id = bp_get_parent_group_id( $request['group_id'] );
+		if ( true === bboss_enable_group_hierarchies() ) {
+			if ( true === bboss_enable_group_restrict_invites() ) {
+				$parent_group_id = bboss_get_parent_group_id( $request['group_id'] );
 				if ( $parent_group_id > 0 ) {
-					$members_query      = groups_get_group_members(
+					$members_query      = bboss_groups_get_group_members(
 						array(
 							'group_id'            => $parent_group_id,
 							'exclude_admins_mods' => false,
@@ -391,7 +391,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 					if ( empty( $request['include'] ) ) {
 						wp_send_json_error(
 							array(
-								'feedback' => __( 'No members found in parent group.', 'buddyboss' ),
+								'feedback' => __( 'No members found in parent group.', 'buddyboss-platform' ),
 								'type'     => 'info',
 							)
 						);
@@ -403,11 +403,11 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 		// Exclude users if ( Restrict invites if user already in other same group type ) is checked
 		if ( false !== $group_type ) {
-			$group_type_id                         = bp_group_get_group_type_id( $group_type );
+			$group_type_id                         = bboss_group_get_group_type_id( $group_type );
 			$meta                                  = get_post_custom( $group_type_id );
 			$get_restrict_invites_same_group_types = isset( $meta['_bp_group_type_restrict_invites_user_same_group_type'] ) ? intval( $meta['_bp_group_type_restrict_invites_user_same_group_type'][0] ) : 0;
 			if ( 1 === $get_restrict_invites_same_group_types ) {
-				$group_arr = bp_get_group_ids_by_group_types( $group_type );
+				$group_arr = bboss_get_group_ids_by_group_types( $group_type );
 				if ( isset( $group_arr ) && ! empty( $group_arr ) ) {
 					$group_arr = wp_list_pluck( $group_arr, 'id' );
 					if ( ( $key = array_search( $request['group_id'], $group_arr ) ) !== false ) {
@@ -415,7 +415,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 					}
 					$member_arr = array();
 					foreach ( $group_arr as $group_id ) {
-						$members_query = groups_get_group_members(
+						$members_query = bboss_groups_get_group_members(
 							array(
 								'group_id' => $group_id,
 							)
@@ -438,17 +438,17 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	}
 
 	$bp->groups->invites_scope = 'members';
-	$message                   = __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' );
+	$message                   = __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss-platform' );
 
 	if ( 'friends' === $request['scope'] ) {
-		$request['user_id']        = bp_loggedin_user_id();
+		$request['user_id']        = bboss_loggedin_user_id();
 		$bp->groups->invites_scope = 'friends';
-		$message                   = __( 'Select which connections to invite by clicking the + button next to each member.', 'buddyboss' );
+		$message                   = __( 'Select which connections to invite by clicking the + button next to each member.', 'buddyboss-platform' );
 	}
 
 	if ( 'invited' === $request['scope'] ) {
 
-		if ( ! bp_group_has_invites(
+		if ( ! bboss_group_has_invites(
 			array(
 				'user_id'  => 'any',
 				'group_id' => $request['group_id'],
@@ -459,7 +459,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				// This message displays if you search in pending invites screen and if no results found in search.
 				wp_send_json_error(
 					array(
-						'feedback' => __( 'All members already received invitations.', 'buddyboss' ),
+						'feedback' => __( 'All members already received invitations.', 'buddyboss-platform' ),
 						'type'     => 'info',
 					)
 				);
@@ -467,7 +467,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				// This message displays when pending invites screen doesn't have any users invitation.
 				wp_send_json_error(
 					array(
-						'feedback' => __( 'No pending group invitations found.', 'buddyboss' ),
+						'feedback' => __( 'No pending group invitations found.', 'buddyboss-platform' ),
 						'type'     => 'info',
 					)
 				);
@@ -476,35 +476,35 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 		$request['is_confirmed']   = false;
 		$bp->groups->invites_scope = 'invited';
-		$message                   = __( 'You can view the group\'s pending invitations from this screen.', 'buddyboss' );
+		$message                   = __( 'You can view the group\'s pending invitations from this screen.', 'buddyboss-platform' );
 	}
 
-	$potential_invites = bp_nouveau_get_group_potential_invites( $request );
+	$potential_invites = bboss_nouveau_get_group_potential_invites( $request );
 
 	if ( empty( $potential_invites->users ) ) {
 		if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
 			// This message displays if you search in Pending Invites screen and if no results found.
 			$error = array(
-				'feedback' => __( 'No members found.', 'buddyboss' ),
+				'feedback' => __( 'No members found.', 'buddyboss-platform' ),
 				'type'     => 'info',
 			);
 		} else {
 			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] && 'members' === $bp->groups->invites_scope ) {
 				// This message displays in Send Invites screen in Members tab, if you search members and if no results found.
 				$error = array(
-					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'feedback' => __( 'No members found.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			} elseif ( isset( $request ) && ! isset( $request['search_terms'] ) && 'members' === $bp->groups->invites_scope ) {
 				// This message displays when all site members are in the group, already invited or already requested to join.
 				$error = array(
-					'feedback' => __( 'All site members are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
+					'feedback' => __( 'All site members are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			} else {
 				// General default message.
 				$error = array(
-					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'feedback' => __( 'No members found.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			}
@@ -514,21 +514,21 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
 				// This message displays if you search in Send Invites screen and if no results found.
 				$error = array(
-					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'feedback' => __( 'No members found.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			} else {
 				// This message displays when all of your connections are in the group, already invited or already requested to join.
 				$error = array(
-					'feedback' => __( 'All your connections are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
+					'feedback' => __( 'All your connections are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			}
 
 			// This message displays if you have no connections.
-			if ( 0 === (int) bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
+			if ( 0 === (int) bboss_get_total_friend_count( bboss_loggedin_user_id() ) ) {
 				$error = array(
-					'feedback' => __( 'You have no connections.', 'buddyboss' ),
+					'feedback' => __( 'You have no connections.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			}
@@ -539,7 +539,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		wp_send_json_error( $error );
 	}
 
-	$potential_invites->users = array_map( 'bp_nouveau_prepare_group_potential_invites_for_js', array_values( $potential_invites->users ) );
+	$potential_invites->users = array_map( 'bboss_nouveau_prepare_group_potential_invites_for_js', array_values( $potential_invites->users ) );
 	$potential_invites->users = array_filter( $potential_invites->users );
 
 	$total_page = (int) $potential_invites->meta['total_page'];
@@ -549,16 +549,16 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	foreach ( $potential_invites->users as $user ) {
 		?>
-		<li class="<?php echo $user['id']; ?>">
+		<li class="<?php echo esc_attr( $user['id'] ); ?>">
 			<div class="item-avatar">
-				<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
-					<img src="<?php echo $user['avatar']; ?>" class="avatar" alt=""/> </a>
+				<a href="<?php echo esc_url( bboss_core_get_user_domain( $user['id'] ) ); ?>">
+					<img src="<?php echo esc_url( $user['avatar'] ); ?>" class="avatar" alt=""/> </a>
 			</div>
 
 			<div class="item">
 				<div class="list-title member-name">
-					<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
-						<?php echo $user['name']; ?>
+					<a href="<?php echo esc_url( bboss_core_get_user_domain( $user['id'] ) ); ?>">
+						<?php echo esc_html( $user['name'] ); ?>
 					</a>
 				</div>
 
@@ -566,13 +566,13 @@ function bp_nouveau_ajax_get_users_to_invite() {
 					<div class="item-meta">
 						<?php if ( isset( $user ) && isset( $user['invited_by'] ) && '' !== $user['invited_by'] ) { ?>
 							<ul class="group-inviters">
-								<li><?php esc_html_e( 'Invited by:', 'buddyboss' ); ?></li>
+								<li><?php esc_html_e( 'Invited by:', 'buddyboss-platform' ); ?></li>
 								<?php foreach ( $user['invited_by'] as $inviter ) { ?>
 									<li>
-										<a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip"
-										   data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['name']; ?>">
-											<img src="<?php echo $inviter['avatar']; ?>" width="30px"
-												 class="avatar mini" alt="<?php echo $inviter['name']; ?>">
+										<a href="<?php echo esc_url( $inviter['user_link'] ); ?>" class="bp-tooltip"
+										   data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( $inviter['name'] ); ?>">
+											<img src="<?php echo esc_url( $inviter['avatar'] ); ?>" width="30px"
+												 class="avatar mini" alt="<?php echo esc_attr( $inviter['name'] ); ?>">
 										</a>
 									</li>
 								<?php } ?>
@@ -581,9 +581,9 @@ function bp_nouveau_ajax_get_users_to_invite() {
 						<p class="status">
 							<?php
 							if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] && false === $user['is_sent'] ) {
-								esc_html_e( 'The invite has not been sent.', 'buddyboss' );
+								esc_html_e( 'The invite has not been sent.', 'buddyboss-platform' );
 							} else {
-								esc_html_e( 'The invite has been sent.', 'buddyboss' );
+								esc_html_e( 'The invite has been sent.', 'buddyboss-platform' );
 							}
 							?>
 						</p>
@@ -592,19 +592,19 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			</div>
 			<div class="action">
 				<?php if ( empty( $user['is_sent'] ) || ( false === $user['is_sent'] && true === $user['is_sent'] ) ) { ?>
-					<button data-bp-user-id="<?php echo $user['id']; ?>"
-							data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
+					<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+							data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
 														<?php
 														if ( isset( $user['selected'] ) && $user['selected'] ) {
 															?>
                             selected<?php } ?>" data-bp-tooltip-pos="left"
-                            data-bp-tooltip="<?php echo ( isset( $user['selected'] ) && $user['selected'] ) ? esc_attr__( 'Cancel invitation', 'buddyboss' ) : esc_attr__( 'Invite', 'buddyboss' ); ?>">
+                            data-bp-tooltip="<?php echo ( isset( $user['selected'] ) && $user['selected'] ) ? esc_attr__( 'Cancel invitation', 'buddyboss-platform' ) : esc_attr__( 'Invite', 'buddyboss-platform' ); ?>">
 						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 						<?php
 						if ( isset( $user['selected'] ) && $user['selected'] ) {
-							esc_html_e( 'Cancel invitation', 'buddyboss' );
+							esc_html_e( 'Cancel invitation', 'buddyboss-platform' );
 						} else {
-							esc_html_e( 'Invite', 'buddyboss' );
+							esc_html_e( 'Invite', 'buddyboss-platform' );
 						}
 						?>
 					</span>
@@ -615,24 +615,24 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				if ( isset( $user['can_edit'] ) && true === $user['can_edit'] ) {
 					if ( 'invited' === $request['scope'] ) {
 						?>
-						<button data-bp-user-id="<?php echo $user['id']; ?>"
-								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+						<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+								data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button"
 								class="button remove-button group-remove-invite-button bp-tooltip bp-icons"
 								data-bp-tooltip-pos="left"
-								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss-platform' ); ?>">
 							<span class=" icons" aria-hidden="true"></span>
-							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
+							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss-platform' ); ?></span>
 						</button>
 						<?php
 					} else {
 						?>
-						<button data-bp-user-id="<?php echo $user['id']; ?>"
-								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+						<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+								data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button"
 								class="button invite-button group-remove-invite-button bp-tooltip bp-icons"
 								data-bp-tooltip-pos="left"
-								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss-platform' ); ?>">
 							<span class=" icons" aria-hidden="true"></span>
-							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
+							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss-platform' ); ?></span>
 						</button>
 						<?php
 					}
@@ -665,9 +665,9 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		if ( 1 !== $page ) {
 			?>
 			<a href="javascript:void(0);" id="bp-group-invites-prev-page" class="button group-invite-button bp-tooltip"
-			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
+			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss-platform' ); ?>">
 				<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
-				<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
+				<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss-platform' ); ?></span> </a>
 			<?php
 		}
 
@@ -675,8 +675,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			$page = $page + 1;
 			?>
 			<a href="javascript:void(0);" id="bp-group-invites-next-page" class="button group-invite-button bp-tooltip"
-			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span
-						class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
+			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss-platform' ); ?>"> <span
+						class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss-platform' ); ?></span>
 				<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
 			<?php
 		}
@@ -702,32 +702,32 @@ function bp_nouveau_ajax_get_users_to_invite() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_ajax_send_group_invites() {
-	$bp = buddypress();
+function bboss_nouveau_ajax_send_group_invites() {
+	$bp = bboss();
 
 	$response = array(
-		'feedback' => __( 'Invites could not be sent. Please try again.', 'buddyboss' ),
+		'feedback' => __( 'Invites could not be sent. Please try again.', 'buddyboss-platform' ),
 		'type'     => 'error',
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_send_invites' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'groups_send_invites' ) ) {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = bp_get_current_group_id() ?: $_POST['group_id'];
+	$group_id = bboss_get_current_group_id() ?: $_POST['group_id'];
 
-	if ( bp_is_group_create() && ! empty( $_POST['group_id'] ) ) {
+	if ( bboss_is_group_create() && ! empty( $_POST['group_id'] ) ) {
 		$group_id = (int) $_POST['group_id'];
 	}
 
-	if ( ! bp_groups_user_can_send_invites( $group_id ) ) {
-		$response['feedback'] = __( 'You are not allowed to send invitations for this group.', 'buddyboss' );
+	if ( ! bboss_groups_user_can_send_invites( $group_id ) ) {
+		$response['feedback'] = __( 'You are not allowed to send invitations for this group.', 'buddyboss-platform' );
 		wp_send_json_error( $response );
 	}
 
 	if ( empty( $_POST['users'] ) ) {
-		$response['feedback'] = __( 'Please select members to send invitations for this group.', 'buddyboss' );
+		$response['feedback'] = __( 'Please select members to send invitations for this group.', 'buddyboss-platform' );
 		wp_send_json_error( $response );
 	}
 
@@ -738,11 +738,11 @@ function bp_nouveau_ajax_send_group_invites() {
 		$user_id = (int) $user_id;
 
 		// Check friends & settings component is active and all members can be invited.
-		if ( bp_is_active( 'friends' ) && bp_nouveau_groups_get_group_invites_setting( $user_id ) && 'is_friend' !== BP_Friends_Friendship::check_is_friend( bp_loggedin_user_id(), $user_id ) ) {
+		if ( bboss_is_active( 'friends' ) && bboss_nouveau_groups_get_group_invites_setting( $user_id ) && 'is_friend' !== BBoss_Friends_Friendship::check_is_friend( bboss_loggedin_user_id(), $user_id ) ) {
 			continue;
 		}
 
-		$invited[ $user_id ] = groups_invite_user(
+		$invited[ $user_id ] = bboss_groups_invite_user(
 			array(
 				'user_id'  => $user_id,
 				'group_id' => $group_id,
@@ -758,23 +758,23 @@ function bp_nouveau_ajax_send_group_invites() {
 	if ( ! empty( $_POST['message'] ) ) {
 		$bp->groups->invites_message = wp_kses( wp_unslash( $_POST['message'] ), array() );
 
-		add_filter( 'groups_notification_group_invites_message', 'bp_nouveau_groups_invites_custom_message', 10, 1 );
+		add_filter( 'groups_notification_group_invites_message', 'bboss_nouveau_groups_invites_custom_message', 10, 1 );
 	}
 
 	// Send the invites.
-	groups_send_invites( array( 'group_id' => $group_id ) );
+	bboss_groups_send_invites( array( 'group_id' => $group_id ) );
 
 	if ( ! empty( $_POST['message'] ) ) {
 		unset( $bp->groups->invites_message );
 
-		remove_filter( 'groups_notification_group_invites_message', 'bp_nouveau_groups_invites_custom_message', 10, 1 );
+		remove_filter( 'groups_notification_group_invites_message', 'bboss_nouveau_groups_invites_custom_message', 10, 1 );
 	}
 
 	if ( array_search( false, $invited ) ) {
 		$errors = array_keys( $invited, false );
 
 		$error_count   = count( $errors );
-		$error_message = sprintf( /* translators: count of users affected */ _n( 'Invitation failed for %s user.', 'Invitation failed for %s users.', $error_count, 'buddyboss' ), bp_core_number_format( $error_count ) );
+		$error_message = sprintf( /* translators: count of users affected */ _n( 'Invitation failed for %s user.', 'Invitation failed for %s users.', $error_count, 'buddyboss-platform' ), bboss_core_number_format( $error_count ) );
 
 		wp_send_json_error(
 			array(
@@ -787,7 +787,7 @@ function bp_nouveau_ajax_send_group_invites() {
 
 	wp_send_json_success(
 		array(
-			'feedback' => __( 'Invitations sent.', 'buddyboss' ),
+			'feedback' => __( 'Invitations sent.', 'buddyboss-platform' ),
 			'type'     => 'success',
 		)
 	);
@@ -798,22 +798,22 @@ function bp_nouveau_ajax_send_group_invites() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_ajax_remove_group_invite() {
+function bboss_nouveau_ajax_remove_group_invite() {
 	$user_id  = (int) $_POST['user'];
-	$group_id = bp_get_current_group_id();
+	$group_id = bboss_get_current_group_id();
 
 	$response = array(
-		'feedback' => __( 'Group invitation could not be removed.', 'buddyboss' ),
+		'feedback' => __( 'Group invitation could not be removed.', 'buddyboss-platform' ),
 		'type'     => 'error',
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_invite_uninvite_user' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'groups_invite_uninvite_user' ) ) {
 		wp_send_json_error( $response );
 	}
 
 	// Verify that a sent invite exists.
-	$inviter_ids = groups_get_invites(
+	$inviter_ids = bboss_groups_get_invites(
 		array(
 			'user_id'     => $user_id,
 			'item_id'     => $group_id,
@@ -827,17 +827,17 @@ function bp_nouveau_ajax_remove_group_invite() {
 	}
 
 	// Is the current user the inviter?
-	$inviter_id = in_array( bp_loggedin_user_id(), $inviter_ids, true ) ? bp_loggedin_user_id() : false;
+	$inviter_id = in_array( bboss_loggedin_user_id(), $inviter_ids, true ) ? bboss_loggedin_user_id() : false;
 
 	// A site moderator, group admin or the inviting user should be able to remove an invitation.
-	if ( ! bp_is_item_admin() && ! $inviter_id ) {
+	if ( ! bboss_is_item_admin() && ! $inviter_id ) {
 		wp_send_json_error( $response );
 	}
 
-	if ( groups_is_user_member( $user_id, $group_id ) ) {
+	if ( bboss_groups_is_user_member( $user_id, $group_id ) ) {
 		wp_send_json_error(
 			array(
-				'feedback' => __( 'The member is already a member of the group.', 'buddyboss' ),
+				'feedback' => __( 'The member is already a member of the group.', 'buddyboss-platform' ),
 				'type'     => 'warning',
 				'code'     => 1,
 			)
@@ -845,10 +845,10 @@ function bp_nouveau_ajax_remove_group_invite() {
 	}
 
 	// Remove the invitation.
-	if ( ! groups_uninvite_user( $user_id, $group_id, $inviter_id ) ) {
+	if ( ! bboss_groups_uninvite_user( $user_id, $group_id, $inviter_id ) ) {
 		wp_send_json_error(
 			array(
-				'feedback' => __( 'Group invitation could not be removed.', 'buddyboss' ),
+				'feedback' => __( 'Group invitation could not be removed.', 'buddyboss-platform' ),
 				'type'     => 'error',
 				'code'     => 0,
 			)
@@ -857,9 +857,9 @@ function bp_nouveau_ajax_remove_group_invite() {
 
 	wp_send_json_success(
 		array(
-			'feedback'    => __( 'There are no more pending invitations for the group.', 'buddyboss' ),
+			'feedback'    => __( 'There are no more pending invitations for the group.', 'buddyboss-platform' ),
 			'type'        => 'info',
-			'has_invites' => bp_group_has_invites( array( 'user_id' => 'any' ) ),
+			'has_invites' => bboss_group_has_invites( array( 'user_id' => 'any' ) ),
 		)
 	);
 }
@@ -869,9 +869,9 @@ function bp_nouveau_ajax_remove_group_invite() {
  *
  * @since BuddyBoss 1.2.9
  */
-function bp_nouveau_ajax_groups_get_group_members_listing() {
+function bboss_nouveau_ajax_groups_get_group_members_listing() {
 
-	if ( false === bp_disable_group_messages() ) {
+	if ( false === bboss_disable_group_messages() ) {
 		return;
 	}
 
@@ -880,15 +880,15 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 	}
 
 	$response = array(
-		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss-platform' ) . '</p></div>',
 		'type'     => 'error',
 	);
 
-	if ( false === bp_is_active( 'messages' ) ) {
+	if ( false === bboss_is_active( 'messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( wp_unslash( $_POST['nonce'] ) ) || ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'retrieve_group_members' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'retrieve_group_members' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -901,7 +901,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			'per_page'            => $search_per_page,
 			'group_id'            => $_POST['group'],
 			'search_terms'        => $_POST['term'],
-			'exclude'             => array( bp_loggedin_user_id() ),
+			'exclude'             => array( bboss_loggedin_user_id() ),
 			'exclude_admins_mods' => false,
 		);
 	} else {
@@ -909,12 +909,12 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			'page'                => $page,
 			'per_page'            => $per_page,
 			'group_id'            => $_POST['group'],
-			'exclude'             => array( bp_loggedin_user_id() ),
+			'exclude'             => array( bboss_loggedin_user_id() ),
 			'exclude_admins_mods' => false,
 		);
 	}
 
-	$group_members = groups_get_group_members( $args );
+	$group_members = bboss_groups_get_group_members( $args );
 	$html          = '';
 	$paginate      = '';
 	$result        = array();
@@ -928,7 +928,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		foreach ( $group_members['members'] as $member ) {
 
 			$image = htmlspecialchars_decode(
-				bp_core_fetch_avatar(
+				bboss_core_fetch_avatar(
 					array(
 						'item_id' => $member->ID,
 						'object'  => 'user',
@@ -939,16 +939,16 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401
 			);
 
-			$name = bp_core_get_user_displayname( $member->ID );
+			$name = bboss_core_get_user_displayname( $member->ID );
 
 			$is_friends_connection  = true;
 
 			if (
-				! bb_messages_user_can_send_message(
+				! bboss_messages_user_can_send_message(
 					array(
-						'sender_id'     => bp_loggedin_user_id(),
+						'sender_id'     => bboss_loggedin_user_id(),
 						'recipients_id' => $member->ID,
-						'group_id'      => bp_get_current_group_id(),
+						'group_id'      => bboss_get_current_group_id(),
 
 					)
 				)
@@ -958,19 +958,19 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="group-message-member-li
 			<?php
-			echo $member->ID;
+			echo esc_attr( $member->ID );
 			echo ( $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
 			?>
 			">
 				<div class="item-avatar">
-					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
-						<?php echo $image; ?>
+					<a href="<?php echo esc_url( bboss_core_get_user_domain( $member->ID ) ); ?>">
+						<?php echo wp_kses_post( $image ); ?>
 					</a>
 				</div>
 				<div class="item">
 					<div class="list-title member-name">
-						<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
-							<?php echo $name; ?>
+						<a href="<?php echo esc_url( bboss_core_get_user_domain( $member->ID ) ); ?>">
+							<?php echo esc_html( $name ); ?>
 						</a>
 					</div>
 				</div>
@@ -982,15 +982,15 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
 								data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
 								data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
-								data-bp-tooltip="<?php esc_attr_e( 'Add Member', 'buddyboss' ); ?>">
+								data-bp-tooltip="<?php esc_attr_e( 'Add Member', 'buddyboss-platform' ); ?>">
 							<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
-							<?php esc_html_e( 'Add Member', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Add Member', 'buddyboss-platform' ); ?>
 						</span>
 						</button>
 						<?php
 					} else {
 						?>
-						<span data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Restricted', 'buddyboss' ); ?>">
+						<span data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Restricted', 'buddyboss-platform' ); ?>">
 							<i class="bb-icon-l bb-icon-cancel" aria-hidden="true"></i>
 						</span>
 						<?php
@@ -1022,9 +1022,9 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				?>
 				<a href="javascript:void(0);" id="bp-group-messages-prev-page"
 				   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
-				   data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
+				   data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss-platform' ); ?>">
 					<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
-					<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
+					<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss-platform' ); ?></span> </a>
 				<?php
 			}
 
@@ -1033,8 +1033,8 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				?>
 				<a href="javascript:void(0);" id="bp-group-messages-next-page"
 				   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
-				   data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span
-							class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
+				   data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss-platform' ); ?>"> <span
+							class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss-platform' ); ?></span>
 					<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
 				<?php
 			}
@@ -1055,7 +1055,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				'total_page'  => $total_page,
 				'page'        => $page,
 				'pagination'  => $paginate,
-				'total_count' => __( 'Members', 'buddyboss' ),
+				'total_count' => __( 'Members', 'buddyboss-platform' ),
 			)
 		);
 
@@ -1067,11 +1067,11 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
  *
  * @since BuddyBoss 1.2.9
  */
-function bp_nouveau_ajax_groups_send_message() {
+function bboss_nouveau_ajax_groups_send_message() {
 
 	global $wpdb, $bp, $bb_background_updater;
 
-	if ( false === bp_disable_group_messages() ) {
+	if ( false === bboss_disable_group_messages() ) {
 		return;
 	}
 
@@ -1080,15 +1080,15 @@ function bp_nouveau_ajax_groups_send_message() {
 	}
 
 	$response = array(
-		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss-platform' ) . '</p></div>',
 		'type'     => 'error',
 	);
 
-	if ( false === bp_is_active( 'messages' ) ) {
+	if ( false === bboss_is_active( 'messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
-	$wp_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
+	$wp_nonce = bboss_filter_input_string( INPUT_POST, 'nonce' );
 
 	if ( empty( $wp_nonce ) || ! wp_verify_nonce( $wp_nonce, 'send_messages_users' ) ) {
 		wp_send_json_error( $response );
@@ -1142,44 +1142,44 @@ function bp_nouveau_ajax_groups_send_message() {
 	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $content, $_POST );
 
 	if ( ! $validated_content ) {
-		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
+		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss-platform' );
 
 		wp_send_json_error( $response );
 	}
 
 	$group         = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ); // Group id.
-	$message_users = bb_filter_input_string( INPUT_POST, 'users' ); // all - individual.
-	$message_type  = bb_filter_input_string( INPUT_POST, 'type' ); // open - private.
+	$message_users = bboss_filter_input_string( INPUT_POST, 'users' ); // all - individual.
+	$message_type  = bboss_filter_input_string( INPUT_POST, 'type' ); // open - private.
 
 	// Get Members list if "All Group Members" selected.
 	if ( 'all' === $message_users ) {
 
 		// Fetch all the group members.
-		$members = BP_Groups_Member::get_group_member_ids( (int) $group );
+		$members = BBoss_Groups_Member::get_group_member_ids( (int) $group );
 
 		// Exclude logged-in user ids from the members list.
-		if ( in_array( bp_loggedin_user_id(), $members, true ) ) {
-			$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
+		if ( in_array( bboss_loggedin_user_id(), $members, true ) ) {
+			$members = array_values( array_diff( $members, array( bboss_loggedin_user_id() ) ) );
 		}
 
 		if ( 'private' === $message_type ) {
 
 			// Check Membership Access.
 			foreach ( $members as $k => $member ) {
-				$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+				$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bboss_loggedin_user_id() );
 				if ( ! $can_send_group_message ) {
 					unset( $members[ $k ] );
 				}
 			}
 
 			// Check if force friendship is enabled and check recipients.
-			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-				if ( bp_is_active( 'messages' ) && ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+			if ( bboss_force_friendship_to_message() && bboss_is_active( 'friends' ) ) {
+				if ( bboss_is_active( 'messages' ) && ! bboss_messages_allowed_messaging_without_connection( bboss_loggedin_user_id() ) ) {
 					foreach ( $members as $f => $member ) {
 						if (
 							! (
-								bb_messages_allowed_messaging_without_connection( $member ) ||
-								friends_check_friendship( bp_loggedin_user_id(), $member )
+								bboss_messages_allowed_messaging_without_connection( $member ) ||
+								bboss_friends_check_friendship( bboss_loggedin_user_id(), $member )
 							)
 						) {
 							unset( $members[ $f ] );
@@ -1195,6 +1195,7 @@ function bp_nouveau_ajax_groups_send_message() {
 	} else {
 
 		$members = filter_input( INPUT_POST, 'users_list', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		$members = ! empty( $members ) ? array_map( 'absint', (array) $members ) : array();
 
 		// Check Membership Access.
 		$not_access_list = array();
@@ -1204,22 +1205,22 @@ function bp_nouveau_ajax_groups_send_message() {
 
 		foreach ( $members as $member ) {
 
-			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bboss_loggedin_user_id() );
 			if ( ! $can_send_group_message ) {
-				$not_access_list[] = bp_core_get_user_displayname( $member );
+				$not_access_list[] = bboss_core_get_user_displayname( $member );
 			}
 		}
 
-		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-			if ( bp_is_active( 'messages' ) && ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+		if ( bboss_force_friendship_to_message() && bboss_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'messages' ) && ! bboss_messages_allowed_messaging_without_connection( bboss_loggedin_user_id() ) ) {
 				foreach ( $members as $f => $member ) {
 					if (
 						! (
-							bb_messages_allowed_messaging_without_connection( $member ) ||
-							friends_check_friendship( bp_loggedin_user_id(), $member )
+							bboss_messages_allowed_messaging_without_connection( $member ) ||
+							bboss_friends_check_friendship( bboss_loggedin_user_id(), $member )
 						)
 					) {
-						$not_friends[] = bp_core_get_user_displayname( $member );
+						$not_friends[] = bboss_core_get_user_displayname( $member );
 					}
 				}
 			}
@@ -1228,7 +1229,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		if ( ! empty( $not_access_list ) ) {
 			$response['feedback'] = sprintf(
 				'%1$s <strong>%2$s</strong>',
-				( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss' ),
+				( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss-platform' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss-platform' ),
 				implode( ', ', $not_access_list )
 			);
 			wp_send_json_error( $response );
@@ -1237,20 +1238,20 @@ function bp_nouveau_ajax_groups_send_message() {
 		if ( ! empty( $not_friends ) ) {
 			$response['feedback'] = sprintf(
 				'%1$s <strong>%2$s</strong>',
-				( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message:  ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message:  ', 'buddyboss' ),
+				( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message:  ', 'buddyboss-platform' ) : __( 'You need to be connected with this member in order to send a message:  ', 'buddyboss-platform' ),
 				implode( ', ', $not_friends )
 			);
 			wp_send_json_error( $response );
 		}
 
 		if ( empty( $members ) ) {
-			$response['feedback'] = __( 'No Members Selected.', 'buddyboss' );
+			$response['feedback'] = __( 'No Members Selected.', 'buddyboss-platform' );
 			wp_send_json_error( $response );
 		}
 	}
 
 	if ( empty( $group ) ) {
-		$response['feedback'] = __( 'No group Selected.', 'buddyboss' );
+		$response['feedback'] = __( 'No group Selected.', 'buddyboss-platform' );
 		wp_send_json_error( $response );
 	}
 
@@ -1266,19 +1267,19 @@ function bp_nouveau_ajax_groups_send_message() {
 			// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
 			$_POST['message_meta_users_list'] = $message_users_ids;
 
-			$group_thread                 = groups_get_groupmeta( (int) $group, 'group_message_thread' );
+			$group_thread                 = bboss_groups_get_groupmeta( (int) $group, 'group_message_thread' );
 			$is_deleted                   = false;
 			$group_thread_id              = '';
 			$_POST['message_thread_type'] = '';
 
-			if ( '' !== $group_thread && messages_is_valid_thread( $group_thread ) ) {
+			if ( '' !== $group_thread && bboss_messages_is_valid_thread( $group_thread ) ) {
 
-				$first_thread_message = BP_Messages_Thread::get_first_message( $group_thread );
+				$first_thread_message = BBoss_Messages_Thread::get_first_message( $group_thread );
 
 				if ( ! empty( $first_thread_message ) ) {
-					$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
-					$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
-					$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
+					$users      = bboss_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+					$type       = bboss_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+					$group_from = bboss_messages_get_meta( $first_thread_message->id, 'message_from', true );
 
 					if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
 						$_POST['message_thread_type'] = 'new';
@@ -1286,7 +1287,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				}
 
 				if ( empty( $_POST['message_thread_type'] ) ) {
-					$total_threads = BP_Messages_Thread::get(
+					$total_threads = BBoss_Messages_Thread::get(
 						array(
 							'include_threads' => array( $group_thread ),
 							'per_page'        => 1,
@@ -1336,21 +1337,21 @@ function bp_nouveau_ajax_groups_send_message() {
 				);
 
 				// Check if there is already previously group thread created.
-				if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+				if ( bboss_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
 
 					$thread_id = 0;
 
-					while ( bp_message_threads() ) {
-						bp_message_thread();
-						$thread_id = bp_get_message_thread_id();
+					while ( bboss_message_threads() ) {
+						bboss_message_thread();
+						$thread_id = bboss_get_message_thread_id();
 
 						// Check the first message meta to check for all users and open type when missed entries found into DB.
-						$first_thread_message = BP_Messages_Thread::get_first_message( $thread_id );
+						$first_thread_message = BBoss_Messages_Thread::get_first_message( $thread_id );
 
 						if ( ! empty( $first_thread_message ) ) {
-							$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
-							$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
-							$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
+							$users      = bboss_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+							$type       = bboss_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+							$group_from = bboss_messages_get_meta( $first_thread_message->id, 'message_from', true );
 
 							if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
 								$thread_id = 0;
@@ -1387,7 +1388,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			 */
 			if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
 
-				$send = bp_groups_messages_new_message(
+				$send = bboss_groups_messages_new_message(
 					array(
 						'recipients'    => $members,
 						'subject'       => wp_trim_words( $content, messages_get_default_subject_length() ),
@@ -1398,27 +1399,27 @@ function bp_nouveau_ajax_groups_send_message() {
 				);
 
 				if ( ! is_wp_error( $send ) && ! empty( $send ) ) {
-					groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
+					bboss_groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
 				}
 
-				bp_groups_messages_validate_message( $send );
+				bboss_groups_messages_validate_message( $send );
 
 			} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $group_thread_id ) ) {
 
-				groups_update_groupmeta( (int) $group, 'group_message_thread', $group_thread_id );
+				bboss_groups_update_groupmeta( (int) $group, 'group_message_thread', $group_thread_id );
 
-				$new_reply = bp_groups_messages_new_message(
+				$new_reply = bboss_groups_messages_new_message(
 					array(
 						'thread_id'    => $group_thread_id,
 						'subject'      => false,
 						'content'      => $content,
-						'date_sent'    => bp_core_current_time(),
+						'date_sent'    => bboss_core_current_time(),
 						'mark_visible' => true,
 						'error_type'   => 'wp_error',
 					)
 				);
 
-				bp_groups_messages_validate_message( $new_reply );
+				bboss_groups_messages_validate_message( $new_reply );
 			}
 
 			// "Individual Members" Selected.
@@ -1435,24 +1436,24 @@ function bp_nouveau_ajax_groups_send_message() {
 			$_POST['message_thread_type'] = '';
 
 			// Check if there is already previously individual group thread created.
-			if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
+			if ( bboss_has_message_threads( array( 'meta_query' => $meta ) ) ) {
 
 				$thread_id = 0;
 
-				while ( bp_message_threads() ) {
-					bp_message_thread();
-					$thread_id = bp_get_message_thread_id();
+				while ( bboss_message_threads() ) {
+					bboss_message_thread();
+					$thread_id = bboss_get_message_thread_id();
 
 					if ( $thread_id ) {
 
 						// get the thread recipients.
-						$thread                     = new BP_Messages_Thread( $thread_id );
+						$thread                     = new BBoss_Messages_Thread( $thread_id );
 						$thread_recipients          = $thread->get_recipients();
 						$previous_thread_recipients = array();
 
 						// Store thread recipients to $previous_ids array.
 						foreach ( $thread_recipients as $thread_recipient ) {
-							if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+							if ( bboss_loggedin_user_id() !== $thread_recipient->user_id ) {
 								$previous_thread_recipients[] = $thread_recipient->user_id;
 							}
 						}
@@ -1469,7 +1470,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						// check both previous and current recipients are same.
 						$is_recipient_match = ( is_array( $previous_thread_recipients ) && is_array( $members_recipients ) && count( $previous_thread_recipients ) === count( $members_recipients ) && array_diff( $previous_thread_recipients, $members_recipients ) === array_diff( $members_recipients, $previous_thread_recipients ) );
 
-						$group_thread = (int) groups_get_groupmeta( (int) $group, 'group_message_thread' );
+						$group_thread = (int) bboss_groups_get_groupmeta( (int) $group, 'group_message_thread' );
 
 						// If recipients are matched.
 						if ( $is_recipient_match && (int) $thread_id !== $group_thread ) {
@@ -1481,16 +1482,16 @@ function bp_nouveau_ajax_groups_send_message() {
 				// If $thread_id found then add as a reply to that thread.
 				if ( $thread_id ) {
 					// get the thread recipients.
-					$thread                     = new BP_Messages_Thread( $thread_id );
+					$thread                     = new BBoss_Messages_Thread( $thread_id );
 					$thread_recipients          = $thread->get_recipients();
 					$previous_thread_recipients = array();
 
-					$last_message = BP_Messages_Thread::get_last_message( $thread_id );
-					$message_type = bp_messages_get_meta( $last_message->id, 'group_message_users', true );
+					$last_message = BBoss_Messages_Thread::get_last_message( $thread_id );
+					$message_type = bboss_messages_get_meta( $last_message->id, 'group_message_users', true );
 
 					// Store thread recipients to $previous_ids array.
 					foreach ( $thread_recipients as $thread_recipient ) {
-						if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+						if ( bboss_loggedin_user_id() !== $thread_recipient->user_id ) {
 							$previous_thread_recipients[] = $thread_recipient->user_id;
 						}
 					}
@@ -1507,7 +1508,7 @@ function bp_nouveau_ajax_groups_send_message() {
 					// check both previous and current recipients are same.
 					$is_recipient_match = ( is_array( $previous_thread_recipients ) && is_array( $members_recipients ) && count( $previous_thread_recipients ) === count( $members_recipients ) && array_diff( $previous_thread_recipients, $members_recipients ) === array_diff( $members_recipients, $previous_thread_recipients ) );
 
-					$group_thread = (int) groups_get_groupmeta( (int) $group, 'group_message_thread' );
+					$group_thread = (int) bboss_groups_get_groupmeta( (int) $group, 'group_message_thread' );
 
 					// If recipients are matched.
 					if ( $is_recipient_match && (int) $thread_id !== $group_thread ) {
@@ -1518,22 +1519,22 @@ function bp_nouveau_ajax_groups_send_message() {
 
 						// Else recipients not matched.
 					} else {
-						$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
+						$previous_threads = BBoss_Messages_Message::get_existing_threads( $members, bboss_loggedin_user_id() );
 						$existing_thread  = 0;
 						if ( $previous_threads ) {
 							foreach ( $previous_threads as $thread ) {
 
-								$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, bp_loggedin_user_id() );
+								$is_active_recipient = BBoss_Messages_Thread::is_thread_recipient( $thread->thread_id, bboss_loggedin_user_id() );
 
 								if ( $is_active_recipient ) {
 									// get the thread recipients.
-									$thread                     = new BP_Messages_Thread( $thread->thread_id );
+									$thread                     = new BBoss_Messages_Thread( $thread->thread_id );
 									$thread_recipients          = $thread->get_recipients();
 									$previous_thread_recipients = array();
 
 									// Store thread recipients to $previous_ids array.
 									foreach ( $thread_recipients as $thread_recipient ) {
-										if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+										if ( bboss_loggedin_user_id() !== $thread_recipient->user_id ) {
 											$previous_thread_recipients[] = $thread_recipient->user_id;
 										}
 									}
@@ -1555,7 +1556,7 @@ function bp_nouveau_ajax_groups_send_message() {
 									$add_existing = true;
 									foreach ( $message_ids as $id ) {
 										// group_message_users not open.
-										$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
+										$message_users = bboss_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 										if ( 'all' === $message_users ) {
 											$add_existing = false;
 											break;
@@ -1585,21 +1586,21 @@ function bp_nouveau_ajax_groups_send_message() {
 					}
 					// Else no thread found.
 				} else {
-					$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
+					$previous_threads = BBoss_Messages_Message::get_existing_threads( $members, bboss_loggedin_user_id() );
 					$existing_thread  = 0;
 					if ( $previous_threads ) {
 						foreach ( $previous_threads as $thread ) {
-							$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, bp_loggedin_user_id() );
+							$is_active_recipient = BBoss_Messages_Thread::is_thread_recipient( $thread->thread_id, bboss_loggedin_user_id() );
 							if ( $is_active_recipient ) {
 
 								// get the thread recipients.
-								$thread                     = new BP_Messages_Thread( $thread->thread_id );
+								$thread                     = new BBoss_Messages_Thread( $thread->thread_id );
 								$thread_recipients          = $thread->get_recipients();
 								$previous_thread_recipients = array();
 
 								// Store thread recipients to $previous_ids array.
 								foreach ( $thread_recipients as $thread_recipient ) {
-									if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+									if ( bboss_loggedin_user_id() !== $thread_recipient->user_id ) {
 										$previous_thread_recipients[] = $thread_recipient->user_id;
 									}
 								}
@@ -1621,7 +1622,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								$add_existing = true;
 								foreach ( $message_ids as $id ) {
 									// group_message_users not open.
-									$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
+									$message_users = bboss_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 									if ( 'all' === $message_users ) {
 										$add_existing = false;
 										break;
@@ -1652,23 +1653,23 @@ function bp_nouveau_ajax_groups_send_message() {
 
 				// Else no previous thread found.
 			} else {
-				$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
+				$previous_threads = BBoss_Messages_Message::get_existing_threads( $members, bboss_loggedin_user_id() );
 				$existing_thread  = 0;
 
 				if ( $previous_threads ) {
 					foreach ( $previous_threads as $thread ) {
 
-						$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, bp_loggedin_user_id() );
+						$is_active_recipient = BBoss_Messages_Thread::is_thread_recipient( $thread->thread_id, bboss_loggedin_user_id() );
 
 						if ( $is_active_recipient ) {
 							// get the thread recipients.
-							$thread                     = new BP_Messages_Thread( $thread->thread_id );
+							$thread                     = new BBoss_Messages_Thread( $thread->thread_id );
 							$thread_recipients          = $thread->get_recipients();
 							$previous_thread_recipients = array();
 
 							// Store thread recipients to $previous_ids array.
 							foreach ( $thread_recipients as $thread_recipient ) {
-								if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+								if ( bboss_loggedin_user_id() !== $thread_recipient->user_id ) {
 									$previous_thread_recipients[] = $thread_recipient->user_id;
 								}
 							}
@@ -1690,7 +1691,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$add_existing = true;
 							foreach ( $message_ids as $id ) {
 								// group_message_users not open.
-								$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
+								$message_users = bboss_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 								if ( 'all' === $message_users ) {
 									$add_existing = false;
 									break;
@@ -1723,7 +1724,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			 * Create Message based on the `message_thread_type` and `individual_thread_id`.
 			 */
 			if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
-				$send = bp_groups_messages_new_message(
+				$send = bboss_groups_messages_new_message(
 					array(
 						'recipients'    => $members,
 						'subject'       => wp_trim_words( $content, messages_get_default_subject_length() ),
@@ -1733,20 +1734,20 @@ function bp_nouveau_ajax_groups_send_message() {
 					)
 				);
 
-				bp_groups_messages_validate_message( $send, 'individual' );
+				bboss_groups_messages_validate_message( $send, 'individual' );
 			} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $individual_thread_id ) ) {
-				$new_reply = bp_groups_messages_new_message(
+				$new_reply = bboss_groups_messages_new_message(
 					array(
 						'thread_id'    => $individual_thread_id,
 						'subject'      => false,
 						'content'      => $content,
-						'date_sent'    => bp_core_current_time(),
+						'date_sent'    => bboss_core_current_time(),
 						'mark_visible' => true,
 						'error_type'   => 'wp_error',
 					)
 				);
 
-				bp_groups_messages_validate_message( $new_reply, 'individual' );
+				bboss_groups_messages_validate_message( $new_reply, 'individual' );
 			}
 		}
 
@@ -1761,7 +1762,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
 			$_POST['message_meta_users_list'] = $message_users_ids;
 
-			$min_count = bb_get_email_queue_min_count();
+			$min_count = bboss_get_email_queue_min_count();
 			if ( count( $members ) > $min_count ) {
 				$chunk_members = array_chunk( $members, $min_count );
 				if ( ! empty( $chunk_members ) ) {
@@ -1772,8 +1773,8 @@ function bp_nouveau_ajax_groups_send_message() {
 								'group'    => 'group_private_message',
 								'data_id'  => $group,
 								'priority' => 5,
-								'callback' => 'bb_send_group_message_background',
-								'args'     => array( $_POST, $members, bp_loggedin_user_id(), $content, true ),
+								'callback' => 'bboss_send_group_message_background',
+								'args'     => array( $_POST, $members, bboss_loggedin_user_id(), $content, true ),
 							),
 						);
 						$bb_background_updater->save();
@@ -1783,7 +1784,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 				$message = true;
 			} else {
-				$message = bb_send_group_message_background( $_POST, $members, bp_loggedin_user_id(), $content, false );
+				$message = bboss_send_group_message_background( $_POST, $members, bboss_loggedin_user_id(), $content, false );
 			}
 		}
 
@@ -1792,12 +1793,12 @@ function bp_nouveau_ajax_groups_send_message() {
 			wp_send_json_error( $response );
 		} elseif ( ! empty( $message ) ) {
 			if ( 'all' !== $message_users ) {
-				$response['feedback'] = __( 'Your message was sent privately to %%count%% members of this group.', 'buddyboss' );
+				$response['feedback'] = __( 'Your message was sent privately to %%count%% members of this group.', 'buddyboss-platform' );
 			} else {
-				$response['feedback'] = __( 'Your message was sent privately to all members of this group you can message.', 'buddyboss' );
+				$response['feedback'] = __( 'Your message was sent privately to all members of this group you can message.', 'buddyboss-platform' );
 			}
 
-			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
+			$response['redirect_link'] = '<a href="' . bboss_loggedin_user_domain() . bboss_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss-platform' ) . '</a>';
 			$response['type']          = 'success';
 			wp_send_json_success( $response );
 		}
@@ -1810,17 +1811,17 @@ function bp_nouveau_ajax_groups_send_message() {
  * @param mixed  $send int|bool|WP_Error
  * @param string $type Type of the message `all` or `individual`.
  */
-function bp_groups_messages_validate_message( $send, $type = 'all' ) {
+function bboss_groups_messages_validate_message( $send, $type = 'all' ) {
 	if ( is_wp_error( $send ) ) {
 		$response['feedback'] = $send->get_error_message();
 		wp_send_json_error( $response );
 	} elseif ( ! empty( $send ) ) {
 		if ( 'individual' === $type ) {
-			$response['feedback'] = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
+			$response['feedback'] = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss-platform' );
 		} else {
-			$response['feedback'] = __( 'Your message was sent to all members of this group.', 'buddyboss' );
+			$response['feedback'] = __( 'Your message was sent to all members of this group.', 'buddyboss-platform' );
 		}
-		$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
+		$response['redirect_link'] = '<a href="' . bboss_loggedin_user_domain() . bboss_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss-platform' ) . '</a>';
 		$response['type']          = 'success';
 		wp_send_json_success( $response );
 	}

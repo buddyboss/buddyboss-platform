@@ -6,12 +6,15 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handles the display of the profile page by loading the correct template file.
  *
  * @since BuddyPress 1.0.0
  */
-function xprofile_screen_display_profile() {
+function bboss_xprofile_screen_display_profile() {
 	$new = isset( $_GET['new'] ) ? $_GET['new'] : '';
 
 	/**
@@ -30,5 +33,5 @@ function xprofile_screen_display_profile() {
 	 *
 	 * @param string $template Path to the XProfile template to load.
 	 */
-	bp_core_load_template( apply_filters( 'xprofile_template_display_profile', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'xprofile_template_display_profile', 'members/single/home' ) );
 }

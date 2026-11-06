@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Deletes the active avatar for a user.
  *
@@ -14,25 +17,25 @@
  *
  * @since BuddyPress 1.0.0
  */
-function xprofile_action_delete_avatar() {
+function bboss_xprofile_action_delete_avatar() {
 
-	if ( ! bp_is_user_change_avatar() || ! bp_is_action_variable( 'delete-avatar', 0 ) ) {
+	if ( ! bboss_is_user_change_avatar() || ! bboss_is_action_variable( 'delete-avatar', 0 ) ) {
 		return false;
 	}
 
 	// Check the nonce.
 	check_admin_referer( 'bp_delete_avatar_link' );
 
-	if ( ! bp_is_my_profile() && ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_is_my_profile() && ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
 
-	if ( bp_core_delete_existing_avatar( array( 'item_id' => bp_displayed_user_id() ) ) ) {
-		bp_core_add_message( __( 'Your profile photo was deleted successfully!', 'buddyboss' ) );
+	if ( bboss_core_delete_existing_avatar( array( 'item_id' => bboss_displayed_user_id() ) ) ) {
+		bboss_core_add_message( __( 'Your profile photo was deleted successfully!', 'buddyboss-platform' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss-platform' ), 'error' );
 	}
 
-	bp_core_redirect( wp_get_referer() );
+	bboss_core_redirect( wp_get_referer() );
 }
-add_action( 'bp_actions', 'xprofile_action_delete_avatar' );
+add_action( 'bp_actions', 'bboss_xprofile_action_delete_avatar' );

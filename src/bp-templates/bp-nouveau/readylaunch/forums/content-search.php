@@ -3,7 +3,7 @@
  * Search Content Template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -17,23 +17,23 @@ defined( 'ABSPATH' ) || exit;
 	<div class="bb-rl-forums-container-inner">
 		<div class="bb-rl-container-inner">
 
-			<?php bbp_set_query_name( bbp_get_search_rewrite_id() ); ?>
+			<?php bboss_bbp_set_query_name( bboss_bbp_get_search_rewrite_id() ); ?>
 
 			<?php do_action( 'bbp_template_before_search' ); ?>
 
-			<?php if ( bbp_has_search_results() ) : ?>
+			<?php if ( bboss_bbp_has_search_results() ) : ?>
 
-				<?php bbp_get_template_part( 'loop', 'search' ); ?>
+				<?php bboss_bbp_get_template_part( 'loop', 'search' ); ?>
 
-				<?php bbp_get_template_part( 'pagination', 'search' ); ?>
+				<?php bboss_bbp_get_template_part( 'pagination', 'search' ); ?>
 
-			<?php elseif ( bbp_get_search_terms() ) : ?>
+			<?php elseif ( bboss_bbp_get_search_terms() ) : ?>
 
-				<?php bbp_get_template_part( 'feedback', 'no-search' ); ?>
+				<?php bboss_bbp_get_template_part( 'feedback', 'no-search' ); ?>
 
 			<?php else : ?>
 
-				<?php bbp_get_template_part( 'form', 'search' ); ?>
+				<?php bboss_bbp_get_template_part( 'form', 'search' ); ?>
 
 			<?php endif; ?>
 

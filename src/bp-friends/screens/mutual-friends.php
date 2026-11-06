@@ -30,5 +30,5 @@ function friends_screen_mutual_friends() {
 	 *
 	 * @param string $template Path to the mutual connections template to load.
 	 */
-	bp_core_load_template( apply_filters( 'friends_template_mutual_friends', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'friends_template_mutual_friends', 'members/single/home' ) );
 }

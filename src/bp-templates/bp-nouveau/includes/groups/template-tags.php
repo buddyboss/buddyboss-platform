@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_before_groups_directory_content() {
+function bboss_nouveau_before_groups_directory_content() {
 	/**
 	 * Fires at the begining of the templates BP injected content.
 	 *
@@ -44,7 +44,7 @@ function bp_nouveau_before_groups_directory_content() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_after_groups_directory_content() {
+function bboss_nouveau_after_groups_directory_content() {
 	/**
 	 * Fires and displays the group content.
 	 *
@@ -82,7 +82,7 @@ function bp_nouveau_after_groups_directory_content() {
  * @param string $when   Optional. Either 'before' or 'after'.
  * @param string $suffix Optional. Use it to add terms at the end of the hook name.
  */
-function bp_nouveau_groups_create_hook( $when = '', $suffix = '' ) {
+function bboss_nouveau_groups_create_hook( $when = '', $suffix = '' ) {
 	$hook = array( 'bp' );
 
 	if ( $when ) {
@@ -96,7 +96,7 @@ function bp_nouveau_groups_create_hook( $when = '', $suffix = '' ) {
 		$hook[] = $suffix;
 	}
 
-	bp_nouveau_hook( $hook );
+	bboss_nouveau_hook( $hook );
 }
 
 /**
@@ -107,7 +107,7 @@ function bp_nouveau_groups_create_hook( $when = '', $suffix = '' ) {
  * @param string $when   Optional. Either 'before' or 'after'.
  * @param string $suffix Optional. Use it to add terms at the end of the hook name.
  */
-function bp_nouveau_group_hook( $when = '', $suffix = '' ) {
+function bboss_nouveau_group_hook( $when = '', $suffix = '' ) {
 	$hook = array( 'bp' );
 
 	if ( $when ) {
@@ -121,7 +121,7 @@ function bp_nouveau_group_hook( $when = '', $suffix = '' ) {
 		$hook[] = $suffix;
 	}
 
-	bp_nouveau_hook( $hook );
+	bboss_nouveau_hook( $hook );
 }
 
 /**
@@ -129,7 +129,7 @@ function bp_nouveau_group_hook( $when = '', $suffix = '' ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_groups_loop_item() {
+function bboss_nouveau_groups_loop_item() {
 	/**
 	 * Fires inside the listing of an individual group listing item.
 	 *
@@ -143,7 +143,7 @@ function bp_nouveau_groups_loop_item() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_groups_activity_post_form() {
+function bboss_nouveau_groups_activity_post_form() {
 	/**
 	 * Fires before the display of the group activity post form.
 	 *
@@ -151,8 +151,8 @@ function bp_nouveau_groups_activity_post_form() {
 	 */
 	do_action( 'bp_before_group_activity_post_form' );
 
-	if ( is_user_logged_in() && bp_group_is_member() && bp_group_is_member_allowed_posting() ) {
-		bp_get_template_part( 'activity/post-form' );
+	if ( is_user_logged_in() && bboss_group_is_member() && bboss_group_is_member_allowed_posting() ) {
+		bboss_get_template_part( 'activity/post-form' );
 	}
 
 	/**
@@ -170,7 +170,7 @@ function bp_nouveau_groups_activity_post_form() {
  *
  * @return string HTML Output.
  */
-function bp_nouveau_group_invites_interface() {
+function bboss_nouveau_group_invites_interface() {
 	/**
 	 * Fires before the send invites content.
 	 *
@@ -178,7 +178,7 @@ function bp_nouveau_group_invites_interface() {
 	 */
 	do_action( 'bp_before_group_send_invites_content' );
 
-	bp_get_template_part( 'common/js-templates/invites/index' );
+	bboss_get_template_part( 'common/js-templates/invites/index' );
 
 	/**
 	 * Fires after the send invites content.
@@ -197,12 +197,12 @@ function bp_nouveau_group_invites_interface() {
  * @param  int $user_id The user ID to check group invites preference for.
  * @return int          Returns 1 if user chose to restrict to friends, 0 otherwise.
  */
-function bp_nouveau_groups_get_group_invites_setting( $user_id = 0 ) {
+function bboss_nouveau_groups_get_group_invites_setting( $user_id = 0 ) {
 	if ( ! $user_id ) {
-		$user_id = bp_displayed_user_id();
+		$user_id = bboss_displayed_user_id();
 	}
 
-	return (int) bp_get_user_meta( $user_id, '_bp_nouveau_restrict_invites_to_friends' );
+	return (int) bboss_get_user_meta( $user_id, '_bp_nouveau_restrict_invites_to_friends' );
 }
 
 /**
@@ -212,14 +212,14 @@ function bp_nouveau_groups_get_group_invites_setting( $user_id = 0 ) {
  *
  * @todo This output isn't localised correctly.
  */
-function bp_nouveau_group_creation_tabs() {
-	$bp = buddypress();
+function bboss_nouveau_group_creation_tabs() {
+	$bp = bboss();
 
 	if ( ! is_array( $bp->groups->group_creation_steps ) ) {
 		return;
 	}
 
-	if ( ! bp_get_groups_current_create_step() ) {
+	if ( ! bboss_get_groups_current_create_step() ) {
 		$keys                            = array_keys( $bp->groups->group_creation_steps );
 		$bp->groups->current_create_step = array_shift( $keys );
 	}
@@ -227,11 +227,11 @@ function bp_nouveau_group_creation_tabs() {
 	$counter = 1;
 
 	foreach ( (array) $bp->groups->group_creation_steps as $slug => $step ) {
-		$is_enabled = bp_are_previous_group_creation_steps_complete( $slug ); ?>
+		$is_enabled = bboss_are_previous_group_creation_steps_complete( $slug ); ?>
 
-		<li<?php if ( bp_get_groups_current_create_step() === $slug ) : ?> class="current"<?php endif; ?>>
+		<li<?php if ( bboss_get_groups_current_create_step() === $slug ) : ?> class="current"<?php endif; ?>>
 			<?php if ( $is_enabled ) : ?>
-				<a href="<?php echo esc_url( bp_groups_directory_permalink() . 'create/step/' . $slug . '/' ); ?>">
+				<a href="<?php echo esc_url( bboss_groups_directory_permalink() . 'create/step/' . $slug . '/' ); ?>">
 					<?php echo (int) $counter; ?> <?php echo esc_html( $step['name'] ); ?>
 				</a>
 			<?php else : ?>
@@ -257,8 +257,8 @@ function bp_nouveau_group_creation_tabs() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_group_creation_screen() {
-	return bp_nouveau_group_manage_screen();
+function bboss_nouveau_group_creation_screen() {
+	return bboss_nouveau_group_manage_screen();
 }
 
 /**
@@ -267,17 +267,17 @@ function bp_nouveau_group_creation_screen() {
  * @since BuddyPress 3.0.0
  */
 
-function bp_nouveau_group_manage_screen() {
-	$action          = bp_action_variable( 0 );
-	$is_group_create = bp_is_group_create();
+function bboss_nouveau_group_manage_screen() {
+	$action          = bboss_action_variable( 0 );
+	$is_group_create = bboss_is_group_create();
 	$output          = '';
 
 	if ( $is_group_create ) {
-		$action = bp_action_variable( 1 );
+		$action = bboss_action_variable( 1 );
 	}
 
 	$screen_id = urlencode( sanitize_file_name( urldecode( $action ) ) );
-	if ( ! bp_is_group_admin_screen( $screen_id ) && ! bp_is_group_creation_step( $screen_id ) ) {
+	if ( ! bboss_is_group_admin_screen( $screen_id ) && ! bboss_is_group_creation_step( $screen_id ) ) {
 		return;
 	}
 
@@ -289,11 +289,11 @@ function bp_nouveau_group_manage_screen() {
 		 */
 		do_action( 'bp_before_group_admin_content' );
 
-		$core_screen = bp_nouveau_group_get_core_manage_screens( $screen_id );
+		$core_screen = bboss_nouveau_group_get_core_manage_screens( $screen_id );
 
 	// It's a group step, get the creation screens.
 	} else {
-		$core_screen = bp_nouveau_group_get_core_create_screens( $screen_id );
+		$core_screen = bboss_nouveau_group_get_core_create_screens( $screen_id );
 	}
 
 	if ( ! $core_screen ) {
@@ -337,7 +337,7 @@ function bp_nouveau_group_manage_screen() {
 			$template = $core_screen['template'];
 		}
 
-		bp_get_template_part( $template );
+		bboss_get_template_part( $template );
 
 		if ( ! empty( $core_screen['hook'] ) ) {
 
@@ -362,7 +362,7 @@ function bp_nouveau_group_manage_screen() {
 
 		if ( ! empty( $core_screen['nonce'] ) ) {
 			if ( ! $is_group_create ) {
-				$output = sprintf( '<p><input type="submit" value="%s" id="save" name="save" /></p>', esc_attr__( 'Save Changes', 'buddyboss' ) );
+				$output = sprintf( '<p><input type="submit" value="%s" id="save" name="save" /></p>', esc_attr__( 'Save Changes', 'buddyboss-platform' ) );
 
 				// Specific case for the delete group screen
 				if ( 'delete-group' === $screen_id ) {
@@ -370,7 +370,7 @@ function bp_nouveau_group_manage_screen() {
 						'<div class="submit">
 							<input type="submit" disabled="disabled" value="%s" id="delete-group-button" name="delete-group-button" />
 						</div>',
-						esc_attr__( 'Delete Group', 'buddyboss' )
+						esc_attr__( 'Delete Group', 'buddyboss-platform' )
 					);
 				}
 			}
@@ -385,35 +385,35 @@ function bp_nouveau_group_manage_screen() {
 		 */
 		do_action( 'bp_before_group_creation_step_buttons' );
 
-		if ( 'crop-image' !== bp_get_avatar_admin_step() ) {
+		if ( 'crop-image' !== bboss_get_avatar_admin_step() ) {
 			$creation_step_buttons = '';
 
-			if ( ! bp_is_first_group_creation_step() ) {
+			if ( ! bboss_is_first_group_creation_step() ) {
 				$creation_step_buttons .= sprintf(
 					'<input type="button" value="%1$s" id="group-creation-previous" name="previous" onclick="%2$s" />',
-					esc_attr__( 'Previous Step', 'buddyboss' ),
-					"location.href='" . esc_js( esc_url_raw( bp_get_group_creation_previous_link() ) ) . "'"
+					esc_attr__( 'Previous Step', 'buddyboss-platform' ),
+					"location.href='" . esc_js( esc_url_raw( bboss_get_group_creation_previous_link() ) ) . "'"
 				);
 			}
 
-			if ( ! bp_is_last_group_creation_step() && ! bp_is_first_group_creation_step() ) {
+			if ( ! bboss_is_last_group_creation_step() && ! bboss_is_first_group_creation_step() ) {
 				$creation_step_buttons .= sprintf(
 					'<input type="submit" value="%s" id="group-creation-next" name="save" />',
-					esc_attr__( 'Next Step', 'buddyboss' )
+					esc_attr__( 'Next Step', 'buddyboss-platform' )
 				);
 			}
 
-			if ( bp_is_first_group_creation_step() ) {
+			if ( bboss_is_first_group_creation_step() ) {
 				$creation_step_buttons .= sprintf(
 					'<input type="submit" value="%s" id="group-creation-create" name="save" />',
-					esc_attr__( 'Create Group and Continue', 'buddyboss' )
+					esc_attr__( 'Create Group and Continue', 'buddyboss-platform' )
 				);
 			}
 
-			if ( bp_is_last_group_creation_step() ) {
+			if ( bboss_is_last_group_creation_step() ) {
 				$creation_step_buttons .= sprintf(
 					'<input type="submit" value="%s" id="group-creation-finish" name="save" />',
-					esc_attr__( 'Finish', 'buddyboss' )
+					esc_attr__( 'Finish', 'buddyboss-platform' )
 				);
 			}
 
@@ -432,10 +432,10 @@ function bp_nouveau_group_manage_screen() {
 	/**
 	 * Avoid nested forms with the Backbone views for the group invites step.
 	 */
-	if ( 'group-invites' === bp_get_groups_current_create_step() ) {
+	if ( 'group-invites' === bboss_get_groups_current_create_step() ) {
 		printf(
 			'<form action="%s" method="post" enctype="multipart/form-data">',
-			bp_get_group_creation_form_action()
+			esc_url( bboss_get_group_creation_form_action() )
 		);
 	}
 
@@ -445,16 +445,16 @@ function bp_nouveau_group_manage_screen() {
 
 	printf(
 		'<input type="hidden" name="group-id" id="group-id" value="%s" />',
-		$is_group_create ? esc_attr( bp_get_new_group_id() ) : esc_attr( bp_get_group_id() )
+		$is_group_create ? esc_attr( bboss_get_new_group_id() ) : esc_attr( bboss_get_group_id() )
 	);
 
 	printf(
 		'<input type="hidden" name="parent-id" id="parent-id" value="%s" />',
-		$is_group_create ? esc_attr( bp_get_parent_group_id( bp_get_new_group_id() ) ) : esc_attr( bp_get_parent_group_id( bp_get_group_id() ) )
+		$is_group_create ? esc_attr( bboss_get_parent_group_id( bboss_get_new_group_id() ) ) : esc_attr( bboss_get_parent_group_id( bboss_get_group_id() ) )
 	);
 
 	// The submit actions
-	echo $output;
+	echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template-part output (may contain forms and scripts); every template escapes its own values.
 
 	if ( ! $is_group_create ) {
 		/**
@@ -476,7 +476,7 @@ function bp_nouveau_group_manage_screen() {
 	/**
 	 * Avoid nested forms with the Backbone views for the group invites step.
 	 */
-	if ( 'group-invites' === bp_get_groups_current_create_step() ) {
+	if ( 'group-invites' === bboss_get_groups_current_create_step() ) {
 		echo '</form>';
 	}
 }
@@ -486,12 +486,12 @@ function bp_nouveau_group_manage_screen() {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_group_header_buttons( $args = array() ) {
-	$bp_nouveau = bp_nouveau();
+function bboss_nouveau_group_header_buttons( $args = array() ) {
+	$bp_nouveau = bboss_nouveau();
 
-	$output = join( ' ', bp_nouveau_get_groups_buttons( $args ) );
+	$output = join( ' ', bboss_nouveau_get_groups_buttons( $args ) );
 
 	// On the group's header we need to reset the group button's global.
 	if ( ! empty( $bp_nouveau->groups->group_buttons ) ) {
@@ -515,7 +515,7 @@ function bp_nouveau_group_header_buttons( $args = array() ) {
 		$args = array( 'classes' => array( 'item-buttons' ) );
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
@@ -523,12 +523,12 @@ function bp_nouveau_group_header_buttons( $args = array() ) {
  *
  * @since BuddyBoss 1.7.3
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bb_nouveau_group_header_bubble_buttons( $args = array() ) {
-	$bp_nouveau = bp_nouveau();
+function bboss_nouveau_group_header_bubble_buttons( $args = array() ) {
+	$bp_nouveau = bboss_nouveau();
 
-	$output = join( ' ', bb_nouveau_get_groups_bubble_buttons( $args ) );
+	$output = join( ' ', bboss_nouveau_get_groups_bubble_buttons( $args ) );
 
 	// On the group's header we need to reset the group button's global.
 	if ( ! empty( $bp_nouveau->groups->group_buttons ) ) {
@@ -553,12 +553,12 @@ function bb_nouveau_group_header_bubble_buttons( $args = array() ) {
 	}
 
 	ob_start();
-	bp_get_template_part( 'common/more-options-view' );
+	bboss_get_template_part( 'common/more-options-view' );
 	$template_part_content = ob_get_clean();
 
-	$output = sprintf( '<a href="#" class="bb_more_options_action" aria-label="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list bb_more_dropdown"> %2$s %3$s</div><div class="bb_more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss' ), $template_part_content, $output );
+	$output = sprintf( '<a href="#" class="bb_more_options_action" aria-label="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list bb_more_dropdown"> %2$s %3$s</div><div class="bb_more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss-platform' ), $template_part_content, $output );
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
@@ -566,16 +566,16 @@ function bb_nouveau_group_header_bubble_buttons( $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_groups_loop_buttons( $args = array() ) {
+function bboss_nouveau_groups_loop_buttons( $args = array() ) {
 	if ( empty( $GLOBALS['groups_template'] ) ) {
 		return;
 	}
 
 	$args['type'] = 'loop';
 
-	$output = join( ' ', bp_nouveau_get_groups_buttons( $args ) );
+	$output = join( ' ', bboss_nouveau_get_groups_buttons( $args ) );
 
 	ob_start();
 	/**
@@ -590,7 +590,7 @@ function bp_nouveau_groups_loop_buttons( $args = array() ) {
 		return;
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
@@ -598,16 +598,16 @@ function bp_nouveau_groups_loop_buttons( $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_groups_invite_buttons( $args = array() ) {
+function bboss_nouveau_groups_invite_buttons( $args = array() ) {
 	if ( empty( $GLOBALS['groups_template'] ) ) {
 		return;
 	}
 
 	$args['type'] = 'invite';
 
-	$output = join( ' ', bp_nouveau_get_groups_buttons( $args ) );
+	$output = join( ' ', bboss_nouveau_get_groups_buttons( $args ) );
 
 	ob_start();
 	/**
@@ -622,7 +622,7 @@ function bp_nouveau_groups_invite_buttons( $args = array() ) {
 		return;
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
@@ -630,16 +630,16 @@ function bp_nouveau_groups_invite_buttons( $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_groups_request_buttons( $args = array() ) {
+function bboss_nouveau_groups_request_buttons( $args = array() ) {
 	if ( empty( $GLOBALS['requests_template'] ) ) {
 		return;
 	}
 
 	$args['type'] = 'request';
 
-	$output = join( ' ', bp_nouveau_get_groups_buttons( $args ) );
+	$output = join( ' ', bboss_nouveau_get_groups_buttons( $args ) );
 
 	ob_start();
 	/**
@@ -654,7 +654,7 @@ function bp_nouveau_groups_request_buttons( $args = array() ) {
 		return;
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
@@ -662,16 +662,16 @@ function bp_nouveau_groups_request_buttons( $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
+function bboss_nouveau_groups_manage_members_buttons( $args = array() ) {
 	if ( empty( $GLOBALS['members_template'] ) ) {
 		return;
 	}
 
 	$args['type'] = 'manage_members';
 
-	$output = join( ' ', bp_nouveau_get_groups_buttons( $args ) );
+	$output = join( ' ', bboss_nouveau_get_groups_buttons( $args ) );
 
 	ob_start();
 	/**
@@ -693,7 +693,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 		);
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
@@ -702,13 +702,13 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_get_groups_buttons( $args = array() ) {
+function bboss_nouveau_get_groups_buttons( $args = array() ) {
 	$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'group';
 
 	// @todo Not really sure why BP Legacy needed to do this...
-	if ( 'group' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+	if ( 'group' === $type && is_admin() && ! ( defined( 'BBOSS_DOING_AJAX' ) && BBOSS_DOING_AJAX ) ) {
 		return;
 	}
 
@@ -717,7 +717,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 	if ( ( 'loop' === $type || 'invite' === $type ) && isset( $GLOBALS['groups_template']->group ) ) {
 		$group = $GLOBALS['groups_template']->group;
 	} else {
-		$group = groups_get_current_group();
+		$group = bboss_groups_get_current_group();
 	}
 
 	if ( empty( $group->id ) ) {
@@ -761,7 +761,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 	// Invite buttons on member's invites screen.
 	if ( 'invite' === $type ) {
 		// Don't show button if not logged in or previously banned.
-		if ( ! is_user_logged_in() || bp_group_is_user_banned( $group ) || empty( $group->status ) ) {
+		if ( ! is_user_logged_in() || bboss_group_is_user_banned( $group ) || empty( $group->status ) ) {
 			return $buttons;
 		}
 
@@ -772,7 +772,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			'component'         => 'groups',
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
-			'link_text'         => esc_html__( 'Accept', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Accept', 'buddyboss-platform' ),
 			'button_element'    => $button_element,
 			'parent_attr'       => array(
 				'id'    => '',
@@ -787,9 +787,9 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 
 		// If button element set add nonce link to data-attr attr.
 		if ( 'button' === $button_element ) {
-			$buttons['accept_invite']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_accept_invite_link() );
+			$buttons['accept_invite']['button_attr']['data-bp-nonce'] = esc_url( bboss_get_group_accept_invite_link() );
 		} else {
-			$buttons['accept_invite']['button_attr']['href'] = esc_url( bp_get_group_accept_invite_link() );
+			$buttons['accept_invite']['button_attr']['href'] = esc_url( bboss_get_group_accept_invite_link() );
 		}
 
 		// Setup Reject button attributes.
@@ -799,7 +799,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			'component'         => 'groups',
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
-			'link_text'         => esc_html__( 'Reject', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Reject', 'buddyboss-platform' ),
 			'parent_attr'       => array(
 				'id'    => '',
 				'class' => $parent_class . ' ' . 'reject',
@@ -814,9 +814,9 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 
 		// If button element set add nonce link to formaction attr.
 		if ( 'button' === $button_element ) {
-			$buttons['reject_invite']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_reject_invite_link() );
+			$buttons['reject_invite']['button_attr']['data-bp-nonce'] = esc_url( bboss_get_group_reject_invite_link() );
 		} else {
-			$buttons['reject_invite']['button_attr']['href'] = esc_url( bp_get_group_reject_invite_link() );
+			$buttons['reject_invite']['button_attr']['href'] = esc_url( bboss_get_group_reject_invite_link() );
 		}
 		// Request button for the group's manage screen.
 	} elseif ( 'request' === $type ) {
@@ -827,7 +827,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			'component'         => 'groups',
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
-			'link_text'         => esc_html__( 'Accept', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Accept', 'buddyboss-platform' ),
 			'button_element'    => $button_element,
 			'parent_attr'       => array(
 				'id'    => '',
@@ -842,9 +842,9 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 
 		// If button element set add nonce link to data-attr attr.
 		if ( 'button' === $button_element ) {
-			$buttons['group_membership_accept']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_request_accept_link() );
+			$buttons['group_membership_accept']['button_attr']['data-bp-nonce'] = esc_url( bboss_get_group_request_accept_link() );
 		} else {
-			$buttons['group_membership_accept']['button_attr']['href'] = esc_url( bp_get_group_request_accept_link() );
+			$buttons['group_membership_accept']['button_attr']['href'] = esc_url( bboss_get_group_request_accept_link() );
 		}
 
 		$buttons['group_membership_reject'] = array(
@@ -854,7 +854,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
 			'button_element'    => $button_element,
-			'link_text'         => esc_html__( 'Reject', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Reject', 'buddyboss-platform' ),
 			'parent_attr'       => array(
 				'id'    => '',
 				'class' => $parent_class,
@@ -868,9 +868,9 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 
 		// If button element set add nonce link to data-attr attr.
 		if ( 'button' === $button_element ) {
-			$buttons['group_membership_reject']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_request_reject_link() );
+			$buttons['group_membership_reject']['button_attr']['data-bp-nonce'] = esc_url( bboss_get_group_request_reject_link() );
 		} else {
-			$buttons['group_membership_reject']['button_attr']['href'] = esc_url( bp_get_group_request_reject_link() );
+			$buttons['group_membership_reject']['button_attr']['href'] = esc_url( bboss_get_group_request_reject_link() );
 		}
 
 		/**
@@ -888,7 +888,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => esc_html__( 'Remove Ban', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Remove Ban', 'buddyboss-platform' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
@@ -907,7 +907,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => esc_html__( 'Kick &amp; Ban', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Kick &amp; Ban', 'buddyboss-platform' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
@@ -936,7 +936,8 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 					'rel'   => '',
 					'title' => '',
 				),
-				'link_text'         => sprintf( __( 'Promote to %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ),
+				/* translators: %s: label. */
+				'link_text'         => sprintf( __( 'Promote to %s', 'buddyboss-platform' ), bboss_get_group_role_label( $group->id, 'moderator_singular_label_name' ) ),
 			),
 			'promote_admin' => array(
 				'id'                => 'promote_admin',
@@ -945,13 +946,14 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => sprintf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ),
+				/* translators: %s: label. */
+				'link_text'         => sprintf( __( 'Promote to co-%s', 'buddyboss-platform' ), strtolower( bboss_get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
 				),
 				'button_attr'       => array(
-					'href'  => esc_url( bp_get_group_member_promote_admin_link() ),
+					'href'  => esc_url( bboss_get_group_member_promote_admin_link() ),
 					'id'    => '',
 					'class' => 'button confirm member-promote-to-admin',
 					'rel'   => '',
@@ -965,7 +967,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => esc_html__( 'Remove from group', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Remove from group', 'buddyboss-platform' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
@@ -981,17 +983,17 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 
 		// If 'button' element is set add the nonce link to data-attr attr, else add it to the href.
 		if ( 'button' === $button_element ) {
-			$buttons['unban_member']['button_attr']['data-bp-nonce']  = bp_get_group_member_unban_link( $user_id );
-			$buttons['ban_member']['button_attr']['data-bp-nonce']    = bp_get_group_member_ban_link( $user_id );
-			$buttons['promote_mod']['button_attr']['data-bp-nonce']   = bp_get_group_member_promote_mod_link();
-			$buttons['promote_admin']['button_attr']['data-bp-nonce'] = bp_get_group_member_promote_admin_link();
-			$buttons['remove_member']['button_attr']['data-bp-nonce'] = bp_get_group_member_remove_link( $user_id );
+			$buttons['unban_member']['button_attr']['data-bp-nonce']  = bboss_get_group_member_unban_link( $user_id );
+			$buttons['ban_member']['button_attr']['data-bp-nonce']    = bboss_get_group_member_ban_link( $user_id );
+			$buttons['promote_mod']['button_attr']['data-bp-nonce']   = bboss_get_group_member_promote_mod_link();
+			$buttons['promote_admin']['button_attr']['data-bp-nonce'] = bboss_get_group_member_promote_admin_link();
+			$buttons['remove_member']['button_attr']['data-bp-nonce'] = bboss_get_group_member_remove_link( $user_id );
 		} else {
-			$buttons['unban_member']['button_attr']['href']  = bp_get_group_member_unban_link( $user_id );
-			$buttons['ban_member']['button_attr']['href']    = bp_get_group_member_ban_link( $user_id );
-			$buttons['promote_mod']['button_attr']['href']   = bp_get_group_member_promote_mod_link();
-			$buttons['promote_admin']['button_attr']['href'] = bp_get_group_member_promote_admin_link();
-			$buttons['remove_member']['button_attr']['href'] = bp_get_group_member_remove_link( $user_id );
+			$buttons['unban_member']['button_attr']['href']  = bboss_get_group_member_unban_link( $user_id );
+			$buttons['ban_member']['button_attr']['href']    = bboss_get_group_member_ban_link( $user_id );
+			$buttons['promote_mod']['button_attr']['href']   = bboss_get_group_member_promote_mod_link();
+			$buttons['promote_admin']['button_attr']['href'] = bboss_get_group_member_promote_admin_link();
+			$buttons['remove_member']['button_attr']['href'] = bboss_get_group_member_remove_link( $user_id );
 		}
 
 		// Membership button on groups loop or single group's header. The `subscription` type has no
@@ -1004,14 +1006,14 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 		 *
 		 * See https://buddypress.trac.wordpress.org/ticket/7126
 		 */
-		add_filter( 'bp_get_group_join_button', 'bp_nouveau_groups_catch_button_args', 100, 1 );
+		add_filter( 'bp_get_group_join_button', 'bboss_nouveau_groups_catch_button_args', 100, 1 );
 
-		bp_get_group_join_button( $group );
+		bboss_get_group_join_button( $group );
 
-		remove_filter( 'bp_get_group_join_button', 'bp_nouveau_groups_catch_button_args', 100, 1 );
+		remove_filter( 'bp_get_group_join_button', 'bboss_nouveau_groups_catch_button_args', 100, 1 );
 
-		if ( ! empty( bp_nouveau()->groups->button_args ) ) {
-			$button_args = bp_nouveau()->groups->button_args;
+		if ( ! empty( bboss_nouveau()->groups->button_args ) ) {
+			$button_args = bboss_nouveau()->groups->button_args;
 
 			// If we pass through parent classes merge those into the existing ones.
 			if ( $parent_class ) {
@@ -1059,7 +1061,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				$buttons['group_membership']['button_attr']['href'] = $button_args['link_href'];
 			}
 
-			unset( bp_nouveau()->groups->button_args );
+			unset( bboss_nouveau()->groups->button_args );
 		}
 	}
 
@@ -1087,17 +1089,17 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 	}
 
 	// It's the first entry of the loop, so build the Group and sort it.
-	if ( ! isset( bp_nouveau()->groups->group_buttons ) || ! is_a( bp_nouveau()->groups->group_buttons, 'BP_Buttons_Group' ) ) {
+	if ( ! isset( bboss_nouveau()->groups->group_buttons ) || ! is_a( bboss_nouveau()->groups->group_buttons, 'BBoss_Buttons_Group' ) ) {
 		$sort                               = true;
-		bp_nouveau()->groups->group_buttons = new BP_Buttons_Group( $buttons_group );
+		bboss_nouveau()->groups->group_buttons = new BBoss_Buttons_Group( $buttons_group );
 
 		// It's not the first entry, the order is set, we simply need to update the Buttons Group.
 	} else {
 		$sort = false;
-		bp_nouveau()->groups->group_buttons->update( $buttons_group );
+		bboss_nouveau()->groups->group_buttons->update( $buttons_group );
 	}
 
-	$return = bp_nouveau()->groups->group_buttons->get( $sort );
+	$return = bboss_nouveau()->groups->group_buttons->get( $sort );
 
 	if ( ! $return ) {
 		return array();
@@ -1105,7 +1107,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 
 	// Remove buttons according to the user's membership type.
 	if ( 'manage_members' === $type && isset( $GLOBALS['members_template'] ) ) {
-		if ( bp_get_group_member_is_banned() ) {
+		if ( bboss_get_group_member_is_banned() ) {
 			unset( $return['ban_member'], $return['promote_mod'], $return['promote_admin'] );
 		} else {
 			unset( $return['unban_member'] );
@@ -1134,13 +1136,13 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
  *
  * @since BuddyBoss 1.7.3
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bb_nouveau_get_groups_bubble_buttons( $args = array() ) {
+function bboss_nouveau_get_groups_bubble_buttons( $args = array() ) {
 	$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'group';
 
 	// @todo Not really sure why BP Legacy needed to do this...
-	if ( 'group' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+	if ( 'group' === $type && is_admin() && ! ( defined( 'BBOSS_DOING_AJAX' ) && BBOSS_DOING_AJAX ) ) {
 		return;
 	}
 
@@ -1149,7 +1151,7 @@ function bb_nouveau_get_groups_bubble_buttons( $args = array() ) {
 	if ( ( 'loop' === $type || 'invite' === $type ) && isset( $GLOBALS['groups_template']->group ) ) {
 		$group = $GLOBALS['groups_template']->group;
 	} else {
-		$group = groups_get_current_group();
+		$group = bboss_groups_get_current_group();
 	}
 
 	if ( empty( $group->id ) ) {
@@ -1190,8 +1192,8 @@ function bb_nouveau_get_groups_bubble_buttons( $args = array() ) {
 		$parent_class = $args['parent_attr']['class'];
 	}
 
-	if ( bp_is_active( 'moderation' ) && bp_is_group_single() && is_user_logged_in() ) {
-		$buttons['group_report'] = bp_moderation_get_report_button(
+	if ( bboss_is_active( 'moderation' ) && bboss_is_group_single() && is_user_logged_in() ) {
+		$buttons['group_report'] = bboss_moderation_get_report_button(
 			array(
 				'id'                => 'group_report',
 				'position'          => 50,
@@ -1205,7 +1207,7 @@ function bb_nouveau_get_groups_bubble_buttons( $args = array() ) {
 				'button_element'    => $button_element,
 				'button_attr'       => array(
 					'data-bp-content-id'   => $group->id,
-					'data-bp-content-type' => BP_Moderation_Groups::$moderation_type,
+					'data-bp-content-type' => BBoss_Moderation_Groups::$moderation_type,
 				),
 			),
 			false
@@ -1228,17 +1230,17 @@ function bb_nouveau_get_groups_bubble_buttons( $args = array() ) {
 	}
 
 	// It's the first entry of the loop, so build the Group and sort it.
-	if ( ! isset( bp_nouveau()->groups->group_buttons ) || ! is_a( bp_nouveau()->groups->group_buttons, 'BP_Buttons_Group' ) ) {
+	if ( ! isset( bboss_nouveau()->groups->group_buttons ) || ! is_a( bboss_nouveau()->groups->group_buttons, 'BBoss_Buttons_Group' ) ) {
 		$sort                               = true;
-		bp_nouveau()->groups->group_buttons = new BP_Buttons_Group( $buttons_group );
+		bboss_nouveau()->groups->group_buttons = new BBoss_Buttons_Group( $buttons_group );
 
 		// It's not the first entry, the order is set, we simply need to update the Buttons Group.
 	} else {
 		$sort = false;
-		bp_nouveau()->groups->group_buttons->update( $buttons_group );
+		bboss_nouveau()->groups->group_buttons->update( $buttons_group );
 	}
 
-	$return = bp_nouveau()->groups->group_buttons->get( $sort );
+	$return = bboss_nouveau()->groups->group_buttons->get( $sort );
 
 	if ( ! $return ) {
 		return array();
@@ -1265,8 +1267,8 @@ function bb_nouveau_get_groups_bubble_buttons( $args = array() ) {
  *
  * @return bool True if the group has meta. False otherwise.
  */
-function bp_nouveau_group_has_meta( $meta_key = '' ) {
-    $group_meta = bp_nouveau_get_group_meta();
+function bboss_nouveau_group_has_meta( $meta_key = '' ) {
+    $group_meta = bboss_nouveau_get_group_meta();
 
     if ( ! $meta_key ) {
         return (bool) $group_meta;
@@ -1282,8 +1284,8 @@ function bp_nouveau_group_has_meta( $meta_key = '' ) {
  *
  * @return bool True if the group has meta. False otherwise.
  */
-function bp_nouveau_group_has_meta_extra() {
-	return (bool) bp_nouveau_get_hooked_group_meta();
+function bboss_nouveau_group_has_meta_extra() {
+	return (bool) bboss_nouveau_get_hooked_group_meta();
 }
 
 /**
@@ -1293,10 +1295,10 @@ function bp_nouveau_group_has_meta_extra() {
  *
  * @return string HTML Output.
  */
-function bp_nouveau_group_meta() {
-	$meta = bp_nouveau_get_group_meta();
+function bboss_nouveau_group_meta() {
+	$meta = bboss_nouveau_get_group_meta();
 
-	if ( ! bp_is_group() ) {
+	if ( ! bboss_is_group() ) {
 		echo join( ' / ', array_map( 'wp_kses', (array) $meta, array( 'span' => array( 'class' => array() ) ) ) );
 	} else {
 
@@ -1307,7 +1309,7 @@ function bp_nouveau_group_meta() {
 		 * @todo Paul says that a function that prints and/or returns a value,
 		 * depending on global state, is madness. This needs changing.
 		 */
-		return (object) bp_nouveau_get_group_meta();
+		return (object) bboss_nouveau_get_group_meta();
 	}
 }
 
@@ -1318,14 +1320,14 @@ function bp_nouveau_group_meta() {
 	 *
 	 * @return array The group meta.
 	 */
-	function bp_nouveau_get_group_meta() {
+	function bboss_nouveau_get_group_meta() {
 		/*
 		 * @todo For brevity required approapriate markup is added here as strings
 		 * this needs to be either filterable or the function needs to be able to accept
 		 * & parse args!
 		 */
 		$meta     = array();
-		$is_group = bp_is_group();
+		$is_group = bboss_is_group();
 
 		if ( ! empty( $GLOBALS['groups_template']->group ) ) {
 			$group = $GLOBALS['groups_template']->group;
@@ -1339,13 +1341,13 @@ function bp_nouveau_group_meta() {
 			// It's a single group
 			if ( $is_group ) {
 					$meta = array(
-						'status'          =>  bp_get_group_type(),
+						'status'          =>  bboss_get_group_type(),
 						//'group_type_list' =>  bp_get_group_type_list(),
-						'description'     =>  bp_get_group_description(),
+						'description'     =>  bboss_get_group_description(),
 					);
 
 				// Make sure to include hooked meta.
-				$extra_meta = bp_nouveau_get_hooked_group_meta();
+				$extra_meta = bboss_nouveau_get_hooked_group_meta();
 
 				if ( $extra_meta ) {
 					$meta['extra'] = $extra_meta;
@@ -1354,8 +1356,8 @@ function bp_nouveau_group_meta() {
 			// We're in the groups loop
 			} else {
 				$meta = array(
-					'status' => bp_get_group_type(),
-					'count'  => bp_get_group_member_count(),
+					'status' => bboss_get_group_type(),
+					'count'  => bboss_get_group_member_count(),
 				);
 			}
 
@@ -1379,7 +1381,7 @@ function bp_nouveau_group_meta() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_group_template_part() {
+function bboss_nouveau_group_template_part() {
 	/**
 	 * Fires before the display of the group home body.
 	 *
@@ -1387,9 +1389,9 @@ function bp_nouveau_group_template_part() {
 	 */
 	do_action( 'bp_before_group_body' );
 
-	$bp_is_group_home = bp_is_group_home();
+	$bp_is_group_home = bboss_is_group_home();
 
-	if ( $bp_is_group_home && ! bp_current_user_can( 'groups_access_group' ) ) {
+	if ( $bp_is_group_home && ! bboss_current_user_can( 'groups_access_group' ) ) {
 		/**
 		 * Fires before the display of the group status message.
 		 *
@@ -1399,7 +1401,7 @@ function bp_nouveau_group_template_part() {
 		?>
 
 		<div id="message" class="info">
-			<p><?php bp_group_status_message(); ?></p>
+			<p><?php bboss_group_status_message(); ?></p>
 		</div>
 
 		<?php
@@ -1412,8 +1414,8 @@ function bp_nouveau_group_template_part() {
 		do_action( 'bp_after_group_status_message' );
 
 	// We have a front template, Use BuddyPress function to load it.
-	} elseif ( $bp_is_group_home && false !== bp_groups_get_front_template() ) {
-		bp_groups_front_template_part();
+	} elseif ( $bp_is_group_home && false !== bboss_groups_get_front_template() ) {
+		bboss_groups_front_template_part();
 
 	// Otherwise use BP_Nouveau template hierarchy
 	} else {
@@ -1421,42 +1423,42 @@ function bp_nouveau_group_template_part() {
 
 		// the home page
 		if ( $bp_is_group_home ) {
-			if ( bp_is_active( 'activity' ) ) {
+			if ( bboss_is_active( 'activity' ) ) {
 				$template = 'activity';
 			} else {
 				$template = 'members';
 			}
 
 		// Not the home page
-		} elseif ( bp_is_group_admin_page() ) {
+		} elseif ( bboss_is_group_admin_page() ) {
 			$template = 'admin';
-		} elseif ( bp_is_group_activity() ) {
+		} elseif ( bboss_is_group_activity() ) {
 			$template = 'activity';
-		} elseif ( bp_is_group_members() ) {
+		} elseif ( bboss_is_group_members() ) {
 			$template = 'members';
-		} elseif ( bp_is_group_subgroups() ) {
+		} elseif ( bboss_is_group_subgroups() ) {
 			$template = 'subgroups';
-		} elseif ( bp_is_group_invites() ) {
+		} elseif ( bboss_is_group_invites() ) {
 			$template = 'invite';
-		} elseif ( bp_is_group_membership_request() ) {
+		} elseif ( bboss_is_group_membership_request() ) {
 			$template = 'request-membership';
-		} elseif ( bp_is_group_media() ) {
+		} elseif ( bboss_is_group_media() ) {
 			$template = 'photos';
-		} elseif ( bp_is_group_albums() ) {
+		} elseif ( bboss_is_group_albums() ) {
 			$template = 'albums';
-		} elseif ( bp_is_active( 'document' ) && bp_is_group_folders() ) {
+		} elseif ( bboss_is_active( 'document' ) && bboss_is_group_folders() ) {
 			$template = 'documents';
-		} elseif ( bp_is_active( 'document' ) && bp_is_group_document() ) {
+		} elseif ( bboss_is_active( 'document' ) && bboss_is_group_document() ) {
 			$template = 'documents';
-		} elseif ( true === bp_disable_group_messages() && bp_is_group_messages() ) {
+		} elseif ( true === bboss_disable_group_messages() && bboss_is_group_messages() ) {
 			$template = 'messages';
-		} elseif ( bp_is_active( 'video' ) && bp_is_group_video() ) {
+		} elseif ( bboss_is_active( 'video' ) && bboss_is_group_video() ) {
 			$template = 'videos';
-		} elseif ( bp_is_group_video_albums() ) {
+		} elseif ( bboss_is_group_video_albums() ) {
 			$template = 'albums';
 		}
 
-		bp_nouveau_group_get_template_part( $template );
+		bboss_nouveau_group_get_template_part( $template );
 	}
 
 	/**
@@ -1472,10 +1474,10 @@ function bp_nouveau_group_template_part() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_group_header_template_part() {
+function bboss_nouveau_group_header_template_part() {
 	$template = 'group-header';
 
-	if ( bp_group_use_cover_image_header() ) {
+	if ( bboss_group_use_cover_image_header() ) {
 		$template = 'cover-image-header';
 	}
 
@@ -1487,7 +1489,7 @@ function bp_nouveau_group_header_template_part() {
 	do_action( 'bp_before_group_header' );
 
 	// Get the template part for the header
-	bp_nouveau_group_get_template_part( $template );
+	bboss_nouveau_group_get_template_part( $template );
 
 	/**
 	 * Fires after the display of a group's header.
@@ -1496,7 +1498,7 @@ function bp_nouveau_group_header_template_part() {
 	 */
 	do_action( 'bp_after_group_header' );
 
-	bp_nouveau_template_notices();
+	bboss_nouveau_template_notices();
 }
 
 /**
@@ -1507,12 +1509,12 @@ function bp_nouveau_group_header_template_part() {
  *
  * @return string HTML Output
  */
-function bp_nouveau_groups_get_customizer_option_link() {
-	return bp_nouveau_get_customizer_link(
+function bboss_nouveau_groups_get_customizer_option_link() {
+	return bboss_nouveau_get_customizer_link(
 		array(
 			'object'    => 'group',
 			'autofocus' => 'bp_nouveau_group_front_page',
-			'text'      => __( 'Groups default front page', 'buddyboss' ),
+			'text'      => __( 'Groups default front page', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -1525,12 +1527,12 @@ function bp_nouveau_groups_get_customizer_option_link() {
  *
  * @return string HTML Output
  */
-function bp_nouveau_groups_get_customizer_widgets_link() {
-	return bp_nouveau_get_customizer_link(
+function bboss_nouveau_groups_get_customizer_widgets_link() {
+	return bboss_nouveau_get_customizer_link(
 		array(
 			'object'    => 'group',
 			'autofocus' => 'sidebar-widgets-sidebar-buddypress-groups',
-			'text'      => __( 'widgets (content blocks)', 'buddyboss' ),
+			'text'      => __( 'widgets (content blocks)', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -1540,18 +1542,18 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
   *
   * @since BuddyPress 3.2.0
   *
-  * @param object $type Group type object. See bp_groups_get_group_type_object().
+  * @param object $type Group type object. See bboss_groups_get_group_type_object().
   */
- function bp_nouveau_group_type_checked( $type = null ) {
+ function bboss_nouveau_group_type_checked( $type = null ) {
      if ( ! is_object( $type ) ) {
          return;
      }
 
      // Group creation screen requires a different check.
-     if ( bp_is_group_create() ) {
+     if ( bboss_is_group_create() ) {
          checked( true, ! empty( $type->create_screen_checked ) );
-     } elseif ( bp_is_group() ) {
-         checked( bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) );
+     } elseif ( bboss_is_group() ) {
+         checked( bboss_groups_has_group_type( bboss_get_current_group_id(), $type->name ) );
      }
  }
 
@@ -1563,11 +1565,11 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
  *
  * @since BuddyPress 4.0.0
  */
-function bp_nouveau_add_notify_group_members_checkbox() {
+function bboss_nouveau_add_notify_group_members_checkbox() {
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 
-		$is_enabled_admin = bb_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' );
+		$is_enabled_admin = bboss_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' );
 
 		if ( $is_enabled_admin ) {
 			printf(
@@ -1575,7 +1577,7 @@ function bp_nouveau_add_notify_group_members_checkbox() {
                     <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" checked />
                     <label for="group-notify-members" class="bp-label-text">%s</label>
                 </p>',
-				esc_html__( 'Notify group members of these changes', 'buddyboss' )
+				esc_html__( 'Notify group members of these changes', 'buddyboss-platform' )
 			);
 		}
 	} else {
@@ -1584,9 +1586,9 @@ function bp_nouveau_add_notify_group_members_checkbox() {
                 <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
                 <label for="group-notify-members" class="bp-label-text">%s</label>
             </p>',
-			esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
+			esc_html__( 'Notify group members of these changes via email', 'buddyboss-platform' )
 		);
 	}
 
 }
-add_action( 'groups_custom_group_fields_editable', 'bp_nouveau_add_notify_group_members_checkbox', 20 );
+add_action( 'groups_custom_group_fields_editable', 'bboss_nouveau_add_notify_group_members_checkbox', 20 );

@@ -5,6 +5,9 @@
  * @deprecated BuddyBoss 2.4.90
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Background job to repair user profile slug.
  *
@@ -15,7 +18,7 @@
  *
  * @return void
  */
-function bb_repair_member_unique_slug( $paged = 1 ) {
+function bboss_repair_member_unique_slug( $paged = 1 ) {
 	_deprecated_function( __FUNCTION__, '2.4.90' );
 
 	global $bp_background_updater;
@@ -50,7 +53,7 @@ function bb_repair_member_unique_slug( $paged = 1 ) {
 	$bp_background_updater->data(
 		array(
 			array(
-				'callback' => 'bb_remove_duplicate_member_slug',
+				'callback' => 'bboss_remove_duplicate_member_slug',
 				'args'     => array( $user_ids, $paged ),
 			),
 		)
@@ -69,13 +72,13 @@ function bb_repair_member_unique_slug( $paged = 1 ) {
  *
  * @return void
  */
-function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
+function bboss_remove_duplicate_member_slug( $user_ids, $paged ) {
 	_deprecated_function( __FUNCTION__, '2.4.90' );
 
 	global $wpdb;
 
 	foreach ( $user_ids as $user_id ) {
-		$unique_slug = bp_get_user_meta( $user_id, 'bb_profile_slug', true );
+		$unique_slug = bboss_get_user_meta( $user_id, 'bb_profile_slug', true );
 
 		$wpdb->query(
 			$wpdb->prepare(
@@ -88,7 +91,7 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
 	}
 
 	$paged++;
-	bb_repair_member_unique_slug( $paged );
+	bboss_repair_member_unique_slug( $paged );
 }
 
 /**
@@ -99,15 +102,15 @@ function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
  *
  * @return array|void
  */
-function bb_generate_member_profile_links_on_update() {
+function bboss_generate_member_profile_links_on_update() {
 	_deprecated_function( __FUNCTION__, '2.4.90' );
 
-	if ( ! bp_is_active( 'members' ) ) {
+	if ( ! bboss_is_active( 'members' ) ) {
 		return;
 	}
 
 	global $wpdb, $bp_background_updater;
-	$bp_prefix = bp_core_get_table_prefix();
+	$bp_prefix = bboss_core_get_table_prefix();
 
 	// Get all users who have not generate unique slug while it runs from background.
 	$user_ids = $wpdb->get_col(
@@ -122,7 +125,7 @@ function bb_generate_member_profile_links_on_update() {
 			$bp_background_updater->data(
 				array(
 					array(
-						'callback' => 'bb_set_bulk_user_profile_slug',
+						'callback' => 'bboss_set_bulk_user_profile_slug',
 						'args'     => array( $chunked_user_ids ),
 					),
 				)

@@ -8,10 +8,10 @@ class BP_Tests_XProfile_Functions extends BP_UnitTestCase {
 	public function test_get_hidden_field_types_for_user_loggedout() {
 		$duser = self::factory()->user->create();
 
-		$old_current_user = bp_loggedin_user_id();
+		$old_current_user = bboss_loggedin_user_id();
 		$this->set_current_user( 0 );
 
-		$this->assertEquals( array( 'friends', 'loggedin', 'adminsonly' ), bp_xprofile_get_hidden_field_types_for_user( $duser, bp_loggedin_user_id() ) );
+		$this->assertEquals( array( 'friends', 'loggedin', 'adminsonly' ), bboss_xprofile_get_hidden_field_types_for_user( $duser, bboss_loggedin_user_id() ) );
 
 		$this->set_current_user( $old_current_user );
 	}
@@ -20,10 +20,10 @@ class BP_Tests_XProfile_Functions extends BP_UnitTestCase {
 		$duser = self::factory()->user->create();
 		$cuser = self::factory()->user->create();
 
-		$old_current_user = bp_loggedin_user_id();
+		$old_current_user = bboss_loggedin_user_id();
 		$this->set_current_user( $cuser );
 
-		$this->assertEquals( array( 'friends', 'adminsonly' ), bp_xprofile_get_hidden_field_types_for_user( $duser, bp_loggedin_user_id() ) );
+		$this->assertEquals( array( 'friends', 'adminsonly' ), bboss_xprofile_get_hidden_field_types_for_user( $duser, bboss_loggedin_user_id() ) );
 
 		$this->set_current_user( $old_current_user );
 	}
@@ -31,12 +31,12 @@ class BP_Tests_XProfile_Functions extends BP_UnitTestCase {
 	public function test_get_hidden_field_types_for_user_friends() {
 		$duser = self::factory()->user->create();
 		$cuser = self::factory()->user->create();
-		friends_add_friend( $duser, $cuser, true );
+		bboss_friends_add_friend( $duser, $cuser, true );
 
-		$old_current_user = bp_loggedin_user_id();
+		$old_current_user = bboss_loggedin_user_id();
 		$this->set_current_user( $cuser );
 
-		$this->assertEquals( array( 'adminsonly' ), bp_xprofile_get_hidden_field_types_for_user( $duser, bp_loggedin_user_id() ) );
+		$this->assertEquals( array( 'adminsonly' ), bboss_xprofile_get_hidden_field_types_for_user( $duser, bboss_loggedin_user_id() ) );
 
 		$this->set_current_user( $old_current_user );
 	}
@@ -46,10 +46,10 @@ class BP_Tests_XProfile_Functions extends BP_UnitTestCase {
 		$cuser = self::factory()->user->create();
 		$this->grant_bp_moderate( $cuser );
 
-		$old_current_user = bp_loggedin_user_id();
+		$old_current_user = bboss_loggedin_user_id();
 		$this->set_current_user( $cuser );
 
-		$this->assertEquals( array(), bp_xprofile_get_hidden_field_types_for_user( $duser, bp_loggedin_user_id() ) );
+		$this->assertEquals( array(), bboss_xprofile_get_hidden_field_types_for_user( $duser, bboss_loggedin_user_id() ) );
 
 		$this->revoke_bp_moderate( $cuser );
 		$this->set_current_user( $old_current_user );
@@ -68,8 +68,8 @@ class BP_Tests_XProfile_Functions extends BP_UnitTestCase {
 		$meta_value = 'Foo!
 
 Bar!';
-		bp_xprofile_update_meta( $f, 'field', 'linebreak_field', $meta_value );
-		$this->assertEquals( $meta_value, bp_xprofile_get_meta( $f, 'field', 'linebreak_field' ) );
+		bboss_xprofile_update_meta( $f, 'field', 'linebreak_field', $meta_value );
+		$this->assertEquals( $meta_value, bboss_xprofile_get_meta( $f, 'field', 'linebreak_field' ) );
 	}
 
 	/**
@@ -78,9 +78,9 @@ Bar!';
 	 */
 	public function test_bp_xprofile_fullname_field_id_invalidation() {
 		// Prime the cache
-		$id = bp_xprofile_fullname_field_id();
+		$id = bboss_xprofile_fullname_field_id();
 
-		bp_update_option( 'bp-xprofile-fullname-field-name', 'foo' );
+		bboss_update_option( 'bp-xprofile-fullname-field-name', 'foo' );
 
 		$this->assertFalse( wp_cache_get( 'fullname_field_id', 'bp_xprofile' ) );
 	}
@@ -89,8 +89,8 @@ Bar!';
 	 * @group xprofile_get_field_visibility_level
 	 */
 	public function test_bp_xprofile_get_field_visibility_level_missing_params() {
-		$this->assertSame( '', xprofile_get_field_visibility_level( 0, 1 ) );
-		$this->assertSame( '', xprofile_get_field_visibility_level( 1, 0 ) );
+		$this->assertSame( '', bboss_xprofile_get_field_visibility_level( 0, 1 ) );
+		$this->assertSame( '', bboss_xprofile_get_field_visibility_level( 1, 0 ) );
 	}
 
 	/**
@@ -103,12 +103,12 @@ Bar!';
 			'field_group_id' => $g,
 		) );
 
-		bp_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
-		bp_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
+		bboss_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'allowed' );
 
-		xprofile_set_field_visibility_level( $f, $u, 'loggedin' );
+		bboss_xprofile_set_field_visibility_level( $f, $u, 'loggedin' );
 
-		$this->assertSame( 'loggedin', xprofile_get_field_visibility_level( $f, $u ) );
+		$this->assertSame( 'loggedin', bboss_xprofile_get_field_visibility_level( $f, $u ) );
 	}
 
 	/**
@@ -121,10 +121,10 @@ Bar!';
 			'field_group_id' => $g,
 		) );
 
-		bp_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
-		bp_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
+		bboss_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'allowed' );
 
-		$this->assertSame( 'adminsonly', xprofile_get_field_visibility_level( $f, $u ) );
+		$this->assertSame( 'adminsonly', bboss_xprofile_get_field_visibility_level( $f, $u ) );
 
 	}
 
@@ -138,12 +138,12 @@ Bar!';
 			'field_group_id' => $g,
 		) );
 
-		bp_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
-		bp_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'disabled' );
+		bboss_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
+		bboss_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'disabled' );
 
-		xprofile_set_field_visibility_level( $f, $u, 'loggedin' );
+		bboss_xprofile_set_field_visibility_level( $f, $u, 'loggedin' );
 
-		$this->assertSame( 'adminsonly', xprofile_get_field_visibility_level( $f, $u ) );
+		$this->assertSame( 'adminsonly', bboss_xprofile_get_field_visibility_level( $f, $u ) );
 	}
 
 	/**
@@ -151,7 +151,7 @@ Bar!';
 	 * @group bp_xprofile_delete_meta
 	 */
 	public function test_bp_xprofile_delete_meta_empty_object_id() {
-		$this->assertFalse( bp_xprofile_delete_meta( '', 'group' ) );
+		$this->assertFalse( bboss_xprofile_delete_meta( '', 'group' ) );
 	}
 
 	/**
@@ -159,7 +159,7 @@ Bar!';
 	 * @group bp_xprofile_delete_meta
 	 */
 	public function test_bp_xprofile_delete_meta_empty_object_type() {
-		$this->assertFalse( bp_xprofile_delete_meta( 1, '' ) );
+		$this->assertFalse( bboss_xprofile_delete_meta( 1, '' ) );
 	}
 
 	/**
@@ -167,7 +167,7 @@ Bar!';
 	 * @group bp_xprofile_delete_meta
 	 */
 	public function test_bp_xprofile_delete_meta_illegal_object_type() {
-		$this->assertFalse( bp_xprofile_delete_meta( 1, 'foo' ) );
+		$this->assertFalse( bboss_xprofile_delete_meta( 1, 'foo' ) );
 	}
 
 	/**
@@ -177,12 +177,12 @@ Bar!';
 	 */
 	public function test_bp_xprofile_delete_meta_illegal_characters() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 
 		$krazy_key = ' f!@#$%^o *(){}o?+';
-		bp_xprofile_delete_meta( $g, 'group', $krazy_key );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_delete_meta( $g, 'group', $krazy_key );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 	}
 
 	/**
@@ -192,11 +192,11 @@ Bar!';
 	 */
 	public function test_bp_xprofile_delete_meta_trim_meta_value() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 
-		bp_xprofile_delete_meta( $g, 'group', 'foo', ' bar  ' );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_delete_meta( $g, 'group', 'foo', ' bar  ' );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 	}
 
 	/**
@@ -205,10 +205,10 @@ Bar!';
 	 */
 	public function test_bp_xprofile_delete_meta_meta_value_match() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
-		$this->assertTrue( bp_xprofile_delete_meta( $g, 'group', 'foo', 'bar' ) );
-		$this->assertSame( '', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
+		$this->assertTrue( bboss_xprofile_delete_meta( $g, 'group', 'foo', 'bar' ) );
+		$this->assertSame( '', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 	}
 
 	/**
@@ -217,15 +217,15 @@ Bar!';
 	 */
 	public function test_bp_xprofile_delete_meta_delete_all() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
-		bp_xprofile_update_meta( $g, 'group', 'foo2', 'bar' );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo2' ) );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
+		bboss_xprofile_update_meta( $g, 'group', 'foo2', 'bar' );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo2' ) );
 
-		$this->assertTrue( bp_xprofile_delete_meta( $g, 'group' ) );
+		$this->assertTrue( bboss_xprofile_delete_meta( $g, 'group' ) );
 
-		$this->assertSame( '', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
-		$this->assertSame( '', bp_xprofile_get_meta( $g, 'group', 'foo2' ) );
+		$this->assertSame( '', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
+		$this->assertSame( '', bboss_xprofile_get_meta( $g, 'group', 'foo2' ) );
 	}
 
 	/**
@@ -237,15 +237,15 @@ Bar!';
 		// all for a single item
 		$g1 = self::factory()->xprofile_group->create();
 		$g2 = self::factory()->xprofile_group->create();
-		bp_xprofile_add_meta( $g1, 'group', 'foo', 'bar' );
-		bp_xprofile_add_meta( $g1, 'group', 'foo1', 'bar1' );
-		bp_xprofile_add_meta( $g2, 'group', 'foo', 'bar' );
-		bp_xprofile_add_meta( $g2, 'group', 'foo1', 'bar1' );
+		bboss_xprofile_add_meta( $g1, 'group', 'foo', 'bar' );
+		bboss_xprofile_add_meta( $g1, 'group', 'foo1', 'bar1' );
+		bboss_xprofile_add_meta( $g2, 'group', 'foo', 'bar' );
+		bboss_xprofile_add_meta( $g2, 'group', 'foo1', 'bar1' );
 
-		$this->assertTrue( bp_xprofile_delete_meta( $g1, 'group', '', '', true ) );
-		$this->assertEmpty( bp_xprofile_get_meta( $g1, 'group' ) );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g2, 'group', 'foo' ) );
-		$this->assertSame( 'bar1', bp_xprofile_get_meta( $g2, 'group', 'foo1' ) );
+		$this->assertTrue( bboss_xprofile_delete_meta( $g1, 'group', '', '', true ) );
+		$this->assertEmpty( bboss_xprofile_get_meta( $g1, 'group' ) );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g2, 'group', 'foo' ) );
+		$this->assertSame( 'bar1', bboss_xprofile_get_meta( $g2, 'group', 'foo1' ) );
 	}
 
 	/**
@@ -257,16 +257,16 @@ Bar!';
 		// all for a single item
 		$g1 = self::factory()->xprofile_group->create();
 		$g2 = self::factory()->xprofile_group->create();
-		bp_xprofile_add_meta( $g1, 'group', 'foo', 'bar' );
-		bp_xprofile_add_meta( $g1, 'group', 'foo1', 'bar1' );
-		bp_xprofile_add_meta( $g2, 'group', 'foo', 'bar' );
-		bp_xprofile_add_meta( $g2, 'group', 'foo1', 'bar1' );
+		bboss_xprofile_add_meta( $g1, 'group', 'foo', 'bar' );
+		bboss_xprofile_add_meta( $g1, 'group', 'foo1', 'bar1' );
+		bboss_xprofile_add_meta( $g2, 'group', 'foo', 'bar' );
+		bboss_xprofile_add_meta( $g2, 'group', 'foo1', 'bar1' );
 
-		$this->assertTrue( bp_xprofile_delete_meta( $g1, 'group', 'foo', '', true ) );
-		$this->assertSame( '', bp_xprofile_get_meta( $g1, 'group', 'foo' ) );
-		$this->assertSame( '', bp_xprofile_get_meta( $g2, 'group', 'foo' ) );
-		$this->assertSame( 'bar1', bp_xprofile_get_meta( $g1, 'group', 'foo1' ) );
-		$this->assertSame( 'bar1', bp_xprofile_get_meta( $g2, 'group', 'foo1' ) );
+		$this->assertTrue( bboss_xprofile_delete_meta( $g1, 'group', 'foo', '', true ) );
+		$this->assertSame( '', bboss_xprofile_get_meta( $g1, 'group', 'foo' ) );
+		$this->assertSame( '', bboss_xprofile_get_meta( $g2, 'group', 'foo' ) );
+		$this->assertSame( 'bar1', bboss_xprofile_get_meta( $g1, 'group', 'foo1' ) );
+		$this->assertSame( 'bar1', bboss_xprofile_get_meta( $g2, 'group', 'foo1' ) );
 	}
 
 	/**
@@ -274,7 +274,7 @@ Bar!';
 	 * @group bp_xprofile_get_meta
 	 */
 	public function test_bp_xprofile_get_meta_empty_object_id() {
-		$this->assertFalse( bp_xprofile_get_meta( 0, 'group' ) );
+		$this->assertFalse( bboss_xprofile_get_meta( 0, 'group' ) );
 	}
 
 	/**
@@ -282,7 +282,7 @@ Bar!';
 	 * @group bp_xprofile_get_meta
 	 */
 	public function test_bp_xprofile_get_meta_empty_object_type() {
-		$this->assertFalse( bp_xprofile_get_meta( 1, '' ) );
+		$this->assertFalse( bboss_xprofile_get_meta( 1, '' ) );
 	}
 
 	/**
@@ -290,7 +290,7 @@ Bar!';
 	 * @group bp_xprofile_get_meta
 	 */
 	public function test_bp_xprofile_get_meta_illegal_object_type() {
-		$this->assertFalse( bp_xprofile_get_meta( 1, 'foo' ) );
+		$this->assertFalse( bboss_xprofile_get_meta( 1, 'foo' ) );
 	}
 
 	/**
@@ -299,10 +299,10 @@ Bar!';
 	 */
 	public function test_bp_xprofile_get_meta_no_meta_key() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
-		bp_xprofile_update_meta( $g, 'group', 'foo2', 'bar' );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
+		bboss_xprofile_update_meta( $g, 'group', 'foo2', 'bar' );
 
-		$meta = bp_xprofile_get_meta( $g, 'group' );
+		$meta = bboss_xprofile_get_meta( $g, 'group' );
 
 		// Group creation stores its own meta (is_repeater_enabled), so assert on the keys
 		// this test sets rather than on the whole meta bag.
@@ -316,10 +316,10 @@ Bar!';
 	 */
 	public function test_bp_xprofile_get_meta_single_true() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
-		bp_xprofile_add_meta( $g, 'group', 'foo', 'baz' );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo' ) ); // default is true
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo', true ) );
+		bboss_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
+		bboss_xprofile_add_meta( $g, 'group', 'foo', 'baz' );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo' ) ); // default is true
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo', true ) );
 	}
 
 	/**
@@ -328,9 +328,9 @@ Bar!';
 	 */
 	public function test_bp_xprofile_get_meta_single_false() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
-		bp_xprofile_add_meta( $g, 'group', 'foo', 'baz' );
-		$this->assertSame( array( 'bar', 'baz' ), bp_xprofile_get_meta( $g, 'group', 'foo', false ) );
+		bboss_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
+		bboss_xprofile_add_meta( $g, 'group', 'foo', 'baz' );
+		$this->assertSame( array( 'bar', 'baz' ), bboss_xprofile_get_meta( $g, 'group', 'foo', false ) );
 	}
 
 	/**
@@ -342,7 +342,7 @@ Bar!';
 
 		// A freshly created group is not meta-free (group creation stores
 		// is_repeater_enabled), so assert that no user meta key was invented for it.
-		$meta = bp_xprofile_get_meta( $g, 'group' );
+		$meta = bboss_xprofile_get_meta( $g, 'group' );
 		$this->assertArrayNotHasKey( 'foo', $meta );
 		$this->assertArrayNotHasKey( 'foo2', $meta );
 	}
@@ -352,7 +352,7 @@ Bar!';
 	 * @group bp_xprofile_update_meta
 	 */
 	public function test_bp_xprofile_update_meta_no_object_id() {
-		$this->assertFalse( bp_xprofile_update_meta( 0, 'group', 'foo', 'bar' ) );
+		$this->assertFalse( bboss_xprofile_update_meta( 0, 'group', 'foo', 'bar' ) );
 	}
 
 	/**
@@ -360,7 +360,7 @@ Bar!';
 	 * @group bp_xprofile_update_meta
 	 */
 	public function test_bp_xprofile_update_meta_no_object_type() {
-		$this->assertFalse( bp_xprofile_update_meta( 1, '', 'foo', 'bar' ) );
+		$this->assertFalse( bboss_xprofile_update_meta( 1, '', 'foo', 'bar' ) );
 	}
 
 	/**
@@ -368,7 +368,7 @@ Bar!';
 	 * @group bp_xprofile_update_meta
 	 */
 	public function test_bp_xprofile_update_meta_illegal_object_type() {
-		$this->assertFalse( bp_xprofile_update_meta( 1, 'foo', 'foo', 'bar' ) );
+		$this->assertFalse( bboss_xprofile_update_meta( 1, 'foo', 'foo', 'bar' ) );
 	}
 
 	/**
@@ -379,8 +379,8 @@ Bar!';
 	public function test_bp_xprofile_update_meta_illegal_characters() {
 		$g = self::factory()->xprofile_group->create();
 		$krazy_key = ' f!@#$%^o *(){}o?+';
-		bp_xprofile_update_meta( $g, 'group', $krazy_key, 'bar' );
-		$this->assertSame( '', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_update_meta( $g, 'group', $krazy_key, 'bar' );
+		$this->assertSame( '', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 	}
 
 	/**
@@ -390,8 +390,8 @@ Bar!';
 	public function test_bp_xprofile_update_meta_stripslashes() {
 		$g = self::factory()->xprofile_group->create();
 		$v = "Totally \'tubular\'";
-		bp_xprofile_update_meta( $g, 'group', 'foo', $v );
-		$this->assertSame( stripslashes( $v ), bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', $v );
+		$this->assertSame( stripslashes( $v ), bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 	}
 
 	/**
@@ -400,9 +400,9 @@ Bar!';
 	 */
 	public function test_bp_xprofile_update_meta_empty_value_delete() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
-		bp_xprofile_update_meta( $g, 'group', 'foo', '' );
-		$this->assertSame( '', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', '' );
+		$this->assertSame( '', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 	}
 
 	/**
@@ -411,9 +411,9 @@ Bar!';
 	 */
 	public function test_bp_xprofile_update_meta_new() {
 		$g = self::factory()->xprofile_group->create();
-		$this->assertSame( '', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
-		$this->assertNotEmpty( bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' ) );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		$this->assertSame( '', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
+		$this->assertNotEmpty( bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar' ) );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 	}
 
 	/**
@@ -422,10 +422,10 @@ Bar!';
 	 */
 	public function test_bp_xprofile_update_meta_existing() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
-		$this->assertTrue( bp_xprofile_update_meta( $g, 'group', 'foo', 'baz' ) );
-		$this->assertSame( 'baz', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
+		$this->assertTrue( bboss_xprofile_update_meta( $g, 'group', 'foo', 'baz' ) );
+		$this->assertSame( 'baz', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 	}
 
 	/**
@@ -434,9 +434,9 @@ Bar!';
 	 */
 	public function test_bp_xprofile_update_meta_same_value() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
-		$this->assertSame( 'bar', bp_xprofile_get_meta( $g, 'group', 'foo' ) );
-		$this->assertFalse( bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' ) );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
+		$this->assertSame( 'bar', bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
+		$this->assertFalse( bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar' ) );
 	}
 
 	/**
@@ -445,7 +445,7 @@ Bar!';
 	 */
 	public function test_bp_xprofile_update_meta_prev_value() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
+		bboss_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
 
 		// In earlier versions of WordPress, bp_activity_update_meta()
 		// returns true even on failure. However, we know that in these
@@ -453,10 +453,10 @@ Bar!';
 		// assertion just to keep our tests passing
 		// See https://core.trac.wordpress.org/ticket/24933
 		if ( version_compare( $GLOBALS['wp_version'], '3.7', '>=' ) ) {
-			$this->assertFalse( bp_xprofile_update_meta( $g, 'group', 'foo', 'bar2', 'baz' ) );
+			$this->assertFalse( bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar2', 'baz' ) );
 		}
 
-		$this->assertTrue( bp_xprofile_update_meta( $g, 'group', 'foo', 'bar2', 'bar' ) );
+		$this->assertTrue( bboss_xprofile_update_meta( $g, 'group', 'foo', 'bar2', 'bar' ) );
 	}
 
 	/**
@@ -467,9 +467,9 @@ Bar!';
 	public function test_bp_xprofile_update_meta_where_sql_filter_keywords_are_in_quoted_value() {
 		$g = self::factory()->xprofile_group->create();
 		$value = "SELECT object_id FROM wp_bp_xprofile_groups WHERE \"foo\" VALUES (foo = 'bar'";
-		bp_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
-		bp_xprofile_update_meta( $g, 'group', 'foo', $value );
-		$this->assertSame( $value, bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', $value );
+		$this->assertSame( $value, bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 	}
 
 	/**
@@ -480,9 +480,9 @@ Bar!';
 	public function test_bp_xprofile_update_meta_where_meta_id_is_in_quoted_value() {
 		$g = self::factory()->xprofile_group->create();
 		$value = "foo meta_id bar";
-		bp_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
-		bp_xprofile_update_meta( $g, 'group', 'foo', $value );
-		$this->assertSame( $value, bp_xprofile_get_meta( $g, 'group', 'foo' ) );
+		bboss_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
+		bboss_xprofile_update_meta( $g, 'group', 'foo', $value );
+		$this->assertSame( $value, bboss_xprofile_get_meta( $g, 'group', 'foo' ) );
 	}
 
 	/**
@@ -490,7 +490,7 @@ Bar!';
 	 * @group bp_xprofile_add_meta
 	 */
 	public function test_bp_xprofile_add_meta_no_meta_key() {
-		$this->assertFalse( bp_xprofile_add_meta( 1, 'group', '', 'bar' ) );
+		$this->assertFalse( bboss_xprofile_add_meta( 1, 'group', '', 'bar' ) );
 	}
 
 	/**
@@ -498,7 +498,7 @@ Bar!';
 	 * @group bp_xprofile_add_meta
 	 */
 	public function test_bp_xprofile_add_meta_empty_object_id() {
-		$this->assertFalse( bp_xprofile_add_meta( 0, 'group', 'foo', 'bar' ) );
+		$this->assertFalse( bboss_xprofile_add_meta( 0, 'group', 'foo', 'bar' ) );
 	}
 
 	/**
@@ -507,8 +507,8 @@ Bar!';
 	 */
 	public function test_bp_xprofile_add_meta_existing_unique() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
-		$this->assertFalse( bp_xprofile_add_meta( $g, 'group', 'foo', 'baz', true ) );
+		bboss_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
+		$this->assertFalse( bboss_xprofile_add_meta( $g, 'group', 'foo', 'baz', true ) );
 	}
 
 	/**
@@ -517,8 +517,8 @@ Bar!';
 	 */
 	public function test_bp_xprofile_add_meta_existing_not_unique() {
 		$g = self::factory()->xprofile_group->create();
-		bp_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
-		$this->assertNotEmpty( bp_xprofile_add_meta( $g, 'group', 'foo', 'baz' ) );
+		bboss_xprofile_add_meta( $g, 'group', 'foo', 'bar' );
+		$this->assertNotEmpty( bboss_xprofile_add_meta( $g, 'group', 'foo', 'baz' ) );
 	}
 
 	/**
@@ -531,10 +531,10 @@ Bar!';
 			'field_group_id' => $g,
 			'name' => 'Neato',
 		) );
-		xprofile_set_field_data( $f, $u, 'foo' );
+		bboss_xprofile_set_field_data( $f, $u, 'foo' );
 
-		if ( bp_has_members() ) : while ( bp_members() ) : bp_the_member();
-		$found = bp_get_member_profile_data( array(
+		if ( bboss_has_members() ) : while ( bboss_members() ) : bboss_the_member();
+		$found = bboss_get_member_profile_data( array(
 			'user_id' => $u,
 			'field' => 'Neato',
 		) );
@@ -555,9 +555,9 @@ Bar!';
 			'field_group_id' => $g,
 			'name' => 'Kewl',
 		) );
-		xprofile_set_field_data( $f, $u, 'foo' );
+		bboss_xprofile_set_field_data( $f, $u, 'foo' );
 
-		$found = bp_get_member_profile_data( array(
+		$found = bboss_get_member_profile_data( array(
 			'user_id' => $u,
 			'field' => 'Kewl',
 		) );
@@ -576,9 +576,9 @@ Bar!';
 			'type' => 'number',
 			'name' => 'Pens',
 		) );
-		xprofile_set_field_data( $f, $u, 0 );
+		bboss_xprofile_set_field_data( $f, $u, 0 );
 
-		$this->assertEquals( 0, xprofile_get_field_data( 'Pens', $u ) );
+		$this->assertEquals( 0, bboss_xprofile_get_field_data( 'Pens', $u ) );
 	}
 
 	/**
@@ -621,7 +621,7 @@ Bar!';
 		$_POST = $post_vars;
 		$this->set_current_user( $old_user );
 
-		$this->assertEquals( 'foobar', xprofile_get_field_data( bp_xprofile_nickname_field_id(), $id ) );
+		$this->assertEquals( 'foobar', bboss_xprofile_get_field_data( bboss_xprofile_nickname_field_id(), $id ) );
 	}
 
 	/**
@@ -635,7 +635,7 @@ Bar!';
 			'name' => 'Parent',
 		) );
 
-		$f = xprofile_insert_field( array(
+		$f = bboss_xprofile_insert_field( array(
 			'field_group_id' => $g,
 			'parent_id' => $parent,
 			'type' => 'option',
@@ -652,7 +652,7 @@ Bar!';
 	 */
 	public function test_xprofile_insert_field_should_process_falsey_values_for_boolean_params_on_existing_fields() {
 		$g = self::factory()->xprofile_group->create();
-		$f = xprofile_insert_field( array(
+		$f = bboss_xprofile_insert_field( array(
 			'field_group_id' => $g,
 			'type' => 'textbox',
 			'name' => 'Foo',
@@ -668,7 +668,7 @@ Bar!';
 
 		$this->assertNotEmpty( $f );
 
-		$field = new BP_XProfile_Field( $f );
+		$field = new BBoss_XProfile_Field( $f );
 		$this->assertEquals( 1, $field->is_required );
 		$this->assertEquals( 1, $field->can_delete );
 		$this->assertEquals( 1, $field->is_default_option );
@@ -678,7 +678,7 @@ Bar!';
 		$this->assertEquals( 'foo', $field->description );
 		$this->assertEquals( 'custom', $field->order_by );
 
-		$f = xprofile_insert_field( array(
+		$f = bboss_xprofile_insert_field( array(
 			'field_group_id' => $g,
 			'type' => 'textbox',
 			'name' => 'Foo',
@@ -694,7 +694,7 @@ Bar!';
 
 		$this->assertNotEmpty( $f );
 
-		$field = new BP_XProfile_Field( $f );
+		$field = new BBoss_XProfile_Field( $f );
 		$this->assertEquals( 0, $field->is_required );
 		$this->assertEquals( 0, $field->can_delete );
 		$this->assertEquals( 0, $field->is_default_option );
@@ -716,7 +716,7 @@ Bar!';
 			'name' => 'Parent',
 		) );
 
-		$f = xprofile_insert_field( array(
+		$f = bboss_xprofile_insert_field( array(
 			'field_group_id' => $g,
 			'parent_id' => $parent,
 			'type' => 'option',
@@ -724,7 +724,7 @@ Bar!';
 			'option_order' => 5,
 		) );
 
-		$field = new BP_XProfile_Field( $f );
+		$field = new BBoss_XProfile_Field( $f );
 
 		$this->assertEquals( 5, $field->option_order );
 	}
@@ -741,7 +741,7 @@ Bar!';
 			'name' => 'Parent',
 		) );
 
-		$f = xprofile_insert_field( array(
+		$f = bboss_xprofile_insert_field( array(
 			'field_group_id' => $g,
 			'parent_id' => $parent,
 			'type' => 'option',
@@ -751,7 +751,7 @@ Bar!';
 		) );
 
 		$this->assertNotEmpty( $f );
-		$field = new BP_XProfile_Field( $f );
+		$field = new BBoss_XProfile_Field( $f );
 		$this->assertEquals( 0, $field->is_default_option );
 	}
 
@@ -767,7 +767,7 @@ Bar!';
 			'name' => 'Parent',
 		) );
 
-		$f = xprofile_insert_field( array(
+		$f = bboss_xprofile_insert_field( array(
 			'field_group_id' => $g,
 			'parent_id' => $parent,
 			'type' => 'option',
@@ -777,7 +777,7 @@ Bar!';
 		) );
 
 		$this->assertNotEmpty( $f );
-		$field = new BP_XProfile_Field( $f );
+		$field = new BBoss_XProfile_Field( $f );
 		$this->assertEquals( 1, $field->is_default_option );
 	}
 
@@ -793,7 +793,7 @@ Bar!';
 			'name' => 'Parent',
 		) );
 
-		$f = xprofile_insert_field( array(
+		$f = bboss_xprofile_insert_field( array(
 			'field_group_id' => $g,
 			'parent_id' => $parent,
 			'type' => 'option',
@@ -803,17 +803,17 @@ Bar!';
 		) );
 
 		$this->assertNotEmpty( $f );
-		$field = new BP_XProfile_Field( $f );
+		$field = new BBoss_XProfile_Field( $f );
 		$this->assertEquals( 1, $field->is_default_option );
 
-		$f = xprofile_insert_field( array(
+		$f = bboss_xprofile_insert_field( array(
 			'field_id' => $f,
 			'field_group_id' => $g,
 			'type' => 'textbox',
 			'is_default_option' => false,
 		) );
 
-		$field2 = new BP_XProfile_Field( $f );
+		$field2 = new BBoss_XProfile_Field( $f );
 		$this->assertEquals( 0, $field2->is_default_option );
 	}
 
@@ -829,7 +829,7 @@ Bar!';
 			'name' => 'Parent',
 		) );
 
-		$f = xprofile_insert_field( array(
+		$f = bboss_xprofile_insert_field( array(
 			'field_group_id' => $g,
 			'parent_id' => $parent,
 			'type' => 'option',
@@ -839,17 +839,17 @@ Bar!';
 		) );
 
 		$this->assertNotEmpty( $f );
-		$field = new BP_XProfile_Field( $f );
+		$field = new BBoss_XProfile_Field( $f );
 		$this->assertEquals( 0, $field->is_default_option );
 
-		$f = xprofile_insert_field( array(
+		$f = bboss_xprofile_insert_field( array(
 			'field_id' => $f,
 			'field_group_id' => $g,
 			'type' => 'textbox',
 			'is_default_option' => true,
 		) );
 
-		$field2 = new BP_XProfile_Field( $f );
+		$field2 = new BBoss_XProfile_Field( $f );
 
 		$this->assertEquals( 1, $field2->is_default_option );
 	}
@@ -864,14 +864,14 @@ Bar!';
 		$g3 = self::factory()->xprofile_group->create();
 
 		// prime the cache
-		bp_profile_get_field_groups();
+		bboss_profile_get_field_groups();
 
 		// switch the field group positions for the last two groups
-		xprofile_update_field_group_position( $g2, 3 );
-		xprofile_update_field_group_position( $g3, 2 );
+		bboss_xprofile_update_field_group_position( $g2, 3 );
+		bboss_xprofile_update_field_group_position( $g3, 2 );
 
 		// now refetch field groups
-		$field_groups = bp_profile_get_field_groups();
+		$field_groups = bboss_profile_get_field_groups();
 
 		// assert!
 		$this->assertEquals( array( 1, $g1, $g3, $g2 ), wp_list_pluck( $field_groups, 'id' ) );
@@ -890,9 +890,9 @@ Bar!';
 			'name' => 'Foo',
 		) );
 
-		$field = xprofile_get_field( $f );
+		$field = bboss_xprofile_get_field( $f );
 
-		$this->assertTrue( $field instanceof BP_XProfile_Field );
+		$this->assertTrue( $field instanceof BBoss_XProfile_Field );
 	}
 
 	/**
@@ -912,12 +912,12 @@ Bar!';
 		$num_queries = $wpdb->num_queries;
 
 		// Prime the cache.
-		$field_1 = xprofile_get_field( $f );
+		$field_1 = bboss_xprofile_get_field( $f );
 		$num_queries++;
 		$this->assertSame( $num_queries, $wpdb->num_queries );
 
 		// No more queries.
-		$field_2 = xprofile_get_field( $f );
+		$field_2 = bboss_xprofile_get_field( $f );
 		$this->assertEquals( $field_1, $field_2 );
 		$this->assertSame( $num_queries, $wpdb->num_queries );
 	}
@@ -932,7 +932,7 @@ Bar!';
 			'type' => 'textarea',
 		) );
 
-		$this->assertTrue( bp_xprofile_is_richtext_enabled_for_field( $f ) );
+		$this->assertTrue( bboss_xprofile_is_richtext_enabled_for_field( $f ) );
 	}
 
 	/**
@@ -945,7 +945,7 @@ Bar!';
 			'type' => 'radio',
 		) );
 
-		$this->assertFalse( bp_xprofile_is_richtext_enabled_for_field( $f ) );
+		$this->assertFalse( bboss_xprofile_is_richtext_enabled_for_field( $f ) );
 	}
 
 	/**
@@ -977,7 +977,7 @@ Bar!';
 			'visibility-public'
 			);
 
-		$classes = bp_get_field_css_class();
+		$classes = bboss_get_field_css_class();
 		preg_match( '/class=["\']?([^"\']*)["\' ]/is', $classes, $matches );
 		$ret_classes = explode( ' ', $matches[1] );
 		$this->assertEqualSets( $expected_classes, $ret_classes );
@@ -1014,7 +1014,7 @@ Bar!';
 			'apple'
 			);
 
-		$classes = bp_get_field_css_class( 'rhubarb apple' );
+		$classes = bboss_get_field_css_class( 'rhubarb apple' );
 		preg_match( '/class=["\']?([^"\']*)["\' ]/is', $classes, $matches );
 		$ret_classes = explode( ' ', $matches[1] );
 		$this->assertEqualSets( $expected_classes, $ret_classes );
@@ -1051,7 +1051,7 @@ Bar!';
 			'gooseberry'
 			);
 
-		$classes = bp_get_field_css_class( array( 'blueberry', 'gooseberry' ) );
+		$classes = bboss_get_field_css_class( array( 'blueberry', 'gooseberry' ) );
 		preg_match( '/class=["\']?([^"\']*)["\' ]/is', $classes, $matches );
 		$ret_classes = explode( ' ', $matches[1] );
 		$this->assertEqualSets( $expected_classes, $ret_classes );
@@ -1100,9 +1100,9 @@ Bar!';
 		$u = self::factory()->user->create();
 		$f = $this->create_visibility_field( 'disabled', 'public' );
 		$this->set_current_user( $u );
-		buddypress()->displayed_user->id = $u;
+		bboss()->displayed_user->id = $u;
 
-		$this->assertFalse( bb_xprofile_can_change_field_visibility( $f ) );
+		$this->assertFalse( bboss_xprofile_can_change_field_visibility( $f ) );
 	}
 
 	/**
@@ -1112,9 +1112,9 @@ Bar!';
 		$u = self::factory()->user->create();
 		$f = $this->create_visibility_field( 'allowed', 'public' );
 		$this->set_current_user( $u );
-		buddypress()->displayed_user->id = $u;
+		bboss()->displayed_user->id = $u;
 
-		$this->assertTrue( bb_xprofile_can_change_field_visibility( $f ) );
+		$this->assertTrue( bboss_xprofile_can_change_field_visibility( $f ) );
 	}
 
 	/**
@@ -1123,13 +1123,13 @@ Bar!';
 	public function test_bb_xprofile_can_change_field_visibility_nickname_locked_by_display_name_format() {
 		$u = self::factory()->user->create();
 		$f = $this->create_visibility_field( 'allowed', 'public' );
-		bp_update_option( 'bp-xprofile-nickname-field-id', $f );
+		bboss_update_option( 'bp-xprofile-nickname-field-id', $f );
 		$this->set_current_user( $u );
-		buddypress()->displayed_user->id = $u;
+		bboss()->displayed_user->id = $u;
 
-		$this->assertFalse( bb_xprofile_can_change_field_visibility( $f ) );
+		$this->assertFalse( bboss_xprofile_can_change_field_visibility( $f ) );
 
-		bp_delete_option( 'bp-xprofile-nickname-field-id' );
+		bboss_delete_option( 'bp-xprofile-nickname-field-id' );
 	}
 
 	/**
@@ -1139,10 +1139,10 @@ Bar!';
 		$u = self::factory()->user->create();
 		$f = $this->create_visibility_field( 'allowed', 'public' );
 		$this->set_current_user( $u );
-		buddypress()->displayed_user->id = $u;
+		bboss()->displayed_user->id = $u;
 		unset( $GLOBALS['profile_template'], $GLOBALS['field'] );
 
-		bb_xprofile_can_change_field_visibility( $f );
+		bboss_xprofile_can_change_field_visibility( $f );
 
 		$this->assertFalse( isset( $GLOBALS['profile_template'] ) );
 		$this->assertFalse( isset( $GLOBALS['field'] ) );
@@ -1159,7 +1159,7 @@ Bar!';
 		$u = self::factory()->user->create();
 		$f = $this->create_visibility_field( 'allowed', 'public' );
 		$this->set_current_user( $u );
-		buddypress()->displayed_user->id = $u;
+		bboss()->displayed_user->id = $u;
 
 		$template          = new stdClass();
 		$template->sentinel = 'caller';
@@ -1169,7 +1169,7 @@ Bar!';
 		$GLOBALS['profile_template'] = $template;
 		$GLOBALS['field']            = $field;
 
-		bb_xprofile_can_change_field_visibility( $f );
+		bboss_xprofile_can_change_field_visibility( $f );
 
 		// Same object handles, not merely equal copies.
 		$this->assertSame( $template, $GLOBALS['profile_template'] );
@@ -1179,7 +1179,7 @@ Bar!';
 		// being unset — the array_key_exists()/isset() distinction the helper relies on.
 		$GLOBALS['field'] = null;
 
-		bb_xprofile_can_change_field_visibility( $f );
+		bboss_xprofile_can_change_field_visibility( $f );
 
 		$this->assertTrue( array_key_exists( 'field', $GLOBALS ) );
 		$this->assertNull( $GLOBALS['field'] );
@@ -1188,7 +1188,7 @@ Bar!';
 	}
 
 	/**
-	 * bp_xprofile_action_settings() skips locked fields entirely. Before the gate every
+	 * bboss_xprofile_action_settings() skips locked fields entirely. Before the gate every
 	 * posted field id fell through to the 'public' fallback, so a locked field's stored
 	 * level was silently overwritten on any Profile Visibility save.
 	 *
@@ -1201,7 +1201,7 @@ Bar!';
 
 		$this->set_current_user( $u );
 
-		$bp                     = buddypress();
+		$bp                     = bboss();
 		$displayed_user_backup  = isset( $bp->displayed_user->id ) ? $bp->displayed_user->id : 0;
 		$component_backup       = $bp->current_component;
 		$action_backup          = $bp->current_action;
@@ -1222,7 +1222,7 @@ Bar!';
 			// exactly the case that used to fall through to the 'public' default.
 			$_POST[ 'field_' . $open . '_visibility' ] = 'adminsonly';
 
-			bp_xprofile_action_settings();
+			bboss_xprofile_action_settings();
 		} finally {
 			// Restore in a finally block: a failed nonce check raises WPDieException in the
 			// test suite, and leaking $_SERVER/$_POST or the BP globals would corrupt every
@@ -1245,12 +1245,12 @@ Bar!';
 		}
 
 		// The locked field was skipped: nothing member-chosen reached storage.
-		$levels = bp_get_user_meta( $u, 'bp_xprofile_visibility_levels', true );
+		$levels = bboss_get_user_meta( $u, 'bp_xprofile_visibility_levels', true );
 		$this->assertTrue( empty( $levels[ $locked ] ), 'A locked field must not be written by the settings screen.' );
 
 		// Positive control: the unlocked field in the same POST still saved, proving the
 		// `continue` skips only the locked field rather than aborting the loop.
-		$this->assertSame( 'adminsonly', xprofile_get_field_visibility_level( $open, $u ) );
+		$this->assertSame( 'adminsonly', bboss_xprofile_get_field_visibility_level( $open, $u ) );
 	}
 
 	/**
@@ -1260,15 +1260,15 @@ Bar!';
 		$u = self::factory()->user->create();
 		$f = $this->create_visibility_field( 'disabled', 'loggedin' );
 		$this->set_current_user( $u );
-		buddypress()->displayed_user->id = $u;
+		bboss()->displayed_user->id = $u;
 
 		$_POST[ 'field_' . $f ]                 = 'hello';
 		$_POST[ 'field_' . $f . '_visibility' ] = 'friends';
-		bb_xprofile_save_fields( array( $f ), array( $f => false ) );
+		bboss_xprofile_save_fields( array( $f ), array( $f => false ) );
 		unset( $_POST[ 'field_' . $f ], $_POST[ 'field_' . $f . '_visibility' ] );
 
-		$this->assertSame( 'hello', xprofile_get_field_data( $f, $u ) );
-		$levels = bp_get_user_meta( $u, 'bp_xprofile_visibility_levels', true );
+		$this->assertSame( 'hello', bboss_xprofile_get_field_data( $f, $u ) );
+		$levels = bboss_get_user_meta( $u, 'bp_xprofile_visibility_levels', true );
 		$this->assertTrue( empty( $levels[ $f ] ) );
 	}
 
@@ -1279,14 +1279,14 @@ Bar!';
 		$u = self::factory()->user->create();
 		$f = $this->create_visibility_field( 'allowed', 'public' );
 		$this->set_current_user( $u );
-		buddypress()->displayed_user->id = $u;
+		bboss()->displayed_user->id = $u;
 
 		$_POST[ 'field_' . $f ]                 = 'hello';
 		$_POST[ 'field_' . $f . '_visibility' ] = 'friends';
-		bb_xprofile_save_fields( array( $f ), array( $f => false ) );
+		bboss_xprofile_save_fields( array( $f ), array( $f => false ) );
 		unset( $_POST[ 'field_' . $f ], $_POST[ 'field_' . $f . '_visibility' ] );
 
-		$this->assertSame( 'friends', xprofile_get_field_visibility_level( $f, $u ) );
+		$this->assertSame( 'friends', bboss_xprofile_get_field_visibility_level( $f, $u ) );
 	}
 
 	/**
@@ -1295,7 +1295,7 @@ Bar!';
 	public function test_signup_activation_ignores_submitted_visibility_for_enforced_field() {
 		$f = $this->create_visibility_field( 'disabled', 'adminsonly' );
 
-		$signup_id = BP_Signup::add(
+		$signup_id = BBoss_Signup::add(
 			array(
 				'user_login'     => 'lockedsignupuser',
 				'user_email'     => 'lockedsignup@example.test',
@@ -1310,14 +1310,14 @@ Bar!';
 		);
 		$this->assertNotEmpty( $signup_id );
 
-		$user_id = bp_core_activate_signup( 'lockedsignupkey' );
+		$user_id = bboss_core_activate_signup( 'lockedsignupkey' );
 		$this->assertNotWPError( $user_id );
 
 		// Assert the RAW stored meta, not the accessor: for enforced fields the
 		// accessor always returns the admin default regardless of storage, so it
 		// cannot distinguish a blocked write from a stored crafted level. The
 		// guard stores the default, so the crafted 'public' must not be present.
-		$levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		$levels = bboss_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 		$this->assertIsArray( $levels, 'Activation must store the visibility levels it resolved.' );
 		$this->assertArrayHasKey( $f, $levels, 'Activation writes the resolved level for every field; a missing key would hide a skipped write.' );
 		$this->assertSame( 'adminsonly', $levels[ $f ], 'Stored level must be the admin default, never the crafted value.' );
@@ -1329,7 +1329,7 @@ Bar!';
 	public function test_signup_activation_honors_submitted_visibility_for_allowed_field() {
 		$f = $this->create_visibility_field( 'allowed', 'adminsonly' );
 
-		$signup_id = BP_Signup::add(
+		$signup_id = BBoss_Signup::add(
 			array(
 				'user_login'     => 'allowedsignupuser',
 				'user_email'     => 'allowedsignup@example.test',
@@ -1344,12 +1344,12 @@ Bar!';
 		);
 		$this->assertNotEmpty( $signup_id );
 
-		$user_id = bp_core_activate_signup( 'allowedsignupkey' );
+		$user_id = bboss_core_activate_signup( 'allowedsignupkey' );
 		$this->assertNotWPError( $user_id );
 
 		// Control: activation still honors the submitted level for fields the
 		// member may change — proves the path processes the signup meta at all.
-		$this->assertSame( 'loggedin', xprofile_get_field_visibility_level( $f, $user_id ) );
+		$this->assertSame( 'loggedin', bboss_xprofile_get_field_visibility_level( $f, $user_id ) );
 	}
 
 	/**
@@ -1364,36 +1364,36 @@ Bar!';
 		$g = self::factory()->xprofile_group->create();
 		$f = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
 
-		bp_xprofile_update_field_meta( $f, 'default_visibility', $default_visibility );
-		bp_xprofile_update_field_meta( $f, 'allow_custom_visibility', $allow_custom_visibility );
+		bboss_xprofile_update_field_meta( $f, 'default_visibility', $default_visibility );
+		bboss_xprofile_update_field_meta( $f, 'allow_custom_visibility', $allow_custom_visibility );
 
 		return $f;
 	}
 
 	/**
-	 * buddypress()->displayed_user->fullname is seeded from the raw WP display_name; the
+	 * bboss()->displayed_user->fullname is seeded from the raw WP display_name; the
 	 * xprofile override must always re-resolve it for the current viewer (not only when
 	 * profile sync is disabled), otherwise a hidden last name leaks through every
-	 * bp_get_displayed_user_fullname() consumer — e.g. the member RSS <link> title.
+	 * bboss_get_displayed_user_fullname() consumer — e.g. the member RSS <link> title.
 	 *
 	 * @group xprofile_override_user_fullnames
 	 * @group bp_get_displayed_user_fullname
 	 */
 	public function test_xprofile_override_user_fullnames_respects_viewer_visibility_with_sync_enabled() {
-		$bp                 = buddypress();
+		$bp                 = bboss();
 		$displayed_backup   = $bp->displayed_user;
 		$loggedin_backup    = $bp->loggedin_user;
-		$format_backup      = bp_get_option( 'bp-display-name-format' );
-		$sync_backup        = bp_get_option( 'bp-disable-profile-sync' );
-		$xprofile_is_active = bp_is_active( 'xprofile' );
+		$format_backup      = bboss_get_option( 'bp-display-name-format' );
+		$sync_backup        = bboss_get_option( 'bp-disable-profile-sync' );
+		$xprofile_is_active = bboss_is_active( 'xprofile' );
 
-		buddypress()->active_components['xprofile'] = '1';
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss()->active_components['xprofile'] = '1';
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 
 		// Profile sync on. Note this option is what an admin sets, but bp_disable_profile_sync()
 		// does not read it (it only runs its filter), so asserting on that function here would
 		// be a tautology - the point of this test is that the override no longer depends on it.
-		bp_update_option( 'bp-disable-profile-sync', 0 );
+		bboss_update_option( 'bp-disable-profile-sync', 0 );
 
 		$u      = self::factory()->user->create();
 		$member = self::factory()->user->create();
@@ -1407,18 +1407,18 @@ Bar!';
 				'display_name' => 'Alex Quillfeather',
 			)
 		);
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 
 		// Refresh the per-request name memo primed during user creation.
 		$GLOBALS['bb_default_display_avatar'] = true;
-		bp_core_get_user_displayname( $u, $u );
+		bboss_core_get_user_displayname( $u, $u );
 
 		// Seed the globals exactly as BP_Members_Component::setup_globals() does (raw column).
 		$bp->displayed_user           = new stdClass();
 		$bp->displayed_user->id       = $u;
-		$bp->displayed_user->userdata = bp_core_get_core_userdata( $u );
+		$bp->displayed_user->userdata = bboss_core_get_core_userdata( $u );
 		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
-		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
+		$bp->displayed_user->domain   = bboss_core_get_user_domain( $u );
 		$this->assertSame( 'Alex Quillfeather', $bp->displayed_user->fullname );
 
 		// try/finally so a failing assertion cannot leave the BP globals, the display-name
@@ -1426,12 +1426,12 @@ Bar!';
 		try {
 			// Guest viewer.
 			$this->set_current_user( 0 );
-			xprofile_override_user_fullnames();
-			$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
+			bboss_xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex', bboss_get_displayed_user_fullname() );
 
-			if ( bp_is_active( 'activity' ) ) {
+			if ( bboss_is_active( 'activity' ) ) {
 				ob_start();
-				bp_members_activity_feed();
+				bboss_members_activity_feed();
 				$rss_link = ob_get_clean();
 				$this->assertStringContainsString( 'rel="alternate"', $rss_link );
 				$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
@@ -1441,16 +1441,16 @@ Bar!';
 			// Logged-in member viewer gets the full name.
 			$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
 			$this->set_current_user( $member );
-			xprofile_override_user_fullnames();
-			$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
+			bboss_xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex Quillfeather', bboss_get_displayed_user_fullname() );
 		} finally {
 			$GLOBALS['bb_default_display_avatar'] = false;
 			$bp->displayed_user = $displayed_backup;
 			$bp->loggedin_user  = $loggedin_backup;
-			bp_update_option( 'bp-display-name-format', $format_backup );
-			bp_update_option( 'bp-disable-profile-sync', $sync_backup );
+			bboss_update_option( 'bp-display-name-format', $format_backup );
+			bboss_update_option( 'bp-disable-profile-sync', $sync_backup );
 			if ( ! $xprofile_is_active ) {
-				unset( buddypress()->active_components['xprofile'] );
+				unset( bboss()->active_components['xprofile'] );
 			}
 		}
 	}
@@ -1458,8 +1458,8 @@ Bar!';
 	/**
 	 * The same redaction must hold with profile sync DISABLED.
 	 *
-	 * xprofile_override_user_fullnames() used to begin with
-	 * `if ( ! bp_disable_profile_sync() ) { return; }`, so with sync off it never ran and
+	 * bboss_xprofile_override_user_fullnames() used to begin with
+	 * `if ( ! bboss_disable_profile_sync() ) { return; }`, so with sync off it never ran and
 	 * $bp->displayed_user->fullname kept the raw wp_users.display_name - which is where the
 	 * drifted full name lives. The RSS <link rel="alternate"> title on a member page is built
 	 * from that global, which is how the surname reached page source. The early
@@ -1469,18 +1469,18 @@ Bar!';
 	 * @group bb_name_privacy
 	 */
 	public function test_xprofile_override_user_fullnames_respects_viewer_visibility_with_sync_disabled() {
-		$bp                 = buddypress();
+		$bp                 = bboss();
 		$displayed_backup   = $bp->displayed_user;
 		$loggedin_backup    = $bp->loggedin_user;
-		$format_backup      = bp_get_option( 'bp-display-name-format' );
-		$sync_backup        = bp_get_option( 'bp-disable-profile-sync' );
-		$xprofile_is_active = bp_is_active( 'xprofile' );
+		$format_backup      = bboss_get_option( 'bp-display-name-format' );
+		$sync_backup        = bboss_get_option( 'bp-disable-profile-sync' );
+		$xprofile_is_active = bboss_is_active( 'xprofile' );
 
-		buddypress()->active_components['xprofile'] = '1';
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss()->active_components['xprofile'] = '1';
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 
 		// The only difference from the sibling test: profile sync is off.
-		bp_update_option( 'bp-disable-profile-sync', 1 );
+		bboss_update_option( 'bp-disable-profile-sync', 1 );
 
 		$u      = self::factory()->user->create();
 		$member = self::factory()->user->create();
@@ -1496,29 +1496,29 @@ Bar!';
 		// With sync off, `profile_update` may not populate the xprofile fields - write them
 		// directly so the redaction has the field values it reads, which is exactly the state a
 		// sync-disabled site is in once a member has filled in their profile.
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Alex' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Quillfeather' );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $u, 'Alex' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $u, 'Quillfeather' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $u, 'loggedin' );
 
 		$GLOBALS['bb_default_display_avatar'] = true;
-		bp_core_get_user_displayname( $u, $u );
+		bboss_core_get_user_displayname( $u, $u );
 
 		$bp->displayed_user           = new stdClass();
 		$bp->displayed_user->id       = $u;
-		$bp->displayed_user->userdata = bp_core_get_core_userdata( $u );
+		$bp->displayed_user->userdata = bboss_core_get_core_userdata( $u );
 		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
-		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
+		$bp->displayed_user->domain   = bboss_core_get_user_domain( $u );
 		$this->assertSame( 'Alex Quillfeather', $bp->displayed_user->fullname );
 
 		try {
 			// Guest viewer - the surname must not survive, sync off or not.
 			$this->set_current_user( 0 );
-			xprofile_override_user_fullnames();
-			$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
+			bboss_xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex', bboss_get_displayed_user_fullname() );
 
-			if ( bp_is_active( 'activity' ) ) {
+			if ( bboss_is_active( 'activity' ) ) {
 				ob_start();
-				bp_members_activity_feed();
+				bboss_members_activity_feed();
 				$rss_link = ob_get_clean();
 				$this->assertStringContainsString( 'rel="alternate"', $rss_link );
 				$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
@@ -1528,16 +1528,16 @@ Bar!';
 			// A logged-in member is still allowed the full name.
 			$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
 			$this->set_current_user( $member );
-			xprofile_override_user_fullnames();
-			$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
+			bboss_xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex Quillfeather', bboss_get_displayed_user_fullname() );
 		} finally {
 			$GLOBALS['bb_default_display_avatar'] = false;
 			$bp->displayed_user = $displayed_backup;
 			$bp->loggedin_user  = $loggedin_backup;
-			bp_update_option( 'bp-display-name-format', $format_backup );
-			bp_update_option( 'bp-disable-profile-sync', $sync_backup );
+			bboss_update_option( 'bp-display-name-format', $format_backup );
+			bboss_update_option( 'bp-disable-profile-sync', $sync_backup );
 			if ( ! $xprofile_is_active ) {
-				unset( buddypress()->active_components['xprofile'] );
+				unset( bboss()->active_components['xprofile'] );
 			}
 		}
 	}
@@ -1545,9 +1545,9 @@ Bar!';
 	/**
 	 * A failed visibility query must report "could not resolve", never "nobody restricted anything".
 	 *
-	 * bb_xprofile_filter_possible_hidden_users() narrows the set of members whose search match has
+	 * bboss_xprofile_filter_possible_hidden_users() narrows the set of members whose search match has
 	 * to be re-tested against their viewer-visible name. Its callers treat an array as an
-	 * authoritative narrowing - bb_xprofile_filter_field_search_matches() returns the whole matched
+	 * authoritative narrowing - bboss_xprofile_filter_field_search_matches() returns the whole matched
 	 * set unfiltered when that narrowing comes back empty - so a query error resolving to array()
 	 * publishes exactly the names the filter exists to withhold.
 	 *
@@ -1572,7 +1572,7 @@ Bar!';
 
 		// Healthy control: the narrowing applies and returns an array.
 		$this->assertIsArray(
-			bb_xprofile_filter_possible_hidden_users( $user_ids, $levels ),
+			bboss_xprofile_filter_possible_hidden_users( $user_ids, $levels ),
 			'A healthy query should return the narrowed candidate array.'
 		);
 
@@ -1582,7 +1582,7 @@ Bar!';
 		// and the test went green against a leg that was never broken. `FROM` keeps
 		// BB_XProfile_Visibility::visibility_table_exists() out of scope: it probes with
 		// `SHOW TABLES LIKE`, and breaking that is the missing-table path, not the failed-read path.
-		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+		$visibility_table = BBoss_XProfile_Visibility::get_visibility_table_name();
 
 		$break_query = function ( $query ) use ( $visibility_table ) {
 			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
@@ -1596,7 +1596,7 @@ Bar!';
 		add_filter( 'query', $break_query );
 
 		try {
-			$result = bb_xprofile_filter_possible_hidden_users( $user_ids, $levels );
+			$result = bboss_xprofile_filter_possible_hidden_users( $user_ids, $levels );
 		} finally {
 			remove_filter( 'query', $break_query );
 			$wpdb->suppress_errors( $suppress );
@@ -1612,7 +1612,7 @@ Bar!';
 	 * A community-wide forced default means the narrowing does not APPLY, which is not a failure.
 	 *
 	 * `allow_custom_visibility = 'disabled'` makes the admin default replace every member's own
-	 * setting on both branches of bp_xprofile_get_fields_by_visibility_levels(), so the field is
+	 * setting on both branches of bboss_xprofile_get_fields_by_visibility_levels(), so the field is
 	 * restricted for the whole community and no candidate set is smaller than the set handed in.
 	 * The answer is null, and the callers keep everything they were given and let their own budget
 	 * decide - reading it as `false` would withhold the leg on an ordinary configuration, and
@@ -1625,40 +1625,40 @@ Bar!';
 	 * @group bb_xprofile_filter_possible_hidden_users
 	 */
 	public function test_filter_possible_hidden_users_returns_null_when_a_forced_default_disables_narrowing() {
-		$field_id = bp_xprofile_lastname_field_id();
+		$field_id = bboss_xprofile_lastname_field_id();
 		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
 
-		$default_backup = bp_xprofile_get_meta( $field_id, 'field', 'default_visibility' );
-		$allow_backup   = bp_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' );
+		$default_backup = bboss_xprofile_get_meta( $field_id, 'field', 'default_visibility' );
+		$allow_backup   = bboss_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' );
 
 		// Both members hold their own, entirely public, row - so the only thing that can make them
 		// candidates is the forced default.
 		foreach ( $user_ids as $user_id ) {
-			xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
+			bboss_xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
 		}
 
-		bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
-		bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'allowed' );
 		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
 
 		try {
 			// Control: with custom visibility allowed the default does not reach a member who has
 			// their own row, so the narrowing still applies and returns an array.
 			$this->assertIsArray(
-				bb_xprofile_filter_possible_hidden_users( $user_ids, array( 'friends', 'loggedin', 'adminsonly' ) ),
+				bboss_xprofile_filter_possible_hidden_users( $user_ids, array( 'friends', 'loggedin', 'adminsonly' ) ),
 				'With custom visibility allowed the narrowing must still apply.'
 			);
 
-			bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'disabled' );
+			bboss_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'disabled' );
 			wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
 
 			$this->assertNull(
-				bb_xprofile_filter_possible_hidden_users( $user_ids, array( 'friends', 'loggedin', 'adminsonly' ) ),
+				bboss_xprofile_filter_possible_hidden_users( $user_ids, array( 'friends', 'loggedin', 'adminsonly' ) ),
 				'A forced community-wide default must stand the narrowing down with null, not report a read failure or an authoritative empty set.'
 			);
 		} finally {
-			bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', $default_backup );
-			bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', $allow_backup );
+			bboss_xprofile_update_meta( $field_id, 'field', 'default_visibility', $default_backup );
+			bboss_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', $allow_backup );
 			wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
 		}
 	}
@@ -1666,8 +1666,8 @@ Bar!';
 	/**
 	 * The user_data_exists() memo must not be filled from a read that failed.
 	 *
-	 * BB_XProfile_Visibility::prime_user_data_exists_cache() fills, for a whole batch, the probe
-	 * that decides which branch bp_xprofile_get_fields_by_visibility_levels() takes per member. A
+	 * BBoss_XProfile_Visibility::prime_user_data_exists_cache() fills, for a whole batch, the probe
+	 * that decides which branch bboss_xprofile_get_fields_by_visibility_levels() takes per member. A
 	 * failed query returns the same empty result as "nobody has a row" - wpdb::get_col() never
 	 * hands back null - so memoising it would tell every later caller in the request that a member
 	 * resolves from user meta when they may in fact hold a restricting row, and a member whose name
@@ -1681,7 +1681,7 @@ Bar!';
 	public function test_prime_user_data_exists_cache_does_not_memoise_a_failed_read() {
 		global $wpdb;
 
-		if ( ! class_exists( 'BB_XProfile_Visibility' ) ) {
+		if ( ! class_exists( 'BBoss_XProfile_Visibility' ) ) {
 			$this->markTestSkipped( 'The visibility class is not available in this configuration.' );
 		}
 
@@ -1696,7 +1696,7 @@ Bar!';
 		// and the test went green against a leg that was never broken. `FROM` keeps
 		// BB_XProfile_Visibility::visibility_table_exists() out of scope: it probes with
 		// `SHOW TABLES LIKE`, and breaking that is the missing-table path, not the failed-read path.
-		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+		$visibility_table = BBoss_XProfile_Visibility::get_visibility_table_name();
 
 		$break_query = function ( $query ) use ( $visibility_table ) {
 			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
@@ -1706,13 +1706,13 @@ Bar!';
 			return $query;
 		};
 
-		BB_XProfile_Visibility::flush_field_ids_cache();
+		BBoss_XProfile_Visibility::flush_field_ids_cache();
 
 		$suppress = $wpdb->suppress_errors( true );
 		add_filter( 'query', $break_query );
 
 		try {
-			BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+			BBoss_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
 		} finally {
 			remove_filter( 'query', $break_query );
 			$wpdb->suppress_errors( $suppress );
@@ -1730,8 +1730,8 @@ Bar!';
 
 		// Control: the healthy read does fill the memo, so the assertion above is about the error
 		// handling rather than about the priming never working.
-		BB_XProfile_Visibility::flush_field_ids_cache();
-		BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+		BBoss_XProfile_Visibility::flush_field_ids_cache();
+		BBoss_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
 
 		$after_success = $memo->getValue();
 
@@ -1743,7 +1743,7 @@ Bar!';
 			);
 		}
 
-		BB_XProfile_Visibility::flush_field_ids_cache();
+		BBoss_XProfile_Visibility::flush_field_ids_cache();
 	}
 
 }

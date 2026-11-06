@@ -22,10 +22,10 @@ defined( 'ABSPATH' ) || exit;
  * @param int $user_id User id to check for flood.
  * @return bool True if there is no flooding, false if there is.
  */
-function bp_core_check_for_flood( $user_id = 0 ) {
+function bboss_core_check_for_flood( $user_id = 0 ) {
 
 	// Option disabled. No flood checks.
-	if ( ! $throttle_time = bp_get_option( '_bp_throttle_time' ) ) {
+	if ( ! $throttle_time = bboss_get_option( '_bp_throttle_time' ) ) {
 		return true;
 	}
 
@@ -54,7 +54,7 @@ function bp_core_check_for_flood( $user_id = 0 ) {
  * @param string $error_type The error type to return. Either 'bool' or 'wp_error'.
  * @return bool|WP_Error True if test is passed, false if fail.
  */
-function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '', $error_type = 'bool' ) {
+function bboss_core_check_for_moderation( $user_id = 0, $title = '', $content = '', $error_type = 'bool' ) {
 
 	/**
 	 * Filters whether or not to bypass checking for moderation keys and too many links.
@@ -96,8 +96,8 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 	}
 
 	// Current user IP and user agent.
-	$_post['user_ip'] = bp_core_current_user_ip();
-	$_post['user_ua'] = bp_core_current_user_ua();
+	$_post['user_ip'] = bboss_core_current_user_ip();
+	$_post['user_ua'] = bboss_core_current_user_ua();
 
 	// Post title and content.
 	$_post['title']   = $title;
@@ -133,7 +133,7 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 			if ( 'bool' === $error_type ) {
 				return false;
 			} else {
-				return new WP_Error( 'bp_moderation_too_many_links', __( 'You have posted too many links', 'buddyboss' ) );
+				return new WP_Error( 'bp_moderation_too_many_links', __( 'You have posted too many links', 'buddyboss-platform' ) );
 			}
 		}
 	}
@@ -174,7 +174,7 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 					if ( 'bool' === $error_type ) {
 						return false;
 					} else {
-						return new WP_Error( 'bp_moderation_word_match', __( 'You have posted an inappropriate word.', 'buddyboss' ) );
+						return new WP_Error( 'bp_moderation_word_match', __( 'You have posted an inappropriate word.', 'buddyboss-platform' ) );
 					}
 				}
 			}
@@ -199,7 +199,7 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
  * @param string $error_type The error type to return. Either 'bool' or 'wp_error'.
  * @return bool|WP_Error True if test is passed, false if fail.
  */
-function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', $error_type = 'bool' ) {
+function bboss_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', $error_type = 'bool' ) {
 
 	/**
 	 * Filters whether or not to bypass checking for blocked keys.
@@ -256,8 +256,8 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
 	}
 
 	// Current user IP and user agent.
-	$_post['user_ip'] = bp_core_current_user_ip();
-	$_post['user_ua'] = bp_core_current_user_ua();
+	$_post['user_ip'] = bboss_core_current_user_ip();
+	$_post['user_ua'] = bboss_core_current_user_ua();
 
 	// Post title and content.
 	$_post['title']   = $title;
@@ -292,7 +292,7 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
 				if ( 'bool' === $error_type ) {
 					return false;
 				} else {
-					return new WP_Error( 'bp_moderation_blacklist_match', __( 'You have posted an inappropriate word.', 'buddyboss' ) );
+					return new WP_Error( 'bp_moderation_blacklist_match', __( 'You have posted an inappropriate word.', 'buddyboss-platform' ) );
 				}
 			}
 		}
@@ -309,8 +309,8 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
  *
  * @return string IP address.
  */
-function bp_core_current_user_ip() {
-	$retval = preg_replace( '/[^0-9a-fA-F:., ]/', '', $_SERVER['REMOTE_ADDR'] );
+function bboss_core_current_user_ip() {
+	$retval = preg_replace( '/[^0-9a-fA-F:., ]/', '', isset( $_SERVER['REMOTE_ADDR'] ) ? wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '' );
 
 	/**
 	 * Filters the current user's IP address.
@@ -329,11 +329,11 @@ function bp_core_current_user_ip() {
  *
  * @return string User agent string.
  */
-function bp_core_current_user_ua() {
+function bboss_core_current_user_ua() {
 
 	// Sanity check the user agent.
 	if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
-		$retval = substr( $_SERVER['HTTP_USER_AGENT'], 0, 254 );
+		$retval = substr( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 0, 254 );
 	} else {
 		$retval = '';
 	}

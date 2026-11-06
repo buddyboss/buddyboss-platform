@@ -19,7 +19,7 @@ class BP_Tests_Routing_Core extends BP_UnitTestCase {
 	}
 	function test_wordpress_page() {
 		$this->go_to( '/' );
-		$this->assertEmpty( bp_current_component() );
+		$this->assertEmpty( bboss_current_component() );
 	}
 
 	/**
@@ -27,7 +27,7 @@ class BP_Tests_Routing_Core extends BP_UnitTestCase {
 	 */
 	function test_nav_menu() {
 		$this->go_to( '/' );
-		$this->assertTrue( isset( buddypress()->bp_nav['activity'] ) );
-		$this->assertTrue( isset( buddypress()->bp_nav['profile'] ) );
+		$this->assertTrue( isset( bboss()->bp_nav['activity'] ) );
+		$this->assertTrue( isset( bboss()->bp_nav['profile'] ) );
 	}
 }

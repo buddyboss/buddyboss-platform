@@ -12,18 +12,18 @@ defined( 'ABSPATH' ) || exit;
 <div id="comments" class="comments-area">
 
 	<!-- .comments-title -->
-	<h4 class="comments-title"><?php esc_html_e( 'Responses', 'buddyboss' ); ?></h4>
+	<h4 class="comments-title"><?php esc_html_e( 'Responses', 'buddyboss-platform' ); ?></h4>
 
 	<?php
-	if ( function_exists( 'bp_core_get_user_domain' ) ) {
-		$user_link = bp_core_get_user_domain( get_current_user_id() );
+	if ( function_exists( 'bboss_core_get_user_domain' ) ) {
+		$user_link = bboss_core_get_user_domain( get_current_user_id() );
 	} else {
 		$user_link = get_author_posts_url( get_current_user_id() );
 	}
 
 	// You can start editing here -- including this comment!
 	$args = array(
-		'comment_field'      => '<p class="comment-form-comment"><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true" placeholder="' . __( 'Write a response...', 'buddyboss' ) . '"></textarea></p>',
+		'comment_field'      => '<p class="comment-form-comment"><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true" placeholder="' . __( 'Write a response...', 'buddyboss-platform' ) . '"></textarea></p>',
 		'title_reply'        => '',
 
 		/*
@@ -31,11 +31,11 @@ defined( 'ABSPATH' ) || exit;
 		 * %1$s - user avatar html
 		 * %3$s - User Name
 		 */
-		'logged_in_as'       => '<p class="logged-in-as">' . sprintf( __( '<a class="comment-author" href="%1$s"><span class="vcard">%2$s</span><span class="name">%3$s</span></a>', 'buddyboss' ), $user_link, get_avatar( get_current_user_id(), 80, '', $user_identity ), $user_identity ) . '</p>',
+		'logged_in_as'       => '<p class="logged-in-as">' . sprintf( __( '<a class="comment-author" href="%1$s"><span class="vcard">%2$s</span><span class="name">%3$s</span></a>', 'buddyboss-platform' ), $user_link, get_avatar( get_current_user_id(), 80, '', $user_identity ), $user_identity ) . '</p>',
 		'class_submit'       => 'submit button small',
 		'title_reply_before' => '<div id="reply-title" class="comment-reply-title">',
 		'title_reply_after'  => '</div>',
-		'label_submit'       => __( 'Publish', 'buddyboss' ),
+		'label_submit'       => __( 'Publish', 'buddyboss-platform' ),
 	);
 
 	comment_form( $args );
@@ -47,8 +47,8 @@ defined( 'ABSPATH' ) || exit;
 		<ol class="comment-list">
 			<?php
 			$bb_rl_mpcs_helper = null;
-			if ( class_exists( 'BB_Readylaunch_Memberpress_Courses_Helper' ) ) {
-				$bb_rl_mpcs_helper = BB_Readylaunch_Memberpress_Courses_Helper::instance();
+			if ( class_exists( 'BBoss_Readylaunch_Memberpress_Courses_Helper' ) ) {
+				$bb_rl_mpcs_helper = BBoss_Readylaunch_Memberpress_Courses_Helper::instance();
 			}
 
 			$comments_args = array(
@@ -71,26 +71,34 @@ defined( 'ABSPATH' ) || exit;
 		// If comments are closed and there are comments, let's leave a little note, shall we?
 		if ( ! comments_open() ) :
 			?>
-			<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'buddyboss' ); ?></p>
+			<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'buddyboss-platform' ); ?></p>
 			<?php
 		endif;
 
 	endif; // Check for have_comments().
 	?>
 
-	<script>
-		// Disable 'submit comment' until we have something in the field
-		if ( jQuery( '#submit' ).length ){
-			jQuery( '#submit' ).prop( 'disabled', true );
+	<?php
+	// Disable 'submit comment' until we have something in the field.
+	$inline_js = <<<'JS'
+	if ( jQuery( '#submit' ).length ){
+		jQuery( '#submit' ).prop( 'disabled', true );
 
-			jQuery( '#comment' ).keyup( function() {
-				if ( jQuery.trim( jQuery( '#comment' ).val().length ) > 0 ) {
-					jQuery( '#submit' ).prop( 'disabled', false );
-				} else {
-					jQuery( '#submit' ).prop( 'disabled', true );
-				}
-			});
-		}
-	</script>
+		jQuery( '#comment' ).keyup( function() {
+			if ( jQuery.trim( jQuery( '#comment' ).val().length ) > 0 ) {
+				jQuery( '#submit' ).prop( 'disabled', false );
+			} else {
+				jQuery( '#submit' ).prop( 'disabled', true );
+			}
+		});
+	}
+JS;
+
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+	}
+	?>
 
 </div><!-- #comments -->

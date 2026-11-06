@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @param  array  $args        Arguments passed to get_avatar_data(), after processing.
  * @return string
  */
-function bp_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
+function bboss_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 	$user = null;
 
 	_deprecated_function( __FUNCTION__, '1.5.2' );
@@ -59,12 +59,12 @@ function bp_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 	$args['html']    = false;
 
 	// Use the 'full' type if size is larger than BP's thumb width.
-	if ( (int) $args['size'] > bp_core_avatar_thumb_width() ) {
+	if ( (int) $args['size'] > bboss_core_avatar_thumb_width() ) {
 		$args['type'] = 'full';
 	}
 
 	// Get the BuddyPress avatar URL.
-	if ( $bp_avatar = bp_core_fetch_avatar( $args ) ) {
+	if ( $bp_avatar = bboss_core_fetch_avatar( $args ) ) {
 		return $bp_avatar;
 	}
 

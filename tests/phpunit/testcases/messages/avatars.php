@@ -40,7 +40,7 @@ class BP_Tests_Messages_Avatars extends BP_UnitTestCase {
 		++$offset;
 
 		// Messages dated in the future are not read, so stay between the thread start and now.
-		$message_id = messages_new_message(
+		$message_id = bboss_messages_new_message(
 			array(
 				'thread_id' => $thread_id,
 				'sender_id' => $sender,
@@ -65,7 +65,7 @@ class BP_Tests_Messages_Avatars extends BP_UnitTestCase {
 		wp_cache_flush();
 		$this->set_current_user( $user_id );
 
-		return array_map( 'intval', wp_list_pluck( bp_messages_get_avatars( $thread_id, $user_id ), 'id' ) );
+		return array_map( 'intval', wp_list_pluck( bboss_messages_get_avatars( $thread_id, $user_id ), 'id' ) );
 	}
 
 	/**
@@ -79,7 +79,7 @@ class BP_Tests_Messages_Avatars extends BP_UnitTestCase {
 	protected function full_recipient_ids( $thread_id, $exclude ) {
 		wp_cache_flush();
 
-		return array_values( array_diff( array_keys( BP_Messages_Thread::get_recipients_for_thread( $thread_id ) ), $exclude ) );
+		return array_values( array_diff( array_keys( BBoss_Messages_Thread::get_recipients_for_thread( $thread_id ) ), $exclude ) );
 	}
 
 	public function test_one_to_one_thread_shows_the_other_member() {
@@ -155,10 +155,10 @@ class BP_Tests_Messages_Avatars extends BP_UnitTestCase {
 		$this->set_current_user( $sender );
 
 		// Warm the messages cache, then drop the full recipient list.
-		BP_Messages_Thread::get_messages( $thread_id, null, 99999999 );
+		BBoss_Messages_Thread::get_messages( $thread_id, null, 99999999 );
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 
-		$avatars = bp_messages_get_avatars( $thread_id, $sender );
+		$avatars = bboss_messages_get_avatars( $thread_id, $sender );
 
 		$this->assertCount( 2, $avatars );
 		$this->assertFalse( wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' ), 'bp_messages_get_avatars() must not load the full recipient list.' );

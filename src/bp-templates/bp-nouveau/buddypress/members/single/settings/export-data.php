@@ -7,14 +7,18 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <h2 class="screen-heading data-export-screen">
-	<?php esc_html_e( 'Request an export of your data', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Request an export of your data', 'buddyboss-platform' ); ?>
 </h2>
 
-<?php bp_nouveau_user_feedback( 'member-data-export' ); ?>
+<?php bboss_nouveau_user_feedback( 'member-data-export' ); ?>
 
-<form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/export/' ); ?>" name="account-data-export-form" id="account-data-export-form" class="standard-form" method="post">
-	<?php bp_nouveau_submit_button( 'member-data-export' ); ?>
+<form action="<?php echo esc_url( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/export/' ); ?>" name="account-data-export-form" id="account-data-export-form" class="standard-form" method="post">
+	<?php bboss_nouveau_submit_button( 'member-data-export' ); ?>
 </form>

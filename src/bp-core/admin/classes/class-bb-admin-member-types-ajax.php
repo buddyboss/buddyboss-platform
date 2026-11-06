@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Member_Types_Ajax
+ * Class BBoss_Admin_Member_Types_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Member_Types_Ajax {
+class BBoss_Admin_Member_Types_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -45,7 +45,7 @@ class BB_Admin_Member_Types_Ajax {
 	 * @return void
 	 */
 	private function bb_verify_request() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class BB_Admin_Member_Types_Ajax {
 	 * member_types_summary — only needed by the create/edit modal) is shipped
 	 * on the first load and skipped on subsequent page-change requests via
 	 * `include_meta=0`. Mirrors the optimization pattern in
-	 * `BB_Activity_Admin_Ajax::bb_admin_get_activities`.
+	 * `BBoss_Activity_Admin_Ajax::bb_admin_get_activities`.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 * @since BuddyBoss 3.1.0 Added pagination (page, per_page, total) +
@@ -108,8 +108,8 @@ class BB_Admin_Member_Types_Ajax {
 	public function get_member_types() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request() above.
@@ -125,7 +125,7 @@ class BB_Admin_Member_Types_Ajax {
 		// (`bb_admin_member_types_listing_orderby`) so it's
 		// `remove_filter()`-able by string reference. See that function's
 		// docblock for the full rationale.
-		add_filter( 'posts_orderby', 'bb_admin_member_types_listing_orderby', 10, 2 );
+		add_filter( 'posts_orderby', 'bboss_admin_member_types_listing_orderby', 10, 2 );
 
 		// Direct WP_Query so we can capture `found_posts` for pagination
 		// alongside the page slice. `bp_get_active_member_types()` returns
@@ -134,7 +134,7 @@ class BB_Admin_Member_Types_Ajax {
 		// which we don't need in the admin-listing context.
 		$type_query = new WP_Query(
 			array(
-				'post_type'      => bp_get_member_type_post_type(),
+				'post_type'      => bboss_get_member_type_post_type(),
 				'post_status'    => array( 'publish', 'private', 'draft' ),
 				'orderby'        => 'menu_order',
 				'order'          => 'ASC',
@@ -145,7 +145,7 @@ class BB_Admin_Member_Types_Ajax {
 			)
 		);
 
-		remove_filter( 'posts_orderby', 'bb_admin_member_types_listing_orderby', 10 );
+		remove_filter( 'posts_orderby', 'bboss_admin_member_types_listing_orderby', 10 );
 
 		$member_type_ids = $type_query->posts;
 		$total           = (int) $type_query->found_posts;
@@ -160,14 +160,14 @@ class BB_Admin_Member_Types_Ajax {
 
 			if ( $include_meta ) {
 				// Include group types if groups component is active.
-				if ( bp_is_active( 'groups' ) ) {
+				if ( bboss_is_active( 'groups' ) ) {
 					$response['group_types'] = $this->bb_get_available_group_types();
 				}
 
 				$response['wp_roles'] = $this->bb_get_wp_roles();
 
 				// Include published pages for redirection dropdowns (Create modal needs them).
-				$response['published_pages'] = bb_get_published_pages( true );
+				$response['published_pages'] = bboss_get_published_pages( true );
 
 				// Empty list means no summary to ship either.
 				$response['member_types_summary'] = array();
@@ -193,7 +193,7 @@ class BB_Admin_Member_Types_Ajax {
 			$count_rows    = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id WHERE tt.taxonomy = %s",
-					bp_get_member_type_tax_name()
+					bboss_get_member_type_tax_name()
 				)
 			);
 			$member_counts = array();
@@ -288,14 +288,14 @@ class BB_Admin_Member_Types_Ajax {
 
 		if ( $include_meta ) {
 			// Include group types if groups component is active.
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				$response['group_types'] = $this->bb_get_available_group_types();
 			}
 
 			$response['wp_roles'] = $this->bb_get_wp_roles();
 
 			// Include published pages for redirection dropdowns.
-			$response['published_pages'] = bb_get_published_pages( true );
+			$response['published_pages'] = bboss_get_published_pages( true );
 
 			// Slim {id, post_title} list of ALL member types, used by the
 			// create/edit modal's Email Invites checkbox grid. Separate from
@@ -328,7 +328,7 @@ class BB_Admin_Member_Types_Ajax {
 	protected function bb_get_member_types_summary() {
 		$summary_posts = get_posts(
 			array(
-				'post_type'              => bp_get_member_type_post_type(),
+				'post_type'              => bboss_get_member_type_post_type(),
 				'post_status'            => array( 'publish', 'private', 'draft' ),
 				'posts_per_page'         => -1,
 				'orderby'                => 'title',
@@ -374,8 +374,8 @@ class BB_Admin_Member_Types_Ajax {
 	public function create_member_type() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -384,7 +384,7 @@ class BB_Admin_Member_Types_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile type name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile type name is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate visibility against allowlist.
@@ -393,7 +393,7 @@ class BB_Admin_Member_Types_Ajax {
 			$visibility = 'publish';
 		}
 
-		$post_type = bp_get_member_type_post_type();
+		$post_type = bboss_get_member_type_post_type();
 
 		// Determine post_status from visibility.
 		$post_status   = 'publish';
@@ -419,15 +419,15 @@ class BB_Admin_Member_Types_Ajax {
 		);
 
 		if ( is_wp_error( $post_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to create profile type. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to create profile type. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		// Generate type key from post_name (slug), same as legacy bp_save_member_type_post_metabox_data().
 		$key  = get_post_field( 'post_name', $post_id );
-		$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
+		$term = term_exists( sanitize_key( $key ), bboss_get_member_type_tax_name() );
 		if ( 0 !== $term && null !== $term ) {
 			// Use wp_unique_post_slug() for robust collision avoidance instead of weak random suffix.
-			$key = wp_unique_post_slug( $key, $post_id, 'publish', bp_get_member_type_post_type(), 0 );
+			$key = wp_unique_post_slug( $key, $post_id, 'publish', bboss_get_member_type_post_type(), 0 );
 		}
 
 		update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
@@ -449,7 +449,7 @@ class BB_Admin_Member_Types_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Profile type created successfully.', 'buddyboss' ),
+				'message' => __( 'Profile type created successfully.', 'buddyboss-platform' ),
 				'id'      => $post_id,
 			)
 		);
@@ -465,8 +465,8 @@ class BB_Admin_Member_Types_Ajax {
 	public function update_member_type() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -476,13 +476,13 @@ class BB_Admin_Member_Types_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $type_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile type ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile type ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Verify post exists and is correct type.
 		$post = get_post( $type_id );
-		if ( ! $post || bp_get_member_type_post_type() !== $post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid profile type.', 'buddyboss' ) ) );
+		if ( ! $post || bboss_get_member_type_post_type() !== $post->post_type ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid profile type.', 'buddyboss-platform' ) ) );
 		}
 
 		// Update title and/or visibility if provided.
@@ -529,7 +529,7 @@ class BB_Admin_Member_Types_Ajax {
 		if ( $needs_update ) {
 			$result = wp_update_post( $update_args, true );
 			if ( is_wp_error( $result ) ) {
-				wp_send_json_error( array( 'message' => __( 'Failed to update profile type. Please try again.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Failed to update profile type. Please try again.', 'buddyboss-platform' ) ) );
 			}
 		}
 
@@ -543,7 +543,7 @@ class BB_Admin_Member_Types_Ajax {
 		do_action( 'bb_member_type_after_save', $type_id );
 
 		$response = array(
-			'message' => __( 'Profile type updated successfully.', 'buddyboss' ),
+			'message' => __( 'Profile type updated successfully.', 'buddyboss-platform' ),
 			'id'      => $type_id,
 		);
 
@@ -560,8 +560,8 @@ class BB_Admin_Member_Types_Ajax {
 	public function delete_member_type() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -569,13 +569,13 @@ class BB_Admin_Member_Types_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $type_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile type ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile type ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Verify post exists and is correct type.
 		$post = get_post( $type_id );
-		if ( ! $post || bp_get_member_type_post_type() !== $post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid profile type.', 'buddyboss' ) ) );
+		if ( ! $post || bboss_get_member_type_post_type() !== $post->post_type ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid profile type.', 'buddyboss-platform' ) ) );
 		}
 
 		// wp_delete_post triggers before_delete_post which calls bp_delete_member_type()
@@ -583,7 +583,7 @@ class BB_Admin_Member_Types_Ajax {
 		$result = wp_delete_post( $type_id, true );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to delete profile type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to delete profile type.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -596,7 +596,7 @@ class BB_Admin_Member_Types_Ajax {
 		do_action( 'bb_member_type_after_delete', $type_id );
 
 		wp_send_json_success(
-			array( 'message' => __( 'Profile type deleted successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Profile type deleted successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -783,7 +783,7 @@ class BB_Admin_Member_Types_Ajax {
 		$check_both_old_new_same = ( $wp_roles === $old_wp_roles );
 
 		if ( false === $check_both_old_new_same ) {
-			$member_type_name = bp_get_member_type_key( $post_id );
+			$member_type_name = bboss_get_member_type_key( $post_id );
 			$type_term        = get_term_by(
 				'name',
 				$member_type_name,
@@ -825,7 +825,7 @@ class BB_Admin_Member_Types_Ajax {
 			if ( true === $bp_prevent_data_update ) {
 				if ( is_array( $old_wp_roles ) && in_array( 'administrator', $old_wp_roles, true ) ) {
 					if ( ! in_array( $current_user_role, $wp_roles, true ) ) {
-						$bp_error_message_string = __( 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type and then you can come back to update the associated WordPress role.', 'buddyboss' );
+						$bp_error_message_string = __( 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type and then you can come back to update the associated WordPress role.', 'buddyboss-platform' );
 
 						/**
 						 * Filters the admin error message when a user attempts to change a role
@@ -876,11 +876,11 @@ class BB_Admin_Member_Types_Ajax {
 	private function bb_get_available_group_types() {
 		$group_types = array();
 
-		if ( ! function_exists( 'bp_groups_get_group_type_post_type' ) ) {
+		if ( ! function_exists( 'bboss_groups_get_group_type_post_type' ) ) {
 			return $group_types;
 		}
 
-		$post_type = bp_groups_get_group_type_post_type();
+		$post_type = bboss_groups_get_group_type_post_type();
 		$posts     = get_posts(
 			array(
 				'post_type'      => $post_type,
@@ -925,14 +925,14 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Clear member type caches after create/update.
 	 *
-	 * The legacy cache clearing hook bb_members_clear_member_type_cache_on_update()
+	 * The legacy cache clearing hook bboss_members_clear_member_type_cache_on_update()
 	 * checks for the legacy nonce $_POST['_bp-member-type-nonce'] which is not present
 	 * in Settings 2.0 AJAX requests. We replicate the same cache clearing here.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @see bb_members_clear_member_type_cache_on_update() Legacy cache clearing (save_post hook).
-	 * @see bb_members_clear_member_type_cache_before_delete() Delete cache clearing (before_delete_post hook) — works automatically.
+	 * @see bboss_members_clear_member_type_cache_on_update() Legacy cache clearing (save_post hook).
+	 * @see bboss_members_clear_member_type_cache_before_delete() Delete cache clearing (before_delete_post hook) — works automatically.
 	 *
 	 * @param int $post_id Post ID of the member type.
 	 */
@@ -951,4 +951,4 @@ class BB_Admin_Member_Types_Ajax {
 }
 
 // Initialize.
-new BB_Admin_Member_Types_Ajax();
+new BBoss_Admin_Member_Types_Ajax();

@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.6.0
  * @deprecated BuddyPress 1.7.0
  */
-function bp_maintenance_mode() {
-	echo bp_get_maintenance_mode();
+function bboss_maintenance_mode() {
+	echo esc_html( bboss_get_maintenance_mode() );
 }
 	/**
 	 * Return the BuddyPress maintenance mode
@@ -25,28 +25,28 @@ function bp_maintenance_mode() {
 	 * @deprecated BuddyPress 1.7.0
 	 * @return string The BuddyPress maintenance mode
 	 */
-function bp_get_maintenance_mode() {
-	return buddypress()->maintenance_mode;
+function bboss_get_maintenance_mode() {
+	return bboss()->maintenance_mode;
 }
 
 /**
- * xprofile_get_profile()
+ * bboss_xprofile_get_profile()
  *
  * @deprecated BuddyPress 1.7.0
  */
-function xprofile_get_profile() {
+function bboss_xprofile_get_profile() {
 	_deprecated_function( __FUNCTION__, '1.7' );
-	bp_locate_template( array( 'profile/profile-loop.php' ), true );
+	bboss_locate_template( array( 'profile/profile-loop.php' ), true );
 }
 
 /**
- * bp_get_profile_header()
+ * bboss_get_profile_header()
  *
  * @deprecated BuddyPress 1.7.0
  */
-function bp_get_profile_header() {
+function bboss_get_profile_header() {
 	_deprecated_function( __FUNCTION__, '1.7' );
-	bp_locate_template( array( 'profile/profile-header.php' ), true );
+	bboss_locate_template( array( 'profile/profile-header.php' ), true );
 }
 
 /**
@@ -56,7 +56,7 @@ function bp_get_profile_header() {
  * @param string $component_name
  * @return boolean
  */
-function bp_exists( $component_name ) {
+function bboss_exists( $component_name ) {
 	_deprecated_function( __FUNCTION__, '1.7' );
 	if ( function_exists( $component_name . '_install' ) ) {
 		return true;
@@ -66,13 +66,13 @@ function bp_exists( $component_name ) {
 }
 
 /**
- * bp_get_plugin_sidebar()
+ * bboss_get_plugin_sidebar()
  *
  * @deprecated BuddyPress 1.7.0
  */
-function bp_get_plugin_sidebar() {
+function bboss_get_plugin_sidebar() {
 	_deprecated_function( __FUNCTION__, '1.7' );
-	bp_locate_template( array( 'plugin-sidebar.php' ), true );
+	bboss_locate_template( array( 'plugin-sidebar.php' ), true );
 }
 
 /**
@@ -84,14 +84,14 @@ function bp_get_plugin_sidebar() {
  * @deprecated BuddyPress 1.7.0
  * @return array
  */
-function bp_core_allow_default_theme( $themes ) {
+function bboss_core_allow_default_theme( $themes ) {
 	_deprecated_function( __FUNCTION__, '1.7' );
 
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return $themes;
 	}
 
-	if ( bp_get_root_blog_id() != get_current_blog_id() ) {
+	if ( bboss_get_root_blog_id() != get_current_blog_id() ) {
 		return $themes;
 	}
 
@@ -111,10 +111,10 @@ function bp_core_allow_default_theme( $themes ) {
  * @param string $page
  * @return boolean True if is BuddyPress page
  */
-function bp_is_page( $page = '' ) {
+function bboss_is_page( $page = '' ) {
 	_deprecated_function( __FUNCTION__, '1.7' );
 
-	if ( ! bp_is_user() && bp_is_current_component( $page ) ) {
+	if ( ! bboss_is_user() && bboss_is_current_component( $page ) ) {
 		return true;
 	}
 
@@ -134,11 +134,11 @@ function bp_is_page( $page = '' ) {
  * @deprecated BuddyPress 1.7.0
  * @global wpdb $wpdb WordPress database abstraction object.
  */
-function bp_update_db_stuff() {
+function bboss_update_db_stuff() {
 	global $wpdb;
 
-	$bp        = buddypress();
-	$bp_prefix = bp_core_get_table_prefix();
+	$bp        = bboss();
+	$bp_prefix = bboss_core_get_table_prefix();
 
 	// Rename the old user activity cached table if needed.
 	if ( $wpdb->get_var( "SHOW TABLES LIKE '%{$bp_prefix}bp_activity_user_activity_cached%'" ) ) {
@@ -158,17 +158,17 @@ function bp_update_db_stuff() {
 
 	// On first installation - record all existing blogs in the system.
 	if ( ! (int) $bp->site_options['bp-blogs-first-install'] ) {
-		bp_blogs_record_existing_blogs();
-		bp_update_option( 'bp-blogs-first-install', 1 );
+		bboss_blogs_record_existing_blogs();
+		bboss_update_option( 'bp-blogs-first-install', 1 );
 	}
 
 	if ( is_multisite() ) {
-		bp_core_add_illegal_names();
+		bboss_core_add_illegal_names();
 	}
 
 	// Update and remove the message threads table if it exists
 	if ( $wpdb->get_var( "SHOW TABLES LIKE '%{$bp_prefix}bp_messages_threads%'" ) ) {
-		if ( BP_Messages_Thread::update_tables() ) {
+		if ( BBoss_Messages_Thread::update_tables() ) {
 			$wpdb->query( "DROP TABLE {$bp_prefix}bp_messages_threads" );
 		}
 	}

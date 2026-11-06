@@ -6,7 +6,7 @@
  * It includes search filters, profile search, invite functionality, and members listing with skeleton loading.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,7 +14,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 
 /**
  * Fires at the begining of the templates BP injected content.
@@ -27,13 +27,13 @@ do_action( 'bp_before_directory_members_page' );
 <div class="bb-rl-members-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading flex">
-			<h2><?php esc_html_e( 'Members', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_core_get_all_member_count() ) : ''; ?></span></h2>
+			<h2><?php esc_html_e( 'Members', 'buddyboss-platform' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bboss_core_get_all_member_count() ) : ''; ?></span></h2>
 			<?php
-			if ( ! bp_disable_advanced_profile_search() ) {
+			if ( ! bboss_disable_advanced_profile_search() ) {
 				?>
 				<div class="bb-rl-advance-profile-search">
-					<a href="javascript::" class="bb-rl-advance-profile-search-toggle"><?php esc_html_e( 'Profile Search', 'buddyboss' ); ?></a>
-				<?php bp_profile_search_show_form(); ?>
+					<a href="javascript::" class="bb-rl-advance-profile-search-toggle"><?php esc_html_e( 'Profile Search', 'buddyboss-platform' ); ?></a>
+				<?php bboss_profile_search_show_form(); ?>
 				</div>
 				<?php
 			}
@@ -41,11 +41,11 @@ do_action( 'bp_before_directory_members_page' );
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
-			bp_get_template_part( 'common/search-and-filters-bar' );
-			if ( bp_allow_user_to_send_invites() ) {
+			bboss_get_template_part( 'common/search-and-filters-bar' );
+			if ( bboss_allow_user_to_send_invites() ) {
 				?>
 				<div class="bb-rl-action-button">
-					<a href="" id="bb-rl-invite-button" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Invite', 'buddyboss' ); ?></a>
+					<a href="" id="bb-rl-invite-button" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Invite', 'buddyboss-platform' ); ?></a>
 				</div>
 				<?php
 			}
@@ -89,7 +89,7 @@ do_action( 'bp_before_directory_members_page' );
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';
 						?>
-						<div class="bb-rl-skeleton-grid <?php bp_nouveau_loop_classes(); ?>">
+						<div class="bb-rl-skeleton-grid <?php bboss_nouveau_loop_classes(); ?>">
 							<?php for ( $i = 0; $i < 8; $i++ ) : ?>
 								<div class="bb-rl-skeleton-grid-block">
 									<div class="bb-rl-skeleton-avatar bb-rl-skeleton-loader"></div>
@@ -109,7 +109,7 @@ do_action( 'bp_before_directory_members_page' );
 						<?php
 						echo '</div>';
 					} else {
-						bp_get_template_part( 'members/members-loop' );
+						bboss_get_template_part( 'members/members-loop' );
 					}
 					?>
 				</div><!-- #members-dir-list -->
@@ -126,7 +126,7 @@ do_action( 'bp_before_directory_members_page' );
 
 			<?php
 
-			bp_get_template_part( 'sidebar/right-sidebar' );
+			bboss_get_template_part( 'sidebar/right-sidebar' );
 
 			/**
 			 * Fires after the display of the members content.
@@ -152,10 +152,10 @@ do_action( 'bp_before_directory_members_page' );
 
 <!-- Invite popup -->
 <?php
-if ( bp_allow_user_to_send_invites() ) {
-	$send_invite_member_type_allow     = bp_check_member_send_invites_tab_member_type_allowed();
-	$is_disabled_invite_member_subject = bp_disable_invite_member_email_subject();
-	$is_disabled_invite_member_content = bp_disable_invite_member_email_content();
+if ( bboss_allow_user_to_send_invites() ) {
+	$send_invite_member_type_allow     = bboss_check_member_send_invites_tab_member_type_allowed();
+	$is_disabled_invite_member_subject = bboss_disable_invite_member_email_subject();
+	$is_disabled_invite_member_content = bboss_disable_invite_member_email_content();
 	?>
 	<div id="bb-rl-invite-modal" class="bb-rl-invite-modal bb-rl-modal"  style="display: none;">
 		<transition name="modal">
@@ -163,7 +163,7 @@ if ( bp_allow_user_to_send_invites() ) {
 				<div class="bb-rl-modal-wrapper">
 					<div class="bb-rl-modal-container">
 						<header class="bb-rl-modal-header">
-							<h4><span class="target_name"><?php echo esc_html__( 'Send invite to add member', 'buddyboss' ); ?></span></h4>
+							<h4><span class="target_name"><?php echo esc_html__( 'Send invite to add member', 'buddyboss-platform' ); ?></span></h4>
 							<a class="bb-rl-close-invite bb-rl-modal-close-button" href="javascript:void(0);">
 								<span class="bb-icons-rl-x"></span>
 							</a>
@@ -171,32 +171,32 @@ if ( bp_allow_user_to_send_invites() ) {
 						<div class="bb-rl-invite-content bb-rl-modal-content">
 							<form action="" method="post" class="bb-rl-invite-form" id="bb-rl-invite-form" novalidate>
 								<div class="bb-rl-form-field-wrapper">
-									<label for="bb-rl-invite-name"><?php esc_html_e( 'Name', 'buddyboss' ); ?></label>
-									<input type="text" name="bb-rl-invite-name" id="bb-rl-invite-name" value="" class="bb-rl-input-field" placeholder="<?php esc_html_e( 'Type name', 'buddyboss' ); ?>">
+									<label for="bb-rl-invite-name"><?php esc_html_e( 'Name', 'buddyboss-platform' ); ?></label>
+									<input type="text" name="bb-rl-invite-name" id="bb-rl-invite-name" value="" class="bb-rl-input-field" placeholder="<?php esc_html_e( 'Type name', 'buddyboss-platform' ); ?>">
 								</div>
 								<div class="bb-rl-form-field-wrapper">
-									<label for="bb-rl-invite-email"><?php esc_html_e( 'Email address', 'buddyboss' ); ?></label>
-									<input type="email" name="bb-rl-invite-email" id="bb-rl-invite-email" value="" class="bb-rl-input-field" placeholder="<?php esc_html_e( 'Enter an email address', 'buddyboss' ); ?>">
+									<label for="bb-rl-invite-email"><?php esc_html_e( 'Email address', 'buddyboss-platform' ); ?></label>
+									<input type="email" name="bb-rl-invite-email" id="bb-rl-invite-email" value="" class="bb-rl-input-field" placeholder="<?php esc_html_e( 'Enter an email address', 'buddyboss-platform' ); ?>">
 								</div>
 								<?php
 								if ( true === $send_invite_member_type_allow ) {
-									$current_user              = bp_loggedin_user_id();
-									$member_type               = bp_get_member_type( $current_user );
-									$member_type_post_id       = bp_member_type_post_by_type( $member_type );
+									$current_user              = bboss_loggedin_user_id();
+									$member_type               = bboss_get_member_type( $current_user );
+									$member_type_post_id       = bboss_member_type_post_by_type( $member_type );
 									$get_selected_member_types = get_post_meta( $member_type_post_id, '_bp_member_type_allowed_member_type_invite', true );
 									if ( isset( $get_selected_member_types ) && ! empty( $get_selected_member_types ) ) {
 										$member_types = $get_selected_member_types;
 									} else {
-										$member_types = bp_get_active_member_types();
+										$member_types = bboss_get_active_member_types();
 									}
 									?>
 										<div class="bb-rl-form-field-wrapper">
-											<label for="bb-rl-invite-type"><?php esc_html_e( 'Profile Type', 'buddyboss' ); ?></label>
+											<label for="bb-rl-invite-type"><?php esc_html_e( 'Profile Type', 'buddyboss-platform' ); ?></label>
 											<select id="bb-rl-invite-type" name="bb-rl-invite-type" class="bb-rl-input-field bb-rl-input-field--select">
 											<?php
 											foreach ( $member_types as $type ) {
-												$name = bp_get_member_type_key( $type );
-												if ( $type_obj = bp_get_member_type_object( $name ) ) {
+												$name = bboss_get_member_type_key( $type );
+												if ( $type_obj = bboss_get_member_type_object( $name ) ) {
 													$member_type = $type_obj->labels['singular_name'];
 												}
 												?>
@@ -211,8 +211,8 @@ if ( bp_allow_user_to_send_invites() ) {
 								if ( true === $is_disabled_invite_member_subject ) {
 									?>
 									<div class="bb-rl-form-field-wrapper">
-										<label for="bb-rl-invite-custom-subject"><?php esc_html_e( 'Subject', 'buddyboss' ); ?></label>
-										<textarea name="bp_member_invites_custom_subject" id="bb-rl-invite-custom-subject" class="bb-rl-textarea-field" rows="5" cols="10"><?php echo esc_textarea( bp_get_member_invitation_subject() ); ?></textarea>
+										<label for="bb-rl-invite-custom-subject"><?php esc_html_e( 'Subject', 'buddyboss-platform' ); ?></label>
+										<textarea name="bp_member_invites_custom_subject" id="bb-rl-invite-custom-subject" class="bb-rl-textarea-field" rows="5" cols="10"><?php echo esc_textarea( bboss_get_member_invitation_subject() ); ?></textarea>
 									</div>
 									<?php
 								}
@@ -220,12 +220,12 @@ if ( bp_allow_user_to_send_invites() ) {
 								if ( true === $is_disabled_invite_member_content ) {
 									?>
 									<div class="bb-rl-form-field-wrapper">
-										<label for="bb-rl-invite-custom-content"><?php esc_html_e( 'Invitation message', 'buddyboss' ); ?></label>
+										<label for="bb-rl-invite-custom-content"><?php esc_html_e( 'Invitation message', 'buddyboss-platform' ); ?></label>
 										<?php
-											add_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
-											add_filter( 'tiny_mce_before_init', 'bp_nouveau_send_invite_content_css' );
+											add_filter( 'mce_buttons', 'bboss_nouveau_btn_invites_mce_buttons', 10, 1 );
+											add_filter( 'tiny_mce_before_init', 'bboss_nouveau_send_invite_content_css' );
 											wp_editor(
-												bp_get_member_invites_wildcard_replace( bp_get_member_invitation_message() ),
+												bboss_get_member_invites_wildcard_replace( bboss_get_member_invitation_message() ),
 												'bb-rl-invite-custom-content',
 												array(
 													'textarea_name' => 'bp_member_invites_custom_content',
@@ -239,8 +239,8 @@ if ( bp_allow_user_to_send_invites() ) {
 												)
 											);
 											// Remove the temporary filter on editor buttons.
-											remove_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
-											remove_filter( 'tiny_mce_before_init', 'bp_nouveau_send_invite_content_css' );
+											remove_filter( 'mce_buttons', 'bboss_nouveau_btn_invites_mce_buttons', 10, 1 );
+											remove_filter( 'tiny_mce_before_init', 'bboss_nouveau_send_invite_content_css' );
 										?>
 									</div>
 									<?php
@@ -251,8 +251,8 @@ if ( bp_allow_user_to_send_invites() ) {
 							</form>
 						</div>
 						<footer class="bb-rl-modal-footer flex items-center">
-							<a class="bb-rl-close-invite bb-rl-modal-close-button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="javascript:void(0);"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-							<input type="submit" name="bb-rl-submit-invite" id="bb-rl-submit-invite" form="bb-rl-invite-form" value="<?php esc_html_e( 'Send Invite', 'buddyboss' ); ?>" class="bb-rl-button-submit-invite bb-rl-button bb-rl-button--brandFill bb-rl-button--small" disabled="disabled">
+							<a class="bb-rl-close-invite bb-rl-modal-close-button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="javascript:void(0);"><?php echo esc_html__( 'Cancel', 'buddyboss-platform' ); ?></a>
+							<input type="submit" name="bb-rl-submit-invite" id="bb-rl-submit-invite" form="bb-rl-invite-form" value="<?php esc_html_e( 'Send Invite', 'buddyboss-platform' ); ?>" class="bb-rl-button-submit-invite bb-rl-button bb-rl-button--brandFill bb-rl-button--small" disabled="disabled">
 						</footer>
 					</div>
 				</div>

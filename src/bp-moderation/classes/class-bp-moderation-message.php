@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Message extends BP_Moderation_Abstract {
+class BBoss_Moderation_Message extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Moderation_Message extends BP_Moderation_Abstract {
 	public static $moderation_type = 'message_thread';
 
 	/**
-	 * BP_Moderation_Message constructor.
+	 * BBoss_Moderation_Message constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */

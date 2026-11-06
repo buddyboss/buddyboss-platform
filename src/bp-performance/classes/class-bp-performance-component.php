@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.5.7
  */
 #[\AllowDynamicProperties]
-class BP_Performance_Component extends BP_Component {
+class BBoss_Performance_Component extends BBoss_Component {
 
 	/**
 	 * Start the performance component creation process.
@@ -26,7 +26,7 @@ class BP_Performance_Component extends BP_Component {
 		parent::start(
 			'performance',
 			'API Caching',
-			buddypress()->plugin_dir,
+			bboss()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
 			)
@@ -39,9 +39,9 @@ class BP_Performance_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see   BP_Component::includes() for a description of arguments.
+	 * @see   BBoss_Component::includes() for a description of arguments.
 	 *
-	 * @param array $includes See BP_Component::includes() for a description.
+	 * @param array $includes See BBoss_Component::includes() for a description.
 	 */
 	public function includes( $includes = array() ) {
 		$includes = array(
@@ -74,15 +74,15 @@ class BP_Performance_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see   BP_Component::setup_globals() for a description of arguments.
+	 * @see   BBoss_Component::setup_globals() for a description of arguments.
 	 *
-	 * @param array $args See BP_Component::setup_globals() for a description.
+	 * @param array $args See BBoss_Component::setup_globals() for a description.
 	 */
 	public function setup_globals( $args = array() ) {
 
 		// Define a slug, if necessary.
-		if ( ! defined( 'BP_PERFORMANCE_SLUG' ) ) {
-			define( 'BP_PERFORMANCE_SLUG', $this->id );
+		if ( ! defined( 'BBOSS_PERFORMANCE_SLUG' ) ) {
+			define( 'BBOSS_PERFORMANCE_SLUG', $this->id );
 		}
 
 		// All globals for performance component.
@@ -90,7 +90,7 @@ class BP_Performance_Component extends BP_Component {
 		parent::setup_globals(
 			array(
 				'slug'      => 'performance',
-				'root_slug' => BP_PERFORMANCE_SLUG,
+				'root_slug' => BBOSS_PERFORMANCE_SLUG,
 			)
 		);
 	}

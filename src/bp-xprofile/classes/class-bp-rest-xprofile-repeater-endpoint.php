@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
+class BBoss_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * XProfile Repeater Class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_XProfile_Repeater_Endpoint
+	 * @var BBoss_REST_XProfile_Repeater_Endpoint
 	 */
 	protected $group_fields_endpoint;
 
@@ -31,7 +31,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_XProfile_Fields_Endpoint
+	 * @var BBoss_REST_XProfile_Fields_Endpoint
 	 */
 	protected $xprofile_fields_endpoint;
 
@@ -40,7 +40,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_XProfile_Update_Endpoint class
+	 * @var BBoss_REST_XProfile_Update_Endpoint class
 	 */
 	protected $xprofile_update_endpoint;
 
@@ -50,11 +50,11 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace                = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base                = buddypress()->profile->id . '/repeater';
-		$this->group_fields_endpoint    = new BP_REST_XProfile_Field_Groups_Endpoint();
-		$this->xprofile_fields_endpoint = new BP_REST_XProfile_Fields_Endpoint();
-		$this->xprofile_update_endpoint = new BP_REST_XProfile_Update_Endpoint();
+		$this->namespace                = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base                = bboss()->profile->id . '/repeater';
+		$this->group_fields_endpoint    = new BBoss_REST_XProfile_Field_Groups_Endpoint();
+		$this->xprofile_fields_endpoint = new BBoss_REST_XProfile_Fields_Endpoint();
+		$this->xprofile_update_endpoint = new BBoss_REST_XProfile_Update_Endpoint();
 	}
 
 	/**
@@ -122,12 +122,12 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 
 		// Get the field group before it's deleted.
-		$field_group = xprofile_get_field_group( (int) $request['id'] );
+		$field_group = bboss_xprofile_get_field_group( (int) $request['id'] );
 
 		if ( empty( $field_group->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field group ID.', 'buddyboss' ),
+				__( 'Invalid field group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -138,30 +138,30 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		if ( ! $user_id ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
 
-		$count = bp_get_profile_field_set_count( $field_group->id, $user_id );
+		$count = bboss_get_profile_field_set_count( $field_group->id, $user_id );
 		$count++;
-		bp_set_profile_field_set_count( $field_group->id, $user_id, $count );
+		bboss_set_profile_field_set_count( $field_group->id, $user_id, $count );
 
-		$clone_fields = bp_get_repeater_clone_field_ids_subset( $field_group->id, $count );
+		$clone_fields = bboss_get_repeater_clone_field_ids_subset( $field_group->id, $count );
 		if ( empty( $clone_fields ) ) {
-			$group_fields = bp_get_repeater_template_field_ids( $field_group->id );
+			$group_fields = bboss_get_repeater_template_field_ids( $field_group->id );
 			if ( ! empty( $group_fields ) ) {
 				foreach ( $group_fields as $field_id ) {
-					bp_clone_field_for_repeater_sets( $field_id, $field_group->id );
+					bboss_clone_field_for_repeater_sets( $field_id, $field_group->id );
 				}
 			}
 		}
 
 		/**
 		 * Clear cache when creating a new field set.
-		 * - from xprofile_clear_profile_field_object_cache();
+		 * - from bboss_xprofile_clear_profile_field_object_cache();
 		 */
 		// Clear default visibility level cache.
 		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
@@ -191,7 +191,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 *
-		 * @param BP_XProfile_Group $field_group Deleted field group.
+		 * @param BBoss_XProfile_Group $field_group Deleted field group.
 		 * @param WP_REST_Response  $response  The response data.
 		 * @param WP_REST_Request   $request   The request sent to the API.
 		 */
@@ -211,7 +211,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -221,23 +221,23 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 			$retval = true;
 
 			// Get the field group before it's deleted.
-			$field_group = xprofile_get_field_group( (int) $request->get_param( 'id' ) );
+			$field_group = bboss_xprofile_get_field_group( (int) $request->get_param( 'id' ) );
 
 			if ( empty( $field_group->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid Group ID.', 'buddyboss' ),
+					__( 'Invalid Group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
 				);
 			} else {
-				$repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
+				$repeater_enabled = bboss_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
 
 				if ( empty( $field_group ) || 'on' !== $repeater_enabled ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_repeater_id',
-						__( 'Invalid Repeater Group ID.', 'buddyboss' ),
+						__( 'Invalid Repeater Group ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -282,12 +282,12 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 
 		// Get the field group before it's deleted.
-		$field_group = xprofile_get_field_group( (int) $request['id'] );
+		$field_group = bboss_xprofile_get_field_group( (int) $request['id'] );
 
 		if ( empty( $field_group->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field group ID.', 'buddyboss' ),
+				__( 'Invalid field group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -298,7 +298,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		if ( ! $user_id ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -346,7 +346,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		if ( ! $this->array_equal( $final_fields, $form_data ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_fields',
-				__( 'Sorry, Fields are not matched with original field set to reorder.', 'buddyboss' ),
+				__( 'Sorry, Fields are not matched with original field set to reorder.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -374,11 +374,11 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $return ) ) {
 
 			foreach ( $return as $field_id => $value ) {
-				$field = xprofile_get_field( $field_id );
+				$field = bboss_xprofile_get_field( $field_id );
 
 				if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type || 'multiselectbox' === $field->type ) {
 					// Disallow object instantiation to prevent PHP object injection from untrusted REST input.
-					$value = bb_xprofile_safe_unserialize( $value );
+					$value = bboss_xprofile_safe_unserialize( $value );
 
 					$value = json_decode( wp_json_encode( $value ), true );
 
@@ -397,11 +397,11 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 			if ( true === $updated ) {
 				foreach ( $return as $field_id => $value ) {
-					$field = xprofile_get_field( $field_id );
+					$field = bboss_xprofile_get_field( $field_id );
 
 					if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type || 'multiselectbox' === $field->type ) {
 						// Disallow object instantiation to prevent PHP object injection from untrusted REST input.
-						$value = bb_xprofile_safe_unserialize( $value );
+						$value = bboss_xprofile_safe_unserialize( $value );
 
 						$value = json_decode( wp_json_encode( $value ), true );
 
@@ -411,14 +411,14 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 						}
 					}
 
-					xprofile_set_field_data( $field_id, $user_id, $value, $field->is_required );
+					bboss_xprofile_set_field_data( $field_id, $user_id, $value, $field->is_required );
 				}
 			}
 		}
 
 		/**
 		 * Clear cache when creating a new field set.
-		 * - from xprofile_clear_profile_field_object_cache();
+		 * - from bboss_xprofile_clear_profile_field_object_cache();
 		 */
 		// Clear default visibility level cache.
 		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
@@ -449,7 +449,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 *
-		 * @param BP_XProfile_Group $field_group Deleted field group.
+		 * @param BBoss_XProfile_Group $field_group Deleted field group.
 		 * @param WP_REST_Response  $response  The response data.
 		 * @param WP_REST_Request   $request   The request sent to the API.
 		 */
@@ -469,7 +469,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -479,23 +479,23 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 			$retval = true;
 
 			// Get the field group before it's deleted.
-			$field_group = xprofile_get_field_group( (int) $request['id'] );
+			$field_group = bboss_xprofile_get_field_group( (int) $request['id'] );
 
 			if ( empty( $field_group->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid Group ID.', 'buddyboss' ),
+					__( 'Invalid Group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
 				);
 			} else {
-				$repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
+				$repeater_enabled = bboss_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
 
 				if ( empty( $field_group ) || 'on' !== $repeater_enabled ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_repeater_id',
-						__( 'Invalid Repeater Group ID.', 'buddyboss' ),
+						__( 'Invalid Repeater Group ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -538,7 +538,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	public function delete_item( $request ) {
 		// Setting context.
 		// Get the field group before it's deleted.
-		$field_group = xprofile_get_field_group( (int) $request['id'] );
+		$field_group = bboss_xprofile_get_field_group( (int) $request['id'] );
 
 		if ( ! isset( $request['fields'] ) || empty( $request['fields'] ) ) {
 			$request['fields'] = array();
@@ -547,7 +547,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		if ( empty( $field_group->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field group ID.', 'buddyboss' ),
+				__( 'Invalid field group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -558,14 +558,14 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		if ( ! $user_id ) {
 			new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete your profile repeater fields.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to delete your profile repeater fields.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
 
-		$group_fields = bp_get_repeater_template_field_ids( $field_group->id );
+		$group_fields = bboss_get_repeater_template_field_ids( $field_group->id );
 
 		$required           = false;
 		$result             = true;
@@ -574,7 +574,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $group_fields ) ) {
 			foreach ( $group_fields as $field_id ) {
 				$field_set_sequence += $this->get_repeater_fields( $field_id, $user_id, $field_group->id );
-				$is_required         = xprofile_check_is_required_field( $field_id );
+				$is_required         = bboss_xprofile_check_is_required_field( $field_id );
 				if ( true === $is_required ) {
 					$required = $is_required;
 				}
@@ -584,7 +584,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		$posted_field_ids = array_keys( $field_set_sequence );
 
 		$fields = $request['fields'];
-		$count  = bp_get_profile_field_set_count( $field_group->id, $user_id );
+		$count  = bboss_get_profile_field_set_count( $field_group->id, $user_id );
 
 		if (
 			( isset( $fields ) && ! empty( $fields ) )
@@ -604,7 +604,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 			--$count;
 			if ( 0 === $count ) {
 				$count        = 1;
-				$clone_fields = bp_get_repeater_clone_field_ids_subset( $field_group->id, $user_id );
+				$clone_fields = bboss_get_repeater_clone_field_ids_subset( $field_group->id, $user_id );
 				if ( ! empty( $clone_fields ) ) {
 					foreach ( $clone_fields as $deleted_field_id ) {
 						if ( array_key_exists( $deleted_field_id, $field_set_sequence ) ) {
@@ -622,7 +622,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 		/**
 		 * Clear cache when deleting fields.
-		 * - from xprofile_clear_profile_field_object_cache();
+		 * - from bboss_xprofile_clear_profile_field_object_cache();
 		 */
 		// Clear default visibility level cache.
 		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
@@ -652,7 +652,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 *
-		 * @param BP_XProfile_Group $field_group Deleted field group.
+		 * @param BBoss_XProfile_Group $field_group Deleted field group.
 		 * @param WP_REST_Response  $response  The response data.
 		 * @param WP_REST_Request   $request   The request sent to the API.
 		 */
@@ -672,7 +672,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to delete this field.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -682,23 +682,23 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 			$retval = true;
 
 			// Get the field group before it's deleted.
-			$field_group = xprofile_get_field_group( (int) $request['id'] );
+			$field_group = bboss_xprofile_get_field_group( (int) $request['id'] );
 
 			if ( empty( $field_group->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid Group ID.', 'buddyboss' ),
+					__( 'Invalid Group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
 				);
 			} else {
-				$repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
+				$repeater_enabled = bboss_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
 
 				if ( empty( $field_group ) || 'on' !== $repeater_enabled ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_repeater_id',
-						__( 'Invalid Repeater Group ID.', 'buddyboss' ),
+						__( 'Invalid Repeater Group ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -734,7 +734,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'data' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Object of groups.', 'buddyboss' ),
+					'description' => __( 'Object of groups.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'object',
 					'properties'  => $this->group_fields_endpoint->get_item_schema()['properties'],
@@ -763,7 +763,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::DELETABLE === $method ) {
 			$args['fields'] = array(
-				'description'       => __( 'Pass Field IDs which you want to delete it.', 'buddyboss' ),
+				'description'       => __( 'Pass Field IDs which you want to delete it.', 'buddyboss-platform' ),
 				'type'              => 'array',
 				'required'          => true,
 				'items'             => array( 'type' => 'integer' ),
@@ -771,7 +771,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 			);
 		} elseif ( WP_REST_Server::EDITABLE === $method ) {
 			$args['fields'] = array(
-				'description' => __( 'Fields array with order of field set with field ID and value to reorder.', 'buddyboss' ),
+				'description' => __( 'Fields array with order of field set with field ID and value to reorder.', 'buddyboss-platform' ),
 				'type'        => 'array',
 				'items'       => array( 'type' => 'object' ),
 				'required'    => true,
@@ -805,12 +805,12 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		unset( $params['search'], $params['page'], $params['per_page'] );
 
 		$params['id'] = array(
-			'description' => __( 'A unique numeric ID for the group of profile fields.', 'buddyboss' ),
+			'description' => __( 'A unique numeric ID for the group of profile fields.', 'buddyboss-platform' ),
 			'type'        => 'integer',
 		);
 
 		$params['fetch_fields'] = array(
-			'description'       => __( 'Whether to fetch the fields for each group.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch the fields for each group.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -818,7 +818,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['fetch_field_data'] = array(
-			'description'       => __( 'Whether to fetch data for each field. Requires a $user_id.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch data for each field. Requires a $user_id.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -826,7 +826,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['fetch_visibility_level'] = array(
-			'description'       => __( 'Whether to fetch the visibility level for each field.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch the visibility level for each field.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -865,7 +865,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		$results = $wpdb->get_col( $sql );
 		$data    = array();
 
-		$user_fields = bp_get_profile_field_set_count( $group_id, $user_id );
+		$user_fields = bboss_get_profile_field_set_count( $group_id, $user_id );
 
 		if ( ! empty( $results ) && ! is_wp_error( $results ) ) {
 
@@ -896,13 +896,13 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $repeater_set_sequence, $deleted_field_ids, $field_group_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( ! empty( $errors ) ) {
 			return;
 		}
 
-		$is_repeater_enabled = 'on' === bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled', true ) ? true : false;
+		$is_repeater_enabled = 'on' === bboss_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled', true ) ? true : false;
 		if ( ! $is_repeater_enabled ) {
 			return;
 		}
@@ -911,7 +911,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		if ( isset( $deleted_field_ids ) && ! empty( $deleted_field_ids ) ) {
 			$deleted_field_ids = wp_parse_id_list( $deleted_field_ids );
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
-				xprofile_delete_field_data( $deleted_field_id, $user_id );
+				bboss_xprofile_delete_field_data( $deleted_field_id, $user_id );
 			}
 		}
 
@@ -941,18 +941,18 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 						// phpcs:ignore
 						$corresponding_field_id = $wpdb->get_var( $sql );
 						if ( ! empty( $corresponding_field_id ) ) {
-							$new_data             = xprofile_get_field_data( $field_of_current_set, $user_id );
-							$new_visibility_level = xprofile_get_field_visibility_level( $field_of_current_set, $user_id );
-							xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
+							$new_data             = bboss_xprofile_get_field_data( $field_of_current_set, $user_id );
+							$new_visibility_level = bboss_xprofile_get_field_visibility_level( $field_of_current_set, $user_id );
+							bboss_xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
 
 							// phpcs:ignore
 							$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
 
 							if ( 'datebox' === $type && ! empty( $new_data ) ) {
-								$new_data = date( 'Y-m-d 00:00:00', strtotime( $new_data ) );
+								$new_data = gmdate( 'Y-m-d 00:00:00', strtotime( $new_data ) );
 							}
 
-							xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
+							bboss_xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
 
 							if ( ! isset( $main_field_data[ $cloned_from ] ) ) {
 								$main_field_data[ $cloned_from ] = array();
@@ -970,11 +970,11 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $main_field_data ) ) {
 			foreach ( $main_field_data as $main_field_id => $values ) {
 				$values_str = implode( ' ', $values );
-				xprofile_set_field_data( $main_field_id, $user_id, $values_str );
+				bboss_xprofile_set_field_data( $main_field_id, $user_id, $values_str );
 			}
 		}
 
-		bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
+		bboss_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
 	}
 
 	/**

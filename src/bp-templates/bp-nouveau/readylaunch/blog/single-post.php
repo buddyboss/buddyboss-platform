@@ -14,12 +14,12 @@ defined( 'ABSPATH' ) || exit;
 
 $bb_rl_blog_categories  = get_the_category();
 $bb_rl_blog_author_id   = (int) get_the_author_meta( 'ID' );
-$bb_rl_blog_author_url  = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $bb_rl_blog_author_id ) : get_author_posts_url( $bb_rl_blog_author_id );
-$bb_rl_blog_author_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $bb_rl_blog_author_id ) : get_the_author();
+$bb_rl_blog_author_url  = function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $bb_rl_blog_author_id ) : get_author_posts_url( $bb_rl_blog_author_id );
+$bb_rl_blog_author_name = function_exists( 'bboss_core_get_user_displayname' ) ? bboss_core_get_user_displayname( $bb_rl_blog_author_id ) : get_the_author();
 $bb_rl_blog_tags        = get_the_tags();
 
 if ( '' === trim( (string) $bb_rl_blog_author_name ) ) {
-	$bb_rl_blog_author_name = __( 'Unknown Member', 'buddyboss' );
+	$bb_rl_blog_author_name = __( 'Unknown Member', 'buddyboss-platform' );
 }
 
 // Related posts render after the comments below — keep them out of the
@@ -29,7 +29,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 <div class="bb-rl-secondary-header bb-rl-blog-single-header">
 	<a class="bb-rl-blog-single-header__back" href="<?php echo esc_url( get_post_type_archive_link( 'post' ) ); ?>">
 		<i class="bb-icons-rl bb-icons-rl-arrow-left" aria-hidden="true"></i>
-		<span class="screen-reader-text"><?php esc_html_e( 'Back to blog', 'buddyboss' ); ?></span>
+		<span class="screen-reader-text"><?php esc_html_e( 'Back to blog', 'buddyboss-platform' ); ?></span>
 	</a>
 	<span class="bb-rl-blog-single-header__crumb"><?php the_title(); ?></span>
 </div>
@@ -41,8 +41,8 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 	<div class="bb-rl-blog-single__meta">
 		<a href="<?php echo esc_url( $bb_rl_blog_author_url ); ?>" class="item-avatar bb-rl-author-avatar" data-bb-hp-profile="<?php echo esc_attr( $bb_rl_blog_author_id ); ?>">
 			<?php
-			if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-				echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
+			if ( function_exists( 'bboss_core_fetch_avatar' ) ) {
+				echo bboss_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
 					array(
 						'item_id' => $bb_rl_blog_author_id,
 						'html'    => true,
@@ -72,7 +72,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 		<div class="bb-rl-blog-single__info_row">
 			<?php if ( ! empty( $bb_rl_blog_categories ) && ! is_wp_error( $bb_rl_blog_categories ) ) : ?>
 				<div class="bb-rl-blog-single__categories">
-					<span class="bb-rl-blog-single__label"><i class="bb-icons-rl bb-icons-rl-folder" aria-hidden="true"></i> <?php esc_html_e( 'Categories:', 'buddyboss' ); ?></span>
+					<span class="bb-rl-blog-single__label"><i class="bb-icons-rl bb-icons-rl-folder" aria-hidden="true"></i> <?php esc_html_e( 'Categories:', 'buddyboss-platform' ); ?></span>
 					<div class="bb-rl-blog-single__category_list">
 						<?php foreach ( $bb_rl_blog_categories as $bb_rl_blog_category ) : ?>
 							<a class="bb-rl-blog-single__category" href="<?php echo esc_url( get_category_link( $bb_rl_blog_category ) ); ?>"><?php echo esc_html( $bb_rl_blog_category->name ); ?></a>
@@ -82,7 +82,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 			<?php endif; ?>
 			<?php if ( ! empty( $bb_rl_blog_tags ) && ! is_wp_error( $bb_rl_blog_tags ) ) : ?>
 				<div class="bb-rl-blog-single__tags">
-					<span class="bb-rl-blog-single__label"><i class="bb-icons-rl bb-icons-rl-tag" aria-hidden="true"></i> <?php esc_html_e( 'Tags:', 'buddyboss' ); ?></span>
+					<span class="bb-rl-blog-single__label"><i class="bb-icons-rl bb-icons-rl-tag" aria-hidden="true"></i> <?php esc_html_e( 'Tags:', 'buddyboss-platform' ); ?></span>
 					<div class="bb-rl-blog-single__tags_list">
 						<?php foreach ( $bb_rl_blog_tags as $bb_rl_blog_tag ) : ?>
 							<a class="bb-rl-blog-single__tag" href="<?php echo esc_url( get_tag_link( $bb_rl_blog_tag ) ); ?>"><?php echo esc_html( $bb_rl_blog_tag->name ); ?></a>
@@ -115,20 +115,20 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 		comments_template();
 	}
 
-	$bb_rl_blog_related_query = function_exists( 'bb_blog_is_related_posts_enabled' ) && bb_blog_is_related_posts_enabled()
-		? bb_blog_get_related_posts( get_the_ID(), 9 )
+	$bb_rl_blog_related_query = function_exists( 'bboss_blog_is_related_posts_enabled' ) && bboss_blog_is_related_posts_enabled()
+		? bboss_blog_get_related_posts( get_the_ID(), 9 )
 		: null;
 
 	if ( $bb_rl_blog_related_query && $bb_rl_blog_related_query->have_posts() ) :
 		?>
 		<section class="bb-rl-blog-related-cards">
 			<div class="bb-rl-blog-related-cards__header">
-				<h2 class="bb-rl-blog-related-cards__title"><?php esc_html_e( 'Related Blogs', 'buddyboss' ); ?></h2>
+				<h2 class="bb-rl-blog-related-cards__title"><?php esc_html_e( 'Related Blogs', 'buddyboss-platform' ); ?></h2>
 				<div class="bb-rl-blog-related-cards__nav">
-					<button type="button" class="bb-rl-blog-related-cards__nav-button" data-bb-rl-related-nav="prev" aria-label="<?php esc_attr_e( 'Previous related blogs', 'buddyboss' ); ?>" disabled>
+					<button type="button" class="bb-rl-blog-related-cards__nav-button" data-bb-rl-related-nav="prev" aria-label="<?php esc_attr_e( 'Previous related blogs', 'buddyboss-platform' ); ?>" disabled>
 						<i class="bb-icons-rl bb-icons-rl-caret-left" aria-hidden="true"></i>
 					</button>
-					<button type="button" class="bb-rl-blog-related-cards__nav-button" data-bb-rl-related-nav="next" aria-label="<?php esc_attr_e( 'Next related blogs', 'buddyboss' ); ?>" disabled>
+					<button type="button" class="bb-rl-blog-related-cards__nav-button" data-bb-rl-related-nav="next" aria-label="<?php esc_attr_e( 'Next related blogs', 'buddyboss-platform' ); ?>" disabled>
 						<i class="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
 					</button>
 				</div>
@@ -137,7 +137,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 				<?php
 				while ( $bb_rl_blog_related_query->have_posts() ) :
 					$bb_rl_blog_related_query->the_post();
-					bp_get_template_part( 'blog/loop-post' );
+					bboss_get_template_part( 'blog/loop-post' );
 				endwhile;
 				wp_reset_postdata();
 				?>

@@ -18,21 +18,21 @@ add_filter( 'bp_displayed_user_fullname', 'esc_html' );
 add_filter( 'bp_get_loggedin_user_fullname', 'esc_html' );
 
 // Filter the user registration URL to point to BuddyPress's registration page.
-add_filter( 'register_url', 'bp_get_signup_page' );
+add_filter( 'register_url', 'bboss_get_signup_page' );
 
 // Change the last active display format if users active within interval then shows 'Active now'.
-add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
+add_filter( 'bp_get_last_activity', 'bboss_get_member_last_active_within_minutes', 10, 2 );
 
 // Repair member profile links.
-add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
+add_filter( 'bp_repair_list', 'bboss_repair_member_profile_links', 12 );
 
-add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
+add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bboss_set_default_member_type_to_activate_user_on_admin', 1, 2 );
 
-add_action( 'update_option_bp-display-name-format', 'bb_member_remove_default_png_avatar_on_update_display_name', 10, 3 );
-add_action( 'deleted_user', 'bb_member_remove_default_png_avatar_on_deleted_user' );
+add_action( 'update_option_bp-display-name-format', 'bboss_member_remove_default_png_avatar_on_update_display_name', 10, 3 );
+add_action( 'deleted_user', 'bboss_member_remove_default_png_avatar_on_deleted_user' );
 
 // Exclude account related notifications.
-add_filter( 'bp_notifications_get_where_conditions', 'bb_members_hide_account_settings_notifications', 10, 2 );
+add_filter( 'bp_notifications_get_where_conditions', 'bboss_members_hide_account_settings_notifications', 10, 2 );
 
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
@@ -44,7 +44,7 @@ add_filter( 'bp_notifications_get_where_conditions', 'bb_members_hide_account_se
  *
  * @since BuddyPress 1.5.0
  */
-function bp_members_signup_sanitization() {
+function bboss_members_signup_sanitization() {
 
 	// Filters on sign-up fields.
 	$fields = array(
@@ -70,7 +70,7 @@ function bp_members_signup_sanitization() {
 	// Sanitize email.
 	add_filter( 'bp_get_signup_email_value', 'sanitize_email' );
 }
-add_action( 'bp_loaded', 'bp_members_signup_sanitization' );
+add_action( 'bp_loaded', 'bboss_members_signup_sanitization' );
 
 /**
  * Make sure the username is not the blog slug in case of root profile & subdirectory blog.
@@ -85,8 +85,8 @@ add_action( 'bp_loaded', 'bp_members_signup_sanitization' );
  * @param array $illegal_names Array of illiegal names.
  * @return array $illegal_names
  */
-function bp_members_signup_with_subdirectory_blog( $illegal_names = array() ) {
-	if ( ! bp_core_enable_root_profiles() ) {
+function bboss_members_signup_with_subdirectory_blog( $illegal_names = array() ) {
+	if ( ! bboss_core_enable_root_profiles() ) {
 		return $illegal_names;
 	}
 
@@ -102,12 +102,12 @@ function bp_members_signup_with_subdirectory_blog( $illegal_names = array() ) {
 			$illegal_names[] = $domain;
 		}
 	} else {
-		$illegal_names[] = buddypress()->signup->username;
+		$illegal_names[] = bboss()->signup->username;
 	}
 
 	return $illegal_names;
 }
-add_filter( 'subdirectory_reserved_names', 'bp_members_signup_with_subdirectory_blog', 10, 1 );
+add_filter( 'subdirectory_reserved_names', 'bboss_members_signup_with_subdirectory_blog', 10, 1 );
 
 /**
  * Filter the user profile URL to point to BuddyPress profile edit.
@@ -119,11 +119,11 @@ add_filter( 'subdirectory_reserved_names', 'bp_members_signup_with_subdirectory_
  * @param string $scheme  Scheme to use.
  * @return string
  */
-function bp_members_edit_profile_url( $url, $user_id, $scheme = 'admin' ) {
+function bboss_members_edit_profile_url( $url, $user_id, $scheme = 'admin' ) {
 
 	// If xprofile is active, use profile domain link.
-	if ( ! is_admin() && bp_is_active( 'xprofile' ) ) {
-		$profile_link = trailingslashit( bp_core_get_user_domain( $user_id ) . bp_get_profile_slug() . '/edit' );
+	if ( ! is_admin() && bboss_is_active( 'xprofile' ) ) {
+		$profile_link = trailingslashit( bboss_core_get_user_domain( $user_id ) . bboss_get_profile_slug() . '/edit' );
 
 	} else {
 		// Default to $url.
@@ -141,29 +141,29 @@ function bp_members_edit_profile_url( $url, $user_id, $scheme = 'admin' ) {
 	 */
 	return apply_filters( 'bp_members_edit_profile_url', $profile_link, $url, $user_id, $scheme );
 }
-add_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
+add_filter( 'edit_profile_url', 'bboss_members_edit_profile_url', 10, 3 );
 
 /**
  * Overwrites login form email field label.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_overwrite_login_form_email_field_label( $defaults ) {
-	$defaults['label_username'] = __( 'Email Address', 'buddyboss' );
+function bboss_overwrite_login_form_email_field_label( $defaults ) {
+	$defaults['label_username'] = __( 'Email Address', 'buddyboss-platform' );
 
 	return $defaults;
 }
-add_filter( 'login_form_defaults', 'bp_overwrite_login_form_email_field_label' );
+add_filter( 'login_form_defaults', 'bboss_overwrite_login_form_email_field_label' );
 
 /**
  * Overwrites login email field label.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_overwrite_login_email_field_label( $translated_text, $text, $domain ) {
+function bboss_overwrite_login_email_field_label( $translated_text, $text, $domain ) {
 	if ( 'Username or Email Address' == $text && 'default' == $domain ) {
-		remove_filter( 'gettext', 'bp_overwrite_login_email_field_label' );
-		return __( 'Email Address', 'buddyboss' );
+		remove_filter( 'gettext', 'bboss_overwrite_login_email_field_label' );
+		return __( 'Email Address', 'buddyboss-platform' );
 	}
 
 	return $translated_text;
@@ -174,12 +174,12 @@ function bp_overwrite_login_email_field_label( $translated_text, $text, $domain 
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_overwrite_login_email_field_label_hook() {
-	add_filter( 'gettext', 'bp_overwrite_login_email_field_label', 10, 3 );
+function bboss_overwrite_login_email_field_label_hook() {
+	add_filter( 'gettext', 'bboss_overwrite_login_email_field_label', 10, 3 );
 }
-add_action( 'login_form_retrievepassword', 'bp_overwrite_login_email_field_label_hook' );
-add_action( 'login_form_lostpassword', 'bp_overwrite_login_email_field_label_hook' );
-add_action( 'login_form_login', 'bp_overwrite_login_email_field_label_hook' );
+add_action( 'login_form_retrievepassword', 'bboss_overwrite_login_email_field_label_hook' );
+add_action( 'login_form_lostpassword', 'bboss_overwrite_login_email_field_label_hook' );
+add_action( 'login_form_login', 'bboss_overwrite_login_email_field_label_hook' );
 
 /**
  * Set up media arguments for use with the 'personal' scope.
@@ -190,32 +190,32 @@ add_action( 'login_form_login', 'bp_overwrite_login_email_field_label_hook' );
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_members_filter_media_personal_scope( $retval = array(), $filter = array() ) {
+function bboss_members_filter_media_personal_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	$privacy = array( 'public' );
 
-	if ( bp_loggedin_user_id() ) {
+	if ( bboss_loggedin_user_id() ) {
 		$privacy[] = 'loggedin';
 
-		if ( (int) $user_id === (int) bp_loggedin_user_id() ) {
+		if ( (int) $user_id === (int) bboss_loggedin_user_id() ) {
 			$privacy[] = 'onlyme';
 		}
 
-		if ( bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
-			if ( (int) $user_id === (int) bp_loggedin_user_id() ) {
+		if ( bboss_is_active( 'friends' ) && bboss_is_profile_media_support_enabled() ) {
+			if ( (int) $user_id === (int) bboss_loggedin_user_id() ) {
 				$privacy[] = 'friends';
 			} else {
-				$friends = friends_get_friend_user_ids( $user_id );
-				if ( ! empty( $friends ) && in_array( (int) bp_loggedin_user_id(), $friends, true ) ) {
+				$friends = bboss_friends_get_friend_user_ids( $user_id );
+				if ( ! empty( $friends ) && in_array( (int) bboss_loggedin_user_id(), $friends, true ) ) {
 					$privacy[] = 'friends';
 				}
 			}
@@ -235,7 +235,7 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 		),
 	);
 
-	if ( ! bp_is_profile_albums_support_enabled() ) {
+	if ( ! bboss_is_profile_albums_support_enabled() ) {
 		$retval[] = array(
 			'column'  => 'album_id',
 			'compare' => '=',
@@ -261,7 +261,7 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 
 	return $retval;
 }
-add_filter( 'bp_media_set_personal_scope_args', 'bp_members_filter_media_personal_scope', 10, 2 );
+add_filter( 'bp_media_set_personal_scope_args', 'bboss_members_filter_media_personal_scope', 10, 2 );
 
 /**
  * Set up video arguments for use with the 'personal' scope.
@@ -272,32 +272,32 @@ add_filter( 'bp_media_set_personal_scope_args', 'bp_members_filter_media_persona
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_members_filter_video_personal_scope( $retval = array(), $filter = array() ) {
+function bboss_members_filter_video_personal_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	$privacy = array( 'public' );
 
-	if ( bp_loggedin_user_id() ) {
+	if ( bboss_loggedin_user_id() ) {
 		$privacy[] = 'loggedin';
 
-		if ( bp_loggedin_user_id() === (int) $user_id ) {
+		if ( bboss_loggedin_user_id() === (int) $user_id ) {
 			$privacy[] = 'onlyme';
 		}
 
-		if ( bp_is_active( 'friends' ) && bp_is_profile_video_support_enabled() ) {
-			if ( bp_loggedin_user_id() === (int) $user_id ) {
+		if ( bboss_is_active( 'friends' ) && bboss_is_profile_video_support_enabled() ) {
+			if ( bboss_loggedin_user_id() === (int) $user_id ) {
 				$privacy[] = 'friends';
 			} else {
-				$friends = friends_get_friend_user_ids( $user_id );
-				if ( ! empty( $friends ) && in_array( (int) bp_loggedin_user_id(), $friends, true ) ) {
+				$friends = bboss_friends_get_friend_user_ids( $user_id );
+				if ( ! empty( $friends ) && in_array( (int) bboss_loggedin_user_id(), $friends, true ) ) {
 					$privacy[] = 'friends';
 				}
 			}
@@ -317,7 +317,7 @@ function bp_members_filter_video_personal_scope( $retval = array(), $filter = ar
 		),
 	);
 
-	if ( ! bp_is_profile_albums_support_enabled() ) {
+	if ( ! bboss_is_profile_albums_support_enabled() ) {
 		$retval[] = array(
 			'column'  => 'album_id',
 			'compare' => '=',
@@ -343,7 +343,7 @@ function bp_members_filter_video_personal_scope( $retval = array(), $filter = ar
 
 	return $retval;
 }
-add_filter( 'bp_video_set_personal_scope_args', 'bp_members_filter_video_personal_scope', 10, 2 );
+add_filter( 'bp_video_set_personal_scope_args', 'bboss_members_filter_video_personal_scope', 10, 2 );
 
 /**
  * Set up media arguments for use with the 'personal' scope.
@@ -354,15 +354,15 @@ add_filter( 'bp_video_set_personal_scope_args', 'bp_members_filter_video_persona
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_members_filter_document_personal_scope( $retval = array(), $filter = array() ) {
+function bboss_members_filter_document_personal_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	$folder_id = 0;
@@ -376,19 +376,19 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 
-		if ( bp_is_active( 'friends' ) ) {
-			$friends = friends_get_friend_user_ids( $user_id );
-			if ( ( ! empty( $friends ) && in_array( bp_loggedin_user_id(), $friends ) ) || $user_id === bp_loggedin_user_id() ) {
+		if ( bboss_is_active( 'friends' ) ) {
+			$friends = bboss_friends_get_friend_user_ids( $user_id );
+			if ( ( ! empty( $friends ) && in_array( bboss_loggedin_user_id(), $friends ) ) || $user_id === bboss_loggedin_user_id() ) {
 				$privacy[] = 'friends';
 			}
 		}
 
-		if ( $user_id === bp_loggedin_user_id() ) {
+		if ( $user_id === bboss_loggedin_user_id() ) {
 			$privacy[] = 'onlyme';
 		}
 	}
 
-	if ( ! bp_is_profile_document_support_enabled() ) {
+	if ( ! bboss_is_profile_document_support_enabled() ) {
 		$user_id = '0';
 	}
 
@@ -450,7 +450,7 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 
 	return $args;
 }
-add_filter( 'bp_document_set_document_personal_scope_args', 'bp_members_filter_document_personal_scope', 10, 2 );
+add_filter( 'bp_document_set_document_personal_scope_args', 'bboss_members_filter_document_personal_scope', 10, 2 );
 
 /**
  * Set up media arguments for use with the 'personal' scope.
@@ -461,9 +461,9 @@ add_filter( 'bp_document_set_document_personal_scope_args', 'bp_members_filter_d
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_members_filter_folder_personal_scope( $retval = array(), $filter = array() ) {
+function bboss_members_filter_folder_personal_scope( $retval = array(), $filter = array() ) {
 
-	if ( ! bp_is_profile_document_support_enabled() ) {
+	if ( ! bboss_is_profile_document_support_enabled() ) {
 		return $retval;
 	}
 
@@ -471,9 +471,9 @@ function bp_members_filter_folder_personal_scope( $retval = array(), $filter = a
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = (int) $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	$folder_id = 0;
@@ -524,14 +524,14 @@ function bp_members_filter_folder_personal_scope( $retval = array(), $filter = a
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 
-		if ( bp_is_active( 'friends' ) ) {
-			$friends = friends_get_friend_user_ids( $user_id );
-			if ( ( ! empty( $friends ) && in_array( bp_loggedin_user_id(), $friends ) ) || $user_id === bp_loggedin_user_id() ) {
+		if ( bboss_is_active( 'friends' ) ) {
+			$friends = bboss_friends_get_friend_user_ids( $user_id );
+			if ( ( ! empty( $friends ) && in_array( bboss_loggedin_user_id(), $friends ) ) || $user_id === bboss_loggedin_user_id() ) {
 				$privacy[] = 'friends';
 			}
 		}
 
-		if ( $user_id === bp_loggedin_user_id() ) {
+		if ( $user_id === bboss_loggedin_user_id() ) {
 			$privacy[] = 'onlyme';
 		}
 	}
@@ -553,7 +553,7 @@ function bp_members_filter_folder_personal_scope( $retval = array(), $filter = a
 
 	return $args;
 }
-add_filter( 'bp_document_set_folder_personal_scope_args', 'bp_members_filter_folder_personal_scope', 10, 2 );
+add_filter( 'bp_document_set_folder_personal_scope_args', 'bboss_members_filter_folder_personal_scope', 10, 2 );
 
 /**
  * Used by the Activity component's @mentions to print a JSON list of the latest 10 users.
@@ -562,9 +562,9 @@ add_filter( 'bp_document_set_folder_personal_scope_args', 'bp_members_filter_fol
  *
  * @since BuddyBoss 1.8.6
  *
- * @see   bp_activity_mentions_script()
+ * @see   bboss_activity_mentions_script()
  */
-function bb_core_prime_mentions_results() {
+function bboss_core_prime_mentions_results() {
 
 	// Stop here if user is not logged in.
 	if ( ! is_user_logged_in() ) {
@@ -572,12 +572,12 @@ function bb_core_prime_mentions_results() {
 	}
 
 	// Bail out if the site has a ton of users.
-	if ( bp_is_large_install() ) {
+	if ( bboss_is_large_install() ) {
 		return;
 	}
 
 	// Bail if single group page.
-	if ( bp_is_group() ) {
+	if ( bboss_is_group() ) {
 		return;
 	}
 
@@ -590,13 +590,13 @@ function bb_core_prime_mentions_results() {
 		'exclude'         => array( get_current_user_id() ),
 	);
 
-	$members_query = new BP_User_Query( $members_query );
+	$members_query = new BBoss_User_Query( $members_query );
 	$members       = array();
 
 	foreach ( $members_query->results as $user ) {
 		$result        = new stdClass();
-		$result->ID    = bp_activity_get_user_mentionname( $user->ID );
-		$result->image = bp_core_fetch_avatar(
+		$result->ID    = bboss_activity_get_user_mentionname( $user->ID );
+		$result->image = bboss_core_fetch_avatar(
 			array(
 				'html'    => false,
 				'item_id' => $user->ID,
@@ -608,7 +608,7 @@ function bb_core_prime_mentions_results() {
 		// $user->display_name column is viewer-agnostic; the friends branch below already
 		// resolves it, and bp_disable_profile_sync() is effectively always false, so the raw
 		// branch previously ran on every request.
-		$result->name    = bp_core_get_user_displayname( $user->ID );
+		$result->name    = bboss_core_get_user_displayname( $user->ID );
 		$result->user_id = $user->ID;
 
 		$members[] = $result;
@@ -616,9 +616,9 @@ function bb_core_prime_mentions_results() {
 
 	$friends = array();
 
-	if ( bp_is_active( 'friends' ) ) {
+	if ( bboss_is_active( 'friends' ) ) {
 
-		if ( friends_get_total_friend_count( get_current_user_id() ) > 30 ) {
+		if ( bboss_friends_get_total_friend_count( get_current_user_id() ) > 30 ) {
 			return;
 		}
 
@@ -629,12 +629,12 @@ function bb_core_prime_mentions_results() {
 			'user_id'         => get_current_user_id(),
 		);
 
-		$friends_query = new BP_User_Query( $friends_query );
+		$friends_query = new BBoss_User_Query( $friends_query );
 
 		foreach ( $friends_query->results as $user ) {
 			$result        = new stdClass();
-			$result->ID    = bp_activity_get_user_mentionname( $user->ID );
-			$result->image = bp_core_fetch_avatar(
+			$result->ID    = bboss_activity_get_user_mentionname( $user->ID );
+			$result->image = bboss_core_fetch_avatar(
 				array(
 					'html'    => false,
 					'item_id' => $user->ID,
@@ -645,7 +645,7 @@ function bb_core_prime_mentions_results() {
 			// carry a name part this viewer is denied, and profile sync has no bearing on that.
 			// Both arms of the branch that used to stand here had become identical, which read as
 			// though sync still changed the answer.
-			$result->name    = bp_core_get_user_displayname( $user->ID );
+			$result->name    = bboss_core_get_user_displayname( $user->ID );
 			$result->user_id = $user->ID;
 
 			$friends[] = $result;
@@ -662,8 +662,8 @@ function bb_core_prime_mentions_results() {
 	);
 }
 
-add_action( 'bp_activity_mentions_prime_results', 'bb_core_prime_mentions_results' );
-add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results' );
+add_action( 'bp_activity_mentions_prime_results', 'bboss_core_prime_mentions_results' );
+add_action( 'bbp_forums_mentions_prime_results', 'bboss_core_prime_mentions_results' );
 
 /**
  * Get member last active difference in minutes.
@@ -675,9 +675,9 @@ add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results
  *
  * @return string Return string if time difference within minutes otherwise $last_activity.
  */
-function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
+function bboss_get_member_last_active_within_minutes( $last_activity, $user_id ) {
 
-	$last_active_date = bp_get_user_last_activity( $user_id );
+	$last_active_date = bboss_get_user_last_activity( $user_id );
 	if ( empty( $last_active_date ) ) {
 		return $last_activity;
 	}
@@ -688,13 +688,13 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
 	$last_active_timestamp = gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
 
 	// Difference in seconds.
-	$since_diff = bp_core_current_time( true, 'timestamp' ) - $last_active_timestamp;
+	$since_diff = bboss_core_current_time( true, 'timestamp' ) - $last_active_timestamp;
 	if ( $since_diff < HOUR_IN_SECONDS && $since_diff >= 0 ) {
 
-		$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_interval() + bb_presence_time_span() );
+		$online_default_time = apply_filters( 'bb_default_online_presence_time', bboss_presence_interval() + bboss_presence_time_span() );
 
 		if ( $online_default_time >= $since_diff ) {
-			return esc_html__( 'Active now', 'buddyboss' );
+			return esc_html__( 'Active now', 'buddyboss-platform' );
 		}
 	}
 
@@ -710,7 +710,7 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
  *
  * @return array Associative array of allowed tags and attributes.
  */
-function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
+function bboss_members_allow_html_tags( $bbp_allow_tags = array() ) {
 	// Allow tag attributes for xprofile datas.
 	$bbp_allow_tags = array_merge( $bbp_allow_tags, wp_kses_allowed_html( 'post' ) );
 
@@ -738,20 +738,20 @@ function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
 }
 
 // Load Account Settings Notifications.
-add_action( 'bp_loaded', 'bb_load_members_account_settings_notifications' );
+add_action( 'bp_loaded', 'bboss_load_members_account_settings_notifications' );
 
 /**
  * Register the Account Settings notifications.
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_load_members_account_settings_notifications() {
-	if ( class_exists( 'BP_Members_Mentions_Notification' ) ) {
-		BP_Members_Mentions_Notification::instance();
+function bboss_load_members_account_settings_notifications() {
+	if ( class_exists( 'BBoss_Members_Mentions_Notification' ) ) {
+		BBoss_Members_Mentions_Notification::instance();
 	}
 
-	if ( class_exists( 'BP_Members_Notification' ) ) {
-		BP_Members_Notification::instance();
+	if ( class_exists( 'BBoss_Members_Notification' ) ) {
+		BBoss_Members_Notification::instance();
 	}
 }
 
@@ -760,14 +760,14 @@ function bb_load_members_account_settings_notifications() {
  *
  * @since BuddyBoss 2.0.0
  */
-function bb_load_member_type_label_custom_css() {
-	if ( true === bp_member_type_enable_disable() ) {
-		$registered_member_types = bp_get_member_types();
+function bboss_load_member_type_label_custom_css() {
+	if ( true === bboss_member_type_enable_disable() ) {
+		$registered_member_types = bboss_get_member_types();
 		$cache_key               = 'bb-member-type-label-css';
 		$member_type_custom_css  = wp_cache_get( $cache_key, 'bp_member_member_type' );
 		if ( false === $member_type_custom_css && ! empty( $registered_member_types ) ) {
 			foreach ( $registered_member_types as $type ) {
-				$label_color_data = function_exists( 'bb_get_member_type_label_colors' ) ? bb_get_member_type_label_colors( $type ) : '';
+				$label_color_data = function_exists( 'bboss_get_member_type_label_colors' ) ? bboss_get_member_type_label_colors( $type ) : '';
 				if (
 					isset( $label_color_data ) &&
 					isset( $label_color_data['color_type'] ) &&
@@ -786,9 +786,9 @@ function bb_load_member_type_label_custom_css() {
 	}
 
 	// load the member card template.
-	bb_profile_card_template();
+	bboss_profile_card_template();
 }
-add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
+add_action( 'bp_enqueue_scripts', 'bboss_load_member_type_label_custom_css', 12 );
 
 /**
  * Remove all subscription associations for a given user.
@@ -799,9 +799,9 @@ add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
  *
  * @return bool Returns false on failure.
  */
-function bb_delete_user_subscriptions( $user_id ) {
+function bboss_delete_user_subscriptions( $user_id ) {
 	// Get the user subscriptions.
-	$all_subscriptions = bb_get_subscriptions(
+	$all_subscriptions = bboss_get_subscriptions(
 		array(
 			'blog_id' => false,
 			'user_id' => $user_id,
@@ -815,14 +815,14 @@ function bb_delete_user_subscriptions( $user_id ) {
 
 	if ( ! empty( $subscriptions ) ) {
 		foreach ( $subscriptions as $subscription ) {
-			bb_delete_subscription( $subscription );
+			bboss_delete_subscription( $subscription );
 		}
 	}
 
 	return true;
 }
-add_action( 'wpmu_delete_user', 'bb_delete_user_subscriptions' );
-add_action( 'delete_user', 'bb_delete_user_subscriptions' );
+add_action( 'wpmu_delete_user', 'bboss_delete_user_subscriptions' );
+add_action( 'delete_user', 'bboss_delete_user_subscriptions' );
 
 
 /**
@@ -834,10 +834,10 @@ add_action( 'delete_user', 'bb_delete_user_subscriptions' );
  *
  * @return array Repair list items.
  */
-function bb_repair_member_profile_links( $repair_list ) {
+function bboss_repair_member_profile_links( $repair_list ) {
 	$repair_list[] = array(
 		'bb-member-repair-profile-links',
-		__( 'Repair member profile links', 'buddyboss' ),
+		__( 'Repair member profile links', 'buddyboss-platform' ),
 		'bb_repair_member_profile_links_callback',
 	);
 
@@ -851,8 +851,8 @@ function bb_repair_member_profile_links( $repair_list ) {
  *
  * @return array|void
  */
-function bb_repair_member_profile_links_callback() {
-	if ( ! bp_is_active( 'members' ) ) {
+function bboss_repair_member_profile_links_callback() {
+	if ( ! bboss_is_active( 'members' ) ) {
 		return;
 	}
 
@@ -874,12 +874,12 @@ function bb_repair_member_profile_links_callback() {
 	);
 
 	if ( ! is_wp_error( $user_ids ) && ! empty( $user_ids ) ) {
-		bb_set_bulk_user_profile_slug( $user_ids );
+		bboss_set_bulk_user_profile_slug( $user_ids );
 
 		$total           = $offset + count( $user_ids );
 		$records_updated = sprintf(
 		/* translators: total user */
-			_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', $total, 'buddyboss' ),
+			_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', $total, 'buddyboss-platform' ),
 			$total
 		);
 
@@ -890,12 +890,12 @@ function bb_repair_member_profile_links_callback() {
 		);
 	} else {
 		/* translators: Status of current action. */
-		$statement = __( 'Profile unique identifier generated for all users; %s', 'buddyboss' );
+		$statement = __( 'Profile unique identifier generated for all users; %s', 'buddyboss-platform' );
 
 		// All done!
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
@@ -908,7 +908,7 @@ function bb_repair_member_profile_links_callback() {
  * @param int    $user_id     ID of user.
  * @param string $member_type Default selected member type.
  */
-function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member_type ) {
+function bboss_set_default_member_type_to_activate_user_on_admin( $user_id, $member_type ) {
 
 	if ( empty( $user_id ) || empty( $member_type ) ) {
 		return false;
@@ -917,14 +917,14 @@ function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member
 	if ( is_admin() ) {
 
 		// Assign the default member type to user.
-		bp_set_member_type( $user_id, '' );
-		bp_set_member_type( $user_id, $member_type );
+		bboss_set_member_type( $user_id, '' );
+		bboss_set_member_type( $user_id, $member_type );
 	} else {
 		// Assign the default member type to user.
-		bp_set_member_type( $user_id, '' );
-		bp_set_member_type( $user_id, $member_type );
+		bboss_set_member_type( $user_id, '' );
+		bboss_set_member_type( $user_id, $member_type );
 
-		$member_type_id                = bp_member_type_post_by_type( $member_type );
+		$member_type_id                = bboss_member_type_post_by_type( $member_type );
 		$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
 
 		if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
@@ -948,19 +948,19 @@ function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member
  *
  * @return void
  */
-function bb_generate_member_profile_slug_on_activate( $user_id ) {
+function bboss_generate_member_profile_slug_on_activate( $user_id ) {
 	if ( empty( $user_id ) ) {
 		return;
 	}
 
-	$username = bb_core_get_user_slug( $user_id );
+	$username = bboss_core_get_user_slug( $user_id );
 	if ( empty( $username ) ) {
-		bb_set_user_profile_slug( $user_id );
+		bboss_set_user_profile_slug( $user_id );
 	}
 }
 
-add_action( 'bp_core_signup_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
-add_action( 'bp_core_activated_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
+add_action( 'bp_core_signup_user', 'bboss_generate_member_profile_slug_on_activate', 10, 1 );
+add_action( 'bp_core_activated_user', 'bboss_generate_member_profile_slug_on_activate', 10, 1 );
 
 /**
  * Function to exclude the account settings related notification.
@@ -972,9 +972,9 @@ add_action( 'bp_core_activated_user', 'bb_generate_member_profile_slug_on_activa
  *
  * @return array
  */
-function bb_members_hide_account_settings_notifications( $where_conditions, $args ) {
+function bboss_members_hide_account_settings_notifications( $where_conditions, $args ) {
 
-	if ( ! bp_is_active( 'settings' ) ) {
+	if ( ! bboss_is_active( 'settings' ) ) {
 		$where_conditions['account_settings_exclude'] = "( component_action != 'bb_account_password' )";
 	}
 
@@ -992,13 +992,13 @@ function bb_members_hide_account_settings_notifications( $where_conditions, $arg
  *
  * @return void
  */
-function bb_member_remove_default_png_avatar_on_update_display_name( $old_value, $value, $option ) {
+function bboss_member_remove_default_png_avatar_on_update_display_name( $old_value, $value, $option ) {
 	if (
 		'bp-display-name-format' === $option &&
 		$old_value !== $value
 	) {
 		// Delete default SVG for users.
-		bb_delete_default_user_png_avatar( array(), false );
+		bboss_delete_default_user_png_avatar( array(), false );
 	}
 }
 
@@ -1011,9 +1011,9 @@ function bb_member_remove_default_png_avatar_on_update_display_name( $old_value,
  *
  * @return void
  */
-function bb_member_remove_default_png_avatar_on_deleted_user( $id ) {
+function bboss_member_remove_default_png_avatar_on_deleted_user( $id ) {
 	// Delete default PNG for users.
-	bb_delete_default_user_png_avatar( array( $id ) );
+	bboss_delete_default_user_png_avatar( array( $id ) );
 }
 
 /**
@@ -1021,8 +1021,8 @@ function bb_member_remove_default_png_avatar_on_deleted_user( $id ) {
  *
  * @since BuddyBoss 2.8.20
  */
-function bb_profile_card_template() {
-	bp_get_template_part( 'members/profile-card' );
+function bboss_profile_card_template() {
+	bboss_get_template_part( 'members/profile-card' );
 }
 
 /**
@@ -1034,7 +1034,7 @@ function bb_profile_card_template() {
  *      top of the list on the next fetch.
  *   2. Within each visibility group, oldest → newest so newly added types
  *      fall to the END of their group instead of the top (the upstream
- *      `bp_get_active_member_types()` default of `menu_order ASC, post_date
+ *      `bboss_get_active_member_types()` default of `menu_order ASC, post_date
  *      DESC` does the opposite).
  *
  * `FIELD( post_status, 'private' )` returns 1 for private rows and 0 for
@@ -1052,10 +1052,10 @@ function bb_profile_card_template() {
  *
  * @return string Filtered ORDER BY clause.
  */
-function bb_admin_member_types_listing_orderby( $orderby, $query ) {
+function bboss_admin_member_types_listing_orderby( $orderby, $query ) {
 	global $wpdb;
 
-	if ( bp_get_member_type_post_type() !== $query->get( 'post_type' ) ) {
+	if ( bboss_get_member_type_post_type() !== $query->get( 'post_type' ) ) {
 		return $orderby;
 	}
 
@@ -1065,7 +1065,7 @@ function bb_admin_member_types_listing_orderby( $orderby, $query ) {
 /**
  * Name a member may be shown under on a WordPress-core author surface, when BuddyBoss redacts it.
  *
- * The name a member is shown under is resolved by bp_core_get_user_displayname(), which applies
+ * The name a member is shown under is resolved by bboss_core_get_user_displayname(), which applies
  * profile-field visibility and the site-wide Display Name Format. WordPress core does not go
  * through it: several emitters read the raw `display_name` column straight off the user object, so
  * a name part the community hides is published on surfaces BuddyBoss never rendered - the author
@@ -1080,13 +1080,13 @@ function bb_admin_member_types_listing_orderby( $orderby, $query ) {
  * @param int $user_id ID of the member whose name is about to be emitted.
  * @return string|null The name to show instead, or null to leave the value alone.
  */
-function bb_core_get_redacted_core_author_name( $user_id ) {
+function bboss_core_get_redacted_core_author_name( $user_id ) {
 	$user_id = (int) $user_id;
 
 	// A resolution already in flight is reading the stored column as its own input; standing in
 	// front of that read would feed it a redacted name resolved for the wrong viewer, and recurse.
 	// See bb_core_is_resolving_user_displayname().
-	if ( empty( $user_id ) || bb_core_is_resolving_user_displayname() ) {
+	if ( empty( $user_id ) || bboss_core_is_resolving_user_displayname() ) {
 		return null;
 	}
 
@@ -1129,7 +1129,7 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 	 * Filters whether BuddyBoss name visibility is applied to WordPress core author output.
 	 *
 	 * Covers the author archive title, the author feed, the feed autodiscovery link, `the_author`
-	 * and the `wp/v2/users` REST response - and, through BB_SEO_Helpers::get_name_map(), the name an
+	 * and the `wp/v2/users` REST response - and, through BBoss_SEO_Helpers::get_name_map(), the name an
 	 * SEO plugin emits in its Open Graph tags and JSON-LD graph. That sixth surface is easy to miss:
 	 * returning false here does not only restore core's own author output, it also stops Yoast,
 	 * Rank Math and All in One SEO being corrected, so a hidden surname reaches social scrapers.
@@ -1156,7 +1156,7 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 	// `pre_option_bp-display-name-format` are both filterable, so one request can see more than one.
 	static $memo = array();
 
-	$memo_key = $user_id . ':' . bb_core_get_viewer_user_id() . ':' . bp_core_display_name_format();
+	$memo_key = $user_id . ':' . bboss_core_get_viewer_user_id() . ':' . bboss_core_display_name_format();
 
 	if ( array_key_exists( $memo_key, $memo ) ) {
 		return $memo[ $memo_key ];
@@ -1170,7 +1170,7 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 	// The raw wp_users row. get_userdata() resolves to the same value, but wraps the row in a
 	// WP_User whose construction also loads and maps the member's capabilities - work nothing here
 	// reads, and this function is called once per member by BB_SEO_Helpers::get_name_map().
-	$user_data = BP_Core_User::get_core_userdata( $user_id );
+	$user_data = BBoss_Core_User::get_core_userdata( $user_id );
 
 	if ( empty( $user_data ) ) {
 		$memo[ $memo_key ] = null;
@@ -1194,7 +1194,7 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 	// get_the_author_display_name / the_author / document_title_parts / rest_prepare_user would
 	// return the raw `display_name` column for the rest of the request. A throw from any filter
 	// on the resolution must not be able to do that.
-	bb_core_is_resolving_user_displayname( true );
+	bboss_core_is_resolving_user_displayname( true );
 
 	// Emitting an author name is a READ. The resolution reaches
 	// bp_xprofile_get_member_display_name(), which back-fills a missing name field from the user
@@ -1203,13 +1203,13 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 	// set newly routes here. Suspend the repair for the duration, exactly as the search re-test
 	// does: the resolved value is identical, only the persistence is skipped, and the resolver
 	// declines to memoise while suspended so the next legitimate call still performs it.
-	bb_xprofile_is_display_name_self_heal_suspended( true );
+	bboss_xprofile_is_display_name_self_heal_suspended( true );
 
 	try {
-		$resolved = bp_core_get_user_displayname( $user_id );
+		$resolved = bboss_core_get_user_displayname( $user_id );
 	} finally {
-		bb_xprofile_is_display_name_self_heal_suspended( false );
-		bb_core_is_resolving_user_displayname( false );
+		bboss_xprofile_is_display_name_self_heal_suspended( false );
+		bboss_core_is_resolving_user_displayname( false );
 	}
 
 	// bp_core_get_user_displayname() runs its result through esc_html(), and the
@@ -1247,12 +1247,12 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
  * @param int    $user_id      ID of the author.
  * @return string The name this viewer may see.
  */
-function bb_core_filter_the_author_display_name( $display_name, $user_id ) {
-	$redacted = bb_core_get_redacted_core_author_name( $user_id );
+function bboss_core_filter_the_author_display_name( $display_name, $user_id ) {
+	$redacted = bboss_core_get_redacted_core_author_name( $user_id );
 
 	return ( null === $redacted ) ? $display_name : $redacted;
 }
-add_filter( 'get_the_author_display_name', 'bb_core_filter_the_author_display_name', 10, 2 );
+add_filter( 'get_the_author_display_name', 'bboss_core_filter_the_author_display_name', 10, 2 );
 
 /**
  * Apply member name visibility to `get_the_author()`.
@@ -1266,16 +1266,16 @@ add_filter( 'get_the_author_display_name', 'bb_core_filter_the_author_display_na
  * @param string|null $display_name The stored display name, or null when there is no author.
  * @return string|null The name this viewer may see.
  */
-function bb_core_filter_the_author( $display_name ) {
+function bboss_core_filter_the_author( $display_name ) {
 	if ( ! is_string( $display_name ) || '' === $display_name || empty( $GLOBALS['authordata']->ID ) ) {
 		return $display_name;
 	}
 
-	$redacted = bb_core_get_redacted_core_author_name( $GLOBALS['authordata']->ID );
+	$redacted = bboss_core_get_redacted_core_author_name( $GLOBALS['authordata']->ID );
 
 	return ( null === $redacted ) ? $display_name : $redacted;
 }
-add_filter( 'the_author', 'bb_core_filter_the_author' );
+add_filter( 'the_author', 'bboss_core_filter_the_author' );
 
 /**
  * Apply member name visibility to the author archive's document title.
@@ -1292,7 +1292,7 @@ add_filter( 'the_author', 'bb_core_filter_the_author' );
  * @param array $title_parts Parts of the document title.
  * @return array The same parts with the author's hidden name part removed.
  */
-function bb_core_filter_author_document_title_parts( $title_parts ) {
+function bboss_core_filter_author_document_title_parts( $title_parts ) {
 	if ( empty( $title_parts['title'] ) || ! is_string( $title_parts['title'] ) || ! is_author() ) {
 		return $title_parts;
 	}
@@ -1303,24 +1303,24 @@ function bb_core_filter_author_document_title_parts( $title_parts ) {
 		return $title_parts;
 	}
 
-	$redacted = bb_core_get_redacted_core_author_name( $author->ID );
+	$redacted = bboss_core_get_redacted_core_author_name( $author->ID );
 
 	if ( null === $redacted ) {
 		return $title_parts;
 	}
 
-	$title_parts['title'] = bb_core_replace_names( $title_parts['title'], array( $author->display_name => $redacted ) );
+	$title_parts['title'] = bboss_core_replace_names( $title_parts['title'], array( $author->display_name => $redacted ) );
 
 	return $title_parts;
 }
-add_filter( 'document_title_parts', 'bb_core_filter_author_document_title_parts' );
+add_filter( 'document_title_parts', 'bboss_core_filter_author_document_title_parts' );
 
 /**
  * Apply member name visibility to an author-archive title produced by an SEO plugin.
  *
  * WordPress offers `pre_get_document_title` first and returns that value untouched
  * when it is non-empty, so an SEO plugin answering there short-circuits the whole title build:
- * `document_title_parts` never fires and bb_core_filter_author_document_title_parts() never sees
+ * `document_title_parts` never fires and bboss_core_filter_author_document_title_parts() never sees
  * the title. Every major one does this - All in One SEO at priority 99999, Yoast, Rank Math - and
  * they resolve the name from the WP_User object's `display_name` PROPERTY, a plain read that no
  * WordPress filter can intercept. Without this the raw surname reaches `<title>` on exactly the
@@ -1336,7 +1336,7 @@ add_filter( 'document_title_parts', 'bb_core_filter_author_document_title_parts'
  * @param string $title The title an earlier filter produced, or '' when none has.
  * @return string The same title with the author's hidden name part removed.
  */
-function bb_core_filter_author_pre_document_title( $title ) {
+function bboss_core_filter_author_pre_document_title( $title ) {
 	if ( ! is_string( $title ) || '' === $title || ! is_author() ) {
 		return $title;
 	}
@@ -1347,15 +1347,15 @@ function bb_core_filter_author_pre_document_title( $title ) {
 		return $title;
 	}
 
-	$redacted = bb_core_get_redacted_core_author_name( $author->ID );
+	$redacted = bboss_core_get_redacted_core_author_name( $author->ID );
 
 	if ( null === $redacted ) {
 		return $title;
 	}
 
-	return bb_core_replace_names( $title, array( $author->display_name => $redacted ) );
+	return bboss_core_replace_names( $title, array( $author->display_name => $redacted ) );
 }
-add_filter( 'pre_get_document_title', 'bb_core_filter_author_pre_document_title', 1000000 );
+add_filter( 'pre_get_document_title', 'bboss_core_filter_author_pre_document_title', 1000000 );
 
 /**
  * Apply member name visibility to the `wp/v2/users` REST response.
@@ -1370,7 +1370,7 @@ add_filter( 'pre_get_document_title', 'bb_core_filter_author_pre_document_title'
  * @param WP_User          $user     The user object used to create the response.
  * @return WP_REST_Response The response, with `name` resolved for the requesting viewer.
  */
-function bb_core_filter_rest_prepare_user( $response, $user ) {
+function bboss_core_filter_rest_prepare_user( $response, $user ) {
 	if ( ! ( $response instanceof WP_REST_Response ) || empty( $user->ID ) ) {
 		return $response;
 	}
@@ -1413,7 +1413,7 @@ function bb_core_filter_rest_prepare_user( $response, $user ) {
 		return $response;
 	}
 
-	$redacted = bb_core_get_redacted_core_author_name( $user->ID );
+	$redacted = bboss_core_get_redacted_core_author_name( $user->ID );
 
 	if ( null === $redacted ) {
 		return $response;
@@ -1424,7 +1424,7 @@ function bb_core_filter_rest_prepare_user( $response, $user ) {
 
 	return $response;
 }
-add_filter( 'rest_prepare_user', 'bb_core_filter_rest_prepare_user', 10, 2 );
+add_filter( 'rest_prepare_user', 'bboss_core_filter_rest_prepare_user', 10, 2 );
 
 /**
  * Stop `wp/v2/users?search=` confirming a name part the viewer may not read.
@@ -1446,10 +1446,10 @@ add_filter( 'rest_prepare_user', 'bb_core_filter_rest_prepare_user', 10, 2 );
  * @param WP_REST_Request $request       The REST request.
  * @return array Arguments, with the members whose only match is withheld excluded.
  */
-function bb_core_filter_rest_user_query_name_matches( $prepared_args, $request ) {
+function bboss_core_filter_rest_user_query_name_matches( $prepared_args, $request ) {
 	global $wpdb;
 
-	if ( empty( $prepared_args['search'] ) || ! function_exists( 'bb_xprofile_get_hidden_name_search_user_ids' ) ) {
+	if ( empty( $prepared_args['search'] ) || ! function_exists( 'bboss_xprofile_get_hidden_name_search_user_ids' ) ) {
 		return $prepared_args;
 	}
 
@@ -1466,9 +1466,9 @@ function bb_core_filter_rest_user_query_name_matches( $prepared_args, $request )
 		return $prepared_args;
 	}
 
-	$viewer_id = bb_core_get_viewer_user_id();
+	$viewer_id = bboss_core_get_viewer_user_id();
 
-	if ( function_exists( 'bb_xprofile_search_viewer_sees_every_name' ) && bb_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
+	if ( function_exists( 'bboss_xprofile_search_viewer_sees_every_name' ) && bboss_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
 		return $prepared_args;
 	}
 
@@ -1479,7 +1479,7 @@ function bb_core_filter_rest_user_query_name_matches( $prepared_args, $request )
 	}
 
 	$like   = '%' . $wpdb->esc_like( $term ) . '%';
-	$hidden = bb_xprofile_get_hidden_name_search_user_ids( array( $like ), $viewer_id );
+	$hidden = bboss_xprofile_get_hidden_name_search_user_ids( array( $like ), $viewer_id );
 
 	// false is "this could not be resolved", never "nobody is hidden". The member directory answers
 	// that by withholding the display_name leg only, so this does the same: the members whose name
@@ -1487,7 +1487,7 @@ function bb_core_filter_rest_user_query_name_matches( $prepared_args, $request )
 	// no results at all would turn one transient database error into a site-wide empty member
 	// search, which is a worse failure than the one being guarded against.
 	if ( false === $hidden ) {
-		$hidden = bb_core_get_name_only_search_match_ids( $like );
+		$hidden = bboss_core_get_name_only_search_match_ids( $like );
 	}
 
 	$hidden = array_filter( array_map( 'intval', (array) $hidden ) );
@@ -1499,7 +1499,7 @@ function bb_core_filter_rest_user_query_name_matches( $prepared_args, $request )
 	// A member whose PUBLIC identifier also matches is a legitimate hit and must stay. Excluding by
 	// user id removes them from every search column at once, so without this a member called `bbde`
 	// vanished from a search for "b" because their withheld surname happened to match too.
-	$hidden = bb_core_remove_public_identifier_matches( $hidden, $like );
+	$hidden = bboss_core_remove_public_identifier_matches( $hidden, $like );
 
 	if ( empty( $hidden ) ) {
 		return $prepared_args;
@@ -1512,14 +1512,14 @@ function bb_core_filter_rest_user_query_name_matches( $prepared_args, $request )
 }
 // Priority 99: buddyboss-app registers its own `rest_user_query` listeners at 10 and overwrites
 // `include`/`exclude` wholesale, so a lower priority here is silently discarded.
-add_filter( 'rest_user_query', 'bb_core_filter_rest_user_query_name_matches', 99, 2 );
+add_filter( 'rest_user_query', 'bboss_core_filter_rest_user_query_name_matches', 99, 2 );
 
 /**
  * Members whose display_name matches a term, used when the visibility producer cannot answer.
  *
  * Members whose PUBLIC identifier matches the term in its own right are excluded here, in SQL,
  * rather than read into PHP and removed afterwards. The caller drops them either way - it applies
- * bb_core_remove_public_identifier_matches() to whichever branch produced the ids - so the set it
+ * bboss_core_remove_public_identifier_matches() to whichever branch produced the ids - so the set it
  * ends up with is identical; what changes is that a term matching most of the member table no
  * longer becomes a 70,000-element PHP array and a 410 KB `IN ( … )` statement on the way there.
  * This runs on the fail-closed path, which an anonymous REST search reaches on a transient read
@@ -1530,7 +1530,7 @@ add_filter( 'rest_user_query', 'bb_core_filter_rest_user_query_name_matches', 99
  * @param string $like LIKE pattern, already escaped.
  * @return int[] User ids whose display_name matches and whose public identifier does not.
  */
-function bb_core_get_name_only_search_match_ids( $like ) {
+function bboss_core_get_name_only_search_match_ids( $like ) {
 	global $wpdb;
 
 	// NOT ( login OR nicename ) expressed as NOT login AND NOT nicename - the same set
@@ -1560,7 +1560,7 @@ function bb_core_get_name_only_search_match_ids( $like ) {
  * @param string $like     LIKE pattern, already escaped.
  * @return int[] The subset that matched ONLY on a withheld name part.
  */
-function bb_core_remove_public_identifier_matches( $user_ids, $like ) {
+function bboss_core_remove_public_identifier_matches( $user_ids, $like ) {
 	global $wpdb;
 
 	$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
@@ -1606,7 +1606,7 @@ function bb_core_remove_public_identifier_matches( $user_ids, $like ) {
  * had it published in the link preview of every post they wrote, to an unauthenticated GET, in JSON
  * and in XML - from a page whose own HTML was correctly redacted.
  *
- * bb_core_get_redacted_core_author_name() returns null in wp-admin, during a re-entrant resolution
+ * bboss_core_get_redacted_core_author_name() returns null in wp-admin, during a re-entrant resolution
  * and when `bb_core_redact_core_author_name` is filtered false; the payload is left untouched in all
  * three, so no other oEmbed consumer changes behaviour.
  *
@@ -1616,12 +1616,12 @@ function bb_core_remove_public_identifier_matches( $user_ids, $like ) {
  * @param WP_Post $post The post object.
  * @return array The response data, with the author name resolved for this viewer.
  */
-function bb_core_filter_oembed_author_name( $data, $post ) {
+function bboss_core_filter_oembed_author_name( $data, $post ) {
 	if ( ! is_array( $data ) || empty( $data['author_name'] ) || empty( $post->post_author ) ) {
 		return $data;
 	}
 
-	$redacted = bb_core_get_redacted_core_author_name( (int) $post->post_author );
+	$redacted = bboss_core_get_redacted_core_author_name( (int) $post->post_author );
 
 	if ( null === $redacted ) {
 		return $data;
@@ -1631,4 +1631,4 @@ function bb_core_filter_oembed_author_name( $data, $post ) {
 
 	return $data;
 }
-add_filter( 'oembed_response_data', 'bb_core_filter_oembed_author_name', 10, 2 );
+add_filter( 'oembed_response_data', 'bboss_core_filter_oembed_author_name', 10, 2 );

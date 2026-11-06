@@ -17,6 +17,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param string $path Path to pusher integration.
  */
-function bb_pusher_integration_url( $path = '' ) {
-	return trailingslashit( buddypress()->integration_url ) . 'pusher/' . trim( $path, '/\\' );
+function bboss_pusher_integration_url( $path = '' ) {
+	return trailingslashit( bboss()->integration_url ) . 'pusher/' . trim( $path, '/\\' );
 }

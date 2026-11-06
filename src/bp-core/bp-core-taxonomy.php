@@ -18,10 +18,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.2.0
  */
-function bp_register_default_taxonomies() {
+function bboss_register_default_taxonomies() {
 	// Profile Type.
 	register_taxonomy(
-		bp_get_member_type_tax_name(),
+		bboss_get_member_type_tax_name(),
 		'user',
 		array(
 			'public' => false,
@@ -30,25 +30,25 @@ function bp_register_default_taxonomies() {
 
 	// Email type.
 	register_taxonomy(
-		bp_get_email_tax_type(),
-		bp_get_email_post_type(),
+		bboss_get_email_tax_type(),
+		bboss_get_email_post_type(),
 		apply_filters(
 			'bp_register_email_tax_type',
 			array(
-				'description'   => __( 'BuddyBoss email types', 'buddyboss' ),
-				'labels'        => bp_get_email_tax_type_labels(),
-				'meta_box_cb'   => 'bp_email_tax_type_metabox',
+				'description'   => __( 'BuddyBoss email types', 'buddyboss-platform' ),
+				'labels'        => bboss_get_email_tax_type_labels(),
+				'meta_box_cb'   => 'bboss_email_tax_type_metabox',
 				'public'        => false,
 				'query_var'     => false,
 				'rewrite'       => false,
 				'show_in_menu'  => false,
 				'show_tagcloud' => false,
-				'show_ui'       => bp_is_root_blog() && bp_current_user_can( 'bp_moderate' ),
+				'show_ui'       => bboss_is_root_blog() && bboss_current_user_can( 'bp_moderate' ),
 			)
 		)
 	);
 }
-add_action( 'bp_register_taxonomies', 'bp_register_default_taxonomies' );
+add_action( 'bp_register_taxonomies', 'bboss_register_default_taxonomies' );
 
 /**
  * Gets the ID of the site that BP should use for taxonomy term storage.
@@ -60,8 +60,8 @@ add_action( 'bp_register_taxonomies', 'bp_register_default_taxonomies' );
  * @param string $taxonomy Taxonomy slug to check for.
  * @return int
  */
-function bp_get_taxonomy_term_site_id( $taxonomy = '' ) {
-	$site_id = bp_get_root_blog_id();
+function bboss_get_taxonomy_term_site_id( $taxonomy = '' ) {
+	$site_id = bboss_get_root_blog_id();
 
 	/**
 	 * Filters the ID of the site where BP should store taxonomy terms.
@@ -87,13 +87,13 @@ function bp_get_taxonomy_term_site_id( $taxonomy = '' ) {
  * @param bool         $append    Optional. True to append terms to existing terms. Default: false.
  * @return array Array of term taxonomy IDs.
  */
-function bp_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) {
-	$site_id = bp_get_taxonomy_term_site_id( $taxonomy );
+function bboss_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) {
+	$site_id = bboss_get_taxonomy_term_site_id( $taxonomy );
 
 	$switched = false;
 	if ( $site_id !== get_current_blog_id() ) {
 		switch_to_blog( $site_id );
-		bp_register_taxonomies();
+		bboss_register_taxonomies();
 		$switched = true;
 	}
 
@@ -130,11 +130,11 @@ function bp_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) {
  * @param array        $args       See {@see wp_get_object_terms()}.
  * @return array
  */
-function bp_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
+function bboss_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
 	// Different taxonomies must be stored on different sites.
 	$taxonomy_site_map = array();
 	foreach ( (array) $taxonomies as $taxonomy ) {
-		$taxonomy_site_id                         = bp_get_taxonomy_term_site_id( $taxonomy );
+		$taxonomy_site_id                         = bboss_get_taxonomy_term_site_id( $taxonomy );
 		$taxonomy_site_map[ $taxonomy_site_id ][] = $taxonomy;
 	}
 
@@ -143,7 +143,7 @@ function bp_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
 		$switched = false;
 		if ( $taxonomy_site_id !== get_current_blog_id() ) {
 			switch_to_blog( $taxonomy_site_id );
-			bp_register_taxonomies();
+			bboss_register_taxonomies();
 			$switched = true;
 		}
 
@@ -172,13 +172,13 @@ function bp_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
  * @param string       $taxonomy  Taxonomy name.
  * @return bool|WP_Error True on success, false or WP_Error on failure.
  */
-function bp_remove_object_terms( $object_id, $terms, $taxonomy ) {
-	$site_id = bp_get_taxonomy_term_site_id( $taxonomy );
+function bboss_remove_object_terms( $object_id, $terms, $taxonomy ) {
+	$site_id = bboss_get_taxonomy_term_site_id( $taxonomy );
 
 	$switched = false;
 	if ( $site_id !== get_current_blog_id() ) {
 		switch_to_blog( $site_id );
-		bp_register_taxonomies();
+		bboss_register_taxonomies();
 		$switched = true;
 	}
 
@@ -205,7 +205,7 @@ function bp_remove_object_terms( $object_id, $terms, $taxonomy ) {
 /**
  * Retrieve IDs of objects in valid taxonomies and terms for BuddyPress-related taxonomies.
  *
- * Note that object IDs are from the `bp_get_taxonomy_term_site_id()`, which on some
+ * Note that object IDs are from the `bboss_get_taxonomy_term_site_id()`, which on some
  * multisite configurations may not be the same as the current site.
  *
  * @since BuddyPress 2.7.0
@@ -220,11 +220,11 @@ function bp_remove_object_terms( $object_id, $terms, $taxonomy ) {
  *                        the array can be empty, meaning that there are no $object_ids found. When
  *                        object IDs are found, an array of those IDs will be returned.
  */
-function bp_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
+function bboss_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
 	// Different taxonomies may be stored on different sites.
 	$taxonomy_site_map = array();
 	foreach ( (array) $taxonomies as $taxonomy ) {
-		$taxonomy_site_id                         = bp_get_taxonomy_term_site_id( $taxonomy );
+		$taxonomy_site_id                         = bboss_get_taxonomy_term_site_id( $taxonomy );
 		$taxonomy_site_map[ $taxonomy_site_id ][] = $taxonomy;
 	}
 
@@ -233,7 +233,7 @@ function bp_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
 		$switched = false;
 		if ( $taxonomy_site_id !== get_current_blog_id() ) {
 			switch_to_blog( $taxonomy_site_id );
-			bp_register_taxonomies();
+			bboss_register_taxonomies();
 			$switched = true;
 		}
 
@@ -251,7 +251,7 @@ function bp_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
 /**
  * Get term data for terms in BuddyPress taxonomies.
  *
- * Note that term data is from the `bp_get_taxonomy_term_site_id()`, which on some
+ * Note that term data is from the `bboss_get_taxonomy_term_site_id()`, which on some
  * multisite configurations may not be the same as the current site.
  *
  * @since BuddyPress 2.7.0
@@ -267,13 +267,13 @@ function bp_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
  * @return WP_Term|bool WP_Term instance on success. Will return false if `$taxonomy` does not exist
  *                      or `$term` was not found.
  */
-function bp_get_term_by( $field, $value, $taxonomy = '', $output = OBJECT, $filter = 'raw' ) {
-	$site_id = bp_get_taxonomy_term_site_id( $taxonomy );
+function bboss_get_term_by( $field, $value, $taxonomy = '', $output = OBJECT, $filter = 'raw' ) {
+	$site_id = bboss_get_taxonomy_term_site_id( $taxonomy );
 
 	$switched = false;
 	if ( $site_id !== get_current_blog_id() ) {
 		switch_to_blog( $site_id );
-		bp_register_taxonomies();
+		bboss_register_taxonomies();
 		$switched = true;
 	}
 

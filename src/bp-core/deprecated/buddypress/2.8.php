@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool
  */
-function bp_core_admin_is_running_php53_or_greater() {
+function bboss_core_admin_is_running_php53_or_greater() {
 	_deprecated_function( __FUNCTION__, '2.8' );
 	return version_compare( PHP_VERSION, '5.3', '>=' );
 }
@@ -31,15 +31,15 @@ function bp_core_admin_is_running_php53_or_greater() {
  * @since BuddyPress 2.7.0
  * @deprecated BuddyPress 2.8.0
  */
-function bp_core_admin_maybe_disable_update_row_for_php53_requirement() {
-	if ( bp_core_admin_is_running_php53_or_greater() ) {
+function bboss_core_admin_maybe_disable_update_row_for_php53_requirement() {
+	if ( bboss_core_admin_is_running_php53_or_greater() ) {
 		return;
 	}
 
-	$loader = basename( constant( 'BP_PLUGIN_DIR' ) ) . '/bp-loader.php';
+	$loader = basename( constant( 'BBOSS_PLUGIN_DIR' ) ) . '/bp-loader.php';
 
 	remove_action( "after_plugin_row_{$loader}", 'wp_plugin_update_row', 10 );
-	add_action( "after_plugin_row_{$loader}", 'bp_core_admin_php52_plugin_row', 10, 2 );
+	add_action( "after_plugin_row_{$loader}", 'bboss_core_admin_php52_plugin_row', 10, 2 );
 }
 
 /**
@@ -50,38 +50,14 @@ function bp_core_admin_maybe_disable_update_row_for_php53_requirement() {
  * @since BuddyPress 2.7.0
  * @deprecated BuddyPress 2.8.0
  */
-function bp_core_admin_maybe_remove_from_update_core() {
-	if ( bp_core_admin_is_running_php53_or_greater() ) {
+function bboss_core_admin_maybe_remove_from_update_core() {
+	if ( bboss_core_admin_is_running_php53_or_greater() ) {
 		return;
 	}
 
 	// Add filter to remove BP from the update plugins list.
-	add_filter( 'site_transient_update_plugins', 'bp_core_admin_remove_buddypress_from_update_transient' );
 }
 
-/**
- * Filter callback to remove BuddyPress from the update plugins list.
- *
- * Attached to the 'site_transient_update_plugins' filter.
- *
- * @since BuddyPress 2.7.0
- * @deprecated BuddyPress 2.8.0
- *
- * @param  object $retval Object of plugin update data.
- * @return object
- */
-function bp_core_admin_remove_buddypress_from_update_transient( $retval ) {
-	_deprecated_function( __FUNCTION__, '2.8' );
-
-	$loader = basename( constant( 'BP_PLUGIN_DIR' ) ) . '/bp-loader.php';
-
-	// Remove BP from update plugins list.
-	if ( isset( $retval->response[ $loader ] ) ) {
-		unset( $retval->response[ $loader ] );
-	}
-
-	return $retval;
-}
 
 /**
  * Outputs a replacement for WP's default update notice, when site is not running PHP 5.3 or greater.
@@ -98,7 +74,7 @@ function bp_core_admin_remove_buddypress_from_update_transient( $retval ) {
  * @param array  $plugin_data Data about the BuddyPress plugin, as returned by the
  *                            plugins API.
  */
-function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
+function bboss_core_admin_php52_plugin_row( $file, $plugin_data ) {
 	_deprecated_function( __FUNCTION__, '2.8' );
 
 	if ( is_multisite() && ! is_network_admin() ) {
@@ -137,12 +113,18 @@ function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
 		$active_class .= ' not-shiny';
 	}
 
-	echo '<tr class="plugin-update-tr' . $active_class . '" id="' . esc_attr( $response->slug . '-update' ) . '" data-slug="' . esc_attr( $response->slug ) . '" data-plugin="' . esc_attr( $file ) . '"><td colspan="' . esc_attr( $wp_list_table->get_column_count() ) . '" class="plugin-update colspanchange"><div class="update-message inline notice notice-error notice-alt">';
+	echo '<tr class="plugin-update-tr' . esc_attr( $active_class ) . '" id="' . esc_attr( $response->slug . '-update' ) . '" data-slug="' . esc_attr( $response->slug ) . '" data-plugin="' . esc_attr( $file ) . '"><td colspan="' . esc_attr( $wp_list_table->get_column_count() ) . '" class="plugin-update colspanchange"><div class="update-message inline notice notice-error notice-alt">';
 
-	printf(
-		$p,
-		esc_html__( 'A BuddyPress update is available, but your system is not compatible.', 'buddyboss' ) . ' ' .
-		sprintf( __( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss' ), 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' )
+	echo wp_kses_post(
+		sprintf(
+			$p,
+			esc_html__( 'A BuddyPress update is available, but your system is not compatible.', 'buddyboss-platform' ) . ' ' .
+			sprintf(
+				/* translators: %s: URL to the Codex guide */
+				__( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss-platform' ),
+				esc_url( 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' )
+			)
+		)
 	);
 
 	echo '</div></td></tr>';
@@ -152,7 +134,7 @@ function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
 	 * See WP_Plugins_List_Table::single_row().
 	 */
 	$checkbox_id = 'checkbox_' . md5( $plugin_data['Name'] );
-	echo "<script type='text/javascript'>document.getElementById('$checkbox_id').disabled = true;</script>";
+	echo "<script type='text/javascript'>document.getElementById('" . esc_js( $checkbox_id ) . "').disabled = true;</script>";
 }
 
 /**
@@ -161,7 +143,7 @@ function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
  * @since BuddyPress 2.7.0
  * @deprecated BuddyPress 2.8.0
  */
-function bp_core_admin_php53_admin_notice() {
+function bboss_core_admin_php53_admin_notice() {
 	_deprecated_function( __FUNCTION__, '2.8' );
 
 	// If not on the Plugins page, stop now.
@@ -173,30 +155,44 @@ function bp_core_admin_php53_admin_notice() {
 		return;
 	}
 
-	if ( bp_core_admin_is_running_php53_or_greater() ) {
+	if ( bboss_core_admin_is_running_php53_or_greater() ) {
 		return;
 	}
 
 	$notice_id = 'bp28-php53';
-	if ( bp_get_option( "bp-dismissed-notice-$notice_id" ) ) {
+	if ( bboss_get_option( "bp-dismissed-notice-$notice_id" ) ) {
 		return;
 	}
 
-	$bp  = buddypress();
-	$min = bp_core_get_minified_asset_suffix();
+	$bp  = bboss();
+	$min = bboss_core_get_minified_asset_suffix();
 
 	wp_enqueue_script(
 		'bp-dismissible-admin-notices',
 		"{$bp->plugin_url}bp-core/admin/js/dismissible-admin-notices{$min}.js",
 		array( 'jquery' ),
-		bp_get_version(),
+		bboss_get_version(),
 		true
 	);
 	?>
 
 	<div id="message" class="error notice is-dismissible bp-is-dismissible" data-noticeid="<?php echo esc_attr( $notice_id ); ?>">
-		<p><strong><?php esc_html_e( 'Your site is not ready for BuddyPress 2.8.', 'buddyboss' ); ?></strong></p>
-		<p><?php printf( esc_html__( 'Your site is currently running PHP version %s, while BuddyPress 2.8 will require version 5.3+.', 'buddyboss' ), esc_html( phpversion() ) ); ?> <?php printf( __( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss' ), 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' ); ?></p>
+		<p><strong><?php esc_html_e( 'Your site is not ready for BuddyPress 2.8.', 'buddyboss-platform' ); ?></strong></p>
+		<p>
+			<?php
+			/* translators: %s: current PHP version */
+			printf( esc_html__( 'Your site is currently running PHP version %s, while BuddyPress 2.8 will require version 5.3+.', 'buddyboss-platform' ), esc_html( phpversion() ) );
+			?>
+			<?php
+			echo wp_kses_post(
+				sprintf(
+					/* translators: %s: URL to the Codex guide */
+					__( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss-platform' ),
+					esc_url( 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' )
+				)
+			);
+			?>
+		</p>
 		<?php wp_nonce_field( "bp-dismissible-notice-$notice_id", "bp-dismissible-nonce-$notice_id" ); ?>
 	</div>
 	<?php

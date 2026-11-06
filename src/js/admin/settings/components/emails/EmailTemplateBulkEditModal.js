@@ -108,7 +108,7 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 			return;
 		}
 		if ( ! status && ! emailType ) {
-			setError( __( 'Please select at least one change to apply.', 'buddyboss' ) );
+			setError( __( 'Please select at least one change to apply.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -131,14 +131,14 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 					onSaved( response.data );
 				}
 			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to update.', 'buddyboss' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to update.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
 			setIsSaving( false );
-			setError( __( 'An error occurred. Please try again.', 'buddyboss' ) );
+			setError( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
 		} );
 	};
 
@@ -158,15 +158,15 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 	}
 
 	var statusOptions = [
-		{ label: __( 'No Change', 'buddyboss' ), value: '' },
-		{ label: __( 'Published', 'buddyboss' ), value: 'publish' },
-		{ label: __( 'Draft', 'buddyboss' ), value: 'draft' },
-		{ label: __( 'Pending Review', 'buddyboss' ), value: 'pending' },
+		{ label: __( 'No Change', 'buddyboss-platform' ), value: '' },
+		{ label: __( 'Published', 'buddyboss-platform' ), value: 'publish' },
+		{ label: __( 'Draft', 'buddyboss-platform' ), value: 'draft' },
+		{ label: __( 'Pending Review', 'buddyboss-platform' ), value: 'pending' },
 	];
 
 	return (
 		<Modal
-			title={ __( 'Bulk Edit', 'buddyboss' ) }
+			title={ __( 'Bulk Edit', 'buddyboss-platform' ) }
 			onRequestClose={ handleClose }
 			className="bb-admin-settings-modal bb-email-template-modal bb-email-template-modal--bulk-edit"
 			shouldCloseOnClickOutside={ false }
@@ -204,7 +204,7 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 				{ ! situations && (
 					<div className="bb-email-template-modal__field bb-email-template-modal__situation">
 						<label className="bb-email-template-modal__field-label">
-							{ __( 'Situation', 'buddyboss' ) }
+							{ __( 'Situation', 'buddyboss-platform' ) }
 						</label>
 						<div className="bb-email-template-modal__loading">
 							<Spinner />
@@ -214,7 +214,7 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 				{ situationTabs.length > 0 && (
 					<div className="bb-email-template-modal__field bb-email-template-modal__situation">
 						<label className="bb-email-template-modal__field-label">
-							{ __( 'Situation', 'buddyboss' ) }
+							{ __( 'Situation', 'buddyboss-platform' ) }
 						</label>
 						<TabPanel
 							className="bb-email-template-modal__situation-tabs"
@@ -243,7 +243,7 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 							} }
 						</TabPanel>
 						<p className="bb-email-template-modal__field-help">
-							{ __( 'Choose when this email will be sent.', 'buddyboss' ) }
+							{ __( 'Choose when this email will be sent.', 'buddyboss-platform' ) }
 						</p>
 					</div>
 				) }
@@ -251,7 +251,7 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 				{/* Status */}
 				<div className="bb-email-template-modal__field bb-email-template-modal__publish-fields">
 					<SelectControl
-						label={ __( 'Status', 'buddyboss' ) }
+						label={ __( 'Status', 'buddyboss-platform' ) }
 						value={ status }
 						options={ statusOptions }
 						onChange={ setStatus }
@@ -262,10 +262,10 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 
 			<div className="bb-admin-settings-modal__footer bb-email-template-modal__footer">
 				<Button variant="secondary" onClick={ handleClose } disabled={ isSaving }>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button variant="primary" onClick={ handleSave } isBusy={ isSaving } disabled={ isSaving || 0 === localItems.length }>
-					{ isSaving ? __( 'Saving...', 'buddyboss' ) : __( 'Save', 'buddyboss' ) }
+					{ isSaving ? __( 'Saving...', 'buddyboss-platform' ) : __( 'Save', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

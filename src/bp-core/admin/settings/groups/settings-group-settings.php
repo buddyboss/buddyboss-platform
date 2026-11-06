@@ -16,17 +16,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_groups_register_settings_panel_fields() {
+function bboss_groups_register_settings_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Group Settings
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'group_settings',
 		'group_settings',
 		array(
-			'title'       => __( 'Group Settings', 'buddyboss' ),
+			'title'       => __( 'Group Settings', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636124',
@@ -37,21 +37,21 @@ function bb_groups_register_settings_panel_fields() {
 	// `invert_value`: Legacy DB stores 1 = restricted. Toggle shows "Enable", so invert for display.
 	// Raw DB value preserved for backward compatibility with `bp_restrict_group_creation()`.
 	// Round-trip: toggle ON (Enable) → DB stores 0; toggle OFF (Disable) → DB stores 1.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_settings',
 		'group_settings',
 		array(
 			'name'              => 'bp_restrict_group_creation',
-			'label'             => __( 'Group Creation', 'buddyboss' ),
+			'label'             => __( 'Group Creation', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable social group creation by all members', 'buddyboss' ),
+			'description'       => __( 'Enable social group creation by all members', 'buddyboss-platform' ),
 			'help_text'         => sprintf(
 				/* translators: %s: Access Controls link. */
-				__( 'Administrators can always create groups, regardless of this setting. You can configure who can create groups in %s.', 'buddyboss' ),
-				'<a href="' . esc_url( bb_get_feature_settings_url( 'groups', 'access_controls' ) ) . '">' . __( 'Access Controls', 'buddyboss' ) . '</a>'
+				__( 'Administrators can always create groups, regardless of this setting. You can configure who can create groups in %s.', 'buddyboss-platform' ),
+				'<a href="' . esc_url( bboss_get_feature_settings_url( 'groups', 'access_controls' ) ) . '">' . __( 'Access Controls', 'buddyboss-platform' ) . '</a>'
 			),
-			'default'           => bp_restrict_group_creation(),
+			'default'           => bboss_restrict_group_creation(),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
 			'order'             => 10,
@@ -60,18 +60,18 @@ function bb_groups_register_settings_panel_fields() {
 
 	// FIELD: Subscriptions (conditional on notifications + activity/forums). Group subscriptions
 	// ship with BuddyBoss Add-ons, which unlocks this field; without it the field shows an upgrade badge.
-	if ( bp_is_active( 'notifications' ) && ( bp_is_active( 'activity' ) || bp_is_active( 'forums' ) ) ) {
-		bb_register_feature_field(
+	if ( bboss_is_active( 'notifications' ) && ( bboss_is_active( 'activity' ) || bboss_is_active( 'forums' ) ) ) {
+		bboss_register_feature_field(
 			'groups',
 			'group_settings',
 			'group_settings',
 			array(
 				'name'              => 'bb_enable_group_subscriptions',
-				'label'             => __( 'Subscriptions', 'buddyboss' ),
+				'label'             => __( 'Subscriptions', 'buddyboss-platform' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow members to subscribe to groups', 'buddyboss' ),
-				'help_text'         => __( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss' ),
-				'default'           => (int) bp_get_option( 'bb_enable_group_subscriptions', 1 ),
+				'description'       => __( 'Allow members to subscribe to groups', 'buddyboss-platform' ),
+				'help_text'         => __( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss-platform' ),
+				'default'           => (int) bboss_get_option( 'bb_enable_group_subscriptions', 1 ),
 				'sanitize_callback' => 'absint',
 				'order'             => 20,
 				'pro_only'          => true,
@@ -84,17 +84,17 @@ function bb_groups_register_settings_panel_fields() {
 	// FIELD: Group Messages (conditional on messages active).
 	// Note: Despite the option name "bp-disable-group-messages", the legacy UI treats
 	// value 1 as "Allow group messages" (checked). No inversion is needed.
-	if ( bp_is_active( 'messages' ) ) {
-		bb_register_feature_field(
+	if ( bboss_is_active( 'messages' ) ) {
+		bboss_register_feature_field(
 			'groups',
 			'group_settings',
 			'group_settings',
 			array(
 				'name'              => 'bp-disable-group-messages',
-				'label'             => __( 'Group Messages', 'buddyboss' ),
+				'label'             => __( 'Group Messages', 'buddyboss-platform' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow for sending group messages to group members', 'buddyboss' ),
-				'default'           => bp_disable_group_messages(),
+				'description'       => __( 'Allow for sending group messages to group members', 'buddyboss-platform' ),
+				'default'           => bboss_disable_group_messages(),
 				'sanitize_callback' => 'absint',
 				'order'             => 30,
 			)
@@ -112,12 +112,12 @@ function bb_groups_register_settings_panel_fields() {
 	// -------------------------------------------------------------------------
 	// SECTION: Subgroups
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'group_settings',
 		'subgroups',
 		array(
-			'title'       => __( 'Subgroups', 'buddyboss' ),
+			'title'       => __( 'Subgroups', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636126',
@@ -125,32 +125,32 @@ function bb_groups_register_settings_panel_fields() {
 	);
 
 	// FIELD: Hierarchies.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_settings',
 		'subgroups',
 		array(
 			'name'              => 'bp-enable-group-hierarchies',
-			'label'             => __( 'Hierarchies', 'buddyboss' ),
+			'label'             => __( 'Hierarchies', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow groups to have subgroups', 'buddyboss' ),
-			'default'           => bp_enable_group_hierarchies(),
+			'description'       => __( 'Allow groups to have subgroups', 'buddyboss-platform' ),
+			'default'           => bboss_enable_group_hierarchies(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
 	);
 
 	// FIELD: Hide Subgroups (depends on hierarchies).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_settings',
 		'subgroups',
 		array(
 			'name'              => 'bp-enable-group-hide-subgroups',
-			'label'             => __( 'Hide Subgroups', 'buddyboss' ),
+			'label'             => __( 'Hide Subgroups', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss' ),
-			'default'           => bp_enable_group_hide_subgroups(),
+			'description'       => __( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss-platform' ),
+			'default'           => bboss_enable_group_hide_subgroups(),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
 				'field' => 'bp-enable-group-hierarchies',
@@ -161,19 +161,19 @@ function bb_groups_register_settings_panel_fields() {
 	);
 
 	// FIELD: Restrict Invitations (depends on hierarchies).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_settings',
 		'subgroups',
 		array(
 			'name'              => 'bp-enable-group-restrict-invites',
-			'label'             => __( 'Restrict Invitations', 'buddyboss' ),
+			'label'             => __( 'Restrict Invitations', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Restrict subgroup invites to members of the parent group', 'buddyboss' ),
-			'help_text'         => __( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss' ),
-			'default'           => bp_enable_group_restrict_invites(),
+			'description'       => __( 'Restrict subgroup invites to members of the parent group', 'buddyboss-platform' ),
+			'help_text'         => __( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss-platform' ),
+			'default'           => bboss_enable_group_restrict_invites(),
 			'sanitize_callback' => 'absint',
-			'confirm_message'   => __( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss' ),
+			'confirm_message'   => __( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss-platform' ),
 			'conditional'       => array(
 				'field' => 'bp-enable-group-hierarchies',
 				'value' => true,

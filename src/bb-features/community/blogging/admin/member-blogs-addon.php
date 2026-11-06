@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Plugin basename.
  */
-function bb_member_blogging_plugin_file() {
+function bboss_member_blogging_plugin_file() {
 	return 'buddyboss-member-blogging/buddyboss-member-blogging.php';
 }
 
@@ -60,7 +60,7 @@ function bb_member_blogging_plugin_file() {
  *
  * @return string Plugin folder slug.
  */
-function bb_member_blogging_plugin_slug() {
+function bboss_member_blogging_plugin_slug() {
 	return 'buddyboss-member-blogging';
 }
 
@@ -71,7 +71,7 @@ function bb_member_blogging_plugin_slug() {
  *
  * @return bool True when both Mothership helper classes are loaded.
  */
-function bb_member_blogging_mothership_available() {
+function bboss_member_blogging_mothership_available() {
 	return class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
 		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
 }
@@ -83,7 +83,7 @@ function bb_member_blogging_mothership_available() {
  *
  * @return bool True when the Mothership connector reports an active license.
  */
-function bb_member_blogging_is_license_active() {
+function bboss_member_blogging_is_license_active() {
 	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
 		return false;
 	}
@@ -100,8 +100,8 @@ function bb_member_blogging_is_license_active() {
  *
  * @return string Admin URL for the license activation screen.
  */
-function bb_member_blogging_get_license_url() {
-	return bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+function bboss_member_blogging_get_license_url() {
+	return bboss_admin_license_screen_url();
 }
 
 /**
@@ -111,42 +111,15 @@ function bb_member_blogging_get_license_url() {
  * header): an unlicensed site can now switch the add-on on from this panel, so
  * the panel must not promise functionality that DRM will immediately deny.
  *
- * Two paths, because the registry is only half an answer:
- *
- * - Add-on ACTIVE — its `plugins_loaded` hook has run `BB_DRM_Registry::register_addon()`,
- *   so the registry is authoritative.
- * - Add-on INACTIVE — `register_addon()` never ran, and
- *   `should_lock_addon_features()` allows-by-default for unregistered slugs. It
- *   would return false regardless of a lockout that predates the deactivation
- *   (DRM events survive it; only a valid license clears them via
- *   `cleanup_addon_drm()`). Instantiate `BB_DRM_Addon` for the slug instead so
- *   the real policy — including the grace-period threshold — is reused rather
- *   than duplicated here.
  *
  * @since BuddyBoss 3.3.0
  *
  * @return bool True when the add-on's features are DRM-locked.
  */
-function bb_member_blogging_addon_is_drm_locked() {
-	if ( ! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
-		return false;
-	}
+function bboss_member_blogging_addon_is_drm_locked() {
+	$is_locked = false;
 
-	$slug = bb_member_blogging_plugin_slug();
-
-	if ( \BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::is_addon_registered( $slug ) ) {
-		return (bool) \BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::should_lock_addon_features( $slug );
-	}
-
-	if ( ! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Addon' ) ) {
-		return false;
-	}
-
-	// Constructing this is cheap and side-effect-light — it only registers a
-	// `bb_drm_addon_event_{slug}` callback, which fires from run(), never here.
-	$drm = new \BuddyBoss\Core\Admin\DRM\BB_DRM_Addon( $slug, __( 'Member Blogging', 'buddyboss' ) );
-
-	return (bool) $drm->should_lock_features();
+	return $is_locked;
 }
 
 /**
@@ -190,14 +163,14 @@ function bb_member_blogging_addon_is_drm_locked() {
  *                'not_installed', 'needs_license', 'not_in_plan',
  *                'api_unavailable'.
  */
-function bb_member_blogging_get_addon_state() {
+function bboss_member_blogging_get_addon_state() {
 	static $state = null;
 
 	if ( null !== $state ) {
 		return $state;
 	}
 
-	$plugin_file = bb_member_blogging_plugin_file();
+	$plugin_file = bboss_member_blogging_plugin_file();
 
 	if ( ! function_exists( 'is_plugin_active' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -214,26 +187,26 @@ function bb_member_blogging_get_addon_state() {
 		// (unlicensed past the grace period), offering a bare "Activate Plugin"
 		// promises a feature the add-on will refuse to load — surface the
 		// licence blocker instead.
-		$state = bb_member_blogging_addon_is_drm_locked() ? 'installed_locked' : 'installed_inactive';
+		$state = bboss_member_blogging_addon_is_drm_locked() ? 'installed_locked' : 'installed_inactive';
 
 		return $state;
 	}
 
 	// Not on disk from here down — an install is the only path forward, and the
 	// add-on is not on wordpress.org, so it needs the licensed add-on server.
-	if ( ! bb_member_blogging_mothership_available() ) {
+	if ( ! bboss_member_blogging_mothership_available() ) {
 		$state = 'not_in_plan';
 
 		return $state;
 	}
 
-	if ( ! bb_member_blogging_is_license_active() ) {
+	if ( ! bboss_member_blogging_is_license_active() ) {
 		$state = 'needs_license';
 
 		return $state;
 	}
 
-	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bb_member_blogging_plugin_slug() );
+	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bboss_member_blogging_plugin_slug() );
 
 	if ( ! empty( $product ) ) {
 		$state = 'not_installed';
@@ -265,7 +238,7 @@ function bb_member_blogging_get_addon_state() {
  *
  * @return string Resolved add-on state.
  */
-function bb_member_blogging_addon_state() {
+function bboss_member_blogging_addon_state() {
 	/**
 	 * Filters the resolved Member Blogging add-on state.
 	 *
@@ -275,7 +248,7 @@ function bb_member_blogging_addon_state() {
 	 *                      'installed_inactive', 'not_installed',
 	 *                      'needs_license', 'not_in_plan', 'api_unavailable'.
 	 */
-	return apply_filters( 'bb_member_blogging_addon_state', bb_member_blogging_get_addon_state() );
+	return apply_filters( 'bb_member_blogging_addon_state', bboss_member_blogging_get_addon_state() );
 }
 
 /**
@@ -294,9 +267,9 @@ function bb_member_blogging_addon_state() {
  *
  * @return array Field data overrides.
  */
-function bb_member_blogging_get_upsell_field_data() {
+function bboss_member_blogging_get_upsell_field_data() {
 	$defaults = array(
-		'empty_state_title'       => __( 'Member Blogging', 'buddyboss' ),
+		'empty_state_title'       => __( 'Member Blogging', 'buddyboss-platform' ),
 		'empty_state_description' => '',
 		'button_label'            => null,
 		'button_url'              => null,
@@ -311,7 +284,7 @@ function bb_member_blogging_get_upsell_field_data() {
 		'addon_busy_label'        => null,
 	);
 
-	$state = bb_member_blogging_addon_state();
+	$state = bboss_member_blogging_addon_state();
 
 	switch ( $state ) {
 
@@ -320,9 +293,9 @@ function bb_member_blogging_get_upsell_field_data() {
 			// BB_MEMBER_BLOG_VERSION — an outdated build. Point at the add-ons
 			// screen where the update is offered.
 			$data = array(
-				'empty_state_description' => __( 'The Member Blogging add-on is active but this version does not provide these settings. Update the add-on to continue.', 'buddyboss' ),
-				'button_label'            => __( 'Manage Add-ons', 'buddyboss' ),
-				'button_url'              => bp_get_admin_url( 'admin.php?page=buddyboss-addons' ),
+				'empty_state_description' => __( 'The Member Blogging add-on is active but this version does not provide these settings. Update the add-on to continue.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Manage Add-ons', 'buddyboss-platform' ),
+				'button_url'              => bboss_admin_addons_screen_url(),
 			);
 			break;
 
@@ -331,31 +304,31 @@ function bb_member_blogging_get_upsell_field_data() {
 			// grace period). Activating would boot straight into the add-on's
 			// locked mode, so lead with the actual blocker.
 			$data = array(
-				'empty_state_description' => __( 'The Member Blogging add-on is installed, but your BuddyBoss license is not active. Activate your license to use Member Blogging.', 'buddyboss' ),
-				'button_label'            => __( 'Activate License', 'buddyboss' ),
-				'button_url'              => bb_member_blogging_get_license_url(),
+				'empty_state_description' => __( 'The Member Blogging add-on is installed, but your BuddyBoss license is not active. Activate your license to use Member Blogging.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Activate License', 'buddyboss-platform' ),
+				'button_url'              => bboss_member_blogging_get_license_url(),
 			);
 			break;
 
 		case 'installed_inactive':
 			$data = array(
-				'empty_state_description' => __( 'The Member Blogging add-on is installed but not activated. Activate it to let your community members create blog posts from the frontend.', 'buddyboss' ),
-				'button_label'            => __( 'Activate Plugin', 'buddyboss' ),
+				'empty_state_description' => __( 'The Member Blogging add-on is installed but not activated. Activate it to let your community members create blog posts from the frontend.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Activate Plugin', 'buddyboss-platform' ),
 				'addon_action'            => 'bb_member_blogging_activate_plugin',
-				'addon_slug'              => bb_member_blogging_plugin_slug(),
+				'addon_slug'              => bboss_member_blogging_plugin_slug(),
 				'addon_nonce_key'         => 'ajaxNonce',
-				'addon_busy_label'        => __( 'Activating…', 'buddyboss' ),
+				'addon_busy_label'        => __( 'Activating…', 'buddyboss-platform' ),
 			);
 			break;
 
 		case 'not_installed':
 			$data = array(
-				'empty_state_description' => __( 'Member Blogging is included in your plan. Install the add-on to let your community members create blog posts from the frontend.', 'buddyboss' ),
-				'button_label'            => __( 'Install & Activate', 'buddyboss' ),
-				'addon_action'            => 'bb_member_blogging_install_plugin',
-				'addon_slug'              => bb_member_blogging_plugin_slug(),
-				'addon_nonce_key'         => 'ajaxNonce',
-				'addon_busy_label'        => __( 'Installing…', 'buddyboss' ),
+				'empty_state_description' => __( 'Member Blogging is included in your plan. Install the add-on to let your community members create blog posts from the frontend.', 'buddyboss-platform' ),
+				// Builds without the in-dashboard installer (the wordpress.org edition) link
+				// to the BuddyBoss account, where the add-on is downloaded for upload.
+				'button_label'            => __( 'Go to My Account', 'buddyboss-platform' ),
+				'button_url'              => 'https://www.buddyboss.com/my-account/',
+				'button_target'           => '_blank',
 			);
 			break;
 
@@ -366,9 +339,9 @@ function bb_member_blogging_get_upsell_field_data() {
 			// options on it. The description names the required plan so a site
 			// without Plus is not sent chasing a license it does not hold.
 			$data = array(
-				'empty_state_description' => __( 'Member Blogging is available with the Member Blogging add-on on the Plus plan. Activate your BuddyBoss license to install it.', 'buddyboss' ),
-				'button_label'            => __( 'Activate License', 'buddyboss' ),
-				'button_url'              => bb_member_blogging_get_license_url(),
+				'empty_state_description' => __( 'Member Blogging is available with the Member Blogging add-on on the Plus plan. Activate your BuddyBoss license to install it.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Activate License', 'buddyboss-platform' ),
+				'button_url'              => bboss_member_blogging_get_license_url(),
 			);
 			break;
 
@@ -378,20 +351,22 @@ function bb_member_blogging_get_upsell_field_data() {
 			// "Upgrade to Scale" button shown to a customer who already has Scale
 			// reads as a billing error on our side.
 			$data = array(
-				'empty_state_description' => __( 'We could not reach BuddyBoss to check which add-ons are in your plan. Check your connection and reload this page to try again.', 'buddyboss' ),
-				'button_label'            => __( 'Manage Add-ons', 'buddyboss' ),
-				'button_url'              => bp_get_admin_url( 'admin.php?page=buddyboss-addons' ),
+				'empty_state_description' => __( 'We could not reach BuddyBoss to check which add-ons are in your plan. Check your connection and reload this page to try again.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Manage Add-ons', 'buddyboss-platform' ),
+				'button_url'              => bboss_admin_addons_screen_url(),
 			);
 			break;
 
 		case 'not_in_plan':
 		default:
 			$data = array(
-				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
-				'button_label'            => __( 'Upgrade to Scale', 'buddyboss' ),
+				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Upgrade to Scale', 'buddyboss-platform' ),
 				// Fallback for when the catalog has no entry for this panel — see
-				// `button_url_from_catalog` in the defaults above.
-				'button_url'              => 'https://www.buddyboss.com/pricing/',
+				// `button_url_from_catalog` in the defaults above. Builds without
+				// pricing links (the wordpress.org edition) keep it empty, so the
+				// empty-state card renders no button.
+				'button_url'              => '',
 				'button_url_from_catalog' => true,
 				'button_target'           => '_blank',
 			);
@@ -429,7 +404,7 @@ function bb_member_blogging_get_upsell_field_data() {
  *
  * @return array Field data.
  */
-function bb_member_blogging_format_upsell_field_data( $field_data, $field, $feature_id ) {
+function bboss_member_blogging_format_upsell_field_data( $field_data, $field, $feature_id ) {
 	if ( 'blogging' !== $feature_id ) {
 		return $field_data;
 	}
@@ -439,7 +414,7 @@ function bb_member_blogging_format_upsell_field_data( $field_data, $field, $feat
 		return $field_data;
 	}
 
-	$overrides = bb_member_blogging_get_upsell_field_data();
+	$overrides = bboss_member_blogging_get_upsell_field_data();
 
 	// The formatter sanitizes its own output before this filter runs, so these
 	// late-added values are sanitized here instead.
@@ -468,7 +443,7 @@ function bb_member_blogging_format_upsell_field_data( $field_data, $field, $feat
 
 	return $field_data;
 }
-add_filter( 'bb_admin_settings_format_field_data', 'bb_member_blogging_format_upsell_field_data', 10, 3 );
+add_filter( 'bb_admin_settings_format_field_data', 'bboss_member_blogging_format_upsell_field_data', 10, 3 );
 
 /**
  * AJAX: activate the Member Blogging add-on.
@@ -481,9 +456,9 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_member_blogging_format_up
  *
  * @return void
  */
-function bb_member_blogging_ajax_activate_plugin() {
+function bboss_member_blogging_ajax_activate_plugin() {
 	if ( ! current_user_can( 'activate_plugins' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
 
@@ -491,10 +466,10 @@ function bb_member_blogging_ajax_activate_plugin() {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
 
-	$plugin_file = bb_member_blogging_plugin_file();
+	$plugin_file = bboss_member_blogging_plugin_file();
 
 	if ( ! file_exists( WP_PLUGIN_DIR . '/' . $plugin_file ) ) {
-		wp_send_json_error( array( 'message' => __( 'The Member Blogging add-on is not installed.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => __( 'The Member Blogging add-on is not installed.', 'buddyboss-platform' ) ) );
 	}
 
 	$result = activate_plugin( $plugin_file );
@@ -506,7 +481,7 @@ function bb_member_blogging_ajax_activate_plugin() {
 		}
 		wp_send_json_error(
 			array(
-				'message' => __( 'Plugin activation failed. Please try again.', 'buddyboss' ),
+				'message' => __( 'Plugin activation failed. Please try again.', 'buddyboss-platform' ),
 				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $result->get_error_message() : '',
 			)
 		);
@@ -514,97 +489,4 @@ function bb_member_blogging_ajax_activate_plugin() {
 
 	wp_send_json_success();
 }
-add_action( 'wp_ajax_bb_member_blogging_activate_plugin', 'bb_member_blogging_ajax_activate_plugin' );
-
-/**
- * AJAX: install and activate the Member Blogging add-on.
- *
- * The add-on ships from the BuddyBoss add-on server rather than wordpress.org,
- * so the authorized package URL can only be resolved through an activated
- * license. There is no generic `plugins_api()` fallback for that reason — a
- * wordpress.org lookup would only ever fail, and failing with a license message
- * is far more actionable.
- *
- * @since BuddyBoss 3.3.0
- *
- * @return void
- */
-function bb_member_blogging_ajax_install_plugin() {
-	if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
-	}
-	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
-
-	require_once ABSPATH . 'wp-admin/includes/file.php';
-	require_once ABSPATH . 'wp-admin/includes/misc.php';
-	require_once ABSPATH . 'wp-admin/includes/plugin.php';
-	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-
-	if ( ! bb_member_blogging_mothership_available() ) {
-		wp_send_json_error( array( 'message' => __( 'The Member Blogging add-on cannot be installed automatically on this site. Please install it manually.', 'buddyboss' ) ) );
-	}
-
-	if ( ! bb_member_blogging_is_license_active() ) {
-		wp_send_json_error(
-			array(
-				'message'     => __( 'Please activate your BuddyBoss license to install this add-on.', 'buddyboss' ),
-				'license_url' => bb_member_blogging_get_license_url(),
-			)
-		);
-	}
-
-	$product      = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bb_member_blogging_plugin_slug() );
-	$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
-
-	if ( '' === $download_url ) {
-		wp_send_json_error(
-			array(
-				'message'     => __( 'The Member Blogging add-on is not available under your current license.', 'buddyboss' ),
-				'license_url' => bb_member_blogging_get_license_url(),
-			)
-		);
-	}
-
-	$skin     = new WP_Ajax_Upgrader_Skin();
-	$upgrader = new Plugin_Upgrader( $skin );
-	$result   = $upgrader->install( $download_url );
-
-	if ( is_wp_error( $result ) || ! $result ) {
-		$detail = is_wp_error( $result ) ? $result->get_error_message() : '';
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces installer failures.
-			error_log( sprintf( 'BB Member Blogging: Plugin_Upgrader->install() failed: %s', $detail ) );
-		}
-		wp_send_json_error(
-			array(
-				'message' => __( 'Plugin installation failed. Please try again.', 'buddyboss' ),
-				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $detail : '',
-			)
-		);
-	}
-
-	// Prefer the basename the installer actually wrote — a repackaged zip can
-	// unpack to a different folder than the product slug implies.
-	$plugin_file = $upgrader->plugin_info();
-	if ( empty( $plugin_file ) ) {
-		$plugin_file = bb_member_blogging_plugin_file();
-	}
-
-	$activate = activate_plugin( $plugin_file );
-
-	if ( is_wp_error( $activate ) ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces post-install activation failures.
-			error_log( sprintf( 'BB Member Blogging: activate_plugin() failed after install: %s', $activate->get_error_message() ) );
-		}
-		wp_send_json_error(
-			array(
-				'message' => __( 'Plugin installed but activation failed. Please try again.', 'buddyboss' ),
-				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $activate->get_error_message() : '',
-			)
-		);
-	}
-
-	wp_send_json_success();
-}
-add_action( 'wp_ajax_bb_member_blogging_install_plugin', 'bb_member_blogging_ajax_install_plugin' );
+add_action( 'wp_ajax_bb_member_blogging_activate_plugin', 'bboss_member_blogging_ajax_activate_plugin' );

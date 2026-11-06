@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Replies_Ajax
+ * Class BBoss_Admin_Replies_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Replies_Ajax {
+class BBoss_Admin_Replies_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -61,7 +61,7 @@ class BB_Admin_Replies_Ajax {
 		add_action( 'bbp_trash_reply', $clear_counts );
 		add_action( 'bbp_spam_reply', $clear_counts );
 		add_action( 'bbp_unspam_reply', $clear_counts );
-		add_action( 'save_post_' . bbp_get_reply_post_type(), $clear_counts );
+		add_action( 'save_post_' . bboss_bbp_get_reply_post_type(), $clear_counts );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class BB_Admin_Replies_Ajax {
 		// cache is invalidated transparently. Keys are
 		// `bb_admin_forums_mine_count_{user}_v{version}` — bumping the version
 		// makes all old keys unreachable. Mirrors BB_Admin_Forums_Ajax::bb_clear_status_counts_cache().
-		bp_update_option( 'bb_admin_forums_mine_count_version', (int) bp_get_option( 'bb_admin_forums_mine_count_version', 0 ) + 1 );
+		bboss_update_option( 'bb_admin_forums_mine_count_version', (int) bboss_get_option( 'bb_admin_forums_mine_count_version', 0 ) + 1 );
 	}
 
 	/**
@@ -108,10 +108,10 @@ class BB_Admin_Replies_Ajax {
 	 * @return void
 	 */
 	public function get_replies() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'forums' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -135,7 +135,7 @@ class BB_Admin_Replies_Ajax {
 
 		// Build WP_Query args.
 		$query_args = array(
-			'post_type'      => bbp_get_reply_post_type(),
+			'post_type'      => bboss_bbp_get_reply_post_type(),
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
 			'post_status'    => array( 'publish', 'private', 'hidden', 'spam', 'future', 'pending', 'draft' ),
@@ -209,11 +209,11 @@ class BB_Admin_Replies_Ajax {
 			'bbp_admin_replies_column_headers',
 			array(
 				'cb'                => '<input type="checkbox" />',
-				'title'             => __( 'Reply', 'buddyboss' ),
-				'bbp_reply_forum'   => __( 'Forum', 'buddyboss' ),
-				'bbp_reply_topic'   => __( 'Discussion', 'buddyboss' ),
-				'bbp_reply_author'  => __( 'Author', 'buddyboss' ),
-				'bbp_reply_created' => __( 'Created', 'buddyboss' ),
+				'title'             => __( 'Reply', 'buddyboss-platform' ),
+				'bbp_reply_forum'   => __( 'Forum', 'buddyboss-platform' ),
+				'bbp_reply_topic'   => __( 'Discussion', 'buddyboss-platform' ),
+				'bbp_reply_author'  => __( 'Author', 'buddyboss-platform' ),
+				'bbp_reply_created' => __( 'Created', 'buddyboss-platform' ),
 			)
 		);
 
@@ -230,10 +230,10 @@ class BB_Admin_Replies_Ajax {
 		ob_start();
 
 		$status_labels_map = array(
-			'future'  => __( 'Scheduled', 'buddyboss' ),
-			'pending' => __( 'Pending Review', 'buddyboss' ),
-			'draft'   => __( 'Draft', 'buddyboss' ),
-			'spam'    => __( 'Spam', 'buddyboss' ),
+			'future'  => __( 'Scheduled', 'buddyboss-platform' ),
+			'pending' => __( 'Pending Review', 'buddyboss-platform' ),
+			'draft'   => __( 'Draft', 'buddyboss-platform' ),
+			'spam'    => __( 'Spam', 'buddyboss-platform' ),
 		);
 
 		$items = array();
@@ -252,7 +252,7 @@ class BB_Admin_Replies_Ajax {
 				: $content_raw;
 
 			$reply_status = get_post_status( $reply_id );
-			$is_spam      = bbp_get_spam_status_id() === $reply_status;
+			$is_spam      = bboss_bbp_get_spam_status_id() === $reply_status;
 
 			// Build status label for non-published items.
 			$status_label = '';
@@ -271,7 +271,7 @@ class BB_Admin_Replies_Ajax {
 				'author_id'     => $author_id,
 				'author_name'   => $user ? $user->display_name : '',
 				'author_avatar' => get_avatar_url( $author_id, array( 'size' => 32 ) ),
-				'permalink'     => bbp_get_reply_url( $reply_id ),
+				'permalink'     => bboss_bbp_get_reply_url( $reply_id ),
 				'post_status'   => $reply_status,
 				'is_spam'       => $is_spam,
 				'reply_to'      => (int) get_post_meta( $reply_id, '_bbp_reply_to', true ),
@@ -314,8 +314,8 @@ class BB_Admin_Replies_Ajax {
 			$forum_counts = $this->bb_get_forum_counts_for_replies();
 
 			$bulk_actions = array(
-				'bulk_edit'   => __( 'Edit', 'buddyboss' ),
-				'bulk_delete' => __( 'Delete', 'buddyboss' ),
+				'bulk_edit'   => __( 'Edit', 'buddyboss-platform' ),
+				'bulk_delete' => __( 'Delete', 'buddyboss-platform' ),
 			);
 
 			$columns = array();
@@ -340,7 +340,7 @@ class BB_Admin_Replies_Ajax {
 			$response['columns']      = $columns;
 
 			// Provide registered field definitions for the create modal.
-			$response['create_fields'] = bb_admin_meta_field_registry()->get_fields_data(
+			$response['create_fields'] = bboss_admin_meta_field_registry()->get_fields_data(
 				'replies',
 				(object) array(
 					'ID'           => 0,
@@ -348,7 +348,7 @@ class BB_Admin_Replies_Ajax {
 					'post_status'  => 'publish',
 					'post_parent'  => 0,
 					'post_author'  => get_current_user_id(),
-					'post_type'    => bbp_get_reply_post_type(),
+					'post_type'    => bboss_bbp_get_reply_post_type(),
 				)
 			);
 		}
@@ -382,8 +382,8 @@ class BB_Admin_Replies_Ajax {
 
 		global $wpdb;
 
-		$reply_type  = bbp_get_reply_post_type();
-		$spam_status = bbp_get_spam_status_id();
+		$reply_type  = bboss_bbp_get_reply_post_type();
+		$spam_status = bboss_bbp_get_spam_status_id();
 
 		// Get forum counts from reply meta.
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -439,23 +439,23 @@ class BB_Admin_Replies_Ajax {
 	 * @return void
 	 */
 	public function get_reply() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'forums' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$reply_id = isset( $_POST['reply_id'] ) ? absint( wp_unslash( $_POST['reply_id'] ) ) : 0;
 
 		if ( empty( $reply_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Reply ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Reply ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$reply = get_post( $reply_id );
 
-		if ( ! $reply || bbp_get_reply_post_type() !== $reply->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Reply not found.', 'buddyboss' ) ) );
+		if ( ! $reply || bboss_bbp_get_reply_post_type() !== $reply->post_type ) {
+			wp_send_json_error( array( 'message' => __( 'Reply not found.', 'buddyboss-platform' ) ) );
 		}
 
 		$forum_id = (int) get_post_meta( $reply_id, '_bbp_forum_id', true );
@@ -471,8 +471,8 @@ class BB_Admin_Replies_Ajax {
 			'topic_title'       => $topic_id ? get_the_title( $topic_id ) : '',
 			'reply_to'          => $reply_to,
 			'post_status'       => get_post_status( $reply_id ),
-			'permalink'         => bbp_get_reply_url( $reply_id ),
-			'registered_fields' => bb_admin_meta_field_registry()->get_fields_data( 'replies', $reply ),
+			'permalink'         => bboss_bbp_get_reply_url( $reply_id ),
+			'registered_fields' => bboss_admin_meta_field_registry()->get_fields_data( 'replies', $reply ),
 		);
 
 		/**
@@ -494,10 +494,10 @@ class BB_Admin_Replies_Ajax {
 	 * @return void
 	 */
 	public function create_reply() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'forums' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -511,17 +511,17 @@ class BB_Admin_Replies_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $content ) ) {
-			wp_send_json_error( array( 'message' => __( 'Reply content is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Reply content is required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $topic_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Discussion is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Discussion is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate that topic_id references an actual topic post type.
 		$topic_post = get_post( $topic_id );
-		if ( ! $topic_post || bbp_get_topic_post_type() !== $topic_post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid discussion.', 'buddyboss' ) ) );
+		if ( ! $topic_post || bboss_bbp_get_topic_post_type() !== $topic_post->post_type ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid discussion.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate visibility.
@@ -537,7 +537,7 @@ class BB_Admin_Replies_Ajax {
 
 		// Validate reply-to threading reference.
 		if ( ! empty( $reply_to ) ) {
-			$reply_to = bbp_validate_reply_to( $reply_to );
+			$reply_to = bboss_bbp_validate_reply_to( $reply_to );
 		}
 
 		// Handle scheduling (publish_mode=schedule with date + time).
@@ -605,12 +605,12 @@ class BB_Admin_Replies_Ajax {
 		// their post meta). Pass an empty stub object — native fields' save_value
 		// callbacks would fatal on null in PHP 8+; mutations on the stub are
 		// harmless because $reply_data is built directly from $_POST below.
-		bb_admin_meta_field_registry()->save_fields_data( 'replies', new \stdClass(), 'before' );
+		bboss_admin_meta_field_registry()->save_fields_data( 'replies', new \stdClass(), 'before' );
 
-		$reply_id = bbp_insert_reply( $reply_data, $reply_meta );
+		$reply_id = bboss_bbp_insert_reply( $reply_data, $reply_meta );
 
 		if ( ! $reply_id || is_wp_error( $reply_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to create reply.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to create reply.', 'buddyboss-platform' ) ) );
 		}
 
 		// Handle reply-to threading.
@@ -635,7 +635,7 @@ class BB_Admin_Replies_Ajax {
 		 * @param bool  $is_edit        Whether this is an edit (false for new).
 		 * @param int   $reply_to       Reply-to ID for threaded replies.
 		 */
-		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, array(), bbp_get_current_user_id(), false, $reply_to );
+		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, array(), bboss_bbp_get_current_user_id(), false, $reply_to );
 
 		/**
 		 * Fires after a new reply post extras in Settings 2.0 admin.
@@ -682,7 +682,7 @@ class BB_Admin_Replies_Ajax {
 		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
 		$created_reply = get_post( $reply_id );
 		if ( $created_reply ) {
-			bb_admin_meta_field_registry()->save_fields_data( 'replies', $created_reply, 'after' );
+			bboss_admin_meta_field_registry()->save_fields_data( 'replies', $created_reply, 'after' );
 		}
 
 		$this->bb_clear_forum_counts_cache();
@@ -690,7 +690,7 @@ class BB_Admin_Replies_Ajax {
 		wp_send_json_success(
 			array(
 				'reply_id' => $reply_id,
-				'message'  => __( 'Reply created successfully.', 'buddyboss' ),
+				'message'  => __( 'Reply created successfully.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -703,10 +703,10 @@ class BB_Admin_Replies_Ajax {
 	 * @return void
 	 */
 	public function save_reply() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'forums' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -721,12 +721,12 @@ class BB_Admin_Replies_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $reply_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Reply ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Reply ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$reply = get_post( $reply_id );
-		if ( ! $reply || bbp_get_reply_post_type() !== $reply->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Reply not found.', 'buddyboss' ) ) );
+		if ( ! $reply || bboss_bbp_get_reply_post_type() !== $reply->post_type ) {
+			wp_send_json_error( array( 'message' => __( 'Reply not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate visibility.
@@ -751,8 +751,8 @@ class BB_Admin_Replies_Ajax {
 		}
 
 		// Capture old parent IDs before update for count recalculation.
-		$old_topic_id = (int) bbp_get_reply_topic_id( $reply_id );
-		$old_forum_id = (int) bbp_get_reply_forum_id( $reply_id );
+		$old_topic_id = (int) bboss_bbp_get_reply_topic_id( $reply_id );
+		$old_forum_id = (int) bboss_bbp_get_reply_forum_id( $reply_id );
 
 		// Update post data.
 		$update_args = array(
@@ -821,8 +821,8 @@ class BB_Admin_Replies_Ajax {
 		// Validate topic_id references an actual topic if provided.
 		if ( ! empty( $topic_id ) ) {
 			$topic_post = get_post( $topic_id );
-			if ( ! $topic_post || bbp_get_topic_post_type() !== $topic_post->post_type ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid discussion.', 'buddyboss' ) ) );
+			if ( ! $topic_post || bboss_bbp_get_topic_post_type() !== $topic_post->post_type ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid discussion.', 'buddyboss-platform' ) ) );
 			}
 			$update_args['post_parent'] = $topic_id;
 		}
@@ -830,8 +830,8 @@ class BB_Admin_Replies_Ajax {
 		// Validate forum_id references an actual forum if provided.
 		if ( ! empty( $forum_id ) ) {
 			$forum_post = get_post( $forum_id );
-			if ( ! $forum_post || bbp_get_forum_post_type() !== $forum_post->post_type ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid forum.', 'buddyboss' ) ) );
+			if ( ! $forum_post || bboss_bbp_get_forum_post_type() !== $forum_post->post_type ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid forum.', 'buddyboss-platform' ) ) );
 			}
 		}
 
@@ -839,11 +839,11 @@ class BB_Admin_Replies_Ajax {
 		// populate $_POST with third-party metabox values before wp_update_post
 		// fires save_post_reply (where third-party plugins read $_POST and persist
 		// their post meta).
-		bb_admin_meta_field_registry()->save_fields_data( 'replies', $reply, 'before' );
+		bboss_admin_meta_field_registry()->save_fields_data( 'replies', $reply, 'before' );
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to update reply. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to update reply. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		// Update meta.
@@ -859,7 +859,7 @@ class BB_Admin_Replies_Ajax {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		if ( isset( $_POST['reply_to'] ) ) {
 			if ( $reply_to > 0 ) {
-				$reply_to = bbp_validate_reply_to( $reply_to );
+				$reply_to = bboss_bbp_validate_reply_to( $reply_to );
 				update_post_meta( $reply_id, '_bbp_reply_to', $reply_to );
 			} else {
 				delete_post_meta( $reply_id, '_bbp_reply_to' );
@@ -869,27 +869,27 @@ class BB_Admin_Replies_Ajax {
 		// Recalculate topic/forum counts when parent changes.
 		if ( ! empty( $topic_id ) && $topic_id !== $old_topic_id ) {
 			if ( ! empty( $old_topic_id ) ) {
-				bbp_update_topic( array( 'topic_id' => $old_topic_id ) );
+				bboss_bbp_update_topic( array( 'topic_id' => $old_topic_id ) );
 			}
-			bbp_update_topic( array( 'topic_id' => $topic_id ) );
+			bboss_bbp_update_topic( array( 'topic_id' => $topic_id ) );
 		}
 		if ( ! empty( $forum_id ) && $forum_id !== $old_forum_id ) {
 			if ( ! empty( $old_forum_id ) ) {
-				bbp_update_forum( array( 'forum_id' => $old_forum_id ) );
+				bboss_bbp_update_forum( array( 'forum_id' => $old_forum_id ) );
 			}
-			bbp_update_forum( array( 'forum_id' => $forum_id ) );
+			bboss_bbp_update_forum( array( 'forum_id' => $forum_id ) );
 		}
 
 		// Resolve actual IDs for hooks — use submitted values or fall back to current meta.
 		// This prevents passing 0 to hook listeners when IDs were not in the request.
-		$hook_topic_id = ! empty( $topic_id ) ? $topic_id : (int) bbp_get_reply_topic_id( $reply_id );
-		$hook_forum_id = ! empty( $forum_id ) ? $forum_id : (int) bbp_get_reply_forum_id( $reply_id );
+		$hook_topic_id = ! empty( $topic_id ) ? $topic_id : (int) bboss_bbp_get_reply_topic_id( $reply_id );
+		$hook_forum_id = ! empty( $forum_id ) ? $forum_id : (int) bboss_bbp_get_reply_forum_id( $reply_id );
 
 		/**
 		 * Fires after reply edit is complete in Settings 2.0 admin.
 		 *
 		 * This is the primary lifecycle hook that triggers reply metadata updates
-		 * via bbp_update_reply() registered in bp-forums/core/actions.php.
+		 * via bboss_bbp_update_reply() registered in bp-forums/core/actions.php.
 		 * Must fire before bbp_edit_reply_post_extras for correct ordering.
 		 *
 		 * @since BuddyBoss 3.0.0
@@ -946,14 +946,14 @@ class BB_Admin_Replies_Ajax {
 		$reply = get_post( $reply_id );
 
 		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
-		bb_admin_meta_field_registry()->save_fields_data( 'replies', $reply, 'after' );
+		bboss_admin_meta_field_registry()->save_fields_data( 'replies', $reply, 'after' );
 
 		$this->bb_clear_forum_counts_cache();
 
 		wp_send_json_success(
 			array(
 				'reply_id' => $reply_id,
-				'message'  => __( 'Reply updated successfully.', 'buddyboss' ),
+				'message'  => __( 'Reply updated successfully.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -966,36 +966,36 @@ class BB_Admin_Replies_Ajax {
 	 * @return void
 	 */
 	public function delete_reply() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'forums' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$reply_id = isset( $_POST['reply_id'] ) ? absint( wp_unslash( $_POST['reply_id'] ) ) : 0;
 
 		if ( empty( $reply_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Reply ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Reply ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$reply = get_post( $reply_id );
-		if ( ! $reply || bbp_get_reply_post_type() !== $reply->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Reply not found.', 'buddyboss' ) ) );
+		if ( ! $reply || bboss_bbp_get_reply_post_type() !== $reply->post_type ) {
+			wp_send_json_error( array( 'message' => __( 'Reply not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// wp_delete_post() triggers bbp_delete_reply() via `delete_post` hook
 		// (registered at bp-forums/core/actions.php:184). No explicit call needed.
 		$result = wp_delete_post( $reply_id, true );
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to delete reply.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to delete reply.', 'buddyboss-platform' ) ) );
 		}
 
 		$this->bb_clear_forum_counts_cache();
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Reply deleted successfully.', 'buddyboss' ),
+				'message' => __( 'Reply deleted successfully.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -1010,10 +1010,10 @@ class BB_Admin_Replies_Ajax {
 	 * @return void
 	 */
 	public function reply_bulk_action() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'forums' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -1023,18 +1023,18 @@ class BB_Admin_Replies_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $reply_ids_raw ) || empty( $do_action ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid bulk action parameters.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid bulk action parameters.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate action.
 		$allowed_actions = array( 'delete', 'spam', 'edit' );
 		if ( ! in_array( $do_action, $allowed_actions, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid bulk action.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid bulk action.', 'buddyboss-platform' ) ) );
 		}
 
 		$reply_ids = array_map( 'absint', array_filter( explode( ',', $reply_ids_raw ) ) );
 		if ( empty( $reply_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No replies selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No replies selected.', 'buddyboss-platform' ) ) );
 		}
 
 		// Cap bulk operations.
@@ -1042,7 +1042,7 @@ class BB_Admin_Replies_Ajax {
 
 		$processed = 0;
 		$failed    = 0;
-		$reply_pt  = bbp_get_reply_post_type();
+		$reply_pt  = bboss_bbp_get_reply_post_type();
 
 		// Prime the post cache in a single query to prevent N+1 get_post() calls.
 		// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
@@ -1069,11 +1069,11 @@ class BB_Admin_Replies_Ajax {
 					++$failed;
 				}
 			} elseif ( 'spam' === $do_action ) {
-				$is_spam = bbp_get_spam_status_id() === get_post_status( $rid );
+				$is_spam = bboss_bbp_get_spam_status_id() === get_post_status( $rid );
 				if ( $is_spam ) {
-					bbp_unspam_reply( $rid );
+					bboss_bbp_unspam_reply( $rid );
 				} else {
-					bbp_spam_reply( $rid );
+					bboss_bbp_spam_reply( $rid );
 				}
 				++$processed;
 			} elseif ( 'edit' === $do_action ) {
@@ -1101,13 +1101,13 @@ class BB_Admin_Replies_Ajax {
 				}
 
 				if ( $updated ) {
-					$topic_id = bbp_get_reply_topic_id( $rid );
-					$forum_id = bbp_get_reply_forum_id( $rid );
+					$topic_id = bboss_bbp_get_reply_topic_id( $rid );
+					$forum_id = bboss_bbp_get_reply_forum_id( $rid );
 
 					/**
 					 * Fires after a reply is bulk-edited in Settings 2.0 admin.
 					 *
-					 * Fires the primary lifecycle hook so that bbp_update_reply()
+					 * Fires the primary lifecycle hook so that bboss_bbp_update_reply()
 					 * runs count recalculation (registered at core/actions.php:178).
 					 *
 					 * @since BuddyBoss 3.0.0
@@ -1122,7 +1122,7 @@ class BB_Admin_Replies_Ajax {
 						array(),
 						get_post_field( 'post_author', $rid ),
 						true,
-						bbp_get_reply_to( $rid )
+						bboss_bbp_get_reply_to( $rid )
 					);
 					do_action( 'bbp_edit_reply_post_extras', $rid );
 					++$processed;
@@ -1140,7 +1140,7 @@ class BB_Admin_Replies_Ajax {
 		if ( 0 === $processed ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'No replies were processed.', 'buddyboss' ),
+					'message' => __( 'No replies were processed.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -1152,7 +1152,7 @@ class BB_Admin_Replies_Ajax {
 					'failed'    => $failed,
 					'message'   => sprintf(
 						/* translators: %d: number of replies updated. */
-						_n( '%d reply updated.', '%d replies updated.', $processed, 'buddyboss' ),
+						_n( '%d reply updated.', '%d replies updated.', $processed, 'buddyboss-platform' ),
 						$processed
 					),
 				)
@@ -1164,7 +1164,7 @@ class BB_Admin_Replies_Ajax {
 					'failed'    => $failed,
 					'message'   => sprintf(
 						/* translators: %d: number of replies processed. */
-						_n( '%d reply processed.', '%d replies processed.', $processed, 'buddyboss' ),
+						_n( '%d reply processed.', '%d replies processed.', $processed, 'buddyboss-platform' ),
 						$processed
 					),
 				)
@@ -1180,10 +1180,10 @@ class BB_Admin_Replies_Ajax {
 	 * @return void
 	 */
 	public function discussion_autocomplete() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'forums' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -1199,7 +1199,7 @@ class BB_Admin_Replies_Ajax {
 		// Resolve selected_id on initial load.
 		if ( $selected_id && empty( $term ) && 1 === $page ) {
 			$topic = get_post( $selected_id );
-			if ( $topic && bbp_get_topic_post_type() === $topic->post_type ) {
+			if ( $topic && bboss_bbp_get_topic_post_type() === $topic->post_type ) {
 				wp_send_json_success(
 					array(
 						'results'  => array(
@@ -1221,7 +1221,7 @@ class BB_Admin_Replies_Ajax {
 		}
 
 		$query_args = array(
-			'post_type'              => bbp_get_topic_post_type(),
+			'post_type'              => bboss_bbp_get_topic_post_type(),
 			'posts_per_page'         => $per_page + 1,
 			'paged'                  => $page,
 			'orderby'                => 'title',
@@ -1277,10 +1277,10 @@ class BB_Admin_Replies_Ajax {
 	 * @return void
 	 */
 	public function reply_autocomplete() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'forums' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -1296,7 +1296,7 @@ class BB_Admin_Replies_Ajax {
 		// Resolve selected_id on initial load.
 		if ( $selected_id && empty( $term ) && 1 === $page ) {
 			$reply = get_post( $selected_id );
-			if ( $reply && bbp_get_reply_post_type() === $reply->post_type ) {
+			if ( $reply && bboss_bbp_get_reply_post_type() === $reply->post_type ) {
 				$content_raw = wp_strip_all_tags( $reply->post_content );
 				$label       = mb_strlen( $content_raw ) > 80
 					? mb_substr( $content_raw, 0, 80 ) . '...'
@@ -1325,7 +1325,7 @@ class BB_Admin_Replies_Ajax {
 		}
 
 		$query_args = array(
-			'post_type'              => bbp_get_reply_post_type(),
+			'post_type'              => bboss_bbp_get_reply_post_type(),
 			'posts_per_page'         => $per_page + 1,
 			'paged'                  => $page,
 			'orderby'                => 'date',
@@ -1375,4 +1375,4 @@ class BB_Admin_Replies_Ajax {
 	}
 }
 
-new BB_Admin_Replies_Ajax();
+new BBoss_Admin_Replies_Ajax();

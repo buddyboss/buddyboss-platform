@@ -3,7 +3,7 @@
  * BuddyBoss Admin Settings - Forums Meta Fields Registration.
  *
  * Registers core forum fields for the Forum Create/Edit modals
- * in the Settings 2.0 admin interface via BB_Admin_Meta_Field_Registry.
+ * in the Settings 2.0 admin interface via BBoss_Admin_Meta_Field_Registry.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -20,10 +20,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  The registry instance.
  * @param string                       $component The component identifier.
  */
-function bb_forums_register_core_meta_fields( $registry, $component ) {
+function bboss_forums_register_core_meta_fields( $registry, $component ) {
 
 	// =========================================================================
 	// TAB: Details (order 10–90).
@@ -34,7 +34,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'name',
 		array(
-			'label'             => __( 'Forum Name', 'buddyboss' ),
+			'label'             => __( 'Forum Name', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 10,
@@ -54,7 +54,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'slug',
 		array(
-			'label'             => __( 'Permalink', 'buddyboss' ),
+			'label'             => __( 'Permalink', 'buddyboss-platform' ),
 			'type'              => 'permalink',
 			'tab'               => 'details',
 			'order'             => 20,
@@ -65,12 +65,12 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 			'get_extra_data'    => function ( $forum ) {
 				$site_url       = trailingslashit( get_site_url() );
 				$forum_slug     = get_option( '_bbp_forum_slug', 'forum' );
-				$is_child_forum = ! empty( $forum->ID ) && function_exists( 'bb_get_child_forum_group_ids' ) && ! empty( bb_get_child_forum_group_ids( $forum->ID ) );
+				$is_child_forum = ! empty( $forum->ID ) && function_exists( 'bboss_get_child_forum_group_ids' ) && ! empty( bboss_get_child_forum_group_ids( $forum->ID ) );
 
 				// For child group forums, show the full permalink instead of base URL.
 				if ( $is_child_forum ) {
 					return array(
-						'base_url'       => bbp_get_forum_permalink( $forum->ID ),
+						'base_url'       => bboss_bbp_get_forum_permalink( $forum->ID ),
 						'is_child_forum' => true,
 					);
 				}
@@ -91,7 +91,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'description',
 		array(
-			'label'             => __( 'Forum Description (Optional)', 'buddyboss' ),
+			'label'             => __( 'Forum Description (Optional)', 'buddyboss-platform' ),
 			'type'              => 'richtext',
 			'tab'               => 'details',
 			'order'             => 30,
@@ -111,7 +111,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'forum_type',
 		array(
-			'label'             => __( 'Type', 'buddyboss' ),
+			'label'             => __( 'Type', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 40,
@@ -121,17 +121,17 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 				if ( empty( $forum->ID ) ) {
 					return 'forum';
 				}
-				return bbp_get_forum_type( $forum->ID );
+				return bboss_bbp_get_forum_type( $forum->ID );
 			},
 			'get_options'       => function ( $forum ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
 				return array(
 					array(
 						'value' => 'forum',
-						'label' => __( 'Forum', 'buddyboss' ),
+						'label' => __( 'Forum', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'category',
-						'label' => __( 'Category', 'buddyboss' ),
+						'label' => __( 'Category', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -146,7 +146,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'forum_status',
 		array(
-			'label'             => __( 'Status', 'buddyboss' ),
+			'label'             => __( 'Status', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 42,
@@ -156,17 +156,17 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 				if ( empty( $forum->ID ) ) {
 					return 'open';
 				}
-				return bbp_get_forum_status( $forum->ID );
+				return bboss_bbp_get_forum_status( $forum->ID );
 			},
 			'get_options'       => function ( $forum ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
 				return array(
 					array(
 						'value' => 'open',
-						'label' => __( 'Open', 'buddyboss' ),
+						'label' => __( 'Open', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'closed',
-						'label' => __( 'Closed', 'buddyboss' ),
+						'label' => __( 'Closed', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -183,7 +183,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'visibility',
 		array(
-			'label'             => __( 'Visibility', 'buddyboss' ),
+			'label'             => __( 'Visibility', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 44,
@@ -199,15 +199,15 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'publish',
-						'label' => __( 'Public', 'buddyboss' ),
+						'label' => __( 'Public', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'private',
-						'label' => __( 'Private', 'buddyboss' ),
+						'label' => __( 'Private', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'hidden',
-						'label' => __( 'Hidden', 'buddyboss' ),
+						'label' => __( 'Hidden', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -226,10 +226,10 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'parent_id',
 		array(
-			'label'             => __( 'Parent Forum', 'buddyboss' ),
+			'label'             => __( 'Parent Forum', 'buddyboss-platform' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_forum_autocomplete',
-			'placeholder'       => __( 'None', 'buddyboss' ),
+			'placeholder'       => __( 'None', 'buddyboss-platform' ),
 			'tab'               => 'details',
 			'order'             => 60,
 			'layout'            => 'half',
@@ -256,7 +256,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'order',
 		array(
-			'label'             => __( 'Order', 'buddyboss' ),
+			'label'             => __( 'Order', 'buddyboss-platform' ),
 			'type'              => 'number',
 			'tab'               => 'details',
 			'order'             => 70,
@@ -272,4 +272,4 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		)
 	);
 }
-add_action( 'bb_register_forums_meta_fields', 'bb_forums_register_core_meta_fields', 1, 2 );
+add_action( 'bb_register_forums_meta_fields', 'bboss_forums_register_core_meta_fields', 1, 2 );

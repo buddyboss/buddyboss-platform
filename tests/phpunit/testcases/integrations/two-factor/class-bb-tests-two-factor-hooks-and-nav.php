@@ -22,7 +22,7 @@ class BB_Tests_Two_Factor_Hooks_And_Nav extends BB_Two_Factor_UnitTestCase {
 	 * The skip is hooked on the Social Login action.
 	 */
 	public function test_social_login_skip_is_hooked() {
-		$this->assertSame( 10, has_action( 'bb_sso_before_wp_login', 'bb_two_factor_skip_social_login_challenge' ) );
+		$this->assertSame( 10, has_action( 'bb_sso_before_wp_login', 'bboss_two_factor_skip_social_login_challenge' ) );
 	}
 
 	/**
@@ -127,9 +127,9 @@ class BB_Tests_Two_Factor_Hooks_And_Nav extends BB_Two_Factor_UnitTestCase {
 	 * @return object|false
 	 */
 	protected function get_security_subnav() {
-		$items = buddypress()->members->nav->get_secondary(
+		$items = bboss()->members->nav->get_secondary(
 			array(
-				'parent_slug' => bp_get_settings_slug(),
+				'parent_slug' => bboss_get_settings_slug(),
 				'slug'        => 'security',
 			),
 			false
@@ -156,7 +156,7 @@ class BB_Tests_Two_Factor_Hooks_And_Nav extends BB_Two_Factor_UnitTestCase {
 	 * Setup nav is hooked on settings setup nav.
 	 */
 	public function test_setup_nav_is_hooked_on_settings_setup_nav() {
-		$this->assertSame( 10, has_action( 'bp_settings_setup_nav', 'bb_two_factor_setup_nav' ) );
+		$this->assertSame( 10, has_action( 'bp_settings_setup_nav', 'bboss_two_factor_setup_nav' ) );
 	}
 
 	/**
@@ -166,7 +166,7 @@ class BB_Tests_Two_Factor_Hooks_And_Nav extends BB_Two_Factor_UnitTestCase {
 		$u = $this->create_member( 'tfa_r2_test_nav_own' );
 		self::set_current_user( $u );
 
-		$this->go_to_member_url( bp_core_get_user_domain( $u ) . 'settings/' );
+		$this->go_to_member_url( bboss_core_get_user_domain( $u ) . 'settings/' );
 
 		$item = $this->get_security_subnav();
 
@@ -186,7 +186,7 @@ class BB_Tests_Two_Factor_Hooks_And_Nav extends BB_Two_Factor_UnitTestCase {
 		$viewer = $this->create_member( 'tfa_r2_test_nav_viewer' );
 		self::set_current_user( $viewer );
 
-		$this->go_to_member_url( bp_core_get_user_domain( $owner ) . 'settings/' );
+		$this->go_to_member_url( bboss_core_get_user_domain( $owner ) . 'settings/' );
 
 		$item = $this->get_security_subnav();
 
@@ -201,7 +201,7 @@ class BB_Tests_Two_Factor_Hooks_And_Nav extends BB_Two_Factor_UnitTestCase {
 		$admin = $this->create_member( 'tfa_r2_test_nav_admin', 'administrator' );
 		self::set_current_user( $admin );
 
-		$this->go_to_member_url( bp_core_get_user_domain( $owner ) . 'settings/' );
+		$this->go_to_member_url( bboss_core_get_user_domain( $owner ) . 'settings/' );
 
 		$item = $this->get_security_subnav();
 
@@ -212,12 +212,12 @@ class BB_Tests_Two_Factor_Hooks_And_Nav extends BB_Two_Factor_UnitTestCase {
 	 * Security subnav absent when feature off.
 	 */
 	public function test_security_subnav_absent_when_feature_off() {
-		bp_update_option( 'bb-active-features', array( 'two-factor' => 0 ) );
+		bboss_update_option( 'bb-active-features', array( 'two-factor' => 0 ) );
 
 		$u = $this->create_member( 'tfa_r2_test_nav_feature_off' );
 		self::set_current_user( $u );
 
-		$this->go_to_member_url( bp_core_get_user_domain( $u ) . 'settings/' );
+		$this->go_to_member_url( bboss_core_get_user_domain( $u ) . 'settings/' );
 
 		$this->assertFalse( $this->get_security_subnav() );
 	}

@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Activity_Admin_Ajax
+ * Class BBoss_Activity_Admin_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Activity_Admin_Ajax {
+class BBoss_Activity_Admin_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -65,7 +65,7 @@ class BB_Activity_Admin_Ajax {
 	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_verify_request() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -83,8 +83,8 @@ class BB_Activity_Admin_Ajax {
 	public function bb_admin_get_activities() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'activity' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'activity' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -148,7 +148,7 @@ class BB_Activity_Admin_Ajax {
 
 		if ( $include_meta ) {
 			// Get spam count (ignoring search/filter).
-			$spams      = bp_activity_get(
+			$spams      = bboss_activity_get(
 				array(
 					'display_comments' => 'stream',
 					'show_hidden'      => true,
@@ -161,7 +161,7 @@ class BB_Activity_Admin_Ajax {
 			$spam_count = isset( $spams['total'] ) ? (int) $spams['total'] : 0;
 
 			// Get ham (non-spam) count for "All" tab (ignoring search/filter).
-			$hams      = bp_activity_get(
+			$hams      = bboss_activity_get(
 				array(
 					'display_comments' => 'stream',
 					'show_hidden'      => true,
@@ -188,7 +188,7 @@ class BB_Activity_Admin_Ajax {
 		if ( false !== $filter_query ) {
 			$get_args['filter_query'] = $filter_query;
 		}
-		$activities = bp_activity_get( $get_args );
+		$activities = bboss_activity_get( $get_args );
 
 		$total = isset( $activities['total'] ) ? (int) $activities['total'] : 0;
 		$items = array();
@@ -196,10 +196,10 @@ class BB_Activity_Admin_Ajax {
 		// Get columns (same as legacy BP_Activity_List_Table::get_columns()).
 		$default_columns = array(
 			'cb'       => '<input name type="checkbox" />',
-			'author'   => __( 'Author', 'buddyboss' ),
-			'comment'  => __( 'Activity', 'buddyboss' ),
-			'action'   => __( 'Action', 'buddyboss' ),
-			'response' => __( 'In Response To', 'buddyboss' ),
+			'author'   => __( 'Author', 'buddyboss-platform' ),
+			'comment'  => __( 'Activity', 'buddyboss-platform' ),
+			'action'   => __( 'Action', 'buddyboss-platform' ),
+			'response' => __( 'In Response To', 'buddyboss-platform' ),
 		);
 
 		/**
@@ -217,10 +217,10 @@ class BB_Activity_Admin_Ajax {
 		$custom_column_keys = array_diff( array_keys( $columns ), array_keys( $default_columns ) );
 
 		// Check if blog/forum commenting is disabled (same as legacy list table constructor).
-		$disable_blogforum_comments = bp_disable_blogforum_comments();
+		$disable_blogforum_comments = bboss_disable_blogforum_comments();
 
 		// Don't truncate activity items (same as legacy prepare_items).
-		remove_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
+		remove_filter( 'bp_get_activity_content_body', 'bboss_activity_truncate_entry', 5 );
 
 		if ( ! empty( $activities['activities'] ) ) {
 			// Prime user cache in bulk to avoid N+1 queries in the loop.
@@ -231,7 +231,7 @@ class BB_Activity_Admin_Ajax {
 
 			// Batch-fetch parent activities for comments to avoid N+1 queries.
 			$parent_activity_cache = array();
-			if ( ! $disable_blogforum_comments && bp_is_active( 'blogs' ) ) {
+			if ( ! $disable_blogforum_comments && bboss_is_active( 'blogs' ) ) {
 				$parent_ids = array();
 				foreach ( $activities['activities'] as $act ) {
 					if ( 'activity_comment' === $act->type && ! empty( $act->item_id ) ) {
@@ -240,7 +240,7 @@ class BB_Activity_Admin_Ajax {
 				}
 				if ( ! empty( $parent_ids ) ) {
 					$parent_ids     = array_unique( $parent_ids );
-					$parent_results = bp_activity_get(
+					$parent_results = bboss_activity_get(
 						array(
 							'in'               => $parent_ids,
 							'display_comments' => false,
@@ -287,23 +287,23 @@ class BB_Activity_Admin_Ajax {
 				$display_content = apply_filters( 'bp_activity_admin_comment_content', $display_content, $item_data );
 
 				// Check if activity can be commented on (same as legacy can_comment()).
-				$can_comment = bp_activity_type_supports( $activity_obj->type, 'comment-reply' );
+				$can_comment = bboss_activity_type_supports( $activity_obj->type, 'comment-reply' );
 
-				if ( ! $disable_blogforum_comments && bp_is_active( 'blogs' ) ) {
+				if ( ! $disable_blogforum_comments && bboss_is_active( 'blogs' ) ) {
 					$parent_activity = false;
 
-					if ( bp_activity_type_supports( $activity_obj->type, 'post-type-comment-tracking' ) ) {
+					if ( bboss_activity_type_supports( $activity_obj->type, 'post-type-comment-tracking' ) ) {
 						$parent_activity = $activity_obj;
 					} elseif ( 'activity_comment' === $activity_obj->type ) {
 						$parent_activity = isset( $parent_activity_cache[ (int) $activity_obj->item_id ] )
 							? $parent_activity_cache[ (int) $activity_obj->item_id ]
-							: new BP_Activity_Activity( $activity_obj->item_id );
-						$can_comment     = bp_activity_can_comment_reply( $activity_obj );
+							: new BBoss_Activity_Activity( $activity_obj->item_id );
+						$can_comment     = bboss_activity_can_comment_reply( $activity_obj );
 					}
 
-					if ( isset( $parent_activity->type ) && bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
-						bp_blogs_setup_activity_loop_globals( $parent_activity );
-						$can_comment = bp_blogs_can_comment_reply( true, $item_data );
+					if ( isset( $parent_activity->type ) && bboss_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
+						bboss_blogs_setup_activity_loop_globals( $parent_activity );
+						$can_comment = bboss_blogs_can_comment_reply( true, $item_data );
 					}
 				}
 
@@ -316,16 +316,16 @@ class BB_Activity_Admin_Ajax {
 				 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity listing.
 				 *
 				 * @param bool  $can_comment Whether an activity item can be commented on or not.
-				 * @param array $item_data   An array version of the BP_Activity_Activity object.
+				 * @param array $item_data   An array version of the BBoss_Activity_Activity object.
 				 */
 				$can_comment = apply_filters( 'bp_activity_list_table_can_comment', $can_comment, $item_data );
 
 				// Row actions (same as legacy column_comment() - filter so plugins can add/alter).
 				$row_actions = array(
-					'edit'   => __( 'Edit', 'buddyboss' ),
-					'spam'   => __( 'Spam', 'buddyboss' ),
-					'unspam' => __( 'Not Spam', 'buddyboss' ),
-					'delete' => __( 'Delete', 'buddyboss' ),
+					'edit'   => __( 'Edit', 'buddyboss-platform' ),
+					'spam'   => __( 'Spam', 'buddyboss-platform' ),
+					'unspam' => __( 'Not Spam', 'buddyboss-platform' ),
+					'delete' => __( 'Delete', 'buddyboss-platform' ),
 				);
 				if ( (int) $activity_obj->is_spam ) {
 					unset( $row_actions['spam'] );
@@ -372,7 +372,7 @@ class BB_Activity_Admin_Ajax {
 					// esc_url_raw drops any disallowed scheme (e.g. javascript:) before
 					// the URL hits the client, even if a consumer interpolates it without esc_url.
 					'primary_link'      => esc_url_raw( (string) $activity_obj->primary_link ),
-					'permalink'         => bp_activity_get_permalink( $activity_obj->id, $activity_obj ),
+					'permalink'         => bboss_activity_get_permalink( $activity_obj->id, $activity_obj ),
 					'item_id'           => (int) $activity_obj->item_id,
 					'secondary_item_id' => (int) $activity_obj->secondary_item_id,
 					'component'         => $activity_obj->component,
@@ -382,8 +382,8 @@ class BB_Activity_Admin_Ajax {
 					'is_root_activity'  => $is_root_activity,
 					'author'            => array(
 						'id'          => $user_id,
-						'name'        => bp_core_get_user_displayname( $user_id ),
-						'avatar_url'  => bp_core_fetch_avatar(
+						'name'        => bboss_core_get_user_displayname( $user_id ),
+						'avatar_url'  => bboss_core_fetch_avatar(
 							array(
 								'item_id' => $user_id,
 								'object'  => 'user',
@@ -393,7 +393,7 @@ class BB_Activity_Admin_Ajax {
 								'html'    => false,
 							)
 						),
-						'profile_url' => bp_core_get_user_domain( $user_id ),
+						'profile_url' => bboss_core_get_user_domain( $user_id ),
 					),
 				);
 
@@ -433,29 +433,29 @@ class BB_Activity_Admin_Ajax {
 
 		if ( $include_meta ) {
 			// Get activity action types for filter dropdown (flat list for backward compat).
-			if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
-				$activity_actions = bp_activity_admin_get_activity_actions();
+			if ( function_exists( 'bboss_activity_admin_get_activity_actions' ) ) {
+				$activity_actions = bboss_activity_admin_get_activity_actions();
 			}
 
 			// Build grouped activity actions for optgroup-style dropdown.
-			if ( function_exists( 'bp_activity_get_actions' ) ) {
-				foreach ( bp_activity_get_actions() as $component => $actions ) {
+			if ( function_exists( 'bboss_activity_get_actions' ) ) {
+				foreach ( bboss_activity_get_actions() as $component => $actions ) {
 					// Resolve component display name (same as legacy list table).
 					if ( 'profile' === $component ) {
 						$component = 'xprofile';
 					}
 
-					if ( bp_is_active( $component ) ) {
+					if ( bboss_is_active( $component ) ) {
 						if ( 'xprofile' === $component ) {
-							$component_name = buddypress()->profile->name;
+							$component_name = bboss()->profile->name;
 						} else {
-							$component_name = buddypress()->$component->name;
+							$component_name = bboss()->$component->name;
 						}
 					} else {
 						$component_name = ucfirst( $component );
 					}
 
-					$component_name = ( 'Bbpress' === $component_name ) ? __( 'Forums', 'buddyboss' ) : $component_name;
+					$component_name = ( 'Bbpress' === $component_name ) ? __( 'Forums', 'buddyboss-platform' ) : $component_name;
 
 					$group_options = array();
 					$actions_arr   = (array) $actions;
@@ -480,9 +480,9 @@ class BB_Activity_Admin_Ajax {
 
 			// Get bulk actions (same as legacy BP_Activity_List_Table::get_bulk_actions()).
 			$bulk_actions = array(
-				'bulk_spam'   => __( 'Mark as Spam', 'buddyboss' ),
-				'bulk_ham'    => __( 'Not Spam', 'buddyboss' ),
-				'bulk_delete' => __( 'Delete', 'buddyboss' ),
+				'bulk_spam'   => __( 'Mark as Spam', 'buddyboss-platform' ),
+				'bulk_ham'    => __( 'Not Spam', 'buddyboss-platform' ),
+				'bulk_delete' => __( 'Delete', 'buddyboss-platform' ),
 			);
 
 			/**
@@ -509,11 +509,11 @@ class BB_Activity_Admin_Ajax {
 		$current_view = 'spam_only' === $spam ? 'spam' : 'all';
 		$views        = array(
 			'all'  => array(
-				'label' => __( 'All', 'buddyboss' ),
+				'label' => __( 'All', 'buddyboss-platform' ),
 				'count' => $ham_count,
 			),
 			'spam' => array(
-				'label' => __( 'Spam', 'buddyboss' ),
+				'label' => __( 'Spam', 'buddyboss-platform' ),
 				'count' => $spam_count,
 			),
 		);
@@ -604,8 +604,8 @@ class BB_Activity_Admin_Ajax {
 	public function bb_admin_get_activity() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'activity' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'activity' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -613,10 +613,10 @@ class BB_Activity_Admin_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $activity_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$activity = bp_activity_get(
+		$activity = bboss_activity_get(
 			array(
 				'in'               => $activity_id,
 				'max'              => 1,
@@ -627,7 +627,7 @@ class BB_Activity_Admin_Ajax {
 		);
 
 		if ( empty( $activity['activities'][0] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss-platform' ) ) );
 		}
 
 		$item = $activity['activities'][0];
@@ -659,8 +659,8 @@ class BB_Activity_Admin_Ajax {
 
 		// Get activity action types.
 		$activity_actions = array();
-		if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
-			$activity_actions = bp_activity_admin_get_activity_actions();
+		if ( function_exists( 'bboss_activity_admin_get_activity_actions' ) ) {
+			$activity_actions = bboss_activity_admin_get_activity_actions();
 		}
 
 		// Build activity data — non-editable metadata plus all fields from registry.
@@ -668,9 +668,9 @@ class BB_Activity_Admin_Ajax {
 			'id'                => (int) $item->id,
 			'date_recorded'     => $item->date_recorded,
 			'is_spam'           => (int) $item->is_spam,
-			'permalink'         => bp_activity_get_permalink( $item->id, $item ),
+			'permalink'         => bboss_activity_get_permalink( $item->id, $item ),
 			'component'         => $item->component,
-			'registered_fields' => bb_admin_meta_field_registry()->get_fields_data( 'activity', $item ),
+			'registered_fields' => bboss_admin_meta_field_registry()->get_fields_data( 'activity', $item ),
 		);
 
 		/**
@@ -681,7 +681,7 @@ class BB_Activity_Admin_Ajax {
 		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array              $activity_data Activity data array.
-		 * @param BP_Activity_Activity $item         Activity object.
+		 * @param BBoss_Activity_Activity $item         Activity object.
 		 */
 		$activity_data = apply_filters( 'bb_admin_get_activity_data', $activity_data, $item );
 
@@ -699,7 +699,7 @@ class BB_Activity_Admin_Ajax {
 		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array              $response_data Response data array.
-		 * @param BP_Activity_Activity $item         Activity object.
+		 * @param BBoss_Activity_Activity $item         Activity object.
 		 */
 		$response_data = apply_filters( 'bb_admin_get_activity_response', $response_data, $item );
 
@@ -725,8 +725,8 @@ class BB_Activity_Admin_Ajax {
 	public function bb_admin_save_activity() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'activity' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'activity' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -734,19 +734,19 @@ class BB_Activity_Admin_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $activity_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Get the activity from the database.
-		$activity = new BP_Activity_Activity( $activity_id );
+		$activity = new BBoss_Activity_Activity( $activity_id );
 
 		if ( empty( $activity->component ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Phase 1: Set core object properties from registry fields before save.
 		// This includes spam/ham status via the is_spam registry field.
-		bb_admin_meta_field_registry()->save_fields_data( 'activity', $activity, 'before' );
+		bboss_admin_meta_field_registry()->save_fields_data( 'activity', $activity, 'before' );
 
 		// Prevent title validation from blocking save in admin context.
 		$activity->title_required = false;
@@ -775,7 +775,7 @@ class BB_Activity_Admin_Ajax {
 		 * @since BuddyPress 1.6.0
 		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX save activity.
 		 *
-		 * @param BP_Activity_Activity $activity Activity object.
+		 * @param BBoss_Activity_Activity $activity Activity object.
 		 * @param int                  $error    Activity ID on failure, 0 on success.
 		 */
 		do_action_ref_array( 'bp_activity_admin_edit_after', array( &$activity, $error ) );
@@ -798,15 +798,15 @@ class BB_Activity_Admin_Ajax {
 		);
 
 		if ( 0 !== $error ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to save activity.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to save activity.', 'buddyboss-platform' ) ) );
 		}
 
 		// Phase 2: Save meta fields via the field registry after save.
-		bb_admin_meta_field_registry()->save_fields_data( 'activity', $activity, 'after' );
+		bboss_admin_meta_field_registry()->save_fields_data( 'activity', $activity, 'after' );
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Activity saved successfully.', 'buddyboss' ),
+				'message' => __( 'Activity saved successfully.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -823,8 +823,8 @@ class BB_Activity_Admin_Ajax {
 	public function bb_admin_activity_action() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'activity' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'activity' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -833,11 +833,11 @@ class BB_Activity_Admin_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $raw_ids ) || empty( $do_action ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity IDs and action are required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity IDs and action are required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! in_array( $do_action, array( 'spam', 'ham', 'delete' ), true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-platform' ) ) );
 		}
 
 		// Parse activity IDs.
@@ -845,7 +845,7 @@ class BB_Activity_Admin_Ajax {
 		$activity_ids = array_filter( $activity_ids );
 
 		if ( empty( $activity_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No valid activity IDs provided.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No valid activity IDs provided.', 'buddyboss-platform' ) ) );
 		}
 
 		// Cap bulk operations to prevent timeout.
@@ -868,7 +868,7 @@ class BB_Activity_Admin_Ajax {
 		$errors    = array();
 
 		foreach ( $activity_ids as $activity_id ) {
-			$activity = new BP_Activity_Activity( $activity_id );
+			$activity = new BBoss_Activity_Activity( $activity_id );
 
 			if ( empty( $activity->component ) ) {
 				$errors[] = $activity_id;
@@ -880,9 +880,9 @@ class BB_Activity_Admin_Ajax {
 			switch ( $do_action ) {
 				case 'delete':
 					if ( 'activity_comment' === $activity->type ) {
-						$result = bp_activity_delete_comment( $activity->item_id, $activity->id );
+						$result = bboss_activity_delete_comment( $activity->item_id, $activity->id );
 					} else {
-						$result = bp_activity_delete( array( 'id' => $activity->id ) );
+						$result = bboss_activity_delete( array( 'id' => $activity->id ) );
 					}
 					if ( false !== $result ) {
 						++$processed;
@@ -893,9 +893,9 @@ class BB_Activity_Admin_Ajax {
 					break;
 
 				case 'ham':
-					remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
-					remove_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys', 2 );
-					bp_activity_mark_as_ham( $activity );
+					remove_action( 'bp_activity_before_save', 'bboss_activity_check_moderation_keys', 2 );
+					remove_action( 'bp_activity_before_save', 'bboss_activity_check_blacklist_keys', 2 );
+					bboss_activity_mark_as_ham( $activity );
 					$result = $activity->save();
 					if ( false !== $result ) {
 						++$processed;
@@ -906,7 +906,7 @@ class BB_Activity_Admin_Ajax {
 					break;
 
 				case 'spam':
-					bp_activity_mark_as_spam( $activity );
+					bboss_activity_mark_as_spam( $activity );
 					$result = $activity->save();
 					if ( false !== $result ) {
 						++$processed;
@@ -950,23 +950,23 @@ class BB_Activity_Admin_Ajax {
 		);
 
 		if ( ! empty( $errors ) && 0 === $processed ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to process activities.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to process activities.', 'buddyboss-platform' ) ) );
 		}
 
 		$messages = array(
 			'spam'   => sprintf(
 				/* translators: %d: number of activities */
-				_n( '%d activity marked as spam.', '%d activities marked as spam.', $processed, 'buddyboss' ),
+				_n( '%d activity marked as spam.', '%d activities marked as spam.', $processed, 'buddyboss-platform' ),
 				$processed
 			),
 			'ham'    => sprintf(
 				/* translators: %d: number of activities */
-				_n( '%d activity marked as not spam.', '%d activities marked as not spam.', $processed, 'buddyboss' ),
+				_n( '%d activity marked as not spam.', '%d activities marked as not spam.', $processed, 'buddyboss-platform' ),
 				$processed
 			),
 			'delete' => sprintf(
 				/* translators: %d: number of activities */
-				_n( '%d activity deleted.', '%d activities deleted.', $processed, 'buddyboss' ),
+				_n( '%d activity deleted.', '%d activities deleted.', $processed, 'buddyboss-platform' ),
 				$processed
 			),
 		);
@@ -992,8 +992,8 @@ class BB_Activity_Admin_Ajax {
 	public function bb_admin_add_activity_comment() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'activity' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'activity' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -1002,18 +1002,18 @@ class BB_Activity_Admin_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $activity_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( trim( $content ) ) ) {
-			wp_send_json_error( array( 'message' => __( 'Comment content is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Comment content is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Get the activity to determine the root activity ID.
-		$activity = new BP_Activity_Activity( $activity_id );
+		$activity = new BBoss_Activity_Activity( $activity_id );
 
 		if ( empty( $activity->component ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Determine root activity ID: if this is already a comment, use its item_id.
@@ -1022,7 +1022,7 @@ class BB_Activity_Admin_Ajax {
 			$root_activity_id = (int) $activity->item_id;
 		}
 
-		$comment_id = bp_activity_new_comment(
+		$comment_id = bboss_activity_new_comment(
 			array(
 				'activity_id' => $root_activity_id,
 				'parent_id'   => $activity_id,
@@ -1037,7 +1037,7 @@ class BB_Activity_Admin_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message'    => __( 'Comment posted successfully.', 'buddyboss' ),
+				'message'    => __( 'Comment posted successfully.', 'buddyboss-platform' ),
 				'comment_id' => $comment_id,
 			)
 		);
@@ -1045,4 +1045,4 @@ class BB_Activity_Admin_Ajax {
 }
 
 // Initialize.
-new BB_Activity_Admin_Ajax();
+new BBoss_Activity_Admin_Ajax();

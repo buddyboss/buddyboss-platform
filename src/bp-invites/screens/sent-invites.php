@@ -8,19 +8,22 @@
  * @todo how is this page different from send-invites?
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the loading of a user's Invites > Invite by Email page.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_invites_screen_sent_invite() {
+function bboss_invites_screen_sent_invite() {
 
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
-	add_action( 'bp_template_content', 'bp_invites_sent_invite_screen' );
+	add_action( 'bp_template_content', 'bboss_invites_sent_invite_screen' );
 
 	/**
 	 * Filters the template to load for a users Invites > Invite by Email page.
@@ -29,7 +32,7 @@ function bp_invites_screen_sent_invite() {
 	 *
 	 * @param string $value Path to a users Invites > Invite by Email page template.
 	 */
-	bp_core_load_template( apply_filters( 'bp_invites_screen_sent_invite', 'members/single/plugins' ) );
+	bboss_core_load_template( apply_filters( 'bp_invites_screen_sent_invite', 'members/single/plugins' ) );
 }
 
 /**
@@ -37,6 +40,6 @@ function bp_invites_screen_sent_invite() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_invites_sent_invite_screen() {
-	bp_get_template_part( 'members/single/invites' );
+function bboss_invites_sent_invite_screen() {
+	bboss_get_template_part( 'members/single/invites' );
 }

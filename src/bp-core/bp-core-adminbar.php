@@ -18,11 +18,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @global WP_Admin_Bar $wp_admin_bar.
  */
-function bp_admin_bar_my_account_root() {
+function bboss_admin_bar_my_account_root() {
 	global $wp_admin_bar;
 
 	// Bail if this is an ajax request.
-	if ( ! bp_use_wp_admin_bar() || defined( 'DOING_AJAX' ) ) {
+	if ( ! bboss_use_wp_admin_bar() || defined( 'BBOSS_DOING_AJAX' ) ) {
 		return;
 	}
 
@@ -34,7 +34,7 @@ function bp_admin_bar_my_account_root() {
 			array(
 				'parent' => 'my-account',
 				'id'     => 'my-account-buddypress',
-				'title'  => __( 'My Account', 'buddyboss' ),
+				'title'  => __( 'My Account', 'buddyboss-platform' ),
 				'group'  => true,
 				'meta'   => array(
 					'class' => 'ab-sub-secondary',
@@ -43,45 +43,45 @@ function bp_admin_bar_my_account_root() {
 		);
 	}
 }
-add_action( 'admin_bar_menu', 'bp_admin_bar_my_account_root', 100 );
+add_action( 'admin_bar_menu', 'bboss_admin_bar_my_account_root', 100 );
 
 /**
  * Handle the Toolbar/BuddyBar business.
  *
  * @since BuddyPress 1.2.0
  */
-function bp_core_load_admin_bar() {
+function bboss_core_load_admin_bar() {
 
 	// Show the Toolbar for logged out users.
-	if ( ! is_user_logged_in() && (int) bp_get_option( 'hide-loggedout-adminbar' ) != 1 ) {
+	if ( ! is_user_logged_in() && (int) bboss_get_option( 'hide-loggedout-adminbar' ) != 1 ) {
 		show_admin_bar( true );
 	}
 
 	// Hide the WordPress Toolbar and show the BuddyBar.
-	if ( ! bp_use_wp_admin_bar() ) {
-		_doing_it_wrong( __FUNCTION__, __( 'The BuddyBar is no longer supported. Please migrate to the WordPress toolbar as soon as possible.', 'buddyboss' ), '2.1.0' );
+	if ( ! bboss_use_wp_admin_bar() ) {
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'The BuddyBar is no longer supported. Please migrate to the WordPress toolbar as soon as possible.', 'buddyboss-platform' ), '2.1.0' );
 
 		// Load deprecated code if not available.
-		if ( ! function_exists( 'bp_core_admin_bar' ) ) {
-			require buddypress()->plugin_dir . 'bp-core/deprecated/2.1.php';
+		if ( ! function_exists( 'bboss_core_admin_bar' ) ) {
+			require bboss()->plugin_dir . 'bp-core/deprecated/2.1.php';
 		}
 
 		// Keep the WP Toolbar from loading.
 		show_admin_bar( false );
 
 		// Actions used to build the BP Toolbar.
-		add_action( 'bp_adminbar_logo', 'bp_adminbar_logo' );
-		add_action( 'bp_adminbar_menus', 'bp_adminbar_login_menu', 2 );
-		add_action( 'bp_adminbar_menus', 'bp_adminbar_account_menu', 4 );
-		add_action( 'bp_adminbar_menus', 'bp_adminbar_thisblog_menu', 6 );
-		add_action( 'bp_adminbar_menus', 'bp_adminbar_random_menu', 100 );
+		add_action( 'bp_adminbar_logo', 'bboss_adminbar_logo' );
+		add_action( 'bp_adminbar_menus', 'bboss_adminbar_login_menu', 2 );
+		add_action( 'bp_adminbar_menus', 'bboss_adminbar_account_menu', 4 );
+		add_action( 'bp_adminbar_menus', 'bboss_adminbar_thisblog_menu', 6 );
+		add_action( 'bp_adminbar_menus', 'bboss_adminbar_random_menu', 100 );
 
 		// Actions used to append BP Toolbar to footer.
-		add_action( 'wp_footer', 'bp_core_admin_bar', 8 );
-		add_action( 'admin_footer', 'bp_core_admin_bar' );
+		add_action( 'wp_footer', 'bboss_core_admin_bar', 8 );
+		add_action( 'admin_footer', 'bboss_core_admin_bar' );
 	}
 }
-add_action( 'init', 'bp_core_load_admin_bar', 9 );
+add_action( 'init', 'bboss_core_load_admin_bar', 9 );
 
 /**
  * Handle the enqueueing of toolbar CSS.
@@ -92,9 +92,9 @@ add_action( 'init', 'bp_core_load_admin_bar', 9 );
  *
  * @since BuddyPress 1.5.0
  */
-function bp_core_load_admin_bar_css() {
-	add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_admin_bar_css', 1 );
-	add_action( 'bp_admin_enqueue_scripts', 'bp_core_enqueue_admin_bar_css', 1 );
+function bboss_core_load_admin_bar_css() {
+	add_action( 'bp_enqueue_scripts', 'bboss_core_enqueue_admin_bar_css', 1 );
+	add_action( 'bp_admin_enqueue_scripts', 'bboss_core_enqueue_admin_bar_css', 1 );
 }
 
 /**
@@ -102,14 +102,14 @@ function bp_core_load_admin_bar_css() {
  *
  * @since BuddyPress 2.1.0
  *
- * @see bp_core_register_common_styles()
- * @see bp_core_load_admin_bar_css()
+ * @see bboss_core_register_common_styles()
+ * @see bboss_core_load_admin_bar_css()
  */
-function bp_core_enqueue_admin_bar_css() {
+function bboss_core_enqueue_admin_bar_css() {
 
 	// Bail if not using WordPress's admin bar or it's not showing on this
 	// page request.
-	if ( ! bp_use_wp_admin_bar() || ! is_admin_bar_showing() ) {
+	if ( ! bboss_use_wp_admin_bar() || ! is_admin_bar_showing() ) {
 		return;
 	}
 
@@ -124,7 +124,7 @@ function bp_core_enqueue_admin_bar_css() {
  *
  * @param WP_Admin_Bar $wp_admin_bar
  */
-function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
+function bboss_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	$user_id      = get_current_user_id();
 	$current_user = wp_get_current_user();
 
@@ -133,7 +133,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	}
 	$display_name = $current_user->data->display_name;
 	$avatar       = get_avatar( $user_id, 26 );
-	$name         = bp_core_get_user_displayname( $user_id );
+	$name         = bboss_core_get_user_displayname( $user_id );
 
 	// my account
 	$wp_admin_bar->add_node(
@@ -146,7 +146,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	// user info
 	$user_info  = get_avatar( $user_id, 64 );
 	$user_info .= "<span class='display-name'>" . $display_name . '</span>';
-	$user_info .= "<span class='username'>" . bp_activity_get_user_mentionname( $user_id ) . '</span>';
+	$user_info .= "<span class='username'>" . bboss_activity_get_user_mentionname( $user_id ) . '</span>';
 
 	$wp_admin_bar->add_menu(
 		array(
@@ -180,8 +180,8 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 
 		if ( 'nickname' !== $current_value ) {
 
-			$username = bp_activity_get_user_mentionname( $current_user->ID );
-			$at = __( '@', 'buddyboss' );
+			$username = bboss_activity_get_user_mentionname( $current_user->ID );
+			$at = __( '@', 'buddyboss-platform' );
 			if ( '' !== $username ) {
 				$user_info .= "<span class='username'>{$at}{$username}</span>";
 			} else {
@@ -207,7 +207,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 			array(
 				'parent' => 'user-actions',
 				'id'     => 'edit-profile',
-				'title'  => __( 'Edit My Profile', 'buddyboss' ),
+				'title'  => __( 'Edit My Profile', 'buddyboss-platform' ),
 				'href'   => $profile_url,
 			)
 		);
@@ -217,7 +217,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 		array(
 			'parent' => 'user-actions',
 			'id'     => 'logout',
-			'title'  => __( 'Log Out', 'buddyboss' ),
+			'title'  => __( 'Log Out', 'buddyboss-platform' ),
 			'href'   => wp_logout_url(),
 		)
 	);
@@ -225,4 +225,4 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 // User related, aligned right.
 remove_action( 'admin_bar_menu', 'wp_admin_bar_my_account_menu', 0 );
 // User related, aligned right.
-add_action( 'admin_bar_menu', 'bp_wp_admin_bar_my_account_menu', 99999999 );
+add_action( 'admin_bar_menu', 'bboss_wp_admin_bar_my_account_menu', 99999999 );

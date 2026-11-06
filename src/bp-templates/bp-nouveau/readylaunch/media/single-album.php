@@ -5,7 +5,7 @@
  * This template handles displaying a single media album with its contents.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -15,71 +15,71 @@ defined( 'ABSPATH' ) || exit;
 
 global $media_album_template;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 
-$album_id      = (int) bp_action_variable( 0 );
-$album_privacy = bb_media_user_can_access( $album_id, 'album' );
+$album_id      = (int) bboss_action_variable( 0 );
+$album_privacy = bboss_media_user_can_access( $album_id, 'album' );
 $can_edit      = true === (bool) $album_privacy['can_edit'];
 $can_add       = true === (bool) $album_privacy['can_add'];
 $can_delete    = true === (bool) $album_privacy['can_delete'];
 
-$bp_is_my_profile                    = bp_is_my_profile();
-$bp_is_group                         = bp_is_group();
-$bp_is_user_media                    = bp_is_user_media();
-$bp_is_group_active                  = bp_is_active( 'groups' );
-$bp_get_current_group_id             = ( $bp_is_group_active ) ? bp_get_current_group_id() : 0;
-$bp_loggedin_user_id                 = bp_loggedin_user_id();
-$bp_is_profile_video_support_enabled = function_exists( 'bp_is_profile_video_support_enabled' ) && bp_is_profile_video_support_enabled();
-$bp_is_group_video_support_enabled   = function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled();
+$bp_is_my_profile                    = bboss_is_my_profile();
+$bp_is_group                         = bboss_is_group();
+$bp_is_user_media                    = bboss_is_user_media();
+$bp_is_group_active                  = bboss_is_active( 'groups' );
+$bp_get_current_group_id             = ( $bp_is_group_active ) ? bboss_get_current_group_id() : 0;
+$bp_loggedin_user_id                 = bboss_loggedin_user_id();
+$bp_is_profile_video_support_enabled = function_exists( 'bboss_is_profile_video_support_enabled' ) && bboss_is_profile_video_support_enabled();
+$bp_is_group_video_support_enabled   = function_exists( 'bboss_is_group_video_support_enabled' ) && bboss_is_group_video_support_enabled();
 
 // Videos belong in this album only when the video component is available and enabled for this context.
-$bp_album_shows_videos = bp_is_active( 'video' ) && ( $bp_is_group ? $bp_is_group_video_support_enabled : $bp_is_profile_video_support_enabled );
+$bp_album_shows_videos = bboss_is_active( 'video' ) && ( $bp_is_group ? $bp_is_group_video_support_enabled : $bp_is_profile_video_support_enabled );
 
-$album = new BP_Media_Album( $album_id );
+$album = new BBoss_Media_Album( $album_id );
 
-$back_link = bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/';
+$back_link = bboss_core_get_user_domain( $album->user_id ) . bboss_get_media_slug() . '/albums/';
 
-if ( bp_is_group() && $bp_is_group_active ) {
-	$back_link = bp_get_group_permalink( groups_get_current_group() ) . 'albums/';
+if ( bboss_is_group() && $bp_is_group_active ) {
+	$back_link = bboss_get_group_permalink( bboss_groups_get_current_group() ) . 'albums/';
 }
 
-$media_privacy = bp_media_get_visibility_levels();
+$media_privacy = bboss_media_get_visibility_levels();
 
-if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
+if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 	<?php
-	while ( bp_album() ) :
-		bp_the_album();
+	while ( bboss_album() ) :
+		bboss_the_album();
 
 		$total_media = $media_album_template->album->media['total'];
 		?>
-		<div id="bp-media-single-album" class="bb-rl-media-single-album" data-id="<?php bp_album_id(); ?>" data-group="<?php bp_album_group_id(); ?>">
+		<div id="bp-media-single-album" class="bb-rl-media-single-album" data-id="<?php bboss_album_id(); ?>" data-group="<?php bboss_album_group_id(); ?>">
 			<div class="album-single-view" <?php echo 0 === $total_media ? 'no-photos' : ''; ?>>
 
 				<div class="bb-single-album-header text-center">
 					<h4 class="bb-title bb-rl-album-title" id="bp-single-album-title">
 						<a href="<?php echo esc_url( $back_link ); ?>" class="bb-rl-album-back"><span class="bb-icons-rl-arrow-left"></span></a>
-						<span class="title-wrap"><?php bp_album_title(); ?></span>
+						<span class="title-wrap"><?php bboss_album_title(); ?></span>
 					</h4>
 					<div class="album-actions">
 						<?php
 						if ( $can_delete ) {
-							bp_get_template_part( 'media/actions' );
+							bboss_get_template_part( 'media/actions' );
 						}
 
 						if ( ( $bp_is_my_profile || $bp_is_user_media ) || ( $bp_is_group ) ) {
 							?>
 								<div class="video-action-wrap item-action-wrap bb_more_options action">
-									<a href="#" class="album-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+									<a href="#" class="album-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>">
 										<i class="bb-icons-rl-dots-three"></i>
 									</a>
 									<div class="media-action_list bb_more_dropdown bb_more_options_list">
-										<?php bp_get_template_part( 'common/more-options-view' ); ?>
+										<?php bboss_get_template_part( 'common/more-options-view' ); ?>
 										<ul>
 											<?php
 											if (
 													(
 														( $bp_is_my_profile || $bp_is_user_media ) &&
-														bb_user_can_create_media() &&
+														bboss_user_can_create_media() &&
 														$can_edit
 													) ||
 													(
@@ -91,7 +91,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												?>
 													<li class="album-add-photos">
 														<a class="bb-album-add-photos" id="bp-add-media" href="#" >
-														<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+														<?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?>
 														</a>
 													</li>
 													<?php
@@ -102,7 +102,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 														( $bp_is_my_profile || $bp_is_user_media ) &&
 														$bp_is_profile_video_support_enabled &&
 														$can_edit &&
-														bb_user_can_create_video()
+														bboss_user_can_create_video()
 													) ||
 													(
 														$bp_is_group_active &&
@@ -113,23 +113,23 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												) {
 												?>
 													<li class="album-add-videos">
-														<a href="#" id="bp-add-video" class="bb-album-add-videos"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+														<a href="#" id="bp-add-video" class="bb-album-add-videos"><?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?></a>
 													</li>
 													<?php
 											}
 
 											if (
 													$bp_is_my_profile ||
-													bp_current_user_can( 'bp_moderate' ) ||
+													bboss_current_user_can( 'bp_moderate' ) ||
 													( $bp_is_group && $can_edit )
 												) {
 
-												$privacy = ! $bp_is_group && $can_edit ? 'data-privacy="' . esc_attr( bp_get_album_privacy() ) . '"' : '';
+												$privacy = ! $bp_is_group && $can_edit ? 'data-privacy="' . esc_attr( bboss_get_album_privacy() ) . '"' : '';
 												?>
 													<li class="album-edit">
-														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title" <?php echo $privacy; ?>>
+														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title" <?php echo $privacy; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $privacy is a data-attribute fragment built with esc_attr(). ?>>
 														<?php
-															esc_html_e( 'Edit Album', 'buddyboss' );
+															esc_html_e( 'Edit Album', 'buddyboss-platform' );
 														?>
 														</a>
 													</li>
@@ -140,7 +140,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												?>
 													<li class="album-delete">
 															<a class="bb-album-delete error" id="bb-delete-album" href="#">
-															<?php esc_html_e( 'Delete Album', 'buddyboss' ); ?>
+															<?php esc_html_e( 'Delete Album', 'buddyboss-platform' ); ?>
 															</a>
 													</li>
 													<?php
@@ -184,7 +184,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				</div>
 				<div class="bb-rl-album-meta">
 					<p>
-						<span><?php esc_html_e( 'Created: ', 'buddyboss' ); ?><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep"></span>
+						<span><?php esc_html_e( 'Created: ', 'buddyboss-platform' ); ?><?php bboss_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep"></span>
 
 						<?php
 						if ( $bp_is_my_profile ) {
@@ -197,21 +197,21 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						}
 						?>
 
-						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span>
+						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php echo esc_html( bboss_core_number_format( $media_album_template->album->media['total'] ) ); ?></span>
 						<?php if ( $bp_album_shows_videos ) : ?>
 						<span class="bb-sep"></span>
-						<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total_video'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
+						<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php echo esc_html( bboss_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
 						<?php endif; ?>
 					</p>
 				</div>
 
 				<?php
 				if ( ( $bp_is_my_profile || $bp_is_user_media ) || ( $bp_is_group ) ) :
-					bp_get_template_part( 'media/uploader' );
-					if ( bp_is_active( 'video' ) ) {
-						bp_get_template_part( 'video/uploader' );
+					bboss_get_template_part( 'media/uploader' );
+					if ( bboss_is_active( 'video' ) ) {
+						bboss_get_template_part( 'video/uploader' );
 					}
-					bp_get_template_part( 'media/edit-album' );
+					bboss_get_template_part( 'media/edit-album' );
 				endif;
 				?>
 
@@ -240,9 +240,9 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					}
 
 					if ( $is_send_ajax_request ) {
-						bp_nouveau_user_feedback( $feedback_id );
+						bboss_nouveau_user_feedback( $feedback_id );
 					} else {
-						bp_get_template_part( 'media/media-loop' );
+						bboss_get_template_part( 'media/media-loop' );
 					}
 					?>
 					</div>

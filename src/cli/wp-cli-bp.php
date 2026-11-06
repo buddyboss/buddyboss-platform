@@ -1,6 +1,9 @@
 <?php
 namespace Buddypress\CLI;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use WP_CLI;
 
 // Bail if WP-CLI is not present.
@@ -36,7 +39,7 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Buddypress',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 				},
@@ -48,7 +51,7 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Signup',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 				},
@@ -60,11 +63,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Notification',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'notifications' ) ) {
+					if ( ! bboss_is_active( 'notifications' ) ) {
 						WP_CLI::error( 'The Notification component is not active.' );
 					}
 				},
@@ -76,7 +79,7 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Email',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 				},
@@ -88,11 +91,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Activity',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'activity' ) ) {
+					if ( ! bboss_is_active( 'activity' ) ) {
 						WP_CLI::error( 'The Activity component is not active.' );
 					}
 				},
@@ -104,11 +107,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Activity_Favorite',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'activity' ) ) {
+					if ( ! bboss_is_active( 'activity' ) ) {
 						WP_CLI::error( 'The Activity component is not active.' );
 					}
 				},
@@ -120,7 +123,7 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Components',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 				},
@@ -132,11 +135,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Group',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'groups' ) ) {
+					if ( ! bboss_is_active( 'groups' ) ) {
 						WP_CLI::error( 'The Groups component is not active.' );
 					}
 				},
@@ -148,11 +151,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Group_Member',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'groups' ) ) {
+					if ( ! bboss_is_active( 'groups' ) ) {
 						WP_CLI::error( 'The Groups component is not active.' );
 					}
 				},
@@ -164,11 +167,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Group_Invite',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'groups' ) ) {
+					if ( ! bboss_is_active( 'groups' ) ) {
 						WP_CLI::error( 'The Groups component is not active.' );
 					}
 				},
@@ -180,7 +183,7 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Member',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 				},
@@ -192,11 +195,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Friend',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'friends' ) ) {
+					if ( ! bboss_is_active( 'friends' ) ) {
 						WP_CLI::error( 'The Connections component is not active.' );
 					}
 				},
@@ -208,11 +211,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\XProfile',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'xprofile' ) ) {
+					if ( ! bboss_is_active( 'xprofile' ) ) {
 						WP_CLI::error( 'The XProfile component is not active.' );
 					}
 				},
@@ -224,11 +227,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\XProfile_Group',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'xprofile' ) ) {
+					if ( ! bboss_is_active( 'xprofile' ) ) {
 						WP_CLI::error( 'The XProfile component is not active.' );
 					}
 				},
@@ -240,11 +243,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\XProfile_Field',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'xprofile' ) ) {
+					if ( ! bboss_is_active( 'xprofile' ) ) {
 						WP_CLI::error( 'The XProfile component is not active.' );
 					}
 				},
@@ -256,11 +259,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\XProfile_Data',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'xprofile' ) ) {
+					if ( ! bboss_is_active( 'xprofile' ) ) {
 						WP_CLI::error( 'The XProfile component is not active.' );
 					}
 				},
@@ -272,11 +275,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Tool',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					require_once buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-tools.php';
+					require_once bboss()->plugin_dir . 'bp-core/admin/bp-core-admin-tools.php';
 				},
 			)
 		);
@@ -286,11 +289,11 @@ WP_CLI::add_hook(
 			__NAMESPACE__ . '\\Command\\Message',
 			array(
 				'before_invoke' => function() {
-					if ( ! class_exists( 'Buddypress' ) ) {
+					if ( ! class_exists( 'BBoss_Platform' ) ) {
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					if ( ! bp_is_active( 'messages' ) ) {
+					if ( ! bboss_is_active( 'messages' ) ) {
 						WP_CLI::error( 'The Message component is not active.' );
 					}
 				},

@@ -6,14 +6,17 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the loading of a single group's activity.
  *
  * @since BuddyPress 2.4.0
  */
-function groups_screen_group_activity() {
+function bboss_groups_screen_group_activity() {
 
-	if ( ! bp_is_single_item() ) {
+	if ( ! bboss_is_single_item() ) {
 		return false;
 	}
 
@@ -31,5 +34,5 @@ function groups_screen_group_activity() {
 	 *
 	 * @param string $value Path to a single group's template to load.
 	 */
-	bp_core_load_template( apply_filters( 'groups_screen_group_activity', 'groups/single/activity' ) );
+	bboss_core_load_template( apply_filters( 'groups_screen_group_activity', 'groups/single/activity' ) );
 }

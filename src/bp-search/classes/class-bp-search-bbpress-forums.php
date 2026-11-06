@@ -9,18 +9,18 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
+if ( ! class_exists( 'BBoss_Search_bbPress_Forums' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search bbpress forums class
 	 */
-	class Bp_Search_bbPress_Forums extends Bp_Search_bbPress {
+	class BBoss_Search_bbPress_Forums extends BBoss_Search_bbPress {
 		public $type = 'forum';
 
 		function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb;
 
-			$bp_prefix = bp_core_get_table_prefix();
+			$bp_prefix = bboss_core_get_table_prefix();
 
 			$query_placeholder = array();
 
@@ -45,7 +45,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 			$where   = array();
 			$where[] = '1=1';
 
-			$search_term_array  = bb_search_get_search_keywords_by_term( $search_term, $this->type );
+			$search_term_array  = bboss_search_get_search_keywords_by_term( $search_term, $this->type );
 			$every_word_clauses = array();
 			foreach ( $search_term_array as $term ) {
 				$every_word_clauses[] = "(post_title LIKE %s OR post_content LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
@@ -66,7 +66,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 			}
 
 			// Build complex WHERE clause for forum visibility.
-			if ( bp_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
+			if ( bboss_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
 				// Get user accessible groups using shared method from parent class.
 				$groups_data        = $this->get_user_accessible_groups();
 				$user_group_ids     = $groups_data['user_group_ids'];
@@ -105,7 +105,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 					$excluded_forum_args = array(
 						'fields'      => 'ids',
 						'post_status' => array( 'publish', 'private', 'hidden' ),
-						'post_type'   => bbp_get_forum_post_type(),
+						'post_type'   => bboss_bbp_get_forum_post_type(),
 						'numberposts' => -1,
 						'meta_query'  => array(
 							'relation' => 'OR',
@@ -186,7 +186,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
-				$instance = new Bp_Search_bbPress_Forums();
+				$instance = new BBoss_Search_bbPress_Forums();
 			}
 
 			// Always return the instance.

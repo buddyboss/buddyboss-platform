@@ -9,20 +9,20 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'bp_before_directory_members', 'bp_profile_search_show_form' );
+add_action( 'bp_before_directory_members', 'bboss_profile_search_show_form' );
 /**
  * Output BuddyBoss Profile Search Form.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_show_form() {
-	if ( bp_disable_advanced_profile_search() ) {
+function bboss_profile_search_show_form() {
+	if ( bboss_disable_advanced_profile_search() ) {
 		return false;
 	}
 
-	$form_id = bp_profile_search_main_form();
+	$form_id = bboss_profile_search_main_form();
 
-	$template = bp_locate_template( 'common/search/profile-search.php', false, false );
+	$template = bboss_locate_template( 'common/search/profile-search.php', false, false );
 	include $template;
 }
 
@@ -31,29 +31,31 @@ function bp_profile_search_show_form() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_escaped_form_data( $form = false ) {
+function bboss_profile_search_escaped_form_data( $form = false ) {
 	if ( empty( $form ) ) {
-		$form = bp_profile_search_main_form();
+		$form = bboss_profile_search_main_form();
 	}
 
 	$location = 'directory';
-	$is_rest  = bb_is_rest();
+	$is_rest  = bboss_is_rest();
 
-	$meta   = bp_ps_meta( $form );
-	$fields = bp_ps_parse_request( bp_ps_get_request( 'form', $form ) );
-	wp_register_script( 'bp-ps-template-form', buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-template.js', array(), bp_get_version() );
+	$meta   = bboss_ps_meta( $form );
+	$fields = bboss_ps_parse_request( bboss_ps_get_request( 'form', $form ) );
+	wp_register_script( 'bp-ps-template-form', bboss()->plugin_url . 'bp-core/profile-search/bp-ps-template.js', array(), bboss_get_version() );
 	wp_enqueue_script( 'bp-ps-template-form' );
 	$F            = new stdClass();
 	$F->id        = $form;
 	$F->title     = get_the_title( $form );
 	$F->location  = $location;
-	$F->unique_id = bp_ps_unique_id( 'form_' . $form );
-	$F->page      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->unique_id = bboss_ps_unique_id( 'form_' . $form );
+	$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$F->page      = wp_parse_url( $request_uri, PHP_URL_PATH );
 
-	$F->action = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->action = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
-	if ( defined( 'DOING_AJAX' ) ) {
-		$F->action = parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
+	if ( defined( 'BBOSS_DOING_AJAX' ) ) {
+		$http_referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+		$F->action    = wp_parse_url( $http_referer, PHP_URL_PATH );
 	}
 
 	$F->method = 'POST';
@@ -66,7 +68,7 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 
 		$f    = clone( $fields[ $code ] );
 		$mode = $meta['field_mode'][ $k ];
-		if ( ! bp_ps_Fields::set_display( $f, $mode ) ) {
+		if ( ! BBoss_ps_Fields::set_display( $f, $mode ) ) {
 			continue;
 		}
 
@@ -74,7 +76,7 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 		$custom_label = $meta['field_label'][ $k ];
 		if ( ! empty( $custom_label ) ) {
 			$f->label    = $custom_label;
-			$F->fields[] = bp_ps_set_hidden_field( $f->code . '_label', $f->label );
+			$F->fields[] = bboss_ps_set_hidden_field( $f->code . '_label', $f->label );
 		}
 
 		$custom_desc = $meta['field_desc'][ $k ];
@@ -158,9 +160,9 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 		$f->values = (array) $f->value;
 
 		$f->html_name  = ( $mode == '' ) ? $f->code : $f->code . '_' . $mode;
-		$f->unique_id  = bp_ps_unique_id( $f->html_name );
+		$f->unique_id  = bboss_ps_unique_id( $f->html_name );
 		$f->mode       = $mode;
-		$f->full_label = bp_ps_full_label( $f );
+		$f->full_label = bboss_ps_full_label( $f );
 
 		/**
 		 * @todo add title/description
@@ -172,7 +174,7 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 		$F->fields[] = $f;
 	}
 
-	$F->fields[] = bp_ps_set_hidden_field( BP_PS_FORM, $form );
+	$F->fields[] = bboss_ps_set_hidden_field( BBOSS_PS_FORM, $form );
 	/**
 	 * @todo add title/description
 	 *

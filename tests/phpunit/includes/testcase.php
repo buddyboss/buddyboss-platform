@@ -56,7 +56,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 		 * WP's test suite wipes out BP's directory page mappings with `_delete_all_posts()`.
 		 * We must reestablish them before our tests can be successfully run.
 		 */
-		bp_core_add_page_mappings( bp_get_option( 'bp-active-components' ), 'delete' );
+		bboss_core_add_page_mappings( bboss_get_option( 'bp-active-components' ), 'delete' );
 
 
 		$this->factory = new BP_UnitTest_Factory;
@@ -103,7 +103,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 
 		// Reactivate any components that have been deactivated.
 		foreach ( $this->deactivated_components as $component ) {
-			buddypress()->active_components[ $component ] = 1;
+			bboss()->active_components[ $component ] = 1;
 		}
 		$this->deactivated_components = array();
 	}
@@ -117,22 +117,22 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 		$deleted = parent::delete_user( $user_id );
 
 		// When called in tearDownAfterClass(), BP's cleanup functions may no longer be hooked.
-		if ( bp_is_active( 'activity' ) ) {
-			bp_activity_remove_all_user_data( $user_id );
+		if ( bboss_is_active( 'activity' ) ) {
+			bboss_activity_remove_all_user_data( $user_id );
 		}
 
 		return $deleted;
 	}
 
 	function clean_up_global_scope() {
-		buddypress()->bp_nav                = buddypress()->bp_options_nav = buddypress()->action_variables = buddypress()->canonical_stack = buddypress()->unfiltered_uri = $GLOBALS['bp_unfiltered_uri'] = array();
-		buddypress()->current_component     = buddypress()->current_item = buddypress()->current_action = buddypress()->current_member_type = '';
-		buddypress()->unfiltered_uri_offset = 0;
-		buddypress()->is_single_item        = false;
-		buddypress()->current_user          = new stdClass();
-		buddypress()->displayed_user        = new stdClass();
-		buddypress()->loggedin_user         = new stdClass();
-		buddypress()->pages                 = array();
+		bboss()->bp_nav                = bboss()->bp_options_nav = bboss()->action_variables = bboss()->canonical_stack = bboss()->unfiltered_uri = $GLOBALS['bp_unfiltered_uri'] = array();
+		bboss()->current_component     = bboss()->current_item = bboss()->current_action = bboss()->current_member_type = '';
+		bboss()->unfiltered_uri_offset = 0;
+		bboss()->is_single_item        = false;
+		bboss()->current_user          = new stdClass();
+		bboss()->displayed_user        = new stdClass();
+		bboss()->loggedin_user         = new stdClass();
+		bboss()->pages                 = array();
 
 		parent::clean_up_global_scope();
 	}
@@ -153,7 +153,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	}
 
 	protected function reset_bp_activity_actions() {
-		buddypress()->activity->actions = new stdClass();
+		bboss()->activity->actions = new stdClass();
 
 		/**
 		 * Populate the global with default activity actions only
@@ -176,7 +176,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 			}
 		}
 
-		buddypress()->activity->track = array();
+		bboss()->activity->track = array();
 	}
 
 	function assertPreConditions() : void {
@@ -189,7 +189,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 
 	function go_to( $url ) {
 		$GLOBALS['bp']->loggedin_user = NULL;
-		$GLOBALS['bp']->pages = bp_core_get_directory_pages();
+		$GLOBALS['bp']->pages = bboss_core_get_directory_pages();
 
 		parent::go_to( $url );
 
@@ -203,20 +203,20 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	 * have to do a bit more work to change it
 	 */
 	public static function set_current_user( $user_id ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$bp->loggedin_user->id = $user_id;
-		$bp->loggedin_user->fullname       = bp_core_get_user_displayname( $user_id );
+		$bp->loggedin_user->fullname       = bboss_core_get_user_displayname( $user_id );
 		$bp->loggedin_user->is_super_admin = $bp->loggedin_user->is_site_admin = is_super_admin( $user_id );
-		$bp->loggedin_user->domain         = bp_core_get_user_domain( $user_id );
-		$bp->loggedin_user->userdata       = bp_core_get_core_userdata( $user_id );
+		$bp->loggedin_user->domain         = bboss_core_get_user_domain( $user_id );
+		$bp->loggedin_user->userdata       = bboss_core_get_core_userdata( $user_id );
 
 		wp_set_current_user( $user_id );
 	}
 
 	public static function add_user_to_group( $user_id, $group_id, $args = array() ) {
-		$r = bp_parse_args( $args, array(
-			'date_modified' => bp_core_current_time(),
+		$r = bboss_parse_args( $args, array(
+			'date_modified' => bboss_core_current_time(),
 			'is_confirmed'  => 1,
 			'is_admin'      => 0,
 			'is_mod'        => 0,
@@ -224,7 +224,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 			'inviter_id'    => 0,
 		) );
 
-		$new_member                = new BP_Groups_Member;
+		$new_member                = new BBoss_Groups_Member;
 		$new_member->group_id      = $group_id;
 		$new_member->user_id       = $user_id;
 		$new_member->inviter_id    = 0;
@@ -276,7 +276,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	}
 
 	public function grant_bp_moderate_cb( $retval, $capability ) {
-		$current_user = bp_loggedin_user_id();
+		$current_user = bboss_loggedin_user_id();
 		if ( ! isset( $this->temp_has_bp_moderate[ $current_user ] ) ) {
 			return $retval;
 		}
@@ -294,7 +294,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	 */
 	public function go_to_root() {
 		$blog_1_url = get_blog_option( 1, 'home' );
-		$this->go_to( str_replace( $blog_1_url, '', trailingslashit( bp_get_root_domain() ) ) );
+		$this->go_to( str_replace( $blog_1_url, '', trailingslashit( bboss_get_root_domain() ) ) );
 	}
 
 	/**
@@ -339,7 +339,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	 */
 	public function rrmdir( $dir ) {
 		// Make sure we are only removing files/dir from uploads
-		if ( 0 !== strpos( $dir, bp_core_avatar_upload_path() ) ) {
+		if ( 0 !== strpos( $dir, bboss_core_avatar_upload_path() ) ) {
 			return;
 		}
 
@@ -375,13 +375,13 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	 * @param string $component Component name.
 	 */
 	public function deactivate_component( $component ) {
-		$is_active = isset( buddypress()->active_components[ $component ] );
+		$is_active = isset( bboss()->active_components[ $component ] );
 
 		if ( ! isset( $component ) ) {
 			return false;
 		}
 
-		unset( buddypress()->active_components[ $component ] );
+		unset( bboss()->active_components[ $component ] );
 		$this->deactivated_components[] = $component;
 	}
 

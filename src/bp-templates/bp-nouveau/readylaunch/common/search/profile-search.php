@@ -3,7 +3,7 @@
  * The template for profile search
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -17,7 +17,7 @@ $options = array(
 
 // 3rd section: display the search form
 
-$search_form_data = bp_profile_search_escaped_form_data( $form_id );
+$search_form_data = bboss_profile_search_escaped_form_data( $form_id );
 ?>
 
 <aside id="bp-profile-search-form-outer" class="bp-profile-search-widget widget">
@@ -28,7 +28,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 			<h2 class="bps-form-title widget-title"><?php echo esc_html( $search_form_data->title ); ?></h2>
 			<p class="clear-from-wrap">
 				<a href='javascript:void(0);' onclick="return bp_ps_clear_form_elements(this);">
-					<i class="bb-icons-rl-arrow-counter-clockwise"></i><?php esc_html_e( 'Reset', 'buddyboss' ); ?>
+					<i class="bb-icons-rl-arrow-counter-clockwise"></i><?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?>
 				</a>
 			</p>
 		</div>
@@ -80,23 +80,23 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 
 						case 'date_range':
 							?>
-							<span class="date-from date-label"><?php _e( 'From', 'buddyboss' ); ?></span>
+							<span class="date-from date-label"><?php esc_html_e( 'From', 'buddyboss-platform' ); ?></span>
 							<div class="date-wrapper">
 								<select name="<?php echo esc_attr( $field_name . '[min][day]' ); ?>">
 										<?php
 										printf(
 											'<option value="" %1$s>%2$s</option>',
 											selected( $field_value['min']['day'], 0, false ),
-											/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' )
+											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss-platform' )
 										);
 
 										for ( $i = 1; $i < 32; ++$i ) {
 											$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
 											printf(
 												'<option value="%1$s" %2$s>%3$s</option>',
-												$day,
+												esc_attr( $day ),
 												selected( $field_value['min']['day'], $day, false ),
-												$i
+												esc_html( $i )
 											);
 										}
 										?>
@@ -105,25 +105,25 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 								<select name="<?php echo esc_attr( $field_name . '[min][month]' ); ?>">
 									<?php
 									$months = array(
-										__( 'January', 'buddyboss' ),
-										__( 'February', 'buddyboss' ),
-										__( 'March', 'buddyboss' ),
-										__( 'April', 'buddyboss' ),
-										__( 'May', 'buddyboss' ),
-										__( 'June', 'buddyboss' ),
-										__( 'July', 'buddyboss' ),
-										__( 'August', 'buddyboss' ),
-										__( 'September', 'buddyboss' ),
-										__( 'October', 'buddyboss' ),
-										__( 'November', 'buddyboss' ),
-										__( 'December', 'buddyboss' ),
+										__( 'January', 'buddyboss-platform' ),
+										__( 'February', 'buddyboss-platform' ),
+										__( 'March', 'buddyboss-platform' ),
+										__( 'April', 'buddyboss-platform' ),
+										__( 'May', 'buddyboss-platform' ),
+										__( 'June', 'buddyboss-platform' ),
+										__( 'July', 'buddyboss-platform' ),
+										__( 'August', 'buddyboss-platform' ),
+										__( 'September', 'buddyboss-platform' ),
+										__( 'October', 'buddyboss-platform' ),
+										__( 'November', 'buddyboss-platform' ),
+										__( 'December', 'buddyboss-platform' ),
 									);
 
 									printf(
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['min']['month'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Month', 'buddyboss' )
+										esc_html__( 'Select Month', 'buddyboss-platform' )
 									);
 
 									for ( $i = 0; $i < 12; ++$i ) {
@@ -131,9 +131,9 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
 										printf(
 											'<option value="%1$s" %2$s>%3$s</option>',
-											$month,
+											esc_attr( $month ),
 											selected( $field_value['min']['month'], $month, false ),
-											$months[ $i ]
+											esc_html( $months[ $i ] )
 										);
 									}
 									?>
@@ -145,22 +145,22 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['min']['year'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Year', 'buddyboss' )
+										esc_html__( 'Select Year', 'buddyboss-platform' )
 									);
 
-										$date_range_type = bp_xprofile_get_meta( $field->id, 'field', 'range_type', true );
+										$date_range_type = bboss_xprofile_get_meta( $field->id, 'field', 'range_type', true );
 
 									if ( 'relative' === $date_range_type ) {
-										$range_relative_start = bp_xprofile_get_meta( $field->id, 'field', 'range_relative_start', true );
-										$range_relative_end   = bp_xprofile_get_meta( $field->id, 'field', 'range_relative_end', true );
-										$start                = date( 'Y' ) - abs( $range_relative_start );
-										$end                  = date( 'Y' ) + $range_relative_end;
+										$range_relative_start = bboss_xprofile_get_meta( $field->id, 'field', 'range_relative_start', true );
+										$range_relative_end   = bboss_xprofile_get_meta( $field->id, 'field', 'range_relative_end', true );
+										$start                = gmdate( 'Y' ) - abs( $range_relative_start );
+										$end                  = gmdate( 'Y' ) + $range_relative_end;
 									} elseif ( 'absolute' === $date_range_type ) {
-										$start = bp_xprofile_get_meta( $field->id, 'field', 'range_absolute_start', true );
-										$end   = bp_xprofile_get_meta( $field->id, 'field', 'range_absolute_end', true );
+										$start = bboss_xprofile_get_meta( $field->id, 'field', 'range_absolute_start', true );
+										$end   = bboss_xprofile_get_meta( $field->id, 'field', 'range_absolute_end', true );
 									} else {
-										$start = date( 'Y' ) - 50;// 50 years ago
-										$end   = date( 'Y' ) + 50;// 50 years in future
+										$start = gmdate( 'Y' ) - 50;// 50 years ago
+										$end   = gmdate( 'Y' ) + 50;// 50 years in future
 									}
 
 									for ( $i = $end; $i >= $start; $i-- ) {
@@ -175,23 +175,23 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 								</select>
 							</div>
 
-							<span class="date-to date-label"><?php _e( 'To', 'buddyboss' ); ?></span>
+							<span class="date-to date-label"><?php esc_html_e( 'To', 'buddyboss-platform' ); ?></span>
 							<div class="date-wrapper">
 								<select name="<?php echo esc_attr( $field_name . '[max][day]' ); ?>">
 										<?php
 										printf(
 											'<option value="" %1$s>%2$s</option>',
 											selected( $field_value['max']['day'], 0, false ),
-											/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' )
+											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss-platform' )
 										);
 
 										for ( $i = 1; $i < 32; ++$i ) {
 											$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
 											printf(
 												'<option value="%1$s" %2$s>%3$s</option>',
-												$day,
+												esc_attr( $day ),
 												selected( $field_value['max']['day'], $day, false ),
-												$i
+												esc_html( $i )
 											);
 										}
 										?>
@@ -203,7 +203,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['max']['month'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Month', 'buddyboss' )
+										esc_html__( 'Select Month', 'buddyboss-platform' )
 									);
 
 									for ( $i = 0; $i < 12; ++$i ) {
@@ -211,9 +211,9 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
 										printf(
 											'<option value="%1$s" %2$s>%3$s</option>',
-											$month,
+											esc_attr( $month ),
 											selected( $field_value['max']['month'], $month, false ),
-											$months[ $i ]
+											esc_html( $months[ $i ] )
 										);
 									}
 									?>
@@ -225,7 +225,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['max']['year'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Year', 'buddyboss' )
+										esc_html__( 'Select Year', 'buddyboss-platform' )
 									);
 									for ( $i = $end; $i >= $start; $i-- ) {
 										printf(
@@ -270,12 +270,12 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 							break;
 
 						case 'distance':
-							$of          = __( 'of', 'buddyboss' );
-							$km          = __( 'km', 'buddyboss' );
-							$miles       = __( 'miles', 'buddyboss' );
-							$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
-							$icon_url    = buddypress()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
-							$icon_title  = __( 'get current location', 'buddyboss' );
+							$of          = __( 'of', 'buddyboss-platform' );
+							$km          = __( 'km', 'buddyboss-platform' );
+							$miles       = __( 'miles', 'buddyboss-platform' );
+							$placeholder = __( 'Start typing, then select a location', 'buddyboss-platform' );
+							$icon_url    = bboss()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
+							$icon_title  = __( 'get current location', 'buddyboss-platform' );
 							?>
 
 							<input type="number" min="1" name="<?php echo esc_attr( $field_name . '[distance]' ); ?>" value="<?php echo esc_attr( $field_value['distance'] ); ?>"/>
@@ -293,15 +293,20 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 							<input type="hidden" id="<?php echo esc_attr( $field_id ); ?>_lat" name="<?php echo esc_attr( $field_name . '[lat]' ); ?>" value="<?php echo esc_attr( $field_value['lat'] ); ?>"/>
 							<input type="hidden" id="<?php echo esc_attr( $field_id ); ?>_lng" name="<?php echo esc_attr( $field_name . '[lng]' ); ?>" value="<?php echo esc_attr( $field_value['lng'] ); ?>"/>
 
-							<script>
-								jQuery(function ($) {
-									bp_ps_autocomplete('<?php echo esc_attr( $field_id ); ?>', '<?php echo esc_attr( $field_id ); ?>_lat', '<?php echo esc_attr( $field_id ); ?>_lng');
-									$('#<?php echo esc_attr( $field_id ); ?>_icon').click(function () {
-										bp_ps_locate('<?php echo esc_attr( $field_id ); ?>', '<?php echo esc_attr( $field_id ); ?>_lat', '<?php echo esc_attr( $field_id ); ?>_lng')
-									});
-								});
-							</script>
 							<?php
+							// Location autocomplete and locate handlers for this field, through the script API (was a raw <script>).
+							$inline_js = sprintf(
+								'jQuery( function ( $ ) { bp_ps_autocomplete( %1$s, %2$s, %3$s ); $( %4$s ).click( function () { bp_ps_locate( %1$s, %2$s, %3$s ); } ); } );',
+								wp_json_encode( (string) $field_id ),
+								wp_json_encode( $field_id . '_lat' ),
+								wp_json_encode( $field_id . '_lng' ),
+								wp_json_encode( '#' . $field_id . '_icon' )
+							);
+							if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+								wp_print_inline_script_tag( $inline_js );
+							} else {
+								echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- ids are wp_json_encode()'d above. WordPress < 5.7 only.
+							}
 							break;
 
 						case 'selectbox':
@@ -387,7 +392,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 			}
 		} else {
 			?>
-			<p class="no-field"><?php esc_html_e( 'Please add fields to search members.', 'buddyboss' ); ?></p>
+			<p class="no-field"><?php esc_html_e( 'Please add fields to search members.', 'buddyboss-platform' ); ?></p>
 			<?php
 		}
 		?>
@@ -397,8 +402,8 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 		if ( isset( $search_form_data->fields ) && ! empty( $search_form_data->fields ) && count( $search_form_data->fields ) > 1 ) {
 			?>
 			<div class="submit-wrapper">
-				<a href="#" class="bb-rl-profile-search-cancel bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-				<input type="submit" class="submit" value="<?php esc_html_e( 'Apply Filters', 'buddyboss' ); ?>"/>
+				<a href="#" class="bb-rl-profile-search-cancel bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+				<input type="submit" class="submit" value="<?php esc_html_e( 'Apply Filters', 'buddyboss-platform' ); ?>"/>
 			</div>
 		<?php } ?>
 

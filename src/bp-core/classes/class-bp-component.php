@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Component' ) ) :
+if ( ! class_exists( 'BBoss_Component' ) ) :
 
 	/**
 	 * BuddyPress Component Class.
@@ -22,7 +22,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 	 * @since BuddyPress 1.5.0
 	 */
 	#[\AllowDynamicProperties]
-	class BP_Component {
+	class BBoss_Component {
 
 		/** Variables *************************************************************/
 
@@ -162,7 +162,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 * @param string $id   Unique ID. Letters, numbers, and underscores only.
 		 * @param string $name Unique name. This should be a translatable name, eg.
 		 *                     __( 'Groups', 'buddyboss' ).
-		 * @param string $path The file path for the component's files. Used by {@link BP_Component::includes()}.
+		 * @param string $path The file path for the component's files. Used by {@link BBoss_Component::includes()}.
 		 * @param array  $params {
 		 *     Additional parameters used by the component.
 		 *     @type int    $adminbar_myaccount_order Set the position for our menu under the WP Toolbar's "My Account menu".
@@ -239,9 +239,9 @@ if ( ! class_exists( 'BP_Component' ) ) :
 
 			// If a WP directory page exists for the component, it should
 			// be the default value of 'root_slug'.
-			$default_root_slug = isset( buddypress()->pages->{$this->id}->slug ) ? buddypress()->pages->{$this->id}->slug : '';
+			$default_root_slug = isset( bboss()->pages->{$this->id}->slug ) ? bboss()->pages->{$this->id}->slug : '';
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'slug'                  => $this->id,
@@ -324,7 +324,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			 */
 
 			// Register this component in the loaded components array.
-			buddypress()->loaded_components[ $this->slug ] = $this->id;
+			bboss()->loaded_components[ $this->slug ] = $this->id;
 
 			/**
 			 * Filters the $blocks global value.
@@ -348,7 +348,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			}
 
 			/**
-			 * Fires at the end of the setup_globals method inside BP_Component.
+			 * Fires at the end of the setup_globals method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -420,7 +420,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			}
 
 			/**
-			 * Fires at the end of the includes method inside BP_Component.
+			 * Fires at the end of the includes method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -433,7 +433,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 * Late includes method.
 		 *
 		 * Components should include files here only on specific pages using
-		 * conditionals such as {@link bp_is_current_component()}. Intentionally left
+		 * conditionals such as {@link bboss_is_current_component()}. Intentionally left
 		 * empty.
 		 *
 		 * @since BuddyPress 3.0.0
@@ -497,17 +497,17 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			add_action( 'bp_generate_rewrite_rules', array( $this, 'generate_rewrite_rules' ), 10 );
 
 			// Register BP REST Endpoints.
-			if ( bp_rest_in_buddypress() && bp_rest_api_is_available() ) {
+			if ( bboss_rest_in_buddypress() && bboss_rest_api_is_available() ) {
 				add_action( 'bp_rest_api_init', array( $this, 'rest_api_init' ), 10 );
 			}
 
 			// Register BB Blocks.
-			if ( bb_support_blocks() ) {
+			if ( bboss_support_blocks() ) {
 				add_action( 'bb_blocks_init', array( $this, 'blocks_init' ), 10 );
 			}
 
 			/**
-			 * Fires at the end of the setup_actions method inside BP_Component.
+			 * Fires at the end of the setup_actions method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -528,33 +528,33 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 *
 		 * @since BuddyPress 1.5.0
 		 *
-		 * @see bp_core_new_nav_item() For a description of the $main_nav
+		 * @see bboss_core_new_nav_item() For a description of the $main_nav
 		 *      parameter formatting.
-		 * @see bp_core_new_subnav_item() For a description of how each item
+		 * @see bboss_core_new_subnav_item() For a description of how each item
 		 *      in the $sub_nav parameter array should be formatted.
 		 *
-		 * @param array $main_nav Optional. Passed directly to bp_core_new_nav_item().
+		 * @param array $main_nav Optional. Passed directly to bboss_core_new_nav_item().
 		 *                        See that function for a description.
 		 * @param array $sub_nav  Optional. Multidimensional array, each item in
-		 *                        which is passed to bp_core_new_subnav_item(). See that
+		 *                        which is passed to bboss_core_new_subnav_item(). See that
 		 *                        function for a description.
 		 */
 		public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
 			// No sub nav items without a main nav item.
 			if ( ! empty( $main_nav ) ) {
-				bp_core_new_nav_item( $main_nav, 'members' );
+				bboss_core_new_nav_item( $main_nav, 'members' );
 
 				// Sub nav items are not required.
 				if ( ! empty( $sub_nav ) ) {
 					foreach ( (array) $sub_nav as $nav ) {
-						bp_core_new_subnav_item( $nav, 'members' );
+						bboss_core_new_subnav_item( $nav, 'members' );
 					}
 				}
 			}
 
 			/**
-			 * Fires at the end of the setup_nav method inside BP_Component.
+			 * Fires at the end of the setup_nav method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -580,12 +580,12 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public function setup_admin_bar( $wp_admin_nav = array() ) {
 
 			// Bail if this is an ajax request.
-			if ( defined( 'DOING_AJAX' ) ) {
+			if ( defined( 'BBOSS_DOING_AJAX' ) ) {
 				return;
 			}
 
 			// Do not proceed if BP_USE_WP_ADMIN_BAR constant is not set or is false.
-			if ( ! bp_use_wp_admin_bar() ) {
+			if ( ! bboss_use_wp_admin_bar() ) {
 				return;
 			}
 
@@ -623,7 +623,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 				}
 
 				// Sort admin nav by position.
-				$wp_admin_nav = bp_sort_by_key( $wp_admin_nav, 'position', 'num' );
+				$wp_admin_nav = bboss_sort_by_key( $wp_admin_nav, 'position', 'num' );
 
 				// Set this objects menus.
 				$this->admin_menu = $wp_admin_nav;
@@ -638,7 +638,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			}
 
 			/**
-			 * Fires at the end of the setup_admin_bar method inside BP_Component.
+			 * Fires at the end of the setup_admin_bar method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -655,7 +655,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public function setup_title() {
 
 			/**
-			 * Fires in the setup_title method inside BP_Component.
+			 * Fires in the setup_title method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -672,7 +672,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public function setup_cache_groups() {
 
 			/**
-			 * Fires in the setup_cache_groups method inside BP_Component.
+			 * Fires in the setup_cache_groups method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -712,7 +712,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			}
 
 			/**
-			 * Fires at the end of the register_global_tables method inside BP_Component.
+			 * Fires at the end of the register_global_tables method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -759,7 +759,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			}
 
 			/**
-			 * Fires at the end of the register_meta_tables method inside BP_Component.
+			 * Fires at the end of the register_meta_tables method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -776,7 +776,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public function register_post_types() {
 
 			/**
-			 * Fires in the register_post_types method inside BP_Component.
+			 * Fires in the register_post_types method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -793,7 +793,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public function register_taxonomies() {
 
 			/**
-			 * Fires in the register_taxonomies method inside BP_Component.
+			 * Fires in the register_taxonomies method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -810,7 +810,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public function add_rewrite_tags() {
 
 			/**
-			 * Fires in the add_rewrite_tags method inside BP_Component.
+			 * Fires in the add_rewrite_tags method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -827,7 +827,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public function add_rewrite_rules() {
 
 			/**
-			 * Fires in the add_rewrite_rules method inside BP_Component.
+			 * Fires in the add_rewrite_rules method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -844,7 +844,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public function add_permastructs() {
 
 			/**
-			 * Fires in the add_permastructs method inside BP_Component.
+			 * Fires in the add_permastructs method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -863,7 +863,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public function parse_query( $query ) {
 
 			/**
-			 * Fires in the parse_query method inside BP_Component.
+			 * Fires in the parse_query method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -882,7 +882,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public function generate_rewrite_rules() {
 
 			/**
-			 * Fires in the generate_rewrite_rules method inside BP_Component.
+			 * Fires in the generate_rewrite_rules method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -911,8 +911,8 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			// the moment the standalone Platform REST API plugin is off
 			// and Platform's bundled controllers become the only path.
 			if (
-				! bp_is_active( $this->id ) &&
-				! in_array( $this->id, (array) buddypress()->required_components, true )
+				! bboss_is_active( $this->id ) &&
+				! in_array( $this->id, (array) bboss()->required_components, true )
 			) {
 				return;
 			}
@@ -944,7 +944,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			}
 
 			/**
-			 * Fires in the rest_api_init method inside BP_Component.
+			 * Fires in the rest_api_init method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
@@ -958,7 +958,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 *
 		 * @since BuddyBoss 2.9.00
 		 *
-		 * @see `BB_Block->construct()` for a full description of a BB Block arguments.
+		 * @see `BBoss_Block->construct()` for a full description of a BB Block arguments.
 		 *
 		 * @param array $blocks The list of BB Blocks to register.
 		 */
@@ -970,8 +970,8 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			// required components explicitly so foundational components
 			// like `core` keep registering their blocks.
 			if (
-				! bp_is_active( $this->id ) &&
-				! in_array( $this->id, (array) buddypress()->required_components, true )
+				! bboss_is_active( $this->id ) &&
+				! in_array( $this->id, (array) bboss()->required_components, true )
 			) {
 				return;
 			}
@@ -990,12 +990,12 @@ if ( ! class_exists( 'BP_Component' ) ) :
 
 			if ( $blocks ) {
 				foreach ( $blocks as $block ) {
-					bb_register_block( $block );
+					bboss_register_block( $block );
 				}
 			}
 
 			/**
-			 * Fires in the blocks_init method inside BP_Component.
+			 * Fires in the blocks_init method inside BBoss_Component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *

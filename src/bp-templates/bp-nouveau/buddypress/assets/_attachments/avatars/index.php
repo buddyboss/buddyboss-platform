@@ -11,6 +11,9 @@
  * @version 3.1.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * This action is for internal use, please do not use it
  */
@@ -24,22 +27,22 @@ do_action( 'bp_attachments_avatar_check_template' );
 	<a href="{{data.href}}" class="bp-avatar-nav-item" data-nav="{{data.id}}">{{data.name}}</a>
 </script>
 
-<?php bp_attachments_get_template_part( 'uploader' ); ?>
+<?php bboss_attachments_get_template_part( 'uploader' ); ?>
 
-<?php bp_attachments_get_template_part( 'avatars/crop' ); ?>
+<?php bboss_attachments_get_template_part( 'avatars/crop' ); ?>
 
-<?php bp_attachments_get_template_part( 'avatars/camera' ); ?>
+<?php bboss_attachments_get_template_part( 'avatars/camera' ); ?>
 
 <script id="tmpl-bp-avatar-delete" type="text/html">
 	<# if ( 'user' === data.object && 'custom' === data.item_id ) { #>
-		<p><?php esc_html_e( "If you'd like to delete default custom profile photo, use the delete profile photo button.", 'buddyboss' ); ?></p>
-		<button type="button" class="button edit" id="bp-delete-avatar"><?php esc_html_e( 'Delete Profile Photo', 'buddyboss' ); ?></button>
+		<p><?php esc_html_e( "If you'd like to delete default custom profile photo, use the delete profile photo button.", 'buddyboss-platform' ); ?></p>
+		<button type="button" class="button edit" id="bp-delete-avatar"><?php esc_html_e( 'Delete Profile Photo', 'buddyboss-platform' ); ?></button>
 	<# } else if ( 'user' === data.object && 'custom' !== data.item_id ) { #>
-		<p><?php esc_html_e( "If you'd like to delete your current profile photo, use the delete profile photo button.", 'buddyboss' ); ?></p>
-		<button type="button" class="button edit" id="bp-delete-avatar"><?php esc_html_e( 'Delete My Profile Photo', 'buddyboss' ); ?></button>
+		<p><?php esc_html_e( "If you'd like to delete your current profile photo, use the delete profile photo button.", 'buddyboss-platform' ); ?></p>
+		<button type="button" class="button edit" id="bp-delete-avatar"><?php esc_html_e( 'Delete My Profile Photo', 'buddyboss-platform' ); ?></button>
 	<# } else if ( 'group' === data.object ) { #>
-		<?php bp_nouveau_user_feedback( 'group-avatar-delete-info' ); ?>
-		<button type="button" class="button edit" id="bp-delete-avatar"><?php esc_html_e( 'Delete Group Profile Photo', 'buddyboss' ); ?></button>
+		<?php bboss_nouveau_user_feedback( 'group-avatar-delete-info' ); ?>
+		<button type="button" class="button edit" id="bp-delete-avatar"><?php esc_html_e( 'Delete Group Profile Photo', 'buddyboss-platform' ); ?></button>
 	<# } else { #>
 		<?php
 			/**

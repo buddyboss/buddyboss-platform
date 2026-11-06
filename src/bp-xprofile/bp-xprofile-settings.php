@@ -17,13 +17,13 @@ defined( 'ABSPATH' ) || exit;
  * @param array|string $args Array of args for the settings fields.
  * @return bool
  */
-function bp_xprofile_get_settings_fields( $args = '' ) {
+function bboss_xprofile_get_settings_fields( $args = '' ) {
 
 	// Parse the possible arguments.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
-			'user_id'                => bp_displayed_user_id(),
+			'user_id'                => bboss_displayed_user_id(),
 			'profile_group_id'       => false,
 			'hide_empty_groups'      => false,
 			'hide_empty_fields'      => false,
@@ -36,7 +36,7 @@ function bp_xprofile_get_settings_fields( $args = '' ) {
 		'xprofile_get_settings_fields'
 	);
 
-	return bp_has_profile( $r );
+	return bboss_has_profile( $r );
 }
 
 /**
@@ -44,18 +44,18 @@ function bp_xprofile_get_settings_fields( $args = '' ) {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_xprofile_settings_add_feedback_message() {
+function bboss_xprofile_settings_add_feedback_message() {
 
 	// Default message type is success.
 	$type    = 'success';
-	$message = __( 'Your profile settings have been saved.', 'buddyboss' );
+	$message = __( 'Your profile settings have been saved.', 'buddyboss-platform' );
 
 	// Community moderator editing another user's settings.
-	if ( ! bp_is_my_profile() && bp_core_can_edit_settings() ) {
-		$message = __( "This member's profile settings have been saved.", 'buddyboss' );
+	if ( ! bboss_is_my_profile() && bboss_core_can_edit_settings() ) {
+		$message = __( "This member's profile settings have been saved.", 'buddyboss-platform' );
 	}
 
 	// Add the message.
-	bp_core_add_message( $message, $type );
+	bboss_core_add_message( $message, $type );
 }
-add_action( 'bp_xprofile_settings_after_save', 'bp_xprofile_settings_add_feedback_message' );
+add_action( 'bp_xprofile_settings_after_save', 'bboss_xprofile_settings_add_feedback_message' );

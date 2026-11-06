@@ -19,31 +19,31 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param array|bool $active_components Components to install.
  */
-function bp_core_install( $active_components = false ) {
+function bboss_core_install( $active_components = false ) {
 
-	bp_pre_schema_upgrade();
+	bboss_pre_schema_upgrade();
 
 	// If no components passed, get all the active components from the main site.
 	if ( empty( $active_components ) ) {
 
 		/** This filter is documented in bp-core/classes/class-bp-core.php */
-		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
+		$active_components = apply_filters( 'bp_active_components', bboss_get_option( 'bp-active-components' ) );
 
 		// check for xprofile is active component in db or not if not then update it.
 		if ( empty( $active_components['xprofile'] ) ) {
 			$active_components['xprofile'] = 1;
 
-			bp_update_option( 'bp-active-components', $active_components );
+			bboss_update_option( 'bp-active-components', $active_components );
 		}
 	}
 
-	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+	if ( function_exists( 'bboss_is_email_queue' ) && bboss_is_email_queue() ) {
 		// Install email queue table.
-		bb_email_queue()::create_db_table();
+		bboss_email_queue()::create_db_table();
 	}
 
-	if ( function_exists( 'bb_load_reaction' ) ) {
-		$reaction = bb_load_reaction();
+	if ( function_exists( 'bboss_load_reaction' ) ) {
+		$reaction = bboss_load_reaction();
 		if ( $reaction ) {
 			// Create table for the bb reactions.
 			$reaction->create_table();
@@ -52,79 +52,79 @@ function bp_core_install( $active_components = false ) {
 	}
 
 	// Install Activity Feeds even when inactive (to store last_activity data).
-	bp_core_install_activity_streams();
+	bboss_core_install_activity_streams();
 
 	// Install the signups table.
-	bp_core_maybe_install_signups();
+	bboss_core_maybe_install_signups();
 
 	// Install item subscriptions.
-	bb_core_install_subscription();
+	bboss_core_install_subscription();
 
 	// Install bookmarks.
-	bb_core_install_bookmarks();
+	bboss_core_install_bookmarks();
 
 	// Install background process logs.
-	if ( class_exists( 'BB_BG_Process_Log' ) ) {
-		BB_BG_Process_Log::instance()->create_table();
+	if ( class_exists( 'BBoss_BG_Process_Log' ) ) {
+		BBoss_BG_Process_Log::instance()->create_table();
 	}
 
 	// Install activity topics manager table.
-	if ( function_exists( 'bb_topics_manager_instance' ) ) {
-		bb_topics_manager_instance()->create_tables();
+	if ( function_exists( 'bboss_topics_manager_instance' ) ) {
+		bboss_topics_manager_instance()->create_tables();
 	}
 
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
-		bp_core_install_notifications();
+		bboss_core_install_notifications();
 	}
 
 	// Connections.
 	if ( ! empty( $active_components['friends'] ) ) {
-		bp_core_install_friends();
+		bboss_core_install_friends();
 	}
 
 	// Follow.
 	if ( ! empty( $active_components['activity'] ) ) {
-		bp_core_install_follow();
+		bboss_core_install_follow();
 	}
 
 	// Extensible Groups.
 	if ( ! empty( $active_components['groups'] ) ) {
-		bp_core_install_groups();
+		bboss_core_install_groups();
 	}
 
 	// Private Messaging.
 	if ( ! empty( $active_components['messages'] ) ) {
-		bp_core_install_private_messaging();
+		bboss_core_install_private_messaging();
 	}
 
 	// Profile Fields.
 	if ( ! empty( $active_components['xprofile'] ) ) {
-		bp_core_install_extended_profiles();
+		bboss_core_install_extended_profiles();
 	}
 
 	// Blog tracking.
 	if ( ! empty( $active_components['blogs'] ) ) {
-		bp_core_install_blog_tracking();
+		bboss_core_install_blog_tracking();
 	}
 
 	// Discussion forums.
 	if ( ! empty( $active_components['forums'] ) ) {
-		bp_core_install_discussion_forums();
+		bboss_core_install_discussion_forums();
 	}
 
 	// Media.
 	if ( ! empty( $active_components['media'] ) ) {
-		bp_core_install_media();
-		bp_core_install_document();
-		if ( false === bp_get_option( 'bp_media_symlink_support', false ) ) {
-			bp_update_option( 'bp_media_symlink_support', 1 );
+		bboss_core_install_media();
+		bboss_core_install_document();
+		if ( false === bboss_get_option( 'bp_media_symlink_support', false ) ) {
+			bboss_update_option( 'bp_media_symlink_support', 1 );
 		}
 	}
 
 	if ( ! empty( $active_components['moderation'] ) ) {
-		bp_core_install_suspend();
-		bp_core_install_moderation();
+		bboss_core_install_suspend();
+		bboss_core_install_moderation();
 	}
 
 	if ( class_exists( '\BuddyBoss\Performance\Performance' ) ) {
@@ -145,10 +145,10 @@ function bp_core_install( $active_components = false ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_uninstall( $uninstalled_components ) {
+function bboss_core_uninstall( $uninstalled_components ) {
 	// Discussion forums
 	if ( ! empty( $uninstalled_components['forums'] ) ) {
-		bp_core_uninstall_discussion_forums();
+		bboss_core_uninstall_discussion_forums();
 	}
 }
 
@@ -157,10 +157,10 @@ function bp_core_uninstall( $uninstalled_components ) {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_core_install_notifications() {
+function bboss_core_install_notifications() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_notifications (
 				id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -199,10 +199,10 @@ function bp_core_install_notifications() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_core_install_activity_streams() {
+function bboss_core_install_activity_streams() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_activity (
 				id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -260,10 +260,10 @@ function bp_core_install_activity_streams() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_core_install_friends() {
+function bboss_core_install_friends() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_friends (
 				id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -285,10 +285,10 @@ function bp_core_install_friends() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_install_follow() {
+function bboss_core_install_follow() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_follow (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -306,10 +306,10 @@ function bp_core_install_follow() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_core_install_groups() {
+function bboss_core_install_groups() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_groups (
 				id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -377,10 +377,10 @@ function bp_core_install_groups() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_core_install_private_messaging() {
+function bboss_core_install_private_messaging() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_messages_messages (
 				id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -440,10 +440,10 @@ function bp_core_install_private_messaging() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_core_install_extended_profiles() {
+function bboss_core_install_extended_profiles() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_xprofile_groups (
 				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -500,8 +500,8 @@ function bp_core_install_extended_profiles() {
 
 	dbDelta( $sql );
 
-	bb_core_install_xprofile_visibility();
-	bp_core_install_default_profiles_fields();
+	bboss_core_install_xprofile_visibility();
+	bboss_core_install_default_profiles_fields();
 }
 
 /**
@@ -509,42 +509,42 @@ function bp_core_install_extended_profiles() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_install_default_profiles_fields() {
+function bboss_core_install_default_profiles_fields() {
 	global $wpdb;
 
-	$bp_prefix = bp_core_get_table_prefix();
+	$bp_prefix = bboss_core_get_table_prefix();
 
-	bp_core_update_group_fields_id_in_db();
+	bboss_core_update_group_fields_id_in_db();
 
 	$is_multisite = is_multisite() ? true : false;
 
 	// These values should only be updated if they are not already present.
-	if ( ! bp_get_option( 'bp-xprofile-base-group-name' ) ) {
-		bp_update_option( 'bp-xprofile-base-group-name', __( 'General', 'buddyboss' ) );
+	if ( ! bboss_get_option( 'bp-xprofile-base-group-name' ) ) {
+		bboss_update_option( 'bp-xprofile-base-group-name', __( 'General', 'buddyboss-platform' ) );
 	}
 
-	if ( ! bp_get_option( 'bp-xprofile-firstname-field-name' ) ) {
-		bp_update_option( 'bp-xprofile-firstname-field-name', __( 'First Name', 'buddyboss' ) );
+	if ( ! bboss_get_option( 'bp-xprofile-firstname-field-name' ) ) {
+		bboss_update_option( 'bp-xprofile-firstname-field-name', __( 'First Name', 'buddyboss-platform' ) );
 	}
 
-	if ( ! bp_get_option( 'bp-xprofile-lastname-field-name' ) ) {
-		bp_update_option( 'bp-xprofile-lastname-field-name', __( 'Last Name', 'buddyboss' ) );
+	if ( ! bboss_get_option( 'bp-xprofile-lastname-field-name' ) ) {
+		bboss_update_option( 'bp-xprofile-lastname-field-name', __( 'Last Name', 'buddyboss-platform' ) );
 	}
 
-	if ( ! bp_get_option( 'bp-xprofile-nickname-field-name' ) ) {
-		bp_update_option( 'bp-xprofile-nickname-field-name', __( 'Nickname', 'buddyboss' ) );
+	if ( ! bboss_get_option( 'bp-xprofile-nickname-field-name' ) ) {
+		bboss_update_option( 'bp-xprofile-nickname-field-name', __( 'Nickname', 'buddyboss-platform' ) );
 	}
 
 	// Insert the default group and fields.
 	$insert_sql = array();
 
-	$base_group_id = bp_xprofile_base_group_id();
+	$base_group_id = bboss_xprofile_base_group_id();
 	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_groups WHERE id = {$base_group_id}" ) ) {
 
 		$result = $wpdb->insert(
 			"{$bp_prefix}bp_xprofile_groups",
 			array(
-				'name'        => bp_get_option( 'bp-xprofile-base-group-name' ),
+				'name'        => bboss_get_option( 'bp-xprofile-base-group-name' ),
 				'description' => '',
 				'can_delete'  => 0,
 			)
@@ -557,10 +557,10 @@ function bp_core_install_default_profiles_fields() {
 			}
 		}
 	}
-	bp_update_option( 'bp-xprofile-base-group-id', $base_group_id );
+	bboss_update_option( 'bp-xprofile-base-group-id', $base_group_id );
 
 	// First name
-	$first_name_id = bp_xprofile_firstname_field_id();
+	$first_name_id = bboss_xprofile_firstname_field_id();
 
 	if ( $first_name_id > 0 ) {
 		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$first_name_id}" ) ) {
@@ -570,7 +570,7 @@ function bp_core_install_default_profiles_fields() {
 					'group_id'    => $base_group_id,
 					'parent_id'   => 0,
 					'type'        => 'textbox',
-					'name'        => bp_get_option( 'bp-xprofile-firstname-field-name' ),
+					'name'        => bboss_get_option( 'bp-xprofile-firstname-field-name' ),
 					'description' => '',
 					'is_required' => 1,
 					'can_delete'  => 0,
@@ -590,7 +590,7 @@ function bp_core_install_default_profiles_fields() {
 				'group_id'    => $base_group_id,
 				'parent_id'   => 0,
 				'type'        => 'textbox',
-				'name'        => bp_get_option( 'bp-xprofile-firstname-field-name' ),
+				'name'        => bboss_get_option( 'bp-xprofile-firstname-field-name' ),
 				'description' => '',
 				'is_required' => 1,
 				'can_delete'  => 0,
@@ -603,10 +603,10 @@ function bp_core_install_default_profiles_fields() {
 			}
 		}
 	}
-	bp_update_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+	bboss_update_option( 'bp-xprofile-firstname-field-id', $first_name_id );
 
 	// Last name
-	$last_name_id = bp_xprofile_lastname_field_id();
+	$last_name_id = bboss_xprofile_lastname_field_id();
 	if ( $last_name_id > 0 ) {
 		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$last_name_id}" ) ) {
 			$result = $wpdb->insert(
@@ -615,7 +615,7 @@ function bp_core_install_default_profiles_fields() {
 					'group_id'    => $base_group_id,
 					'parent_id'   => 0,
 					'type'        => 'textbox',
-					'name'        => bp_get_option( 'bp-xprofile-lastname-field-name' ),
+					'name'        => bboss_get_option( 'bp-xprofile-lastname-field-name' ),
 					'description' => '',
 					'is_required' => 1,
 					'can_delete'  => 0,
@@ -635,7 +635,7 @@ function bp_core_install_default_profiles_fields() {
 				'group_id'    => $base_group_id,
 				'parent_id'   => 0,
 				'type'        => 'textbox',
-				'name'        => bp_get_option( 'bp-xprofile-lastname-field-name' ),
+				'name'        => bboss_get_option( 'bp-xprofile-lastname-field-name' ),
 				'description' => '',
 				'is_required' => 1,
 				'can_delete'  => 0,
@@ -648,10 +648,10 @@ function bp_core_install_default_profiles_fields() {
 			}
 		}
 	}
-	bp_update_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+	bboss_update_option( 'bp-xprofile-lastname-field-id', $last_name_id );
 
 	// Nickname
-	$nickname_id = bp_xprofile_nickname_field_id();
+	$nickname_id = bboss_xprofile_nickname_field_id();
 	if ( $last_name_id > 0 ) {
 		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$nickname_id}" ) ) {
 			$result = $wpdb->insert(
@@ -660,7 +660,7 @@ function bp_core_install_default_profiles_fields() {
 					'group_id'    => $base_group_id,
 					'parent_id'   => 0,
 					'type'        => 'textbox',
-					'name'        => bp_get_option( 'bp-xprofile-nickname-field-name' ),
+					'name'        => bboss_get_option( 'bp-xprofile-nickname-field-name' ),
 					'description' => '',
 					'is_required' => 1,
 					'can_delete'  => 0,
@@ -680,7 +680,7 @@ function bp_core_install_default_profiles_fields() {
 				'group_id'    => $base_group_id,
 				'parent_id'   => 0,
 				'type'        => 'textbox',
-				'name'        => bp_get_option( 'bp-xprofile-nickname-field-name' ),
+				'name'        => bboss_get_option( 'bp-xprofile-nickname-field-name' ),
 				'description' => '',
 				'is_required' => 1,
 				'can_delete'  => 0,
@@ -693,7 +693,7 @@ function bp_core_install_default_profiles_fields() {
 			}
 		}
 	}
-	bp_update_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+	bboss_update_option( 'bp-xprofile-nickname-field-id', $nickname_id );
 }
 
 /**
@@ -701,10 +701,10 @@ function bp_core_install_default_profiles_fields() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_core_install_blog_tracking() {
+function bboss_core_install_blog_tracking() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_user_blogs (
 				id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -735,12 +735,12 @@ function bp_core_install_blog_tracking() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_install_discussion_forums() {
-	require_once buddypress()->plugin_dir . 'bp-forums/classes/class-bbpress.php';
-	bbpress();
+function bboss_core_install_discussion_forums() {
+	require_once bboss()->plugin_dir . 'bp-forums/classes/class-bbpress.php';
+	bboss_forums();
 
-	bbp_activation();
-	bbp_map_caps_to_wp_roles();
+	bboss_bbp_activation();
+	bboss_bbp_map_caps_to_wp_roles();
 }
 
 /**
@@ -748,8 +748,8 @@ function bp_core_install_discussion_forums() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_uninstall_discussion_forums() {
-	bbp_deactivation();
+function bboss_core_uninstall_discussion_forums() {
+	bboss_bbp_deactivation();
 }
 
 /** Media *********************************************************/
@@ -759,10 +759,10 @@ function bp_core_uninstall_discussion_forums() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_install_media() {
+function bboss_core_install_media() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_media_albums (
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -808,10 +808,10 @@ function bp_core_install_media() {
 	dbDelta( $sql );
 }
 
-function bp_core_install_document() {
+function bboss_core_install_document() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_folder (
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -891,11 +891,11 @@ function bp_core_install_document() {
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
-function bp_core_install_signups() {
+function bboss_core_install_signups() {
 	global $wpdb;
 
 	// Signups is not there and we need it so let's create it.
-	require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+	require_once bboss()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 	// Never use bp_core_get_table_prefix() for any global users tables.
@@ -938,7 +938,7 @@ function bp_core_install_signups() {
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
-function bp_core_upgrade_signups() {
+function bboss_core_upgrade_signups() {
 	global $wpdb;
 
 	// Bail if global tables should not be upgraded.
@@ -959,14 +959,14 @@ function bp_core_upgrade_signups() {
  *
  * @since BuddyPress 2.5.0
  */
-function bp_core_install_emails() {
+function bboss_core_install_emails() {
 	$defaults = array(
 		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
+		'post_type'   => bboss_get_email_post_type(),
 	);
 
-	$emails       = bp_email_get_schema();
-	$descriptions = bp_email_get_type_schema( 'description' );
+	$emails       = bboss_email_get_schema();
+	$descriptions = bboss_email_get_type_schema( 'description' );
 
 	// Add these emails to the database.
 	foreach ( $emails as $id => $email ) {
@@ -976,17 +976,17 @@ function bp_core_install_emails() {
 			continue;
 		}
 
-		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		$post_id = wp_insert_post( bboss_parse_args( $email, $defaults, 'install_email_' . $id ) );
 		if ( ! $post_id ) {
 			continue;
 		}
 
-		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		$tt_ids = wp_set_object_terms( $post_id, $id, bboss_get_email_tax_type() );
 		foreach ( $tt_ids as $tt_id ) {
-			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bboss_get_email_tax_type() );
 			wp_update_term(
 				(int) $term->term_id,
-				bp_get_email_tax_type(),
+				bboss_get_email_tax_type(),
 				array(
 					'description' => $descriptions[ $id ],
 				)
@@ -994,7 +994,7 @@ function bp_core_install_emails() {
 		}
 	}
 
-	bp_update_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
+	bboss_update_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
 
 	/**
 	 * Fires after BuddyPress adds the posts for its emails.
@@ -1009,14 +1009,14 @@ function bp_core_install_emails() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_install_bbp_emails() {
+function bboss_core_install_bbp_emails() {
 	$defaults = array(
 		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
+		'post_type'   => bboss_get_email_post_type(),
 	);
 
-	$emails       = bp_email_get_schema();
-	$descriptions = bp_email_get_type_schema( 'description' );
+	$emails       = bboss_email_get_schema();
+	$descriptions = bboss_email_get_type_schema( 'description' );
 
 	// Add these emails to the database.
 	foreach ( $emails as $id => $email ) {
@@ -1030,17 +1030,17 @@ function bp_core_install_bbp_emails() {
 			continue;
 		}
 
-		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		$post_id = wp_insert_post( bboss_parse_args( $email, $defaults, 'install_email_' . $id ) );
 		if ( ! $post_id ) {
 			continue;
 		}
 
-		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		$tt_ids = wp_set_object_terms( $post_id, $id, bboss_get_email_tax_type() );
 		foreach ( $tt_ids as $tt_id ) {
-			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bboss_get_email_tax_type() );
 			wp_update_term(
 				(int) $term->term_id,
-				bp_get_email_tax_type(),
+				bboss_get_email_tax_type(),
 				array(
 					'description' => $descriptions[ $id ],
 				)
@@ -1048,7 +1048,7 @@ function bp_core_install_bbp_emails() {
 		}
 	}
 
-	bp_update_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
+	bboss_update_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
 
 	/**
 	 * Fires after BuddyPress adds the posts for its bbp emails.
@@ -1063,14 +1063,14 @@ function bp_core_install_bbp_emails() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_install_invites_email() {
+function bboss_core_install_invites_email() {
 	$defaults = array(
 		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
+		'post_type'   => bboss_get_email_post_type(),
 	);
 
-	$emails       = bp_email_get_schema();
-	$descriptions = bp_email_get_type_schema( 'description' );
+	$emails       = bboss_email_get_schema();
+	$descriptions = bboss_email_get_type_schema( 'description' );
 
 	// Add these emails to the database.
 	foreach ( $emails as $id => $email ) {
@@ -1084,17 +1084,17 @@ function bp_core_install_invites_email() {
 			continue;
 		}
 
-		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		$post_id = wp_insert_post( bboss_parse_args( $email, $defaults, 'install_email_' . $id ) );
 		if ( ! $post_id ) {
 			continue;
 		}
 
-		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		$tt_ids = wp_set_object_terms( $post_id, $id, bboss_get_email_tax_type() );
 		foreach ( $tt_ids as $tt_id ) {
-			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bboss_get_email_tax_type() );
 			wp_update_term(
 				(int) $term->term_id,
-				bp_get_email_tax_type(),
+				bboss_get_email_tax_type(),
 				array(
 					'description' => $descriptions[ $id ],
 				)
@@ -1115,14 +1115,14 @@ function bp_core_install_invites_email() {
  *
  * @since BuddyBoss 1.2.9
  */
-function bp_core_install_group_message_email() {
+function bboss_core_install_group_message_email() {
 	$defaults = array(
 		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
+		'post_type'   => bboss_get_email_post_type(),
 	);
 
-	$emails       = bp_email_get_schema();
-	$descriptions = bp_email_get_type_schema( 'description' );
+	$emails       = bboss_email_get_schema();
+	$descriptions = bboss_email_get_type_schema( 'description' );
 
 	// Add these emails to the database.
 	foreach ( $emails as $id => $email ) {
@@ -1136,17 +1136,17 @@ function bp_core_install_group_message_email() {
 			continue;
 		}
 
-		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		$post_id = wp_insert_post( bboss_parse_args( $email, $defaults, 'install_email_' . $id ) );
 		if ( ! $post_id ) {
 			continue;
 		}
 
-		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		$tt_ids = wp_set_object_terms( $post_id, $id, bboss_get_email_tax_type() );
 		foreach ( $tt_ids as $tt_id ) {
-			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bboss_get_email_tax_type() );
 			wp_update_term(
 				(int) $term->term_id,
-				bp_get_email_tax_type(),
+				bboss_get_email_tax_type(),
 				array(
 					'description' => $descriptions[ $id ],
 				)
@@ -1169,14 +1169,14 @@ function bp_core_install_group_message_email() {
  *
  * @since BuddyPress 5.0.0
  *
- * @uses  bp_core_set_charset()
- * @uses  bp_core_get_table_prefix()
+ * @uses  bboss_core_set_charset()
+ * @uses  bboss_core_get_table_prefix()
  * @uses  dbDelta()
  */
-function bp_core_install_invitations() {
+function bboss_core_install_invitations() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 	$sql[]           = "CREATE TABLE {$bp_prefix}bp_invitations (
 		id bigint(20) NOT NULL AUTO_INCREMENT,
 		user_id bigint(20) NOT NULL,
@@ -1228,14 +1228,14 @@ function bp_core_install_invitations() {
  *
  * @since BuddyBoss 1.5.6
  *
- * @uses  bp_core_set_charset()
- * @uses  bp_core_get_table_prefix()
+ * @uses  bboss_core_set_charset()
+ * @uses  bboss_core_get_table_prefix()
  * @uses  dbDelta()
  */
-function bp_core_install_suspend() {
+function bboss_core_install_suspend() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend (
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1286,14 +1286,14 @@ function bp_core_install_suspend() {
  *
  * @since BuddyBoss 1.5.6
  *
- * @uses  bp_core_set_charset()
- * @uses  bp_core_get_table_prefix()
+ * @uses  bboss_core_set_charset()
+ * @uses  bboss_core_get_table_prefix()
  * @uses  dbDelta()
  */
-function bp_core_install_moderation() {
+function bboss_core_install_moderation() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation (
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1326,15 +1326,15 @@ function bp_core_install_moderation() {
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_core_install_moderation_emails() {
+function bboss_core_install_moderation_emails() {
 
 	$defaults = array(
 		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
+		'post_type'   => bboss_get_email_post_type(),
 	);
 
-	$emails       = bp_email_get_schema();
-	$descriptions = bp_email_get_type_schema( 'description' );
+	$emails       = bboss_email_get_schema();
+	$descriptions = bboss_email_get_type_schema( 'description' );
 
 	// Add these emails to the database.
 	foreach ( $emails as $id => $email ) {
@@ -1348,17 +1348,17 @@ function bp_core_install_moderation_emails() {
 			continue;
 		}
 
-		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		$post_id = wp_insert_post( bboss_parse_args( $email, $defaults, 'install_email_' . $id ) );
 		if ( ! $post_id ) {
 			continue;
 		}
 
-		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		$tt_ids = wp_set_object_terms( $post_id, $id, bboss_get_email_tax_type() );
 		foreach ( $tt_ids as $tt_id ) {
-			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bboss_get_email_tax_type() );
 			wp_update_term(
 				(int) $term->term_id,
-				bp_get_email_tax_type(),
+				bboss_get_email_tax_type(),
 				array(
 					'description' => $descriptions[ $id ],
 				)
@@ -1381,13 +1381,13 @@ function bp_core_install_moderation_emails() {
  * @since BuddyBoss 2.2.6
  *
  * @uses  get_charset_collate()
- * @uses  bp_core_get_table_prefix()
+ * @uses  bboss_core_get_table_prefix()
  * @uses  dbDelta()
  */
-function bb_core_install_subscription() {
+function bboss_core_install_subscription() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bb_notifications_subscriptions (
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1424,13 +1424,13 @@ function bb_core_install_subscription() {
  * @since BuddyBoss 3.2.0
  *
  * @uses get_charset_collate()
- * @uses bp_core_get_table_prefix()
+ * @uses bboss_core_get_table_prefix()
  * @uses dbDelta()
  */
-function bb_core_install_bookmarks() {
+function bboss_core_install_bookmarks() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-	$bp_prefix       = bp_core_get_table_prefix();
+	$bp_prefix       = bboss_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bb_bookmark (
 		id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1459,13 +1459,13 @@ function bb_core_install_bookmarks() {
  *
  * @since BuddyBoss 2.6.50
  *
- * @uses  bp_core_get_table_prefix()
+ * @uses  bboss_core_get_table_prefix()
  * @uses  dbDelta()
  */
-function bb_core_install_xprofile_visibility() {
+function bboss_core_install_xprofile_visibility() {
 	global $wpdb;
 
-	$bp_prefix = bp_core_get_table_prefix();
+	$bp_prefix = bboss_core_get_table_prefix();
 	
 	// Install bb_xprofile_visibility table if already not exists.
 	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bb_xprofile_visibility' ) );

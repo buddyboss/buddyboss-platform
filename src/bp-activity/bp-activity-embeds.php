@@ -17,10 +17,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.6.0
  */
-function bp_activity_setup_oembed() {
-	buddypress()->activity->oembed = new BP_Activity_oEmbed_Extension();
+function bboss_activity_setup_oembed() {
+	bboss()->activity->oembed = new BBoss_Activity_oEmbed_Extension();
 }
-add_action( 'bp_loaded', 'bp_activity_setup_oembed' );
+add_action( 'bp_loaded', 'bboss_activity_setup_oembed' );
 
 /**
  * Catch links in embed excerpt so top.location.href can be added.
@@ -33,18 +33,18 @@ add_action( 'bp_loaded', 'bp_activity_setup_oembed' );
  * @param  string $text Embed excerpt
  * @return string
  */
-function bp_activity_embed_excerpt_onclick_location_filter( $text ) {
-	return preg_replace_callback( '/<a\s+[^>]*href=\"([^\"]*)\"/iU', 'bp_activity_embed_excerpt_onclick_location_filter_callback', $text );
+function bboss_activity_embed_excerpt_onclick_location_filter( $text ) {
+	return preg_replace_callback( '/<a\s+[^>]*href=\"([^\"]*)\"/iU', 'bboss_activity_embed_excerpt_onclick_location_filter_callback', $text );
 }
 	/**
 	 * Add onclick="top.location.href" to a link.
 	 *
 	 * @since BuddyPress 2.6.0
 	 *
-	 * @param  array $matches Items matched by bp_activity_embed_excerpt_onclick_location_filter().
+	 * @param  array $matches Items matched by bboss_activity_embed_excerpt_onclick_location_filter().
 	 * @return string
 	 */
-function bp_activity_embed_excerpt_onclick_location_filter_callback( $matches ) {
+function bboss_activity_embed_excerpt_onclick_location_filter_callback( $matches ) {
 	return sprintf( '<a href="%1$s" onclick="top.location.href=\'%1$s\'"', $matches[1] );
 }
 
@@ -53,17 +53,17 @@ function bp_activity_embed_excerpt_onclick_location_filter_callback( $matches ) 
  *
  * @since BuddyPress  2.6.0
  */
-function bp_activity_embed_add_inline_styles() {
-	if ( false === bp_is_single_activity() ) {
+function bboss_activity_embed_add_inline_styles() {
+	if ( false === bboss_is_single_activity() ) {
 		return;
 	}
 
-	$min = bp_core_get_minified_asset_suffix();
+	$min = bboss_core_get_minified_asset_suffix();
 
 	if ( is_rtl() ) {
-		$css = bp_locate_template_asset( "css/embeds-activity-rtl{$min}.css" );
+		$css = bboss_locate_template_asset( "css/embeds-activity-rtl{$min}.css" );
 	} else {
-		$css = bp_locate_template_asset( "css/embeds-activity{$min}.css" );
+		$css = bboss_locate_template_asset( "css/embeds-activity{$min}.css" );
 	}
 
 	// Bail if file wasn't found.
@@ -75,14 +75,14 @@ function bp_activity_embed_add_inline_styles() {
 	$css = file_get_contents( $css['file'] );
 	$css = wp_kses( $css, array( "\'", '\"' ) );
 
-	printf( '<style>%s</style>', $css );
+	printf( '<style>%s</style>', $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static stylesheet string defined in this file.
 }
-add_action( 'embed_head', 'bp_activity_embed_add_inline_styles', 20 );
+add_action( 'embed_head', 'bboss_activity_embed_add_inline_styles', 20 );
 
 /**
  * Query for the activity item on the activity embed template.
  *
- * Basically a wrapper for {@link bp_has_activities()}, but allows us to
+ * Basically a wrapper for {@link bboss_has_activities()}, but allows us to
  * use the activity loop without requerying for it again.
  *
  * @since BuddyPress 2.6.0
@@ -90,7 +90,7 @@ add_action( 'embed_head', 'bp_activity_embed_add_inline_styles', 20 );
  * @param  int $activity_id The activity ID.
  * @return bool
  */
-function bp_activity_embed_has_activity( $activity_id = 0 ) {
+function bboss_activity_embed_has_activity( $activity_id = 0 ) {
 	global $activities_template;
 
 	if ( empty( $activity_id ) ) {
@@ -107,7 +107,7 @@ function bp_activity_embed_has_activity( $activity_id = 0 ) {
 		}
 	}
 
-	return bp_has_activities(
+	return bboss_has_activities(
 		array(
 			'display_comments' => 'threaded',
 			'show_hidden'      => true,
@@ -121,8 +121,8 @@ function bp_activity_embed_has_activity( $activity_id = 0 ) {
  *
  * @since BuddyPress 2.6.0
  */
-function bp_activity_embed_excerpt( $content = '' ) {
-	echo bp_activity_get_embed_excerpt( $content );
+function bboss_activity_embed_excerpt( $content = '' ) {
+	echo wp_kses_post( bboss_activity_get_embed_excerpt( $content ) );
 }
 
 	/**
@@ -133,7 +133,7 @@ function bp_activity_embed_excerpt( $content = '' ) {
 	 * @param  string $content The content to generate an excerpt for.
 	 * @return string
 	 */
-function bp_activity_get_embed_excerpt( $content = '' ) {
+function bboss_activity_get_embed_excerpt( $content = '' ) {
 	if ( empty( $content ) && ! empty( $GLOBALS['activities_template']->in_the_loop ) ) {
 		$content = $GLOBALS['activities_template']->activity->content;
 	}
@@ -143,7 +143,7 @@ function bp_activity_get_embed_excerpt( $content = '' ) {
 	 * we're using this instead of bp_create_excerpt().
 	 */
 	$content = html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
-	$content = bp_activity_truncate_entry(
+	$content = bboss_activity_truncate_entry(
 		$content,
 		array(
 			'html'              => false,
@@ -169,7 +169,7 @@ function bp_activity_get_embed_excerpt( $content = '' ) {
  *
  * @since BuddyPress 2.6.0
  */
-function bp_activity_embed_media() {
+function bboss_activity_embed_media() {
 	// Bail if oEmbed request explicitly hides media.
 	if ( isset( $_GET['hide_media'] ) && true == wp_validate_boolean( $_GET['hide_media'] ) ) {
 		/**
@@ -192,9 +192,9 @@ function bp_activity_embed_media() {
 	$allow_media = apply_filters( 'bp_activity_embed_display_media', true );
 
 	// Find oEmbeds from only WP registered providers.
-	bp_remove_all_filters( 'oembed_providers' );
-	$media = bp_core_extract_media_from_content( $GLOBALS['activities_template']->activity->content, 'embeds' );
-	bp_restore_all_filters( 'oembed_providers' );
+	bboss_remove_all_filters( 'oembed_providers' );
+	$media = bboss_core_extract_media_from_content( $GLOBALS['activities_template']->activity->content, 'embeds' );
+	bboss_restore_all_filters( 'oembed_providers' );
 
 	// oEmbeds have precedence over inline video / audio.
 	if ( isset( $media['embeds'] ) && true === $allow_media ) {
@@ -209,7 +209,7 @@ function bp_activity_embed_media() {
 		$cachekey        = '_oembed_response_' . md5( $url . serialize( $oembed_args ) );
 
 		// Try to fetch oEmbed response from meta.
-		$oembed = bp_activity_get_meta( bp_get_activity_id(), $cachekey );
+		$oembed = bboss_activity_get_meta( bboss_get_activity_id(), $cachekey );
 
 		// No cache, so fetch full oEmbed response now!
 		if ( '' === $oembed ) {
@@ -217,7 +217,7 @@ function bp_activity_embed_media() {
 			$oembed = $o->fetch( $o->get_provider( $url, $oembed_args ), $url, $oembed_args );
 
 			// Cache oEmbed response.
-			bp_activity_update_meta( bp_get_activity_id(), $cachekey, $oembed );
+			bboss_activity_update_meta( bboss_get_activity_id(), $cachekey, $oembed );
 		}
 
 		$content = '';
@@ -261,9 +261,7 @@ function bp_activity_embed_media() {
 				 * @link    http://ionicons.com/
 				 * @license MIT
 				 */
-				$play_icon = <<<EOD
-<svg id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M405.2,232.9L126.8,67.2c-3.4-2-6.9-3.2-10.9-3.2c-10.9,0-19.8,9-19.8,20H96v344h0.1c0,11,8.9,20,19.8,20  c4.1,0,7.5-1.4,11.2-3.4l278.1-165.5c6.6-5.5,10.8-13.8,10.8-23.1C416,246.7,411.8,238.5,405.2,232.9z"/></svg>
-EOD;
+				$play_icon = '<svg id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M405.2,232.9L126.8,67.2c-3.4-2-6.9-3.2-10.9-3.2c-10.9,0-19.8,9-19.8,20H96v344h0.1c0,11,8.9,20,19.8,20  c4.1,0,7.5-1.4,11.2-3.4l278.1-165.5c6.6-5.5,10.8-13.8,10.8-23.1C416,246.7,411.8,238.5,405.2,232.9z"/></svg>';
 
 				$play_icon = sprintf( '<a rel="nofollow" class="play-btn" href="%1$s" onclick="top.location.href=\'%1$s\'">%2$s</a>', esc_url( $url ), $play_icon );
 			}
@@ -289,10 +287,11 @@ EOD;
 			// Show author info.
 			if ( isset( $oembed->provider_name ) && isset( $oembed->author_name ) ) {
 				/* translators: By [oEmbed author] on [oEmbed provider]. eg. By BuddyPress on YouTube. */
-				$anchor_text = sprintf( __( 'By %1$s on %2$s', 'buddyboss' ), $oembed->author_name, $oembed->provider_name );
+				$anchor_text = sprintf( __( 'By %1$s on %2$s', 'buddyboss-platform' ), $oembed->author_name, $oembed->provider_name );
 
 			} elseif ( isset( $oembed->provider_name ) ) {
-				$anchor_text = sprintf( __( 'View on %s', 'buddyboss' ), $oembed->provider_name );
+				/* translators: %s: embed provider name. */
+				$anchor_text = sprintf( __( 'View on %s', 'buddyboss-platform' ), $oembed->provider_name );
 			}
 
 			if ( true === isset( $anchor_text ) ) {
@@ -318,29 +317,29 @@ EOD;
 			printf(
 				'<div class="bp-activity-embed-display-media %s" style="max-width:%spx">%s</div>',
 				$thumb_width < $float_width ? 'two-col' : 'one-col',
-				$thumb_width < $float_width ? $width : $thumb_width,
-				$content
+				esc_attr( $thumb_width < $float_width ? $width : $thumb_width ),
+				wp_kses_post( $content )
 			);
 		}
 
 		// Video / audio.
 	} elseif ( true === $allow_media ) {
 		// Call BP_Embed if it hasn't already loaded.
-		bp_embed_init();
+		bboss_embed_init();
 
 		// Run shortcode and embed routine.
-		$content = buddypress()->embed->run_shortcode( $GLOBALS['activities_template']->activity->content );
-		$content = buddypress()->embed->autoembed( $content );
+		$content = bboss()->embed->run_shortcode( $GLOBALS['activities_template']->activity->content );
+		$content = bboss()->embed->autoembed( $content );
 
 		// Try to find inline video / audio.
-		$media = bp_core_extract_media_from_content( $content, 96 );
+		$media = bboss_core_extract_media_from_content( $content, 96 );
 
 		// Video takes precedence. HTML5-only.
 		if ( isset( $media['videos'] ) && 'shortcodes' === $media['videos'][0]['source'] ) {
 			printf(
 				'<video controls preload="metadata"><source src="%1$s"><p>%2$s</p></video>',
 				esc_url( $media['videos'][0]['url'] ),
-				esc_html__( 'Your browser does not support HTML5 video', 'buddyboss' )
+				esc_html__( 'Your browser does not support HTML5 video', 'buddyboss-platform' )
 			);
 
 			// No video? Try audio. HTML5-only.
@@ -348,7 +347,7 @@ EOD;
 			printf(
 				'<audio controls preload="metadata"><source src="%1$s"><p>%2$s</p></audio>',
 				esc_url( $media['audio'][0]['url'] ),
-				esc_html__( 'Your browser does not support HTML5 audio', 'buddyboss' )
+				esc_html__( 'Your browser does not support HTML5 audio', 'buddyboss-platform' )
 			);
 		}
 	}

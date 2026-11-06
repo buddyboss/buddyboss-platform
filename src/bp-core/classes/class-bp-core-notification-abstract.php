@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.9.3
  */
-abstract class BP_Core_Notification_Abstract {
+abstract class BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Preferences Group.
@@ -181,8 +181,8 @@ abstract class BP_Core_Notification_Abstract {
 				);
 
 				if ( 'other' === $preference['notification_group'] ) {
-					$notifications[ $preference['notification_group'] ]['label']       = esc_html__( 'Other', 'buddyboss' );
-					$notifications[ $preference['notification_group'] ]['admin_label'] = esc_html__( 'Other Notifications', 'buddyboss' );
+					$notifications[ $preference['notification_group'] ]['label']       = esc_html__( 'Other', 'buddyboss-platform' );
+					$notifications[ $preference['notification_group'] ]['admin_label'] = esc_html__( 'Other Notifications', 'buddyboss-platform' );
 					$notifications[ $preference['notification_group'] ]['priority']    = $this->priority;
 				}
 			}
@@ -580,7 +580,7 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_filters() {
 		if ( ! empty( $this->notifications_filters ) && ! empty( $this->notifications ) ) {
-			$filtered_notifications = array_column( bb_register_notifications(), 'component_action', 'notification_type' );
+			$filtered_notifications = array_column( bboss_register_notifications(), 'component_action', 'notification_type' );
 			foreach ( $this->notifications_filters as $filters ) {
 				$label             = ( isset( $filters['label'] ) ? $filters['label'] : '' );
 				$position          = ( isset( $filters['position'] ) ? $filters['position'] : 0 );
@@ -604,7 +604,7 @@ abstract class BP_Core_Notification_Abstract {
 				}
 
 				if ( ! empty( $component_actions ) && ! empty( $label ) ) {
-					bp_nouveau_notifications_register_filter(
+					bboss_nouveau_notifications_register_filter(
 						array(
 							'id'       => ( is_array( $component_actions ) ? implode( ',', $component_actions ) : $component_actions ),
 							'label'    => $label,
@@ -651,7 +651,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * }
 	 */
 	final public function bb_register_subscription_type( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'label'              => array(
@@ -689,7 +689,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * Register validate callback function for subscription.
 	 *
 	 * @param bool             $response      True when subscription request correct otherwise false/WP_Error.
-	 * @param BB_Subscriptions $subscriptions Current instance of the subscription item being saved.
+	 * @param BBoss_Subscriptions $subscriptions Current instance of the subscription item being saved.
 	 *
 	 * @return bool|WP_Error True on success, false on failure.
 	 */
@@ -702,7 +702,7 @@ abstract class BP_Core_Notification_Abstract {
 		if ( empty( $item_id ) ) {
 			$response = new WP_Error(
 				'bb_subscription_required_item_id',
-				__( 'The item ID is required.', 'buddyboss' ),
+				__( 'The item ID is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -710,13 +710,13 @@ abstract class BP_Core_Notification_Abstract {
 		} elseif ( empty( $type ) ) {
 			$response = new WP_Error(
 				'bb_subscription_required_item_type',
-				__( 'The item type is required.', 'buddyboss' ),
+				__( 'The item type is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
 			);
 		} else {
-			$type_data = bb_register_subscriptions_types( $type );
+			$type_data = bboss_register_subscriptions_types( $type );
 
 			if (
 				! empty( $type_data ) &&
@@ -744,7 +744,7 @@ abstract class BP_Core_Notification_Abstract {
 				} elseif ( ! $validate_item ) {
 					$response = new WP_Error(
 						'bb_subscription_invalid_item_request',
-						__( 'The request for subscription item is not valid.', 'buddyboss' ),
+						__( 'The request for subscription item is not valid.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -753,7 +753,7 @@ abstract class BP_Core_Notification_Abstract {
 			} else {
 				$response = new WP_Error(
 					'bb_subscription_invalid_item_type',
-					__( 'The item type is not valid.', 'buddyboss' ),
+					__( 'The item type is not valid.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)

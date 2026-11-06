@@ -30,7 +30,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_multiple_new_membership_requests_notification() {
 		add_filter( 'bp_groups_multiple_new_membership_requests_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'new_membership_request', $this->group, $this->requesting_user_id, 5 );
+		$n = bboss_groups_format_notifications( 'new_membership_request', $this->group, $this->requesting_user_id, 5 );
 		remove_filter( 'bp_groups_multiple_new_membership_requests_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_multiple_new_membership_requests_notification', $this->filter_fired );
@@ -41,7 +41,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_single_new_membership_request_notification() {
 		add_filter( 'bp_groups_single_new_membership_request_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'new_membership_request', $this->group, 0, 1 );
+		$n = bboss_groups_format_notifications( 'new_membership_request', $this->group, 0, 1 );
 		remove_filter( 'bp_groups_single_new_membership_request_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_single_new_membership_request_notification', $this->filter_fired );
@@ -52,7 +52,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_multiple_membership_request_accepted_notification() {
 		add_filter( 'bp_groups_multiple_membership_request_accepted_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'membership_request_accepted', $this->group, 0, 5 );
+		$n = bboss_groups_format_notifications( 'membership_request_accepted', $this->group, 0, 5 );
 		remove_filter( 'bp_groups_multiple_membership_request_accepted_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_multiple_membership_request_accepted_notification', $this->filter_fired );
@@ -63,7 +63,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_single_membership_request_accepted_notification() {
 		add_filter( 'bp_groups_single_membership_request_accepted_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'membership_request_accepted', $this->group, 0, 1 );
+		$n = bboss_groups_format_notifications( 'membership_request_accepted', $this->group, 0, 1 );
 		remove_filter( 'bp_groups_single_membership_request_accepted_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_single_membership_request_accepted_notification', $this->filter_fired );
@@ -74,7 +74,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_multiple_membership_request_rejected_notification() {
 		add_filter( 'bp_groups_multiple_membership_request_rejected_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'membership_request_rejected', $this->group, 0, 5 );
+		$n = bboss_groups_format_notifications( 'membership_request_rejected', $this->group, 0, 5 );
 		remove_filter( 'bp_groups_multiple_membership_request_rejected_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_multiple_membership_request_rejected_notification', $this->filter_fired );
@@ -85,7 +85,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_single_membership_request_rejected_notification() {
 		add_filter( 'bp_groups_single_membership_request_rejected_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'membership_request_rejected', $this->group, 0, 1 );
+		$n = bboss_groups_format_notifications( 'membership_request_rejected', $this->group, 0, 1 );
 		remove_filter( 'bp_groups_single_membership_request_rejected_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_single_membership_request_rejected_notification', $this->filter_fired );
@@ -96,7 +96,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_multiple_member_promoted_to_admin_notification() {
 		add_filter( 'bp_groups_multiple_member_promoted_to_admin_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'member_promoted_to_admin', $this->group, 0, 5 );
+		$n = bboss_groups_format_notifications( 'member_promoted_to_admin', $this->group, 0, 5 );
 		remove_filter( 'bp_groups_multiple_member_promoted_to_admin_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_multiple_member_promoted_to_admin_notification', $this->filter_fired );
@@ -107,7 +107,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_single_member_promoted_to_admin_notification() {
 		add_filter( 'bp_groups_single_member_promoted_to_admin_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'member_promoted_to_admin', $this->group, 0, 1 );
+		$n = bboss_groups_format_notifications( 'member_promoted_to_admin', $this->group, 0, 1 );
 		remove_filter( 'bp_groups_single_member_promoted_to_admin_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_single_member_promoted_to_admin_notification', $this->filter_fired );
@@ -118,7 +118,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_multiple_member_promoted_to_mod_notification() {
 		add_filter( 'bp_groups_multiple_member_promoted_to_mod_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'member_promoted_to_mod', $this->group, 0, 5 );
+		$n = bboss_groups_format_notifications( 'member_promoted_to_mod', $this->group, 0, 5 );
 		remove_filter( 'bp_groups_multiple_member_promoted_to_mod_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_multiple_member_promoted_to_mod_notification', $this->filter_fired );
@@ -129,7 +129,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_single_member_promoted_to_mod_notification() {
 		add_filter( 'bp_groups_single_member_promoted_to_mod_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'member_promoted_to_mod', $this->group, 0, 1 );
+		$n = bboss_groups_format_notifications( 'member_promoted_to_mod', $this->group, 0, 1 );
 		remove_filter( 'bp_groups_single_member_promoted_to_mod_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_single_member_promoted_to_mod_notification', $this->filter_fired );
@@ -140,7 +140,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_multiple_group_invite_notification() {
 		add_filter( 'bp_groups_multiple_group_invite_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'group_invite', $this->group, 0, 5 );
+		$n = bboss_groups_format_notifications( 'group_invite', $this->group, 0, 5 );
 		remove_filter( 'bp_groups_multiple_group_invite_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_multiple_group_invite_notification', $this->filter_fired );
@@ -151,7 +151,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 	 */
 	public function test_groups_format_notifications_bp_groups_single_group_invite_notification() {
 		add_filter( 'bp_groups_single_group_invite_notification', array( $this, 'notification_filter_callback' ) );
-		$n = groups_format_notifications( 'group_invite', $this->group, 0, 1 );
+		$n = bboss_groups_format_notifications( 'group_invite', $this->group, 0, 1 );
 		remove_filter( 'bp_groups_single_group_invite_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_groups_single_group_invite_notification', $this->filter_fired );
@@ -173,7 +173,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 			'component_action' => 'member_promoted_to_admin',
 		) );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 		) );
 
@@ -183,7 +183,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 		// fire the hook
 		do_action( 'groups_demoted_member', $u, $g );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 		) );
 
@@ -197,7 +197,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 			'component_action' => 'member_promoted_to_mod',
 		) );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 		) );
 
@@ -207,7 +207,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 		// fire the hook
 		do_action( 'groups_demoted_member', $u, $g );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 		) );
 
@@ -232,7 +232,7 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 			'is_admin' => 1,
 		) );
 
-		groups_send_membership_request( $users[2], $this->group );
+		bboss_groups_send_membership_request( $users[2], $this->group );
 
 		// Both admins should get a notification.
 		$get_args = array(
@@ -242,18 +242,18 @@ class BP_Tests_Groups_Notifications extends BP_UnitTestCase {
 			'component_action' => 'new_membership_request',
 			'is_new' => true,
 		);
-		$u0_notifications = BP_Notifications_Notification::get( $get_args );
-		$u1_notifications = BP_Notifications_Notification::get( $get_args );
+		$u0_notifications = BBoss_Notifications_Notification::get( $get_args );
+		$u1_notifications = BBoss_Notifications_Notification::get( $get_args );
 		$this->assertNotEmpty( $u0_notifications );
 		$this->assertNotEmpty( $u1_notifications );
 
-		$this->assertTrue( groups_invite_user( array(
+		$this->assertTrue( bboss_groups_invite_user( array(
 			'user_id' => $users[2],
 			'group_id' => $this->group,
 		) ) );
 
-		$u0_notifications = BP_Notifications_Notification::get( $get_args );
-		$u1_notifications = BP_Notifications_Notification::get( $get_args );
+		$u0_notifications = BBoss_Notifications_Notification::get( $get_args );
+		$u1_notifications = BBoss_Notifications_Notification::get( $get_args );
 		$this->assertEmpty( $u0_notifications );
 		$this->assertEmpty( $u1_notifications );
 	}

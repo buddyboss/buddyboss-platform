@@ -6,14 +6,17 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of the members directory index.
  *
  * @since BuddyPress 1.5.0
  */
-function bp_members_screen_index() {
-	if ( bp_is_members_directory() ) {
-		bp_update_is_directory( true, 'members' );
+function bboss_members_screen_index() {
+	if ( bboss_is_members_directory() ) {
+		bboss_update_is_directory( true, 'members' );
 
 		/**
 		 * Fires right before the loading of the Member directory index screen template file.
@@ -29,7 +32,7 @@ function bp_members_screen_index() {
 		 *
 		 * @param string $value Path to the member directory template to load.
 		 */
-		bp_core_load_template( apply_filters( 'bp_members_screen_index', 'members/index' ) );
+		bboss_core_load_template( apply_filters( 'bp_members_screen_index', 'members/index' ) );
 	}
 }
-add_action( 'bp_screens', 'bp_members_screen_index' );
+add_action( 'bp_screens', 'bboss_members_screen_index' );

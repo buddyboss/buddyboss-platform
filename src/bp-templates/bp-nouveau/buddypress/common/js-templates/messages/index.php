@@ -8,6 +8,10 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <input type="hidden" id="thread-id" value="" />
@@ -23,7 +27,7 @@
 		<div id="bb-messages-thread-list-nav"></div>
 		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
 		<div class="bp-messages-search-feedback"></div>
-		<div class="bp-messages-threads-list bp-messages-threads-list-user-<?php echo esc_attr( bp_loggedin_user_id() ); ?>" id="bp-messages-threads-list"></div>
+		<div class="bp-messages-threads-list bp-messages-threads-list-user-<?php echo esc_attr( bboss_loggedin_user_id() ); ?>" id="bp-messages-threads-list"></div>
 	</div>
 	<div class="bp-messages-content"></div>
 
@@ -31,12 +35,12 @@
 
 <?php
 
-if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
-	bp_get_template_part( 'media/theatre' );
+if ( bboss_is_active( 'media' ) && bboss_is_messages_media_support_enabled() ) {
+	bboss_get_template_part( 'media/theatre' );
 }
-if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
-	bp_get_template_part( 'video/theatre' );
+if ( bboss_is_active( 'video' ) && bboss_is_messages_video_support_enabled() ) {
+	bboss_get_template_part( 'video/theatre' );
 }
-if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
-	bp_get_template_part( 'document/theatre' );
+if ( bboss_is_active( 'media' ) && bboss_is_messages_document_support_enabled() ) {
+	bboss_get_template_part( 'document/theatre' );
 }

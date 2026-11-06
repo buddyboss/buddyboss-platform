@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool Is media profile media support enabled or not
  * @since BuddyBoss 1.0.0
  */
-function bp_is_profile_media_support_enabled( $default = 1 ) {
+function bboss_is_profile_media_support_enabled( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_profile_media_support_enabled', (bool) get_option( 'bp_media_profile_media_support', $default ) );
 }
 
@@ -31,7 +31,7 @@ function bp_is_profile_media_support_enabled( $default = 1 ) {
  * @return bool Is media profile albums support enabled or not
  * @since BuddyBoss 1.0.0
  */
-function bp_is_profile_albums_support_enabled( $default = 1 ) {
+function bboss_is_profile_albums_support_enabled( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_profile_albums_support_enabled', (bool) get_option( 'bp_media_profile_albums_support', $default ) );
 }
 
@@ -43,7 +43,7 @@ function bp_is_profile_albums_support_enabled( $default = 1 ) {
  * @return bool Is media group media support enabled or not
  * @since BuddyBoss 1.0.0
  */
-function bp_is_group_media_support_enabled( $default = 1 ) {
+function bboss_is_group_media_support_enabled( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_group_media_support_enabled', (bool) get_option( 'bp_media_group_media_support', $default ) );
 }
 
@@ -55,7 +55,7 @@ function bp_is_group_media_support_enabled( $default = 1 ) {
  * @return bool Is media group album support enabled or not
  * @since BuddyBoss 1.0.0
  */
-function bp_is_group_albums_support_enabled( $default = 1 ) {
+function bboss_is_group_albums_support_enabled( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_group_albums_support_enabled', (bool) get_option( 'bp_media_group_albums_support', $default ) );
 }
 
@@ -67,7 +67,7 @@ function bp_is_group_albums_support_enabled( $default = 1 ) {
  * @return bool Is media messages media support enabled or not
  * @since BuddyBoss 1.0.0
  */
-function bp_is_messages_media_support_enabled( $default = 0 ) {
+function bboss_is_messages_media_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_messages_media_support_enabled', (bool) get_option( 'bp_media_messages_media_support', $default ) );
 }
 
@@ -79,7 +79,7 @@ function bp_is_messages_media_support_enabled( $default = 0 ) {
  * @return bool Is media forums media support enabled or not
  * @since BuddyBoss 1.0.0
  */
-function bp_is_forums_media_support_enabled( $default = 0 ) {
+function bboss_is_forums_media_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_media_support_enabled', (bool) get_option( 'bp_media_forums_media_support', $default ) );
 }
 
@@ -91,7 +91,7 @@ function bp_is_forums_media_support_enabled( $default = 0 ) {
  * @return bool Is media emoji support enabled or not in profiles
  * @since BuddyBoss 1.0.0
  */
-function bp_is_profiles_emoji_support_enabled( $default = 0 ) {
+function bboss_is_profiles_emoji_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profiles_emoji_support_enabled', (bool) get_option( 'bp_media_profiles_emoji_support', $default ) );
 }
 
@@ -103,7 +103,7 @@ function bp_is_profiles_emoji_support_enabled( $default = 0 ) {
  * @return bool Is media emoji support enabled or not in groups
  * @since BuddyBoss 1.0.0
  */
-function bp_is_groups_emoji_support_enabled( $default = 0 ) {
+function bboss_is_groups_emoji_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_groups_emoji_support_enabled', (bool) get_option( 'bp_media_groups_emoji_support', $default ) );
 }
 
@@ -115,7 +115,7 @@ function bp_is_groups_emoji_support_enabled( $default = 0 ) {
  * @return bool Is media emoji support enabled or not in messages
  * @since BuddyBoss 1.0.0
  */
-function bp_is_messages_emoji_support_enabled( $default = 0 ) {
+function bboss_is_messages_emoji_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_messages_emoji_support_enabled', (bool) get_option( 'bp_media_messages_emoji_support', $default ) );
 }
 
@@ -127,7 +127,7 @@ function bp_is_messages_emoji_support_enabled( $default = 0 ) {
  * @return bool Is media emoji support enabled or not in forums
  * @since BuddyBoss 1.0.0
  */
-function bp_is_forums_emoji_support_enabled( $default = 0 ) {
+function bboss_is_forums_emoji_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_emoji_support_enabled', (bool) get_option( 'bp_media_forums_emoji_support', $default ) );
 }
 
@@ -139,14 +139,14 @@ function bp_is_forums_emoji_support_enabled( $default = 0 ) {
  * Add-ons plugin (older Platform builds had it in the media component), with
  * the same function names. When neither is
  * loaded, every `bp_is_*_gif_support_enabled()` gate returns false (via
- * {@see bb_media_gifs_force_disable()}), so GIF UI never renders against a
+ * {@see bboss_media_gifs_force_disable()}), so GIF UI never renders against a
  * missing backend.
  *
  * @since BuddyBoss 3.7.0
  *
  * @return bool True when a GIF provider (Platform-bundled or addon) is loaded.
  */
-function bb_giphy_provider_available() {
+function bboss_giphy_provider_available() {
 	$available = function_exists( 'bp_media_activity_embed_gif' );
 
 	/**
@@ -168,7 +168,7 @@ function bb_giphy_provider_available() {
  * @return GIF Api Key if, empty string.
  * @since BuddyBoss 1.0.0
  */
-function bp_media_get_gif_api_key( $default = '' ) {
+function bboss_media_get_gif_api_key( $default = '' ) {
 
 	/**
 	 * Filters whether GIF key.
@@ -177,7 +177,7 @@ function bp_media_get_gif_api_key( $default = '' ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	return apply_filters( 'bp_media_get_gif_api_key', bp_get_option( 'bp_media_gif_api_key', $default ) );
+	return apply_filters( 'bp_media_get_gif_api_key', bboss_get_option( 'bp_media_gif_api_key', $default ) );
 }
 
 /**
@@ -188,7 +188,7 @@ function bp_media_get_gif_api_key( $default = '' ) {
  * @return bool Is media gif support enabled or not in profiles
  * @since BuddyBoss 1.0.0
  */
-function bp_is_profiles_gif_support_enabled( $default = 0 ) {
+function bboss_is_profiles_gif_support_enabled( $default = 0 ) {
 	$result = false;
 	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_profiles_gif_support', $default );
@@ -204,7 +204,7 @@ function bp_is_profiles_gif_support_enabled( $default = 0 ) {
  * @return bool Is media gif support enabled or not in groups
  * @since BuddyBoss 1.0.0
  */
-function bp_is_groups_gif_support_enabled( $default = 0 ) {
+function bboss_is_groups_gif_support_enabled( $default = 0 ) {
 	$result = false;
 	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_groups_gif_support', $default );
@@ -220,7 +220,7 @@ function bp_is_groups_gif_support_enabled( $default = 0 ) {
  * @return bool Is media gif support enabled or not in messages
  * @since BuddyBoss 1.0.0
  */
-function bp_is_messages_gif_support_enabled( $default = 0 ) {
+function bboss_is_messages_gif_support_enabled( $default = 0 ) {
 	$result = false;
 	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_messages_gif_support', $default );
@@ -236,7 +236,7 @@ function bp_is_messages_gif_support_enabled( $default = 0 ) {
  * @return bool Is media gif support enabled or not in forums
  * @since BuddyBoss 1.0.0
  */
-function bp_is_forums_gif_support_enabled( $default = 0 ) {
+function bboss_is_forums_gif_support_enabled( $default = 0 ) {
 	$result = false;
 	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_forums_gif_support', $default );
@@ -252,7 +252,7 @@ function bp_is_forums_gif_support_enabled( $default = 0 ) {
  * @return bool Is media messages doc support enabled or not
  * @since BuddyBoss 1.2.3
  */
-function bp_is_messages_document_support_enabled( $default = 0 ) {
+function bboss_is_messages_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_messages_document_support_enabled', (bool) get_option( 'bp_media_messages_document_support', $default ) );
 }
 
@@ -264,7 +264,7 @@ function bp_is_messages_document_support_enabled( $default = 0 ) {
  * @return bool Is media group document support enabled or not
  * @since BuddyBoss 1.2.3
  */
-function bp_is_group_document_support_enabled( $default = 0 ) {
+function bboss_is_group_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_group_document_support_enabled', (bool) get_option( 'bp_media_group_document_support', $default ) );
 }
 
@@ -276,7 +276,7 @@ function bp_is_group_document_support_enabled( $default = 0 ) {
  * @return bool Is media forums document support enabled or not
  * @since BuddyBoss 1.2.3
  */
-function bp_is_forums_document_support_enabled( $default = 0 ) {
+function bboss_is_forums_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_document_support_enabled', (bool) get_option( 'bp_media_forums_document_support', $default ) );
 }
 
@@ -288,7 +288,7 @@ function bp_is_forums_document_support_enabled( $default = 0 ) {
  * @return bool Is media forums document support enabled or not
  * @since BuddyBoss 1.2.3
  */
-function bp_is_profile_document_support_enabled( $default = 0 ) {
+function bboss_is_profile_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profile_document_support_enabled', (bool) get_option( 'bp_media_profile_document_support', $default ) );
 }
 
@@ -316,7 +316,7 @@ function bp_is_profile_document_support_enabled( $default = 0 ) {
  * @param int $default Default value.
  * @return bool Whether profile video support is enabled.
  */
-function bp_is_profile_video_support_enabled( $default = 0 ) {
+function bboss_is_profile_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profile_video_support_enabled', (bool) get_option( 'bp_video_profile_video_support', $default ) );
 }
 
@@ -329,7 +329,7 @@ function bp_is_profile_video_support_enabled( $default = 0 ) {
  * @param int $default Default value.
  * @return bool Whether group video support is enabled.
  */
-function bp_is_group_video_support_enabled( $default = 0 ) {
+function bboss_is_group_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_group_video_support_enabled', (bool) get_option( 'bp_video_group_video_support', $default ) );
 }
 
@@ -342,7 +342,7 @@ function bp_is_group_video_support_enabled( $default = 0 ) {
  * @param int $default Default value.
  * @return bool Whether messages video support is enabled.
  */
-function bp_is_messages_video_support_enabled( $default = 0 ) {
+function bboss_is_messages_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_messages_video_support_enabled', (bool) get_option( 'bp_video_messages_video_support', $default ) );
 }
 
@@ -355,7 +355,7 @@ function bp_is_messages_video_support_enabled( $default = 0 ) {
  * @param int $default Default value.
  * @return bool Whether forums video support is enabled.
  */
-function bp_is_forums_video_support_enabled( $default = 0 ) {
+function bboss_is_forums_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_video_support_enabled', (bool) get_option( 'bp_video_forums_video_support', $default ) );
 }
 
@@ -365,11 +365,11 @@ function bp_is_forums_video_support_enabled( $default = 0 ) {
  * @return array Is media extension support enabled or not
  * @since BuddyBoss 1.0.0
  */
-function bp_document_extensions_list() {
+function bboss_document_extensions_list() {
 
 	// The default-type helper loads with the document component (BuddyBoss Add-ons), so fall back to the stored option.
 	$default = function_exists( 'bp_media_allowed_document_type' ) ? bp_media_allowed_document_type() : array();
-	$saved   = bp_get_option( 'bp_document_extensions_support', $default );
+	$saved   = bboss_get_option( 'bp_document_extensions_support', $default );
 	$merge   = array_merge( (array) $default, (array) $saved );
 	$final   = array_unique( $merge, SORT_REGULAR );
 
@@ -389,10 +389,10 @@ function bp_document_extensions_list() {
  * @return int Allowed upload file size for the media.
  * @since BuddyBoss 1.4.8
  */
-function bp_media_allowed_upload_media_size() {
+function bboss_media_allowed_upload_media_size() {
 
-	$max_size = bp_core_upload_max_size();
-	$default  = bp_media_format_size_units( $max_size, false, 'MB' );
+	$max_size = bboss_core_upload_max_size();
+	$default  = bboss_media_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_media_allowed_upload_media_size', (int) get_option( 'bp_media_allowed_size', $default ) );
 }
 
@@ -403,9 +403,9 @@ function bp_media_allowed_upload_media_size() {
  *
  * @since BuddyBoss 1.4.8
  */
-function bp_media_allowed_upload_document_size() {
-	$max_size = bp_core_upload_max_size();
-	$default  = function_exists( 'bp_document_format_size_units' ) ? bp_document_format_size_units( $max_size, false, 'MB' ) : bp_media_format_size_units( $max_size, false, 'MB' );
+function bboss_media_allowed_upload_document_size() {
+	$max_size = bboss_core_upload_max_size();
+	$default  = function_exists( 'bp_document_format_size_units' ) ? bp_document_format_size_units( $max_size, false, 'MB' ) : bboss_media_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_media_allowed_upload_document_size', (int) get_option( 'bp_document_allowed_size', $default ) );
 }
 
@@ -415,7 +415,7 @@ function bp_media_allowed_upload_document_size() {
  * @return int Allowed upload per batch for the media.
  * @since BuddyBoss 1.5.6
  */
-function bp_media_allowed_upload_media_per_batch() {
+function bboss_media_allowed_upload_media_per_batch() {
 
 	$default = apply_filters( 'bp_media_upload_chunk_limit', 10 );
 	return (int) apply_filters( 'bp_media_allowed_upload_media_per_batch', (int) get_option( 'bp_media_allowed_per_batch', $default ) );
@@ -427,7 +427,7 @@ function bp_media_allowed_upload_media_per_batch() {
  * @return int Allowed per batch for the document.
  * @since BuddyBoss 1.5.6
  */
-function bp_media_allowed_upload_document_per_batch() {
+function bboss_media_allowed_upload_document_per_batch() {
 
 	/**
 	 * Filter to allow document upload per batch.
@@ -454,9 +454,9 @@ function bp_media_allowed_upload_document_per_batch() {
  * @return array Is video extension support enabled or not
  * @since BuddyBoss 1.7.0
  */
-function bp_video_extensions_list() {
+function bboss_video_extensions_list() {
 	// The default-type helper loads with the video component (BuddyBoss Add-ons), so fall back to the stored option.
 	$default = function_exists( 'bp_video_allowed_video_type' ) ? bp_video_allowed_video_type() : array();
 
-	return apply_filters( 'bp_video_extensions_list', bp_get_option( 'bp_video_extensions_support', $default ) );
+	return apply_filters( 'bp_video_extensions_list', bboss_get_option( 'bp_video_extensions_support', $default ) );
 }

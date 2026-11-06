@@ -286,7 +286,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $destination_topic_id Destination Topic ID.
 	 */
 	public function event_bbp_post_move_reply( $move_reply_id, $source_topic_id, $destination_topic_id ) {
-		$destination_forum_id = bbp_get_topic_forum_id( $destination_topic_id );
+		$destination_forum_id = bboss_bbp_get_topic_forum_id( $destination_topic_id );
 		$this->purge_item_cache_by_item_id( $destination_forum_id );
 		$this->purge_subscription_cache_by_items( $destination_forum_id );
 	}
@@ -299,7 +299,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $destination_topic_id Destination Topic ID.
 	 */
 	public function event_bbp_post_split_topic( $from_reply_id, $source_topic_id, $destination_topic_id ) {
-		$destination_forum_id = bbp_get_topic_forum_id( $destination_topic_id );
+		$destination_forum_id = bboss_bbp_get_topic_forum_id( $destination_topic_id );
 		$this->purge_item_cache_by_item_id( $destination_forum_id );
 		$this->purge_subscription_cache_by_items( $destination_forum_id );
 	}
@@ -311,7 +311,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_bp_group_admin_edit_after( $group_id ) {
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 		if ( ! empty( $forum_ids ) ) {
 			$this->purge_item_cache_by_item_ids( $forum_ids );
@@ -324,7 +324,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_group_details_edited( $group_id ) {
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 		if ( ! empty( $forum_ids ) ) {
 			$this->purge_item_cache_by_item_ids( $forum_ids );
@@ -337,7 +337,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_group_settings_edited( $group_id ) {
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 		if ( ! empty( $forum_ids ) ) {
 			$this->purge_item_cache_by_item_ids( $forum_ids );
@@ -350,7 +350,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_bp_group_admin_after_edit_screen_save( $group_id ) {
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 		if ( ! empty( $forum_ids ) ) {
 			$this->purge_item_cache_by_item_ids( $forum_ids );
@@ -363,7 +363,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_avatar_uploaded( $group_id ) {
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 		if ( ! empty( $forum_ids ) ) {
 			$this->purge_item_cache_by_item_ids( $forum_ids );
@@ -376,7 +376,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_cover_image_uploaded( $group_id ) {
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 		if ( ! empty( $forum_ids ) ) {
 			$this->purge_item_cache_by_item_ids( $forum_ids );
@@ -389,7 +389,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_cover_image_deleted( $group_id ) {
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 		if ( ! empty( $forum_ids ) ) {
 			$this->purge_item_cache_by_item_ids( $forum_ids );
@@ -399,7 +399,7 @@ class BB_Forums extends Integration_Abstract {
 	/**
 	 * When forum has been subscribed.
 	 *
-	 * @param BB_Subscriptions $subscription Subscription object.
+	 * @param BBoss_Subscriptions $subscription Subscription object.
 	 */
 	public function event_bb_subscriptions_after_save( $subscription ) {
 		if (
@@ -417,7 +417,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $subscription_id  Subscription id.
 	 */
 	public function event_bb_subscriptions_before_delete_subscription( $subscription_id ) {
-		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		$subscription = bboss_subscriptions_get_subscription( $subscription_id );
 		if (
 			! empty( $subscription->type ) &&
 			! empty( $subscription->item_id ) &&
@@ -434,7 +434,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $group_id Group ID.
 	 */
 	public function event_bp_suspend_groups_suspended( $group_id ) {
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 		if ( ! empty( $forum_ids ) ) {
 			$this->purge_item_cache_by_item_ids( $forum_ids );
@@ -448,7 +448,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $group_id Group ID.
 	 */
 	public function event_bp_suspend_groups_unsuspended( $group_id ) {
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 		if ( ! empty( $forum_ids ) ) {
 			$this->purge_item_cache_by_item_ids( $forum_ids );
@@ -484,7 +484,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $topic_id Topic ID.
 	 */
 	public function event_bp_suspend_forum_topic_suspended( $topic_id ) {
-		$forum_id = bbp_get_topic_forum_id( $topic_id );
+		$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
@@ -494,7 +494,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $topic_id Topic ID.
 	 */
 	public function event_bp_suspend_forum_topic_unsuspended( $topic_id ) {
-		$forum_id = bbp_get_topic_forum_id( $topic_id );
+		$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
@@ -504,7 +504,7 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bp_suspend_forum_reply_suspended( $reply_id ) {
-		$forum_id = bbp_get_reply_forum_id( $reply_id );
+		$forum_id = bboss_bbp_get_reply_forum_id( $reply_id );
 		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
@@ -514,14 +514,14 @@ class BB_Forums extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bp_suspend_forum_reply_unsuspended( $reply_id ) {
-		$forum_id = bbp_get_reply_forum_id( $reply_id );
+		$forum_id = bboss_bbp_get_reply_forum_id( $reply_id );
 		$this->purge_item_cache_by_item_id( $forum_id );
 	}
 
 	/**
 	 * Update cache for forums when member blocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bp_moderation_after_save( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -540,7 +540,7 @@ class BB_Forums extends Integration_Abstract {
 	/**
 	 * Update cache for topics when member unblocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bb_moderation_after_delete( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -769,7 +769,7 @@ class BB_Forums extends Integration_Abstract {
 			'status'        => null,
 		);
 
-		$all_subscription = bb_get_subscriptions(
+		$all_subscription = bboss_get_subscriptions(
 			$args,
 			true
 		);

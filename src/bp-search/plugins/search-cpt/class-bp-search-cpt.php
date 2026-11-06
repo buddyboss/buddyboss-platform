@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Search_CPT' ) ) :
+if ( ! class_exists( 'BBoss_Search_CPT' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search posts class
 	 */
-	class BP_Search_CPT extends Bp_Search_Type {
+	class BBoss_Search_CPT extends BBoss_Search_Type {
 		private $cpt_name;
 		private $search_type;
 
@@ -77,9 +77,9 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 			if ( $only_totalrow_count ) {
 				$sql .= ' COUNT( DISTINCT id ) ';
 			} else {
-				$sql                .= " DISTINCT id , %s as type, post_title LIKE '%%%s%%' AS relevance, post_date as entry_date  ";
+				$sql                .= ' DISTINCT id , %s as type, post_title LIKE %s AS relevance, post_date as entry_date  ';
 				$query_placeholder[] = $this->search_type;
-				$query_placeholder[] = $search_term;
+				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
 			$sql .= " FROM {$wpdb->posts} p";
@@ -87,7 +87,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 			$tax        = array();
 			$taxonomies = get_object_taxonomies( $this->cpt_name );
 			foreach ( $taxonomies as $taxonomy ) {
-				if ( bp_is_search_post_type_taxonomy_enable( $taxonomy, $this->cpt_name ) ) {
+				if ( bboss_is_search_post_type_taxonomy_enable( $taxonomy, $this->cpt_name ) ) {
 					$tax[] = $taxonomy;
 				}
 			}
@@ -104,24 +104,20 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 			// Tax query.
 			if ( ! empty( $tax ) ) {
 
-				$tax_in_arr = array_map(
-					function( $t_name ) {
-							return "'" . $t_name . "'";
-					},
-					$tax
-				);
-
-				$tax_in = implode( ', ', $tax_in_arr );
+				// Taxonomy names are bound as %s placeholders (one per name).
+				$tax_in = implode( ', ', array_fill( 0, count( $tax ), '%s' ) );
 
 				$sql                .= " OR  r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON
 					  t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN ({$tax_in}) )";
 				$query_placeholder[] = '%' . $search_term . '%';
 				$query_placeholder[] = '%' . $search_term . '%';
+				$query_placeholder   = array_merge( $query_placeholder, $tax );
 			}
 
 			// If post is not attachment Post should be publish &
 			// else attachment should be inherit and that not include media and document as we have separate search for that.
-			$sql .= ' ) AND p.post_type = %s';
+			$sql                .= ' ) AND p.post_type = %s';
+			$query_placeholder[] = $this->cpt_name;
 			if ( 'attachment' === $this->cpt_name ) {
 				$sql .= " AND p.post_status = 'inherit' AND p.ID NOT IN ( SELECT post_id FROM {$wpdb->postmeta} pm WHERE pm.`meta_key` IN ( 'bp_media_upload', 'bp_document_upload', 'bp_video_upload' ) )";
 			} else {
@@ -132,17 +128,15 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$sql                 .= " AND p.post_type != %s";
 				$query_placeholder[] = $this->cpt_name;
 			} elseif ( false === $exclude_post_type && ! empty( $enrolled_courses ) ) {
-				// $enrolled_courses is guaranteed to be a list of non-negative integers
-				// (wp_parse_id_list above). Interpolating an integer list directly is
-				// safe; the previous double-quoted-string form widened the surface for
-				// no functional gain — meta_value compares fine against unquoted ints.
-				$courses_id_in = implode( ',', $enrolled_courses );
-				$sql          .= " AND p.ID IN ( SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'course_id' AND meta_value IN ({$courses_id_in}) )";
+				// $enrolled_courses is a list of non-negative integers (wp_parse_id_list
+				// above), bound as %d placeholders; meta_value compares fine against
+				// unquoted ints.
+				$courses_id_in     = implode( ',', array_fill( 0, count( $enrolled_courses ), '%d' ) );
+				$sql              .= " AND p.ID IN ( SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'course_id' AND meta_value IN ({$courses_id_in}) )";
+				$query_placeholder = array_merge( $query_placeholder, $enrolled_courses );
 			}
 
-			$query_placeholder[] = $this->cpt_name;
-
-			$sql = $wpdb->prepare( $sql, $query_placeholder );
+			$sql = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is built in this method from literals and $wpdb table names; search type, search term, taxonomy names and post type are bound here as %s and enrolled course ids (wp_parse_id_list()) as %d.
 
 			return apply_filters(
 				'BP_Search_CPT_sql',
@@ -171,7 +165,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 					'posts_per_page' => 20,
 				)
 			);
-			$template = bp_locate_template( "search/loop/{$this->cpt_name}.php" ) ? "loop/{$this->cpt_name}" : 'loop/post';
+			$template = bboss_locate_template( "search/loop/{$this->cpt_name}.php" ) ? "loop/{$this->cpt_name}" : 'loop/post';
 
 			if ( $qry->have_posts() ) {
 				while ( $qry->have_posts() ) {
@@ -180,7 +174,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 						'id'    => get_the_ID(),
 						'type'  => $this->search_type,
 						'title' => get_the_title(),
-						'html'  => bp_search_buffer_template_part( $template, $template_type, false ),
+						'html'  => bboss_search_buffer_template_part( $template, $template_type, false ),
 					);
 
 					$this->search_results['items'][ get_the_ID() ] = $result;
@@ -197,7 +191,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 		 * post type e.g $this->cpt_name
 		 */
 		public function print_search_options( $items_to_search ) {
-			echo "<div class='wp-{$this->cpt_name}-fields' style='margin: 10px 0 10px 30px'>";
+			echo "<div class='wp-" . esc_attr( $this->cpt_name ) . "-fields' style='margin: 10px 0 10px 30px'>";
 
 			$cpt_taxonomy = get_object_taxonomies( $this->cpt_name );
 
@@ -207,7 +201,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$value   = $this->search_type . '-tax-' . $tax;
 				$checked = ! empty( $items_to_search ) && in_array( $value, $items_to_search ) ? ' checked' : '';
 
-				echo "<label><input type='checkbox' value='{$value}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				printf( "<label><input type='checkbox' value='%s' name='bp_search_plugin_options[items-to-search][]' %s>%s</label><br>", esc_attr( $value ), esc_attr( trim( $checked ) ), esc_html( $label ) );
 			}
 
 			echo '</div><!-- .wp-user-fields -->';

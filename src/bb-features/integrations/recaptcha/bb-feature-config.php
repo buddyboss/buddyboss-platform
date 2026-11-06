@@ -3,7 +3,7 @@
  * reCAPTCHA Integration Feature Configuration.
  *
  * Registers the reCAPTCHA integration in the BuddyBoss Feature Registry.
- * Auto-discovered by BB_Feature_Autoloader from bb-features/integrations/recaptcha/.
+ * Auto-discovered by BBoss_Feature_Autoloader from bb-features/integrations/recaptcha/.
  *
  * @package BuddyBoss\Features\Integrations\Recaptcha
  * @since BuddyBoss 3.0.0
@@ -15,18 +15,23 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register reCAPTCHA integration with Feature Registry.
  *
- * Uses bb_register_integration() which forces category to 'integrations'
- * and wires the Integration Bridge for legacy BP_Integration sync.
+ * Uses bboss_register_integration() which forces category to 'integrations'
+ * and wires the Integration Bridge for legacy BBoss_Integration sync.
+ *
+ * The card icon is a bundled font icon; the buddyboss.com build uses the
+ * reCAPTCHA logo hosted on the BuddyBoss marketing bucket instead.
  */
-bb_register_integration(
+$bb_recaptcha_icon = array(
+	'type'  => 'font',
+	'class' => 'bb-icons-rl bb-icons-rl-robot',
+);
+
+bboss_register_integration(
 	'recaptcha',
 	array(
-		'label'              => __( 'reCAPTCHA', 'buddyboss' ),
-		'description'        => __( 'Protect your community from spam and bot registrations with Google\'s invisible and checkbox verification.', 'buddyboss' ),
-		'icon'               => array(
-			'type'  => 'svg',
-			'url'  => 'https://bb-features-marketing.s3.amazonaws.com/images/svg/ReCaptcha.svg',
-		),
+		'label'              => __( 'reCAPTCHA', 'buddyboss-platform' ),
+		'description'        => __( 'Protect your community from spam and bot registrations with Google\'s invisible and checkbox verification.', 'buddyboss-platform' ),
+		'icon'               => $bb_recaptcha_icon,
 		'license_tier'       => 'free',
 		'standalone'         => true,
 		'integration_id'     => 'recaptcha',
@@ -34,7 +39,7 @@ bb_register_integration(
 			// Respect Settings 2.0 feature toggle (bb-active-features).
 			// Backward compat: if 'recaptcha' key not set, treat as enabled
 			// (same as before this toggle existed).
-			$active_features = bp_get_option( 'bb-active-features', array() );
+			$active_features = bboss_get_option( 'bb-active-features', array() );
 			if ( ! array_key_exists( 'recaptcha', $active_features ) ) {
 				$is_active = true;
 			} else {

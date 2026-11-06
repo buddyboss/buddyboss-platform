@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Responsible for loading a group of blogs into a loop for display.
  */
-class BP_Blogs_Template {
+class BBoss_Blogs_Template {
 
 	/**
 	 * The loop iterator.
@@ -94,17 +94,18 @@ class BP_Blogs_Template {
 	 * @since BuddyPress 10.0.0 Converted to array as main function argument. Added $date_query parameter.
 	 * @since BuddyBoss 2.3.90 Converted to array as main function argument. Added $date_query parameter.
 	 *
-	 * @see BP_Blogs_Blog::get() for a description of parameters.
+	 * @see BBoss_Blogs_Blog::get() for a description of parameters.
 	 *
 	 * @param array $args {
-	 *     Array of arguments. See {@link BP_Blogs_Blog::get()}.
+	 *     Array of arguments. See {@link BBoss_Blogs_Blog::get()}.
 	 * }
 	 */
 	public function __construct( ...$args ) {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args[0] ) || count( $args ) > 1 ) {
-			_deprecated_argument( __METHOD__, '2.3.90', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			/* translators: 1: method name, 2: file name. */
+			_deprecated_argument( __METHOD__, '2.3.90', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'type',
@@ -118,12 +119,12 @@ class BP_Blogs_Template {
 				8 => 'include_blog_ids',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $args );
 		} else {
 			$args = reset( $args );
 		}
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'type'              => '',
@@ -141,16 +142,16 @@ class BP_Blogs_Template {
 		);
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 
 		// Backwards compatibility support for blogs by first letter.
 		if ( ! empty( $_REQUEST['letter'] ) ) {
-			$this->blogs = BP_Blogs_Blog::get_by_letter( $_REQUEST['letter'], $this->pag_num, $this->pag_page );
+			$this->blogs = BBoss_Blogs_Blog::get_by_letter( $_REQUEST['letter'], $this->pag_num, $this->pag_page );
 
 			// Typical blogs query.
 		} else {
-			$this->blogs = bp_blogs_get_blogs(
+			$this->blogs = bboss_blogs_get_blogs(
 				array(
 					'type'              => $r['type'],
 					'per_page'          => $this->pag_num,
@@ -194,8 +195,8 @@ class BP_Blogs_Template {
 					'format'    => '',
 					'total'     => ceil( (int) $this->total_blog_count / (int) $this->pag_num ),
 					'current'   => (int) $this->pag_page,
-					'prev_text' => __( '&larr;', 'buddyboss' ),
-					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'prev_text' => __( '&larr;', 'buddyboss-platform' ),
+					'next_text' => __( '&rarr;', 'buddyboss-platform' ),
 					'mid_size'  => 1,
 					'add_args'  => array(),
 				)
@@ -206,7 +207,7 @@ class BP_Blogs_Template {
 	/**
 	 * Whether there are blogs available in the loop.
 	 *
-	 * @see bp_has_blogs()
+	 * @see bboss_has_blogs()
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
@@ -239,11 +240,11 @@ class BP_Blogs_Template {
 	/**
 	 * Whether there are blogs left in the loop to iterate over.
 	 *
-	 * This method is used by {@link bp_blogs()} as part of the while loop
+	 * This method is used by {@link bboss_blogs()} as part of the while loop
 	 * that controls iteration inside the blogs loop, eg:
-	 *     while ( bp_blogs() ) { ...
+	 *     while ( bboss_blogs() ) { ...
 	 *
-	 * @see bp_blogs()
+	 * @see bboss_blogs()
 	 *
 	 * @return bool True if there are more blogs to show, otherwise false.
 	 */
@@ -269,11 +270,11 @@ class BP_Blogs_Template {
 	/**
 	 * Set up the current blog inside the loop.
 	 *
-	 * Used by {@link bp_the_blog()} to set up the current blog data while
+	 * Used by {@link bboss_the_blog()} to set up the current blog data while
 	 * looping, so that template tags used during that iteration make
 	 * reference to the current blog.
 	 *
-	 * @see bp_the_blog()
+	 * @see bboss_the_blog()
 	 */
 	public function the_blog() {
 

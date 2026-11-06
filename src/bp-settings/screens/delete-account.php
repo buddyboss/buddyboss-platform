@@ -6,15 +6,18 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Show the delete-account settings template.
  *
  * @since BuddyPress 1.5.0
  */
-function bp_settings_screen_delete_account() {
+function bboss_settings_screen_delete_account() {
 
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
@@ -25,5 +28,5 @@ function bp_settings_screen_delete_account() {
 	 *
 	 * @param string $value Directory path to look in for the template file.
 	 */
-	bp_core_load_template( apply_filters( 'bp_settings_screen_delete_account', 'members/single/settings/delete-account' ) );
+	bboss_core_load_template( apply_filters( 'bp_settings_screen_delete_account', 'members/single/settings/delete-account' ) );
 }

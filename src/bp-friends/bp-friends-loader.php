@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_setup_friends() {
-	buddypress()->friends = new BP_Friends_Component();
+function bboss_setup_friends() {
+	bboss()->friends = new BBoss_Friends_Component();
 }
-add_action( 'bp_setup_components', 'bp_setup_friends', 6 );
+add_action( 'bp_setup_components', 'bboss_setup_friends', 6 );

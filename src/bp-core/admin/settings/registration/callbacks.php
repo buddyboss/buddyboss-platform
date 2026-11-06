@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array Sanitized domain restrictions.
  */
-function bb_registration_sanitize_domain_restrictions( $value ) {
+function bboss_registration_sanitize_domain_restrictions( $value ) {
 	if ( ! is_array( $value ) ) {
 		return array();
 	}
@@ -75,7 +75,7 @@ function bb_registration_sanitize_domain_restrictions( $value ) {
  *
  * @return array Sanitized email restrictions.
  */
-function bb_registration_sanitize_email_restrictions( $value ) {
+function bboss_registration_sanitize_email_restrictions( $value ) {
 	if ( ! is_array( $value ) ) {
 		return array();
 	}
@@ -121,7 +121,7 @@ function bb_registration_sanitize_email_restrictions( $value ) {
  *
  * @return int 0 for BuddyBoss Registration, 1 for Custom URL.
  */
-function bb_registration_sanitize_form_type( $value ) {
+function bboss_registration_sanitize_form_type( $value ) {
 	return in_array( (int) $value, array( 0, 1 ), true ) ? (int) $value : 0;
 }
 
@@ -136,7 +136,7 @@ function bb_registration_sanitize_form_type( $value ) {
  *
  * @return string Sanitized redirection value.
  */
-function bb_registration_sanitize_redirection( $value ) {
+function bboss_registration_sanitize_redirection( $value ) {
 	$value = sanitize_text_field( $value );
 
 	// Allow empty (Default) or '0' (Custom URL) or numeric page ID.
@@ -159,7 +159,7 @@ function bb_registration_sanitize_redirection( $value ) {
  *
  * @return string Sanitized URL or empty string.
  */
-function bb_registration_sanitize_redirect_url( $value ) {
+function bboss_registration_sanitize_redirect_url( $value ) {
 	$value = esc_url_raw( $value );
 
 	if ( empty( $value ) ) {

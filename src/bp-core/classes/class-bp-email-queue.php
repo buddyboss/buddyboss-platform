@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.8.1
  */
-class BP_Email_Queue {
+class BBoss_Email_Queue {
 
 	/**
 	 * Instance of this class.
@@ -84,8 +84,71 @@ class BP_Email_Queue {
 			$to = get_userdata( $to );
 		}
 
+		$args = $this->compact_tokens( $args );
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->base_prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES ( %s, %s, %s, %s, %d )", $email_type, maybe_serialize( $to ), maybe_serialize( $args ), bp_core_current_time(), false ) );
+		$wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->base_prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES ( %s, %s, %s, %s, %d )", $email_type, maybe_serialize( $to ), maybe_serialize( $args ), bboss_core_current_time(), false ) );
+	}
+
+	/**
+	 * Replace the group object token with its id before a record is stored.
+	 *
+	 * A stored BBoss_Groups_Group object can only be read back while that class
+	 * name exists, so the queue keeps the id and loads the group again when
+	 * the email is sent (see restore_tokens()).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Email arguments.
+	 *
+	 * @return array Email arguments to store.
+	 */
+	protected function compact_tokens( $args ) {
+		if (
+			! is_array( $args ) ||
+			empty( $args['tokens']['group'] ) ||
+			! $args['tokens']['group'] instanceof BBoss_Groups_Group ||
+			empty( $args['tokens']['group']->id )
+		) {
+			return $args;
+		}
+
+		$args['tokens']['group.id'] = (int) $args['tokens']['group']->id;
+		unset( $args['tokens']['group'] );
+		$args['bb_email_queue_compacted'] = array( 'group' );
+
+		return $args;
+	}
+
+	/**
+	 * Load the group object token again for a record stored by compact_tokens().
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Stored email arguments.
+	 *
+	 * @return array Email arguments to send.
+	 */
+	protected function restore_tokens( $args ) {
+		if ( ! is_array( $args ) || empty( $args['bb_email_queue_compacted'] ) ) {
+			return $args;
+		}
+
+		$compacted = (array) $args['bb_email_queue_compacted'];
+		unset( $args['bb_email_queue_compacted'] );
+
+		if (
+			in_array( 'group', $compacted, true ) &&
+			! empty( $args['tokens']['group.id'] ) &&
+			function_exists( 'bboss_groups_get_group' )
+		) {
+			$group = bboss_groups_get_group( (int) $args['tokens']['group.id'] );
+			if ( ! empty( $group->id ) ) {
+				$args['tokens']['group'] = $group;
+			}
+		}
+
+		return $args;
 	}
 
 	/**
@@ -110,7 +173,7 @@ class BP_Email_Queue {
 			$place_holders = array();
 			foreach ( $data as $item ) {
 				// phpcs:ignore Squiz.Strings.DoubleQuoteUsage.NotRequired
-				$place_holders[] = $wpdb->prepare( "( %s, %s, %s, %s, %d )", $item['email_type'], maybe_serialize( $item['recipient'] ), maybe_serialize( $item['arguments'] ), bp_core_current_time(), 0 );
+				$place_holders[] = $wpdb->prepare( "( %s, %s, %s, %s, %d )", $item['email_type'], maybe_serialize( $item['recipient'] ), maybe_serialize( $this->compact_tokens( $item['arguments'] ) ), bboss_core_current_time(), 0 );
 			}
 
 			$sql = "INSERT INTO {$wpdb->base_prefix}bb_email_queue ( email_type, recipient, arguments, date_created, scheduled ) VALUES " . implode( ', ', $place_holders );
@@ -181,10 +244,10 @@ class BP_Email_Queue {
 				$item_id    = ! empty( $single['id'] ) ? $single['id'] : 0;
 				$email_type = ! empty( $single['email_type'] ) ? $single['email_type'] : '';
 				$to         = ! empty( $single['recipient'] ) ? maybe_unserialize( $single['recipient'] ) : 0;
-				$args       = ! empty( $single['arguments'] ) ? maybe_unserialize( $single['arguments'] ) : array();
+				$args       = ! empty( $single['arguments'] ) ? $this->restore_tokens( maybe_unserialize( $single['arguments'] ) ) : array();
 
 				if ( $this->get_single_record( $item_id ) && ! empty( $email_type ) && ! empty( $to ) ) {
-					bp_send_email( $email_type, $to, $args );
+					bboss_send_email( $email_type, $to, $args );
 					$this->delete_record( $item_id );
 				}
 			}

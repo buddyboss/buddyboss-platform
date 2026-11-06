@@ -6,24 +6,27 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load the Messages > Inbox screen.
  *
  * @since BuddyPress 1.0.0
  */
-function messages_screen_inbox() {
+function bboss_messages_screen_inbox() {
 
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
 	// check if user has threads or not, if yes then redirect to latest thread otherwise to compose screen
-	if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
+	if ( bboss_has_message_threads( bboss_ajax_querystring( 'messages' ) ) ) {
 		$thread_id = 0;
-		while ( bp_message_threads() ) :
-			bp_message_thread();
-			$thread_id = bp_get_message_thread_id();
+		while ( bboss_message_threads() ) :
+			bboss_message_thread();
+			$thread_id = bboss_get_message_thread_id();
 			break;
 		endwhile;
 
@@ -33,7 +36,7 @@ function messages_screen_inbox() {
 			exit;
 		}*/
 	} else {
-		wp_safe_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/compose' ) );
+		wp_safe_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/compose' ) );
 		exit;
 	}
 
@@ -51,5 +54,5 @@ function messages_screen_inbox() {
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */
-	bp_core_load_template( apply_filters( 'messages_template_inbox', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'messages_template_inbox', 'members/single/home' ) );
 }

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
+class BBoss_Nouveau_Group_Invite_Query extends BBoss_User_Query {
 	/**
 	 * Array of group member ids, cached to prevent redundant lookups
 	 *
@@ -39,7 +39,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function build_exclude_args() {
-		$this->query_vars = bp_parse_args( $this->query_vars, array(
+		$this->query_vars = bboss_parse_args( $this->query_vars, array(
 			'group_id'     => 0,
 			'is_confirmed' => true,
 		) );
@@ -79,7 +79,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 		}
 
 		// Fetch **all** invited users.
-		$pending_invites = groups_get_invites( array(
+		$pending_invites = bboss_groups_get_invites( array(
 			'item_id'     => $this->query_vars['group_id'],
 			'invite_sent' => 'sent',
 			'fields'      => 'user_ids'
@@ -94,7 +94,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 		 * Otherwise, we want group members _and_ users with outstanding invitations,
 		 * because we're doing an "exclude" query.
 		 */
-		$bp  = buddypress();
+		$bp  = bboss();
 		$sql = array(
 			'select'  => "SELECT user_id FROM {$bp->groups->table_name_members}",
 			'where'   => array(),
@@ -121,7 +121,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 		$sql['order']   = 'DESC';
 
 		/** LIMIT clause ******************************************************/
-		$this->group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']} {$sql['limit']}" );
+		$this->group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']} {$sql['limit']}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- clauses built just above: table name from buddypress(), group_id and is_confirmed $wpdb->prepare()'d, the rest constants.
 
 		return array_merge( $this->group_member_ids, $pending_invites );
 	}
@@ -133,9 +133,9 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 	 * @since BuddyBoss 3.5.1 Resolve a lone `NOT EXISTS` clause to an excluded user ID list
 	 *                              and join the `WP_Meta_Query` fallback on the query's uid column.
 	 *
-	 * @param BP_User_Query $bp_user_query The user query being built.
+	 * @param BBoss_User_Query $bp_user_query The user query being built.
 	 */
-	public function build_meta_query( BP_User_Query $bp_user_query ) {
+	public function build_meta_query( BBoss_User_Query $bp_user_query ) {
 		global $wpdb;
 
 		if ( isset( $this->query_vars['scope'] ) && 'members' === $this->query_vars['scope'] && isset( $this->query_vars['meta_query'] ) ) {
@@ -213,7 +213,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				// incrementor, so a rebuild that raced a member toggling the setting writes under
 				// a key nobody will read again, instead of overwriting the fresh state with its
 				// pre-toggle snapshot. All three keys below carry it, so one reset clears them.
-				$incrementor   = bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+				$incrementor   = bboss_core_get_incrementor( 'bb_nouveau_group_invites' );
 				$list_key      = 'bb_restrict_invites_ids_' . $incrementor;
 				$ceiling_key   = 'bb_restrict_invites_over_' . $limit . '_' . $incrementor;
 				$lock_key      = 'bb_restrict_invites_lock_' . $incrementor;
@@ -347,7 +347,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 			return array();
 		}
 
-		return groups_get_invites( array(
+		return bboss_groups_get_invites( array(
 			'user_id'     => $user_id,
 			'item_id'     => $group_id,
 			'invite_sent' => 'sent',
@@ -358,11 +358,11 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 
 /**
  * A specific Group Nav class to make it possible to set new positions for
- * buddypress()->groups->nav.
+ * bboss()->groups->nav.
  *
  * @since BuddyPress 3.0.0
  */
-class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
+class BBoss_Nouveau_Customizer_Group_Nav extends BBoss_Core_Nav {
 
 
 	/**
@@ -380,11 +380,11 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	public function __construct( $object_id = 0 ) {
 		$error = new WP_Error( 'missing_parameter' );
 
-		if ( empty( $object_id ) || ! bp_current_user_can( 'bp_moderate' ) || ! did_action( 'admin_init' ) ) {
+		if ( empty( $object_id ) || ! bboss_current_user_can( 'bp_moderate' ) || ! did_action( 'admin_init' ) ) {
 			return $error;
 		}
 
-		$group = groups_get_group( array( 'group_id' => $object_id ) );
+		$group = bboss_groups_get_group( array( 'group_id' => $object_id ) );
 		if ( empty( $group->id ) ) {
 			return $error;
 		}
@@ -398,7 +398,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	/**
 	 * Checks whether a property is set.
 	 *
-	 * Overrides BP_Core_Nav::__isset() to avoid looking into its nav property.
+	 * Overrides BBoss_Core_Nav::__isset() to avoid looking into its nav property.
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
@@ -413,7 +413,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	/**
 	 * Gets a property.
 	 *
-	 * Overrides BP_Core_Nav::__isset() to avoid looking into its nav property.
+	 * Overrides BBoss_Core_Nav::__isset() to avoid looking into its nav property.
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
@@ -432,7 +432,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	/**
 	 * Sets a property.
 	 *
-	 * Overrides BP_Core_Nav::__isset() to avoid adding a value to its nav property.
+	 * Overrides BBoss_Core_Nav::__isset() to avoid adding a value to its nav property.
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
@@ -452,41 +452,41 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	protected function setup_nav() {
 		$nav_items = array(
 			'root'    => array(
-				'name'                => __( 'My Groups', 'buddyboss' ),
+				'name'                => __( 'My Groups', 'buddyboss-platform' ),
 				'slug'                => $this->group->slug,
 				'position'            => -1,
 				/** This filter is documented in bp-groups/classes/class-bp-groups-component.php. */
 				'default_subnav_slug' => apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : 'home' ),
 			),
 			'members'    => array(
-				'name'        => __( 'Members', 'buddyboss' ),
+				'name'        => __( 'Members', 'buddyboss-platform' ),
 				'slug'        => 'members',
 				'parent_slug' => $this->group->slug,
 				'position'    => 10,
 			),
 			'invites' => array(
-				'name'        => __( 'Send Invites', 'buddyboss' ),
+				'name'        => __( 'Send Invites', 'buddyboss-platform' ),
 				'slug'        => 'invite',
 				'parent_slug' => $this->group->slug,
 				'position'    => 30,
 			),
 			'manage'  => array(
-				'name'        => __( 'Manage', 'buddyboss' ),
+				'name'        => __( 'Manage', 'buddyboss-platform' ),
 				'slug'        => 'admin',
 				'parent_slug' => $this->group->slug,
 				'position'    => 1000,
 			),
 		);
 
-		if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
+		if ( bboss_is_active( 'media' ) && bboss_is_group_media_support_enabled() ) {
 			$nav_items['photos'] = array(
-				'name'        => __( 'Photos', 'buddyboss' ),
+				'name'        => __( 'Photos', 'buddyboss-platform' ),
 				'slug'        => 'photos',
 				'parent_slug' => $this->group->slug,
 				'position'    => 21,
 			);
 
-			if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) {
+			if ( bboss_is_active( 'video' ) && bboss_is_group_video_support_enabled() ) {
 				// Checked if order already set before, New menu(video) will be added at last
 				$video_menu_position = 22;
 				$orders              = get_option( 'bp_nouveau_appearance' );
@@ -494,16 +494,16 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 					$video_menu_position = 1001;
 				}
 				$nav_items['videos'] = array(
-					'name'        => __( 'Videos', 'buddyboss' ),
+					'name'        => __( 'Videos', 'buddyboss-platform' ),
 					'slug'        => 'videos',
 					'parent_slug' => $this->group->slug,
 					'position'    => $video_menu_position,
 				);
 			}
 
-			if ( bp_is_group_albums_support_enabled() ) {
+			if ( bboss_is_group_albums_support_enabled() ) {
 				$nav_items['albums'] = array(
-					'name'        => __( 'Albums', 'buddyboss' ),
+					'name'        => __( 'Albums', 'buddyboss-platform' ),
 					'slug'        => 'albums',
 					'parent_slug' => $this->group->slug,
 					'position'    => 23,
@@ -512,10 +512,10 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 		}
 
-		if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
-			if ( bbp_is_group_forums_active() ) {
+		if ( bboss_is_active( 'forums' ) && function_exists( 'bboss_bbp_is_group_forums_active' ) ) {
+			if ( bboss_bbp_is_group_forums_active() ) {
 				$nav_items['forum'] = array(
-					'name'        => __( 'Discussions', 'buddyboss' ),
+					'name'        => __( 'Discussions', 'buddyboss-platform' ),
 					'slug'        => get_option( '_bbp_forum_slug', 'forum' ),
 					'parent_slug' => $this->group->slug,
 					'position'    => 30,
@@ -523,9 +523,9 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			}
 		}
 
-		if ( bp_enable_group_hierarchies() ) {
+		if ( bboss_enable_group_hierarchies() ) {
 			$nav_items['subgroups'] = array(
-				'name'        => __( 'Subgroups', 'buddyboss' ),
+				'name'        => __( 'Subgroups', 'buddyboss-platform' ),
 				'slug'        => 'subgroups',
 				'parent_slug' => $this->group->slug,
 				'position'    => 28,
@@ -537,27 +537,27 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 		// addon adds them via the existing bp_nouveau_customizer_group_nav_items
 		// filter below — no Platform-side knowledge of LD slugs needed.
 
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$nav_items['activity'] = array(
-				'name'        => __( 'Feed', 'buddyboss' ),
+				'name'        => __( 'Feed', 'buddyboss-platform' ),
 				'slug'        => 'activity',
 				'parent_slug' => $this->group->slug,
 				'position'    => 20,
 			);
 		}
 
-		if ( bp_is_active( 'messages' ) && true === bp_disable_group_messages() && groups_can_user_manage_messages( bp_loggedin_user_id(), $this->group->id ) ) {
+		if ( bboss_is_active( 'messages' ) && true === bboss_disable_group_messages() && groups_can_user_manage_messages( bboss_loggedin_user_id(), $this->group->id ) ) {
 			$nav_items['messages'] = array(
-				'name'        => __( 'Send Messages', 'buddyboss' ),
+				'name'        => __( 'Send Messages', 'buddyboss-platform' ),
 				'slug'        => 'messages',
 				'parent_slug' => $this->group->slug,
 				'position'    => 25,
 			);
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+		if ( bboss_is_active( 'media' ) && bboss_is_group_document_support_enabled() ) {
 			$nav_items['documents'] = array(
-				'name'        => __( 'Documents', 'buddyboss' ),
+				'name'        => __( 'Documents', 'buddyboss-platform' ),
 				'slug'        => 'documents',
 				'parent_slug' => $this->group->slug,
 				'position'    => 24,
@@ -573,7 +573,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 		// Now find nav items plugins are creating within their Group extensions!
 		foreach ( get_declared_classes() as $class ) {
-			if ( is_subclass_of( $class, 'BP_Group_Extension' ) ) {
+			if ( is_subclass_of( $class, 'BBoss_Group_Extension' ) ) {
 				$extension = new $class;
 
 				if ( ! empty( $extension->params ) && ! array_diff_key( $required_params, $extension->params ) ) {
@@ -637,7 +637,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	 */
 	public function get_group_nav() {
 		// Eventually reset the order
-		bp_nouveau_set_nav_item_order( $this, bp_nouveau_get_appearance_settings( 'group_nav_order' ), $this->group->slug );
+		bboss_nouveau_set_nav_item_order( $this, bboss_nouveau_get_appearance_settings( 'group_nav_order' ), $this->group->slug );
 
 		return $this->get_secondary( array( 'parent_slug' => $this->group->slug ) );
 	}

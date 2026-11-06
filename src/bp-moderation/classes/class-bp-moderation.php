@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation {
+class BBoss_Moderation {
 
 	/**
 	 * ID of the moderation.
@@ -180,9 +180,9 @@ class BP_Moderation {
 			$this->item_id   = $item_id;
 			$this->item_type = $item_type;
 
-			$report_type = ( BP_Moderation_Members::$moderation_type_report === $item_type ) ? BP_Moderation_Members::$moderation_type : $this->item_type;
+			$report_type = ( BBoss_Moderation_Members::$moderation_type_report === $item_type ) ? BBoss_Moderation_Members::$moderation_type : $this->item_type;
 
-			$id = self::check_moderation_exist( $this->item_id, $report_type, self::$no_cache, BP_Moderation_Members::$moderation_type_report === $item_type );
+			$id = self::check_moderation_exist( $this->item_id, $report_type, self::$no_cache, BBoss_Moderation_Members::$moderation_type_report === $item_type );
 			if ( ! empty( $id ) ) {
 				$this->id = (int) $id;
 				$this->populate( $item_type );
@@ -205,14 +205,14 @@ class BP_Moderation {
 	public static function check_moderation_exist( $item_id, $item_type, $force_check = false, $user_report = false ) {
 		global $wpdb;
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$cache_key = 'bb_check_moderation_' . $item_type . '_' . $item_id . '_' . $user_report;
 		$found     = null;
 		$result    = wp_cache_get( $cache_key, 'bp_moderation', false, $found );
 
 		if ( ( false === $result && null == $found ) || true === $force_check ) {
 			if ( true === $user_report ) {
-				$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.user_report = 1", $item_id, BP_Moderation_Members::$moderation_type ) ); // phpcs:ignore
+				$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.user_report = 1", $item_id, BBoss_Moderation_Members::$moderation_type ) ); // phpcs:ignore
 			} else {
 				$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1", $item_id, $item_type ) ); // phpcs:ignore
 			}
@@ -237,7 +237,7 @@ class BP_Moderation {
 	public static function check_any_moderation_exist( $item_id, $item_type, $force_check = false ) {
 		global $wpdb;
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$cache_key = 'bb_check_any_moderation_' . $item_type . '_' . $item_id;
 		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
@@ -260,7 +260,7 @@ class BP_Moderation {
 
 		$row = wp_cache_get( $this->id, 'bp_moderation' );
 		if ( false === $row ) {
-			$bp  = buddypress();
+			$bp  = bboss();
 			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} WHERE id = %d", $this->id ) ); // phpcs:ignore
 
 			wp_cache_set( $this->id, $row, 'bp_moderation' );
@@ -276,16 +276,16 @@ class BP_Moderation {
 		$this->hide_sitewide = (int) $row->hide_sitewide;
 		$this->last_updated  = $row->last_updated;
 		$this->blog_id       = (int) $row->blog_id;
-		$this->count         = (int) bp_moderation_get_meta( $this->id, '_count' );
-		$this->count_report  = (int) bp_moderation_get_meta( $this->id, '_count_user_reported' );
+		$this->count         = (int) bboss_moderation_get_meta( $this->id, '_count' );
+		$this->count_report  = (int) bboss_moderation_get_meta( $this->id, '_count_user_reported' );
 
 		/**
 		 * Fetch User Report data
 		 */
-		$bp        = buddypress();
+		$bp        = bboss();
 		$cache_key = 'bp_moderation_populate_' . $this->id . '_' . $this->user_id . '_' . ( ! empty( $user_report ) ? $user_report : $this->item_type );
 		if ( ! isset( $bb_report_row_query[ $cache_key ] ) || true === self::$no_cache ) {
-			if ( BP_Moderation_Members::$moderation_type_report === $user_report ) {
+			if ( BBoss_Moderation_Members::$moderation_type_report === $user_report ) {
 				$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d and user_report = 1", $this->id, $this->user_id ) ); // phpcs:ignore
 			} else {
 				$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d AND user_report = 0", $this->id, $this->user_id ) ); // phpcs:ignore
@@ -329,7 +329,7 @@ class BP_Moderation {
 	 * @type array       $meta_query        Array of meta_query conditions. See WP_Meta_Query::queries.
 	 * @type array       $date_query        Array of date_query conditions. See first parameter of
 	 *                                           WP_Date_Query::__construct().
-	 * @type array       $filter_query      Array of advanced query conditions. See BP_Moderation_Query::__construct().
+	 * @type array       $filter_query      Array of advanced query conditions. See BBoss_Moderation_Query::__construct().
 	 * @type bool        $display_reporters Whether to include moderation reported users. Default: false.
 	 * @type bool        $update_meta_cache Whether to pre-fetch metadata for queried moderation items. Default: true.
 	 * @type string|bool $count_total       If true, an additional DB query is run to count the total moderation items
@@ -339,7 +339,7 @@ class BP_Moderation {
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located moderations
 	 *               - 'moderations' is an array of the located moderation reports
-	 * @see   BP_Moderation::get_filter_sql() for a description of the
+	 * @see   BBoss_Moderation::get_filter_sql() for a description of the
 	 *        'filter' parameter.
 	 * @see   WP_Meta_Query::queries for a description of the 'meta_query'
 	 *        parameter format.
@@ -347,8 +347,8 @@ class BP_Moderation {
 	public static function get( $args = array() ) {
 		global $wpdb;
 
-		$bp = buddypress();
-		$r  = bp_parse_args(
+		$bp = bboss();
+		$r  = bboss_parse_args(
 			$args,
 			array(
 				'page'              => 1,               // The current page.
@@ -393,7 +393,7 @@ class BP_Moderation {
 
 		// Scope takes precedence.
 		if ( ! empty( $r['filter_query'] ) ) {
-			$filter_query = new BP_Moderation_Query( $r['filter_query'], $r );
+			$filter_query = new BBoss_Moderation_Query( $r['filter_query'], $r );
 			$sql          = $filter_query->get_sql();
 
 			if ( ! empty( $sql['where'] ) ) {
@@ -478,7 +478,7 @@ class BP_Moderation {
 			$in_types                     = "'" . implode( "', '", wp_parse_slug_list( $r['in_types'] ) ) . "'";
 			$where_conditions['in_types'] = "ms.item_type IN ({$in_types})";
 		} else {
-			$content_type                 = bp_moderation_content_types();
+			$content_type                 = bboss_moderation_content_types();
 			$in_types                     = "'" . implode( "', '", wp_parse_slug_list( array_keys( $content_type ) ) ) . "'";
 			$where_conditions['in_types'] = "ms.item_type IN ({$in_types})";
 		}
@@ -510,15 +510,15 @@ class BP_Moderation {
 
 		// Handle search terms.
 		if ( ! empty( $r['search_terms'] ) ) {
-			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+			$search_terms_like = '%' . bboss_esc_like( $r['search_terms'] ) . '%';
 
 			// Check if we're searching for members.
-			$is_member_search = ! empty( $r['in_types'] ) && in_array( BP_Moderation_Members::$moderation_type, $r['in_types'], true );
+			$is_member_search = ! empty( $r['in_types'] ) && in_array( BBoss_Moderation_Members::$moderation_type, $r['in_types'], true );
 
 			if ( $is_member_search ) {
 				// For member searches, join the users table and search in user fields.
 				if ( ! strpos( $join_sql, $wpdb->users ) ) {
-					$join_sql .= " INNER JOIN {$wpdb->users} u ON ms.item_id = u.ID AND ms.item_type = '" . BP_Moderation_Members::$moderation_type . "'";
+					$join_sql .= " INNER JOIN {$wpdb->users} u ON ms.item_id = u.ID AND ms.item_type = '" . BBoss_Moderation_Members::$moderation_type . "'";
 				}
 				$where_conditions['search'] = $wpdb->prepare(
 					'(u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_email LIKE %s)',
@@ -602,10 +602,10 @@ class BP_Moderation {
 		$moderation_ids_sql = apply_filters( 'bp_moderation_paged_moderations_sql', $moderation_ids_sql, $r );
 
 		$cache_group = 'bp_moderation';
-		$cached      = bp_core_get_incremented_cache( $moderation_ids_sql, $cache_group );
+		$cached      = bboss_core_get_incremented_cache( $moderation_ids_sql, $cache_group );
 		if ( false === $cached ) {
 			$moderation_ids = $wpdb->get_col( $moderation_ids_sql ); // phpcs:ignore
-			bp_core_set_incremented_cache( $moderation_ids_sql, $cache_group, $moderation_ids );
+			bboss_core_set_incremented_cache( $moderation_ids_sql, $cache_group, $moderation_ids );
 		} else {
 			$moderation_ids = $cached;
 		}
@@ -660,10 +660,10 @@ class BP_Moderation {
 			 * @param string $sort      Sort direction for query.
 			 */
 			$total_moderations_sql = apply_filters( 'bp_moderation_total_moderations_sql', "SELECT count(DISTINCT ms.id) FROM {$bp->moderation->table_name} ms {$join_sql} {$where_sql}", $where_sql, $sort );
-			$cached                = bp_core_get_incremented_cache( $total_moderations_sql, $cache_group );
+			$cached                = bboss_core_get_incremented_cache( $total_moderations_sql, $cache_group );
 			if ( false === $cached ) {
 				$total_moderations = $wpdb->get_var( $total_moderations_sql ); // phpcs:ignore
-				bp_core_set_incremented_cache( $total_moderations_sql, $cache_group, $total_moderations );
+				bboss_core_set_incremented_cache( $total_moderations_sql, $cache_group, $total_moderations );
 			} else {
 				$total_moderations = $cached;
 			}
@@ -729,7 +729,7 @@ class BP_Moderation {
 	 * @param array|bool $items The values for the IN clause, or false when none are found.
 	 *
 	 * @return string|false
-	 * @see   BP_Moderation::get_filter_sql()
+	 * @see   BBoss_Moderation::get_filter_sql()
 	 */
 	public static function get_in_operator_sql( $field, $items ) {
 		global $wpdb;
@@ -759,11 +759,11 @@ class BP_Moderation {
 	}
 
 	/**
-	 * Get the SQL for the 'meta_query' param in BP_Moderation::get().
+	 * Get the SQL for the 'meta_query' param in BBoss_Moderation::get().
 	 *
 	 * We use WP_Meta_Query to do the heavy lifting of parsing the
 	 * meta_query array and creating the necessary SQL clauses. However,
-	 * since BP_Moderation::get() builds its SQL differently than
+	 * since BBoss_Moderation::get() builds its SQL differently than
 	 * WP_Query, we have to alter the return value (stripping the leading
 	 * AND keyword from the 'where' clause).
 	 *
@@ -787,7 +787,7 @@ class BP_Moderation {
 
 			// WP_Meta_Query expects the table name at
 			// $wpdb->moderationmeta.
-			$wpdb->moderationmeta = buddypress()->moderation->table_name_meta;
+			$wpdb->moderationmeta = bboss()->moderation->table_name_meta;
 
 			$meta_sql = $moderation_meta_query->get_sql( 'moderation', 'ms', 'id' );
 
@@ -800,11 +800,11 @@ class BP_Moderation {
 	}
 
 	/**
-	 * Get the SQL for the 'date_query' param in BP_Moderation::get().
+	 * Get the SQL for the 'date_query' param in BBoss_Moderation::get().
 	 *
-	 * We use BP_Date_Query, which extends WP_Date_Query, to do the heavy lifting
+	 * We use BBoss_Date_Query, which extends WP_Date_Query, to do the heavy lifting
 	 * of parsing the date_query array and creating the necessary SQL clauses.
-	 * However, since BP_Moderation::get() builds its SQL differently than
+	 * However, since BBoss_Moderation::get() builds its SQL differently than
 	 * WP_Query, we have to alter the return value (stripping the leading AND
 	 * keyword from the query).
 	 *
@@ -820,7 +820,7 @@ class BP_Moderation {
 
 		// Date query.
 		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
-			$date_query = new BP_Date_Query( $date_query, 'last_updated' );
+			$date_query = new BBoss_Date_Query( $date_query, 'last_updated' );
 			$sql        = preg_replace( '/^\sAND/', '', $date_query->get_sql() );
 		}
 
@@ -845,10 +845,10 @@ class BP_Moderation {
 		}
 
 		// Get BuddyPress.
-		$bp = buddypress();
+		$bp = bboss();
 
 		$moderations  = array();
-		$uncached_ids = bp_get_non_cached_ids( $moderation_ids, 'bp_moderation' );
+		$uncached_ids = bboss_get_non_cached_ids( $moderation_ids, 'bp_moderation' );
 
 		// Prime caches as necessary.
 		if ( ! empty( $uncached_ids ) ) {
@@ -874,8 +874,8 @@ class BP_Moderation {
 				$moderation->item_id       = (int) $moderation->item_id;
 				$moderation->hide_sitewide = (int) $moderation->hide_sitewide;
 				$moderation->blog_id       = (int) $moderation->blog_id;
-				$moderation->count         = (int) bp_moderation_get_meta( $moderation->id, '_count' );
-				$moderation->count_report  = (int) bp_moderation_get_meta( $moderation->id, '_count_user_reported' );
+				$moderation->count         = (int) bboss_moderation_get_meta( $moderation->id, '_count' );
+				$moderation->count_report  = (int) bboss_moderation_get_meta( $moderation->id, '_count_user_reported' );
 				$moderation->user_report   = $moderation->user_report;
 			}
 			$moderations[] = $moderation;
@@ -929,7 +929,7 @@ class BP_Moderation {
 
 		$reporters = wp_cache_get( $moderation_id, 'bp_moderation_reporters' );
 		if ( empty( $reporters ) || ! empty( $args ) ) {
-			$bp = buddypress();
+			$bp = bboss();
 
 			$select_sql = "SELECT * FROM {$bp->moderation->table_name_reports} mr";
 
@@ -976,11 +976,11 @@ class BP_Moderation {
 	 */
 	protected static function append_user_fullnames( $moderations, $user_key = 'user_id' ) {
 
-		if ( bp_is_active( 'xprofile' ) && ! empty( $moderations ) ) {
+		if ( bboss_is_active( 'xprofile' ) && ! empty( $moderations ) ) {
 			$moderation_user_ids = wp_list_pluck( $moderations, $user_key );
 
 			if ( ! empty( $moderation_user_ids ) ) {
-				$fullnames = bp_core_get_user_displaynames( $moderation_user_ids );
+				$fullnames = bboss_core_get_user_displaynames( $moderation_user_ids );
 				if ( ! empty( $fullnames ) ) {
 					foreach ( (array) $moderations as $i => $moderation ) {
 						if ( ! empty( $fullnames[ $moderation->$user_key ] ) ) {
@@ -1037,7 +1037,7 @@ class BP_Moderation {
 	public static function get_specific_moderation( $item_id, $item_type ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$cache_key = 'bb_get_specific_moderation_' . $item_type . '_' . $item_id;
 		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
@@ -1066,14 +1066,14 @@ class BP_Moderation {
 		}
 
 		$this->hide_related_content();
-		bp_moderation_update_meta( $this->id, '_hide_by', get_current_user_id() );
+		bboss_moderation_update_meta( $this->id, '_hide_by', get_current_user_id() );
 
 		/**
 		 * Fires after an moderation report item has been hide
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param BP_Moderation $this current class object.
+		 * @param BBoss_Moderation $this current class object.
 		 */
 		do_action( 'bp_moderation_after_hide', $this );
 
@@ -1108,7 +1108,7 @@ class BP_Moderation {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param BP_Moderation $this Current instance of the moderation item being saved. Passed by reference.
+		 * @param BBoss_Moderation $this Current instance of the moderation item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_moderation_before_save', array( &$this ) );
 
@@ -1117,9 +1117,9 @@ class BP_Moderation {
 				return false;
 			} else {
 				if ( empty( $this->item_id ) ) {
-					$this->errors->add( 'bp_moderation_missing_item_id', esc_html__( 'Item ID field missing.', 'buddyboss' ) );
+					$this->errors->add( 'bp_moderation_missing_item_id', esc_html__( 'Item ID field missing.', 'buddyboss-platform' ) );
 				} else {
-					$this->errors->add( 'bp_moderation_missing_item_type', esc_html__( 'Item type field missing.', 'buddyboss' ) );
+					$this->errors->add( 'bp_moderation_missing_item_type', esc_html__( 'Item type field missing.', 'buddyboss-platform' ) );
 				}
 			}
 		}
@@ -1134,13 +1134,13 @@ class BP_Moderation {
 		$email_notification = false;
 		$auto_hide          = false;
 
-		if ( BP_Moderation_Members::$moderation_type === $this->item_type && ( bp_is_moderation_auto_suspend_enable() || bb_is_moderation_auto_suspend_report_enable() ) ) {
-			$threshold          = bp_is_moderation_auto_suspend_enable() ? bp_moderation_auto_suspend_threshold( 5 ) : false;
-			$user_threshold     = bb_is_moderation_auto_suspend_report_enable() ? bb_moderation_auto_suspend_report_threshold() : false;
-			$email_notification = bp_is_moderation_blocking_email_notification_enable();
-		} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
-			$threshold          = bp_moderation_reporting_auto_hide_threshold( '5', $this->item_type );
-			$email_notification = bp_is_moderation_reporting_email_notification_enable();
+		if ( BBoss_Moderation_Members::$moderation_type === $this->item_type && ( bboss_is_moderation_auto_suspend_enable() || bboss_is_moderation_auto_suspend_report_enable() ) ) {
+			$threshold          = bboss_is_moderation_auto_suspend_enable() ? bboss_moderation_auto_suspend_threshold( 5 ) : false;
+			$user_threshold     = bboss_is_moderation_auto_suspend_report_enable() ? bboss_moderation_auto_suspend_report_threshold() : false;
+			$email_notification = bboss_is_moderation_blocking_email_notification_enable();
+		} elseif ( bboss_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
+			$threshold          = bboss_moderation_reporting_auto_hide_threshold( '5', $this->item_type );
+			$email_notification = bboss_is_moderation_reporting_email_notification_enable();
 		}
 
 		/**
@@ -1152,15 +1152,15 @@ class BP_Moderation {
 		/**
 		 * IF any new Content reported then do some required actions
 		 */
-		if ( empty( $this->report_id ) || ( 0 === (int) $this->user_report && BP_Moderation_Members::$moderation_type === $this->item_type ) ) {
+		if ( empty( $this->report_id ) || ( 0 === (int) $this->user_report && BBoss_Moderation_Members::$moderation_type === $this->item_type ) ) {
 
 			// Update last update time as new reported added.
 			$this->last_updated = current_time( 'mysql' );
 
 			// Update count and check $threshold for auto hide/suspended and send email notification if auto hide/suspended.
-			$this->count        = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
-			$this->count_report = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count_user_reported' ) : 0;
-			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->user_report ) ) {
+			$this->count        = ! empty( $this->id ) ? (int) bboss_moderation_get_meta( $this->id, '_count' ) : 0;
+			$this->count_report = ! empty( $this->id ) ? (int) bboss_moderation_get_meta( $this->id, '_count_user_reported' ) : 0;
+			if ( BBoss_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->user_report ) ) {
 				$this->count_report += 1;
 			} else {
 				$this->count += 1;
@@ -1176,7 +1176,7 @@ class BP_Moderation {
 				$auto_hide           = true;
 			}
 			if (
-				BP_Moderation_Members::$moderation_type === $this->item_type &&
+				BBoss_Moderation_Members::$moderation_type === $this->item_type &&
 				! empty( $user_threshold ) &&
 				$this->count_report >= $user_threshold &&
 				1 === $this->user_report &&
@@ -1209,7 +1209,7 @@ class BP_Moderation {
 			if ( ! empty( $email_notification ) ) {
 				$this->send_emails();
 			}
-		} elseif ( BP_Moderation_Members::$moderation_type === $this->item_type && 0 === (int) $this->user_report ) {
+		} elseif ( BBoss_Moderation_Members::$moderation_type === $this->item_type && 0 === (int) $this->user_report ) {
 			// Content will be hide when Blocked User for reported.
 			$this->hide_related_content();
 		}
@@ -1219,7 +1219,7 @@ class BP_Moderation {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param BP_Moderation $this Current instance of moderation item being saved. Passed by reference.
+		 * @param BBoss_Moderation $this Current instance of moderation item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_moderation_after_save', array( &$this ) );
 
@@ -1239,7 +1239,7 @@ class BP_Moderation {
 	public static function check_moderation_report_exist( $moderation_id, $user_id, $user_report = false ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( $user_report ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d and mr.user_report = 1", $moderation_id, $user_id ) ); // phpcs:ignore
@@ -1268,18 +1268,18 @@ class BP_Moderation {
 		);
 
 		if (
-			( in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true ) && empty( $this->user_report ) )
-			|| ! in_array( $this->item_type, array( BP_Moderation_Members::$moderation_type_report, BP_Moderation_Members::$moderation_type ), true )
+			( in_array( $this->item_type, array( BBoss_Moderation_Members::$moderation_type_report, BBoss_Moderation_Members::$moderation_type ), true ) && empty( $this->user_report ) )
+			|| ! in_array( $this->item_type, array( BBoss_Moderation_Members::$moderation_type_report, BBoss_Moderation_Members::$moderation_type ), true )
 		) {
 			$args['reported'] = 1;
 		}
 
 		// If we have an existing ID, update the moderation report item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = BP_Core_Suspend::add_suspend( $args );
+			$q = BBoss_Core_Suspend::add_suspend( $args );
 		} else {
 			$args['blog_id'] = $this->blog_id;
-			$q               = BP_Core_Suspend::add_suspend( $args );
+			$q               = BBoss_Core_Suspend::add_suspend( $args );
 		}
 
 		if ( false === $q ) { // phpcs:ignore
@@ -1304,22 +1304,22 @@ class BP_Moderation {
 	public function store_report() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
-		if ( ! empty( $this->report_id ) && BP_Moderation_Members::$moderation_type === $this->item_type && empty( $this->user_report ) ) {
+		if ( ! empty( $this->report_id ) && BBoss_Moderation_Members::$moderation_type === $this->item_type && empty( $this->user_report ) ) {
 			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id, user_report ) VALUES ( %d, %d, %s, %s, %d, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id, $this->user_report ); // phpcs:ignore
 
-			bp_moderation_update_meta( $this->id, '_count', $this->count );
-			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
+			bboss_moderation_update_meta( $this->id, '_count', $this->count );
+			bboss_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
 		} elseif ( ! empty( $this->report_id ) ) {
 			$q_report = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d, user_report = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_created, $this->category_id, $this->user_report, $this->report_id, $this->id, $this->user_id ); // phpcs:ignore
-			bp_moderation_update_meta( $this->id, '_count', $this->count );
-			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
+			bboss_moderation_update_meta( $this->id, '_count', $this->count );
+			bboss_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
 		} else {
 			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id, user_report ) VALUES ( %d, %d, %s, %s, %d, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id, $this->user_report ); // phpcs:ignore
 
-			bp_moderation_update_meta( $this->id, '_count', $this->count );
-			bp_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
+			bboss_moderation_update_meta( $this->id, '_count', $this->count );
+			bboss_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
 		}
 
 		if ( false === $wpdb->query( $q_report ) ) { // phpcs:ignore
@@ -1339,7 +1339,7 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @return bool|BP_Email|WP_Error
+	 * @return bool|BBoss_Email|WP_Error
 	 */
 	public function send_emails() {
 
@@ -1354,13 +1354,13 @@ class BP_Moderation {
 
 			$_GET['username_visible'] = true;
 
-			if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
+			if ( BBoss_Moderation_Members::$moderation_type === $this->item_type && bboss_is_moderation_auto_suspend_enable() ) {
 
 				$tokens = array(
-					'user_name'      => bp_core_get_user_displayname( $this->item_id ),
+					'user_name'      => bboss_core_get_user_displayname( $this->item_id ),
 					'times_blocked'  => $this->count,
 					'times_reported' => $this->count_report,
-					'member_link'    => BP_Moderation_Members::get_permalink( $this->item_id ),
+					'member_link'    => BBoss_Moderation_Members::get_permalink( $this->item_id ),
 					'report_link'    => add_query_arg(
 						array(
 							'page'         => 'bp-moderation',
@@ -1368,18 +1368,18 @@ class BP_Moderation {
 							'content_type' => $this->item_type,
 							'action'       => 'view',
 						),
-						bp_get_admin_url( 'admin.php' )
+						bboss_get_admin_url( 'admin.php' )
 					),
 				);
 
 				foreach ( $admins as $admin ) {
-					bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
+					bboss_moderation_member_suspend_email( bboss_core_get_user_email( $admin ), $tokens );
 				}
-			} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
+			} elseif ( bboss_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
 
-				$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
+				$content_report_link = ( bboss_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bboss_get_admin_url( 'admin.php' ) ) : bboss_get_admin_url( 'admin.php' );
 
-				$user_ids = bp_moderation_get_content_owner_id( $this->item_id, $this->item_type );
+				$user_ids = bboss_moderation_get_content_owner_id( $this->item_id, $this->item_type );
 				if ( ! is_array( $user_ids ) ) {
 					$user_ids = array( $user_ids );
 				}
@@ -1387,15 +1387,15 @@ class BP_Moderation {
 				$content_owner = array();
 				if ( ! empty( $user_ids ) ) {
 					foreach ( $user_ids as $user_id ) {
-						$content_owner[] = bp_core_get_user_displayname( $user_id );
+						$content_owner[] = bboss_core_get_user_displayname( $user_id );
 					}
 				}
 
 				$tokens = array(
-					'content_type'          => bp_moderation_get_content_type( $this->item_type ),
+					'content_type'          => bboss_moderation_get_content_type( $this->item_type ),
 					'content_owner'         => implode( ', ', $content_owner ),
 					'content_timesreported' => $this->count,
-					'content_link'          => bp_moderation_get_permalink( $this->item_id, $this->item_type ),
+					'content_link'          => bboss_moderation_get_permalink( $this->item_id, $this->item_type ),
 					'content_reportlink'    => add_query_arg(
 						array(
 							'page'         => 'bp-moderation',
@@ -1408,7 +1408,7 @@ class BP_Moderation {
 				);
 
 				foreach ( $admins as $admin ) {
-					bp_moderation_content_hide_email( bp_core_get_user_email( $admin ), $tokens );
+					bboss_moderation_content_hide_email( bboss_core_get_user_email( $admin ), $tokens );
 				}
 			}
 
@@ -1447,7 +1447,7 @@ class BP_Moderation {
 		} else {
 
 			$this->unhide_related_content();
-			bp_moderation_delete_meta( $this->id, '_hide_by' );
+			bboss_moderation_delete_meta( $this->id, '_hide_by' );
 		}
 
 		/**
@@ -1455,7 +1455,7 @@ class BP_Moderation {
 		 *
 		 * @since BuddyBoss 1.5.6
 		 *
-		 * @param BP_Moderation $this current class object.
+		 * @param BBoss_Moderation $this current class object.
 		 */
 		do_action( 'bp_moderation_after_unhide', $this );
 	}
@@ -1471,7 +1471,7 @@ class BP_Moderation {
 	 */
 	public function delete( $force_all = false ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		$updated_row   = false;
 		$delete_parent = $force_all;
@@ -1506,7 +1506,7 @@ class BP_Moderation {
 		 *
 		 * @since BuddyBoss 2.1.4
 		 *
-		 * @param BP_Moderation $this Current instance of moderation item being deleted. Passed by reference.
+		 * @param BBoss_Moderation $this Current instance of moderation item being deleted. Passed by reference.
 		 */
 		do_action_ref_array( 'bb_moderation_after_delete', array( &$this ) );
 
@@ -1524,7 +1524,7 @@ class BP_Moderation {
 	 */
 	public function delete_report( $force_all ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( $force_all ) {
 			$args = array( 'moderation_id' => $this->id );
@@ -1536,17 +1536,17 @@ class BP_Moderation {
 
 		if ( ! empty( $updated_row ) ) {
 			$this->report_id = null;
-			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->user_report ) ) {
+			if ( BBoss_Moderation_Members::$moderation_type === $this->item_type && ! empty( $this->user_report ) ) {
 				$this->count_report -= 1;
 			} else {
 				$this->count -= 1;
 			}
 
 			if ( 0 <= $this->count ) {
-				bp_moderation_update_meta( $this->id, '_count', $this->count );
+				bboss_moderation_update_meta( $this->id, '_count', $this->count );
 			}
 			if ( 0 <= $this->count_report ) {
-				bp_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
+				bboss_moderation_update_meta( $this->id, '_count_user_reported', $this->count_report );
 			}
 		}
 
@@ -1564,7 +1564,7 @@ class BP_Moderation {
 	 */
 	public static function delete_meta( $moderation_id = 0 ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( empty( $moderation_id ) ) {
 			return;

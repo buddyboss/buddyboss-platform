@@ -30,7 +30,7 @@ class XProfile_Field extends BuddypressCommand {
 	 * ## OPTIONS
 	 *
 	 * [--<field>=<value>]
-	 * : One or more parameters to pass. See bp_xprofile_get_groups()
+	 * : One or more parameters to pass. See bboss_xprofile_get_groups()
 	 *
 	 * ## EXAMPLE
 	 *
@@ -49,7 +49,7 @@ class XProfile_Field extends BuddypressCommand {
 
 		$fields    = array();
 		$formatter = $this->get_formatter( $assoc_args );
-		$groups    = bp_xprofile_get_groups( $args );
+		$groups    = bboss_xprofile_get_groups( $args );
 
 		// Reformat so that field_group_id is a property of fields.
 		foreach ( $groups as $group ) {
@@ -95,7 +95,7 @@ class XProfile_Field extends BuddypressCommand {
 	 */
 	public function create( $args, $assoc_args ) {
 		// Check this is a non-empty, valid field type.
-		if ( ! in_array( $assoc_args['type'], (array) buddypress()->profile->field_types, true ) ) {
+		if ( ! in_array( $assoc_args['type'], (array) bboss()->profile->field_types, true ) ) {
 			WP_CLI::error( 'Not a valid field type.' );
 		}
 
@@ -105,7 +105,7 @@ class XProfile_Field extends BuddypressCommand {
 			'field_group_id' => $assoc_args['field-group-id'],
 		);
 
-		$field_id = xprofile_insert_field( $create_args );
+		$field_id = bboss_xprofile_insert_field( $create_args );
 		if ( ! $field_id ) {
 			WP_CLI::error( 'Could not create XProfile field.' );
 		}
@@ -113,7 +113,7 @@ class XProfile_Field extends BuddypressCommand {
 		if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'porcelain' ) ) {
 			WP_CLI::line( $field_id );
 		} else {
-			$field   = new \BP_XProfile_Field( $field_id );
+			$field   = new \BBoss_XProfile_Field( $field_id );
 			$success = sprintf(
 				'Created XProfile field "%s" (ID %d).',
 				$field->name,
@@ -156,7 +156,7 @@ class XProfile_Field extends BuddypressCommand {
 	 */
 	public function get( $args, $assoc_args ) {
 		$field_id = $this->get_field_id( $args[0] );
-		$object   = xprofile_get_field( $field_id );
+		$object   = bboss_xprofile_get_field( $field_id );
 
 		if ( ! is_object( $object ) && empty( $object->id ) ) {
 			WP_CLI::error( 'No XProfile field found.' );
@@ -208,7 +208,7 @@ class XProfile_Field extends BuddypressCommand {
 			array( $field_id ),
 			$assoc_args,
 			function( $field_id ) use ( $r ) {
-				$field   = new \BP_XProfile_Field( $field_id );
+				$field   = new \BBoss_XProfile_Field( $field_id );
 				$name    = $field->name;
 				$id      = $field->id;
 				$deleted = $field->delete( $r['delete_data'] );

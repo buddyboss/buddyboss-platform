@@ -27,18 +27,18 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param array $args  {
  *     Array of arguments. Accepts all arguments from
- *     {@link BP_User_Query}, with the following additions:
+ *     {@link BBoss_User_Query}, with the following additions:
  *
  *     @type int|array|string $group_id     ID of the group to limit results to. Also accepts multiple values
  *                                          either as an array or as a comma-delimited string.
  *     @type array            $group_role   Array of group roles to match ('member', 'mod', 'admin', 'banned').
  *                                          Default: array( 'member' ).
  *     @type bool             $is_confirmed Whether to limit to confirmed members. Default: true.
- *     @type string           $type         Sort order. Accepts any value supported by {@link BP_User_Query}, in
+ *     @type string           $type         Sort order. Accepts any value supported by {@link BBoss_User_Query}, in
  *                                          addition to 'last_joined' and 'first_joined'. Default: 'last_joined'.
  * }
  */
-class BP_Group_Member_Query extends BP_User_Query {
+class BBoss_Group_Member_Query extends BBoss_User_Query {
 
 	/**
 	 * Array of group member ids, cached to prevent redundant lookups.
@@ -71,13 +71,13 @@ class BP_Group_Member_Query extends BP_User_Query {
 	/**
 	 * Get a list of user_ids to include in the IN clause of the main query.
 	 *
-	 * Overrides BP_User_Query::get_include_ids(), adding our additional
+	 * Overrides BBoss_User_Query::get_include_ids(), adding our additional
 	 * group-member logic.
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
 	 * @param array $include Existing group IDs in the $include parameter,
-	 *                       as calculated in BP_User_Query.
+	 *                       as calculated in BBoss_User_Query.
 	 * @return array
 	 */
 	public function get_include_ids( $include = array() ) {
@@ -86,7 +86,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 		// We loop through to make sure that defaults are set (though
 		// values passed to the constructor will, as usual, override
 		// these defaults).
-		$this->query_vars = bp_parse_args(
+		$this->query_vars = bboss_parse_args(
 			$this->query_vars,
 			array(
 				'group_id'     => 0,
@@ -128,7 +128,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 			return $this->group_member_ids;
 		}
 
-		$bp  = buddypress();
+		$bp  = bboss();
 		$sql = array(
 			'select'  => "SELECT user_id FROM {$bp->groups->table_name_members}",
 			'where'   => array(),
@@ -239,7 +239,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 
 		$sql['order'] = 'first_joined' === $this->query_vars['type'] ? 'ASC' : 'DESC';
 
-		$group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}" );
+		$group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- clauses built above: table name from buddypress(), group_id/is_confirmed/invite_sent $wpdb->prepare()'d, inviter ids from wp_parse_id_list(), roles from a fixed whitelist, ORDER BY constants.
 
 		$invited_member_ids = array();
 
@@ -290,7 +290,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 				$invite_args['sort_order'] = 'ASC';
 			}
 
-			$invited_member_ids = groups_get_invites( $invite_args );
+			$invited_member_ids = bboss_groups_get_invites( $invite_args );
 		}
 
 		$this->group_member_ids = array_merge( $group_member_ids, $invited_member_ids );
@@ -304,7 +304,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array                 $group_member_ids Array of associated member IDs.
-		 * @param BP_Group_Member_Query $this             Current BP_Group_Member_Query instance.
+		 * @param BBoss_Group_Member_Query $this             Current BBoss_Group_Member_Query instance.
 		 */
 		$this->group_member_ids = apply_filters( 'bp_group_member_query_group_member_ids', $this->group_member_ids, $this );
 
@@ -312,14 +312,14 @@ class BP_Group_Member_Query extends BP_User_Query {
 	}
 
 	/**
-	 * Tell BP_User_Query to order by the order of our query results.
+	 * Tell BBoss_User_Query to order by the order of our query results.
 	 *
-	 * We only override BP_User_Query's native ordering in case of the
+	 * We only override BBoss_User_Query's native ordering in case of the
 	 * 'last_joined' and 'first_joined' $type parameters.
 	 *
 	 * @since BuddyPress 1.8.1
 	 *
-	 * @param BP_User_Query $query BP_User_Query object.
+	 * @param BBoss_User_Query $query BBoss_User_Query object.
 	 */
 	public function set_orderby( $query ) {
 		$gm_ids = $this->get_group_member_ids();
@@ -355,7 +355,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 	}
 
 	/**
-	 * Fetch additional data required in bp_group_has_members() loops.
+	 * Fetch additional data required in bboss_group_has_members() loops.
 	 *
 	 * Additional data fetched:
 	 *      - is_banned
@@ -363,7 +363,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @param BP_User_Query $query        BP_User_Query object. Because we're
+	 * @param BBoss_User_Query $query        BBoss_User_Query object. Because we're
 	 *                                    filtering the current object, we use
 	 *                                    $this inside of the method instead.
 	 * @param string        $user_ids_sql Sanitized, comma-separated string of
@@ -373,7 +373,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 		global $wpdb;
 		static $cache = array();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( is_array( $this->query_vars['group_id'] ) ) {
 			$group_ids = wp_parse_id_list( $this->query_vars['group_id'] );
@@ -389,7 +389,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 			// Call $wpdb->prepare passing the values of the array as separate arguments.
 			$query = call_user_func_array( array( $wpdb, 'prepare' ), array_merge( array( $sql ), $group_ids ) );
 
-			$extras              = $wpdb->get_results( $query );
+			$extras              = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d above (group IDs from wp_parse_id_list() as %s); $user_ids_sql is the comma-separated wp_parse_id_list() list BP_User_Query passes to bp_user_query_populate_extras; table name from $bp->groups.
 			$cache[ $cache_key ] = $extras;
 		} else {
 			$extras = $cache[ $cache_key ];
@@ -413,7 +413,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 		}
 
 		// Add accurate invitation info from the invitations table.
-		$invites = groups_get_invites(
+		$invites = bboss_groups_get_invites(
 			array(
 				'user_id' => $user_ids_sql,
 				'item_id' => $this->query_vars['group_id'],
@@ -462,7 +462,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 	 *
 	 * @since BuddyPress 2.1.0
 	 *
-	 * @param BP_User_Query $query  BP_User_Query object.
+	 * @param BBoss_User_Query $query  BBoss_User_Query object.
 	 * @param array         $gm_ids array of group member ids.
 	 * @return array
 	 */
@@ -473,11 +473,11 @@ class BP_Group_Member_Query extends BP_User_Query {
 			return $gm_ids;
 		}
 
-		if ( ! bp_is_active( 'activity' ) ) {
+		if ( ! bboss_is_active( 'activity' ) ) {
 			return $gm_ids;
 		}
 
-		$activity_table = buddypress()->activity->table_name;
+		$activity_table = bboss()->activity->table_name;
 
 		$sql = array(
 			'select'  => "SELECT user_id, max( date_recorded ) as date_recorded FROM {$activity_table}",
@@ -490,12 +490,12 @@ class BP_Group_Member_Query extends BP_User_Query {
 		$sql['where'] = array(
 			'user_id IN (' . implode( ',', wp_parse_id_list( $gm_ids ) ) . ')',
 			'item_id = ' . absint( $query->query_vars['group_id'] ),
-			$wpdb->prepare( 'component = %s', buddypress()->groups->id ),
+			$wpdb->prepare( 'component = %s', bboss()->groups->id ),
 		);
 
 		$sql['where'] = 'WHERE ' . implode( ' AND ', $sql['where'] );
 
-		$group_user_ids = $wpdb->get_results( "{$sql['select']} {$sql['where']} {$sql['groupby']} {$sql['orderby']} {$sql['order']}" );
+		$group_user_ids = $wpdb->get_results( "{$sql['select']} {$sql['where']} {$sql['groupby']} {$sql['orderby']} {$sql['order']}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- clauses built just above: activity table from buddypress(), member ids from wp_parse_id_list(), group id absint()'d, component $wpdb->prepare()'d, the rest constants.
 
 		return wp_list_pluck( $group_user_ids, 'user_id' );
 	}

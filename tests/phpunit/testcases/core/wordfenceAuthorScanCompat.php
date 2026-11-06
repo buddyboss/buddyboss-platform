@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for bb_core_wordfence_rest_author_scan_compatibility().
+ * Tests for bboss_core_wordfence_rest_author_scan_compatibility().
  *
  * The filter drops the `author` query var for BuddyBoss REST requests so
  * Wordfence's author-scan block does not 404 them, and must leave every other
@@ -19,7 +19,7 @@ class BP_Tests_Core_WordfenceAuthorScanCompat extends BP_UnitTestCase {
 	 * @param string $rest_route REST route query var.
 	 */
 	public function test_drops_author_for_buddyboss_rest_routes( $rest_route ) {
-		$query_vars = bb_core_wordfence_rest_author_scan_compatibility(
+		$query_vars = bboss_core_wordfence_rest_author_scan_compatibility(
 			array(
 				'rest_route' => $rest_route,
 				'author'     => '84',
@@ -51,7 +51,7 @@ class BP_Tests_Core_WordfenceAuthorScanCompat extends BP_UnitTestCase {
 	 * @param array $query_vars Incoming query vars.
 	 */
 	public function test_keeps_author_for_other_requests( $query_vars ) {
-		$this->assertSame( $query_vars, bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) );
+		$this->assertSame( $query_vars, bboss_core_wordfence_rest_author_scan_compatibility( $query_vars ) );
 	}
 
 	/**
@@ -93,6 +93,6 @@ class BP_Tests_Core_WordfenceAuthorScanCompat extends BP_UnitTestCase {
 			'author'     => '84',
 		);
 
-		$this->assertSame( $query_vars, bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) );
+		$this->assertSame( $query_vars, bboss_core_wordfence_rest_author_scan_compatibility( $query_vars ) );
 	}
 }

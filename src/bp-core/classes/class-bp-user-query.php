@@ -50,13 +50,13 @@ defined( 'ABSPATH' ) || exit;
  * @type string|bool       $meta_value          When used with $meta_key, limits results to users whose usermeta value
  *                                                  associated with $meta_key matches $meta_value. Default: false.
  * @type array             $xprofile_query      Filter results by xprofile data. Requires the xprofile component.
- *                                                  See {@see BP_XProfile_Query} for details.
+ *                                                  See {@see BBoss_XProfile_Query} for details.
  * @type array             $date_query          Filter results by member last activity date. See first parameter of
  *                                                  {@link WP_Date_Query::__construct()} for syntax. Only applicable if
  *                                                  $type is either 'active', 'random', 'newest', or 'online'.
  * @type bool              $populate_extras     True if you want to fetch extra metadata
  *                                                  about returned users, such as total group and friend counts.
- * @type string            $count_total         Determines how BP_User_Query will do a count of total users matching
+ * @type string            $count_total         Determines how BBoss_User_Query will do a count of total users matching
  *                                                  the other filter criteria. Default value is 'count_query', which
  *                                                  does a separate SELECT COUNT query to determine the total.
  *                                                  'sql_count_found_rows' uses SQL_COUNT_FOUND_ROWS and
@@ -64,7 +64,7 @@ defined( 'ABSPATH' ) || exit;
  *                                                  count query.
  * }
  */
-class BP_User_Query {
+class BBoss_User_Query {
 
 	/** Variables *************************************************************/
 
@@ -151,7 +151,7 @@ class BP_User_Query {
 	 *
 	 * @since BuddyPress 1.7.0
 	 *
-	 * @param string|array|null $query See {@link BP_User_Query}.
+	 * @param string|array|null $query See {@link BBoss_User_Query}.
 	 */
 	public function __construct( $query = null ) {
 
@@ -162,7 +162,7 @@ class BP_User_Query {
 		$this->setup_hooks();
 
 		if ( ! empty( $this->query_vars_raw ) ) {
-			$this->query_vars = bp_parse_args(
+			$this->query_vars = bboss_parse_args(
 				$this->query_vars_raw,
 				array(
 					'type'                => 'newest',
@@ -187,11 +187,11 @@ class BP_User_Query {
 			);
 
 			/**
-			 * Fires before the construction of the BP_User_Query query.
+			 * Fires before the construction of the BBoss_User_Query query.
 			 *
 			 * @since BuddyPress 1.7.0
 			 *
-			 * @param BP_User_Query $this Current instance of the BP_User_Query. Passed by reference.
+			 * @param BBoss_User_Query $this Current instance of the BBoss_User_Query. Passed by reference.
 			 */
 			do_action_ref_array( 'bp_pre_user_query_construct', array( &$this ) );
 
@@ -220,14 +220,14 @@ class BP_User_Query {
 	/**
 	 * Allow extending classes to set up action/filter hooks.
 	 *
-	 * When extending BP_User_Query, you may need to use some of its
+	 * When extending BBoss_User_Query, you may need to use some of its
 	 * internal hooks to modify the output. It's not convenient to call
 	 * add_action() or add_filter() in your class constructor, because
-	 * BP_User_Query::__construct() contains a fair amount of logic that
+	 * BBoss_User_Query::__construct() contains a fair amount of logic that
 	 * you may not want to override in your class. Define this method in
 	 * your own class if you need a place where your extending class can
 	 * add its hooks early in the query-building process. See
-	 * {@link BP_Group_Member_Query::setup_hooks()} for an example.
+	 * {@link BBoss_Group_Member_Query::setup_hooks()} for an example.
 	 *
 	 * @since BuddyPress 1.8.0
 	 */
@@ -242,7 +242,7 @@ class BP_User_Query {
 	public function prepare_user_ids_query() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Default query variables used here.
 		$type         = '';
@@ -283,9 +283,9 @@ class BP_User_Query {
 				$this->uid_name  = 'user_id';
 				$this->uid_table = $bp->members->table_name_last_activity;
 				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
-				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
+				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", bboss()->members->id );
 
-				$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_interval() + bb_presence_time_span() );
+				$online_default_time = apply_filters( 'bb_default_online_presence_time', bboss_presence_interval() + bboss_presence_time_span() );
 
 				/**
 				 * Filters the threshold for activity timestamp minutes since to indicate online status.
@@ -299,7 +299,7 @@ class BP_User_Query {
 				$sql['order']   = 'DESC';
 
 				// Date query.
-				$date_query = BP_Date_Query::get_where_sql( $date_query, 'u.date_recorded' );
+				$date_query = BBoss_Date_Query::get_where_sql( $date_query, 'u.date_recorded' );
 				if ( ! empty( $date_query ) ) {
 					$sql['where']['date_query'] = $date_query;
 				}
@@ -314,7 +314,7 @@ class BP_User_Query {
 				$this->uid_name  = 'user_id';
 				$this->uid_table = $bp->members->table_name_last_activity;
 				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
-				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
+				$sql['where'][]  = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", bboss()->members->id );
 
 				if ( 'newest' == $type ) {
 					$sql['orderby'] = 'ORDER BY u.user_id';
@@ -327,7 +327,7 @@ class BP_User_Query {
 				}
 
 				// Date query.
-				$date_query = BP_Date_Query::get_where_sql( $date_query, 'u.date_recorded' );
+				$date_query = BBoss_Date_Query::get_where_sql( $date_query, 'u.date_recorded' );
 				if ( ! empty( $date_query ) ) {
 					$sql['where']['date_query'] = $date_query;
 				}
@@ -339,7 +339,7 @@ class BP_User_Query {
 				$this->uid_name  = 'user_id';
 				$this->uid_table = $wpdb->usermeta;
 				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
-				$sql['where'][]  = $wpdb->prepare( 'u.meta_key = %s', bp_get_user_meta_key( 'total_friend_count' ) );
+				$sql['where'][]  = $wpdb->prepare( 'u.meta_key = %s', bboss_get_user_meta_key( 'total_friend_count' ) );
 				$sql['orderby']  = 'ORDER BY CONVERT(u.meta_value, SIGNED)';
 				$sql['order']    = 'DESC';
 
@@ -352,7 +352,7 @@ class BP_User_Query {
 				// can do so if xprofile sync is enabled, or if xprofile is inactive.
 				//
 				// @todo remove need for bp_is_active() check.
-				if ( ! bp_disable_profile_sync() || ! bp_is_active( 'xprofile' ) ) {
+				if ( ! bboss_disable_profile_sync() || ! bboss_is_active( 'xprofile' ) ) {
 					$this->uid_name  = 'ID';
 					$this->uid_table = $wpdb->users;
 					$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
@@ -365,7 +365,7 @@ class BP_User_Query {
 					$this->uid_name  = 'user_id';
 					$this->uid_table = $bp->profile->table_name_data;
 					$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
-					$sql['where'][]  = $wpdb->prepare( 'u.field_id = %d', bp_xprofile_fullname_field_id() );
+					$sql['where'][]  = $wpdb->prepare( 'u.field_id = %d', bboss_xprofile_fullname_field_id() );
 					$sql['orderby']  = 'ORDER BY u.value';
 					$sql['order']    = 'ASC';
 				}
@@ -373,7 +373,7 @@ class BP_User_Query {
 				// Alphabetical queries ignore last_activity, while BP uses last_activity
 				// to infer spam/deleted/non-activated users. To ensure that these users
 				// are filtered out, we add an appropriate sub-query.
-				$sql['where'][] = "u.{$this->uid_name} IN ( SELECT ID FROM {$wpdb->users} WHERE " . bp_core_get_status_sql( '' ) . ' )';
+				$sql['where'][] = "u.{$this->uid_name} IN ( SELECT ID FROM {$wpdb->users} WHERE " . bboss_core_get_status_sql( '' ) . ' )';
 
 				break;
 
@@ -429,8 +429,8 @@ class BP_User_Query {
 
 		// 'user_id' - When a user id is passed, limit to the friends of the user
 		// @todo remove need for bp_is_active() check.
-		if ( ! empty( $user_id ) && bp_is_active( 'friends' ) ) {
-			$friend_ids = friends_get_friend_user_ids( $user_id );
+		if ( ! empty( $user_id ) && bboss_is_active( 'friends' ) ) {
+			$friend_ids = bboss_friends_get_friend_user_ids( $user_id );
 			$friend_ids = implode( ',', wp_parse_id_list( $friend_ids ) );
 
 			if ( ! empty( $friend_ids ) ) {
@@ -448,7 +448,7 @@ class BP_User_Query {
 		// 'search_terms' searches user_login and user_nicename
 		// xprofile field matches happen in bp_xprofile_bp_user_query_search().
 		if ( false !== (bool) $search_terms ) {
-			$search_terms = bp_esc_like( wp_kses_normalize_entities( $search_terms ) );
+			$search_terms = bboss_esc_like( wp_kses_normalize_entities( $search_terms ) );
 
 			if ( $search_wildcard === 'left' ) {
 				$search_terms_nospace = '%' . $search_terms;
@@ -480,7 +480,7 @@ class BP_User_Query {
 			// surname and getting one hit confirms it. Drop the matches that exist only in a hidden
 			// name part. See bb_xprofile_filter_user_search_matches().
 			if ( ! empty( $matched_user_ids ) ) {
-				$matched_user_ids = bb_xprofile_filter_user_search_matches(
+				$matched_user_ids = bboss_xprofile_filter_user_search_matches(
 					$matched_user_ids,
 					array( $search_terms_nospace, $search_terms_space )
 				);
@@ -490,7 +490,7 @@ class BP_User_Query {
 			// above normally removes a handful of members and keeps nearly everybody, so spelling
 			// out the survivors sent the whole match set to the database - 70,022 ids to exclude
 			// one of them. See bb_core_get_search_match_clause().
-			$sql['where']['search'] = bb_core_get_search_match_clause(
+			$sql['where']['search'] = bboss_core_get_search_match_clause(
 				"u.{$this->uid_name}",
 				$unfiltered_user_ids,
 				$matched_user_ids,
@@ -525,7 +525,7 @@ class BP_User_Query {
 				$meta_sql .= $wpdb->prepare( ' AND meta_value = %s', $meta_value );
 			}
 
-			$found_user_ids = $wpdb->get_col( $meta_sql );
+			$found_user_ids = $wpdb->get_col( $meta_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $meta_sql is $wpdb->prepare() output only (meta_key %s, optional meta_value %s) on the $wpdb->usermeta table.
 
 			if ( ! empty( $found_user_ids ) ) {
 				$sql['where'][] = "u.{$this->uid_name} IN (" . implode( ',', wp_parse_id_list( $found_user_ids ) ) . ')';
@@ -557,7 +557,7 @@ class BP_User_Query {
 		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array         $sql  Array of SQL clauses to be used in the query.
-		 * @param BP_User_Query $this Current BP_User_Query instance.
+		 * @param BBoss_User_Query $this Current BBoss_User_Query instance.
 		 */
 		$sql = apply_filters_ref_array( 'bp_user_query_uid_clauses', array( $sql, &$this ) );
 
@@ -569,11 +569,11 @@ class BP_User_Query {
 		$this->uid_clauses['limit']   = $sql['limit'];
 
 		/**
-		 * Fires before the BP_User_Query query is made.
+		 * Fires before the BBoss_User_Query query is made.
 		 *
 		 * @since BuddyPress 1.7.0
 		 *
-		 * @param BP_User_Query $this Current BP_User_Query instance. Passed by reference.
+		 * @param BBoss_User_Query $this Current BBoss_User_Query instance. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_pre_user_query', array( &$this ) );
 	}
@@ -622,14 +622,14 @@ class BP_User_Query {
 			 * @since BuddyPress 1.7.0
 			 *
 			 * @param string        $value SQL statement to select FOUND_ROWS().
-			 * @param BP_User_Query $this  Current BP_User_Query instance.
+			 * @param BBoss_User_Query $this  Current BBoss_User_Query instance.
 			 */
-			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', 'SELECT FOUND_ROWS()', $this ) );
+			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', 'SELECT FOUND_ROWS()', $this ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_found_user_query; as built here the literal 'SELECT FOUND_ROWS()'.
 		} elseif ( 'count_query' == $this->query_vars['count_total'] ) {
 			$count_select = preg_replace( '/^SELECT.*?FROM (\S+) u/', "SELECT COUNT(u.{$this->uid_name}) FROM $1 u", $this->uid_clauses['select'] );
 
 			/** This filter is documented in bp-core/classes/class-bp-user-query.php */
-			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', "{$count_select} {$this->uid_clauses['where']}", $this ) );
+			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', "{$count_select} {$this->uid_clauses['where']}", $this ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filters bp_user_query_join_sql / bp_user_query_where_sql / bp_user_query_uid_clauses / bp_pre_user_query / bp_found_user_query; as built here: COUNT select rewritten from uid_clauses[select] (uid table/column names chosen by query type), WHERE parts from prepare_user_ids_query(): $wpdb->prepare() fragments (%s/%d), ids via wp_parse_id_list()/intval, BP_Date_Query, WP_Tax_Query (member types) and the prepared search-match subquery.
 		}
 	}
 
@@ -660,7 +660,7 @@ class BP_User_Query {
 		$r = array();
 
 		// Prime caches as necessary.
-		$uncached_ids = bp_get_non_cached_ids( $this->user_ids, 'bb_user' );
+		$uncached_ids = bboss_get_non_cached_ids( $this->user_ids, 'bb_user' );
 		if ( ! empty( $uncached_ids ) ) {
 			/**
 			 * Filters the WP User Query arguments before passing into the class.
@@ -668,7 +668,7 @@ class BP_User_Query {
 			 * @since BuddyPress 1.7.0
 			 *
 			 * @param array         $value Array of arguments for the user query.
-			 * @param BP_User_Query $this  Current BP_User_Query instance.
+			 * @param BBoss_User_Query $this  Current BBoss_User_Query instance.
 			 */
 			$args = apply_filters( 'bp_wp_user_query_args', array(
 				// Relevant.
@@ -727,7 +727,7 @@ class BP_User_Query {
 	 * ($this->query_vars['include']). Having this abstracted into a
 	 * standalone method means that extending classes can override the
 	 * logic, parsing together their own user_id limits with the 'include'
-	 * ids passed to the class constructor. See {@link BP_Group_Member_Query}
+	 * ids passed to the class constructor. See {@link BBoss_Group_Member_Query}
 	 * for an example.
 	 *
 	 * @since BuddyPress 1.8.0
@@ -784,18 +784,18 @@ class BP_User_Query {
 		 * - XProfile: To override display names.
 		 * - Connections:  To set whether or not a user is the current users friend.
 		 *
-		 * @see   bp_xprofile_filter_user_query_populate_extras()
-		 * @see   bp_friends_filter_user_query_populate_extras()
+		 * @see   bboss_xprofile_filter_user_query_populate_extras()
+		 * @see   bboss_friends_filter_user_query_populate_extras()
 		 *
 		 * @since BuddyPress 1.7.0
 		 *
-		 * @param BP_User_Query $this         Current BP_User_Query instance.
+		 * @param BBoss_User_Query $this         Current BBoss_User_Query instance.
 		 * @param string        $user_ids_sql Comma-separated string of user IDs.
 		 */
 		do_action_ref_array( 'bp_user_query_populate_extras', array( $this, $user_ids_sql ) );
 
 		// Fetch last_active data from the activity table.
-		$last_activities = BP_Core_User::get_last_activity( $this->user_ids );
+		$last_activities = BBoss_Core_User::get_last_activity( $this->user_ids );
 
 		// Set a last_activity value for each user, even if it's empty.
 		foreach ( $this->results as $user_id => $user ) {
@@ -807,8 +807,8 @@ class BP_User_Query {
 		// We want the three following pieces of info from usermeta:
 		// - friend count
 		// - latest update.
-		$total_friend_count_key = bp_get_user_meta_key( 'total_friend_count' );
-		$bp_latest_update_key   = bp_get_user_meta_key( 'bp_latest_update' );
+		$total_friend_count_key = bboss_get_user_meta_key( 'total_friend_count' );
+		$bp_latest_update_key   = bboss_get_user_meta_key( 'bp_latest_update' );
 
 		// Total_friend_count must be set for each user, even if its
 		// value is 0.
@@ -891,7 +891,7 @@ class BP_User_Query {
 
 		$types = array();
 		foreach ( $member_types as $mt ) {
-			if ( bp_get_member_type_object( $mt ) ) {
+			if ( bboss_get_member_type_object( $mt ) ) {
 				$types[] = $mt;
 			}
 		}
@@ -899,7 +899,7 @@ class BP_User_Query {
 		$tax_query = new WP_Tax_Query(
 			array(
 				array(
-					'taxonomy' => bp_get_member_type_tax_name(),
+					'taxonomy' => bboss_get_member_type_tax_name(),
 					'field'    => 'name',
 					'operator' => $operator,
 					'terms'    => $types,
@@ -908,7 +908,7 @@ class BP_User_Query {
 		);
 
 		// Switch to the root blog, where profile type taxonomies live.
-		$site_id  = bp_get_taxonomy_term_site_id( bp_get_member_type_tax_name() );
+		$site_id  = bboss_get_taxonomy_term_site_id( bboss_get_member_type_tax_name() );
 		$switched = false;
 		if ( $site_id !== get_current_blog_id() ) {
 			switch_to_blog( $site_id );

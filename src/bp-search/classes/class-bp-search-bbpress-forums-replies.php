@@ -9,18 +9,18 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
+if ( ! class_exists( 'BBoss_Search_bbPress_Replies' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search bbpress forums replies class
 	 */
-	class Bp_Search_bbPress_Replies extends Bp_Search_bbPress {
+	class BBoss_Search_bbPress_Replies extends BBoss_Search_bbPress {
 		public $type = 'reply';
 
 		function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb;
 
-			$bp_prefix = bp_core_get_table_prefix();
+			$bp_prefix = bboss_core_get_table_prefix();
 
 			$query_placeholder = array();
 
@@ -46,7 +46,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			$excluded_forum_ids                  = array();
 			$enrolled_hidden_group_forum_ids_str = '';
 
-			if ( bp_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
+			if ( bboss_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
 				// Get user accessible groups using shared method from parent class.
 				$groups_data        = $this->get_user_accessible_groups();
 				$excluded_group_ids = $groups_data['excluded_group_ids'];
@@ -56,7 +56,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 					$excluded_forum_args = array(
 						'fields'      => 'ids',
 						'post_status' => array( 'publish', 'private', 'hidden' ),
-						'post_type'   => bbp_get_forum_post_type(),
+						'post_type'   => bboss_bbp_get_forum_post_type(),
 						'numberposts' => -1,
 						'meta_query'  => array(
 							'relation' => 'OR',
@@ -76,7 +76,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 				}
 
 				// Get hidden groups.
-				$hidden_groups = groups_get_groups(
+				$hidden_groups = bboss_groups_get_groups(
 					array(
 						'fields'      => 'ids',
 						'status'      => array( 'hidden' ),
@@ -95,7 +95,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 					$included_forum_args = array(
 						'fields'      => 'ids',
 						'post_status' => array( 'hidden' ),
-						'post_type'   => bbp_get_forum_post_type(),
+						'post_type'   => bboss_bbp_get_forum_post_type(),
 						'numberposts' => -1,
 						'meta_query'  => array(
 							'relation' => 'OR',
@@ -138,7 +138,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			$where   = array();
 			$where[] = '1=1';
 
-			$search_term_array  = bb_search_get_search_keywords_by_term( $search_term, $this->type );
+			$search_term_array  = bboss_search_get_search_keywords_by_term( $search_term, $this->type );
 			$every_word_clauses = array();
 			foreach ( $search_term_array as $term ) {
 				$every_word_clauses[] = "(post_title LIKE %s OR post_content LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
@@ -225,7 +225,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 
 			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
-				$instance = new Bp_Search_bbPress_Replies();
+				$instance = new BBoss_Search_bbPress_Replies();
 			}
 
 			// Always return the instance.

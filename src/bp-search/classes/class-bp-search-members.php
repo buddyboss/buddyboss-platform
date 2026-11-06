@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_Members' ) ) :
+if ( ! class_exists( 'BBoss_Search_Members' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search members class
 	 */
-	class Bp_Search_Members extends Bp_Search_Type {
+	class BBoss_Search_Members extends BBoss_Search_Type {
 		private $type = 'members';
 
 		/**
@@ -99,7 +99,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @return object Bp_Search_Members
+		 * @return object BBoss_Search_Members
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication
@@ -107,7 +107,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// Only run these methods if they haven't been run previously
 			if ( null === $instance ) {
-				$instance = new Bp_Search_Members();
+				$instance = new BBoss_Search_Members();
 
 				add_action( 'bp_search_settings_item_members', array( $instance, 'print_search_options' ) );
 			}
@@ -175,12 +175,12 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			 ++++++++++++++++++++++++++++++++
 			 * wp_users table fields
 			 +++++++++++++++++++++++++++++++ */
-			$user_fields = bp_get_search_user_fields();
+			$user_fields = bboss_get_search_user_fields();
 			if ( ! empty( $user_fields ) ) {
 				$conditions_wp_user_table = array();
 				foreach ( $user_fields as $user_field => $field_label ) {
 
-					if ( ! bp_is_search_user_field_enable( $user_field ) ) {
+					if ( ! bboss_is_search_user_field_enable( $user_field ) ) {
 						continue;
 					}
 
@@ -232,7 +232,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$clause_wp_user_table .= implode( ' OR ', $conditions_wp_user_table );
 
 					// get all excluded member types.
-					$bp_member_type_ids = bp_get_hidden_member_types();
+					$bp_member_type_ids = bboss_get_hidden_member_types();
 					$member_type_sql    = $this->get_sql_clause_for_member_types( $bp_member_type_ids, 'NOT IN' );
 
 					if ( ! empty( $member_type_sql ) ) {
@@ -252,8 +252,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			 * xprofile fields
 			 +++++++++++++++++++++++++++++++ */
 			// get all selected xprofile fields
-			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'xprofile' ) ) {
-				$groups = bp_xprofile_get_groups(
+			if ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'xprofile' ) ) {
+				$groups = bboss_xprofile_get_groups(
 					array(
 						'fetch_fields'                   => true,
 						'repeater_show_main_fields_only' => true,
@@ -275,18 +275,18 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					foreach ( $groups as $group ) {
 						if ( ! empty( $group->fields ) ) {
 							foreach ( $group->fields as $field ) {
-								if ( bp_is_search_xprofile_enable( $field->id ) ) {
+								if ( bboss_is_search_xprofile_enable( $field->id ) ) {
 
-									if ( true === bp_core_hide_display_name_field( $field->id ) ) {
+									if ( true === bboss_core_hide_display_name_field( $field->id ) ) {
 										continue;
 									}
 
-									$repeater_enabled = bp_xprofile_get_meta( $field->group_id, 'group', 'is_repeater_enabled', true );
+									$repeater_enabled = bboss_xprofile_get_meta( $field->group_id, 'group', 'is_repeater_enabled', true );
 
 									if ( ! empty( $repeater_enabled ) && 'on' === $repeater_enabled ) {
 										$selected_xprofile_repeater_fields = array_unique( array_merge(
 											$selected_xprofile_repeater_fields,
-											bp_get_repeater_clone_field_ids_all( $field->group_id )
+											bboss_get_repeater_clone_field_ids_all( $field->group_id )
 										) );
 									} else {
 										if ( in_array( $field->type, $word_search_field_type ) ) {
@@ -306,7 +306,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					if ( ! empty( $selected_xprofile_repeater_fields ) ) {
 						$selected_xprofile_repeater_fields = array_unique( $selected_xprofile_repeater_fields );
 						foreach ( $selected_xprofile_repeater_fields as $field_id ) {
-							$field_object = new BP_XProfile_Field( $field_id );
+							$field_object = new BBoss_XProfile_Field( $field_id );
 							if ( in_array( $field_object->type, $word_search_field_type ) ) {
 								$selected_xprofile_fields['word_search'][] = $field_object->id;
 							} elseif ( in_array( $field_object->type, $date_search_field_type ) ) {
@@ -353,13 +353,13 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 							$data_clause_xprofile_table .= ' )';
 
-							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $wpdb->esc_like( $search_term ) . '%', '[[:<:]]' . preg_quote( $search_term ) . '[[:>:]]' ); // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing -- $search_term feeds a MySQL REGEXP string literal, not a PHP preg_* pattern, so there is no PCRE delimiter to escape.
-							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
+							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $wpdb->esc_like( $search_term ) . '%', '[[:<:]]' . preg_quote( $search_term ) . '[[:>:]]' ); // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing,WordPress.DB.PreparedSQL.NotPrepared -- $search_term feeds a MySQL REGEXP string literal, not a PHP preg_* pattern, so there is no PCRE delimiter to escape. The template is built above from the $bp->profile table name, int-cast field id lists and $date_sql (already $wpdb->prepare()'d by bb_generate_date_search_sql(), its % escaped by the placeholder hash); the LIKE/REGEXP terms are bound here as %s.
+							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql_xprofile is $wpdb->prepare()'d on the previous line.
 
 							// check visiblity for field id with current user.
 							if ( ! empty( $sql_xprofile_result ) ) {
 								foreach ( $sql_xprofile_result as $field_data ) {
-									$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bb_core_get_viewer_user_id() );
+									$hidden_fields = bboss_xprofile_get_hidden_fields_for_user( $field_data->user_id, bboss_core_get_viewer_user_id() );
 
 									if (
 										( ! empty( $hidden_fields )
@@ -378,7 +378,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						}
 
 						// get all excluded member types.
-						$bp_member_type_ids = bp_get_hidden_member_types();
+						$bp_member_type_ids = bboss_get_hidden_member_types();
 						$member_type_sql    = $this->get_sql_clause_for_member_types( $bp_member_type_ids, 'NOT IN' );
 
 						// Added user when visibility matched.
@@ -447,7 +447,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			if ( ! empty( $query_placeholder ) ) {
-				$sql = $wpdb->prepare( $sql, $query_placeholder );
+				$sql = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- as built by this method: table names from $wpdb/$bp, every search term and the display-name exclusion ids/values bound here as %s/%d, xprofile user ids int-cast, member type clause from WP_Tax_Query. JOIN/WHERE pass through the documented bp_user_search_join_sql / bp_user_search_where_sql filters (core listener: BP_Suspend_Member); listeners may alter them.
 			}
 
 			return apply_filters(
@@ -464,8 +464,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * Visibility exclusions for the display_name comparison.
 		 *
 		 * The member directory drops matches whose only match lies in a hidden name part inside
-		 * BP_User_Query, through bb_xprofile_filter_user_search_matches(). This engine assembles its
-		 * own SQL against wp_users and never runs BP_User_Query, so the same rule has to be applied
+		 * BBoss_User_Query, through bboss_xprofile_filter_user_search_matches(). This engine assembles its
+		 * own SQL against wp_users and never runs BBoss_User_Query, so the same rule has to be applied
 		 * here - otherwise the site-wide search answers a question the member directory refuses.
 		 *
 		 * The rule has two halves and they are excluded in two different shapes, because they are
@@ -478,7 +478,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * - The site-wide half - a Display Name Format that leaves a name part out of the visible
 		 *   name for everyone - is bounded by the TERM, and under a one-word term the members it
 		 *   explains are most of the table. So it is not materialised at all: it is applied as the
-		 *   SQL predicate bb_xprofile_get_format_visible_name_sql() builds from the same sources its
+		 *   SQL predicate bboss_xprofile_get_format_visible_name_sql() builds from the same sources its
 		 *   ID-returning sibling compares.
 		 *
 		 * Neither half is bounded by the match set, and that is the point. An earlier revision read
@@ -528,8 +528,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				'values'           => array(),
 			);
 
-			$viewer_id           = bb_core_get_viewer_user_id();
-			$display_name_format = bp_core_display_name_format();
+			$viewer_id           = bboss_core_get_viewer_user_id();
+			$display_name_format = bboss_core_display_name_format();
 
 			// The format is part of the key, not just the viewer: the memoised value carries
 			// $visible_name_sql, which bb_xprofile_get_format_visible_name_sql() builds FROM the
@@ -546,7 +546,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// A moderator reads every name part, so neither half of the rule applies to them - the
 			// per-member half answers that itself, the format predicate below would not.
-			if ( bb_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
+			if ( bboss_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
 				$cache[ $cache_key ] = $exclusions;
 
 				return $cache[ $cache_key ];
@@ -554,7 +554,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			$like_pattern = '%' . $wpdb->esc_like( $search_term ) . '%';
 
-			$hidden_ids = bb_xprofile_get_hidden_name_search_user_ids( array( $like_pattern ), $viewer_id );
+			$hidden_ids = bboss_xprofile_get_hidden_name_search_user_ids( array( $like_pattern ), $viewer_id );
 
 			if ( false === $hidden_ids ) {
 				$exclusions['suppress_leg'] = true;
@@ -566,7 +566,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$exclusions['hidden_ids'] = array_values( array_filter( array_map( 'intval', (array) $hidden_ids ) ) );
 
 			if ( in_array( $display_name_format, array( 'first_name', 'nickname' ), true ) ) {
-				$format = bb_xprofile_get_format_visible_name_sql( $display_name_format, array( $like_pattern ) );
+				$format = bboss_xprofile_get_format_visible_name_sql( $display_name_format, array( $like_pattern ) );
 
 				if ( '' !== $format['sql'] ) {
 					// `ID` is the outer SELECT's own column and the subquery references nothing of
@@ -601,23 +601,23 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// now we have all the posts
 			// lets do a groups loop
-			if ( bp_has_members( array(
+			if ( bboss_has_members( array(
 				'search_terms'        => '',
 				'include'             => $group_ids,
 				'per_page'            => count( $group_ids ),
-				'member_type__not_in' => bp_get_hidden_member_types()
+				'member_type__not_in' => bboss_get_hidden_member_types()
 			) ) ) {
-				while ( bp_members() ) {
-					bp_the_member();
+				while ( bboss_members() ) {
+					bboss_the_member();
 
 					$result_item = array(
-						'id'    => bp_get_member_user_id(),
+						'id'    => bboss_get_member_user_id(),
 						'type'  => $this->type,
-						'title' => bp_get_member_name(),
-						'html'  => bp_search_buffer_template_part( 'loop/member', $template_type, false ),
+						'title' => bboss_get_member_name(),
+						'html'  => bboss_search_buffer_template_part( 'loop/member', $template_type, false ),
 					);
 
-					$this->search_results['items'][ bp_get_member_user_id() ] = $result_item;
+					$this->search_results['items'][ bboss_get_member_user_id() ] = $result_item;
 				}
 			}
 
@@ -633,27 +633,27 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		function print_search_options( $items_to_search ) {
 			echo "<div class='wp-user-fields' style='margin: 10px 0 0 30px'>";
-			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . __( 'Account', 'buddyboss' ) . '</strong></p>';
+			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html__( 'Account', 'buddyboss-platform' ) . '</strong></p>';
 
 			$fields = array(
-				'user_login'   => __( 'Username/Login', 'buddyboss' ),
-				'display_name' => __( 'Display Name', 'buddyboss' ),
-				'user_email'   => __( 'Email', 'buddyboss' ),
-				'user_meta'    => __( 'User Meta', 'buddyboss' ),
+				'user_login'   => __( 'Username/Login', 'buddyboss-platform' ),
+				'display_name' => __( 'Display Name', 'buddyboss-platform' ),
+				'user_email'   => __( 'Email', 'buddyboss-platform' ),
+				'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
 			);
 			foreach ( $fields as $field => $label ) {
 				$item    = 'member_field_' . $field;
 				$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-				echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				printf( "<label><input type='checkbox' value='%s' name='bp_search_plugin_options[items-to-search][]' %s>%s</label><br>", esc_attr( $item ), esc_attr( trim( $checked ) ), esc_html( $label ) );
 			}
 
 			echo '</div><!-- .wp-user-fields -->';
 
-			if ( ! function_exists( 'bp_is_active' ) || ! bp_is_active( 'xprofile' ) ) {
+			if ( ! function_exists( 'bboss_is_active' ) || ! bboss_is_active( 'xprofile' ) ) {
 				return;
 			}
 
-			$groups = bp_xprofile_get_groups(
+			$groups = bboss_xprofile_get_groups(
 				array(
 					'fetch_fields' => true,
 				)
@@ -662,14 +662,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			if ( ! empty( $groups ) ) {
 				echo "<div class='xprofile-fields' style='margin: 0 0 10px 30px'>";
 				foreach ( $groups as $group ) {
-					echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . $group->name . '</strong></p>';
+					echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html( $group->name ) . '</strong></p>';
 
 					if ( ! empty( $group->fields ) ) {
 						foreach ( $group->fields as $field ) {
 							// lets save these as xprofile_field_{field_id}
 							$item    = 'xprofile_field_' . $field->id;
 							$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-							echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$field->name}</label><br>";
+							printf( "<label><input type='checkbox' value='%s' name='bp_search_plugin_options[items-to-search][]' %s>%s</label><br>", esc_attr( $item ), esc_attr( trim( $checked ) ), esc_html( $field->name ) );
 						}
 					}
 				}
@@ -702,7 +702,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			$types = array();
 			foreach ( $member_types as $mt ) {
-				if ( bp_get_member_type_object( $mt ) ) {
+				if ( bboss_get_member_type_object( $mt ) ) {
 					$types[] = $mt;
 				}
 			}
@@ -710,7 +710,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$tax_query = new WP_Tax_Query(
 				array(
 					array(
-						'taxonomy' => bp_get_member_type_tax_name(),
+						'taxonomy' => bboss_get_member_type_tax_name(),
 						'field'    => 'name',
 						'operator' => $operator,
 						'terms'    => $types,
@@ -719,7 +719,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			);
 
 			// Switch to the root blog, where profile type taxonomies live.
-			$site_id  = bp_get_taxonomy_term_site_id( bp_get_member_type_tax_name() );
+			$site_id  = bboss_get_taxonomy_term_site_id( bboss_get_member_type_tax_name() );
 			$switched = false;
 			if ( $site_id !== get_current_blog_id() ) {
 				switch_to_blog( $site_id );
@@ -1732,12 +1732,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					// Cache WordPress translations to avoid repeated function calls.
 					if ( ! isset( $translation_cache[ $cache_key ] ) ) {
-						$translation_cache[ $cache_key ] = array(
-							// Get singular form translation (e.g., "one year" for "year").
-							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss' ),
-							// Get plural form translation (e.g., "two years" for "years").
-							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss' ),
-						);
+						// Resolve the singular/plural translations using literal gettext strings
+						// so the string parser can extract them (WordPress.org i18n rule).
+						$translation_cache[ $cache_key ] = $this->bb_get_time_unit_translation( $unit['singular'] );
 
 						// Clean up cache if it exceeds the size limit.
 						if ( count( $translation_cache ) > self::$max_cache_size ) {
@@ -1757,9 +1754,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						$cache_key = $unit . '_' . $actual_amount;
 
 						if ( ! isset( $translation_cache[ $cache_key ] ) ) {
+							// Translate the fixed string time unit using a literal gettext string.
+							$unit_translation                = $this->bb_get_time_string_translation( $unit );
 							$translation_cache[ $cache_key ] = array(
-								'singular' => __( $unit, 'buddyboss' ),
-								'plural'   => __( $unit, 'buddyboss' ),
+								'singular' => $unit_translation,
+								'plural'   => $unit_translation,
 							);
 
 							// Clean up cache if it exceeds the size limit.
@@ -1777,6 +1776,141 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			return $search_term;
+		}
+
+		/**
+		 * Get the translated singular and plural forms for a known time unit.
+		 *
+		 * The gettext strings and text domain are passed as literals so the string
+		 * translation parser can extract them (WordPress.org i18n rule: no variables
+		 * in translation function arguments). The unit is one of the fixed, enumerable
+		 * values defined in bb_translate_time_units().
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $singular The English singular time unit (e.g. "year").
+		 *
+		 * @return array {
+		 *     Translated singular and plural forms.
+		 *
+		 *     @type string $singular Translated singular form (e.g. "%s year").
+		 *     @type string $plural   Translated plural form (e.g. "%s years").
+		 * }
+		 */
+		private function bb_get_time_unit_translation( $singular ) {
+			switch ( $singular ) {
+				case 'year':
+					return array(
+						/* translators: %s: number of years. */
+						'singular' => _n( '%s year', '%s years', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of years. */
+						'plural'   => _n( '%s year', '%s years', 2, 'buddyboss-platform' ),
+					);
+				case 'month':
+					return array(
+						/* translators: %s: number of months. */
+						'singular' => _n( '%s month', '%s months', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of months. */
+						'plural'   => _n( '%s month', '%s months', 2, 'buddyboss-platform' ),
+					);
+				case 'week':
+					return array(
+						/* translators: %s: number of weeks. */
+						'singular' => _n( '%s week', '%s weeks', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of weeks. */
+						'plural'   => _n( '%s week', '%s weeks', 2, 'buddyboss-platform' ),
+					);
+				case 'day':
+					return array(
+						/* translators: %s: number of days. */
+						'singular' => _n( '%s day', '%s days', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of days. */
+						'plural'   => _n( '%s day', '%s days', 2, 'buddyboss-platform' ),
+					);
+				case 'hour':
+					return array(
+						/* translators: %s: number of hours. */
+						'singular' => _n( '%s hour', '%s hours', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of hours. */
+						'plural'   => _n( '%s hour', '%s hours', 2, 'buddyboss-platform' ),
+					);
+				case 'minute':
+					return array(
+						/* translators: %s: number of minutes. */
+						'singular' => _n( '%s minute', '%s minutes', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of minutes. */
+						'plural'   => _n( '%s minute', '%s minutes', 2, 'buddyboss-platform' ),
+					);
+			}
+
+			// Unknown unit: fall back to the raw value so behaviour is unchanged.
+			return array(
+				'singular' => '%s ' . $singular,
+				'plural'   => '%s ' . $singular,
+			);
+		}
+
+		/**
+		 * Translate a fixed string time unit (e.g. "a year", "sometime").
+		 *
+		 * The gettext strings and text domain are passed as literals so the string
+		 * translation parser can extract them. The value is one of the fixed string
+		 * time units defined in bb_translate_time_units().
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $unit The English string time unit (e.g. "a year").
+		 *
+		 * @return string The translated string time unit.
+		 */
+		private function bb_get_time_string_translation( $unit ) {
+			switch ( $unit ) {
+				case 'a year':
+					return __( 'a year', 'buddyboss-platform' );
+				case 'sometime':
+					return __( 'sometime', 'buddyboss-platform' );
+				case 'a week':
+					return __( 'a week', 'buddyboss-platform' );
+				case 'a day':
+					return __( 'a day', 'buddyboss-platform' );
+				case 'an hour':
+					return __( 'an hour', 'buddyboss-platform' );
+				case 'a minute':
+					return __( 'a minute', 'buddyboss-platform' );
+			}
+
+			// Unknown unit: return as-is, matching __() with no available translation.
+			return $unit;
+		}
+
+		/**
+		 * Translate a fixed direction word into its "%s <direction>" form.
+		 *
+		 * The gettext strings and text domain are passed as literals so the string
+		 * translation parser can extract them. The direction is one of the fixed set
+		 * used across the elapsed-time parsing helpers ("ago", "since", "from now").
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $direction The English direction word (e.g. "ago").
+		 *
+		 * @return string The translated "%s <direction>" form (e.g. "%s ago").
+		 */
+		private function bb_get_direction_translation( $direction ) {
+			switch ( $direction ) {
+				case 'ago':
+					/* translators: %s: amount of time (e.g. "2 days"). */
+					return __( '%s ago', 'buddyboss-platform' );
+				case 'since':
+					/* translators: %s: amount of time (e.g. "2 days"). */
+					return __( '%s since', 'buddyboss-platform' );
+				case 'from now':
+					/* translators: %s: amount of time (e.g. "2 days"). */
+					return __( '%s from now', 'buddyboss-platform' );
+			}
+
+			// Unknown direction: return as-is so behaviour matches the original.
+			return '%s ' . $direction;
 		}
 
 		/**
@@ -1803,7 +1937,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				// Cache WordPress translations for direction words.
 				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 					// Get the translation for this direction word (e.g., "ago" for "ago").
-					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss' );
+					$translation_cache[ $cache_key ] = $this->bb_get_direction_translation( $direction );
 
 					// Clean up cache if it exceeds the size limit.
 					if ( count( $translation_cache ) > self::$max_cache_size ) {
@@ -1974,7 +2108,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			foreach ( $directions as $direction ) {
 				// Get the WordPress translation for this direction word.
 				// Example: __('%s ago', 'buddyboss') → "since".
-				$direction_translation = __( '%s ' . $direction, 'buddyboss' );
+				$direction_translation = $this->bb_get_direction_translation( $direction );
 
 				// Remove the %s placeholder to get just the direction word.
 				// Example: "since %s" → "since".

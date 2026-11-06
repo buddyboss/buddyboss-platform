@@ -4,7 +4,7 @@
  *
  * Generic bookmark storage: CRUD, a query builder and object caching over the
  * `bb_bookmark` table. Knows nothing about what is being bookmarked — that is
- * the bookmark type's job (see BB_Bookmark_Type).
+ * the bookmark type's job (see BBoss_Bookmark_Type).
  *
  * @package BuddyBoss\Core
  *
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.2.0
  */
-class BB_Bookmarks {
+class BBoss_Bookmarks {
 
 	/**
 	 * Object cache group.
@@ -33,7 +33,7 @@ class BB_Bookmarks {
 	/**
 	 * Get the bookmarks table name.
 	 *
-	 * Network-shared: `bp_core_get_table_prefix()` returns the base prefix on
+	 * Network-shared: `bboss_core_get_table_prefix()` returns the base prefix on
 	 * multisite, and the table carries a `blog_id` column, matching the App
 	 * plugin's own bookmarks table.
 	 *
@@ -42,7 +42,7 @@ class BB_Bookmarks {
 	 * @return string
 	 */
 	public static function get_bookmark_tbl() {
-		return bp_core_get_table_prefix() . 'bb_bookmark';
+		return bboss_core_get_table_prefix() . 'bb_bookmark';
 	}
 
 	/**
@@ -79,7 +79,7 @@ class BB_Bookmarks {
 	 * When `$bookmark_obj->id` is set the row is updated; otherwise it is
 	 * inserted. The table's UNIQUE key on (blog_id, user_id, type, item_id)
 	 * means a duplicate insert fails rather than creating a second row —
-	 * callers should look the row up first (see `bb_bookmark_add()`).
+	 * callers should look the row up first (see `bboss_bookmark_add()`).
 	 *
 	 * @since BuddyBoss 3.2.0
 	 *
@@ -272,7 +272,7 @@ class BB_Bookmarks {
 	public static function get( $args = array() ) {
 		global $wpdb;
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'type'          => array(),
@@ -359,10 +359,10 @@ class BB_Bookmarks {
 			$column  = ( 'all' === $r['fields'] ) ? 'id' : $r['fields'];
 			$ids_sql = "SELECT bm.{$column} FROM {$table} bm {$where_sql} ORDER BY bm.{$order_by} {$order}, bm.id {$order} {$pagination}";
 
-			$cached = bp_core_get_incremented_cache( $ids_sql, self::CACHE_GROUP );
+			$cached = bboss_core_get_incremented_cache( $ids_sql, self::CACHE_GROUP );
 			if ( false === $cached || false === $r['cache'] ) {
 				$ids = $wpdb->get_col( $ids_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- parts prepared above.
-				bp_core_set_incremented_cache( $ids_sql, self::CACHE_GROUP, $ids );
+				bboss_core_set_incremented_cache( $ids_sql, self::CACHE_GROUP, $ids );
 			} else {
 				$ids = $cached;
 			}
@@ -401,10 +401,10 @@ class BB_Bookmarks {
 		if ( ! empty( $r['count'] ) || ! empty( $r['count_only'] ) ) {
 			$count_sql = "SELECT COUNT(DISTINCT bm.id) FROM {$table} bm {$where_sql}";
 
-			$cached_total = bp_core_get_incremented_cache( $count_sql, self::CACHE_GROUP );
+			$cached_total = bboss_core_get_incremented_cache( $count_sql, self::CACHE_GROUP );
 			if ( false === $cached_total || false === $r['cache'] ) {
 				$total = (int) $wpdb->get_var( $count_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- parts prepared above.
-				bp_core_set_incremented_cache( $count_sql, self::CACHE_GROUP, array( $total ) );
+				bboss_core_set_incremented_cache( $count_sql, self::CACHE_GROUP, array( $total ) );
 			} else {
 				$total = (int) ( ! empty( $cached_total ) ? current( $cached_total ) : 0 );
 			}
@@ -457,7 +457,7 @@ class BB_Bookmarks {
 		$obj->status        = (int) $bookmark->status;
 		$obj->date_recorded = $bookmark->date_recorded;
 
-		$type_data = bb_bookmark_register_types( $obj->type );
+		$type_data = bboss_bookmark_register_types( $obj->type );
 
 		if ( ! empty( $type_data['items_callback'] ) && is_callable( $type_data['items_callback'] ) ) {
 			$items = call_user_func( $type_data['items_callback'], array( $obj ) );
@@ -659,6 +659,6 @@ class BB_Bookmarks {
 			wp_cache_delete( (int) $bookmark_id, self::CACHE_GROUP );
 		}
 
-		bp_core_reset_incrementor( self::CACHE_GROUP );
+		bboss_core_reset_incrementor( self::CACHE_GROUP );
 	}
 }

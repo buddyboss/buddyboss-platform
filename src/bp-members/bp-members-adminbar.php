@@ -18,18 +18,18 @@ defined( 'ABSPATH' ) || exit;
  *
  * @todo Deprecate WP 3.2 Toolbar compatibility when we drop 3.2 support.
  */
-function bp_members_admin_bar_my_account_menu() {
+function bboss_members_admin_bar_my_account_menu() {
 	global $wp_admin_bar;
 
 	// Bail if this is an ajax request.
-	if ( defined( 'DOING_AJAX' ) ) {
+	if ( defined( 'BBOSS_DOING_AJAX' ) ) {
 		return;
 	}
 
 	// Logged in user.
 	if ( is_user_logged_in() ) {
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Stored in the global so we can add menus easily later on.
 		$bp->my_account_menu_id = 'my-account-buddypress';
@@ -39,8 +39,8 @@ function bp_members_admin_bar_my_account_menu() {
 			array(
 				'id'    => $bp->my_account_menu_id,
 				'group' => true,
-				'title' => __( 'Edit My Profile', 'buddyboss' ),
-				'href'  => bp_loggedin_user_domain(),
+				'title' => __( 'Edit My Profile', 'buddyboss-platform' ),
+				'href'  => bboss_loggedin_user_domain(),
 				'meta'  => array(
 					'class' => 'ab-sub-secondary',
 				),
@@ -56,75 +56,75 @@ function bp_members_admin_bar_my_account_menu() {
 		$wp_admin_bar->add_menu(
 			array(
 				'id'    => 'bp-login',
-				'title' => __( 'Log In', 'buddyboss' ),
-				'href'  => wp_login_url( bp_get_requested_url() ),
+				'title' => __( 'Log In', 'buddyboss-platform' ),
+				'href'  => wp_login_url( bboss_get_requested_url() ),
 			)
 		);
 
 		// Sign up.
-		if ( bp_get_signup_allowed() ) {
+		if ( bboss_get_signup_allowed() ) {
 			$wp_admin_bar->add_menu(
 				array(
 					'id'    => 'bp-register',
-					'title' => __( 'Register', 'buddyboss' ),
-					'href'  => bp_get_signup_page(),
+					'title' => __( 'Register', 'buddyboss-platform' ),
+					'href'  => bboss_get_signup_page(),
 				)
 			);
 		}
 	}
 }
-add_action( 'bp_setup_admin_bar', 'bp_members_admin_bar_my_account_menu', 4 );
+add_action( 'bp_setup_admin_bar', 'bboss_members_admin_bar_my_account_menu', 4 );
 
 /**
  * Add the User Admin top-level menu to user pages.
  *
  * @since BuddyPress 1.5.0
  */
-function bp_members_admin_bar_user_admin_menu() {
+function bboss_members_admin_bar_user_admin_menu() {
 	global $wp_admin_bar;
 
 	// Only show if viewing a user.
-	if ( ! bp_is_user() ) {
+	if ( ! bboss_is_user() ) {
 		return false;
 	}
 
 	// Don't show this menu to non site admins or if you're viewing your own profile.
-	if ( ! current_user_can( 'edit_users' ) || bp_is_my_profile() ) {
+	if ( ! current_user_can( 'edit_users' ) || bboss_is_my_profile() ) {
 		return false;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Unique ID for the 'My Account' menu.
 	$bp->user_admin_menu_id = 'user-admin';
 
-	$user = get_userdata( bp_displayed_user_id() );
-	$link = BP_Core_Members_Switching::maybe_switch_url( $user );
+	$user = get_userdata( bboss_displayed_user_id() );
+	$link = BBoss_Core_Members_Switching::maybe_switch_url( $user );
 
 	// Add the top-level User Admin button.
 	$wp_admin_bar->add_menu(
 		array(
 			'id'    => $bp->user_admin_menu_id,
-			'title' => __( 'Edit Member', 'buddyboss' ),
+			'title' => __( 'Edit Member', 'buddyboss-platform' ),
 			'href'  => add_query_arg(
 				array(
-					'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'edit' ) ),
+					'redirect_to' => urlencode( bboss_get_members_component_link( 'profile', 'edit' ) ),
 				),
 				$link
 			),
 		)
 	);
 
-	if ( bp_is_active( 'xprofile' ) ) {
+	if ( bboss_is_active( 'xprofile' ) ) {
 		// User Admin > Edit this user's profile.
 		$wp_admin_bar->add_menu(
 			array(
 				'parent' => $bp->user_admin_menu_id,
 				'id'     => $bp->user_admin_menu_id . '-edit-profile',
-				'title'  => __( 'Edit Profile', 'buddyboss' ),
+				'title'  => __( 'Edit Profile', 'buddyboss-platform' ),
 				'href'   => add_query_arg(
 					array(
-						'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'edit' ) ),
+						'redirect_to' => urlencode( bboss_get_members_component_link( 'profile', 'edit' ) ),
 					),
 					$link
 				),
@@ -132,15 +132,15 @@ function bp_members_admin_bar_user_admin_menu() {
 		);
 
 		// User Admin > Edit this user's avatar.
-		if ( buddypress()->avatar->show_avatars ) {
+		if ( bboss()->avatar->show_avatars ) {
 			$wp_admin_bar->add_menu(
 				array(
 					'parent' => $bp->user_admin_menu_id,
 					'id'     => $bp->user_admin_menu_id . '-change-avatar',
-					'title'  => __( 'Edit Profile Photo', 'buddyboss' ),
+					'title'  => __( 'Edit Profile Photo', 'buddyboss-platform' ),
 					'href'   => add_query_arg(
 						array(
-							'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'change-avatar' ) ),
+							'redirect_to' => urlencode( bboss_get_members_component_link( 'profile', 'change-avatar' ) ),
 						),
 						$link
 					),
@@ -149,15 +149,15 @@ function bp_members_admin_bar_user_admin_menu() {
 		}
 
 		// User Admin > Edit this user's cover photo.
-		if ( bp_displayed_user_use_cover_image_header() ) {
+		if ( bboss_displayed_user_use_cover_image_header() ) {
 			$wp_admin_bar->add_menu(
 				array(
 					'parent' => $bp->user_admin_menu_id,
 					'id'     => $bp->user_admin_menu_id . '-change-cover-image',
-					'title'  => __( 'Edit Cover Photo', 'buddyboss' ),
+					'title'  => __( 'Edit Cover Photo', 'buddyboss-platform' ),
 					'href'   => add_query_arg(
 						array(
-							'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'change-cover-image' ) ),
+							'redirect_to' => urlencode( bboss_get_members_component_link( 'profile', 'change-cover-image' ) ),
 						),
 						$link
 					),
@@ -166,7 +166,7 @@ function bp_members_admin_bar_user_admin_menu() {
 		}
 	}
 
-	if ( bp_is_active( 'settings' ) ) {
+	if ( bboss_is_active( 'settings' ) ) {
 		// User Admin > Spam/unspam.
 		// $wp_admin_bar->add_menu( array(
 		// 'parent' => $bp->user_admin_menu_id,
@@ -182,10 +182,10 @@ function bp_members_admin_bar_user_admin_menu() {
 			array(
 				'parent' => $bp->user_admin_menu_id,
 				'id'     => $bp->user_admin_menu_id . '-delete-user',
-				'title'  => __( 'Delete Account', 'buddyboss' ),
+				'title'  => __( 'Delete Account', 'buddyboss-platform' ),
 				'href'   => add_query_arg(
 					array(
-						'redirect_to' => urlencode( bp_displayed_user_domain() . 'settings/delete-account/' ),
+						'redirect_to' => urlencode( bboss_displayed_user_domain() . 'settings/delete-account/' ),
 					),
 					$link
 				),
@@ -195,7 +195,7 @@ function bp_members_admin_bar_user_admin_menu() {
 	}
 
 }
-add_action( 'admin_bar_menu', 'bp_members_admin_bar_user_admin_menu', 99 );
+add_action( 'admin_bar_menu', 'bboss_members_admin_bar_user_admin_menu', 99 );
 
 /**
  * Build the "Notifications" dropdown.
@@ -204,25 +204,25 @@ add_action( 'admin_bar_menu', 'bp_members_admin_bar_user_admin_menu', 99 );
  *
  * @return bool
  */
-function bp_members_admin_bar_notifications_menu() {
+function bboss_members_admin_bar_notifications_menu() {
 
 	// Bail if notifications is not active.
-	if ( ! bp_is_active( 'notifications' ) ) {
+	if ( ! bboss_is_active( 'notifications' ) ) {
 		return false;
 	}
 
-	bp_notifications_toolbar_menu();
+	bboss_notifications_toolbar_menu();
 }
-add_action( 'admin_bar_menu', 'bp_members_admin_bar_notifications_menu', 90 );
+add_action( 'admin_bar_menu', 'bboss_members_admin_bar_notifications_menu', 90 );
 
 /**
  * Remove rogue WP core Edit menu when viewing a single user.
  *
  * @since BuddyPress 1.6.0
  */
-function bp_members_remove_edit_page_menu() {
-	if ( bp_is_user() ) {
+function bboss_members_remove_edit_page_menu() {
+	if ( bboss_is_user() ) {
 		remove_action( 'admin_bar_menu', 'wp_admin_bar_edit_menu', 80 );
 	}
 }
-add_action( 'add_admin_bar_menus', 'bp_members_remove_edit_page_menu' );
+add_action( 'add_admin_bar_menus', 'bboss_members_remove_edit_page_menu' );

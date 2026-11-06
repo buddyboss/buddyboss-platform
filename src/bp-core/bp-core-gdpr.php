@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_setup_gdpr() {
-	new BP_Core_Gdpr();
+function bboss_setup_gdpr() {
+	new BBoss_Core_Gdpr();
 }
-add_action( 'bp_loaded', 'bp_setup_gdpr', 0 );
+add_action( 'bp_loaded', 'bboss_setup_gdpr', 0 );

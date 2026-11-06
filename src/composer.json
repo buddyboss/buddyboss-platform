@@ -19,10 +19,7 @@
         "composer/installers": "~1.0",
         "php": ">=5.6.0",
         "php-ffmpeg/php-ffmpeg": "^0.16.0",
-        "maennchen/zipstream-php": "^2.1",
-		"caseproof/ground-level-mothership": "9.1.2",
-		"caseproof/ground-level-in-product-notifications": "9.1.2",
-        "caseproof/ground-level-insights": "9.1.2"
+        "maennchen/zipstream-php": "^2.1"
     },
 	"require-dev": {
 		"humbug/php-scoper": "^0.17.5"
@@ -52,17 +49,10 @@
     },
     "config": {
         "preferred-install": {
-            "caseproof/*": "source",
             "*": "dist"
         },
         "allow-plugins": {
             "composer/installers": true
         }
-    },
-    "repositories": {
-		"caseproof": {
-		"type": "composer",
-		"url": "https://pkgs.cspf.co"
-		}
-	}
+    }
 }

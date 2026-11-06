@@ -37,11 +37,11 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	 * Put Platform's Login Redirect override back where core registers it.
 	 */
 	public function tearDown(): void {
-		if ( ! has_filter( 'bp_login_redirect', 'bb_login_redirect' ) ) {
-			add_filter( 'bp_login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
+		if ( ! has_filter( 'bp_login_redirect', 'bboss_bb_login_redirect' ) ) {
+			add_filter( 'bp_login_redirect', 'bboss_bb_login_redirect', PHP_INT_MAX, 3 );
 		}
 
-		remove_filter( 'gettext', 'bb_two_factor_filter_plugin_strings', 10 );
+		remove_filter( 'gettext', 'bboss_two_factor_filter_plugin_strings', 10 );
 
 		parent::tearDown();
 	}
@@ -54,7 +54,7 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	public function test_settings_url_for_member() {
 		$this->assertSame(
 			'http://example.org/members/tfa_r2_test_reval/settings/security/',
-			bb_two_factor_get_settings_url( $this->member )
+			bboss_two_factor_get_settings_url( $this->member )
 		);
 	}
 
@@ -62,8 +62,8 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	 * Settings url falls back to logged in member.
 	 */
 	public function test_settings_url_falls_back_to_logged_in_member() {
-		$this->assertStringEndsWith( '/settings/security/', bb_two_factor_get_settings_url() );
-		$this->assertSame( 'http://example.org/members/tfa_r2_test_reval/settings/security/', bb_two_factor_get_settings_url() );
+		$this->assertStringEndsWith( '/settings/security/', bboss_two_factor_get_settings_url() );
+		$this->assertSame( 'http://example.org/members/tfa_r2_test_reval/settings/security/', bboss_two_factor_get_settings_url() );
 	}
 
 	/**
@@ -72,7 +72,7 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	public function test_settings_url_empty_for_logged_out_with_no_member() {
 		self::set_current_user( 0 );
 
-		$this->assertSame( '', bb_two_factor_get_settings_url() );
+		$this->assertSame( '', bboss_two_factor_get_settings_url() );
 	}
 
 	// Revalidate link rewrite.
@@ -84,7 +84,7 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 		$html = '<p class="intro">Keep <a href="http://example.org/keep-me/">this link</a>.</p>'
 			. '<a class="button" href="http://example.org/wp-login.php?action=revalidate_2fa&amp;redirect_to=http%3A%2F%2Fexample.org%2Fwp-admin%2Fprofile.php">Revalidate now</a>';
 
-		$result = bb_two_factor_set_revalidate_return( $html, 'http://example.org/members/tfa_r2_test_reval/settings/security/' );
+		$result = bboss_two_factor_set_revalidate_return( $html, 'http://example.org/members/tfa_r2_test_reval/settings/security/' );
 
 		$this->assertSame(
 			'<p class="intro">Keep <a href="http://example.org/keep-me/">this link</a>.</p>'
@@ -100,7 +100,7 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	public function test_set_revalidate_return_leaves_html_without_revalidate_link() {
 		$html = '<p>No link here. <a href="http://example.org/other/">other</a></p>';
 
-		$this->assertSame( $html, bb_two_factor_set_revalidate_return( $html, 'http://example.org/members/tfa_r2_test_reval/settings/security/' ) );
+		$this->assertSame( $html, bboss_two_factor_set_revalidate_return( $html, 'http://example.org/members/tfa_r2_test_reval/settings/security/' ) );
 	}
 
 	/**
@@ -109,7 +109,7 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	public function test_set_revalidate_return_leaves_html_when_return_url_empty() {
 		$html = '<a href="http://example.org/wp-login.php?action=revalidate_2fa">Revalidate now</a>';
 
-		$this->assertSame( $html, bb_two_factor_set_revalidate_return( $html, '' ) );
+		$this->assertSame( $html, bboss_two_factor_set_revalidate_return( $html, '' ) );
 	}
 
 	// Revalidation return vs Login Redirect (F-3).
@@ -118,14 +118,14 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	 * Keep revalidation return is hooked.
 	 */
 	public function test_keep_revalidation_return_is_hooked() {
-		$this->assertSame( 10, has_action( 'two_factor_user_revalidated', 'bb_two_factor_keep_revalidation_return' ) );
+		$this->assertSame( 10, has_action( 'two_factor_user_revalidated', 'bboss_two_factor_keep_revalidation_return' ) );
 	}
 
 	/**
 	 * Login redirect override registered by default.
 	 */
 	public function test_login_redirect_override_registered_by_default() {
-		$this->assertSame( PHP_INT_MAX, has_filter( 'bp_login_redirect', 'bb_login_redirect' ) );
+		$this->assertSame( PHP_INT_MAX, has_filter( 'bp_login_redirect', 'bboss_bb_login_redirect' ) );
 	}
 
 	/**
@@ -136,7 +136,7 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 
 		do_action( 'two_factor_user_revalidated', get_userdata( $this->member ) );
 
-		$this->assertFalse( has_filter( 'bp_login_redirect', 'bb_login_redirect' ) );
+		$this->assertFalse( has_filter( 'bp_login_redirect', 'bboss_bb_login_redirect' ) );
 	}
 
 	/**
@@ -145,9 +145,9 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	public function test_own_security_url_without_trailing_slash_lifts_override() {
 		$_REQUEST['redirect_to'] = 'http://example.org/members/tfa_r2_test_reval/settings/security';
 
-		bb_two_factor_keep_revalidation_return( get_userdata( $this->member ) );
+		bboss_two_factor_keep_revalidation_return( get_userdata( $this->member ) );
 
-		$this->assertFalse( has_filter( 'bp_login_redirect', 'bb_login_redirect' ) );
+		$this->assertFalse( has_filter( 'bp_login_redirect', 'bboss_bb_login_redirect' ) );
 	}
 
 	/**
@@ -156,9 +156,9 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	public function test_other_url_keeps_login_redirect_override() {
 		$_REQUEST['redirect_to'] = 'http://example.org/wp-admin/profile.php';
 
-		bb_two_factor_keep_revalidation_return( get_userdata( $this->member ) );
+		bboss_two_factor_keep_revalidation_return( get_userdata( $this->member ) );
 
-		$this->assertSame( PHP_INT_MAX, has_filter( 'bp_login_redirect', 'bb_login_redirect' ) );
+		$this->assertSame( PHP_INT_MAX, has_filter( 'bp_login_redirect', 'bboss_bb_login_redirect' ) );
 	}
 
 	/**
@@ -168,9 +168,9 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 		$this->create_member( 'tfa_r2_test_reval_other' );
 		$_REQUEST['redirect_to'] = 'http://example.org/members/tfa_r2_test_reval_other/settings/security/';
 
-		bb_two_factor_keep_revalidation_return( get_userdata( $this->member ) );
+		bboss_two_factor_keep_revalidation_return( get_userdata( $this->member ) );
 
-		$this->assertSame( PHP_INT_MAX, has_filter( 'bp_login_redirect', 'bb_login_redirect' ) );
+		$this->assertSame( PHP_INT_MAX, has_filter( 'bp_login_redirect', 'bboss_bb_login_redirect' ) );
 	}
 
 	/**
@@ -179,9 +179,9 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	public function test_missing_redirect_to_keeps_login_redirect_override() {
 		unset( $_REQUEST['redirect_to'] );
 
-		bb_two_factor_keep_revalidation_return( get_userdata( $this->member ) );
+		bboss_two_factor_keep_revalidation_return( get_userdata( $this->member ) );
 
-		$this->assertSame( PHP_INT_MAX, has_filter( 'bp_login_redirect', 'bb_login_redirect' ) );
+		$this->assertSame( PHP_INT_MAX, has_filter( 'bp_login_redirect', 'bboss_bb_login_redirect' ) );
 	}
 
 	/**
@@ -190,9 +190,9 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	public function test_non_user_argument_keeps_login_redirect_override() {
 		$_REQUEST['redirect_to'] = 'http://example.org/members/tfa_r2_test_reval/settings/security/';
 
-		bb_two_factor_keep_revalidation_return( $this->member );
+		bboss_two_factor_keep_revalidation_return( $this->member );
 
-		$this->assertSame( PHP_INT_MAX, has_filter( 'bp_login_redirect', 'bb_login_redirect' ) );
+		$this->assertSame( PHP_INT_MAX, has_filter( 'bp_login_redirect', 'bboss_bb_login_redirect' ) );
 	}
 
 	// String override (F-7).
@@ -203,7 +203,7 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	public function test_string_filter_rewords_defined_above_for_two_factor_domain() {
 		$this->assertSame(
 			'Authentication for the REST API and XML-RPC must use an application password instead of your regular password.',
-			bb_two_factor_filter_plugin_strings(
+			bboss_two_factor_filter_plugin_strings(
 				'translated',
 				'Authentication for REST API and XML-RPC must use application passwords (defined above) instead of your regular password.',
 				'two-factor'
@@ -217,7 +217,7 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	public function test_string_filter_ignores_other_domains() {
 		$this->assertSame(
 			'translated',
-			bb_two_factor_filter_plugin_strings(
+			bboss_two_factor_filter_plugin_strings(
 				'translated',
 				'Authentication for REST API and XML-RPC must use application passwords (defined above) instead of your regular password.',
 				'default'
@@ -229,14 +229,14 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 	 * String filter ignores other two factor strings.
 	 */
 	public function test_string_filter_ignores_other_two_factor_strings() {
-		$this->assertSame( 'translated', bb_two_factor_filter_plugin_strings( 'translated', 'Recovery Codes', 'two-factor' ) );
+		$this->assertSame( 'translated', bboss_two_factor_filter_plugin_strings( 'translated', 'Recovery Codes', 'two-factor' ) );
 	}
 
 	/**
 	 * String filter not attached outside render.
 	 */
 	public function test_string_filter_not_attached_outside_render() {
-		$this->assertFalse( has_filter( 'gettext', 'bb_two_factor_filter_plugin_strings' ) );
+		$this->assertFalse( has_filter( 'gettext', 'bboss_two_factor_filter_plugin_strings' ) );
 	}
 
 	/**
@@ -259,22 +259,22 @@ class BB_Tests_Two_Factor_Revalidation extends BB_Two_Factor_UnitTestCase {
 		add_filter( 'wp_is_application_passwords_available', '__return_true' );
 
 		ob_start();
-		bb_two_factor_render_options( get_userdata( $this->member ) );
+		bboss_two_factor_render_options( get_userdata( $this->member ) );
 		$html = ob_get_clean();
 
 		$this->assertStringNotContainsString( 'defined above', $html );
 		$this->assertStringContainsString( 'must use an application password instead of your regular password.', $html );
-		$this->assertFalse( has_filter( 'gettext', 'bb_two_factor_filter_plugin_strings' ) );
+		$this->assertFalse( has_filter( 'gettext', 'bboss_two_factor_filter_plugin_strings' ) );
 	}
 
 	/**
 	 * Render options prints nothing when feature off.
 	 */
 	public function test_render_options_prints_nothing_when_feature_off() {
-		bp_update_option( 'bb-active-features', array( 'two-factor' => 0 ) );
+		bboss_update_option( 'bb-active-features', array( 'two-factor' => 0 ) );
 
 		ob_start();
-		bb_two_factor_render_options( get_userdata( $this->member ) );
+		bboss_two_factor_render_options( get_userdata( $this->member ) );
 		$html = ob_get_clean();
 
 		$this->assertSame( '', $html );

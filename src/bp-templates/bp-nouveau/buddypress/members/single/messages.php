@@ -7,15 +7,19 @@
  * @since   BuddyPress 1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="messages-wrapper">
 	<div class="messages-screen">
 		<?php
-		if ( ! in_array( bp_current_action(), array( 'inbox', 'starred', 'view', 'compose', 'notices', 'archived' ), true ) ) :
-			bp_get_template_part( 'members/single/plugins' );
+		if ( ! in_array( bboss_current_action(), array( 'inbox', 'starred', 'view', 'compose', 'notices', 'archived' ), true ) ) :
+			bboss_get_template_part( 'members/single/plugins' );
 		else :
-			bp_nouveau_messages_member_interface();
+			bboss_nouveau_messages_member_interface();
 		endif;
 		?>
 	</div>

@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Catch and process group creation form submissions.
  *
@@ -13,10 +16,10 @@
  *
  * @return bool
  */
-function groups_action_create_group() {
+function bboss_groups_action_create_group() {
 
 	// If we're not at domain.org/groups/create/ then return false.
-	if ( ! bp_is_groups_component() || ! bp_is_current_action( 'create' ) ) {
+	if ( ! bboss_is_groups_component() || ! bboss_is_current_action( 'create' ) ) {
 		return false;
 	}
 
@@ -24,19 +27,19 @@ function groups_action_create_group() {
 		return false;
 	}
 
-	if ( ! bp_user_can_create_groups() ) {
-		bp_core_add_message( __( 'Sorry, you are not allowed to create groups.', 'buddyboss' ), 'error' );
-		bp_core_redirect( bp_get_groups_directory_permalink() );
+	if ( ! bboss_user_can_create_groups() ) {
+		bboss_core_add_message( __( 'Sorry, you are not allowed to create groups.', 'buddyboss-platform' ), 'error' );
+		bboss_core_redirect( bboss_get_groups_directory_permalink() );
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Make sure creation steps are in the right order.
-	groups_action_sort_creation_steps();
+	bboss_groups_action_sort_creation_steps();
 
 	// If no current step is set, reset everything so we can start a fresh group creation.
-	$bp->groups->current_create_step = bp_action_variable( 1 );
-	if ( ! bp_get_groups_current_create_step() ) {
+	$bp->groups->current_create_step = bboss_action_variable( 1 );
+	if ( ! bboss_get_groups_current_create_step() ) {
 		unset( $bp->groups->current_create_step );
 		unset( $bp->groups->completed_create_steps );
 
@@ -45,28 +48,29 @@ function groups_action_create_group() {
 
 		$reset_steps = true;
 		$keys        = array_keys( $bp->groups->group_creation_steps );
-		bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . array_shift( $keys ) ) );
+		bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create/step/' . array_shift( $keys ) ) );
 	}
 
 	// If this is a creation step that is not recognized, just redirect them back to the first screen.
-	if ( bp_get_groups_current_create_step() && empty( $bp->groups->group_creation_steps[ bp_get_groups_current_create_step() ] ) ) {
-		bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
-		bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) );
+	if ( bboss_get_groups_current_create_step() && empty( $bp->groups->group_creation_steps[ bboss_get_groups_current_create_step() ] ) ) {
+		bboss_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss-platform' ), 'error' );
+		bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create' ) );
 	}
 
 	// Fetch the currently completed steps variable.
 	if ( isset( $_COOKIE['bp_completed_create_steps'] ) && ! isset( $reset_steps ) ) {
-		$bp->groups->completed_create_steps = json_decode( base64_decode( stripslashes( $_COOKIE['bp_completed_create_steps'] ) ) );
+		$completed_create_steps             = json_decode( base64_decode( wp_unslash( $_COOKIE['bp_completed_create_steps'] ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		$bp->groups->completed_create_steps = is_array( $completed_create_steps ) ? map_deep( $completed_create_steps, 'sanitize_text_field' ) : array();
 	}
 
 	// Set the ID of the new group, if it has already been created in a previous step.
-	if ( bp_get_new_group_id() ) {
-		$bp->groups->current_group = groups_get_group( $bp->groups->new_group_id );
+	if ( bboss_get_new_group_id() ) {
+		$bp->groups->current_group = bboss_groups_get_group( $bp->groups->new_group_id );
 
 		// Only allow the group creator to continue to edit the new group.
-		if ( ! bp_is_group_creator( $bp->groups->current_group, bp_loggedin_user_id() ) ) {
-			bp_core_add_message( __( 'Only the group organizer may continue editing this group.', 'buddyboss' ), 'error' );
-			bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) );
+		if ( ! bboss_is_group_creator( $bp->groups->current_group, bboss_loggedin_user_id() ) ) {
+			bboss_core_add_message( __( 'Only the group organizer may continue editing this group.', 'buddyboss-platform' ), 'error' );
+			bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create' ) );
 		}
 	}
 
@@ -74,32 +78,32 @@ function groups_action_create_group() {
 	if ( isset( $_POST['save'] ) ) {
 
 		// Check the nonce.
-		check_admin_referer( 'groups_create_save_' . bp_get_groups_current_create_step() );
+		check_admin_referer( 'groups_create_save_' . bboss_get_groups_current_create_step() );
 
-		if ( 'group-details' == bp_get_groups_current_create_step() ) {
+		if ( 'group-details' == bboss_get_groups_current_create_step() ) {
 			if ( empty( $_POST['group-name'] ) || ! strlen( trim( $_POST['group-name'] ) ) ) {
-				bp_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss' ), 'error' );
-				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
+				bboss_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss-platform' ), 'error' );
+				bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create/step/' . bboss_get_groups_current_create_step() ) );
 			}
 
 			$new_group_id = isset( $bp->groups->new_group_id ) ? $bp->groups->new_group_id : 0;
 
-			if ( ! $bp->groups->new_group_id = groups_create_group(
+			if ( ! $bp->groups->new_group_id = bboss_groups_create_group(
 				array(
 					'group_id'     => $new_group_id,
 					'name'         => $_POST['group-name'],
 					'description'  => $_POST['group-desc'],
-					'slug'         => groups_check_slug( sanitize_title( esc_attr( $_POST['group-name'] ) ) ),
-					'date_created' => bp_core_current_time(),
+					'slug'         => bboss_groups_check_slug( sanitize_title( wp_unslash( $_POST['group-name'] ) ) ),
+					'date_created' => bboss_core_current_time(),
 					'status'       => 'public',
 				)
 			) ) {
-				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
-				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
+				bboss_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss-platform' ), 'error' );
+				bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create/step/' . bboss_get_groups_current_create_step() ) );
 			}
 		}
 
-		if ( 'group-settings' == bp_get_groups_current_create_step() ) {
+		if ( 'group-settings' == bboss_get_groups_current_create_step() ) {
 			$group_status       = 'public';
 			$group_enable_forum = 1;
 
@@ -115,7 +119,7 @@ function groups_action_create_group() {
 
 			$parent_id = ( isset( $_POST['bp-groups-parent'] ) ) ? $_POST['bp-groups-parent'] : 0;
 
-			if ( ! $bp->groups->new_group_id = groups_create_group(
+			if ( ! $bp->groups->new_group_id = bboss_groups_create_group(
 				array(
 					'group_id'     => $bp->groups->new_group_id,
 					'status'       => $group_status,
@@ -123,13 +127,13 @@ function groups_action_create_group() {
 					'parent_id'    => $parent_id,
 				)
 			) ) {
-				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
-				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
+				bboss_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss-platform' ), 'error' );
+				bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create/step/' . bboss_get_groups_current_create_step() ) );
 			}
 
 			// Save group types.
 			if ( ! empty( $_POST['group-types'] ) ) {
-				bp_groups_set_group_type( $bp->groups->new_group_id, $_POST['group-types'] );
+				bboss_groups_set_group_type( $bp->groups->new_group_id, $_POST['group-types'] );
 			}
 
 			/**
@@ -141,10 +145,10 @@ function groups_action_create_group() {
 			 *                     Possible values are 'members,
 			 *                     'mods', and 'admins'.
 			 */
-			$allowed_invite_status = bb_groups_get_settings_status( 'invite' );
-			$invite_status         = ! empty( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : bb_groups_settings_default_fallback( 'invite_status', current( $allowed_invite_status ) );
+			$allowed_invite_status = bboss_groups_get_settings_status( 'invite' );
+			$invite_status         = ! empty( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : bboss_groups_settings_default_fallback( 'invite_status', current( $allowed_invite_status ) );
 
-			groups_update_groupmeta( $bp->groups->new_group_id, 'invite_status', $invite_status );
+			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'invite_status', $invite_status );
 
 			/**
 			 * Filters the allowed activity feed statuses.
@@ -155,10 +159,10 @@ function groups_action_create_group() {
 			 *                     Possible values are 'members,
 			 *                     'mods', and 'admins'.
 			 */
-			$allowed_activity_feed_status = bb_groups_get_settings_status( 'activity_feed' );
-			$activity_feed_status         = ! empty( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : bb_groups_settings_default_fallback( 'activity_feed_status', current( $allowed_activity_feed_status ) );
+			$allowed_activity_feed_status = bboss_groups_get_settings_status( 'activity_feed' );
+			$activity_feed_status         = ! empty( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : bboss_groups_settings_default_fallback( 'activity_feed_status', current( $allowed_activity_feed_status ) );
 
-			groups_update_groupmeta( $bp->groups->new_group_id, 'activity_feed_status', $activity_feed_status );
+			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'activity_feed_status', $activity_feed_status );
 
 			/**
 			* Filters the allowed media statuses.
@@ -169,10 +173,10 @@ function groups_action_create_group() {
 			 *                     Possible values are 'members,
 			 *                     'mods', and 'admins'.
 			 */
-			$allowed_media_status = bb_groups_get_settings_status( 'media' );
-			$media_status         = ! empty( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : bb_groups_settings_default_fallback( 'media_status', current( $allowed_media_status ) );
+			$allowed_media_status = bboss_groups_get_settings_status( 'media' );
+			$media_status         = ! empty( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : bboss_groups_settings_default_fallback( 'media_status', current( $allowed_media_status ) );
 
-			groups_update_groupmeta( $bp->groups->new_group_id, 'media_status', $media_status );
+			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'media_status', $media_status );
 
 			/**
 			 * Filters the allowed document statuses.
@@ -183,10 +187,10 @@ function groups_action_create_group() {
 			 *                     Possible values are 'members,
 			 *                     'mods', and 'admins'.
 			 */
-			$allowed_document_status = bb_groups_get_settings_status( 'document' );
-			$document_status         = ! empty( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : bb_groups_settings_default_fallback( 'document_status', current( $allowed_document_status ) );
+			$allowed_document_status = bboss_groups_get_settings_status( 'document' );
+			$document_status         = ! empty( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : bboss_groups_settings_default_fallback( 'document_status', current( $allowed_document_status ) );
 
-			groups_update_groupmeta( $bp->groups->new_group_id, 'document_status', $document_status );
+			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'document_status', $document_status );
 
 			/**
 			 * Filters the allowed video statuses.
@@ -197,11 +201,11 @@ function groups_action_create_group() {
 			 *                     Possible values are 'members,
 			 *                     'mods', and 'admins'.
 			 */
-			$allowed_video_status    = bb_groups_get_settings_status( 'video' );
-			$post_group_video_status = bb_filter_input_string( INPUT_POST, 'group-video-status' );
-			$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : bb_groups_settings_default_fallback( 'video_status', current( $allowed_video_status ) );
+			$allowed_video_status    = bboss_groups_get_settings_status( 'video' );
+			$post_group_video_status = bboss_filter_input_string( INPUT_POST, 'group-video-status' );
+			$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : bboss_groups_settings_default_fallback( 'video_status', current( $allowed_video_status ) );
 
-			groups_update_groupmeta( $bp->groups->new_group_id, 'video_status', $video_status );
+			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'video_status', $video_status );
 
 			/**
 			 * Filters the allowed album statuses.
@@ -212,22 +216,22 @@ function groups_action_create_group() {
 			 *                     Possible values are 'members,
 			 *                     'mods', and 'admins'.
 			 */
-			$allowed_album_status = bb_groups_get_settings_status( 'album' );
-			$album_status         = ! empty( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : bb_groups_settings_default_fallback( 'album_status', current( $allowed_album_status ) );
+			$allowed_album_status = bboss_groups_get_settings_status( 'album' );
+			$album_status         = ! empty( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : bboss_groups_settings_default_fallback( 'album_status', current( $allowed_album_status ) );
 
-			groups_update_groupmeta( $bp->groups->new_group_id, 'album_status', $album_status );
+			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'album_status', $album_status );
 
-			$allowed_message_status = bb_groups_get_settings_status( 'message' );
-			$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : bb_groups_settings_default_fallback( 'message_status', current( $allowed_message_status ) );
+			$allowed_message_status = bboss_groups_get_settings_status( 'message' );
+			$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : bboss_groups_settings_default_fallback( 'message_status', current( $allowed_message_status ) );
 
-			groups_update_groupmeta( $bp->groups->new_group_id, 'message_status', $message_status );
+			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'message_status', $message_status );
 
 		}
 
-		if ( 'group-invites' === bp_get_groups_current_create_step() ) {
+		if ( 'group-invites' === bboss_get_groups_current_create_step() ) {
 			if ( ! empty( $_POST['friends'] ) ) {
 				foreach ( (array) $_POST['friends'] as $friend ) {
-					groups_invite_user(
+					bboss_groups_invite_user(
 						array(
 							'user_id'  => (int) $friend,
 							'group_id' => $bp->groups->new_group_id,
@@ -235,7 +239,7 @@ function groups_action_create_group() {
 					);
 				}
 			}
-			groups_send_invites( array( 'group_id' => $bp->groups->new_group_id ) );
+			bboss_groups_send_invites( array( 'group_id' => $bp->groups->new_group_id ) );
 		}
 
 		/**
@@ -246,7 +250,7 @@ function groups_action_create_group() {
 		 *
 		 * @since BuddyPress 1.1.0
 		 */
-		do_action( 'groups_create_group_step_save_' . bp_get_groups_current_create_step() );
+		do_action( 'groups_create_group_step_save_' . bboss_get_groups_current_create_step() );
 
 		/**
 		 * Fires after the group creation step is completed.
@@ -263,8 +267,8 @@ function groups_action_create_group() {
 		 * holding the information
 		 */
 		$completed_create_steps = isset( $bp->groups->completed_create_steps ) ? $bp->groups->completed_create_steps : array();
-		if ( ! in_array( bp_get_groups_current_create_step(), $completed_create_steps ) ) {
-			$bp->groups->completed_create_steps[] = bp_get_groups_current_create_step();
+		if ( ! in_array( bboss_get_groups_current_create_step(), $completed_create_steps ) ) {
+			$bp->groups->completed_create_steps[] = bboss_get_groups_current_create_step();
 		}
 
 		// Reset cookie info.
@@ -274,7 +278,7 @@ function groups_action_create_group() {
 		// If we have completed all steps and hit done on the final step we
 		// can redirect to the completed group.
 		$keys = array_keys( $bp->groups->group_creation_steps );
-		if ( count( $bp->groups->completed_create_steps ) == count( $keys ) && bp_get_groups_current_create_step() == array_pop( $keys ) ) {
+		if ( count( $bp->groups->completed_create_steps ) == count( $keys ) && bboss_get_groups_current_create_step() == array_pop( $keys ) ) {
 			unset( $bp->groups->current_create_step );
 			unset( $bp->groups->completed_create_steps );
 
@@ -282,8 +286,8 @@ function groups_action_create_group() {
 			setcookie( 'bp_completed_create_steps', false, time() - 3600, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 
 			// Once we completed all steps, record the group creation in the activity feed.
-			if ( bp_is_active( 'activity' ) ) {
-				groups_record_activity(
+			if ( bboss_is_active( 'activity' ) ) {
+				bboss_groups_record_activity(
 					array(
 						'type'    => 'created_group',
 						'item_id' => $bp->groups->new_group_id,
@@ -300,14 +304,14 @@ function groups_action_create_group() {
 			 */
 			do_action( 'groups_group_create_complete', $bp->groups->new_group_id );
 
-			bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
+			bboss_core_redirect( bboss_get_group_permalink( $bp->groups->current_group ) );
 		} else {
 			/**
 			 * Since we don't know what the next step is going to be (any plugin can insert steps)
 			 * we need to loop the step array and fetch the next step that way.
 			 */
 			foreach ( $keys as $key ) {
-				if ( $key == bp_get_groups_current_create_step() ) {
+				if ( $key == bboss_get_groups_current_create_step() ) {
 					$next = 1;
 					continue;
 				}
@@ -318,30 +322,30 @@ function groups_action_create_group() {
 				}
 			}
 
-			bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . $next_step ) );
+			bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create/step/' . $next_step ) );
 		}
 	}
 
 	// Remove invitations.
-	if ( 'group-invites' === bp_get_groups_current_create_step() && ! empty( $_REQUEST['user_id'] ) && is_numeric( $_REQUEST['user_id'] ) ) {
+	if ( 'group-invites' === bboss_get_groups_current_create_step() && ! empty( $_REQUEST['user_id'] ) && is_numeric( $_REQUEST['user_id'] ) ) {
 		if ( ! check_admin_referer( 'groups_invite_uninvite_user' ) ) {
 			return false;
 		}
 
-		$message = __( 'Invite successfully withdrawn', 'buddyboss' );
+		$message = __( 'Invite successfully withdrawn', 'buddyboss-platform' );
 		$error   = false;
 
-		if ( ! groups_uninvite_user( (int) $_REQUEST['user_id'], $bp->groups->new_group_id ) ) {
-			$message = __( 'There was an error withdrawing the invite', 'buddyboss' );
+		if ( ! bboss_groups_uninvite_user( (int) $_REQUEST['user_id'], $bp->groups->new_group_id ) ) {
+			$message = __( 'There was an error withdrawing the invite', 'buddyboss-platform' );
 			$error   = 'error';
 		}
 
-		bp_core_add_message( $message, $error );
-		bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/group-invites' ) );
+		bboss_core_add_message( $message, $error );
+		bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create/step/group-invites' ) );
 	}
 
 	// Group avatar is handled separately.
-	if ( 'group-avatar' == bp_get_groups_current_create_step() && isset( $_POST['upload'] ) ) {
+	if ( 'group-avatar' == bboss_get_groups_current_create_step() && isset( $_POST['upload'] ) ) {
 		if ( ! isset( $bp->avatar_admin ) ) {
 			$bp->avatar_admin = new stdClass();
 		}
@@ -349,11 +353,11 @@ function groups_action_create_group() {
 		if ( ! empty( $_FILES ) && isset( $_POST['upload'] ) ) {
 			// Normally we would check a nonce here, but the group save nonce is used instead.
 			// Pass the file to the avatar upload handler.
-			if ( bp_core_avatar_handle_upload( $_FILES, 'groups_avatar_upload_dir' ) ) {
+			if ( bboss_core_avatar_handle_upload( $_FILES, 'bboss_groups_avatar_upload_dir' ) ) {
 				$bp->avatar_admin->step = 'crop-image';
 
 				// Make sure we include the jQuery jCrop file for image cropping.
-				add_action( 'wp_print_scripts', 'bp_core_add_jquery_cropper' );
+				add_action( 'wp_print_scripts', 'bboss_core_add_jquery_cropper' );
 			}
 		}
 
@@ -372,8 +376,8 @@ function groups_action_create_group() {
 				'crop_h'        => $_POST['h'],
 			);
 
-			if ( ! bp_core_avatar_handle_crop( $args ) ) {
-				bp_core_add_message( __( 'There was an error with the group profile photo, please try again.', 'buddyboss' ), 'error' );
+			if ( ! bboss_core_avatar_handle_crop( $args ) ) {
+				bboss_core_add_message( __( 'There was an error with the group profile photo, please try again.', 'buddyboss-platform' ), 'error' );
 			} else {
 				/**
 				 * Fires after a group avatar is uploaded.
@@ -384,9 +388,9 @@ function groups_action_create_group() {
 				 * @param string $type     Avatar type. 'crop' or 'full'.
 				 * @param array  $args     Array of parameters passed to the avatar handler.
 				 */
-				do_action( 'groups_avatar_uploaded', bp_get_current_group_id(), 'crop', $args );
+				do_action( 'groups_avatar_uploaded', bboss_get_current_group_id(), 'crop', $args );
 
-				bp_core_add_message( __( 'The group profile photo was uploaded successfully.', 'buddyboss' ) );
+				bboss_core_add_message( __( 'The group profile photo was uploaded successfully.', 'buddyboss-platform' ) );
 			}
 		}
 	}
@@ -398,9 +402,9 @@ function groups_action_create_group() {
 	 *
 	 * @param string $value Path to the group creation template to load.
 	 */
-	bp_core_load_template( apply_filters( 'groups_template_create_group', 'groups/create' ) );
+	bboss_core_load_template( apply_filters( 'groups_template_create_group', 'groups/create' ) );
 }
-add_action( 'bp_actions', 'groups_action_create_group' );
+add_action( 'bp_actions', 'bboss_groups_action_create_group' );
 
 /**
  * Sort the group creation steps.
@@ -409,13 +413,13 @@ add_action( 'bp_actions', 'groups_action_create_group' );
  *
  * @return false|null False on failure.
  */
-function groups_action_sort_creation_steps() {
+function bboss_groups_action_sort_creation_steps() {
 
-	if ( ! bp_is_groups_component() || ! bp_is_current_action( 'create' ) ) {
+	if ( ! bboss_is_groups_component() || ! bboss_is_current_action( 'create' ) ) {
 		return false;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	if ( ! is_array( $bp->groups->group_creation_steps ) ) {
 		return false;

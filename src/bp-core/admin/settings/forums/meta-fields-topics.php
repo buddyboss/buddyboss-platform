@@ -3,7 +3,7 @@
  * BuddyBoss Admin Settings - Discussion (Topic) Meta Fields Registration.
  *
  * Registers core discussion fields for the Discussion Create/Edit modals
- * in the Settings 2.0 admin interface via BB_Admin_Meta_Field_Registry.
+ * in the Settings 2.0 admin interface via BBoss_Admin_Meta_Field_Registry.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -20,17 +20,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  The registry instance.
  * @param string                       $component The component identifier.
  */
-function bb_discussions_register_core_meta_fields( $registry, $component ) {
+function bboss_discussions_register_core_meta_fields( $registry, $component ) {
 
 	// Title.
 	$registry->register(
 		$component,
 		'title',
 		array(
-			'label'             => __( 'Title', 'buddyboss' ),
+			'label'             => __( 'Title', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 10,
@@ -50,7 +50,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'slug',
 		array(
-			'label'             => __( 'Permalink', 'buddyboss' ),
+			'label'             => __( 'Permalink', 'buddyboss-platform' ),
 			'type'              => 'permalink',
 			'tab'               => 'details',
 			'order'             => 15,
@@ -66,7 +66,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 					return array( 'base_url' => '' );
 				}
 
-				$permalink = bbp_get_topic_permalink( $topic->ID );
+				$permalink = bboss_bbp_get_topic_permalink( $topic->ID );
 
 				// Remove the slug from the end to get the base URL.
 				$slug     = $topic->post_name;
@@ -88,7 +88,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'description',
 		array(
-			'label'             => __( 'Description', 'buddyboss' ),
+			'label'             => __( 'Description', 'buddyboss-platform' ),
 			'type'              => 'richtext',
 			'tab'               => 'details',
 			'order'             => 20,
@@ -108,10 +108,10 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'forum_id',
 		array(
-			'label'             => __( 'Forum', 'buddyboss' ),
+			'label'             => __( 'Forum', 'buddyboss-platform' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_forum_autocomplete',
-			'placeholder'       => __( 'Select Forum', 'buddyboss' ),
+			'placeholder'       => __( 'Select Forum', 'buddyboss-platform' ),
 			'tab'               => 'details',
 			'order'             => 30,
 			'save_phase'        => 'after',
@@ -132,7 +132,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'type',
 		array(
-			'label'             => __( 'Type', 'buddyboss' ),
+			'label'             => __( 'Type', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 40,
@@ -141,9 +141,9 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 				if ( empty( $topic->ID ) ) {
 					return 'normal';
 				}
-				if ( bbp_is_topic_super_sticky( $topic->ID ) ) {
+				if ( bboss_bbp_is_topic_super_sticky( $topic->ID ) ) {
 					return 'super_sticky';
-				} elseif ( bbp_is_topic_sticky( $topic->ID ) ) {
+				} elseif ( bboss_bbp_is_topic_sticky( $topic->ID ) ) {
 					return 'sticky';
 				}
 				return 'normal';
@@ -152,15 +152,15 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'normal',
-						'label' => __( 'Normal', 'buddyboss' ),
+						'label' => __( 'Normal', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'sticky',
-						'label' => __( 'Sticky', 'buddyboss' ),
+						'label' => __( 'Sticky', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'super_sticky',
-						'label' => __( 'Super Sticky (To front)', 'buddyboss' ),
+						'label' => __( 'Super Sticky (To front)', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -175,7 +175,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'topic_status',
 		array(
-			'label'             => __( 'Status', 'buddyboss' ),
+			'label'             => __( 'Status', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 50,
@@ -183,12 +183,12 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 			'save_phase'        => 'after',
 			'get_value'         => function ( $topic ) {
 				if ( empty( $topic->ID ) ) {
-					return bbp_get_public_status_id();
+					return bboss_bbp_get_public_status_id();
 				}
 				return get_post_status( $topic->ID );
 			},
 			'get_options'       => function ( $topic ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
-				$statuses = function_exists( 'bbp_get_topic_statuses' ) ? bbp_get_topic_statuses() : array();
+				$statuses = function_exists( 'bboss_bbp_get_topic_statuses' ) ? bboss_bbp_get_topic_statuses() : array();
 				$options  = array();
 				foreach ( $statuses as $status_id => $label ) {
 					$options[] = array(
@@ -209,7 +209,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'visibility',
 		array(
-			'label'             => __( 'Visibility', 'buddyboss' ),
+			'label'             => __( 'Visibility', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 55,
@@ -231,15 +231,15 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'publish',
-						'label' => __( 'Public', 'buddyboss' ),
+						'label' => __( 'Public', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'private',
-						'label' => __( 'Private', 'buddyboss' ),
+						'label' => __( 'Private', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'password',
-						'label' => __( 'Password Protected', 'buddyboss' ),
+						'label' => __( 'Password Protected', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -263,7 +263,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'post_password',
 		array(
-			'label'             => __( 'Password', 'buddyboss' ),
+			'label'             => __( 'Password', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 56,
@@ -294,7 +294,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'publish_mode',
 		array(
-			'label'             => __( 'Publish', 'buddyboss' ),
+			'label'             => __( 'Publish', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 57,
@@ -311,11 +311,11 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'immediately',
-						'label' => __( 'Immediately', 'buddyboss' ),
+						'label' => __( 'Immediately', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'schedule',
-						'label' => __( 'Schedule', 'buddyboss' ),
+						'label' => __( 'Schedule', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -330,7 +330,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'schedule_date',
 		array(
-			'label'             => __( 'Date', 'buddyboss' ),
+			'label'             => __( 'Date', 'buddyboss-platform' ),
 			'type'              => 'date',
 			'tab'               => 'details',
 			'order'             => 58,
@@ -357,7 +357,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'schedule_time',
 		array(
-			'label'             => __( 'Time', 'buddyboss' ),
+			'label'             => __( 'Time', 'buddyboss-platform' ),
 			'type'              => 'time',
 			'tab'               => 'details',
 			'order'             => 59,
@@ -388,7 +388,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'author_id',
 		array(
-			'label'             => __( 'Author ID', 'buddyboss' ),
+			'label'             => __( 'Author ID', 'buddyboss-platform' ),
 			'type'              => 'number',
 			'tab'               => 'details',
 			'order'             => 60,
@@ -413,7 +413,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 				return array(
 					'author_name'   => $user->display_name,
 					'author_avatar' => get_avatar_url( $user->ID, array( 'size' => 32 ) ),
-					'author_url'    => function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user->ID ) : get_author_posts_url( $user->ID ),
+					'author_url'    => function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $user->ID ) : get_author_posts_url( $user->ID ),
 				);
 			},
 			'save_value'        => function ( $topic, $value ) {
@@ -444,7 +444,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'author_ip',
 		array(
-			'label'      => __( 'Author IP', 'buddyboss' ),
+			'label'      => __( 'Author IP', 'buddyboss-platform' ),
 			'type'       => 'text',
 			'tab'        => 'details',
 			'order'      => 65,
@@ -485,10 +485,10 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 				return array(
 					'author_name'   => $user->display_name,
 					'author_avatar' => get_avatar_url( $user->ID, array( 'size' => 32 ) ),
-					'author_url'    => function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user->ID ) : get_author_posts_url( $user->ID ),
+					'author_url'    => function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $user->ID ) : get_author_posts_url( $user->ID ),
 				);
 			},
 		)
 	);
 }
-add_action( 'bb_register_discussions_meta_fields', 'bb_discussions_register_core_meta_fields', 1, 2 );
+add_action( 'bb_register_discussions_meta_fields', 'bboss_discussions_register_core_meta_fields', 1, 2 );

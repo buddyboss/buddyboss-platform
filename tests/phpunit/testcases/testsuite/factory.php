@@ -10,7 +10,7 @@ class BPTests_Testsuite_Factory extends BP_UnitTestCase {
 	public function test_message_create_and_get_should_return_message_object() {
 		$m = self::factory()->message->create_and_get();
 
-		$this->assertTrue( $m instanceof BP_Messages_Message );
+		$this->assertTrue( $m instanceof BBoss_Messages_Message );
 	}
 
 	/**

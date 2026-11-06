@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Moderation_Endpoint class
+ * BP REST: BBoss_REST_Moderation_Endpoint class
  *
  * @package BuddyBoss
  *
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -22,20 +22,20 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->moderation->id;
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->moderation->id;
 
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			// Moderation support for activity/activity_comments.
 			$this->bp_rest_moderation_activity_support();
 		}
 
-		if ( bp_is_active( 'groups' ) ) {
+		if ( bboss_is_active( 'groups' ) ) {
 			// Moderation support for Group.
 			$this->bp_rest_moderation_group_support();
 		}
 
-		if ( bp_is_active( 'forums' ) ) {
+		if ( bboss_is_active( 'forums' ) ) {
 			// Moderation support for Forums.
 			$this->bp_rest_moderation_forums_support();
 
@@ -46,22 +46,22 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			$this->bp_rest_moderation_reply_support();
 		}
 
-		if ( bp_is_active( 'media' ) ) {
+		if ( bboss_is_active( 'media' ) ) {
 			// Moderation support for media.
 			$this->bp_rest_moderation_media_support();
 		}
 
 		// Moderation support for video.
-		if ( bp_is_active( 'video' ) ) {
+		if ( bboss_is_active( 'video' ) ) {
 			$this->bp_rest_moderation_video_support();
 		}
 
-		if ( bp_is_active( 'document' ) ) {
+		if ( bboss_is_active( 'document' ) ) {
 			// Moderation support for document.
 			$this->bp_rest_moderation_document_support();
 		}
 
-		if ( bp_is_active( 'messages' ) ) {
+		if ( bboss_is_active( 'messages' ) ) {
 			// Moderation support for messages.
 			$this->bp_rest_moderation_messages_support();
 		}
@@ -106,7 +106,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => 'true',
 					),
@@ -155,7 +155,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function get_items( $request ) {
 
 		$args = array(
-			'user_id'           => bp_loggedin_user_id(),
+			'user_id'           => bboss_loggedin_user_id(),
 			'page'              => $request['page'],
 			'per_page'          => $request['per_page'],
 			'sort'              => strtoupper( $request['order'] ),
@@ -201,7 +201,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		 */
 		$args = apply_filters( 'bp_rest_moderation_get_items_query_args', $args, $request );
 
-		$moderations = bp_moderation_get( $args );
+		$moderations = bboss_moderation_get( $args );
 
 		$retval = array();
 		foreach ( $moderations['moderations'] as $moderation ) {
@@ -211,7 +211,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, $moderations['total'], $args['per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, $moderations['total'], $args['per_page'] );
 
 		/**
 		 * Fires after a list of blocked members is fetched via the REST API.
@@ -239,7 +239,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -283,7 +283,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( empty( $moderation->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid moderation ID.', 'buddyboss' ),
+				__( 'Invalid moderation ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -299,7 +299,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a moderation is fetched via the REST API.
 		 *
-		 * @param BP_Moderation    $moderation Fetched moderation.
+		 * @param BBoss_Moderation    $moderation Fetched moderation.
 		 * @param WP_REST_Response $response   The response data.
 		 * @param WP_REST_Request  $request    The request sent to the API.
 		 *
@@ -321,7 +321,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to view the block member.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to view the block member.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -363,40 +363,40 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$item_id = $request->get_param( 'item_id' );
 		$type    = $request->get_param( 'type' );
 
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 
 		if ( empty( $item_id ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_missing_data',
-				__( 'Required field missing.', 'buddyboss' ),
+				__( 'Required field missing.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
 			);
 		}
 
-		if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
+		if ( bboss_moderation_report_exist( $item_id, BBoss_Moderation_Members::$moderation_type ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
-				__( 'Already reported this item.', 'buddyboss' ),
+				__( 'Already reported this item.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
 			);
 		}
 
-		$moderation = bp_moderation_add(
+		$moderation = bboss_moderation_add(
 			array(
 				'content_id'   => $item_id,
 				'content_type' => $type,
-				'note'         => esc_html__( 'Member block', 'buddyboss' ),
+				'note'         => esc_html__( 'Member block', 'buddyboss-platform' ),
 			)
 		);
 
 		if ( empty( $moderation->id ) && empty( $moderation->report_id ) && ! empty( $moderation->errors ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_moderation',
-				__( 'Sorry, something goes wrong please try again.', 'buddyboss' ),
+				__( 'Sorry, something goes wrong please try again.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -405,8 +405,8 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $moderation->id ) ) {
 
-			if ( bp_is_active( 'friends' ) ) {
-				$friend_status = bp_is_friend( $item_id );
+			if ( bboss_is_active( 'friends' ) ) {
+				$friend_status = bboss_is_friend( $item_id );
 				if (
 					! empty( $friend_status ) &&
 					in_array(
@@ -415,20 +415,20 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 						true
 					)
 				) {
-					friends_remove_friend( bp_loggedin_user_id(), $item_id );
+					bboss_friends_remove_friend( bboss_loggedin_user_id(), $item_id );
 				}
 			}
 
 			if (
-				function_exists( 'bp_is_following' ) &&
-				bp_is_following(
+				function_exists( 'bboss_is_following' ) &&
+				bboss_is_following(
 					array(
 						'leader_id'   => $item_id,
 						'follower_id' => $user_id,
 					)
 				)
 			) {
-				bp_stop_following(
+				bboss_stop_following(
 					array(
 						'leader_id'   => $item_id,
 						'follower_id' => $user_id,
@@ -442,7 +442,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( empty( $moderation->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid moderation ID.', 'buddyboss' ),
+				__( 'Invalid moderation ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -458,7 +458,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a moderation item is created via the REST API.
 		 *
-		 * @param BP_Moderation    $moderation Created moderation.
+		 * @param BBoss_Moderation    $moderation Created moderation.
 		 * @param WP_REST_Response $response   The response data.
 		 * @param WP_REST_Request  $request    The request sent to the API.
 		 *
@@ -480,14 +480,14 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to block member.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to block member.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
 		);
 
 		$item_id = $request->get_param( 'item_id' );
-		$user    = bp_rest_get_user( $item_id );
+		$user    = bboss_rest_get_user( $item_id );
 
 		if ( is_user_logged_in() && $user instanceof WP_User ) {
 			$retval = true;
@@ -496,17 +496,17 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! empty( $user->roles ) && in_array( 'administrator', $user->roles, true ) ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_item_id',
-				__( 'Sorry, you can not able to block admin users.', 'buddyboss' ),
+				__( 'Sorry, you can not able to block admin users.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
 			);
 		}
 
-		if ( true === $retval && (int) bp_loggedin_user_id() === (int) $item_id ) {
+		if ( true === $retval && (int) bboss_loggedin_user_id() === (int) $item_id ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_item_id',
-				__( 'Sorry, you can not able to block him self.', 'buddyboss' ),
+				__( 'Sorry, you can not able to block him self.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -547,7 +547,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( empty( $moderation->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid moderation ID.', 'buddyboss' ),
+				__( 'Invalid moderation ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -561,11 +561,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		if (
 			empty( $item_id )
-			|| ! bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type )
+			|| ! bboss_moderation_report_exist( $item_id, BBoss_Moderation_Members::$moderation_type )
 		) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid moderation ID.', 'buddyboss' ),
+				__( 'Invalid moderation ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -575,14 +575,14 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( true === $moderation->hide_sitewide ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid moderation ID.', 'buddyboss' ),
+				__( 'Invalid moderation ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
 			);
 		}
 
-		$moderation_deleted = bp_moderation_delete(
+		$moderation_deleted = bboss_moderation_delete(
 			array(
 				'content_id'   => $item_id,
 				'content_type' => $type,
@@ -592,7 +592,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $moderation_deleted->report_id ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_block_error',
-				__( 'Sorry, Something happened wrong', 'buddyboss' ),
+				__( 'Sorry, Something happened wrong', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -611,7 +611,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a moderation is fetched via the REST API.
 		 *
-		 * @param BP_Moderation    $moderation Fetched moderation.
+		 * @param BBoss_Moderation    $moderation Fetched moderation.
 		 * @param WP_REST_Response $response   The response data.
 		 * @param WP_REST_Request  $request    The request sent to the API.
 		 *
@@ -633,7 +633,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to unblock member.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to unblock member.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -687,7 +687,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
-	 * @return BP_Moderation|string A Moderation object.
+	 * @return BBoss_Moderation|string A Moderation object.
 	 */
 	public function get_moderation_object( $request ) {
 		$moderation_id = is_numeric( $request ) ? $request : (int) $request['id'];
@@ -698,7 +698,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			$args['display_reporters'] = $request['reporters'];
 		}
 
-		$moderation = bp_moderation_get( $args );
+		$moderation = bboss_moderation_get( $args );
 
 		if ( is_array( $moderation ) && ! empty( $moderation['moderations'][0] ) ) {
 			return $moderation['moderations'][0];
@@ -710,7 +710,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares moderation data for return as an object.
 	 *
-	 * @param BP_Moderation   $moderation The Moderation object.
+	 * @param BBoss_Moderation   $moderation The Moderation object.
 	 * @param WP_REST_Request $request    Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -742,7 +742,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response   The response data.
 		 * @param WP_REST_Request  $request    Request used to generate the response.
-		 * @param BP_Moderation    $moderation The Moderation object.
+		 * @param BBoss_Moderation    $moderation The Moderation object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -752,7 +752,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BP_Moderation $moderation The Moderation object.
+	 * @param BBoss_Moderation $moderation The Moderation object.
 	 *
 	 * @return array
 	 * @since 0.1.0
@@ -769,7 +769,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			'user' => array(
 				'href'       => add_query_arg(
 					array( 'username_visible' => 1 ),
-					rest_url( bp_rest_get_user_url( $moderation->item_id ) )
+					rest_url( bboss_rest_get_user_url( $moderation->item_id ) )
 				),
 				'embeddable' => true,
 			),
@@ -779,7 +779,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		 * Filter links prepared for the REST response.
 		 *
 		 * @param array         $links      The prepared links of the REST response.
-		 * @param BP_Moderation $moderation The Moderation object.
+		 * @param BBoss_Moderation $moderation The Moderation object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -799,14 +799,14 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		unset( $params['search'] );
 
 		$params['item_id'] = array(
-			'description'       => __( 'Get the result by reported item.', 'buddyboss' ),
+			'description'       => __( 'Get the result by reported item.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -815,7 +815,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -824,7 +824,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order_by'] = array(
-			'description'       => __( 'Column name to order the results by.', 'buddyboss' ),
+			'description'       => __( 'Column name to order the results by.', 'buddyboss-platform' ),
 			'default'           => 'last_updated',
 			'type'              => 'string',
 			'enum'              => array( 'id', 'item_type', 'item_id', 'last_updated', 'hide_sitewide' ),
@@ -833,7 +833,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -842,7 +842,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -851,7 +851,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['reporters'] = array(
-			'description'       => __( 'Whether to show the reporter ids or not.', 'buddyboss' ),
+			'description'       => __( 'Whether to show the reporter ids or not.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -859,14 +859,14 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['status'] = array(
-			'description'       => __( 'Whether to show the blocked or suspended. 0-Blocked, 1-Suspended', 'buddyboss' ),
+			'description'       => __( 'Whether to show the blocked or suspended. 0-Blocked, 1-Suspended', 'buddyboss-platform' ),
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['blog_id'] = array(
-			'description'       => __( 'Fetch the data for specific blog ID.', 'buddyboss' ),
+			'description'       => __( 'Fetch the data for specific blog ID.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
@@ -894,35 +894,35 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'            => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'blog_id'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Current Site ID.', 'buddyboss' ),
+					'description' => __( 'Current Site ID.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'item_id'       => array(
 					'context'           => array( 'view', 'edit' ),
-					'description'       => __( 'Item ID which needs to be blocked.', 'buddyboss' ),
+					'description'       => __( 'Item ID which needs to be blocked.', 'buddyboss-platform' ),
 					'type'              => 'integer',
 					'sanitize_callback' => 'sanitize_key',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'type'          => array(
 					'context'           => array( 'view', 'edit' ),
-					'description'       => __( 'Item type for the block.', 'buddyboss' ),
+					'description'       => __( 'Item type for the block.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'default'           => 'user',
-					'enum'              => (array) ( class_exists( 'BP_Moderation_Members' ) ? BP_Moderation_Members::$moderation_type : 'user' ),
+					'enum'              => (array) ( class_exists( 'BBoss_Moderation_Members' ) ? BBoss_Moderation_Members::$moderation_type : 'user' ),
 					'sanitize_callback' => 'sanitize_key',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'hide_sitewide' => array(
 					'context'           => array( 'view', 'edit' ),
-					'description'       => __( 'Whether it is hidden of all or not.', 'buddyboss' ),
+					'description'       => __( 'Whether it is hidden of all or not.', 'buddyboss-platform' ),
 					'type'              => 'boolean',
 					'readonly'          => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
@@ -930,7 +930,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				),
 				'count'         => array(
 					'context'           => array( 'view', 'edit' ),
-					'description'       => __( 'Number of time item was reported.', 'buddyboss' ),
+					'description'       => __( 'Number of time item was reported.', 'buddyboss-platform' ),
 					'type'              => 'integer',
 					'readonly'          => true,
 					'sanitize_callback' => 'sanitize_key',
@@ -938,7 +938,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				),
 				'reporters'     => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Reported users for the item.', 'buddyboss' ),
+					'description' => __( 'Reported users for the item.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 				),
@@ -960,14 +960,14 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_rest_moderation_activity_support() {
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'activity',
 			'can_report',
 			array(
 				'get_callback' => array( $this, 'bp_rest_activity_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -981,21 +981,21 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_activity_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'activity',
 			'reported',
 			array(
 				'get_callback' => array( $this, 'bp_rest_activity_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Whether the activity is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the activity is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1009,63 +1009,63 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_activity_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the activity is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the activity is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'activity',
 			'report_button_text',
 			array(
 				'get_callback' => array( $this, 'bp_rest_activity_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Activity report button text.', 'buddyboss' ),
+					'description' => __( 'Activity report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'activity_comments',
 			'report_button_text',
 			array(
 				'get_callback' => array( $this, 'bp_rest_activity_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Activity comment report button text.', 'buddyboss' ),
+					'description' => __( 'Activity comment report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'activity',
 			'report_type',
 			array(
 				'get_callback' => array( $this, 'bp_rest_activity_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Activity report type.', 'buddyboss' ),
+					'description' => __( 'Activity report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'activity_comments',
 			'report_type',
 			array(
 				'get_callback' => array( $this, 'bp_rest_activity_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Activity comment report type.', 'buddyboss' ),
+					'description' => __( 'Activity comment report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1078,24 +1078,24 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get can_report of the activity REST Field.
 	 *
-	 * @param BP_Activity_Activity $activity  Activity Array.
+	 * @param BBoss_Activity_Activity $activity  Activity Array.
 	 *
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
 	public function bp_rest_activity_can_report( $activity ) {
 		$item_id   = $activity['id'];
-		$item_type = BP_Suspend_Activity::$type;
+		$item_type = BBoss_Suspend_Activity::$type;
 
 		if ( empty( $item_id ) ) {
 			return false;
 		}
 
 		if ( 'activity_comment' === $activity['type'] ) {
-			$item_data = bp_moderation_get_sub_items( $item_id, 'activity_comment' );
+			$item_data = bboss_moderation_get_sub_items( $item_id, 'activity_comment' );
 			$item_id   = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
-			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BBoss_Suspend_Activity_Comment::$type;
 		} else {
-			$item_data = bp_moderation_get_sub_items( $item_id, 'activity' );
+			$item_data = bboss_moderation_get_sub_items( $item_id, 'activity' );
 			$item_id   = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
 			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
@@ -1103,19 +1103,19 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if (
 			! empty( $activity['user_id'] ) &&
 			(
-				! bb_is_group_activity_comment( $item_id ) &&
+				! bboss_is_group_activity_comment( $item_id ) &&
 				'groups' !== $activity['component']
 			) &&
 			(
-				bp_moderation_is_user_suspended( $activity['user_id'] ) ||
-				bp_moderation_is_user_blocked( $activity['user_id'] ) ||
-				bb_moderation_is_user_blocked_by( $activity['user_id'] )
+				bboss_moderation_is_user_suspended( $activity['user_id'] ) ||
+				bboss_moderation_is_user_blocked( $activity['user_id'] ) ||
+				bboss_moderation_is_user_blocked_by( $activity['user_id'] )
 			)
 		) {
 			return false;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $item_id, $item_type ) ) {
+		if ( is_user_logged_in() && bboss_moderation_user_can( $item_id, $item_type ) ) {
 			return true;
 		}
 
@@ -1125,24 +1125,24 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get reported of the activity REST Field.
 	 *
-	 * @param BP_Activity_Activity $activity Activity Array.
+	 * @param BBoss_Activity_Activity $activity Activity Array.
 	 *
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
 	public function bp_rest_activity_is_reported( $activity ) {
 		$item_id   = $activity['id'];
-		$item_type = BP_Suspend_Activity::$type;
+		$item_type = BBoss_Suspend_Activity::$type;
 
 		if ( empty( $item_id ) ) {
 			return false;
 		}
 
 		if ( 'activity_comment' === $activity['type'] ) {
-			$item_data = bp_moderation_get_sub_items( $item_id, 'activity_comment' );
+			$item_data = bboss_moderation_get_sub_items( $item_id, 'activity_comment' );
 			$item_id   = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
-			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BBoss_Suspend_Activity_Comment::$type;
 		} else {
-			$item_data = bp_moderation_get_sub_items( $item_id, 'activity' );
+			$item_data = bboss_moderation_get_sub_items( $item_id, 'activity' );
 			$item_id   = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
 			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
@@ -1157,57 +1157,57 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * Function to get activity report button text.
 	 *
-	 * @param BP_Activity_Activity $activity Activity array.
+	 * @param BBoss_Activity_Activity $activity Activity array.
 	 *
 	 * @return false|mixed|void
 	 */
 	public function bp_rest_activity_report_button_text( $activity ) {
 		$item_id   = $activity['id'];
-		$item_type = BP_Suspend_Activity::$type;
+		$item_type = BBoss_Suspend_Activity::$type;
 
 		if ( empty( $item_id ) ) {
 			return false;
 		}
 
 		if ( 'activity_comment' === $activity['type'] ) {
-			$item_data = bp_moderation_get_sub_items( $item_id, 'activity_comment' );
+			$item_data = bboss_moderation_get_sub_items( $item_id, 'activity_comment' );
 			$item_id   = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
-			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BBoss_Suspend_Activity_Comment::$type;
 		} else {
-			$item_data = bp_moderation_get_sub_items( $item_id, 'activity' );
+			$item_data = bboss_moderation_get_sub_items( $item_id, 'activity' );
 			$item_id   = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
 			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		return bp_moderation_get_report_button_text( $item_type, $item_id );
+		return bboss_moderation_get_report_button_text( $item_type, $item_id );
 	}
 
 	/**
 	 * Function to get activity report type.
 	 *
-	 * @param BP_Activity_Activity $activity Activity array.
+	 * @param BBoss_Activity_Activity $activity Activity array.
 	 *
 	 * @return false|mixed|void
 	 */
 	public function bp_rest_activity_report_type( $activity ) {
 		$item_id   = $activity['id'];
-		$item_type = BP_Suspend_Activity::$type;
+		$item_type = BBoss_Suspend_Activity::$type;
 
 		if ( empty( $item_id ) ) {
 			return false;
 		}
 
 		if ( 'activity_comment' === $activity['type'] ) {
-			$item_data = bp_moderation_get_sub_items( $item_id, 'activity_comment' );
+			$item_data = bboss_moderation_get_sub_items( $item_id, 'activity_comment' );
 			$item_id   = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
-			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BBoss_Suspend_Activity_Comment::$type;
 		} else {
-			$item_data = bp_moderation_get_sub_items( $item_id, 'activity' );
+			$item_data = bboss_moderation_get_sub_items( $item_id, 'activity' );
 			$item_id   = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
 			$item_type = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		return bp_moderation_get_report_type( $item_type, $item_id );
+		return bboss_moderation_get_report_type( $item_type, $item_id );
 	}
 
 	/**
@@ -1215,7 +1215,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Response     $response The response data.
 	 * @param WP_REST_Request      $request  Request used to generate the response.
-	 * @param BP_Activity_Activity $activity The activity object.
+	 * @param BBoss_Activity_Activity $activity The activity object.
 	 *
 	 * @return mixed
 	 */
@@ -1223,35 +1223,35 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		$data = $response->get_data();
 
-		$type = BP_Suspend_Activity::$type;
+		$type = BBoss_Suspend_Activity::$type;
 		if ( 'activity_comment' === $activity->type ) {
-			$type = BP_Suspend_Activity_Comment::$type;
+			$type = BBoss_Suspend_Activity_Comment::$type;
 		}
 
-		$is_user_suspended  = bp_moderation_is_user_suspended( $activity->user_id );
-		$is_user_blocked    = bp_moderation_is_user_blocked( $activity->user_id );
-		$is_blocked_by_user = bb_moderation_is_user_blocked_by( $activity->user_id );
-		$is_hidden          = bp_moderation_is_content_hidden( $activity->id, $type );
+		$is_user_suspended  = bboss_moderation_is_user_suspended( $activity->user_id );
+		$is_user_blocked    = bboss_moderation_is_user_blocked( $activity->user_id );
+		$is_blocked_by_user = bboss_moderation_is_user_blocked_by( $activity->user_id );
+		$is_hidden          = bboss_moderation_is_content_hidden( $activity->id, $type );
 
 		if ( empty( $is_user_suspended ) && empty( $is_user_blocked ) && empty( $is_blocked_by_user ) && empty( $is_hidden ) ) {
 			return $response;
 		}
 
 		if ( $is_user_suspended || $is_user_blocked || $is_blocked_by_user ) {
-			$user_displayname = bp_core_get_user_displayname( $activity->user_id );
+			$user_displayname = bboss_core_get_user_displayname( $activity->user_id );
 			if ( $is_user_suspended ) {
-				$data['name'] = bb_moderation_is_suspended_label( $activity->user_id );
+				$data['name'] = bboss_moderation_is_suspended_label( $activity->user_id );
 			} elseif ( $is_user_blocked ) {
-				$data['name'] = bb_moderation_has_blocked_label( $user_displayname, $activity->user_id );
+				$data['name'] = bboss_moderation_has_blocked_label( $user_displayname, $activity->user_id );
 			} elseif ( $is_blocked_by_user ) {
-				$data['name'] = bb_moderation_is_blocked_label( $user_displayname, $activity->user_id );
+				$data['name'] = bboss_moderation_is_blocked_label( $user_displayname, $activity->user_id );
 			}
 
 			if ( isset( $data['user_avatar'] ) ) {
 				$blocked_by_show_avatar = false;
 				$group_id               = $request->get_param( 'group_id' );
 				if ( empty( $group_id ) ) {
-					$activity_endpoint = new BP_REST_Activity_Endpoint();
+					$activity_endpoint = new BBoss_REST_Activity_Endpoint();
 					$activity_data     = $activity_endpoint->bp_rest_activitiy_edit_data( $activity );
 					$group_id          = ! empty( $activity_data['group_id'] ) ? $activity_data['group_id'] : '';
 				}
@@ -1259,18 +1259,18 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 					$is_blocked_by_user &&
 					! empty( $group_id ) &&
 					(
-						groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
-						groups_is_user_mod( bp_loggedin_user_id(), $group_id )
+						bboss_groups_is_user_admin( bboss_loggedin_user_id(), $group_id ) ||
+						bboss_groups_is_user_mod( bboss_loggedin_user_id(), $group_id )
 					)
 				) {
 					$blocked_by_show_avatar = true;
 				}
 				if ( true === $blocked_by_show_avatar ) {
-					remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+					remove_filter( 'bb_get_blocked_avatar_url', 'bboss_moderation_fetch_avatar_url_filter', 10, 3 );
 					add_filter( 'bb_get_blocked_avatar_url', array( $this, 'bb_moderation_fetch_avatar_url_filter' ), 10, 3 );
 				}
 				$data['user_avatar'] = array(
-					'full'  => bp_core_fetch_avatar(
+					'full'  => bboss_core_fetch_avatar(
 						array(
 							'item_id' => $data['user_id'],
 							'html'    => false,
@@ -1278,7 +1278,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 						)
 					),
 
-					'thumb' => bp_core_fetch_avatar(
+					'thumb' => bboss_core_fetch_avatar(
 						array(
 							'item_id' => $data['user_id'],
 							'html'    => false,
@@ -1287,7 +1287,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				);
 				if ( true === $blocked_by_show_avatar ) {
 					remove_filter( 'bb_get_blocked_avatar_url', array( $this, 'bb_moderation_fetch_avatar_url_filter' ), 10, 3 );
-					add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
+					add_filter( 'bb_get_blocked_avatar_url', 'bboss_moderation_fetch_avatar_url_filter', 10, 3 );
 				}
 			}
 		}
@@ -1295,22 +1295,22 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$content      = $activity->content;
 		$hide_objects = false;
 		if ( $is_hidden ) {
-			$content            = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			$content            = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 			$data['can_report'] = false;
 		} elseif ( $is_user_suspended && 'groups' !== $activity->component ) {
-			$is_suspended_content = bb_moderation_is_suspended_message( $content, $type, $activity->id );
+			$is_suspended_content = bboss_moderation_is_suspended_message( $content, $type, $activity->id );
 			if ( $content !== $is_suspended_content ) {
 				$content      = $is_suspended_content;
 				$hide_objects = true;
 			}
 		} elseif ( $is_user_blocked && 'groups' !== $activity->component  ) {
-			$has_blocked_content = bb_moderation_has_blocked_message( $content, $type, $activity->id );
+			$has_blocked_content = bboss_moderation_has_blocked_message( $content, $type, $activity->id );
 			if ( $content !== $has_blocked_content ) {
 				$content      = $has_blocked_content;
 				$hide_objects = true;
 			}
 		} elseif ( $is_blocked_by_user && 'groups' !== $activity->component  ) {
-			$s_blocked_content = bb_moderation_is_blocked_message( $content, $type, $activity->id );
+			$s_blocked_content = bboss_moderation_is_blocked_message( $content, $type, $activity->id );
 			if ( $content !== $s_blocked_content ) {
 				$content      = $s_blocked_content;
 				$hide_objects = true;
@@ -1336,7 +1336,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			}
 
 			if (
-				bb_is_group_activity_comment( $activity ) ||
+				bboss_is_group_activity_comment( $activity ) ||
 				(
 					'activity_comment' !== $activity->type &&
 					'groups' === $activity->component
@@ -1366,56 +1366,56 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_rest_moderation_group_support() {
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'groups',
 			'can_report',
 			array(
 				'get_callback' => array( $this, 'bp_rest_group_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'groups',
 			'reported',
 			array(
 				'get_callback' => array( $this, 'bp_rest_group_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the group is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the group is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'groups',
 			'report_button_text',
 			array(
 				'get_callback' => array( $this, 'bp_rest_group_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Group report button text.', 'buddyboss' ),
+					'description' => __( 'Group report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'groups',
 			'report_type',
 			array(
 				'get_callback' => array( $this, 'bp_rest_group_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Group report type.', 'buddyboss' ),
+					'description' => __( 'Group report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1430,7 +1430,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_member_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1444,7 +1444,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_member_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the member is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the member is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1457,7 +1457,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get can_report of the group REST Field.
 	 *
-	 * @param BP_Groups_Group $group Group object.
+	 * @param BBoss_Groups_Group $group Group object.
 	 *
 	 * @return string The value of the REST Field to include into the REST response.
 	 */
@@ -1468,11 +1468,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( ! empty( $group['creator_id'] ) && ( bp_moderation_is_user_suspended( $group['creator_id'] ) || bp_moderation_is_user_blocked( $group['creator_id'] ) ) ) {
+		if ( ! empty( $group['creator_id'] ) && ( bboss_moderation_is_user_suspended( $group['creator_id'] ) || bboss_moderation_is_user_blocked( $group['creator_id'] ) ) ) {
 			return false;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $group_id, BP_Suspend_Group::$type ) ) {
+		if ( is_user_logged_in() && bboss_moderation_user_can( $group_id, BBoss_Suspend_Group::$type ) ) {
 			return true;
 		}
 
@@ -1482,7 +1482,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get reported of the group REST Field.
 	 *
-	 * @param BP_Groups_Group $group Group object.
+	 * @param BBoss_Groups_Group $group Group object.
 	 *
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
@@ -1493,7 +1493,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $group_id, BP_Suspend_Group::$type ) ) {
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $group_id, BBoss_Suspend_Group::$type ) ) {
 			return true;
 		}
 
@@ -1503,7 +1503,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * Function to get group report button text.
 	 *
-	 * @param BP_Groups_Group $group Group object.
+	 * @param BBoss_Groups_Group $group Group object.
 	 *
 	 * @return false|mixed|void
 	 */
@@ -1514,13 +1514,13 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_button_text( BP_Suspend_Group::$type, $group_id );
+		return bboss_moderation_get_report_button_text( BBoss_Suspend_Group::$type, $group_id );
 	}
 
 	/**
 	 * Function to get group report type.
 	 *
-	 * @param BP_Groups_Group $group Group object.
+	 * @param BBoss_Groups_Group $group Group object.
 	 *
 	 * @return false|mixed|void
 	 */
@@ -1531,7 +1531,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_type( BP_Suspend_Group::$type, $group_id );
+		return bboss_moderation_get_report_type( BBoss_Suspend_Group::$type, $group_id );
 	}
 
 	/********************** Forums Support *****************************************/
@@ -1541,56 +1541,56 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_rest_moderation_forums_support() {
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'forums',
 			'can_report',
 			array(
 				'get_callback' => array( $this, 'bp_rest_forum_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'forums',
 			'reported',
 			array(
 				'get_callback' => array( $this, 'bp_rest_forum_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the Forum is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the Forum is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'forums',
 			'report_button_text',
 			array(
 				'get_callback' => array( $this, 'bp_rest_forum_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Forum report button text.', 'buddyboss' ),
+					'description' => __( 'Forum report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'forums',
 			'report_type',
 			array(
 				'get_callback' => array( $this, 'bp_rest_forum_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Forum report type.', 'buddyboss' ),
+					'description' => __( 'Forum report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1612,7 +1612,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $forum_id, BP_Suspend_Forum::$type ) ) {
+		if ( is_user_logged_in() && bboss_moderation_user_can( $forum_id, BBoss_Suspend_Forum::$type ) ) {
 			return true;
 		}
 
@@ -1633,7 +1633,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $forum_id, BP_Suspend_Forum::$type ) ) {
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $forum_id, BBoss_Suspend_Forum::$type ) ) {
 			return true;
 		}
 
@@ -1654,7 +1654,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_button_text( BP_Suspend_Forum::$type, $forum_id );
+		return bboss_moderation_get_report_button_text( BBoss_Suspend_Forum::$type, $forum_id );
 	}
 
 	/**
@@ -1671,7 +1671,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_type( BP_Suspend_Forum::$type, $forum_id );
+		return bboss_moderation_get_report_type( BBoss_Suspend_Forum::$type, $forum_id );
 	}
 
 	/********************** Topic Support *****************************************/
@@ -1688,7 +1688,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_topic_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1702,7 +1702,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_topic_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the topic is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the topic is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1716,7 +1716,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_topic_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Topic report button text.', 'buddyboss' ),
+					'description' => __( 'Topic report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1730,7 +1730,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_topic_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Topic report type.', 'buddyboss' ),
+					'description' => __( 'Topic report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1752,7 +1752,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $topic_id, BP_Suspend_Forum_Topic::$type ) ) {
+		if ( is_user_logged_in() && bboss_moderation_user_can( $topic_id, BBoss_Suspend_Forum_Topic::$type ) ) {
 			return true;
 		}
 
@@ -1773,7 +1773,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $topic_id, BP_Suspend_Forum_Topic::$type ) ) {
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $topic_id, BBoss_Suspend_Forum_Topic::$type ) ) {
 			return true;
 		}
 
@@ -1794,7 +1794,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_button_text( BP_Suspend_Forum_Topic::$type, $topic_id );
+		return bboss_moderation_get_report_button_text( BBoss_Suspend_Forum_Topic::$type, $topic_id );
 	}
 
 	/**
@@ -1811,7 +1811,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_type( BP_Suspend_Forum_Topic::$type, $topic_id );
+		return bboss_moderation_get_report_type( BBoss_Suspend_Forum_Topic::$type, $topic_id );
 	}
 
 	/********************** Reply Support *****************************************/
@@ -1828,7 +1828,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_reply_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1842,7 +1842,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_reply_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the reply is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the reply is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1856,7 +1856,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_reply_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Reply report button text.', 'buddyboss' ),
+					'description' => __( 'Reply report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1870,7 +1870,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_reply_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Reply report type.', 'buddyboss' ),
+					'description' => __( 'Reply report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1894,7 +1894,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $reply_id, BP_Suspend_Forum_Reply::$type ) ) {
+		if ( is_user_logged_in() && bboss_moderation_user_can( $reply_id, BBoss_Suspend_Forum_Reply::$type ) ) {
 			return true;
 		}
 
@@ -1915,7 +1915,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $reply_id, BP_Suspend_Forum_Reply::$type ) ) {
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $reply_id, BBoss_Suspend_Forum_Reply::$type ) ) {
 			return true;
 		}
 
@@ -1936,7 +1936,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_button_text( BP_Suspend_Forum_Reply::$type, $reply_id );
+		return bboss_moderation_get_report_button_text( BBoss_Suspend_Forum_Reply::$type, $reply_id );
 	}
 
 	/**
@@ -1953,7 +1953,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_type( BP_Suspend_Forum_Reply::$type, $reply_id );
+		return bboss_moderation_get_report_type( BBoss_Suspend_Forum_Reply::$type, $reply_id );
 	}
 
 	/**
@@ -1969,13 +1969,13 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		$data = $response->get_data();
 
-		$type = BP_Suspend_Forum_Reply::$type;
+		$type = BBoss_Suspend_Forum_Reply::$type;
 
-		$is_user_suspended  = bp_moderation_is_user_suspended( $reply->post_author );
-		$is_user_blocked    = bp_moderation_is_user_blocked( $reply->post_author );
-		$is_hidden          = bp_moderation_is_content_hidden( $reply->ID, $type );
-		$is_blocked_by_user = bb_moderation_is_user_blocked_by( $reply->post_author );
-		$is_user_inactive   = bp_is_user_inactive( $reply->post_author );
+		$is_user_suspended  = bboss_moderation_is_user_suspended( $reply->post_author );
+		$is_user_blocked    = bboss_moderation_is_user_blocked( $reply->post_author );
+		$is_hidden          = bboss_moderation_is_content_hidden( $reply->ID, $type );
+		$is_blocked_by_user = bboss_moderation_is_user_blocked_by( $reply->post_author );
+		$is_user_inactive   = bboss_is_user_inactive( $reply->post_author );
 
 		if (
 			empty( $is_user_suspended ) &&
@@ -1987,30 +1987,30 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return $response;
 		}
 
-		$content      = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+		$content      = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 		$hide_objects = false;
 		if ( $is_user_suspended || $is_user_blocked || $is_blocked_by_user || $is_user_inactive ) {
-			$user_displayname = bp_core_get_user_displayname( $reply->post_author );
+			$user_displayname = bboss_core_get_user_displayname( $reply->post_author );
 			if ( $is_user_suspended ) {
-				$data['name'] = bb_moderation_is_suspended_label( $reply->post_author );
-				$content      = bb_moderation_is_suspended_message( $reply->post_content, $type, $reply->ID );
+				$data['name'] = bboss_moderation_is_suspended_label( $reply->post_author );
+				$content      = bboss_moderation_is_suspended_message( $reply->post_content, $type, $reply->ID );
 				if ( isset( $data['content']['raw'] ) && $data['content']['raw'] !== $content ) {
 					$hide_objects = true;
 				}
 			} elseif ( $is_user_blocked ) {
-				$data['name'] = bb_moderation_has_blocked_label( $user_displayname, $reply->post_author );
-				$content      = bb_moderation_has_blocked_message( $reply->post_content, $type, $reply->ID );
+				$data['name'] = bboss_moderation_has_blocked_label( $user_displayname, $reply->post_author );
+				$content      = bboss_moderation_has_blocked_message( $reply->post_content, $type, $reply->ID );
 				if ( isset( $data['content']['raw'] ) && $data['content']['raw'] !== $content ) {
 					$hide_objects = true;
 				}
 			} elseif ( $is_blocked_by_user ) {
-				$data['name'] = bb_moderation_is_blocked_label( $user_displayname, $reply->post_author );
-				$content      = bb_moderation_is_blocked_message( $reply->post_content, $type, $reply->ID );
+				$data['name'] = bboss_moderation_is_blocked_label( $user_displayname, $reply->post_author );
+				$content      = bboss_moderation_is_blocked_message( $reply->post_content, $type, $reply->ID );
 				if ( isset( $data['content']['raw'] ) && $data['content']['raw'] !== $content ) {
 					$hide_objects = true;
 				}
 			} elseif ( $is_user_inactive ) {
-				$data['name'] = bb_moderation_is_deleted_label();
+				$data['name'] = bboss_moderation_is_deleted_label();
 				$content      = $reply->post_content;
 			}
 		}
@@ -2041,56 +2041,56 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_rest_moderation_member_support() {
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'members',
 			'can_report',
 			array(
 				'get_callback' => array( $this, 'bp_rest_member_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'members',
 			'reported',
 			array(
 				'get_callback' => array( $this, 'bp_rest_member_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the member is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the member is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'members',
 			'can_user_report',
 			array(
 				'get_callback' => array( $this, 'bp_rest_member_can_user_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'members',
 			'user_reported',
 			array(
 				'get_callback' => array( $this, 'bp_rest_member_is_user_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the member is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the member is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2114,11 +2114,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( ! empty( $user_id ) && ( bp_moderation_is_user_suspended( $user_id ) || bp_moderation_is_user_blocked( $user_id ) ) ) {
+		if ( ! empty( $user_id ) && ( bboss_moderation_is_user_suspended( $user_id ) || bboss_moderation_is_user_blocked( $user_id ) ) ) {
 			return false;
 		}
 
-		if ( is_user_logged_in() && ! user_can( $user_id, 'administrator' ) && bp_moderation_user_can( $user_id, BP_Suspend_Member::$type ) ) {
+		if ( is_user_logged_in() && ! user_can( $user_id, 'administrator' ) && bboss_moderation_user_can( $user_id, BBoss_Suspend_Member::$type ) ) {
 			return true;
 		}
 
@@ -2141,8 +2141,8 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		if (
 			is_user_logged_in() &&
-			$this->bp_rest_moderation_report_exist( $user_id, BP_Suspend_Member::$type ) &&
-			! bp_moderation_is_user_suspended( $user_id )
+			$this->bp_rest_moderation_report_exist( $user_id, BBoss_Suspend_Member::$type ) &&
+			! bboss_moderation_is_user_suspended( $user_id )
 		) {
 			return true;
 		}
@@ -2164,7 +2164,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type_report ) ) {
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $user_id, BBoss_Moderation_Members::$moderation_type_report ) ) {
 			return true;
 		}
 
@@ -2185,11 +2185,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( ! empty( $user_id ) && ( bp_moderation_is_user_suspended( $user_id ) || bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type_report ) ) ) {
+		if ( ! empty( $user_id ) && ( bboss_moderation_is_user_suspended( $user_id ) || bboss_moderation_report_exist( $user_id, BBoss_Moderation_Members::$moderation_type_report ) ) ) {
 			return false;
 		}
 
-		if ( is_user_logged_in() && ! user_can( $user_id, 'administrator' ) && bp_moderation_user_can( $user_id, BP_Moderation_Members::$moderation_type_report ) ) {
+		if ( is_user_logged_in() && ! user_can( $user_id, 'administrator' ) && bboss_moderation_user_can( $user_id, BBoss_Moderation_Members::$moderation_type_report ) ) {
 			return true;
 		}
 
@@ -2208,12 +2208,12 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function bp_rest_moderation_prepare_value( $response, $request, $user ) {
 		$data = $response->get_data();
 
-		$type = BP_Suspend_Member::$type;
+		$type = BBoss_Suspend_Member::$type;
 
-		$is_user_suspended  = bp_moderation_is_user_suspended( $user->ID );
-		$is_user_blocked    = bp_moderation_is_user_blocked( $user->ID );
-		$is_hidden          = bp_moderation_is_content_hidden( $user->ID, $type );
-		$is_blocked_by_user = bb_moderation_is_user_blocked_by( $user->ID );
+		$is_user_suspended  = bboss_moderation_is_user_suspended( $user->ID );
+		$is_user_blocked    = bboss_moderation_is_user_blocked( $user->ID );
+		$is_hidden          = bboss_moderation_is_content_hidden( $user->ID, $type );
+		$is_blocked_by_user = bboss_moderation_is_user_blocked_by( $user->ID );
 		if ( empty( $is_user_suspended ) && empty( $is_user_blocked ) && empty( $is_blocked_by_user ) && empty( $is_hidden ) ) {
 			return $response;
 		}
@@ -2222,16 +2222,16 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$_GET['username_visible'] = $username_visible;
 
 		if ( empty( $username_visible ) ) {
-			$user_displayname = bp_core_get_user_displayname( $user->ID );
+			$user_displayname = bboss_core_get_user_displayname( $user->ID );
 			if ( $is_user_suspended ) {
-				$data['name'] = bb_moderation_is_suspended_label( $user->ID );
+				$data['name'] = bboss_moderation_is_suspended_label( $user->ID );
 			} elseif ( $is_user_blocked ) {
-				$data['name'] = bb_moderation_has_blocked_label( $user_displayname, $user->ID );
+				$data['name'] = bboss_moderation_has_blocked_label( $user_displayname, $user->ID );
 			} elseif ( $is_blocked_by_user ) {
-				$data['name'] = bb_moderation_is_blocked_label( $user_displayname, $user->ID );
+				$data['name'] = bboss_moderation_is_blocked_label( $user_displayname, $user->ID );
 			}
 		}
-		$data['profile_name'] = bp_core_get_user_displayname( $data['id'] );
+		$data['profile_name'] = bboss_core_get_user_displayname( $data['id'] );
 		$data['user_login']   = '';
 		$data['xprofile']     = new stdClass();
 		$data['followers']    = 0;
@@ -2251,56 +2251,56 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_rest_moderation_media_support() {
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'media',
 			'can_report',
 			array(
 				'get_callback' => array( $this, 'bp_rest_media_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'media',
 			'reported',
 			array(
 				'get_callback' => array( $this, 'bp_rest_media_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the media is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the media is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'media',
 			'report_button_text',
 			array(
 				'get_callback' => array( $this, 'bp_rest_media_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Media report button text.', 'buddyboss' ),
+					'description' => __( 'Media report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'media',
 			'report_type',
 			array(
 				'get_callback' => array( $this, 'bp_rest_media_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Media report type.', 'buddyboss' ),
+					'description' => __( 'Media report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2313,56 +2313,56 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_rest_moderation_video_support() {
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'video',
 			'can_report',
 			array(
 				'get_callback' => array( $this, 'bp_rest_media_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'video',
 			'reported',
 			array(
 				'get_callback' => array( $this, 'bp_rest_media_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the Video is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the Video is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'video',
 			'report_button_text',
 			array(
 				'get_callback' => array( $this, 'bp_rest_media_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Video report button text.', 'buddyboss' ),
+					'description' => __( 'Video report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'video',
 			'report_type',
 			array(
 				'get_callback' => array( $this, 'bp_rest_media_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Video report type.', 'buddyboss' ),
+					'description' => __( 'Video report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2373,7 +2373,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get can_report of the media REST Field.
 	 *
-	 * @param BP_Media $media The Media object.
+	 * @param BBoss_Media $media The Media object.
 	 *
 	 * @return string The value of the REST Field to include into the REST response.
 	 */
@@ -2385,16 +2385,16 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $media['type'] ) && 'video' === $media['type'] ) {
-			$type = BP_Suspend_Video::$type;
+			$type = BBoss_Suspend_Video::$type;
 		} else {
-			$type = BP_Suspend_Media::$type;
+			$type = BBoss_Suspend_Media::$type;
 		}
 
-		if ( ! empty( $media['user_id'] ) && ( bp_moderation_is_user_suspended( $media['user_id'] ) || bp_moderation_is_user_blocked( $media['user_id'] ) ) ) {
+		if ( ! empty( $media['user_id'] ) && ( bboss_moderation_is_user_suspended( $media['user_id'] ) || bboss_moderation_is_user_blocked( $media['user_id'] ) ) ) {
 			return false;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $media_id, $type ) ) {
+		if ( is_user_logged_in() && bboss_moderation_user_can( $media_id, $type ) ) {
 			return true;
 		}
 
@@ -2404,7 +2404,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get reported of the media REST Field.
 	 *
-	 * @param BP_Media $media The Media object.
+	 * @param BBoss_Media $media The Media object.
 	 *
 	 * @return string The value of the REST Field to include into the REST response.
 	 */
@@ -2416,9 +2416,9 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $media['type'] ) && 'video' === $media['type'] ) {
-			$type = BP_Suspend_Video::$type;
+			$type = BBoss_Suspend_Video::$type;
 		} else {
-			$type = BP_Suspend_Media::$type;
+			$type = BBoss_Suspend_Media::$type;
 		}
 
 		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $media_id, $type ) ) {
@@ -2431,7 +2431,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	/**
 	 * Function to get media report button text.
 	 *
-	 * @param BP_Media $media The Media object.
+	 * @param BBoss_Media $media The Media object.
 	 *
 	 * @return false|mixed|void
 	 */
@@ -2443,18 +2443,18 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $media['type'] ) && 'video' === $media['type'] ) {
-			$type = BP_Suspend_Video::$type;
+			$type = BBoss_Suspend_Video::$type;
 		} else {
-			$type = BP_Suspend_Media::$type;
+			$type = BBoss_Suspend_Media::$type;
 		}
 
-		return bp_moderation_get_report_button_text( $type, $media_id );
+		return bboss_moderation_get_report_button_text( $type, $media_id );
 	}
 
 	/**
 	 * Function to get media report type.
 	 *
-	 * @param BP_Media $media The Media object.
+	 * @param BBoss_Media $media The Media object.
 	 *
 	 * @return false|mixed|void
 	 */
@@ -2466,12 +2466,12 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $media['type'] ) && 'video' === $media['type'] ) {
-			$type = BP_Suspend_Video::$type;
+			$type = BBoss_Suspend_Video::$type;
 		} else {
-			$type = BP_Suspend_Media::$type;
+			$type = BBoss_Suspend_Media::$type;
 		}
 
-		return bp_moderation_get_report_type( $type, $media_id );
+		return bboss_moderation_get_report_type( $type, $media_id );
 	}
 
 	/********************** Document Support *****************************************/
@@ -2481,14 +2481,14 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_rest_moderation_document_support() {
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'document',
 			'can_report',
 			array(
 				'get_callback' => array( $this, 'bp_rest_document_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2502,49 +2502,49 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_document_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'document',
 			'report_button_text',
 			array(
 				'get_callback' => array( $this, 'bp_rest_document_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Document report button text.', 'buddyboss' ),
+					'description' => __( 'Document report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'document',
 			'report_type',
 			array(
 				'get_callback' => array( $this, 'bp_rest_document_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Document report type.', 'buddyboss' ),
+					'description' => __( 'Document report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'document',
 			'reported',
 			array(
 				'get_callback' => array( $this, 'bp_rest_document_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the document is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the document is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2558,7 +2558,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_document_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the document is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the document is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2580,16 +2580,16 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		$type = BP_Suspend_Document::$type;
+		$type = BBoss_Suspend_Document::$type;
 		if ( 'folder' === $document['type'] ) {
 			return false;
 		}
 
-		if ( ! empty( $document['user_id'] ) && ( bp_moderation_is_user_suspended( $document['user_id'] ) || bp_moderation_is_user_blocked( $document['user_id'] ) ) ) {
+		if ( ! empty( $document['user_id'] ) && ( bboss_moderation_is_user_suspended( $document['user_id'] ) || bboss_moderation_is_user_blocked( $document['user_id'] ) ) ) {
 			return false;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $document_id, $type ) ) {
+		if ( is_user_logged_in() && bboss_moderation_user_can( $document_id, $type ) ) {
 			return true;
 		}
 
@@ -2610,7 +2610,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		$type = BP_Suspend_Document::$type;
+		$type = BBoss_Suspend_Document::$type;
 		if ( 'folder' === $document['type'] ) {
 			return false;
 		}
@@ -2636,7 +2636,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_button_text( BP_Suspend_Document::$type, $document_id );
+		return bboss_moderation_get_report_button_text( BBoss_Suspend_Document::$type, $document_id );
 	}
 
 	/**
@@ -2653,7 +2653,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_type( BP_Suspend_Document::$type, $document_id );
+		return bboss_moderation_get_report_type( BBoss_Suspend_Document::$type, $document_id );
 	}
 
 	/********************** Messages Support *****************************************/
@@ -2683,19 +2683,19 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$data['current_user_permissions']['can_user_report'] = false;
 		$data['current_user_permissions']['user_reported']   = false;
 
-		$is_user_suspended = bp_moderation_is_user_suspended( $recipient->user_id );
-		$is_user_blocked   = bp_moderation_is_user_blocked( $recipient->user_id );
-		$is_user_reported  = $this->bp_rest_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
+		$is_user_suspended = bboss_moderation_is_user_suspended( $recipient->user_id );
+		$is_user_blocked   = bboss_moderation_is_user_blocked( $recipient->user_id );
+		$is_user_reported  = $this->bp_rest_moderation_report_exist( $recipient->user_id, BBoss_Moderation_Members::$moderation_type_report );
 
-		if ( ! empty( $recipient->user_id ) && ( bp_moderation_is_user_suspended( $recipient->user_id ) || bp_moderation_is_user_blocked( $recipient->user_id ) ) ) {
+		if ( ! empty( $recipient->user_id ) && ( bboss_moderation_is_user_suspended( $recipient->user_id ) || bboss_moderation_is_user_blocked( $recipient->user_id ) ) ) {
 			$data['current_user_permissions']['can_report'] = false;
 		}
 
-		if ( is_user_logged_in() && ! user_can( $recipient->user_id, 'administrator' ) && bp_moderation_user_can( $recipient->user_id, BP_Suspend_Member::$type ) ) {
+		if ( is_user_logged_in() && ! user_can( $recipient->user_id, 'administrator' ) && bboss_moderation_user_can( $recipient->user_id, BBoss_Suspend_Member::$type ) ) {
 			$data['current_user_permissions']['can_report'] = true;
 		}
 
-		if ( is_user_logged_in() && ! user_can( $recipient->user_id, 'administrator' ) && bp_moderation_user_can( $recipient->user_id, BP_Moderation_Members::$moderation_type_report ) && ! $is_user_reported ) {
+		if ( is_user_logged_in() && ! user_can( $recipient->user_id, 'administrator' ) && bboss_moderation_user_can( $recipient->user_id, BBoss_Moderation_Members::$moderation_type_report ) && ! $is_user_reported ) {
 			$data['current_user_permissions']['can_user_report'] = true;
 		}
 
@@ -2725,15 +2725,15 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * Filter a message value returned from the API.
 	 *
 	 * @param array               $data    The message value for the REST response.
-	 * @param BP_Messages_Message $message The Message object.
+	 * @param BBoss_Messages_Message $message The Message object.
 	 *
 	 * @return array
 	 */
 	public function bp_rest_moderation_message_prepare_value( $data, $message ) {
 		$sender_user        = (int) $message->sender_id;
-		$is_user_suspended  = bp_moderation_is_user_suspended( $sender_user );
-		$is_user_blocked    = bp_moderation_is_user_blocked( $sender_user );
-		$is_blocked_by_user = bb_moderation_is_user_blocked_by( $sender_user );
+		$is_user_suspended  = bboss_moderation_is_user_suspended( $sender_user );
+		$is_user_blocked    = bboss_moderation_is_user_blocked( $sender_user );
+		$is_blocked_by_user = bboss_moderation_is_user_blocked_by( $sender_user );
 
 		if ( empty( $is_user_suspended ) && empty( $is_user_blocked ) ) {
 			return $data;
@@ -2742,11 +2742,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$content = '';
 
 		if ( $is_user_suspended ) {
-			$content = bb_moderation_is_suspended_message( $message->message, BP_Moderation_Message::$moderation_type, $message->id );
+			$content = bboss_moderation_is_suspended_message( $message->message, BBoss_Moderation_Message::$moderation_type, $message->id );
 		} elseif ( $is_user_blocked ) {
-			$content = bb_moderation_has_blocked_message( $message->message, BP_Moderation_Message::$moderation_type, $message->id );
+			$content = bboss_moderation_has_blocked_message( $message->message, BBoss_Moderation_Message::$moderation_type, $message->id );
 		} elseif ( $is_blocked_by_user ) {
-			$content = bb_moderation_is_blocked_message( $message->message, BP_Moderation_Message::$moderation_type, $message->id );
+			$content = bboss_moderation_is_blocked_message( $message->message, BBoss_Moderation_Message::$moderation_type, $message->id );
 		}
 
 		if ( ! empty( $content ) && $message->message !== $content ) {
@@ -2781,7 +2781,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Response   $response Response generated by the request.
 	 * @param WP_REST_Request    $request  Request used to generate the response.
-	 * @param BP_Messages_Thread $thread   The thread object.
+	 * @param BBoss_Messages_Thread $thread   The thread object.
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -2793,9 +2793,9 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		}
 
 		$sender_user        = $data['last_sender_id'];
-		$is_user_suspended  = bp_moderation_is_user_suspended( $sender_user );
-		$is_user_blocked    = bp_moderation_is_user_blocked( $sender_user );
-		$is_blocked_by_user = bb_moderation_is_user_blocked_by( $sender_user );
+		$is_user_suspended  = bboss_moderation_is_user_suspended( $sender_user );
+		$is_user_blocked    = bboss_moderation_is_user_blocked( $sender_user );
+		$is_blocked_by_user = bboss_moderation_is_user_blocked_by( $sender_user );
 
 		if ( empty( $is_user_suspended ) && empty( $is_user_blocked ) ) {
 			return $response;
@@ -2804,11 +2804,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$content = '';
 
 		if ( $is_user_suspended ) {
-			$content = bb_moderation_is_suspended_message( $data['message']['rendered'], BP_Moderation_Message::$moderation_type, $data['message_id'] );
+			$content = bboss_moderation_is_suspended_message( $data['message']['rendered'], BBoss_Moderation_Message::$moderation_type, $data['message_id'] );
 		} elseif ( $is_blocked_by_user ) {
-			$content = bb_moderation_is_blocked_message( $data['message']['rendered'], BP_Moderation_Message::$moderation_type, $data['message_id'] );
+			$content = bboss_moderation_is_blocked_message( $data['message']['rendered'], BBoss_Moderation_Message::$moderation_type, $data['message_id'] );
 		} elseif ( $is_user_blocked ) {
-			$content = bb_moderation_has_blocked_message( $data['message']['rendered'], BP_Moderation_Message::$moderation_type, $data['message_id'] );
+			$content = bboss_moderation_has_blocked_message( $data['message']['rendered'], BBoss_Moderation_Message::$moderation_type, $data['message_id'] );
 		}
 
 		if ( ! empty( $content ) ) {
@@ -2837,7 +2837,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
-	 * Wrapper function for bp_moderation_report_exist().
+	 * Wrapper function for bboss_moderation_report_exist().
 	 *
 	 * @param integer $item_id   Item ID.
 	 * @param string  $item_type Item Type.
@@ -2845,11 +2845,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @return bool
 	 */
 	protected function bp_rest_moderation_report_exist( $item_id, $item_type ) {
-		$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
+		$sub_items     = bboss_moderation_get_sub_items( $item_id, $item_type );
 		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
-		if ( is_user_logged_in() && bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
+		if ( is_user_logged_in() && bboss_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
 			return true;
 		}
 
@@ -2868,7 +2868,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_blog_comment_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2882,7 +2882,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_blog_comment_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the comment is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the comment is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2896,7 +2896,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_blog_comment_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Blog comment report button text.', 'buddyboss' ),
+					'description' => __( 'Blog comment report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2910,7 +2910,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_blog_comment_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Blog comment report type.', 'buddyboss' ),
+					'description' => __( 'Blog comment report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2924,7 +2924,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bb_rest_blog_comment_can_reply' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can reply or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can reply or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2950,11 +2950,11 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( ! empty( $post['author'] ) && ( bp_moderation_is_user_suspended( $post['author'] ) || bp_moderation_is_user_blocked( $post['author'] ) ) ) {
+		if ( ! empty( $post['author'] ) && ( bboss_moderation_is_user_suspended( $post['author'] ) || bboss_moderation_is_user_blocked( $post['author'] ) ) ) {
 			return false;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $comment_id, BP_Suspend_Comment::$type ) ) {
+		if ( is_user_logged_in() && bboss_moderation_user_can( $comment_id, BBoss_Suspend_Comment::$type ) ) {
 			return true;
 		}
 
@@ -2975,7 +2975,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $comment_id, BP_Suspend_Comment::$type ) ) {
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $comment_id, BBoss_Suspend_Comment::$type ) ) {
 			return true;
 		}
 
@@ -2996,7 +2996,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_button_text( BP_Suspend_Comment::$type, $comment_id );
+		return bboss_moderation_get_report_button_text( BBoss_Suspend_Comment::$type, $comment_id );
 	}
 
 	/**
@@ -3013,7 +3013,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_moderation_get_report_type( BP_Suspend_Comment::$type, $comment_id );
+		return bboss_moderation_get_report_type( BBoss_Suspend_Comment::$type, $comment_id );
 	}
 
 	/**
@@ -3028,13 +3028,13 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		$data = $response->get_data();
 
-		$type = BP_Suspend_Comment::$type;
+		$type = BBoss_Suspend_Comment::$type;
 
-		$is_user_suspended  = bp_moderation_is_user_suspended( $comment->user_id );
-		$is_user_blocked    = bp_moderation_is_user_blocked( $comment->user_id );
-		$is_hidden          = bp_moderation_is_content_hidden( $comment->comment_ID, $type );
-		$is_blocked_by_user = bb_moderation_is_user_blocked_by( $comment->user_id );
-		$is_user_inactive   = bp_is_user_inactive( $comment->user_id );
+		$is_user_suspended  = bboss_moderation_is_user_suspended( $comment->user_id );
+		$is_user_blocked    = bboss_moderation_is_user_blocked( $comment->user_id );
+		$is_hidden          = bboss_moderation_is_content_hidden( $comment->comment_ID, $type );
+		$is_blocked_by_user = bboss_moderation_is_user_blocked_by( $comment->user_id );
+		$is_user_inactive   = bboss_is_user_inactive( $comment->user_id );
 
 		if (
 			empty( $is_user_suspended ) &&
@@ -3046,22 +3046,22 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return $response;
 		}
 
-		$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+		$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 
 		if ( $is_user_suspended || $is_user_blocked || $is_blocked_by_user || $is_user_inactive ) {
 			$data['author_url'] = '';
-			$user_displayname   = bp_core_get_user_displayname( $comment->user_id );
+			$user_displayname   = bboss_core_get_user_displayname( $comment->user_id );
 			if ( $is_user_suspended ) {
-				$data['author_name'] = bb_moderation_is_suspended_label( $comment->user_id );
-				$content             = bb_moderation_is_suspended_message( $comment->comment_content, $type, $comment->comment_ID );
+				$data['author_name'] = bboss_moderation_is_suspended_label( $comment->user_id );
+				$content             = bboss_moderation_is_suspended_message( $comment->comment_content, $type, $comment->comment_ID );
 			} elseif ( $is_user_blocked ) {
-				$data['author_name'] = bb_moderation_has_blocked_label( $user_displayname, $comment->user_id );
-				$content             = bb_moderation_has_blocked_message( $comment->comment_content, $type, $comment->comment_ID );
+				$data['author_name'] = bboss_moderation_has_blocked_label( $user_displayname, $comment->user_id );
+				$content             = bboss_moderation_has_blocked_message( $comment->comment_content, $type, $comment->comment_ID );
 			} elseif ( $is_blocked_by_user ) {
-				$data['author_name'] = bb_moderation_is_blocked_label( $user_displayname, $comment->user_id );
-				$content             = bb_moderation_is_blocked_message( $comment->comment_content, $type, $comment->comment_ID );
+				$data['author_name'] = bboss_moderation_is_blocked_label( $user_displayname, $comment->user_id );
+				$content             = bboss_moderation_is_blocked_message( $comment->comment_content, $type, $comment->comment_ID );
 			} elseif ( $is_user_inactive ) {
-				$data['author_name'] = bb_moderation_is_deleted_label();
+				$data['author_name'] = bboss_moderation_is_deleted_label();
 				$content             = $comment->comment_content;
 			}
 		}
@@ -3108,9 +3108,9 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if (
 			! empty( $post['author'] ) &&
 			(
-				bp_moderation_is_user_suspended( $post['author'] ) ||
-				bp_moderation_is_user_blocked( $post['author'] ) ||
-				bb_moderation_is_user_blocked_by( $post['author'] )
+				bboss_moderation_is_user_suspended( $post['author'] ) ||
+				bboss_moderation_is_user_blocked( $post['author'] ) ||
+				bboss_moderation_is_user_blocked_by( $post['author'] )
 			)
 		) {
 			return false;
@@ -3132,19 +3132,19 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return $prepared_comment;
 		}
 
-		$user_id = BP_Moderation_Comment::get_content_owner_id( $prepared_comment['comment_parent'] );
+		$user_id = BBoss_Moderation_Comment::get_content_owner_id( $prepared_comment['comment_parent'] );
 
 		if (
 			empty( $user_id ) ||
-			! bp_moderation_is_user_blocked( $user_id ) ||
-			! bb_moderation_is_user_blocked_by( $user_id )
+			! bboss_moderation_is_user_blocked( $user_id ) ||
+			! bboss_moderation_is_user_blocked_by( $user_id )
 		) {
 			return $prepared_comment;
 		}
 
 		return new WP_Error(
 			'bp_rest_comment_cannot_create_reply',
-			__( 'Sorry, you are not allowed to reply on this Comment.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to reply on this Comment.', 'buddyboss-platform' ),
 			array( 'status' => 400 )
 		);
 
@@ -3162,8 +3162,8 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function bb_rest_group_members_moderation_value( $response, $request, $user ) {
 		$data = $response->get_data();
 
-		$is_user_blocked    = bp_moderation_is_user_blocked( $user->ID );
-		$is_blocked_by_user = bb_moderation_is_user_blocked_by( $user->ID );
+		$is_user_blocked    = bboss_moderation_is_user_blocked( $user->ID );
+		$is_blocked_by_user = bboss_moderation_is_user_blocked_by( $user->ID );
 		if ( empty( $is_user_blocked ) && empty( $is_blocked_by_user ) ) {
 			return $response;
 		}
@@ -3172,14 +3172,14 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$_GET['username_visible'] = $username_visible;
 
 		if ( empty( $username_visible ) ) {
-			$user_displayname = bp_core_get_user_displayname( $user->ID );
+			$user_displayname = bboss_core_get_user_displayname( $user->ID );
 			if ( $is_user_blocked ) {
-				$data['name'] = bb_moderation_has_blocked_label( $user_displayname, $user->ID );
+				$data['name'] = bboss_moderation_has_blocked_label( $user_displayname, $user->ID );
 			} elseif ( $is_blocked_by_user ) {
-				$data['name'] = bb_moderation_is_blocked_label( $user_displayname, $user->ID );
+				$data['name'] = bboss_moderation_is_blocked_label( $user_displayname, $user->ID );
 			}
 		}
-		$data['profile_name']       = bp_core_get_user_displayname( $data['id'] );
+		$data['profile_name']       = bboss_core_get_user_displayname( $data['id'] );
 		$data['user_login']         = '';
 		$data['xprofile']           = new stdClass();
 		$data['cover_url']          = '';

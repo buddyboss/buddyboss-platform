@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.5.6
  */
 #[\AllowDynamicProperties]
-class BP_Moderation_Component extends BP_Component {
+class BBoss_Moderation_Component extends BBoss_Component {
 
 	/**
 	 * Start the Moderation component setup process.
@@ -28,7 +28,7 @@ class BP_Moderation_Component extends BP_Component {
 		parent::start(
 			'moderation',
 			'Moderation',
-			buddypress()->plugin_dir,
+			bboss()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
 			)
@@ -40,9 +40,9 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param array $includes See BP_Component::includes() for a description.
+	 * @param array $includes See BBoss_Component::includes() for a description.
 	 *
-	 * @see   BP_Component::includes() for a description of arguments.
+	 * @see   BBoss_Component::includes() for a description of arguments.
 	 */
 	public function includes( $includes = array() ) {
 		// Files to include.
@@ -74,7 +74,7 @@ class BP_Moderation_Component extends BP_Component {
 			return;
 		}
 
-		if ( bp_is_user() ) {
+		if ( bboss_is_user() ) {
 			require $this->path . 'bp-moderation/screens/user/my-moderation.php';
 		}
 	}
@@ -84,16 +84,16 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param array $args See BP_Component::setup_globals() for a description.
+	 * @param array $args See BBoss_Component::setup_globals() for a description.
 	 *
-	 * @see   BP_Component::setup_globals() for a description of arguments.
+	 * @see   BBoss_Component::setup_globals() for a description of arguments.
 	 */
 	public function setup_globals( $args = array() ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Define a slug, if necessary.
-		if ( ! defined( 'BP_MODERATION_SLUG' ) ) {
-			define( 'BP_MODERATION_SLUG', $this->id );
+		if ( ! defined( 'BBOSS_MODERATION_SLUG' ) ) {
+			define( 'BBOSS_MODERATION_SLUG', $this->id );
 		}
 
 		// Global tables for activity component.
@@ -115,7 +115,7 @@ class BP_Moderation_Component extends BP_Component {
 		parent::setup_globals(
 			array(
 				'slug'            => 'moderation',
-				'root_slug'       => isset( $bp->pages->moderation->slug ) ? $bp->pages->moderation->slug : BP_MODERATION_SLUG,
+				'root_slug'       => isset( $bp->pages->moderation->slug ) ? $bp->pages->moderation->slug : BBOSS_MODERATION_SLUG,
 				'has_directory'   => false,
 				'global_tables'   => $global_tables,
 				'meta_tables'     => $meta_tables,
@@ -130,11 +130,11 @@ class BP_Moderation_Component extends BP_Component {
 	 */
 	public function setup_title() {
 		// Adjust title based on view.
-		if ( bp_is_moderation_component() ) {
-			$bp = buddypress();
+		if ( bboss_is_moderation_component() ) {
+			$bp = bboss();
 
-			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Moderation', 'buddyboss' );
+			if ( bboss_is_my_profile() ) {
+				$bp->bp_options_title = __( 'My Moderation', 'buddyboss-platform' );
 			}
 		}
 
@@ -169,24 +169,24 @@ class BP_Moderation_Component extends BP_Component {
 			'bpm_category',
 			'bp_moderation',
 			array(
-				'label'              => __( 'Reporting Category', 'buddyboss' ),
-				'description'        => __( 'Create reporting categories for members to select when reporting content and members on the front-end. An additional "Other" category will also be available for members to specify their own reason for reporting.', 'buddyboss' ),
+				'label'              => __( 'Reporting Category', 'buddyboss-platform' ),
+				'description'        => __( 'Create reporting categories for members to select when reporting content and members on the front-end. An additional "Other" category will also be available for members to specify their own reason for reporting.', 'buddyboss-platform' ),
 				'labels'             => array(
-					'name'                       => _x( 'Reporting Categories', 'taxonomy general name', 'buddyboss' ),
-					'singular_name'              => _x( 'Reporting Category', 'taxonomy singular name', 'buddyboss' ),
-					'search_items'               => __( 'Search Categories', 'buddyboss' ),
-					'popular_items'              => __( 'Popular Categories', 'buddyboss' ),
-					'all_items'                  => __( 'All Categories', 'buddyboss' ),
-					'edit_item'                  => __( 'Edit Category', 'buddyboss' ),
-					'update_item'                => __( 'Update Category', 'buddyboss' ),
-					'add_new_item'               => __( 'Add New Category', 'buddyboss' ),
-					'new_item_name'              => __( 'New Category Name', 'buddyboss' ),
-					'separate_items_with_commas' => __( 'Separate categories with commas', 'buddyboss' ),
-					'add_or_remove_items'        => __( 'Add or remove categories', 'buddyboss' ),
-					'choose_from_most_used'      => __( 'Choose from the most used categories', 'buddyboss' ),
-					'not_found'                  => __( 'No reporting categories found.', 'buddyboss' ),
-					'menu_name'                  => __( 'Reporting Categories', 'buddyboss' ),
-					'back_to_items'              => __( '&larr; Back to Reporting Categories', 'buddyboss' ),
+					'name'                       => _x( 'Reporting Categories', 'taxonomy general name', 'buddyboss-platform' ),
+					'singular_name'              => _x( 'Reporting Category', 'taxonomy singular name', 'buddyboss-platform' ),
+					'search_items'               => __( 'Search Categories', 'buddyboss-platform' ),
+					'popular_items'              => __( 'Popular Categories', 'buddyboss-platform' ),
+					'all_items'                  => __( 'All Categories', 'buddyboss-platform' ),
+					'edit_item'                  => __( 'Edit Category', 'buddyboss-platform' ),
+					'update_item'                => __( 'Update Category', 'buddyboss-platform' ),
+					'add_new_item'               => __( 'Add New Category', 'buddyboss-platform' ),
+					'new_item_name'              => __( 'New Category Name', 'buddyboss-platform' ),
+					'separate_items_with_commas' => __( 'Separate categories with commas', 'buddyboss-platform' ),
+					'add_or_remove_items'        => __( 'Add or remove categories', 'buddyboss-platform' ),
+					'choose_from_most_used'      => __( 'Choose from the most used categories', 'buddyboss-platform' ),
+					'not_found'                  => __( 'No reporting categories found.', 'buddyboss-platform' ),
+					'menu_name'                  => __( 'Reporting Categories', 'buddyboss-platform' ),
+					'back_to_items'              => __( '&larr; Back to Reporting Categories', 'buddyboss-platform' ),
 				),
 				'public'             => true,
 				'publicly_queryable' => false,
@@ -199,7 +199,7 @@ class BP_Moderation_Component extends BP_Component {
 		$is_moderation_terms_added = get_option( 'moderation_default_category_added', false );
 
 		if ( false === $is_moderation_terms_added ) {
-			$default_terms = bp_moderation_get_default_report_categories();
+			$default_terms = bboss_moderation_get_default_report_categories();
 
 			foreach ( $default_terms as $key => $term ) {
 				$existing = term_exists( $term['name'], 'bpm_category' );
@@ -235,13 +235,13 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 	 */
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init(
 			array(
-				'BP_REST_Moderation_Endpoint',
-				'BP_REST_Moderation_Report_Endpoint',
+				'BBoss_REST_Moderation_Endpoint',
+				'BBoss_REST_Moderation_Report_Endpoint',
 			)
 		);
 	}
@@ -251,7 +251,7 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 	 */
 	public function blocks_init( $blocks = array() ) {
 		parent::blocks_init( array() );

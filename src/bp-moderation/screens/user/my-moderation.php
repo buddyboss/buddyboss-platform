@@ -6,12 +6,15 @@
  * @package BuddyBoss\Moderation\Screens
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the loading of the My Groups page.
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_moderation_screen() {
+function bboss_moderation_screen() {
 
 	/**
 	 * Fires before the loading of the My Groups page.
@@ -27,5 +30,5 @@ function bp_moderation_screen() {
 	 *
 	 * @param string $value Path to the My Groups page template to load.
 	 */
-	bp_core_load_template( apply_filters( 'moderation_template_content', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'moderation_template_content', 'members/single/home' ) );
 }

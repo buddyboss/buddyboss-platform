@@ -17,23 +17,23 @@ defined( 'ABSPATH' ) || exit;
  * @since bbPress (r4579)
  *
  * @param mixed $new_args New arguments
- * @uses bbp_get_search_query_args() To get the search query args
- * @uses bbp_parse_args() To parse the args
- * @uses bbp_has_search_results() To make the search query
+ * @uses bboss_bbp_get_search_query_args() To get the search query args
+ * @uses bboss_bbp_parse_args() To parse the args
+ * @uses bboss_bbp_has_search_results() To make the search query
  * @return bool False if no results, otherwise if search results are there
  */
-function bbp_search_query( $new_args = array() ) {
+function bboss_bbp_search_query( $new_args = array() ) {
 
 	// Existing arguments
-	$query_args = bbp_get_search_query_args();
+	$query_args = bboss_bbp_get_search_query_args();
 
 	// Merge arguments
 	if ( ! empty( $new_args ) ) {
-		$new_args   = bbp_parse_args( $new_args, array(), 'search_query' );
+		$new_args   = bboss_bbp_parse_args( $new_args, array(), 'search_query' );
 		$query_args = array_merge( $query_args, $new_args );
 	}
 
-	return bbp_has_search_results( $query_args );
+	return bboss_bbp_has_search_results( $query_args );
 }
 
 /**
@@ -41,13 +41,13 @@ function bbp_search_query( $new_args = array() ) {
  *
  * @since bbPress (r4579)
  *
- * @uses bbp_get_search_terms() To get the search terms
+ * @uses bboss_bbp_get_search_terms() To get the search terms
  * @return array Query arguments
  */
-function bbp_get_search_query_args() {
+function bboss_bbp_get_search_query_args() {
 
 	// Get search terms
-	$search_terms = bbp_get_search_terms();
+	$search_terms = bboss_bbp_get_search_terms();
 	$retval       = ! empty( $search_terms ) ? array( 's' => $search_terms ) : array();
 
 	return apply_filters( 'bbp_get_search_query_args', $retval );
@@ -59,7 +59,7 @@ function bbp_get_search_query_args() {
  * @since bbPress (r4928)
  * @return If a redirect is not needed
  */
-function bbp_search_results_redirect() {
+function bboss_bbp_search_results_redirect() {
 
 	// Bail if not a search request action
 	if ( empty( $_GET['action'] ) || ( 'bbp-search-request' !== $_GET['action'] ) ) {
@@ -67,18 +67,18 @@ function bbp_search_results_redirect() {
 	}
 
 	// Bail if not using pretty permalinks
-	if ( ! bbp_use_pretty_urls() ) {
+	if ( ! bboss_bbp_use_pretty_urls() ) {
 		return;
 	}
 
 	// Get the redirect URL
-	$redirect_to = bbp_get_search_results_url();
+	$redirect_to = bboss_bbp_get_search_results_url();
 	if ( empty( $redirect_to ) ) {
 		return;
 	}
 
 	// Redirect and bail
-	bbp_redirect( $redirect_to );
+	bboss_bbp_redirect( $redirect_to );
 }
 
 
@@ -89,7 +89,7 @@ function bbp_search_results_redirect() {
  *
  * @return array
  */
-function bbp_get_search_type_ids() {
+function bboss_bbp_get_search_type_ids() {
 	return apply_filters( 'bbp_get_search_types', array( 's', 'fs', 'ts', 'rs' ) );
 }
 
@@ -104,10 +104,10 @@ function bbp_get_search_type_ids() {
  *
  * @return mixed
  */
-function bbp_sanitize_search_request( $query_arg = 's' ) {
+function bboss_bbp_sanitize_search_request( $query_arg = 's' ) {
 
 	// Define allowed keys
-	$allowed = bbp_get_search_type_ids();
+	$allowed = bboss_bbp_get_search_type_ids();
 
 	// Bail if not an allowed query string key
 	if ( ! in_array( $query_arg, $allowed, true ) ) {

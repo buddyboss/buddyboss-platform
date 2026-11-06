@@ -47,12 +47,12 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         }
 
         // Create some dummy friendships (but not the corresponding activity items).
-        remove_action( 'friends_friendship_accepted', 'bp_friends_friendship_accepted_activity', 10 );
-        friends_add_friend( self::$current_user, self::$user_ids['aardvark'], true );
-        friends_add_friend( self::$current_user, self::$user_ids['cat'], true );
-        friends_add_friend( self::$current_user, self::$user_ids['caterpillar'], true );
-        friends_add_friend( self::$current_user, self::$user_ids['pig'], true );
-        add_action( 'friends_friendship_accepted', 'bp_friends_friendship_accepted_activity', 10, 4 );
+        remove_action( 'friends_friendship_accepted', 'bboss_friends_friendship_accepted_activity', 10 );
+        bboss_friends_add_friend( self::$current_user, self::$user_ids['aardvark'], true );
+        bboss_friends_add_friend( self::$current_user, self::$user_ids['cat'], true );
+        bboss_friends_add_friend( self::$current_user, self::$user_ids['caterpillar'], true );
+        bboss_friends_add_friend( self::$current_user, self::$user_ids['pig'], true );
+        add_action( 'friends_friendship_accepted', 'bboss_friends_friendship_accepted_activity', 10, 4 );
 
         self::$group_slugs['hidden']  = 'the-maw';
         self::$group_slugs['public']  = 'the-great-journey';
@@ -76,26 +76,26 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         ) );
 
         // Add dummy users to dummy hidden groups.
-        groups_join_group( self::$group_ids['hidden'], self::$user_ids['pig'] );
-        groups_join_group( self::$group_ids['hidden'], self::$user_ids['alpaca red'] );
+        bboss_groups_join_group( self::$group_ids['hidden'], self::$user_ids['pig'] );
+        bboss_groups_join_group( self::$group_ids['hidden'], self::$user_ids['alpaca red'] );
 
         // Add dummy users to dummy public groups.
-        groups_join_group( self::$group_ids['public'], self::$current_user );
-        groups_join_group( self::$group_ids['public'], self::$user_ids['aardvark'] );
-        groups_join_group( self::$group_ids['public'], self::$user_ids['alpaca red'] );
-        groups_join_group( self::$group_ids['public'], self::$user_ids['cat'] );
-        groups_join_group( self::$group_ids['public'], self::$user_ids['smith'] );
+        bboss_groups_join_group( self::$group_ids['public'], self::$current_user );
+        bboss_groups_join_group( self::$group_ids['public'], self::$user_ids['aardvark'] );
+        bboss_groups_join_group( self::$group_ids['public'], self::$user_ids['alpaca red'] );
+        bboss_groups_join_group( self::$group_ids['public'], self::$user_ids['cat'] );
+        bboss_groups_join_group( self::$group_ids['public'], self::$user_ids['smith'] );
 
         // Add dummy users to dummy private groups.
-        groups_join_group( self::$group_ids['private'], self::$user_ids['cat'] );
-        groups_join_group( self::$group_ids['private'], self::$user_ids['caterpillar'] );
+        bboss_groups_join_group( self::$group_ids['private'], self::$user_ids['cat'] );
+        bboss_groups_join_group( self::$group_ids['private'], self::$user_ids['caterpillar'] );
 
         self::commit_transaction();
     }
 
     public static function tearDownAfterClass() {
         foreach ( self::$group_ids as $group_id ) {
-            groups_delete_group( $group_id );
+            bboss_groups_delete_group( $group_id );
         }
 
         foreach ( array_merge( self::$user_ids, array( self::$current_user ) ) as $user_id ) {
@@ -120,7 +120,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_type_members() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'type' => 'members',
             'term' => 'smith',
         ) );
@@ -131,7 +131,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_type_members_and_limit() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'limit' => 2,
             'type'  => 'members',
             'term'  => 'smith',
@@ -143,7 +143,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_type_members_and_only_friends() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'only_friends' => true,
             'type'         => 'members',
             'term'         => 'smith',
@@ -152,7 +152,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         // shouldn't search for user nicename, but nickname meta instead
         $this->assertEquals( 0, count( $suggestions ) );
 
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'only_friends' => true,
             'type'         => 'members',
             'term'         => 'cat',
@@ -162,7 +162,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_type_members_and_term_as_displayname() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'type' => 'members',
             'term' => 'aardvark',
         ) );
@@ -172,7 +172,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_type_members_and_term_as_usernicename() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'type' => 'members',
             'term' => 'eleanor',
         ) );
@@ -182,7 +182,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_term_as_current_user() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'type' => 'members',
             'term' => 'katie',
         ) );
@@ -194,7 +194,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
 
     public function test_suggestions_with_type_groupmembers_public() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => self::$group_ids['public'],
             'type'     => 'members',
             'term'     => 'smith',
@@ -206,7 +206,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_type_groupmembers_public_and_limit() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'limit'    => 1,
             'group_id' => self::$group_ids['public'],
             'type'     => 'members',
@@ -218,7 +218,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_type_groupmembers_public_and_only_friends() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id'     => self::$group_ids['public'],
             'only_friends' => true,
             'type'         => 'members',
@@ -231,7 +231,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_type_groupmembers_public_and_term_as_displayname() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => self::$group_ids['public'],
             'type'     => 'members',
             'term'     => 'aardvark',
@@ -242,7 +242,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_type_groupmembers_public_and_term_as_usernicename() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => self::$group_ids['public'],
             'type'     => 'members',
             'term'     => 'robert',
@@ -253,7 +253,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_with_type_groupmembers_public_as_id() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => self::$group_ids['public'],
             'type'     => 'members',
             'term'     => 'smith',
@@ -266,7 +266,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
     public function test_suggestions_with_type_groupmembers_hidden() {
         // current_user isn't a member of the hidden group
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => self::$group_ids['hidden'],
             'type'     => 'members',
             'term'     => 'pig',
@@ -275,7 +275,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
         // "alpaca red" is in the hidden group
         $this->set_current_user( self::$user_ids['alpaca red'] );
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => self::$group_ids['hidden'],
             'type'     => 'members',
             'term'     => 'pig',
@@ -286,7 +286,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
     public function test_suggestions_with_type_groupmembers_private() {
         // current_user isn't a member of the private group.
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => self::$group_ids['private'],
             'type'     => 'members',
             'term'     => 'cat',
@@ -295,7 +295,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
         // "caterpillar" is in the private group
         $this->set_current_user( self::$user_ids['caterpillar'] );
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => self::$group_ids['private'],
             'type'     => 'members',
             'term'     => 'cat',
@@ -306,7 +306,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
 
     public function test_suggestions_with_type_groupmembers_public_and_exclude_group_from_results() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => self::$group_ids['public'],
             'type'     => 'members',
             'term'     => 'smith',
@@ -315,7 +315,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         // shouldn't search for user nicename, but nickname meta instead
         $this->assertEquals( 1, count( $suggestions ) );  // aardvark.
 
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => -self::$group_ids['public'],
             'type'     => 'members',
             'term'     => 'smith',
@@ -327,7 +327,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
     public function test_suggestions_with_type_groupmembers_private_and_exclude_group_from_results() {
         // current_user isn't a member of the private group.
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => -self::$group_ids['private'],
             'type'     => 'members',
             'term'     => 'cat',
@@ -338,7 +338,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         $this->set_current_user( self::$user_ids['caterpillar'] );
 
         // "cat" is in the private group, so won't show up here.
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => -self::$group_ids['private'],
             'type'     => 'members',
             'term'     => 'cat',
@@ -347,7 +347,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         $this->assertEmpty( $suggestions );
 
         // "zoo" is not the private group, so will show up here.
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => -self::$group_ids['private'],
             'type'     => 'members',
             'term'     => 'zoo',
@@ -358,7 +358,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
     public function test_suggestions_with_type_groupmembers_hidden_and_exclude_group_from_results() {
         // current_user isn't a member of the hidden group.
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => self::$group_ids['hidden'],
             'type'     => 'members',
             'term'     => 'pig',
@@ -369,7 +369,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         $this->set_current_user( self::$user_ids['alpaca red'] );
 
         // "alpaca red" is in the hidden group, so won't show up here.
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => -self::$group_ids['hidden'],
             'type'     => 'members',
             'term'     => 'alpaca red',
@@ -378,7 +378,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         $this->assertEmpty( $suggestions );
 
         // "zoo" is not the hidden group, so will show up here.
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => -self::$group_ids['hidden'],
             'type'     => 'members',
             'term'     => 'zoo',
@@ -393,7 +393,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
      */
 
     public function test_suggestions_response_no_matches() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'term' => 'abcdefghijklmnopqrstuvwxyz',
             'type' => 'members',
         ) );
@@ -404,7 +404,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_response_single_match() {
-        $suggestion = bp_core_get_suggestions( array(
+        $suggestion = bboss_core_get_suggestions( array(
             'term' => 'zoom',
             'type' => 'members',
         ) );
@@ -422,7 +422,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_response_multiple_matches() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'term' => 'cat',
             'type' => 'members',
         ) );
@@ -440,14 +440,14 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_term_is_case_insensitive() {
-        $lowercase = bp_core_get_suggestions( array(
+        $lowercase = bboss_core_get_suggestions( array(
             'term' => 'lisa',
             'type' => 'members',
         ) );
         $this->assertFalse( is_wp_error( $lowercase ) );
         $this->assertEquals( 1, count( $lowercase ) );
 
-        $uppercase = bp_core_get_suggestions( array(
+        $uppercase = bboss_core_get_suggestions( array(
             'term' => 'LISA',
             'type' => 'members',
         ) );
@@ -459,7 +459,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
     }
 
     public function test_suggestions_response_property_types() {
-        $suggestion = bp_core_get_suggestions( array(
+        $suggestion = bboss_core_get_suggestions( array(
             'term' => 'zoom',
             'type' => 'members',
         ) );
@@ -482,7 +482,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
      */
 
     public function test_suggestions_with_bad_type() {
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'type' => 'fake_type',
         ) );
 
@@ -491,7 +491,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
     public function test_suggestions_with_type_groupmembers_and_bad_group_ids() {
         // group_ids can't be a group slug.
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'group_id' => 'fake-group-slug',
             'type'     => 'members',
         ) );
@@ -501,7 +501,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
     public function test_suggestions_with_bad_term() {
         // a non-empty term is mandatory
-        $suggestions = bp_core_get_suggestions( array(
+        $suggestions = bboss_core_get_suggestions( array(
             'term' => '',
             'type' => 'members',
         ) );

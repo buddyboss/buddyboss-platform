@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Activity {
+class BBoss_Nouveau_Activity {
 	/**
 	 * Constructor
 	 *
@@ -55,7 +55,7 @@ class BP_Nouveau_Activity {
 		} else {
 			add_action( 'admin_init', function() {
 				// AJAX condtion.
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX &&
+				if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX &&
 					// Check to see if action is activity-specific.
 					( false !== strpos( $_REQUEST['action'], 'activity' ) || ( 'post_update' === $_REQUEST['action'] ) )
 				) {
@@ -71,13 +71,13 @@ class BP_Nouveau_Activity {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_actions() {
-		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_activity_enqueue_scripts' );
-		add_action( 'bp_widgets_init', array( 'BP_Latest_Activities', 'register_widget' ) );
-		add_action( 'bp_nouveau_notifications_init_filters', 'bp_nouveau_activity_notification_filters' );
+		add_action( 'bp_nouveau_enqueue_scripts', 'bboss_nouveau_activity_enqueue_scripts' );
+		add_action( 'bp_widgets_init', array( 'BBoss_Latest_Activities', 'register_widget' ) );
+		add_action( 'bp_nouveau_notifications_init_filters', 'bboss_nouveau_activity_notification_filters' );
 
-		$bp = buddypress();
+		$bp = bboss();
 
-		if ( bp_is_akismet_active() && isset( $bp->activity->akismet ) ) {
+		if ( bboss_is_akismet_active() && isset( $bp->activity->akismet ) ) {
 			remove_action( 'bp_activity_entry_meta', array( $bp->activity->akismet, 'add_activity_spam_button' ) );
 			remove_action( 'bp_activity_comment_options', array( $bp->activity->akismet, 'add_activity_comment_spam_button' ) );
 		}
@@ -90,16 +90,16 @@ class BP_Nouveau_Activity {
 	 */
 	protected function setup_filters() {
 		// Register customizer controls.
-		add_filter( 'bp_nouveau_customizer_controls', 'bp_nouveau_activity_customizer_controls', 10, 1 );
+		add_filter( 'bp_nouveau_customizer_controls', 'bboss_nouveau_activity_customizer_controls', 10, 1 );
 
 		// Register activity scripts
-		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_activity_register_scripts', 10, 1 );
+		add_filter( 'bp_nouveau_register_scripts', 'bboss_nouveau_activity_register_scripts', 10, 1 );
 
 		// Localize Scripts
-		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_activity_localize_scripts', 10, 1 );
+		add_filter( 'bp_core_get_js_strings', 'bboss_nouveau_activity_localize_scripts', 10, 1 );
 
-		add_filter( 'bp_get_activity_action_pre_meta', 'bp_nouveau_activity_secondary_avatars', 10, 2 );
-		add_filter( 'bp_get_activity_css_class', 'bp_nouveau_activity_scope_newest_class', 10, 1 );
+		add_filter( 'bp_get_activity_action_pre_meta', 'bboss_nouveau_activity_secondary_avatars', 10, 2 );
+		add_filter( 'bp_get_activity_css_class', 'bboss_nouveau_activity_scope_newest_class', 10, 1 );
 	}
 }
 
@@ -108,11 +108,11 @@ class BP_Nouveau_Activity {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity( $bp_nouveau = null ) {
+function bboss_nouveau_activity( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->activity = new BP_Nouveau_Activity();
+	$bp_nouveau->activity = new BBoss_Nouveau_Activity();
 }
-add_action( 'bp_nouveau_includes', 'bp_nouveau_activity', 10, 1 );
+add_action( 'bp_nouveau_includes', 'bboss_nouveau_activity', 10, 1 );

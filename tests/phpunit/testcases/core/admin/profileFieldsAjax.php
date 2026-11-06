@@ -10,14 +10,14 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 	/**
 	 * AJAX handler instance under test.
 	 *
-	 * @var BB_Admin_Profile_Fields_Ajax
+	 * @var BBoss_Admin_Profile_Fields_Ajax
 	 */
 	protected $ajax;
 
 	/**
 	 * Profile Type field created fresh for each test.
 	 *
-	 * @var BP_XProfile_Field|null
+	 * @var BBoss_XProfile_Field|null
 	 */
 	protected $member_type_field;
 
@@ -25,30 +25,30 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 	 * Load the admin-context-only AJAX class and build the instance under test.
 	 *
 	 * Also creates a `membertypes` field BEFORE any test body runs, so whichever
-	 * test first triggers `bp_get_xprofile_member_type_field_id()` — whose result
+	 * test first triggers `bboss_get_xprofile_member_type_field_id()` — whose result
 	 * is memoized in a process-wide static that cannot be reset — memoizes a real
 	 * field ID instead of 0, in any test-execution order.
 	 */
 	public function set_up() {
 		parent::set_up();
 
-		if ( ! class_exists( 'BB_Admin_Profile_Fields_Ajax' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php';
+		if ( ! class_exists( 'BBoss_Admin_Profile_Fields_Ajax' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php';
 		}
 
-		$this->ajax = new BB_Admin_Profile_Fields_Ajax();
+		$this->ajax = new BBoss_Admin_Profile_Fields_Ajax();
 
 		// The membertypes field type is registered only when member types exist,
 		// and the type whitelist is frozen into buddypress()->profile->field_types
 		// at bootstrap — register a type and extend the whitelist first.
-		if ( ! bp_get_member_type_object( 'prod10439type' ) ) {
-			bp_register_member_type( 'prod10439type' );
+		if ( ! bboss_get_member_type_object( 'prod10439type' ) ) {
+			bboss_register_member_type( 'prod10439type' );
 		}
-		if ( ! in_array( 'membertypes', buddypress()->profile->field_types, true ) ) {
-			buddypress()->profile->field_types[] = 'membertypes';
+		if ( ! in_array( 'membertypes', bboss()->profile->field_types, true ) ) {
+			bboss()->profile->field_types[] = 'membertypes';
 		}
 
-		$this->member_type_field = xprofile_get_field(
+		$this->member_type_field = bboss_xprofile_get_field(
 			self::factory()->xprofile_field->create(
 				array(
 					'field_group_id' => self::factory()->xprofile_group->create(),
@@ -62,10 +62,10 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 	 * Remove the display-format and name-field options the tests set.
 	 */
 	public function tear_down() {
-		bp_delete_option( 'bp-display-name-format' );
-		bp_delete_option( 'bp-xprofile-nickname-field-id' );
-		bp_delete_option( 'bp-xprofile-firstname-field-id' );
-		bp_delete_option( 'bp-xprofile-lastname-field-id' );
+		bboss_delete_option( 'bp-display-name-format' );
+		bboss_delete_option( 'bp-xprofile-nickname-field-id' );
+		bboss_delete_option( 'bp-xprofile-firstname-field-id' );
+		bboss_delete_option( 'bp-xprofile-lastname-field-id' );
 
 		parent::tear_down();
 	}
@@ -78,7 +78,7 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 	 * @return mixed
 	 */
 	protected function invoke( $method, ...$args ) {
-		$reflection = new ReflectionMethod( 'BB_Admin_Profile_Fields_Ajax', $method );
+		$reflection = new ReflectionMethod( 'BBoss_Admin_Profile_Fields_Ajax', $method );
 		$reflection->setAccessible( true );
 
 		return $reflection->invoke( $this->ajax, ...$args );
@@ -110,10 +110,10 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 		$firstname = $this->create_field( $group_id );
 		$lastname  = $this->create_field( $group_id );
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
-		bp_update_option( 'bp-xprofile-nickname-field-id', $nickname );
-		bp_update_option( 'bp-xprofile-firstname-field-id', $firstname );
-		bp_update_option( 'bp-xprofile-lastname-field-id', $lastname );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-xprofile-nickname-field-id', $nickname );
+		bboss_update_option( 'bp-xprofile-firstname-field-id', $firstname );
+		bboss_update_option( 'bp-xprofile-lastname-field-id', $lastname );
 
 		// Legacy-parity locks: Nickname and First Name only.
 		$this->assertTrue( $this->invoke( 'bb_is_settings_locked_field', $nickname ) );
@@ -134,10 +134,10 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 		$firstname = $this->create_field( $group_id );
 		$lastname  = $this->create_field( $group_id );
 
-		bp_update_option( 'bp-display-name-format', 'nickname' );
-		bp_update_option( 'bp-xprofile-nickname-field-id', $nickname );
-		bp_update_option( 'bp-xprofile-firstname-field-id', $firstname );
-		bp_update_option( 'bp-xprofile-lastname-field-id', $lastname );
+		bboss_update_option( 'bp-display-name-format', 'nickname' );
+		bboss_update_option( 'bp-xprofile-nickname-field-id', $nickname );
+		bboss_update_option( 'bp-xprofile-firstname-field-id', $firstname );
+		bboss_update_option( 'bp-xprofile-lastname-field-id', $lastname );
 
 		$this->assertTrue( $this->invoke( 'bb_is_settings_locked_field', $nickname ) );
 		$this->assertFalse( $this->invoke( 'bb_is_settings_locked_field', $firstname ) );
@@ -154,10 +154,10 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 		$firstname = $this->create_field( $group_id );
 		$lastname  = $this->create_field( $group_id );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
-		bp_update_option( 'bp-xprofile-nickname-field-id', $nickname );
-		bp_update_option( 'bp-xprofile-firstname-field-id', $firstname );
-		bp_update_option( 'bp-xprofile-lastname-field-id', $lastname );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-xprofile-nickname-field-id', $nickname );
+		bboss_update_option( 'bp-xprofile-firstname-field-id', $firstname );
+		bboss_update_option( 'bp-xprofile-lastname-field-id', $lastname );
 
 		$this->assertTrue( $this->invoke( 'bb_is_settings_locked_field', $nickname ) );
 		$this->assertTrue( $this->invoke( 'bb_is_settings_locked_field', $firstname ) );
@@ -172,18 +172,18 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 	public function test_hide_member_types_matches_legacy_metabox_rule() {
 		$group_id = self::factory()->xprofile_group->create();
 
-		$regular = xprofile_get_field( $this->create_field( $group_id ) );
+		$regular = bboss_xprofile_get_field( $this->create_field( $group_id ) );
 		$this->assertFalse( $this->invoke( 'bb_hide_member_types_for_field', $regular ) );
 
 		// Undeletable field (e.g. First Name / Nickname on a default install).
-		$undeletable             = xprofile_get_field( $this->create_field( $group_id ) );
+		$undeletable             = bboss_xprofile_get_field( $this->create_field( $group_id ) );
 		$undeletable->can_delete = 0;
 		$this->assertTrue( $this->invoke( 'bb_hide_member_types_for_field', $undeletable ) );
 
 		// The primary field (ID 1) never offers Profile Types. The helper reads
 		// only id/can_delete, so an in-memory stub exercises the branch without
 		// depending on the install's fixture data.
-		$primary             = xprofile_get_field( $this->create_field( $group_id ) );
+		$primary             = bboss_xprofile_get_field( $this->create_field( $group_id ) );
 		$primary->id         = 1;
 		$primary->can_delete = 1;
 		$this->assertTrue( $this->invoke( 'bb_hide_member_types_for_field', $primary ) );
@@ -203,7 +203,7 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 	public function test_hide_member_types_for_the_profile_type_field() {
 		$this->assertInstanceOf( 'BP_XProfile_Field', $this->member_type_field );
 
-		$memo_id = (int) bp_get_xprofile_member_type_field_id();
+		$memo_id = (int) bboss_get_xprofile_member_type_field_id();
 
 		if ( 0 === $memo_id ) {
 			$this->markTestSkipped( 'bp_get_xprofile_member_type_field_id() static memo was primed to 0 before this class ran; the branch is unreachable in this process.' );
@@ -213,7 +213,7 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 			$this->assertTrue( $this->invoke( 'bb_hide_member_types_for_field', $this->member_type_field ) );
 		} else {
 			$group_id         = self::factory()->xprofile_group->create();
-			$stub             = xprofile_get_field( $this->create_field( $group_id ) );
+			$stub             = bboss_xprofile_get_field( $this->create_field( $group_id ) );
 			$stub->id         = $memo_id;
 			$stub->can_delete = 1;
 			$this->assertTrue( $this->invoke( 'bb_hide_member_types_for_field', $stub ) );
@@ -228,10 +228,10 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 		$group_id = self::factory()->xprofile_group->create();
 		$lastname = $this->create_field( $group_id );
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
-		bp_update_option( 'bp-xprofile-lastname-field-id', $lastname );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-xprofile-lastname-field-id', $lastname );
 
-		$payload = $this->invoke( 'bb_format_field', xprofile_get_field( $lastname ) );
+		$payload = $this->invoke( 'bb_format_field', bboss_xprofile_get_field( $lastname ) );
 
 		$this->assertArrayHasKey( 'is_settings_locked', $payload );
 		$this->assertArrayHasKey( 'hide_member_types', $payload );

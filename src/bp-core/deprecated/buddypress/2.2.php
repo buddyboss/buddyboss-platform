@@ -27,9 +27,9 @@ defined( 'ABSPATH' ) || exit;
  * @param string $old_status Old status for the post.
  * @param object $post Post data.
  */
-function bp_blogs_catch_transition_post_status( $new_status, $old_status, $post ) {
+function bboss_blogs_catch_transition_post_status( $new_status, $old_status, $post ) {
 	_deprecated_function( __FUNCTION__, '2.2', 'bp_activity_catch_transition_post_type_status()' );
-	bp_activity_catch_transition_post_type_status( $new_status, $old_status, $post );
+	bboss_activity_catch_transition_post_type_status( $new_status, $old_status, $post );
 }
 
 /**
@@ -43,9 +43,9 @@ function bp_blogs_catch_transition_post_status( $new_status, $old_status, $post 
  *           associated. Defaults to the post_author.
  * @return bool|null Returns false on failure.
  */
-function bp_blogs_record_post( $post_id, $post, $user_id = 0 ) {
+function bboss_blogs_record_post( $post_id, $post, $user_id = 0 ) {
 	_deprecated_function( __FUNCTION__, '2.2', 'bp_activity_post_type_publish()' );
-	bp_activity_post_type_publish( $post_id, $post, $user_id );
+	bboss_activity_post_type_publish( $post_id, $post, $user_id );
 }
 
 /**
@@ -54,13 +54,13 @@ function bp_blogs_record_post( $post_id, $post, $user_id = 0 ) {
  * @since BuddyPress 2.0.0
  * @deprecated BuddyPress 2.2.0
  *
- * @see bp_blogs_catch_transition_post_status()
+ * @see bboss_blogs_catch_transition_post_status()
  *
  * @param WP_Post $post
  */
-function bp_blogs_update_post( $post ) {
+function bboss_blogs_update_post( $post ) {
 	_deprecated_function( __FUNCTION__, '2.2', 'bp_activity_post_type_update()' );
-	bp_activity_post_type_update( $post );
+	bboss_activity_post_type_update( $post );
 }
 
 /**
@@ -69,12 +69,12 @@ function bp_blogs_update_post( $post ) {
  * @since BuddyPress 1.0.0
  * @deprecated BuddyPress 2.2.0
  *
- * @param BP_Blogs_Blog $recorded_blog_obj The recorded blog, passed by
+ * @param BBoss_Blogs_Blog $recorded_blog_obj The recorded blog, passed by
  *        'bp_blogs_new_blog'.
  */
-function bp_blogs_format_clear_blog_cache( $recorded_blog_obj ) {
+function bboss_blogs_format_clear_blog_cache( $recorded_blog_obj ) {
 	_deprecated_function( __FUNCTION__, '2.2', 'bp_blogs_clear_blog_object_cache()' );
-	bp_blogs_clear_blog_object_cache( false, $recorded_blog_obj->user_id );
+	bboss_blogs_clear_blog_object_cache( false, $recorded_blog_obj->user_id );
 }
 
 /**
@@ -87,11 +87,11 @@ function bp_blogs_format_clear_blog_cache( $recorded_blog_obj ) {
  * @param object $activity Activity object.
  * @return string
  */
-function bp_xprofile_format_activity_action_new_member( $action, $activity ) {
+function bboss_xprofile_format_activity_action_new_member( $action, $activity ) {
 	_deprecated_function( __FUNCTION__, '2.2', 'bp_members_format_activity_action_new_member()' );
 
 	$action = apply_filters( 'bp_xprofile_format_activity_action_new_member', $action, $activity );
-	return bp_members_format_activity_action_new_member( $action, $activity );
+	return bboss_members_format_activity_action_new_member( $action, $activity );
 }
 
 /**
@@ -100,7 +100,7 @@ function bp_xprofile_format_activity_action_new_member( $action, $activity ) {
  * @since BuddyPress 1.1.0
  * @deprecated BuddyPress 2.2.0
  */
-function bp_core_add_global_group() {
+function bboss_core_add_global_group() {
 	_deprecated_function( __FUNCTION__, '2.2', 'This function has no replacement' );
 }
 
@@ -109,7 +109,7 @@ function bp_core_add_global_group() {
  *
  * @deprecated BuddyPress 2.2.2
  */
-function bp_message_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
+function bboss_message_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
 	_deprecated_function( __FUNCTION__, '2.3.0', 'bp_messages_add_meta()' );
-	return bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique );
+	return bboss_messages_add_meta( $message_id, $meta_key, $meta_value, $unique );
 }

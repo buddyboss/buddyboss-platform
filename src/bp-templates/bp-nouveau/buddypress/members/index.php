@@ -8,7 +8,10 @@
  * @version 1.0.0
  */
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+$is_send_ajax_request = bboss_is_send_ajax_request();
 
 /**
  * Fires at the begining of the templates BP injected content.
@@ -39,16 +42,16 @@ do_action( 'bp_before_directory_members_page' );
 		 */
 		do_action( 'bp_before_directory_members_tabs' );
 
-		if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
-			bp_get_template_part( 'common/nav/directory-nav' );
+		if ( ! bboss_nouveau_is_object_nav_in_sidebar() ) {
+			bboss_get_template_part( 'common/nav/directory-nav' );
 		}
 
-		if ( bb_enable_content_counts() ) {
+		if ( bboss_enable_content_counts() ) {
 			?>
 			<div class="bb-item-count">
 				<?php
 				if ( ! $is_send_ajax_request ) {
-					$count = bp_core_get_all_member_count();
+					$count = bboss_core_get_all_member_count();
 					printf(
 						wp_kses(
 							/* translators: %d is the member count */
@@ -56,7 +59,7 @@ do_action( 'bp_before_directory_members_page' );
 								'<span class="bb-count">%d</span> Member',
 								'<span class="bb-count">%d</span> Members',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),
@@ -69,7 +72,7 @@ do_action( 'bp_before_directory_members_page' );
 			</div>
 			<?php
 		}
-		bp_get_template_part( 'common/search-and-filters-bar' );
+		bboss_get_template_part( 'common/search-and-filters-bar' );
 
 		/**
 		 * Fires before the display of the members content.
@@ -85,10 +88,10 @@ do_action( 'bp_before_directory_members_page' );
 				<?php
 				if ( $is_send_ajax_request ) {
 					echo '<div id="bp-ajax-loader">';
-					bp_nouveau_user_feedback( 'directory-members-loading' );
+					bboss_nouveau_user_feedback( 'directory-members-loading' );
 					echo '</div>';
 				} else {
-					bp_get_template_part( 'members/members-loop' );
+					bboss_get_template_part( 'members/members-loop' );
 				}
 				?>
 			</div><!-- #members-dir-list -->

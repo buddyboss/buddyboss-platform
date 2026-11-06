@@ -6,12 +6,15 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Catch and process the My Connections page.
  *
  * @since BuddyPress 1.0.0
  */
-function friends_screen_my_friends() {
+function bboss_friends_screen_my_friends() {
 
 	/**
 	 * Fires before the loading of template for the My Connections page.
@@ -27,5 +30,5 @@ function friends_screen_my_friends() {
 	 *
 	 * @param string $template Path to the my friends template to load.
 	 */
-	bp_core_load_template( apply_filters( 'friends_template_my_friends', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'friends_template_my_friends', 'members/single/home' ) );
 }

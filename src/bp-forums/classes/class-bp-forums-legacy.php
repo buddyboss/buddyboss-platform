@@ -9,13 +9,13 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
+if ( ! class_exists( 'BBoss_Forums_Legacy' ) ) {
 	/**
 	 * Setup the bp forums legacy class.
 	 *
 	 * @since 2.2.6
 	 */
-	class BP_Forums_Legacy {
+	class BBoss_Forums_Legacy {
 
 		/**
 		 * The single instance of the class.
@@ -92,11 +92,11 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 				return;
 			}
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'type'    => '',
-					'user_id' => bp_loggedin_user_id(),
+					'user_id' => bboss_loggedin_user_id(),
 					'item_id' => 0,
 				),
 				'bb_create_legacy_subscription'
@@ -129,7 +129,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 
 			if ( ! empty( $subscription_id ) ) {
 				// Get the subscription object.
-				$subscription = bb_subscriptions_get_subscription( $subscription_id );
+				$subscription = bboss_subscriptions_get_subscription( $subscription_id );
 
 				if (
 					( empty( $subscription->type ) || empty( $subscription->item_id ) ) ||
@@ -175,7 +175,7 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 				return false;
 			}
 
-			$get_subscriptions = bb_get_subscription_users(
+			$get_subscriptions = bboss_get_subscription_users(
 				array(
 					'blog_id' => $blog_id,
 					'item_id' => $item_id,
@@ -319,12 +319,12 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 			switch ( $post_type ) {
 
 				// Forum.
-				case bbp_get_forum_post_type():
+				case bboss_bbp_get_forum_post_type():
 					$user_meta_key = $wpdb->prefix . '_bbp_forum_subscriptions';
 					break;
 
 				// Topic.
-				case bbp_get_topic_post_type():
+				case bboss_bbp_get_topic_post_type():
 				default:
 					$user_meta_key = $wpdb->prefix . '_bbp_subscriptions';
 					break;
@@ -339,11 +339,11 @@ if ( ! class_exists( 'BP_Forums_Legacy' ) ) {
 	 *
 	 * @since BuddyBoss 2.2.6
 	 *
-	 * @return BP_Forums_Legacy
+	 * @return BBoss_Forums_Legacy
 	 */
-	function bb_forum_legacy_subscription() {
-		return BP_Forums_Legacy::instance();
+	function bboss_forum_legacy_subscription() {
+		return BBoss_Forums_Legacy::instance();
 	}
 
-	bb_forum_legacy_subscription();
+	bboss_forum_legacy_subscription();
 }

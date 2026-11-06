@@ -29,20 +29,20 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_media_register_access_controls_panel_fields() {
+function bboss_media_register_access_controls_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Media Access.
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'media',
 		'access_controls',
 		'media_access_controls',
 		array(
-			'title'      => __( 'Media Access', 'buddyboss' ),
+			'title'      => __( 'Media Access', 'buddyboss-platform' ),
 			'order'      => 10,
 			'help_url'   => '121813',
-			'pro_notice' => bb_admin_settings_get_pro_notice(
+			'pro_notice' => bboss_admin_settings_get_pro_notice(
 				array(
 					'type'    => 'access_controls',
 					'context' => 'section',
@@ -52,64 +52,64 @@ function bb_media_register_access_controls_panel_fields() {
 	);
 
 	// FIELD: Upload Photos access control.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'media',
 		'access_controls',
 		'media_access_controls',
 		array(
 			'name'              => 'bb-access-control-upload-media',
-			'label'             => __( 'Upload Photos', 'buddyboss' ),
+			'label'             => __( 'Upload Photos', 'buddyboss-platform' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can upload photos based on:', 'buddyboss' ),
+			'description'       => __( 'Select which members can upload photos based on:', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 10,
-			'sanitize_callback' => 'bb_media_sanitize_access_control',
+			'sanitize_callback' => 'bboss_media_sanitize_access_control',
 		)
 	);
 
 	// Videos are provided by BuddyBoss Add-ons; hide the rule when the component is unavailable.
-	if ( bp_is_active( 'video' ) ) {
+	if ( bboss_is_active( 'video' ) ) {
 		// FIELD: Upload Videos access control.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'media',
 			'access_controls',
 			'media_access_controls',
 			array(
 				'name'              => 'bb-access-control-upload-video',
-				'label'             => __( 'Upload Videos', 'buddyboss' ),
+				'label'             => __( 'Upload Videos', 'buddyboss-platform' ),
 				'type'              => 'access_control',
-				'description'       => __( 'Select which members can upload videos based on:', 'buddyboss' ),
+				'description'       => __( 'Select which members can upload videos based on:', 'buddyboss-platform' ),
 				'default'           => '',
 				'pro_only'          => true,
 				'order'             => 20,
-				'sanitize_callback' => 'bb_media_sanitize_access_control',
+				'sanitize_callback' => 'bboss_media_sanitize_access_control',
 			)
 		);
 	}
 
 	// Documents are provided by BuddyBoss Add-ons; hide the rule when the component is unavailable.
-	if ( bp_is_active( 'document' ) ) {
+	if ( bboss_is_active( 'document' ) ) {
 		// FIELD: Upload Documents access control.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'media',
 			'access_controls',
 			'media_access_controls',
 			array(
 				'name'              => 'bb-access-control-upload-document',
-				'label'             => __( 'Upload Documents', 'buddyboss' ),
+				'label'             => __( 'Upload Documents', 'buddyboss-platform' ),
 				'type'              => 'access_control',
-				'description'       => __( 'Select which members can upload documents based on:', 'buddyboss' ),
+				'description'       => __( 'Select which members can upload documents based on:', 'buddyboss-platform' ),
 				'default'           => '',
 				'pro_only'          => true,
 				'order'             => 30,
-				'sanitize_callback' => 'bb_media_sanitize_access_control',
+				'sanitize_callback' => 'bboss_media_sanitize_access_control',
 			)
 		);
 	}
 
 	// FIELD: Admin notice (displayed once at the end of the section).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'media',
 		'access_controls',
 		'media_access_controls',
@@ -117,7 +117,7 @@ function bb_media_register_access_controls_panel_fields() {
 			'name'              => 'bb-media-access-control-notice',
 			'label'             => '',
 			'type'              => 'notice',
-			'description'       => __( 'These settings do not apply to administrators.', 'buddyboss' ),
+			'description'       => __( 'These settings do not apply to administrators.', 'buddyboss-platform' ),
 			'notice_type'       => 'info',
 			'sanitize_callback' => '__return_empty_string',
 			'order'             => 100,

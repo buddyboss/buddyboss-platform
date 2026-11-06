@@ -12,15 +12,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
+if ( ! class_exists( 'BBoss_Elementor_Plugin_Compatibility') ) {
 	/**
-	 * BB_Elementor_Plugin_Compatibility Class
+	 * BBoss_Elementor_Plugin_Compatibility Class
 	 *
 	 * This class handles compatibility code for third party plugins used in conjunction with Platform
 	 *
 	 * @since BuddyBoss 2.1.2
 	 */
-	class BB_Elementor_Plugin_Compatibility {
+	class BBoss_Elementor_Plugin_Compatibility {
 
 		/**
 		 * The single instance of the class.
@@ -32,7 +32,7 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 		private static $instance = null;
 
 		/**
-		 * BB_Elementor_Plugin_Compatibility constructor.
+		 * BBoss_Elementor_Plugin_Compatibility constructor.
 		 *
 		 * @since BuddyBoss 2.1.2
 		 */
@@ -104,8 +104,8 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 		 * @return void
 		 */
 		public function maintenance_mode_template() {
-			if ( bb_is_elementor_maintenance_mode_enabled() ) {
-				remove_action( 'template_redirect', 'bp_template_redirect', 10 );
+			if ( bboss_is_elementor_maintenance_mode_enabled() ) {
+				remove_action( 'template_redirect', 'bboss_template_redirect', 10 );
 			}
 		}
 
@@ -198,4 +198,4 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 	}
 }
 
-BB_Elementor_Plugin_Compatibility::instance();
+BBoss_Elementor_Plugin_Compatibility::instance();

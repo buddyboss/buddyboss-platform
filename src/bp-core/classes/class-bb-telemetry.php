@@ -8,14 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Telemetry' ) ) {
+if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 
 	/**
 	 * BuddyBoss Telemetry object.
 	 *
 	 * @since BuddyBoss 2.7.40
 	 */
-	class BB_Telemetry {
+	class BBoss_Telemetry {
 
 		/**
 		 * The single instance of the class.
@@ -49,7 +49,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 *
 		 * @since BuddyBoss 2.7.40
 		 *
-		 * @return BB_Telemetry|null
+		 * @return BBoss_Telemetry|null
 		 */
 		public static function instance() {
 			if ( null === self::$instance ) {
@@ -71,13 +71,30 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			/**
 			 * Filters the telemetry reporting mode.
 			 *
-			 * Pro uses this to force 'complete' mode for paid users.
+			 * Pro uses this to force 'complete' mode for paid users. Builds without
+			 * "complete" reporting (the WordPress.org edition) let it switch
+			 * telemetry off, never on or up (see below).
 			 *
 			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
 			 */
-			self::$bb_telemetry_option = apply_filters( 'bb_advanced_telemetry_reporting_value', bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
+			self::$bb_telemetry_option = apply_filters( 'bb_advanced_telemetry_reporting_value', bboss_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
+
+			/*
+			 * Builds without "complete" reporting (the WordPress.org edition) keep
+			 * telemetry strictly opt-in: it runs only when an administrator saved
+			 * "Anonymous reporting". The filter above may still switch it off, but
+			 * never on or up, and a stored "complete" value is read as "disable".
+			 */
+			$bb_telemetry_opt_in_only = true;
+
+			if ( $bb_telemetry_opt_in_only ) {
+				add_filter( 'option_bb_advanced_telemetry_reporting', array( __CLASS__, 'bb_telemetry_opt_in_mode' ) );
+
+				$bb_telemetry_saved_mode   = bboss_get_option( 'bb_advanced_telemetry_reporting', 'disable' );
+				self::$bb_telemetry_option = ( 'anonymous' === $bb_telemetry_saved_mode && 'disable' !== self::$bb_telemetry_option ) ? 'anonymous' : 'disable';
+			}
 
 			// Schedule the CRON event only if it's not already scheduled.
 			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {
@@ -89,9 +106,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			// Schedule the single event in next 10 minute.
-			if ( ! bp_get_option( 'bb_telemetry_report_single_cron_event_scheduled', 0 ) && ! wp_next_scheduled( 'bb_telemetry_report_single_cron_event' ) ) {
+			if ( ! bboss_get_option( 'bb_telemetry_report_single_cron_event_scheduled', 0 ) && ! wp_next_scheduled( 'bb_telemetry_report_single_cron_event' ) ) {
 				wp_schedule_single_event( time() + ( 10 * MINUTE_IN_SECONDS ), 'bb_telemetry_report_single_cron_event' );
-				bp_update_option( 'bb_telemetry_report_single_cron_event_scheduled', 1 );
+				bboss_update_option( 'bb_telemetry_report_single_cron_event_scheduled', 1 );
 			}
 
 			$this->setup_actions();
@@ -111,6 +128,23 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		}
 
 		/**
+		 * Read a stored telemetry mode without "complete" reporting.
+		 *
+		 * Used only by builds without "complete" reporting (the WordPress.org
+		 * edition), so a "complete" value saved by an earlier install is shown
+		 * and treated as "disable" rather than as consent.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $mode Stored telemetry mode.
+		 *
+		 * @return mixed Stored mode, or 'disable' instead of 'complete'.
+		 */
+		public static function bb_telemetry_opt_in_mode( $mode ) {
+			return ( 'complete' === $mode ) ? 'disable' : $mode;
+		}
+
+		/**
 		 * Send telemetry data to the analytics site when the CRON job is triggered.
 		 *
 		 * @since BuddyBoss 2.7.40
@@ -124,27 +158,21 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			$data    = $this->bb_collect_site_data();
-			$api_url =
-				'aHR0cHM6Ly9h' .
-				'bmFseXRpY3Mu' .
-				'YnVkZHlib3Nz' .
-				'LmNvbS93cC1q' .
-				'c29uL3dwL3Yx' .
-				'L2JiLXRlbGVt' .
-				'ZXRyeQ==';
+			// Plain URL (disclosed under "External services" in readme.txt); TLS is verified
+			// (WordPress default) because this is a remote server, not a loopback request.
+			$api_url = 'https://analytics.buddyboss.com/wp-json/wp/v1/bb-telemetry';
 			$args    = array(
-				'headers'   => array(
+				'headers'  => array(
 					'Accept'       => 'application/json;ver=1.0',
 					'Content-Type' => 'application/json; charset=UTF-8',
 					'Site-URL'     => get_site_url(),
 				),
-				'timeout'   => 10,
-				'blocking'  => true,
-				'body'      => wp_json_encode( $data ),
-				'sslverify' => apply_filters( 'https_local_ssl_verify', false ), // Local requests.
+				'timeout'  => 10,
+				'blocking' => true,
+				'body'     => wp_json_encode( $data ),
 			);
 
-			$raw_response = wp_safe_remote_post( base64_decode( $api_url ), $args ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+			$raw_response = wp_safe_remote_post( $api_url, $args );
 			if ( is_wp_error( $raw_response ) ) {
 				$this->bb_record_delivery_failure( $raw_response->get_error_message() );
 				unset( $data, $api_url, $args );
@@ -175,11 +203,11 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 */
 		public function bb_uuid() {
 			$uuid_key = 'bb-telemetry-uuid';
-			$uuid     = bp_get_option( $uuid_key );
+			$uuid     = bboss_get_option( $uuid_key );
 
 			if ( empty( $uuid ) ) {
 				$uuid = md5( uniqid() . site_url() );
-				bp_update_option( $uuid_key, $uuid );
+				bboss_update_option( $uuid_key, $uuid );
 			}
 
 			unset( $uuid_key );
@@ -209,10 +237,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'is_multisite'  => is_multisite(),
 			);
 
-			if ( 'complete' === self::$bb_telemetry_option ) {
-				$bb_telemetry_data['admin_email'] = get_option( 'admin_email' );
-			}
-
 			$bb_telemetry_data = $this->bb_telemetry_platform_data( $bb_telemetry_data );
 
 			if ( function_exists( 'bb_telemetry_platform_pro_data' ) ) {
@@ -225,6 +249,33 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			if ( function_exists( 'bbapp_telemetry_data' ) ) {
 				$bb_telemetry_data = bbapp_telemetry_data( $bb_telemetry_data );
+			}
+
+			/*
+			 * Builds without "complete" reporting (the WordPress.org edition) send no
+			 * personal data or credentials, whatever a contributor above added: the
+			 * admin email (BuddyBoss App adds it unconditionally), the legacy licence
+			 * option with its keys (Platform Pro and the Theme), a licence key added
+			 * through `bb_telemetry_license_data`, and the App's connection token,
+			 * AppCenter account id and app id. The database host name goes too: on
+			 * managed hosting it can name the server or the customer account, which
+			 * "anonymous" does not promise. This runs after every contributor and
+			 * filter that can touch the payload.
+			 */
+			$bb_telemetry_scrub_private = true;
+
+			if ( $bb_telemetry_scrub_private ) {
+				foreach ( array( 'admin_email', 'bboss_updater_saved_licenses', 'app_key', 'vendor_id', 'app_id', 'db_provider' ) as $bb_telemetry_private_key ) {
+					unset( $bb_telemetry_data[ $bb_telemetry_private_key ] );
+				}
+
+				if ( isset( $bb_telemetry_data['bb_license'] ) && is_array( $bb_telemetry_data['bb_license'] ) ) {
+					foreach ( $bb_telemetry_data['bb_license'] as $bb_telemetry_product => $bb_telemetry_licence ) {
+						if ( is_array( $bb_telemetry_licence ) ) {
+							unset( $bb_telemetry_data['bb_license'][ $bb_telemetry_product ]['license_key'] );
+						}
+					}
+				}
 			}
 
 			/*
@@ -388,12 +439,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				}
 			}
 
-			// DRM's detector is the single definition of "not a real site":
-			// environment type, reserved TLDs, staging keywords as whole labels,
-			// host/staging provider domains, local IPs and non-standard ports.
-			if ( class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' ) ) {
-				return ! \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::is_dev_environment();
-			}
 
 			// Fallback when DRM is unavailable: the one legacy rule the list
 			// above does not express — a `staging.` host prefix.
@@ -417,7 +462,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * }
 		 */
 		public function bb_get_delivery_status() {
-			$status = bp_get_option( 'bb_telemetry_delivery', array() );
+			$status = bboss_get_option( 'bb_telemetry_delivery', array() );
 
 			return wp_parse_args(
 				is_array( $status ) ? $status : array(),
@@ -445,7 +490,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			$now = gmdate( 'Y-m-d H:i:s' );
-			bp_update_option(
+			bboss_update_option(
 				'bb_telemetry_delivery',
 				array(
 					'last_attempt'         => $now,
@@ -474,7 +519,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$status['consecutive_failures'] = (int) $status['consecutive_failures'] + 1;
 			$status['last_error']           = substr( (string) $error_message, 0, 200 );
 
-			bp_update_option( 'bb_telemetry_delivery', $status );
+			bboss_update_option( 'bb_telemetry_delivery', $status );
 
 			$retry_delays = array(
 				1 => HOUR_IN_SECONDS,
@@ -507,8 +552,8 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$report_metrics_file = __DIR__ . '/class-bb-report-metrics.php';
 			if ( file_exists( $report_metrics_file ) ) {
 				require_once $report_metrics_file;
-				if ( class_exists( 'BB_Report_Metrics' ) ) {
-					$bb_telemetry_data['bb_report_metrics'] = BB_Report_Metrics::collect();
+				if ( class_exists( 'BBoss_Report_Metrics' ) ) {
+					$bb_telemetry_data['bb_report_metrics'] = BBoss_Report_Metrics::collect();
 				}
 			}
 
@@ -620,17 +665,17 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			);
 
 			// Added those options that are not available in the option table.
-			$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
+			$bb_telemetry_data['bb_platform_version'] = BBOSS_PLATFORM_VERSION;
 			$bb_telemetry_data['active_integrations'] = $this->bb_active_integrations();
 			$bb_telemetry_data['bb_license']          = $this->bb_get_license_data();
 			$bb_telemetry_data['bb_drm']              = $this->bb_get_drm_data();
 
 			if (
-				function_exists( 'bb_topics_manager_instance' ) &&
-				function_exists( 'bb_is_enabled_activity_topics' ) &&
-				bb_is_enabled_activity_topics()
+				function_exists( 'bboss_topics_manager_instance' ) &&
+				function_exists( 'bboss_is_enabled_activity_topics' ) &&
+				bboss_is_enabled_activity_topics()
 			) {
-				$global_activity_topics_count = bb_topics_manager_instance()->bb_get_topics(
+				$global_activity_topics_count = bboss_topics_manager_instance()->bb_get_topics(
 					array(
 						'item_type'   => 'activity',
 						'item_id'     => 0,
@@ -644,8 +689,8 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			// Pass active or inactive components.
-			$components          = bp_core_get_components();
-			$active_components   = bp_get_option( 'bp-active-components' );
+			$components          = bboss_core_get_components();
+			$active_components   = bboss_get_option( 'bp-active-components' );
 			$inactive_components = array_diff( array_keys( $components ), array_keys( $active_components ) );
 			if ( ! empty( $inactive_components ) ) {
 				foreach ( $inactive_components as $component ) {
@@ -655,7 +700,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$bb_telemetry_data['bp-active-components'] = $active_components;
 
 			// Fetch options from the database using parameterized query.
-			$bp_prefix    = bp_core_get_table_prefix();
+			$bp_prefix    = bboss_core_get_table_prefix();
 			$sanitized    = array_map( 'sanitize_key', $bb_platform_db_options );
 			$placeholders = implode( ', ', array_fill( 0, count( $sanitized ), '%s' ) );
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table prefix is safe; placeholders are parameterized.
@@ -689,7 +734,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
 			// Tools usage → cumulative per-action counts for Repair / Sample Data / Migration.
-			$bb_telemetry_data['tools_usage'] = bb_get_tool_usage();
+			$bb_telemetry_data['tools_usage'] = bboss_get_tool_usage();
 
 			/**
 			 * Filters the telemetry platform data.
@@ -741,9 +786,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @return array Licence data for the Platform and, when present, the Theme.
 		 */
 		public function bb_get_license_data() {
-			$include_key = ( 'complete' === self::$bb_telemetry_option );
+			$include_key = false;
 
-			$platform_id = self::bb_get_license_option( 'buddyboss_dynamic_plugin_id', defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : '' );
+			$platform_id = self::bb_get_license_option( 'buddyboss_dynamic_plugin_id', defined( 'BBOSS_PLATFORM_EDITION' ) ? BBOSS_PLATFORM_EDITION : '' );
 			$theme_id    = get_option( 'buddyboss_theme_dynamic_id', defined( 'THEME_EDITION' ) ? THEME_EDITION : '' );
 
 			/*
@@ -753,23 +798,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * would otherwise report as unlicensed.
 			 */
 			$platform_key = '';
-			if ( class_exists( '\BuddyBossPlatform\GroundLevel\Mothership\Credentials' ) ) {
-				try {
-					/*
-					 * getLicenseKey() was static in GroundLevel 2.2.1 but is an instance
-					 * method as of 9.1.2, so it has to be resolved from the container.
-					 * Calling it statically throws an Error that the catch below swallows,
-					 * which silently defeats the constant/environment lookup this block
-					 * exists for.
-					 */
-					$platform_key = (string) \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance()
-						->get_container()
-						->get( \BuddyBossPlatform\GroundLevel\Mothership\Credentials::class )
-						->getLicenseKey();
-				} catch ( \Throwable $e ) {
-					$platform_key = '';
-				}
-			}
 
 			if ( '' === $platform_key && ! empty( $platform_id ) ) {
 				$platform_key = (string) get_option( $platform_id . '_license_key', '' );
@@ -937,10 +965,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Reporting the stage is what makes the ladder measurable: how many sites
 		 * sit at each rung, and how many reach lockout rather than licensing.
 		 *
-		 * Derived from local state only — two indexed lookups on the DRM event
-		 * table plus two option reads. Deliberately avoids
-		 * `BB_DRM_Registry::get_addons_by_drm_status()`, which calls
-		 * `is_addon_licensed()` and can reach the Mothership API.
 		 *
 		 * @since BuddyBoss 3.4.3
 		 *
@@ -954,26 +978,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'addons'   => array(),
 			);
 
-			if (
-				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Event' ) ||
-				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' )
-			) {
-				return $data;
-			}
-
-			// Per-plugin DRM state for every paid add-on registered on this site.
-			$data['addons'] = $this->bb_get_drm_addons_data();
-
-			// Platform's own scenario, if any.
-			if ( get_option( 'bb_drm_no_license', false ) ) {
-				$data['scenario'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::NO_LICENSE_EVENT;
-			} elseif ( get_option( 'bb_drm_invalid_license', false ) ) {
-				$data['scenario'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::INVALID_LICENSE_EVENT;
-			} else {
-				return $data;
-			}
-
-			$data = array_merge( $data, $this->bb_get_drm_stage( $data['scenario'] ) );
 
 			/**
 			 * Filters the DRM data reported by telemetry.
@@ -985,166 +989,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			return apply_filters( 'bb_telemetry_drm_data', $data );
 		}
 
-		/**
-		 * Resolve the DRM escalation stage for a single DRM event.
-		 *
-		 * Mirrors the boundaries in `BB_DRM_NoKey::run()`, `BB_DRM_Invalid::run()`
-		 * and `BB_DRM_Addon::run()`, which are identical.
-		 *
-		 * @since BuddyBoss 3.4.3
-		 *
-		 * @param string $event_name DRM event name, e.g. `no-license` or `addon-{slug}`.
-		 *
-		 * @return array Stage, elapsed days and the event start date.
-		 */
-		protected function bb_get_drm_stage( $event_name ) {
-			try {
-				$event = \BuddyBoss\Core\Admin\DRM\BB_DRM_Event::latest( $event_name );
-			} catch ( \Throwable $e ) {
-				$event = null;
-			}
-
-			return $this->bb_get_drm_stage_from_event( $event );
-		}
-
-		/**
-		 * Resolve the DRM escalation stage from an already-fetched DRM event.
-		 *
-		 * Split from bb_get_drm_stage() so the add-on collector can resolve many
-		 * stages from one batched query instead of one query per add-on.
-		 *
-		 * @since BuddyBoss 3.4.3
-		 *
-		 * @param object|null $event Latest DRM event, or null when there is none.
-		 *
-		 * @return array Stage, elapsed days and the event start date.
-		 */
-		protected function bb_get_drm_stage_from_event( $event ) {
-			$stage = array(
-				'stage' => '',
-				'days'  => 0,
-			);
-
-			if ( ! $event || empty( $event->created_at ) ) {
-				return $stage;
-			}
-
-			$days             = (int) \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::days_elapsed( $event->created_at );
-			$stage['days']    = $days;
-			$stage['started'] = $event->created_at;
-
-			if ( $days >= 31 ) {
-				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_LOCKED;
-			} elseif ( $days >= 22 ) {
-				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_HIGH;
-			} elseif ( $days >= 14 ) {
-				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_MEDIUM;
-			} elseif ( $days >= 7 ) {
-				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_LOW;
-			} else {
-				$stage['stage'] = 'grace';
-			}
-
-			return $stage;
-		}
-
-		/**
-		 * Collect per-plugin DRM state for every registered paid add-on.
-		 *
-		 * Add-ons register with the DRM registry from their own bootstrap, so the
-		 * registry is effectively the list of paid BuddyBoss plugins active on this
-		 * site. Every one is reported, including add-ons with no DRM event — a
-		 * healthy add-on reports an empty stage, which is what makes "how many
-		 * sites run this add-on licensed vs lapsed" answerable.
-		 *
-		 * Add-on DRM events are named `addon-{sanitized product slug}` and use the
-		 * same escalation ladder as the Platform.
-		 *
-		 * @since BuddyBoss 3.4.3
-		 *
-		 * @return array Map of product slug => name, version, stage, days, started.
-		 */
-		protected function bb_get_drm_addons_data() {
-			if ( ! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
-				return array();
-			}
-
-			$registered = \BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::get_registered_addons();
-
-			if ( empty( $registered ) || ! is_array( $registered ) ) {
-				return array();
-			}
-
-			$event_names = array();
-			foreach ( $registered as $product_slug => $addon ) {
-				$event_names[ $product_slug ] = 'addon-' . sanitize_key( $product_slug );
-			}
-
-			// One grouped query for every add-on's latest event, not one each.
-			$latest_events = $this->bb_get_latest_drm_events( array_values( $event_names ) );
-
-			$addons = array();
-			foreach ( $registered as $product_slug => $addon ) {
-				$entry = array(
-					'name'    => isset( $addon['plugin_name'] ) ? $addon['plugin_name'] : $product_slug,
-					'version' => isset( $addon['args']['version'] ) ? $addon['args']['version'] : '',
-				);
-
-				$event_name = $event_names[ $product_slug ];
-
-				$addons[ $product_slug ] = array_merge(
-					$entry,
-					$this->bb_get_drm_stage_from_event( isset( $latest_events[ $event_name ] ) ? $latest_events[ $event_name ] : null )
-				);
-			}
-
-			return $addons;
-		}
-
-		/**
-		 * Fetch the latest DRM event for each given event name in one query.
-		 *
-		 * Replaces one BB_DRM_Event::latest() round trip per registered add-on
-		 * with a single grouped lookup.
-		 *
-		 * @since BuddyBoss 3.4.3
-		 *
-		 * @param array $event_names DRM event names.
-		 *
-		 * @return array Map of event name => latest event row.
-		 */
-		protected function bb_get_latest_drm_events( $event_names ) {
-			if ( empty( $event_names ) ) {
-				return array();
-			}
-
-			try {
-				$table        = \BuddyBoss\Core\Admin\DRM\BB_DRM_Event::get_table_name();
-				$placeholders = implode( ', ', array_fill( 0, count( $event_names ), '%s' ) );
-
-				$events_sql = "SELECT t.* FROM {$table} t
-					INNER JOIN (
-						SELECT event, MAX( id ) AS id
-						FROM {$table}
-						WHERE event IN ( {$placeholders} )
-						GROUP BY event
-					) latest ON latest.id = t.id";
-
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name from the DRM class; values parameterized.
-				$rows = self::$wpdb->get_results( self::$wpdb->prepare( $events_sql, $event_names ) );
-			} catch ( \Throwable $e ) {
-				return array();
-			}
-
-			$events = array();
-			foreach ( (array) $rows as $row ) {
-				if ( isset( $row->event ) ) {
-					$events[ $row->event ] = $row;
-				}
-			}
-
-			return $events;
-		}
 
 		/**
 		 * Get the status of integrations.
@@ -1160,7 +1004,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'bb-recaptcha' => false,
 			);
 
-			if ( function_exists( 'bb_recaptcha_site_key' ) && ! empty( bb_recaptcha_site_key() ) ) {
+			if ( function_exists( 'bboss_recaptcha_site_key' ) && ! empty( bboss_recaptcha_site_key() ) ) {
 				$active_integrations['bb-recaptcha'] = true;
 			}
 
@@ -1196,7 +1040,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function bb_telemetry_admin_notice() {
 
 			// Check if the notice has already been dismissed.
-			if ( bp_get_option( 'bb_telemetry_notice_dismissed', 0 ) ) {
+			if ( bboss_get_option( 'bb_telemetry_notice_dismissed', 0 ) ) {
 				return; // Do not display the notice if it's been dismissed.
 			}
 			// URL for the telemetry settings page.
@@ -1207,15 +1051,21 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				<div class="bb-telemetry-notice_logo"><i class="bb-icon-brand-buddyboss bb-icon-rf"></i></div>
 				<div class="bb-telemetry-notice_content">
 					<p class="bb-telemetry-notice_heading">
-						<strong><?php esc_html_e( 'Help us improve BuddyBoss', 'buddyboss' ); ?></strong>
+						<strong><?php esc_html_e( 'Help us improve BuddyBoss', 'buddyboss-platform' ); ?></strong>
 					</p>
 					<p>
 						<?php
+						/*
+						 * Builds where telemetry is off until an administrator opts in (the
+						 * WordPress.org edition) must not word this notice as opt-out.
+						 */
+						/* translators: %1$s: telemetry settings URL. */
+						$bb_telemetry_notice_text = __( 'You can help us improve the product by sharing anonymous usage statistics. Nothing is sent unless an administrator turns this on in your <a href="%1$s">telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss-platform' );
+
 						// Message with link to telemetry settings.
 						printf(
 							wp_kses(
-							/* translators: %1$s and %2$s are links. */
-								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you\'re happy with that you can dismiss this message, otherwise you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
+								$bb_telemetry_notice_text,
 								array(
 									'a' => array(
 										'href' => array(),
@@ -1228,7 +1078,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					</p>
 					<p>
 						<a href="<?php echo esc_url( $telemetry_url ); ?>" class="button button-primary" target="_blank" >
-							<?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?>
+							<?php esc_html_e( 'About Telemetry', 'buddyboss-platform' ); ?>
 						</a>
 					</p>
 				</div>
@@ -1248,17 +1098,17 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			// (admin_notices fires for any admin viewer; manage_options matches
 			// the network-admin-friendly subset that can dismiss it).
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error( array( 'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'error' => __( 'You do not have permission to perform this action.', 'buddyboss-platform' ) ) );
 			}
 
-			$bb_telemetry_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
+			$bb_telemetry_nonce = bboss_filter_input_string( INPUT_POST, 'nonce' );
 
 			// Nonce check.
 			if ( empty( $bb_telemetry_nonce ) || ! wp_verify_nonce( $bb_telemetry_nonce, 'bb-telemetry-notice-nonce' ) ) {
-				wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss-platform' ) ) );
 			}
 
-			bp_update_option( 'bb_telemetry_notice_dismissed', 1 );
+			bboss_update_option( 'bb_telemetry_notice_dismissed', 1 );
 			wp_send_json_success();
 		}
 	}

@@ -15,12 +15,12 @@ defined( 'ABSPATH' ) || exit;
  * @deprecated BuddyBoss 1.0.0
  * No longer updating member's last activity
  *
- * @param array|string $args {@see bp_get_member_latest_update()}.
+ * @param array|string $args {@see bboss_get_member_latest_update()}.
  */
-function bp_member_latest_update( $args = '' ) {
+function bboss_member_latest_update( $args = '' ) {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
-	echo bp_get_member_latest_update( $args );
+	echo wp_kses_post( bboss_get_member_latest_update( $args ) );
 }
 
 	/**
@@ -37,7 +37,7 @@ function bp_member_latest_update( $args = '' ) {
 	 * }
 	 * @return string
 	 */
-function bp_get_member_latest_update( $args = '' ) {
+function bboss_get_member_latest_update( $args = '' ) {
 	global $members_template;
 
 	_deprecated_function( __FUNCTION__, '1.0.0' );
@@ -49,10 +49,10 @@ function bp_get_member_latest_update( $args = '' ) {
 		'view_link' => true,
 	);
 
-	$r = bp_parse_args( $args, $defaults );
+	$r = bboss_parse_args( $args, $defaults );
 	extract( $r );
 
-	if ( ! bp_is_active( 'activity' ) || empty( $members_template->member->latest_update ) || ! $update = maybe_unserialize( $members_template->member->latest_update ) ) {
+	if ( ! bboss_is_active( 'activity' ) || empty( $members_template->member->latest_update ) || ! $update = maybe_unserialize( $members_template->member->latest_update ) ) {
 		return false;
 	}
 
@@ -65,16 +65,17 @@ function bp_get_member_latest_update( $args = '' ) {
 	 * @param string $value Excerpt of the latest update for current member in the loop.
 	 * @param array  $r     Array of parsed arguments.
 	 */
-	$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( strip_tags( bp_create_excerpt( $update['content'], $length ) ) ), $r );
+	$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( wp_strip_all_tags( bboss_create_excerpt( $update['content'], $length ) ) ), $r );
 
-	$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss' ), $update_content );
+	/* translators: %s: latest update excerpt. */
+	$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss-platform' ), $update_content );
 
 	// If $view_link is true and the text returned by bp_create_excerpt() is different from the original text (ie it's
 	// been truncated), add the "View" link.
 	if ( $view_link && ( $update_content != $update['content'] ) ) {
-		$view = __( 'View', 'buddyboss' );
+		$view = __( 'View', 'buddyboss-platform' );
 
-		$update_content .= '<span class="activity-read-more"><a href="' . bp_activity_get_permalink( $update['id'] ) . '" rel="nofollow">' . $view . '</a></span>';
+		$update_content .= '<span class="activity-read-more"><a href="' . bboss_activity_get_permalink( $update['id'] ) . '" rel="nofollow">' . $view . '</a></span>';
 	}
 
 	/**
@@ -102,10 +103,10 @@ function bp_get_member_latest_update( $args = '' ) {
  *
  * @return string Excerpt.
  */
-function bp_nouveau_group_description_excerpt( $group = null, $length = null ) {
+function bboss_nouveau_group_description_excerpt( $group = null, $length = null ) {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
-	echo bp_nouveau_get_group_description_excerpt( $group, $length );
+	echo wp_kses_post( bboss_nouveau_get_group_description_excerpt( $group, $length ) );
 }
 
 /**
@@ -122,7 +123,7 @@ function bp_nouveau_group_description_excerpt( $group = null, $length = null ) {
  *
  * @return string Excerpt.
  */
-function bp_nouveau_get_group_description_excerpt( $group = null, $length = null ) {
+function bboss_nouveau_get_group_description_excerpt( $group = null, $length = null ) {
 	global $groups_template;
 
 	_deprecated_function( __FUNCTION__, '1.0.0' );
@@ -136,7 +137,7 @@ function bp_nouveau_get_group_description_excerpt( $group = null, $length = null
 	* default value otherwise use the passed in value.
 	* If not a grid then the BP core default is used or passed in value.
 	*/
-	if ( bp_nouveau_loop_is_grid() && 'groups' === bp_current_component() ) {
+	if ( bboss_nouveau_loop_is_grid() && 'groups' === bboss_current_component() ) {
 		if ( ! $length ) {
 			$length = 100;
 		} else {
@@ -153,7 +154,7 @@ function bp_nouveau_get_group_description_excerpt( $group = null, $length = null
 	* @param object $group Object for group whose description is made into an excerpt.
 	* @param object $group Object for group whose description is made into an excerpt.
 	*/
-	return apply_filters( 'bp_nouveau_get_group_description_excerpt', bp_create_excerpt( $group->description, $length ), $group );
+	return apply_filters( 'bp_nouveau_get_group_description_excerpt', bboss_create_excerpt( $group->description, $length ), $group );
 }
 
 /**
@@ -164,12 +165,12 @@ function bp_nouveau_get_group_description_excerpt( $group = null, $length = null
  *
  * @return bool True to display. False otherwise.
  */
-function bp_nouveau_members_wp_bio_info() {
+function bboss_nouveau_members_wp_bio_info() {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	return false;
 
-	$user_settings = bp_nouveau_get_appearance_settings();
+	$user_settings = bboss_nouveau_get_appearance_settings();
 
 	return ! empty( $user_settings['user_front_page'] ) && ! empty( $user_settings['user_front_bio'] );
 }
@@ -184,14 +185,14 @@ function bp_nouveau_members_wp_bio_info() {
  *
  * @return string HTML output.
  */
-function bp_nouveau_member_description( $user_id = 0 ) {
+function bboss_nouveau_member_description( $user_id = 0 ) {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	if ( ! $user_id ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 
-		if ( bp_displayed_user_id() ) {
-			$user_id = bp_displayed_user_id();
+		if ( bboss_displayed_user_id() ) {
+			$user_id = bboss_displayed_user_id();
 		}
 	}
 
@@ -223,9 +224,9 @@ function bp_nouveau_member_description( $user_id = 0 ) {
  *
  * @return string HTML Output
  */
-function bp_nouveau_member_description_edit_link() {
+function bboss_nouveau_member_description_edit_link() {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
-	echo bp_nouveau_member_get_description_edit_link();
+	echo wp_kses_post( bboss_nouveau_member_get_description_edit_link() );
 }
 
 	/**
@@ -238,22 +239,22 @@ function bp_nouveau_member_description_edit_link() {
 	 *
 	 * @return string HTML Output
 	 */
-function bp_nouveau_member_get_description_edit_link() {
+function bboss_nouveau_member_get_description_edit_link() {
 
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
-	remove_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
+	remove_filter( 'edit_profile_url', 'bboss_members_edit_profile_url', 10, 3 );
 
 	if ( is_multisite() && ! current_user_can( 'read' ) ) {
-	 $link = get_dashboard_url( bp_displayed_user_id(), 'profile.php' );
+	 $link = get_dashboard_url( bboss_displayed_user_id(), 'profile.php' );
 	} else {
-	 $link = get_edit_profile_url( bp_displayed_user_id() );
+	 $link = get_edit_profile_url( bboss_displayed_user_id() );
 	}
 
-	add_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
+	add_filter( 'edit_profile_url', 'bboss_members_edit_profile_url', 10, 3 );
 	$link .= '#description';
 
-	return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $link ), esc_html__( 'Edit your bio', 'buddyboss' ) );
+	return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $link ), esc_html__( 'Edit your bio', 'buddyboss-platform' ) );
 }
 
 /**
@@ -262,14 +263,14 @@ function bp_nouveau_member_get_description_edit_link() {
  * @since BuddyPress 1.2.0
  * @deprecated BuddyBoss 1.0.0
  *
- * @see bp_get_send_public_message_button() for description of parameters.
+ * @see bboss_get_send_public_message_button() for description of parameters.
  *
- * @param array|string $args See {@link bp_get_send_public_message_button()}.
+ * @param array|string $args See {@link bboss_get_send_public_message_button()}.
  */
-function bp_send_public_message_button( $args = '' ) {
+function bboss_send_public_message_button( $args = '' ) {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
-	echo bp_get_send_public_message_button( $args );
+	echo wp_kses_post( bboss_get_send_public_message_button( $args ) );
 }
 
 	/**
@@ -279,7 +280,7 @@ function bp_send_public_message_button( $args = '' ) {
 	 * @deprecated BuddyBoss 1.0.0
 	 *
 	 * @param array|string $args {
-	 *     All arguments are optional. See {@link BP_Button} for complete
+	 *     All arguments are optional. See {@link BBoss_Button} for complete
 	 *     descriptions.
 	 *     @type string $id                Default: 'public_message'.
 	 *     @type string $component         Default: 'activity'.
@@ -293,10 +294,10 @@ function bp_send_public_message_button( $args = '' ) {
 	 * }
 	 * @return string The button for sending a public message.
 	 */
-function bp_get_send_public_message_button( $args = '' ) {
+function bboss_get_send_public_message_button( $args = '' ) {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'id'                => 'public_message',
@@ -304,8 +305,8 @@ function bp_get_send_public_message_button( $args = '' ) {
 			'must_be_logged_in' => true,
 			'block_self'        => true,
 			'wrapper_id'        => 'post-mention',
-			'link_href'         => bp_get_send_public_message_link(),
-			'link_text'         => __( 'Public Mention', 'buddyboss' ),
+			'link_href'         => bboss_get_send_public_message_link(),
+			'link_text'         => __( 'Public Mention', 'buddyboss-platform' ),
 			'link_class'        => 'activity-button mention'
 		)
 	);
@@ -317,7 +318,7 @@ function bp_get_send_public_message_button( $args = '' ) {
 	*
 	* @param array $r Array of arguments for the public message button HTML.
 	*/
-	return bp_get_button( apply_filters( 'bp_get_send_public_message_button', $r ) );
+	return bboss_get_button( apply_filters( 'bp_get_send_public_message_button', $r ) );
 }
 
 /**
@@ -328,7 +329,7 @@ function bp_get_send_public_message_button( $args = '' ) {
  * @since BuddyPress 1.5.0
  * @deprecated BuddyBoss 1.0.0
  */
-function bp_register_theme_directory() {
+function bboss_register_theme_directory() {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	/**
@@ -350,7 +351,7 @@ function bp_register_theme_directory() {
  *
  * @return bool True if bp-themes should be registered, false otherwise.
  */
-function bp_do_register_theme_directory() {
+function bboss_do_register_theme_directory() {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	// If bp-default exists in another theme directory, bail.
@@ -387,31 +388,31 @@ function bp_do_register_theme_directory() {
  * Setup the theme's features.
  *
  * Note: BP Legacy's buddypress-functions.php is not loaded in WP Administration
- * as it's loaded using bp_locate_template(). That's why this function is here.
+ * as it's loaded using bboss_locate_template(). That's why this function is here.
  *
  * @since BuddyPress 2.4.0
  * @deprecated BuddyBoss 1.0.0
  *
  * @global string $content_width the content width of the theme
  */
-function bp_register_theme_compat_default_features() {
+function bboss_register_theme_compat_default_features() {
 
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	global $content_width;
 
 	// Do not set up default features on deactivation.
-	if ( bp_is_deactivation() ) {
+	if ( bboss_is_deactivation() ) {
 		return;
 	}
 
 	// If the current theme doesn't need theme compat, bail at this point.
-	if ( ! bp_use_theme_compat_with_current_theme() ) {
+	if ( ! bboss_use_theme_compat_with_current_theme() ) {
 		return;
 	}
 
 	// Make sure BP Legacy is the Theme Compat in use.
-	if ( 'legacy' !== bp_get_theme_compat_id() ) {
+	if ( 'legacy' !== bboss_get_theme_compat_id() ) {
 		return;
 	}
 
@@ -458,7 +459,7 @@ function bp_register_theme_compat_default_features() {
 		$top_offset = $avatar_height;
 	}
 
-	bp_set_theme_compat_feature(
+	bboss_set_theme_compat_feature(
 		'legacy',
 		array(
 			'name'     => 'cover_image',
@@ -478,7 +479,7 @@ function bp_register_theme_compat_default_features() {
  *
  * @deprecated BuddyBoss 1.0.0
  */
-function bp_admin_setting_callback_theme_package_id() {
+function bboss_admin_setting_callback_theme_package_id() {
 
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
@@ -491,21 +492,21 @@ function bp_admin_setting_callback_theme_package_id() {
 	 *
 	 * See BuddyPress::register_theme_packages()
 	 */
-	foreach ( (array) buddypress()->theme_compat->packages as $id => $theme ) {
+	foreach ( (array) bboss()->theme_compat->packages as $id => $theme ) {
 		$options .= sprintf(
 			'<option value="%1$s" %2$s>%3$s</option>',
 			esc_attr( $id ),
-			selected( $theme->id, bp_get_theme_package_id(), false ),
+			selected( $theme->id, bboss_get_theme_package_id(), false ),
 			esc_html( $theme->name )
 		);
 	}
 
 	if ( $options ) : ?>
-		<select name="_bp_theme_package_id" id="_bp_theme_package_id" aria-describedby="_bp_theme_package_description"><?php echo $options; ?></select>
-		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyPress templates.', 'buddyboss' ); ?></p>
+		<select name="_bp_theme_package_id" id="_bp_theme_package_id" aria-describedby="_bp_theme_package_description"><?php echo $options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- <option> form-control markup built from esc_attr()/esc_html()/selected() above. ?></select>
+		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyPress templates.', 'buddyboss-platform' ); ?></p>
 
 	<?php else : ?>
-		<p><?php esc_html_e( 'No template packages available.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'No template packages available.', 'buddyboss-platform' ); ?></p>
 
 	<?php endif;
 }
@@ -517,16 +518,16 @@ function bp_admin_setting_callback_theme_package_id() {
  * @since BuddyPress 1.0.0
  * @deprecated BuddyBoss 1.0.0
  */
-function messages_screen_sentbox() {
+function bboss_messages_screen_sentbox() {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
 
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
@@ -544,7 +545,7 @@ function messages_screen_sentbox() {
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */
-	bp_core_load_template( apply_filters( 'messages_template_sentbox', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'messages_template_sentbox', 'members/single/home' ) );
 }
 
 /**
@@ -557,9 +558,9 @@ function messages_screen_sentbox() {
  *
  * @return bool True if the current page is a user's Messages Sentbox.
  */
-function bp_is_messages_sentbox() {
+function bboss_is_messages_sentbox() {
 	_deprecated_function( __FUNCTION__, '1.0.0' );
-	return (bool) ( bp_is_user_messages() && bp_is_current_action( 'sentbox' ) );
+	return (bool) ( bboss_is_user_messages() && bboss_is_current_action( 'sentbox' ) );
 }
 
 /** Single Topic **************************************************************/
@@ -571,11 +572,11 @@ function bp_is_messages_sentbox() {
  * @since bbPress (r2860)
  * @deprecated BuddyBoss 1.0.0
  *
- * @param array $args See {@link bbp_get_single_topic_description()}
- * @uses bbp_get_single_topic_description() Return the eventual output
+ * @param array $args See {@link bboss_bbp_get_single_topic_description()}
+ * @uses bboss_bbp_get_single_topic_description() Return the eventual output
  */
-function bbp_single_topic_description( $args = '' ) {
-	echo bbp_get_single_topic_description( $args );
+function bboss_bbp_single_topic_description( $args = '' ) {
+	echo wp_kses_post( bboss_bbp_get_single_topic_description( $args ) );
 }
 	/**
 	 * Return a fancy description of the current topic, including total topics,
@@ -588,20 +589,20 @@ function bbp_single_topic_description( $args = '' ) {
 	 *  - before: Before the text
 	 *  - after: After the text
 	 *  - size: Size of the avatar
-	 * @uses bbp_get_topic_id() To get the topic id
-	 * @uses bbp_get_topic_voice_count() To get the topic voice count
-	 * @uses bbp_get_topic_reply_count() To get the topic reply count
-	 * @uses bbp_get_topic_freshness_link() To get the topic freshness link
-	 * @uses bbp_get_topic_last_active_id() To get the topic last active id
-	 * @uses bbp_get_reply_author_link() To get the reply author link
+	 * @uses bboss_bbp_get_topic_id() To get the topic id
+	 * @uses bboss_bbp_get_topic_voice_count() To get the topic voice count
+	 * @uses bboss_bbp_get_topic_reply_count() To get the topic reply count
+	 * @uses bboss_bbp_get_topic_freshness_link() To get the topic freshness link
+	 * @uses bboss_bbp_get_topic_last_active_id() To get the topic last active id
+	 * @uses bboss_bbp_get_reply_author_link() To get the reply author link
 	 * @uses apply_filters() Calls 'bbp_get_single_topic_description' with
 	 *                        the description and args
 	 * @return string Filtered topic description
 	 */
-function bbp_get_single_topic_description( $args = '' ) {
+function bboss_bbp_get_single_topic_description( $args = '' ) {
 
 	// Parse arguments against default values
-	$r = bbp_parse_args(
+	$r = bboss_bbp_parse_args(
 		$args,
 		array(
 			'topic_id' => 0,
@@ -613,42 +614,45 @@ function bbp_get_single_topic_description( $args = '' ) {
 	);
 
 	// Validate topic_id
-	$topic_id = bbp_get_topic_id( $r['topic_id'] );
+	$topic_id = bboss_bbp_get_topic_id( $r['topic_id'] );
 
 	// Unhook the 'view all' query var adder
-	remove_filter( 'bbp_get_topic_permalink', 'bbp_add_view_all' );
+	remove_filter( 'bbp_get_topic_permalink', 'bboss_bbp_add_view_all' );
 
 	// Build the topic description
-	$vc_int      = bbp_get_topic_voice_count( $topic_id, true );
-	$voice_count = bbp_get_topic_voice_count( $topic_id, false );
-	$reply_count = bbp_get_topic_replies_link( $topic_id );
-	$time_since  = bbp_get_topic_freshness_link( $topic_id );
+	$vc_int      = bboss_bbp_get_topic_voice_count( $topic_id, true );
+	$voice_count = bboss_bbp_get_topic_voice_count( $topic_id, false );
+	$reply_count = bboss_bbp_get_topic_replies_link( $topic_id );
+	$time_since  = bboss_bbp_get_topic_freshness_link( $topic_id );
 
 	// Singular/Plural
-	$voice_count = sprintf( _n( '%s member', '%s members', $vc_int, 'buddyboss' ), $voice_count );
+	/* translators: %s: number. */
+	$voice_count = sprintf( _n( '%s member', '%s members', $vc_int, 'buddyboss-platform' ), $voice_count );
 
 	// Topic has replies
-	$last_reply = bbp_get_topic_last_reply_id( $topic_id );
+	$last_reply = bboss_bbp_get_topic_last_reply_id( $topic_id );
 	if ( ! empty( $last_reply ) ) {
-		$last_updated_by = bbp_get_author_link(
+		$last_updated_by = bboss_bbp_get_author_link(
 			array(
 				'post_id' => $last_reply,
 				'size'    => $r['size'],
 			)
 		);
-		$retstr          = sprintf( esc_html__( 'This discussion contains %1$s, has %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $reply_count, $voice_count, $last_updated_by, $time_since );
+		/* translators: 1: reply count link, 2: member voice count, 3: author link of last updater, 4: time since last update. */
+		$retstr          = sprintf( esc_html__( 'This discussion contains %1$s, has %2$s, and was last updated by %3$s %4$s.', 'buddyboss-platform' ), $reply_count, $voice_count, $last_updated_by, $time_since );
 
 		// Topic has no replies
 	} elseif ( ! empty( $voice_count ) && ! empty( $reply_count ) ) {
-		$retstr = sprintf( esc_html__( 'This discussion contains %1$s and has %2$s.', 'buddyboss' ), $voice_count, $reply_count );
+		/* translators: 1: member voice count, 2: reply count link. */
+		$retstr = sprintf( esc_html__( 'This discussion contains %1$s and has %2$s.', 'buddyboss-platform' ), $voice_count, $reply_count );
 
 		// Topic has no replies and no members
 	} elseif ( empty( $voice_count ) && empty( $reply_count ) ) {
-		$retstr = sprintf( esc_html__( 'This discussion has no replies.', 'buddyboss' ), $voice_count, $reply_count );
+		$retstr = sprintf( esc_html__( 'This discussion has no replies.', 'buddyboss-platform' ), $voice_count, $reply_count );
 	}
 
 	// Add the 'view all' filter back
-	add_filter( 'bbp_get_topic_permalink', 'bbp_add_view_all' );
+	add_filter( 'bbp_get_topic_permalink', 'bboss_bbp_add_view_all' );
 
 	// Combine the elements together
 	$retstr = $r['before'] . $retstr . $r['after'];
@@ -667,10 +671,10 @@ function bbp_get_single_topic_description( $args = '' ) {
  * @deprecated BuddyBoss 1.0.0
  *
  * @param array $args Arguments passed to alter output
- * @uses bbp_get_single_forum_description() Return the eventual output
+ * @uses bboss_bbp_get_single_forum_description() Return the eventual output
  */
-function bbp_single_forum_description( $args = '' ) {
-	echo bbp_get_single_forum_description( $args );
+function bboss_bbp_single_forum_description( $args = '' ) {
+	echo wp_kses_post( bboss_bbp_get_single_forum_description( $args ) );
 }
 	/**
 	 * Return a fancy description of the current forum, including total
@@ -683,21 +687,21 @@ function bbp_single_forum_description( $args = '' ) {
 	 *  - before: Before the text
 	 *  - after: After the text
 	 *  - size: Size of the avatar
-	 * @uses bbp_get_forum_id() To get the forum id
-	 * @uses bbp_get_forum_topic_count() To get the forum topic count
-	 * @uses bbp_get_forum_reply_count() To get the forum reply count
-	 * @uses bbp_get_forum_freshness_link() To get the forum freshness link
-	 * @uses bbp_get_forum_last_active_id() To get the forum last active id
-	 * @uses bbp_get_author_link() To get the author link
+	 * @uses bboss_bbp_get_forum_id() To get the forum id
+	 * @uses bboss_bbp_get_forum_topic_count() To get the forum topic count
+	 * @uses bboss_bbp_get_forum_reply_count() To get the forum reply count
+	 * @uses bboss_bbp_get_forum_freshness_link() To get the forum freshness link
+	 * @uses bboss_bbp_get_forum_last_active_id() To get the forum last active id
+	 * @uses bboss_bbp_get_author_link() To get the author link
 	 * @uses add_filter() To add the 'view all' filter back
 	 * @uses apply_filters() Calls 'bbp_get_single_forum_description' with
 	 *                        the description and args
 	 * @return string Filtered forum description
 	 */
-function bbp_get_single_forum_description( $args = '' ) {
+function bboss_bbp_get_single_forum_description( $args = '' ) {
 
 	// Parse arguments against default values
-	$r = bbp_parse_args(
+	$r = bboss_bbp_parse_args(
 		$args,
 		array(
 			'forum_id' => 0,
@@ -710,28 +714,29 @@ function bbp_get_single_forum_description( $args = '' ) {
 	);
 
 	// Validate forum_id
-	$forum_id = bbp_get_forum_id( $r['forum_id'] );
+	$forum_id = bboss_bbp_get_forum_id( $r['forum_id'] );
 
 	// Unhook the 'view all' query var adder
-	remove_filter( 'bbp_get_forum_permalink', 'bbp_add_view_all' );
+	remove_filter( 'bbp_get_forum_permalink', 'bboss_bbp_add_view_all' );
 
 	// Get some forum data
-	$tc_int      = bbp_get_forum_topic_count( $forum_id, false );
-	$rc_int      = bbp_get_forum_reply_count( $forum_id, false );
-	$topic_count = bbp_get_forum_topic_count( $forum_id );
-	$reply_count = bbp_get_forum_reply_count( $forum_id );
-	$last_active = bbp_get_forum_last_active_id( $forum_id );
+	$tc_int      = bboss_bbp_get_forum_topic_count( $forum_id, false );
+	$rc_int      = bboss_bbp_get_forum_reply_count( $forum_id, false );
+	$topic_count = bboss_bbp_get_forum_topic_count( $forum_id );
+	$reply_count = bboss_bbp_get_forum_reply_count( $forum_id );
+	$last_active = bboss_bbp_get_forum_last_active_id( $forum_id );
 
 	// Has replies
 	if ( ! empty( $reply_count ) ) {
-		$reply_text = sprintf( _n( '%s reply', '%s replies', $rc_int, 'buddyboss' ), $reply_count );
+		/* translators: %s: number. */
+		$reply_text = sprintf( _n( '%s reply', '%s replies', $rc_int, 'buddyboss-platform' ), $reply_count );
 	}
 
 	// Forum has active data
 	if ( ! empty( $last_active ) ) {
-		$topic_text      = bbp_get_forum_topics_link( $forum_id );
-		$time_since      = bbp_get_forum_freshness_link( $forum_id );
-		$last_updated_by = bbp_get_author_link(
+		$topic_text      = bboss_bbp_get_forum_topics_link( $forum_id );
+		$time_since      = bboss_bbp_get_forum_freshness_link( $forum_id );
+		$last_updated_by = bboss_bbp_get_author_link(
 			array(
 				'post_id' => $last_active,
 				'size'    => $r['size'],
@@ -740,7 +745,8 @@ function bbp_get_single_forum_description( $args = '' ) {
 
 		// Forum has no last active data
 	} else {
-		$topic_text = sprintf( _n( '%s discussion', '%s discussions', $tc_int, 'buddyboss' ), $topic_count );
+		/* translators: %s: number. */
+		$topic_text = sprintf( _n( '%s discussion', '%s discussions', $tc_int, 'buddyboss-platform' ), $topic_count );
 	}
 
 	// Forum has active data
@@ -748,17 +754,21 @@ function bbp_get_single_forum_description( $args = '' ) {
 
 		if ( ! empty( $reply_count ) ) {
 
-			if ( bbp_is_forum_category( $forum_id ) ) {
-				$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $topic_text, $reply_text, $last_updated_by, $time_since );
+			if ( bboss_bbp_is_forum_category( $forum_id ) ) {
+				/* translators: 1: discussion count text, 2: reply count text, 3: author link of last updater, 4: time since last update. */
+				$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss-platform' ), $topic_text, $reply_text, $last_updated_by, $time_since );
 			} else {
-				$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $topic_text, $reply_text, $last_updated_by, $time_since );
+				/* translators: 1: discussion count text, 2: reply count text, 3: author link of last updater, 4: time since last update. */
+				$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss-platform' ), $topic_text, $reply_text, $last_updated_by, $time_since );
 			}
 		} else {
 
-			if ( bbp_is_forum_category( $forum_id ) ) {
-				$retstr = sprintf( esc_html__( 'This category contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss' ), $topic_text, $last_updated_by, $time_since );
+			if ( bboss_bbp_is_forum_category( $forum_id ) ) {
+				/* translators: 1: discussion count text, 2: author link of last updater, 3: time since last update. */
+				$retstr = sprintf( esc_html__( 'This category contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss-platform' ), $topic_text, $last_updated_by, $time_since );
 			} else {
-				$retstr = sprintf( esc_html__( 'This forum contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss' ), $topic_text, $last_updated_by, $time_since );
+				/* translators: 1: discussion count text, 2: author link of last updater, 3: time since last update. */
+				$retstr = sprintf( esc_html__( 'This forum contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss-platform' ), $topic_text, $last_updated_by, $time_since );
 			}
 		}
 
@@ -767,22 +777,26 @@ function bbp_get_single_forum_description( $args = '' ) {
 
 		if ( ! empty( $reply_count ) ) {
 
-			if ( bbp_is_forum_category( $forum_id ) ) {
-				$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s.', 'buddyboss' ), $topic_text, $reply_text );
+			if ( bboss_bbp_is_forum_category( $forum_id ) ) {
+				/* translators: 1: discussion count text, 2: reply count text. */
+				$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s.', 'buddyboss-platform' ), $topic_text, $reply_text );
 			} else {
-				$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s.', 'buddyboss' ), $topic_text, $reply_text );
+				/* translators: 1: discussion count text, 2: reply count text. */
+				$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s.', 'buddyboss-platform' ), $topic_text, $reply_text );
 			}
 		} else {
 
 			if ( ! empty( $topic_count ) ) {
 
-				if ( bbp_is_forum_category( $forum_id ) ) {
-					$retstr = sprintf( esc_html__( 'This category contains %1$s.', 'buddyboss' ), $topic_text );
+				if ( bboss_bbp_is_forum_category( $forum_id ) ) {
+					/* translators: %s: discussion count text. */
+					$retstr = sprintf( esc_html__( 'This category contains %1$s.', 'buddyboss-platform' ), $topic_text );
 				} else {
-					$retstr = sprintf( esc_html__( 'This forum contains %1$s.', 'buddyboss' ), $topic_text );
+					/* translators: %s: discussion count text. */
+					$retstr = sprintf( esc_html__( 'This forum contains %1$s.', 'buddyboss-platform' ), $topic_text );
 				}
 			} else {
-				$retstr = esc_html__( 'This forum is empty.', 'buddyboss' );
+				$retstr = esc_html__( 'This forum is empty.', 'buddyboss-platform' );
 			}
 		}
 	}
@@ -791,7 +805,7 @@ function bbp_get_single_forum_description( $args = '' ) {
 	// $feed_links = ( !empty( $r['feed'] ) ) ? bbp_get_forum_topics_feed_link ( $forum_id ) . bbp_get_forum_replies_feed_link( $forum_id ) : '';
 
 	// Add the 'view all' filter back
-	add_filter( 'bbp_get_forum_permalink', 'bbp_add_view_all' );
+	add_filter( 'bbp_get_forum_permalink', 'bboss_bbp_add_view_all' );
 
 	// Combine the elements together
 	$retstr = $r['before'] . $retstr . $r['after'];

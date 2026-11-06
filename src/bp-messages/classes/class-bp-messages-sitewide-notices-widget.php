@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.9.0
  */
-class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
+class BBoss_Messages_Sitewide_Notices_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
@@ -22,10 +22,10 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'bp_messages_sitewide_notices_widget',
-			__( '(BB) Sitewide Notices', 'buddyboss' ),
+			__( '(BB) Sitewide Notices', 'buddyboss-platform' ),
 			array(
 				'classname'                   => 'widget_bp_core_sitewide_messages buddypress widget',
-				'description'                 => __( 'Display Sitewide Notices posted by the site administrator', 'buddyboss' ),
+				'description'                 => __( 'Display Sitewide Notices posted by the site administrator', 'buddyboss-platform' ),
 				'customize_selective_refresh' => true,
 			)
 		);
@@ -46,7 +46,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 		}
 
 		// Don't display the widget if there are no Notices to show.
-		$notices = BP_Messages_Notice::get_active();
+		$notices = BBoss_Messages_Notice::get_active();
 		if ( empty( $notices ) ) {
 			return;
 		}
@@ -67,16 +67,16 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-		echo $before_widget;
-		echo $before_title . $title . $after_title; ?>
+		echo wp_kses_post( $before_widget );
+		echo wp_kses_post( $before_title ) . esc_html( $title ) . wp_kses_post( $after_title ); ?>
 
 		<div class="bp-site-wide-message">
-			<?php bp_message_get_notices(); ?>
+			<?php bboss_message_get_notices(); ?>
 		</div>
 
 		<?php
 
-		echo $after_widget;
+		echo wp_kses_post( $after_widget );
 	}
 
 	/**
@@ -91,7 +91,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance          = $old_instance;
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
 		return $instance;
 	}
 
@@ -105,19 +105,19 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 	 * @return string|null Widget form output.
 	 */
 	public function form( $instance ) {
-		$instance = bp_parse_args(
+		$instance = bboss_parse_args(
 			(array) $instance,
 			array(
 				'title' => '',
 			)
 		);
 
-		$title = strip_tags( $instance['title'] );
+		$title = wp_strip_all_tags( $instance['title'] );
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 
 		<?php

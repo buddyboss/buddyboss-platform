@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_rl_register_single_widget( $widget_class, $widget_file ) {
+function bboss_rl_register_single_widget( $widget_class, $widget_file ) {
 	if ( ! file_exists( $widget_file ) ) {
 		return;
 	}
@@ -57,53 +57,53 @@ function bb_rl_register_single_widget( $widget_class, $widget_file ) {
  *
  * @since BuddyBoss 2.9.00
  */
-function bb_rl_register_widgets() {
-	if ( ! bb_is_readylaunch_enabled() ) {
+function bboss_rl_register_widgets() {
+	if ( ! bboss_is_readylaunch_enabled() ) {
 		return;
 	}
 
-	$plugin_dir = BP_PLUGIN_DIR;
-	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+	$plugin_dir = BBOSS_PLUGIN_DIR;
+	if ( defined( 'BBOSS_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BBOSS_SOURCE_SUBDIRECTORY' ) ) ) {
 		$plugin_dir = $plugin_dir . 'src';
 	}
 
 	// Follow My Network Widget.
-	if ( function_exists( 'bp_get_following_ids' ) ) {
-		bb_rl_register_single_widget(
-			'BB_Core_Follow_My_Network_Widget',
+	if ( function_exists( 'bboss_get_following_ids' ) ) {
+		bboss_rl_register_single_widget(
+			'BBoss_Core_Follow_My_Network_Widget',
 			$plugin_dir . '/bp-core/classes/class-bb-core-follow-my-network-widget.php'
 		);
 	}
 
 	// Recent Blog Posts Widget.
-	bb_rl_register_single_widget(
-		'BB_Recent_Blog_Posts_Widget',
+	bboss_rl_register_single_widget(
+		'BBoss_Recent_Blog_Posts_Widget',
 		$plugin_dir . '/bp-core/classes/class-bb-recent-blog-posts-widget.php'
 	);
 
 	// About Group / Group Members Widgets — depend on the groups component.
-	if ( bp_is_active( 'groups' ) ) {
-		bb_rl_register_single_widget(
-			'BB_Group_About_Widget',
+	if ( bboss_is_active( 'groups' ) ) {
+		bboss_rl_register_single_widget(
+			'BBoss_Group_About_Widget',
 			$plugin_dir . '/bp-core/classes/class-bb-group-about-widget.php'
 		);
 
-		bb_rl_register_single_widget(
-			'BB_Group_Members_Widget',
+		bboss_rl_register_single_widget(
+			'BBoss_Group_Members_Widget',
 			$plugin_dir . '/bp-core/classes/class-bb-group-members-widget.php'
 		);
 	}
 
 	// Connections Widget.
-	if ( function_exists( 'friends_get_friend_user_ids' ) ) {
-		bb_rl_register_single_widget(
-			'BB_Core_Connections_Widget',
+	if ( function_exists( 'bboss_friends_get_friend_user_ids' ) ) {
+		bboss_rl_register_single_widget(
+			'BBoss_Core_Connections_Widget',
 			$plugin_dir . '/bp-core/classes/class-bb-core-connections-widget.php'
 		);
 	}
 }
 
-add_action( 'bp_register_widgets', 'bb_rl_register_widgets' );
+add_action( 'bp_register_widgets', 'bboss_rl_register_widgets' );
 
 /**
  * Filter pre-existing widgets.
@@ -116,7 +116,7 @@ add_action( 'bp_register_widgets', 'bb_rl_register_widgets' );
  *
  * @return bool
  */
-function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
+function bboss_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 	ob_start(); // Start output buffering.
 	$widget->widget( $args, $instance ); // Render the widget.
 	$output = ob_get_clean(); // Get the output.
@@ -126,7 +126,7 @@ function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 
 		// Define URLs based on widget class.
 		$updated_widget_urls = array(
-			'BP_Core_Recently_Active_Widget' => esc_url( bp_get_members_directory_permalink() . '?bb-rl-order-by=active&bb-rl-scope=all' ),
+			'BP_Core_Recently_Active_Widget' => esc_url( bboss_get_members_directory_permalink() . '?bb-rl-order-by=active&bb-rl-scope=all' ),
 		);
 
 		$widget_class = get_class( $widget );
@@ -150,21 +150,21 @@ function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 	echo $output; // Output modified widget.
 	return false; // Prevent default rendering.
 }
-add_filter( 'widget_display_callback', 'bb_rl_modify_existing_widget_output', 10, 3 );
+add_filter( 'widget_display_callback', 'bboss_rl_modify_existing_widget_output', 10, 3 );
 
 /**
  * Open the wrapper of the repeater set - on the View profile screen
  *
  * @since BuddyBoss 2.9.00
  */
-function bb_rl_view_profile_repeaters_print_group_html_start() {
-	$group_id            = bp_get_the_profile_group_id();
-	$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+function bboss_rl_view_profile_repeaters_print_group_html_start() {
+	$group_id            = bboss_get_the_profile_group_id();
+	$is_repeater_enabled = 'on' === BBoss_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
 		global $repeater_set_being_displayed;
 
-		$current_field_id   = bp_get_the_profile_field_id();
-		$current_set_number = bp_xprofile_get_meta( $current_field_id, 'field', '_clone_number', true );
+		$current_field_id   = bboss_get_the_profile_field_id();
+		$current_set_number = bboss_xprofile_get_meta( $current_field_id, 'field', '_clone_number', true );
 
 		if ( ! empty( $repeater_set_being_displayed ) && $repeater_set_being_displayed !== $current_set_number ) {
 			// End of previous set.
@@ -174,8 +174,8 @@ function bb_rl_view_profile_repeaters_print_group_html_start() {
 		$repeater_set_being_displayed = $current_set_number;
 	}
 }
-remove_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_group_html_start' );
-add_action( 'bp_before_profile_field_item', 'bb_rl_view_profile_repeaters_print_group_html_start' );
+remove_action( 'bp_before_profile_field_item', 'bboss_view_profile_repeaters_print_group_html_start' );
+add_action( 'bp_before_profile_field_item', 'bboss_rl_view_profile_repeaters_print_group_html_start' );
 
 /**
  * Add social networks button to the member header area.
@@ -185,21 +185,21 @@ add_action( 'bp_before_profile_field_item', 'bb_rl_view_profile_repeaters_print_
  * @param int|null $user_id User ID.
  * @return string
  */
-function bb_rl_get_user_social_networks_urls( $user_id = null ) {
-	$social_networks_id = bb_rl_get_user_social_networks_field_id();
+function bboss_rl_get_user_social_networks_urls( $user_id = null ) {
+	$social_networks_id = bboss_rl_get_user_social_networks_field_id();
 
 	$html = '';
 
 	$original_option_values = array();
 
-	$user = ( null !== $user_id && $user_id > 0 ) ? $user_id : bp_displayed_user_id();
+	$user = ( null !== $user_id && $user_id > 0 ) ? $user_id : bboss_displayed_user_id();
 
 	if ( $social_networks_id > 0 ) {
-		$providers = bp_xprofile_social_network_provider();
+		$providers = bboss_xprofile_social_network_provider();
 
-		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+		$original_option_values = maybe_unserialize( BBoss_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
 
-		$social_settings_field   = xprofile_get_field( $social_networks_id, $user_id );
+		$social_settings_field   = bboss_xprofile_get_field( $social_networks_id, $user_id );
 		$social_settings_options = $social_settings_field->get_children();
 
 		if (
@@ -212,7 +212,7 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 			$original_option_values = array_intersect_key( $original_option_values, array_flip( array_column( $social_settings_options, 'name' ) ) );
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
-					$key   = bp_social_network_search_key( $key, $providers );
+					$key   = bboss_social_network_search_key( $key, $providers );
 					$html .= '<span class="bb-rl-social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icons-rl-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '-logo"></i></a></span>';
 				}
 			}
@@ -220,10 +220,10 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 	}
 
 	if ( '' !== $html ) {
-		$level = xprofile_get_field_visibility_level( $social_networks_id, bp_displayed_user_id() );
+		$level = bboss_xprofile_get_field_visibility_level( $social_networks_id, bboss_displayed_user_id() );
 		if ( 'friends' === $level && is_user_logged_in() ) {
 
-			$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(), bp_displayed_user_id() );
+			$member_friend_status = bboss_friends_check_friendship_status( bboss_loggedin_user_id(), bboss_displayed_user_id() );
 			if ( 'is_friend' === $member_friend_status ) {
 				$html = '<div class="social-networks-wrap">' . $html . '</div>';
 			} else {
@@ -244,7 +244,7 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
  *
  * @return int Social network xProfile field id.
  */
-function bb_rl_get_user_social_networks_field_id() {
+function bboss_rl_get_user_social_networks_field_id() {
 	global $wpdb, $bp;
 
 	// Check cache first.
@@ -274,7 +274,7 @@ function bb_rl_get_user_social_networks_field_id() {
  *
  * @since BuddyBoss 2.9.00
  */
-function bb_rl_clear_social_networks_field_cache() {
+function bboss_rl_clear_social_networks_field_cache() {
 	wp_cache_delete( 'bb_rl_social_networks_field_id' );
 }
 
@@ -283,12 +283,12 @@ function bb_rl_clear_social_networks_field_cache() {
  *
  * @since BuddyBoss 2.9.00
  *
- * @param BP_XProfile_Field $field The field object being saved.
+ * @param BBoss_XProfile_Field $field The field object being saved.
  */
-function bb_rl_clear_cache_on_field_type_change( $field = null ) {
+function bboss_rl_clear_cache_on_field_type_change( $field = null ) {
 	// Clear cache if this is a socialnetworks field or if we can't determine the type.
 	if ( ! empty( $field->type ) && 'socialnetworks' === $field->type ) {
-		bb_rl_clear_social_networks_field_cache();
+		bboss_rl_clear_social_networks_field_cache();
 	}
 }
 
@@ -300,20 +300,20 @@ function bb_rl_clear_cache_on_field_type_change( $field = null ) {
  * @param array $options Mentions options.
  * @return array Modified mentions options.
  */
-function bb_rl_add_mentions_selectors( $options ) {
+function bboss_rl_add_mentions_selectors( $options ) {
 	if ( ! empty( $options['selectors'] ) && is_array( $options['selectors'] ) ) {
 		$options['selectors'][] = '.bb-rl-suggestions';
 	}
 	return $options;
 }
-add_filter( 'bp_at_mention_js_options', 'bb_rl_add_mentions_selectors' );
+add_filter( 'bp_at_mention_js_options', 'bboss_rl_add_mentions_selectors' );
 
 // Hook cache clearing to XProfile field changes.
-add_action( 'xprofile_field_after_save', 'bb_rl_clear_cache_on_field_type_change' );
-add_action( 'xprofile_field_before_delete', 'bb_rl_clear_social_networks_field_cache' );
-add_action( 'xprofile_fields_saved_field', 'bb_rl_clear_social_networks_field_cache' );
-add_action( 'bp_xprofile_admin_new_field', 'bb_rl_clear_social_networks_field_cache' );
-add_action( 'bp_xprofile_admin_edit_field', 'bb_rl_clear_social_networks_field_cache' );
+add_action( 'xprofile_field_after_save', 'bboss_rl_clear_cache_on_field_type_change' );
+add_action( 'xprofile_field_before_delete', 'bboss_rl_clear_social_networks_field_cache' );
+add_action( 'xprofile_fields_saved_field', 'bboss_rl_clear_social_networks_field_cache' );
+add_action( 'bp_xprofile_admin_new_field', 'bboss_rl_clear_social_networks_field_cache' );
+add_action( 'bp_xprofile_admin_edit_field', 'bboss_rl_clear_social_networks_field_cache' );
 
 /**
  * Get course category names for a specific course.
@@ -324,7 +324,7 @@ add_action( 'bp_xprofile_admin_edit_field', 'bb_rl_clear_social_networks_field_c
  *
  * @return string Course category names separated by comma.
  */
-function bb_rl_mpcs_get_course_category_names( $course_id ) {
+function bboss_rl_mpcs_get_course_category_names( $course_id ) {
 	$categories = get_the_terms( $course_id, 'mpcs-course-categories' );
 
 	if ( is_wp_error( $categories ) || empty( $categories ) ) {
@@ -334,7 +334,7 @@ function bb_rl_mpcs_get_course_category_names( $course_id ) {
 	return implode( ', ', wp_list_pluck( $categories, 'name' ) );
 }
 
-if ( ! function_exists( 'bb_rl_get_normalized_file_type' ) ) {
+if ( ! function_exists( 'bboss_rl_get_normalized_file_type' ) ) {
 	/**
 	 * Get normalized file type from MIME type.
 	 *
@@ -344,7 +344,7 @@ if ( ! function_exists( 'bb_rl_get_normalized_file_type' ) ) {
 	 *
 	 * @return string Normalized file type or empty string if invalid.
 	 */
-	function bb_rl_get_normalized_file_type( $file_type ) {
+	function bboss_rl_get_normalized_file_type( $file_type ) {
 		if ( ! $file_type ) {
 			return '';
 		}

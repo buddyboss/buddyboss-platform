@@ -14,26 +14,26 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.9.0
  */
-function bp_friends_register_widgets() {
-	if ( ! bp_is_active( 'friends' ) ) {
+function bboss_friends_register_widgets() {
+	if ( ! bboss_is_active( 'friends' ) ) {
 		return;
 	}
 
 	// The Connections widget works only when looking at a displayed user,
 	// and the concept of "displayed user" doesn't exist on non-root blogs,
 	// so we don't register the widget there.
-	if ( ! bp_is_root_blog() ) {
+	if ( ! bboss_is_root_blog() ) {
 		return;
 	}
 
 	add_action(
 		'widgets_init',
 		function() {
-			register_widget( 'BP_Core_Friends_Widget' );
+			register_widget( 'BBoss_Core_Friends_Widget' );
 		}
 	);
 }
-add_action( 'bp_register_widgets', 'bp_friends_register_widgets' );
+add_action( 'bp_register_widgets', 'bboss_friends_register_widgets' );
 
 /** Widget AJAX ***************************************************************/
 
@@ -42,7 +42,7 @@ add_action( 'bp_register_widgets', 'bp_friends_register_widgets' );
  *
  * @since BuddyPress 1.9.0
  */
-function bp_core_ajax_widget_friends() {
+function bboss_core_ajax_widget_friends() {
 
 	check_ajax_referer( 'bp_core_widget_friends' );
 
@@ -60,12 +60,12 @@ function bp_core_ajax_widget_friends() {
 			break;
 	}
 
-	$user_id = bp_displayed_user_id();
+	$user_id = bboss_displayed_user_id();
 
 	if ( ! $user_id ) {
 
 		// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 
 	}
 
@@ -83,28 +83,28 @@ function bp_core_ajax_widget_friends() {
 
 	global $members_template;
 
-	if ( bp_has_members( $members_args ) ) : ?>
+	if ( bboss_has_members( $members_args ) ) : ?>
 		<?php echo '0[[SPLIT]]'; // Return valid result. TODO: remove this. ?>
 		<?php
-		while ( bp_members() ) :
-			bp_the_member();
+		while ( bboss_members() ) :
+			bboss_the_member();
 			?>
 			<li class="vcard">
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>" class="bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
-						<?php bp_member_avatar(); ?>
-						<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
+					<a href="<?php bboss_member_permalink(); ?>" class="bb-item-avatar-connection-widget-<?php echo esc_attr( bboss_get_member_user_id() ); ?>"<?php echo bboss_get_hover_card_profile_attr( bboss_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+						<?php bboss_member_avatar(); ?>
+						<?php bboss_user_presence_html( bboss_get_member_user_id() ); ?>
 					</a>
 				</div>
 
 				<div class="item">
-					<div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bp_member_name(); ?></a></div>
+					<div class="item-title fn"><a href="<?php bboss_member_permalink(); ?>"<?php echo bboss_get_hover_card_profile_attr( bboss_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bboss_member_name(); ?></a></div>
 					<?php if ( 'active' === $type ) : ?>
-						<div class="item-meta"><span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span></div>
+						<div class="item-meta"><span class="activity" data-livestamp="<?php bboss_core_iso8601_date( bboss_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bboss_member_last_active(); ?></span></div>
 					<?php elseif ( 'newest' === $type ) : ?>
-						<div class="item-meta"><span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span></div>
-					<?php elseif ( bp_is_active( 'friends' ) ) : ?>
-						<div class="item-meta"><span class="activity"><?php bp_member_total_friend_count(); ?></span></div>
+						<div class="item-meta"><span class="activity" data-livestamp="<?php bboss_core_iso8601_date( bboss_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bboss_member_registered(); ?></span></div>
+					<?php elseif ( bboss_is_active( 'friends' ) ) : ?>
+						<div class="item-meta"><span class="activity"><?php bboss_member_total_friend_count(); ?></span></div>
 					<?php endif; ?>
 				</div>
 			</li>
@@ -112,10 +112,10 @@ function bp_core_ajax_widget_friends() {
 
 	<?php else : ?>
 		<?php echo '-1[[SPLIT]]<li>'; ?>
-		<?php _e( 'There were no members found, please try another filter.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss-platform' ); ?>
 		<?php echo '</li>'; ?>
 		<?php
 	endif;
 }
-add_action( 'wp_ajax_widget_friends', 'bp_core_ajax_widget_friends' );
-add_action( 'wp_ajax_nopriv_widget_friends', 'bp_core_ajax_widget_friends' );
+add_action( 'wp_ajax_widget_friends', 'bboss_core_ajax_widget_friends' );
+add_action( 'wp_ajax_nopriv_widget_friends', 'bboss_core_ajax_widget_friends' );

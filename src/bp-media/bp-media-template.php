@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_slug() {
-	echo bp_get_media_slug();
+function bboss_media_slug() {
+	echo esc_attr( bboss_get_media_slug() );
 }
 /**
  * Return the media component slug.
@@ -24,7 +24,7 @@ function bp_media_slug() {
  *
  * @return string
  */
-function bp_get_media_slug() {
+function bboss_get_media_slug() {
 
 	/**
 	 * Filters the media component slug.
@@ -33,7 +33,7 @@ function bp_get_media_slug() {
 	 *
 	 * @param string $slug Media component slug.
 	 */
-	return apply_filters( 'bp_get_media_slug', buddypress()->media->slug );
+	return apply_filters( 'bp_get_media_slug', bboss()->media->slug );
 }
 
 /**
@@ -41,8 +41,8 @@ function bp_get_media_slug() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_root_slug() {
-	echo bp_get_media_root_slug();
+function bboss_media_root_slug() {
+	echo esc_attr( bboss_get_media_root_slug() );
 }
 /**
  * Return the media component root slug.
@@ -51,7 +51,7 @@ function bp_media_root_slug() {
  *
  * @return string
  */
-function bp_get_media_root_slug() {
+function bboss_get_media_root_slug() {
 
 	/**
 	 * Filters the Media component root slug.
@@ -60,25 +60,25 @@ function bp_get_media_root_slug() {
 	 *
 	 * @param string $slug Media component root slug.
 	 */
-	return apply_filters( 'bp_get_media_root_slug', buddypress()->media->root_slug );
+	return apply_filters( 'bp_get_media_root_slug', bboss()->media->root_slug );
 }
 
 /**
  * Initialize the media loop.
  *
- * Based on the $args passed, bp_has_media() populates the
+ * Based on the $args passed, bboss_has_media() populates the
  * $media_template global, enabling the use of BuddyPress templates and
  * template functions to display a list of media items.
  *
  * @since BuddyBoss 1.0.0
 
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @param array|string $args {
  *     Arguments for limiting the contents of the media loop. Most arguments
- *     are in the same format as {@link BP_Media::get()}. However,
+ *     are in the same format as {@link BBoss_Media::get()}. However,
  *     because the format of the arguments accepted here differs in a number of
- *     ways, and because bp_has_media() determines some default arguments in
+ *     ways, and because bboss_has_media() determines some default arguments in
  *     a dynamic fashion, we list all accepted arguments here as well.
  *
  *     Arguments can be passed as an associative array, or as a URL querystring
@@ -117,50 +117,50 @@ function bp_get_media_root_slug() {
  * }
  * @return bool Returns true when media found, otherwise false.
  */
-function bp_has_media( $args = '' ) {
+function bboss_has_media( $args = '' ) {
 	global $media_template;
 
-	$args = bp_parse_args( $args );
+	$args = bboss_parse_args( $args );
 
 	/*
 	 * Smart Defaults.
 	 */
 
 	// User filtering.
-	$user_id = bp_displayed_user_id()
-		? bp_displayed_user_id()
+	$user_id = bboss_displayed_user_id()
+		? bboss_displayed_user_id()
 		: false;
 
 	$search_terms_default = false;
-	$search_query_arg     = bp_core_get_component_search_query_arg( 'media' );
+	$search_query_arg     = bboss_core_get_component_search_query_arg( 'media' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
 	// Album filtering.
 	if ( ! isset( $args['album_id'] ) ) {
-		$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
+		$album_id = bboss_is_single_album() ? (int) bboss_action_variable( 0 ) : false;
 	} else {
 		$album_id = ( isset( $args['album_id'] ) ? $args['album_id'] : false );
 	}
 
-	if ( $album_id && ( bp_is_profile_albums_support_enabled() || bp_is_group_albums_support_enabled() ) && ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) ) {
+	if ( $album_id && ( bboss_is_profile_albums_support_enabled() || bboss_is_group_albums_support_enabled() ) && ( bboss_is_active( 'video' ) && ( bboss_is_profile_video_support_enabled() || bboss_is_group_video_support_enabled() ) ) ) {
 		$args['video'] = true;
 	}
 
 	$group_id = false;
 	$privacy  = false;
 	if (
-		bp_is_active( 'groups' ) &&
-		bp_is_group() &&
+		bboss_is_active( 'groups' ) &&
+		bboss_is_group() &&
 		(
 			! isset( $_GET['action'] ) ||
 			'bp_search_ajax' !== $_GET['action']
 		)
 	) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 		$privacy  = array( 'grouponly' );
-		if ( bp_is_active( 'forums' ) && ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) ) {
+		if ( bboss_is_active( 'forums' ) && ( bboss_bbp_is_forum_edit() || bboss_bbp_is_topic_edit() || bboss_bbp_is_reply_edit() ) ) {
 			$privacy = false;
 		}
 		$user_id = false;
@@ -170,7 +170,7 @@ function bp_has_media( $args = '' ) {
 	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
 	$scope = ( isset( $args['scope'] ) && ! empty( $args['scope'] ) ? $args['scope'] : $scope );
 
-	$scope = bp_media_default_scope( trim( $scope ) );
+	$scope = bboss_media_default_scope( trim( $scope ) );
 
 	if ( isset( $args ) && isset( $args['scope'] ) ) {
 		unset( $args['scope'] );
@@ -182,7 +182,7 @@ function bp_has_media( $args = '' ) {
 
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'include'      => false,           // Pass an media_id or string of IDs comma-separated.
@@ -208,7 +208,7 @@ function bp_has_media( $args = '' ) {
 
 		// Searching.
 			'search_terms' => $search_terms_default,
-			'status'       => bb_media_get_published_status(),  
+			'status'       => bboss_media_get_published_status(),  
 		),
 		'has_media'
 	);
@@ -226,7 +226,7 @@ function bp_has_media( $args = '' ) {
 	/*
 	 * Query
 	 */
-	$media_template = new BP_Media_Template( $r );
+	$media_template = new BBoss_Media_Template( $r );
 
 	/**
 	 * Filters whether or not there are media items to display.
@@ -235,7 +235,7 @@ function bp_has_media( $args = '' ) {
 	 *
 	 * @param bool   $value               Whether or not there are media items to display.
 	 * @param string $media_template      Current media template being used.
-	 * @param array  $r                   Array of arguments passed into the BP_Media_Template class.
+	 * @param array  $r                   Array of arguments passed into the BBoss_Media_Template class.
 	 */
 	return apply_filters( 'bp_has_media', $media_template->has_media(), $media_template, $r );
 }
@@ -245,11 +245,11 @@ function bp_has_media( $args = '' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return bool Returns true when media are found.
  */
-function bp_media() {
+function bboss_media() {
 	global $media_template;
 	return $media_template->user_medias();
 }
@@ -259,11 +259,11 @@ function bp_media() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return object The current media within the loop.
  */
-function bp_the_media() {
+function bboss_the_media() {
 	global $media_template;
 	return $media_template->the_media();
 }
@@ -273,8 +273,8 @@ function bp_the_media() {
  *
  * @since BuddyPress 2.1.0
  */
-function bp_media_load_more_link() {
-	echo esc_url( bp_get_media_load_more_link() );
+function bboss_media_load_more_link() {
+	echo esc_url( bboss_get_media_load_more_link() );
 }
 /**
  * Get the URL for the Load More link.
@@ -283,10 +283,10 @@ function bp_media_load_more_link() {
  *
  * @return string $link
  */
-function bp_get_media_load_more_link() {
+function bboss_get_media_load_more_link() {
 	global $media_template;
 
-	$url  = bp_get_requested_url();
+	$url  = bboss_get_requested_url();
 	$link = add_query_arg( $media_template->pag_arg, $media_template->pag_page + 1, $url );
 
 	/**
@@ -306,10 +306,10 @@ function bp_get_media_load_more_link() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  */
-function bp_media_pagination_count() {
-	echo bp_get_media_pagination_count();
+function bboss_media_pagination_count() {
+	echo esc_html( bboss_get_media_pagination_count() );
 }
 
 /**
@@ -317,19 +317,20 @@ function bp_media_pagination_count() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return string The pagination text.
  */
-function bp_get_media_pagination_count() {
+function bboss_get_media_pagination_count() {
 	global $media_template;
 
 	$start_num = intval( ( $media_template->pag_page - 1 ) * $media_template->pag_num ) + 1;
-	$from_num  = bp_core_number_format( $start_num );
-	$to_num    = bp_core_number_format( ( $start_num + ( $media_template->pag_num - 1 ) > $media_template->total_media_count ) ? $media_template->total_media_count : $start_num + ( $media_template->pag_num - 1 ) );
-	$total     = bp_core_number_format( $media_template->total_media_count );
+	$from_num  = bboss_core_number_format( $start_num );
+	$to_num    = bboss_core_number_format( ( $start_num + ( $media_template->pag_num - 1 ) > $media_template->total_media_count ) ? $media_template->total_media_count : $start_num + ( $media_template->pag_num - 1 ) );
+	$total     = bboss_core_number_format( $media_template->total_media_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_template->total_media_count, 'buddyboss' ), $from_num, $to_num, $total );
+	// translators: 1: starting item number, 2: ending item number, 3: total number of items.
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_template->total_media_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
 }
@@ -339,8 +340,8 @@ function bp_get_media_pagination_count() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_pagination_links() {
-	echo bp_get_media_pagination_links();
+function bboss_media_pagination_links() {
+	echo wp_kses_post( bboss_get_media_pagination_links() );
 }
 
 /**
@@ -348,11 +349,11 @@ function bp_media_pagination_links() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return string The pagination links.
  */
-function bp_get_media_pagination_links() {
+function bboss_get_media_pagination_links() {
 	global $media_template;
 
 	/**
@@ -370,11 +371,11 @@ function bp_get_media_pagination_links() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return bool $has_more_items True if more items, false if not.
  */
-function bp_media_has_more_items() {
+function bboss_media_has_more_items() {
 	global $media_template;
 
 	if ( ! empty( $media_template->has_more_items ) ) {
@@ -404,8 +405,8 @@ function bp_media_has_more_items() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_count() {
-	echo bp_get_media_count();
+function bboss_media_count() {
+	echo esc_html( bboss_get_media_count() );
 }
 
 /**
@@ -413,11 +414,11 @@ function bp_media_count() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media count.
  */
-function bp_get_media_count() {
+function bboss_get_media_count() {
 	global $media_template;
 
 	/**
@@ -435,8 +436,8 @@ function bp_get_media_count() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_per_page() {
-	echo bp_get_media_per_page();
+function bboss_media_per_page() {
+	echo esc_html( bboss_get_media_per_page() );
 }
 
 /**
@@ -444,11 +445,11 @@ function bp_media_per_page() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media per page.
  */
-function bp_get_media_per_page() {
+function bboss_get_media_per_page() {
 	global $media_template;
 
 	/**
@@ -466,8 +467,8 @@ function bp_get_media_per_page() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_id() {
-	echo bp_get_media_id();
+function bboss_media_id() {
+	echo esc_attr( bboss_get_media_id() );
 }
 
 /**
@@ -475,11 +476,11 @@ function bp_media_id() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media ID.
  */
-function bp_get_media_id() {
+function bboss_get_media_id() {
 	global $media_template;
 
 	/**
@@ -497,8 +498,8 @@ function bp_get_media_id() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_blog_id() {
-	echo bp_get_media_blog_id();
+function bboss_media_blog_id() {
+	echo esc_attr( bboss_get_media_blog_id() );
 }
 
 /**
@@ -506,11 +507,11 @@ function bp_media_blog_id() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media blog ID.
  */
-function bp_get_media_blog_id() {
+function bboss_get_media_blog_id() {
 	global $media_template;
 
 	/**
@@ -528,8 +529,8 @@ function bp_get_media_blog_id() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_user_id() {
-	echo bp_get_media_user_id();
+function bboss_media_user_id() {
+	echo esc_attr( bboss_get_media_user_id() );
 }
 
 /**
@@ -537,11 +538,11 @@ function bp_media_user_id() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media user ID.
  */
-function bp_get_media_user_id() {
+function bboss_get_media_user_id() {
 	global $media_template;
 
 	/**
@@ -559,8 +560,8 @@ function bp_get_media_user_id() {
  *
  * @since BuddyBoss 1.5.3
  */
-function bp_media_author() {
-	echo bp_get_media_author();
+function bboss_media_author() {
+	echo esc_html( bboss_get_media_author() );
 }
 
 /**
@@ -572,11 +573,11 @@ function bp_media_author() {
  *
  * @return int The Media author name.
  */
-function bp_get_media_author() {
+function bboss_get_media_author() {
 	global $media_template;
 
 	if ( isset( $media_template ) && isset( $media_template->media ) && isset( $media_template->media->user_id ) ) {
-		$author = bp_core_get_user_displayname( $media_template->media->user_id );
+		$author = bboss_core_get_user_displayname( $media_template->media->user_id );
 	}
 
 	/**
@@ -594,8 +595,8 @@ function bp_get_media_author() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_attachment_id() {
-	echo bp_get_media_attachment_id();
+function bboss_media_attachment_id() {
+	echo esc_attr( bboss_get_media_attachment_id() );
 }
 
 /**
@@ -603,11 +604,11 @@ function bp_media_attachment_id() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media attachment ID.
  */
-function bp_get_media_attachment_id() {
+function bboss_get_media_attachment_id() {
 	global $media_template;
 
 	/**
@@ -625,8 +626,8 @@ function bp_get_media_attachment_id() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_title() {
-	echo bp_get_media_title();
+function bboss_media_title() {
+	echo esc_html( bboss_get_media_title() );
 }
 
 /**
@@ -634,11 +635,11 @@ function bp_media_title() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media title.
  */
-function bp_get_media_title() {
+function bboss_get_media_title() {
 	global $media_template;
 
 	/**
@@ -656,10 +657,10 @@ function bp_get_media_title() {
  *
  * @since BuddyBoss 1.2.0
  *
- * @param int|BP_Media $media BP_Media object or ID of the media
+ * @param int|BBoss_Media $media BBoss_Media object or ID of the media
  * @return bool True if can delete, false otherwise.
  */
-function bp_media_user_can_delete( $media = false ) {
+function bboss_media_user_can_delete( $media = false ) {
 
 	// Assume the user cannot delete the media item.
 	$can_delete = false;
@@ -669,7 +670,7 @@ function bp_media_user_can_delete( $media = false ) {
 	}
 
 	if ( ! is_object( $media ) ) {
-		$media = new BP_Media( $media );
+		$media = new BBoss_Media( $media );
 	}
 
 	if ( empty( $media ) ) {
@@ -680,19 +681,19 @@ function bp_media_user_can_delete( $media = false ) {
 	if ( is_user_logged_in() ) {
 
 		// Community moderators can always delete media (at least for now).
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bboss_current_user_can( 'bp_moderate' ) ) {
 			$can_delete = true;
 		}
 
 		// Users are allowed to delete their own media.
-		if ( isset( $media->user_id ) && ( $media->user_id === bp_loggedin_user_id() ) ) {
+		if ( isset( $media->user_id ) && ( $media->user_id === bboss_loggedin_user_id() ) ) {
 			$can_delete = true;
 		}
 
-		if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
-			$manage   = groups_can_user_manage_media( bp_loggedin_user_id(), $media->group_id );
-			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $media->group_id );
-			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $media->group_id );
+		if ( bboss_is_active( 'groups' ) && $media->group_id > 0 ) {
+			$manage   = groups_can_user_manage_media( bboss_loggedin_user_id(), $media->group_id );
+			$is_admin = bboss_groups_is_user_admin( bboss_loggedin_user_id(), $media->group_id );
+			$is_mod   = bboss_groups_is_user_mod( bboss_loggedin_user_id(), $media->group_id );
 			if ( $manage ) {
 				$can_delete = true;
 			} elseif ( $is_mod || $is_admin ) {
@@ -717,8 +718,8 @@ function bp_media_user_can_delete( $media = false ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_album_id() {
-	echo bp_get_media_album_id();
+function bboss_media_album_id() {
+	echo esc_attr( bboss_get_media_album_id() );
 }
 
 /**
@@ -726,11 +727,11 @@ function bp_media_album_id() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media album ID.
  */
-function bp_get_media_album_id() {
+function bboss_get_media_album_id() {
 	global $media_template;
 
 	/**
@@ -748,8 +749,8 @@ function bp_get_media_album_id() {
  *
  * @since BuddyBoss 1.2.5
  */
-function bp_media_group_id() {
-	echo bp_get_media_group_id();
+function bboss_media_group_id() {
+	echo esc_attr( bboss_get_media_group_id() );
 }
 
 /**
@@ -757,11 +758,11 @@ function bp_media_group_id() {
  *
  * @since BuddyBoss 1.2.5
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media group ID.
  */
-function bp_get_media_group_id() {
+function bboss_get_media_group_id() {
 	global $media_template;
 
 	/**
@@ -779,8 +780,8 @@ function bp_get_media_group_id() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_activity_id() {
-	echo bp_get_media_activity_id();
+function bboss_media_activity_id() {
+	echo esc_attr( bboss_get_media_activity_id() );
 }
 
 /**
@@ -788,11 +789,11 @@ function bp_media_activity_id() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media activity ID.
  */
-function bp_get_media_activity_id() {
+function bboss_get_media_activity_id() {
 	global $media_template;
 
 	/**
@@ -810,8 +811,8 @@ function bp_get_media_activity_id() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_date_created() {
-	echo bp_get_media_date_created();
+function bboss_media_date_created() {
+	echo esc_html( bboss_get_media_date_created() );
 }
 
 /**
@@ -819,11 +820,11 @@ function bp_media_date_created() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return string The media date created.
  */
-function bp_get_media_date_created() {
+function bboss_get_media_date_created() {
 	global $media_template;
 
 	/**
@@ -841,8 +842,8 @@ function bp_get_media_date_created() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_attachment_image_thumbnail() {
-	echo bp_get_media_attachment_image_thumbnail();
+function bboss_media_attachment_image_thumbnail() {
+	echo esc_url( bboss_get_media_attachment_image_thumbnail() );
 }
 
 /**
@@ -850,11 +851,11 @@ function bp_media_attachment_image_thumbnail() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return string The media attachment thumbnail url.
  */
-function bp_get_media_attachment_image_thumbnail() {
+function bboss_get_media_attachment_image_thumbnail() {
 	global $media_template;
 
 	/**
@@ -872,8 +873,8 @@ function bp_get_media_attachment_image_thumbnail() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_attachment_image_activity_thumbnail() {
-	echo bp_get_media_attachment_image_activity_thumbnail();
+function bboss_media_attachment_image_activity_thumbnail() {
+	echo esc_url( bboss_get_media_attachment_image_activity_thumbnail() );
 }
 
 /**
@@ -881,11 +882,11 @@ function bp_media_attachment_image_activity_thumbnail() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return string The media attachment thumbnail url.
  */
-function bp_get_media_attachment_image_activity_thumbnail() {
+function bboss_get_media_attachment_image_activity_thumbnail() {
 	global $media_template;
 
 	/**
@@ -903,8 +904,8 @@ function bp_get_media_attachment_image_activity_thumbnail() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_attachment_image() {
-	echo esc_url( bp_get_media_attachment_image() );
+function bboss_media_attachment_image() {
+	echo esc_url( bboss_get_media_attachment_image() );
 }
 
 /**
@@ -912,11 +913,11 @@ function bp_media_attachment_image() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return string The media attachment url.
  */
-function bp_get_media_attachment_image() {
+function bboss_get_media_attachment_image() {
 	global $media_template;
 
 	/**
@@ -934,8 +935,8 @@ function bp_get_media_attachment_image() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_directory_permalink() {
-	echo esc_url( bp_get_media_directory_permalink() );
+function bboss_media_directory_permalink() {
+	echo esc_url( bboss_get_media_directory_permalink() );
 }
 /**
  * Return media directory permalink.
@@ -944,7 +945,7 @@ function bp_media_directory_permalink() {
  *
  * @return string
  */
-function bp_get_media_directory_permalink() {
+function bboss_get_media_directory_permalink() {
 
 	/**
 	 * Filters the media directory permalink.
@@ -953,7 +954,7 @@ function bp_get_media_directory_permalink() {
 	 *
 	 * @param string $value Media directory permalink.
 	 */
-	return apply_filters( 'bp_get_media_directory_permalink', trailingslashit( bp_get_root_domain() . '/' . bp_get_media_root_slug() ) );
+	return apply_filters( 'bp_get_media_directory_permalink', trailingslashit( bboss_get_root_domain() . '/' . bboss_get_media_root_slug() ) );
 }
 
 /**
@@ -961,8 +962,8 @@ function bp_get_media_directory_permalink() {
  *
  * @since BuddyBoss 1.2.3
  */
-function bp_media_privacy() {
-	echo bp_get_media_privacy();
+function bboss_media_privacy() {
+	echo esc_html( bboss_get_media_privacy() );
 }
 
 /**
@@ -970,11 +971,11 @@ function bp_media_privacy() {
  *
  * @since BuddyBoss 1.2.3
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return string The media privacy.
  */
-function bp_get_media_privacy() {
+function bboss_get_media_privacy() {
 	global $media_template;
 
 	/**
@@ -992,8 +993,8 @@ function bp_get_media_privacy() {
  *
  * @since BuddyBoss 1.2.3
  */
-function bp_media_visibility() {
-	echo bp_get_media_visibility();
+function bboss_media_visibility() {
+	echo esc_html( bboss_get_media_visibility() );
 }
 
 /**
@@ -1001,11 +1002,11 @@ function bp_media_visibility() {
  *
  * @since BuddyBoss 1.2.3
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return string The media visibility.
  */
-function bp_get_media_visibility() {
+function bboss_get_media_visibility() {
 	global $media_template;
 
 	/**
@@ -1023,8 +1024,8 @@ function bp_get_media_visibility() {
  *
  * @since BuddyBoss 1.2.0
  */
-function bp_media_parent_activity_id() {
-	echo bp_get_media_parent_activity_id();
+function bboss_media_parent_activity_id() {
+	echo esc_attr( bboss_get_media_parent_activity_id() );
 }
 
 /**
@@ -1032,11 +1033,11 @@ function bp_media_parent_activity_id() {
  *
  * @since BuddyBoss 1.2.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return int The media parent activity id.
  */
-function bp_get_media_parent_activity_id() {
+function bboss_get_media_parent_activity_id() {
 	global $media_template;
 
 	/**
@@ -1057,18 +1058,18 @@ function bp_get_media_parent_activity_id() {
  * @return string The media link.
  * @global object $media_template {@link \BP_Media_Template}
  */
-function bp_get_media_link() {
+function bboss_get_media_link() {
 	global $media_template;
 
 	if ( ! empty( $media_template->media->group_id ) ) {
-		$group = buddypress()->groups->current_group;
+		$group = bboss()->groups->current_group;
 		if ( ! isset( $group->id ) || $group->id !== $media_template->media->group_id ) {
-			$group = groups_get_group( $media_template->media->group_id );
+			$group = bboss_groups_get_group( $media_template->media->group_id );
 		}
-		$group_link = bp_get_group_permalink( $group );
-		$url        = trailingslashit( $group_link . bp_get_media_slug() );
+		$group_link = bboss_get_group_permalink( $group );
+		$url        = trailingslashit( $group_link . bboss_get_media_slug() );
 	} else {
-		$url = trailingslashit( bp_core_get_user_domain( bp_get_media_user_id() ) . bp_get_media_slug() );
+		$url = trailingslashit( bboss_core_get_user_domain( bboss_get_media_user_id() ) . bboss_get_media_slug() );
 	}
 
 	/**
@@ -1086,19 +1087,19 @@ function bp_get_media_link() {
 /**
  * Initialize the album loop.
  *
- * Based on the $args passed, bp_has_albums() populates the
+ * Based on the $args passed, bboss_has_albums() populates the
  * $media_album_template global, enabling the use of BuddyPress templates and
  * template functions to display a list of media album items.
  *
  * @since BuddyBoss 1.0.0
 
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @param array|string $args {
  *     Arguments for limiting the contents of the media loop. Most arguments
- *     are in the same format as {@link BP_Media_Album::get()}. However,
+ *     are in the same format as {@link BBoss_Media_Album::get()}. However,
  *     because the format of the arguments accepted here differs in a number of
- *     ways, and because bp_has_media() determines some default arguments in
+ *     ways, and because bboss_has_media() determines some default arguments in
  *     a dynamic fashion, we list all accepted arguments here as well.
  *
  *     Arguments can be passed as an associative array, or as a URL querystring
@@ -1130,7 +1131,7 @@ function bp_get_media_link() {
  * }
  * @return bool Returns true when media found, otherwise false.
  */
-function bp_has_albums( $args = '' ) {
+function bboss_has_albums( $args = '' ) {
 	global $media_album_template;
 
 	/*
@@ -1138,12 +1139,12 @@ function bp_has_albums( $args = '' ) {
 	 */
 
 	// User filtering.
-	$user_id = bp_displayed_user_id()
-		? bp_displayed_user_id()
+	$user_id = bboss_displayed_user_id()
+		? bboss_displayed_user_id()
 		: false;
 
 	$search_terms_default = false;
-	$search_query_arg     = bp_core_get_component_search_query_arg( 'album' );
+	$search_query_arg     = bboss_core_get_component_search_query_arg( 'album' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
@@ -1151,13 +1152,13 @@ function bp_has_albums( $args = '' ) {
 	$privacy = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bboss_is_active( 'friends' ) ) {
 
 			// get the login user id.
 			$current_user_id = get_current_user_id();
 
 			// check if the login user is friends of the display user.
-			$is_friend = friends_check_friendship( $current_user_id, $user_id );
+			$is_friend = bboss_friends_check_friendship( $current_user_id, $user_id );
 
 			/**
 			 * check if the login user is friends of the display user
@@ -1168,14 +1169,14 @@ function bp_has_albums( $args = '' ) {
 			}
 		}
 
-		if ( bp_is_my_profile() ) {
+		if ( bboss_is_my_profile() ) {
 			$privacy[] = 'onlyme';
 		}
 	}
 
 	$group_id = false;
-	if ( bp_is_group() ) {
-		$group_id = bp_get_current_group_id();
+	if ( bboss_is_group() ) {
+		$group_id = bboss_get_current_group_id();
 		$user_id  = false;
 		$privacy  = array( 'grouponly' );
 	}
@@ -1186,7 +1187,7 @@ function bp_has_albums( $args = '' ) {
 
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'include'      => false,        // Pass an album_id or string of IDs comma-separated.
@@ -1228,7 +1229,7 @@ function bp_has_albums( $args = '' ) {
 	 * Query
 	 */
 
-	$media_album_template = new BP_Media_Album_Template( $r );
+	$media_album_template = new BBoss_Media_Album_Template( $r );
 
 	/**
 	 * Filters whether or not there are media albums to display.
@@ -1237,7 +1238,7 @@ function bp_has_albums( $args = '' ) {
 	 *
 	 * @param bool   $value                     Whether or not there are media items to display.
 	 * @param string $media_album_template      Current media album template being used.
-	 * @param array  $r                         Array of arguments passed into the BP_Media_Album_Template class.
+	 * @param array  $r                         Array of arguments passed into the BBoss_Media_Album_Template class.
 	 */
 	return apply_filters( 'bp_has_album', $media_album_template->has_albums(), $media_album_template, $r );
 }
@@ -1247,11 +1248,11 @@ function bp_has_albums( $args = '' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return bool Returns true when media are found.
  */
-function bp_album() {
+function bboss_album() {
 	global $media_album_template;
 	return $media_album_template->user_albums();
 }
@@ -1261,11 +1262,11 @@ function bp_album() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return object The current media within the loop.
  */
-function bp_the_album() {
+function bboss_the_album() {
 	global $media_album_template;
 	return $media_album_template->the_album();
 }
@@ -1275,8 +1276,8 @@ function bp_the_album() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_album_load_more_link() {
-	echo esc_url( bp_get_album_load_more_link() );
+function bboss_album_load_more_link() {
+	echo esc_url( bboss_get_album_load_more_link() );
 }
 /**
  * Get the URL for the Load More link.
@@ -1285,10 +1286,10 @@ function bp_album_load_more_link() {
  *
  * @return string $link
  */
-function bp_get_album_load_more_link() {
+function bboss_get_album_load_more_link() {
 	global $media_album_template;
 
-	$url  = bp_get_requested_url();
+	$url  = bboss_get_requested_url();
 	$link = add_query_arg( $media_album_template->pag_arg, $media_album_template->pag_page + 1, $url );
 
 	/**
@@ -1308,10 +1309,10 @@ function bp_get_album_load_more_link() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  */
-function bp_album_pagination_count() {
-	echo bp_get_album_pagination_count();
+function bboss_album_pagination_count() {
+	echo esc_html( bboss_get_album_pagination_count() );
 }
 
 /**
@@ -1319,19 +1320,20 @@ function bp_album_pagination_count() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return string The pagination text.
  */
-function bp_get_album_pagination_count() {
+function bboss_get_album_pagination_count() {
 	global $media_album_template;
 
 	$start_num = intval( ( $media_album_template->pag_page - 1 ) * $media_album_template->pag_num ) + 1;
-	$from_num  = bp_core_number_format( $start_num );
-	$to_num    = bp_core_number_format( ( $start_num + ( $media_album_template->pag_num - 1 ) > $media_album_template->total_album_count ) ? $media_album_template->total_album_count : $start_num + ( $media_album_template->pag_num - 1 ) );
-	$total     = bp_core_number_format( $media_album_template->total_album_count );
+	$from_num  = bboss_core_number_format( $start_num );
+	$to_num    = bboss_core_number_format( ( $start_num + ( $media_album_template->pag_num - 1 ) > $media_album_template->total_album_count ) ? $media_album_template->total_album_count : $start_num + ( $media_album_template->pag_num - 1 ) );
+	$total     = bboss_core_number_format( $media_album_template->total_album_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_album_template->total_media_count, 'buddyboss' ), $from_num, $to_num, $total );
+	// translators: 1: starting item number, 2: ending item number, 3: total number of items.
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_album_template->total_media_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
 }
@@ -1341,8 +1343,8 @@ function bp_get_album_pagination_count() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_album_pagination_links() {
-	echo bp_get_album_pagination_links();
+function bboss_album_pagination_links() {
+	echo wp_kses_post( bboss_get_album_pagination_links() );
 }
 
 /**
@@ -1350,11 +1352,11 @@ function bp_album_pagination_links() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return string The pagination links.
  */
-function bp_get_album_pagination_links() {
+function bboss_get_album_pagination_links() {
 	global $media_album_template;
 
 	/**
@@ -1372,11 +1374,11 @@ function bp_get_album_pagination_links() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return bool $has_more_items True if more items, false if not.
  */
-function bp_album_has_more_items() {
+function bboss_album_has_more_items() {
 	global $media_album_template;
 
 	if ( ! empty( $media_album_template->has_more_items ) ) {
@@ -1406,8 +1408,8 @@ function bp_album_has_more_items() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_album_count() {
-	echo bp_get_album_count();
+function bboss_album_count() {
+	echo esc_html( bboss_get_album_count() );
 }
 
 /**
@@ -1415,11 +1417,11 @@ function bp_album_count() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return int The album count.
  */
-function bp_get_album_count() {
+function bboss_get_album_count() {
 	global $media_album_template;
 
 	/**
@@ -1437,8 +1439,8 @@ function bp_get_album_count() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_album_per_page() {
-	echo bp_get_album_per_page();
+function bboss_album_per_page() {
+	echo esc_html( bboss_get_album_per_page() );
 }
 
 /**
@@ -1446,11 +1448,11 @@ function bp_album_per_page() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return int The media album per page.
  */
-function bp_get_album_per_page() {
+function bboss_get_album_per_page() {
 	global $media_album_template;
 
 	/**
@@ -1468,8 +1470,8 @@ function bp_get_album_per_page() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_album_id() {
-	echo bp_get_album_id();
+function bboss_album_id() {
+	echo esc_attr( bboss_get_album_id() );
 }
 
 /**
@@ -1477,11 +1479,11 @@ function bp_album_id() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return int The media album ID.
  */
-function bp_get_album_id() {
+function bboss_get_album_id() {
 	global $media_album_template;
 
 	if ( empty( $media_album_template ) ) {
@@ -1503,8 +1505,8 @@ function bp_get_album_id() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_album_title() {
-	echo esc_html( bp_get_album_title() );
+function bboss_album_title() {
+	echo esc_html( bboss_get_album_title() );
 }
 
 /**
@@ -1512,11 +1514,11 @@ function bp_album_title() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return string The media album title.
  */
-function bp_get_album_title() {
+function bboss_get_album_title() {
 	global $media_album_template;
 
 	$album_id = isset( $media_album_template->album->id ) ? (int) $media_album_template->album->id : 0;
@@ -1538,11 +1540,11 @@ function bp_get_album_title() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return string The media album privacy.
  */
-function bp_get_album_privacy() {
+function bboss_get_album_privacy() {
 	global $media_album_template;
 
 	/**
@@ -1560,8 +1562,8 @@ function bp_get_album_privacy() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_album_link() {
-	echo bp_get_album_link();
+function bboss_album_link() {
+	echo wp_kses_post( bboss_get_album_link() );
 }
 
 /**
@@ -1569,22 +1571,22 @@ function bp_album_link() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return string The media album description.
  */
-function bp_get_album_link() {
+function bboss_get_album_link() {
 	global $media_album_template;
 
 	if ( ! empty( $media_album_template->album->group_id ) ) {
-		$group = buddypress()->groups->current_group;
+		$group = bboss()->groups->current_group;
 		if ( ! isset( $group->id ) || $group->id !== $media_album_template->album->group_id ) {
-			$group = groups_get_group( $media_album_template->album->group_id );
+			$group = bboss_groups_get_group( $media_album_template->album->group_id );
 		}
-		$group_link = bp_get_group_permalink( $group );
-		$url        = trailingslashit( $group_link . 'albums/' . bp_get_album_id() );
+		$group_link = bboss_get_group_permalink( $group );
+		$url        = trailingslashit( $group_link . 'albums/' . bboss_get_album_id() );
 	} else {
-		$url = trailingslashit( bp_core_get_user_domain( bp_get_album_user_id() ) . bp_get_media_slug() . '/albums/' . bp_get_album_id() );
+		$url = trailingslashit( bboss_core_get_user_domain( bboss_get_album_user_id() ) . bboss_get_media_slug() . '/albums/' . bboss_get_album_id() );
 	}
 
 	/**
@@ -1602,10 +1604,10 @@ function bp_get_album_link() {
  *
  * @since BuddyBoss 1.2.0
  *
- * @param int|BP_Media_Album $album BP_Media_Album object or ID of the album
+ * @param int|BBoss_Media_Album $album BBoss_Media_Album object or ID of the album
  * @return bool True if can delete, false otherwise.
  */
-function bp_album_user_can_delete( $album = false ) {
+function bboss_album_user_can_delete( $album = false ) {
 
 	// Assume the user cannot delete the album item.
 	$can_delete = false;
@@ -1615,7 +1617,7 @@ function bp_album_user_can_delete( $album = false ) {
 	}
 
 	if ( ! is_object( $album ) ) {
-		$album = new BP_Media_Album( $album );
+		$album = new BBoss_Media_Album( $album );
 	}
 
 	if ( empty( $album ) ) {
@@ -1627,16 +1629,16 @@ function bp_album_user_can_delete( $album = false ) {
 
 		// Groups albums have their own access.
 		if ( ! empty( $album->group_id ) ) {
-			$album_privacy = bb_media_user_can_access( $album->id, 'album' );
+			$album_privacy = bboss_media_user_can_access( $album->id, 'album' );
 			$can_delete    = isset( $album_privacy['can_delete'] ) && true === (bool) $album_privacy['can_delete'];
 
 			// Users are allowed to delete their own album.
-		} elseif ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
+		} elseif ( isset( $album->user_id ) && bboss_loggedin_user_id() === $album->user_id ) {
 			$can_delete = true;
 		}
 
 		// Community moderators can always delete album (at least for now).
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bboss_current_user_can( 'bp_moderate' ) ) {
 			$can_delete = true;
 		}
 	}
@@ -1657,8 +1659,8 @@ function bp_album_user_can_delete( $album = false ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_album_user_id() {
-	echo bp_get_album_user_id();
+function bboss_album_user_id() {
+	echo esc_attr( bboss_get_album_user_id() );
 }
 
 /**
@@ -1670,7 +1672,7 @@ function bp_album_user_id() {
  *
  * @return int The album user ID.
  */
-function bp_get_album_user_id() {
+function bboss_get_album_user_id() {
 	global $media_album_template;
 
 	/**
@@ -1688,8 +1690,8 @@ function bp_get_album_user_id() {
  *
  * @since BuddyBoss 1.5.3
  */
-function bp_album_author() {
-	echo bp_get_album_author();
+function bboss_album_author() {
+	echo esc_html( bboss_get_album_author() );
 }
 
 /**
@@ -1701,11 +1703,11 @@ function bp_album_author() {
  *
  * @return int The album author name.
  */
-function bp_get_album_author() {
+function bboss_get_album_author() {
 	global $media_album_template;
 
 	if ( isset( $media_album_template ) && isset( $media_album_template->album ) && isset( $media_album_template->album->user_id ) ) {
-		$author = bp_core_get_user_displayname( $media_album_template->album->user_id );
+		$author = bboss_core_get_user_displayname( $media_album_template->album->user_id );
 	}
 
 	/**
@@ -1723,8 +1725,8 @@ function bp_get_album_author() {
  *
  * @since BuddyBoss 1.2.5
  */
-function bp_album_group_id() {
-	echo bp_get_album_group_id();
+function bboss_album_group_id() {
+	echo esc_attr( bboss_get_album_group_id() );
 }
 
 /**
@@ -1732,11 +1734,11 @@ function bp_album_group_id() {
  *
  * @since BuddyBoss 1.2.5
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return int The album group ID.
  */
-function bp_get_album_group_id() {
+function bboss_get_album_group_id() {
 	global $media_album_template;
 
 	/**
@@ -1754,8 +1756,8 @@ function bp_get_album_group_id() {
  *
  * @since BuddyBoss 1.2.5
  */
-function bp_album_privacy() {
-	echo bp_get_album_privacy();
+function bboss_album_privacy() {
+	echo esc_html( bboss_get_album_privacy() );
 }
 
 /**
@@ -1763,8 +1765,8 @@ function bp_album_privacy() {
  *
  * @since BuddyBoss 1.2.5
  */
-function bp_album_visibility() {
-	echo bp_get_album_visibility();
+function bboss_album_visibility() {
+	echo esc_html( bboss_get_album_visibility() );
 }
 
 /**
@@ -1772,11 +1774,11 @@ function bp_album_visibility() {
  *
  * @since BuddyBoss 1.2.5
  *
- * @global object $media_album_template {@link BP_Media_Album_Template}
+ * @global object $media_album_template {@link BBoss_Media_Album_Template}
  *
  * @return string The media album visibility.
  */
-function bp_get_album_visibility() {
+function bboss_get_album_visibility() {
 	global $media_album_template;
 
 	/**
@@ -1792,12 +1794,12 @@ function bp_get_album_visibility() {
 /**
  * Determine if the current user can edit an media item.
  *
- * @param bool $media BP_Media object or ID of the media.
+ * @param bool $media BBoss_Media object or ID of the media.
  *
  * @return bool True if can edit, false otherwise.
  * @since BuddyBoss 1.5.6
  */
-function bp_media_user_can_edit( $media = false ) {
+function bboss_media_user_can_edit( $media = false ) {
 
 	// Assume the user cannot edit the document item.
 	$can_edit = false;
@@ -1807,7 +1809,7 @@ function bp_media_user_can_edit( $media = false ) {
 	}
 
 	if ( ! is_object( $media ) ) {
-		$media = new BP_Media( $media );
+		$media = new BBoss_Media( $media );
 	}
 
 	if ( empty( $media ) ) {
@@ -1818,23 +1820,23 @@ function bp_media_user_can_edit( $media = false ) {
 	if ( is_user_logged_in() ) {
 
 		// Community moderators can always edit media (at least for now).
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bboss_current_user_can( 'bp_moderate' ) ) {
 			$can_edit = true;
 		}
 
 		// Users are allowed to edit their own media.
-		if ( isset( $media->user_id ) && ( bp_loggedin_user_id() === $media->user_id ) ) {
+		if ( isset( $media->user_id ) && ( bboss_loggedin_user_id() === $media->user_id ) ) {
 			$can_edit = true;
 		}
 
-		if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
-			$manage   = groups_can_user_manage_media( bp_loggedin_user_id(), $media->group_id );
-			$status   = bp_group_get_media_status( $media->group_id );
-			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $media->group_id );
-			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $media->group_id );
+		if ( bboss_is_active( 'groups' ) && $media->group_id > 0 ) {
+			$manage   = groups_can_user_manage_media( bboss_loggedin_user_id(), $media->group_id );
+			$status   = bboss_group_get_media_status( $media->group_id );
+			$is_admin = bboss_groups_is_user_admin( bboss_loggedin_user_id(), $media->group_id );
+			$is_mod   = bboss_groups_is_user_mod( bboss_loggedin_user_id(), $media->group_id );
 
 			if ( $manage ) {
-				if ( bp_loggedin_user_id() === $media->user_id ) {
+				if ( bboss_loggedin_user_id() === $media->user_id ) {
 					$can_edit = true;
 				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
 					$can_edit = true;
@@ -1861,12 +1863,12 @@ function bp_media_user_can_edit( $media = false ) {
 /**
  * Determine if the current user can edit an album item.
  *
- * @param bool $album BP_Media_Album object or ID of the album.
+ * @param bool $album BBoss_Media_Album object or ID of the album.
  *
  * @return bool True if can edit, false otherwise.
  * @since BuddyBoss 1.5.6
  */
-function bp_album_user_can_edit( $album = false ) {
+function bboss_album_user_can_edit( $album = false ) {
 
 	// Assume the user cannot edit the album item.
 	$can_edit = false;
@@ -1876,7 +1878,7 @@ function bp_album_user_can_edit( $album = false ) {
 	}
 
 	if ( ! is_object( $album ) ) {
-		$album = new BP_Media_Album( $album );
+		$album = new BBoss_Media_Album( $album );
 	}
 
 	if ( empty( $album ) ) {
@@ -1887,13 +1889,13 @@ function bp_album_user_can_edit( $album = false ) {
 	if ( is_user_logged_in() ) {
 
 		// Users are allowed to edit their own album.
-		if ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
+		if ( isset( $album->user_id ) && bboss_loggedin_user_id() === $album->user_id ) {
 			$can_edit = true;
 			// Community moderators can always edit album (at least for now).
-		} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+		} elseif ( bboss_current_user_can( 'bp_moderate' ) ) {
 			$can_edit = true;
 			// Groups medias have their own access.
-		} elseif ( ! empty( $album->group_id ) && groups_can_user_manage_media( bp_loggedin_user_id(), $album->group_id ) ) {
+		} elseif ( ! empty( $album->group_id ) && groups_can_user_manage_media( bboss_loggedin_user_id(), $album->group_id ) ) {
 			$can_edit = true;
 		}
 	}
@@ -1914,8 +1916,8 @@ function bp_album_user_can_edit( $album = false ) {
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_media_photos_directory_image_thumbnail() {
-	echo bb_get_media_photos_directory_image_thumbnail();
+function bboss_media_photos_directory_image_thumbnail() {
+	echo esc_url( bboss_get_media_photos_directory_image_thumbnail() );
 }
 
 /**
@@ -1923,11 +1925,11 @@ function bb_media_photos_directory_image_thumbnail() {
  *
  * @since BuddyBoss 1.7.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return string The media photos/directory thumbnail url.
  */
-function bb_get_media_photos_directory_image_thumbnail() {
+function bboss_get_media_photos_directory_image_thumbnail() {
 	global $media_template;
 
 	/**
@@ -1945,8 +1947,8 @@ function bb_get_media_photos_directory_image_thumbnail() {
  *
  * @since BuddyBoss 1.7.0
  */
-function bb_media_photos_theatre_popup_image() {
-	echo bb_get_media_photos_theatre_popup_image();
+function bboss_media_photos_theatre_popup_image() {
+	echo esc_url( bboss_get_media_photos_theatre_popup_image() );
 }
 
 /**
@@ -1954,11 +1956,11 @@ function bb_media_photos_theatre_popup_image() {
  *
  * @since BuddyBoss 1.7.0
  *
- * @global object $media_template {@link BP_Media_Template}
+ * @global object $media_template {@link BBoss_Media_Template}
  *
  * @return string The media theatre popup thumbnail url.
  */
-function bb_get_media_photos_theatre_popup_image() {
+function bboss_get_media_photos_theatre_popup_image() {
 	global $media_template;
 
 	/**

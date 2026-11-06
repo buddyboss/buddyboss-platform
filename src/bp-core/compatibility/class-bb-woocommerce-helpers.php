@@ -6,11 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * BB_Woocommerce_Helpers Class
+ * BBoss_Woocommerce_Helpers Class
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  */
-class BB_Woocommerce_Helpers {
+class BBoss_Woocommerce_Helpers {
 
 	/**
 	 * The single instance of the class.
@@ -20,7 +20,7 @@ class BB_Woocommerce_Helpers {
 	private static $instance = null;
 
 	/**
-	 * BB_Woocommerce_Helpers constructor.
+	 * BBoss_Woocommerce_Helpers constructor.
 	 */
 	public function __construct() {
 
@@ -105,7 +105,7 @@ class BB_Woocommerce_Helpers {
 	 * @return array
 	 */
 	public function bb_wcs_remove_query_vars( $q_vars ) {
-		if ( 'subscriptions' === bp_action_variable() && isset( $q_vars['subscriptions'] ) ) {
+		if ( 'subscriptions' === bboss_action_variable() && isset( $q_vars['subscriptions'] ) ) {
 			unset( $q_vars['subscriptions'] );
 		}
 
@@ -126,9 +126,9 @@ class BB_Woocommerce_Helpers {
 	 */
 	public function bb_invites_validate_invitation_before_wc_registration( $validation_error, $username, $password, $email ) {
 
-		if ( bp_is_active( 'invites' ) && ! empty( $_REQUEST['inviter'] ) && ! empty( $email ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( bboss_is_active( 'invites' ) && ! empty( $_REQUEST['inviter'] ) && ! empty( $email ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$inviter  = sanitize_text_field( wp_unslash( $_REQUEST['inviter'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$is_valid = bb_invites_validate_invitation_before_registration( $email, $inviter );
+			$is_valid = bboss_invites_validate_invitation_before_registration( $email, $inviter );
 
 			if ( is_string( $is_valid ) ) {
 				$validation_error->add( 'email_error', $is_valid );
@@ -139,4 +139,4 @@ class BB_Woocommerce_Helpers {
 	}
 }
 
-BB_Woocommerce_Helpers::instance();
+BBoss_Woocommerce_Helpers::instance();

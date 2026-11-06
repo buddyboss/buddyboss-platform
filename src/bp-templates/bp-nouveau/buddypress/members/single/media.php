@@ -8,21 +8,24 @@
  * @version 1.0.0
  */
 
-$is_send_ajax_request = bb_is_send_ajax_request();
-$bp_current_action    = bp_current_action();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+$is_send_ajax_request = bboss_is_send_ajax_request();
+$bp_current_action    = bboss_current_action();
 $count                = false;
 
-bp_get_template_part( 'members/single/parts/item-subnav' );
+bboss_get_template_part( 'members/single/parts/item-subnav' );
 
-if ( bp_is_user() && bb_enable_content_counts() ) {
+if ( bboss_is_user() && bboss_enable_content_counts() ) {
 	?>
 	<div class="bb-item-count">
 		<?php
-		if ( ! $is_send_ajax_request || ( 'albums' === $bp_current_action && ! bp_is_single_album() ) ) {
+		if ( ! $is_send_ajax_request || ( 'albums' === $bp_current_action && ! bboss_is_single_album() ) ) {
 			if ( 'my-media' === $bp_current_action ) {
-				$count = bp_media_get_total_media_count();
-			} elseif ( 'albums' === $bp_current_action && ! bp_is_single_album() ) {
-				$count = bb_media_get_total_album_count();
+				$count = bboss_media_get_total_media_count();
+			} elseif ( 'albums' === $bp_current_action && ! bboss_is_single_album() ) {
+				$count = bboss_media_get_total_album_count();
 			}
 
 			if ( false !== $count ) {
@@ -34,7 +37,7 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 								'<span class="bb-count">%d</span> Album',
 								'<span class="bb-count">%d</span> Albums',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),
@@ -48,7 +51,7 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 								'<span class="bb-count">%d</span> Photo',
 								'<span class="bb-count">%d</span> Photos',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),
@@ -66,52 +69,52 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 ?>
 <div class="bb-media-container member-media">
 	<?php
-	bp_get_template_part( 'media/theatre' );
-	if ( bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() ) {
-		bp_get_template_part( 'video/theatre' );
-		bp_get_template_part( 'video/add-video-thumbnail' );
+	bboss_get_template_part( 'media/theatre' );
+	if ( bboss_is_active( 'video' ) && bboss_is_profile_video_support_enabled() ) {
+		bboss_get_template_part( 'video/theatre' );
+		bboss_get_template_part( 'video/add-video-thumbnail' );
 	}
-	bp_get_template_part( 'document/theatre' );
+	bboss_get_template_part( 'document/theatre' );
 
 	switch ( $bp_current_action ) :
 
 		// Home/Media.
 		case 'my-media':
-			bp_nouveau_member_hook( 'before', 'media_content' );
+			bboss_nouveau_member_hook( 'before', 'media_content' );
 			?>
 			<div class="bb-media-actions-header">
 				<?php
-				bp_get_template_part( 'media/add-media' );
-				bp_get_template_part( 'media/actions' );
+				bboss_get_template_part( 'media/add-media' );
+				bboss_get_template_part( 'media/actions' );
 				?>
 			</div>
 			<div id="media-stream" class="media" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
 				if ( $is_send_ajax_request ) {
 					echo '<div id="bp-ajax-loader">';
-					bp_nouveau_user_feedback( 'member-media-loading' );
+					bboss_nouveau_user_feedback( 'member-media-loading' );
 					echo '</div>';
 				} else {
-					bp_get_template_part( 'media/media-loop' );
+					bboss_get_template_part( 'media/media-loop' );
 				}
 				?>
 			</div><!-- .media -->
 			<?php
-			bp_nouveau_member_hook( 'after', 'media_content' );
+			bboss_nouveau_member_hook( 'after', 'media_content' );
 			break;
 
 		// Home/Media/Albums.
 		case 'albums':
-			if ( ! bp_is_single_album() ) {
-				bp_get_template_part( 'media/albums' );
+			if ( ! bboss_is_single_album() ) {
+				bboss_get_template_part( 'media/albums' );
 			} else {
-				bp_get_template_part( 'media/single-album' );
+				bboss_get_template_part( 'media/single-album' );
 			}
 			break;
 
 		// Any other.
 		default:
-			bp_get_template_part( 'members/single/plugins' );
+			bboss_get_template_part( 'members/single/plugins' );
 			break;
 	endswitch;
 	?>

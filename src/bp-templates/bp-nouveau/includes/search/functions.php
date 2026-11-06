@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array  The same array with the specific search scripts.
  */
-function bp_nouveau_search_register_scripts( $scripts = array() ) {
+function bboss_nouveau_search_register_scripts( $scripts = array() ) {
 
 	if ( ! isset( $scripts['bp-nouveau'] ) ) {
 		return $scripts;
@@ -41,12 +41,12 @@ function bp_nouveau_search_register_scripts( $scripts = array() ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_search_enqueue_scripts() {
+function bboss_nouveau_search_enqueue_scripts() {
 
 	/* To show number of listing per page. */
 	$per_page = '5';
-	if ( function_exists( 'bp_search_get_form_option' ) ) {
-		$per_page = bp_search_get_form_option( 'bp_search_number_of_results', 5 );
+	if ( function_exists( 'bboss_search_get_form_option' ) ) {
+		$per_page = bboss_search_get_form_option( 'bp_search_number_of_results', 5 );
 	}
 
 	$data = array(
@@ -55,8 +55,8 @@ function bp_nouveau_search_enqueue_scripts() {
 		'debug'                 => true, // set it to false on production
 		'ajaxurl'               => admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ),
 		// 'search_url'    => home_url( '/' ), Now we are using form[role='search'] selector
-		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss' ),
-		'enable_ajax_search'    => function_exists( 'bp_is_search_autocomplete_enable' ) && bp_is_search_autocomplete_enable(),
+		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss-platform' ),
+		'enable_ajax_search'    => function_exists( 'bboss_is_search_autocomplete_enable' ) && bboss_is_search_autocomplete_enable(),
 		'per_page'              => $per_page,
 		'autocomplete_selector' => "form[role='search']:not(.bp-dir-search-form), form.search-form:not(.bp-dir-search-form), form.searchform:not(.bp-dir-search-form), form#adminbarsearch:not(.bp-dir-search-form), .bp-search-form>#search-form:not(.bp-dir-search-form)",
 		'form_selector'         => ".bp-search-page form.bp-dir-search-form[role='search']",
@@ -67,12 +67,12 @@ function bp_nouveau_search_enqueue_scripts() {
 		$data['search_term'] = $_GET['s'];
 	}
 
-	if ( bp_is_active( 'forums' ) ) {
+	if ( bboss_is_active( 'forums' ) ) {
 		$data['forums_autocomplete'] = (
-			bp_is_search_post_type_enable( bbp_get_forum_post_type() ) ||
-			bp_is_search_post_type_enable( bbp_get_topic_post_type() ) ||
-			bp_is_search_post_type_taxonomy_enable( bbpress()->topic_tag_tax_id, bbp_get_topic_post_type() ) ||
-			bp_is_search_post_type_enable( bbp_get_reply_post_type() )
+			bboss_is_search_post_type_enable( bboss_bbp_get_forum_post_type() ) ||
+			bboss_is_search_post_type_enable( bboss_bbp_get_topic_post_type() ) ||
+			bboss_is_search_post_type_taxonomy_enable( bboss_forums()->topic_tag_tax_id, bboss_bbp_get_topic_post_type() ) ||
+			bboss_is_search_post_type_enable( bboss_bbp_get_reply_post_type() )
 		);
 	}
 
@@ -83,14 +83,12 @@ function bp_nouveau_search_enqueue_scripts() {
 }
 
 /**
- * Output search message autocomplete init JS.
+ * Attach the search message autocomplete init JS to the bp-nouveau-search script.
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_search_messages_autocomplete_init_jsblock() {
-	?>
-
-	<script>
+function bboss_nouveau_search_messages_autocomplete_init_jsblock() {
+	$inline_js = <<<'JS'
 		window.user_profiles = Array();
 		jQuery( document ).ready( function() {
 			var obj = jQuery( '.send-to-input' ).autocomplete( {
@@ -177,9 +175,9 @@ function bp_nouveau_search_messages_autocomplete_init_jsblock() {
 				document.getElementById( 'send-to-usernames' ).value = tosend.join( ' ' );
 			} );
 		} );
-	</script>
+JS;
 
-	<?php
+	wp_add_inline_script( 'bp-nouveau-search', $inline_js );
 }
 
 /**
@@ -194,13 +192,13 @@ function bp_nouveau_search_messages_autocomplete_init_jsblock() {
  *
  * @return void
  */
-function bb_rl_search_enqueue_scripts() {
+function bboss_rl_search_enqueue_scripts() {
 	global $bp;
 
 	/* To show the number of listings per page. */
 	$per_page = '5';
-	if ( function_exists( 'bp_search_get_form_option' ) ) {
-		$per_page = bp_search_get_form_option( 'bp_search_number_of_results', 5 );
+	if ( function_exists( 'bboss_search_get_form_option' ) ) {
+		$per_page = bboss_search_get_form_option( 'bp_search_number_of_results', 5 );
 	}
 
 	$data = array(
@@ -208,8 +206,8 @@ function bb_rl_search_enqueue_scripts() {
 		'action'                => 'bp_search_ajax',
 		'debug'                 => true, // set it to false on production.
 		'ajaxurl'               => admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ),
-		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss' ),
-		'enable_ajax_search'    => function_exists( 'bp_is_search_autocomplete_enable' ) && bp_is_search_autocomplete_enable(),
+		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss-platform' ),
+		'enable_ajax_search'    => function_exists( 'bboss_is_search_autocomplete_enable' ) && bboss_is_search_autocomplete_enable(),
 		'per_page'              => $per_page,
 		'autocomplete_selector' => '.bb-rl-network-search-modal .search-form',
 		'form_selector'         => '.bp-search-form-wrapper #search-form',
@@ -220,10 +218,10 @@ function bb_rl_search_enqueue_scripts() {
 		$data['search_term'] = $_GET['s'];
 	}
 
-	$min = bp_core_get_minified_asset_suffix();
+	$min = bboss_core_get_minified_asset_suffix();
 
 	wp_enqueue_script( 'jquery-ui-autocomplete' );
-	wp_enqueue_script( 'bb-rl-nouveau-search', trailingslashit( $bp->plugin_url ) . "bp-templates/bp-nouveau/readylaunch/js/buddypress-search{$min}.js", array( 'bp-nouveau' ), bp_get_version(), true );
+	wp_enqueue_script( 'bb-rl-nouveau-search', trailingslashit( $bp->plugin_url ) . "bp-templates/bp-nouveau/readylaunch/js/buddypress-search{$min}.js", array( 'bp-nouveau' ), bboss_get_version(), true );
 
 	wp_localize_script( 'bb-rl-nouveau-search', 'BP_SEARCH', apply_filters( 'bp_search_js_settings', $data ) );
 }

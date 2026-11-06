@@ -198,7 +198,7 @@ class BB_Activity extends Integration_Abstract {
 	 * @param int $comment_id Activity comment id.
 	 */
 	public function event_bb_activity_comment_attachment_deleted( $comment_id ) {
-		$comment = new \BP_Activity_Activity( $comment_id );
+		$comment = new \BBoss_Activity_Activity( $comment_id );
 
 		$this->purge_item_cache_by_item_id( $comment_id );
 
@@ -288,7 +288,7 @@ class BB_Activity extends Integration_Abstract {
 	/**
 	 * Update cache for activity when member blocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bp_moderation_after_save( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -305,7 +305,7 @@ class BB_Activity extends Integration_Abstract {
 	/**
 	 * Update cache for activity when member unblocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bb_moderation_after_delete( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -460,7 +460,7 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	private function get_activity_ids_by_userid( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name} WHERE user_id = %d", $user_id );
 
@@ -475,7 +475,7 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	private function purge_item_cache_by_item_id( $activity_id ) {
 		Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
-		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity_id ) ) );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bboss_activity_get_permalink( $activity_id ) ) );
 	}
 
 	/**
@@ -501,7 +501,7 @@ class BB_Activity extends Integration_Abstract {
 	 * @return string
 	 */
 	public function prepare_activity_deeplink( $activity_id ) {
-		return 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity_id ) );
+		return 'bbapp-deeplinking_' . untrailingslashit( bboss_activity_get_permalink( $activity_id ) );
 	}
 
 	/**
@@ -632,7 +632,7 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	private function get_activity_id_by_poll_id( $poll_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_var( $wpdb->prepare( "SELECT activity_id FROM {$bp->activity->table_name_meta} WHERE meta_key = %s AND meta_value = %d", "bb_poll_id", $poll_id ) );

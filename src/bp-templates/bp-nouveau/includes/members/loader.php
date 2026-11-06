@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Members {
+class BBoss_Nouveau_Members {
 	/**
 	 * Constructor
 	 *
@@ -58,7 +58,7 @@ class BP_Nouveau_Members {
 		$ajax_actions = array(
 			array(
 				'members_filter' => array(
-					'function' => 'bp_nouveau_ajax_object_template_loader',
+					'function' => 'bboss_nouveau_ajax_object_template_loader',
 					'nopriv'   => true,
 				),
 			),
@@ -79,10 +79,10 @@ class BP_Nouveau_Members {
 		add_action( 'dynamic_sidebar_after', array( $this, 'user_home_sidebar_unset' ), 10, 1 );
 
 		// Add 'Dashboard' link to admin bar.
-		add_action( 'bp_setup_admin_bar', 'bp_nouveau_admin_bar_member_dashboard', 11 );
+		add_action( 'bp_setup_admin_bar', 'bboss_nouveau_admin_bar_member_dashboard', 11 );
 
 		// Enqueue the scripts for the new UI.
-		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_member_enqueue_scripts' );
+		add_action( 'bp_nouveau_enqueue_scripts', 'bboss_nouveau_member_enqueue_scripts' );
 
 	}
 
@@ -93,10 +93,10 @@ class BP_Nouveau_Members {
 	 */
 	protected function setup_filters() {
 		// Register member scripts.
-		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_member_register_scripts', 10, 1 );
+		add_filter( 'bp_nouveau_register_scripts', 'bboss_nouveau_member_register_scripts', 10, 1 );
 
 		// Localize Scripts.
-		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_member_localize_scripts', 10, 1 );
+		add_filter( 'bp_core_get_js_strings', 'bboss_nouveau_member_localize_scripts', 10, 1 );
 
 		// Add the default-front to User's front hierarchy if user enabled it (Enabled by default).
 	}
@@ -117,7 +117,7 @@ class BP_Nouveau_Members {
 		$this->is_user_home_sidebar = true;
 
 		// Add needed filters.
-		bp_nouveau_members_add_home_widget_filters();
+		bboss_nouveau_members_add_home_widget_filters();
 	}
 
 	/**
@@ -136,7 +136,7 @@ class BP_Nouveau_Members {
 		$this->is_user_home_sidebar = false;
 
 		// Remove no more needed filters.
-		bp_nouveau_members_remove_home_widget_filters();
+		bboss_nouveau_members_remove_home_widget_filters();
 	}
 }
 
@@ -145,11 +145,11 @@ class BP_Nouveau_Members {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_members( $bp_nouveau = null ) {
+function bboss_nouveau_members( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->members = new BP_Nouveau_Members();
+	$bp_nouveau->members = new BBoss_Nouveau_Members();
 }
-add_action( 'bp_nouveau_includes', 'bp_nouveau_members', 5, 1 );
+add_action( 'bp_nouveau_includes', 'bboss_nouveau_members', 5, 1 );

@@ -246,7 +246,7 @@ class BB_Replies extends Integration_Abstract {
 	/**
 	 * Update cache for replies when member blocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bp_moderation_after_save( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -263,7 +263,7 @@ class BB_Replies extends Integration_Abstract {
 	/**
 	 * Update cache for replies when member unblocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bb_moderation_after_delete( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {

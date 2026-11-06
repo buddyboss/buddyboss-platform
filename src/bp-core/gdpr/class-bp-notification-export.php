@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Notification_Export class
+ * Export API: BBoss_Notification_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Notification_Export
+ * Class BBoss_Notification_Export
  */
-final class BP_Notification_Export extends BP_Export {
+final class BBoss_Notification_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -23,8 +23,8 @@ final class BP_Notification_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Notification_Export();
-			$instance->setup( 'bp_notification', __( 'Notifications', 'buddyboss' ) );
+			$instance = new BBoss_Notification_Export();
+			$instance->setup( 'bp_notification', __( 'Notifications', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -42,7 +42,7 @@ final class BP_Notification_Export extends BP_Export {
 	/**
 	 * Resolve member names for the data subject while their export is rendered.
 	 *
-	 * Filters the viewer bp_core_get_user_displayname() falls back to when no viewer is passed.
+	 * Filters the viewer bboss_core_get_user_displayname() falls back to when no viewer is passed.
 	 * Only name resolution is re-pointed - capabilities and the logged-in user are untouched - so a
 	 * notification the subject received reads with the names the subject is allowed to see, not the
 	 * names the administrator running the export can see.
@@ -114,31 +114,31 @@ final class BP_Notification_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_notifications';
-			$group_label = __( 'Notifications', 'buddyboss' );
+			$group_label = __( 'Notifications', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
-			$notification = bp_notifications_get_notification( $item->id );
+			$notification = bboss_notifications_get_notification( $item->id );
 
 			$action = $this->bp_get_the_notification_description( $notification );
 			$action = wp_strip_all_tags( $action );
 			$action = apply_filters( 'buddyboss_bp_gdpr_bp_notification_item_action', $action, $item, $data_items );
 
-			$mark_as_read = __( 'No', 'buddyboss' );
+			$mark_as_read = __( 'No', 'buddyboss-platform' );
 			if ( '0' === $item->is_new ) {
-				$mark_as_read = __( 'Yes', 'buddyboss' );
+				$mark_as_read = __( 'Yes', 'buddyboss-platform' );
 			}
 
 			$data = array(
 				array(
-					'name'  => __( 'Notification Action', 'buddyboss' ),
+					'name'  => __( 'Notification Action', 'buddyboss-platform' ),
 					'value' => $action,
 				),
 				array(
-					'name'  => __( 'Notified Date (GMT)', 'buddyboss' ),
+					'name'  => __( 'Notified Date (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_notified,
 				),
 				array(
-					'name'  => __( 'Mark as Read', 'buddyboss' ),
+					'name'  => __( 'Mark as Read', 'buddyboss-platform' ),
 					'value' => $mark_as_read,
 				),
 			);
@@ -182,7 +182,7 @@ final class BP_Notification_Export extends BP_Export {
 		/**
 		 * Make use of buddypress default data remover.
 		 */
-		bp_notifications_delete_notifications_on_user_delete( $user->ID );
+		bboss_notifications_delete_notifications_on_user_delete( $user->ID );
 
 		$done = true;
 
@@ -205,21 +205,16 @@ final class BP_Notification_Export extends BP_Export {
 
 		$wpdb->show_errors( false );
 
-		$table              = bp_core_get_table_prefix() . 'bp_notifications item';
-		$query_select       = 'item.*';
-		$query_select_count = 'COUNT(item.id)';
-		$query_where        = 'item.user_id=%d';
-
+		$table  = bboss_core_get_table_prefix() . 'bp_notifications item';
 		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
 
-		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID );
-		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID );
-
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		// Table name from bp_core_get_table_prefix(); user ID, LIMIT and OFFSET bound as %d.
+		$count = (int) $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(item.id) FROM {$table} WHERE item.user_id=%d", $user->ID )
+		);
+		$items = $wpdb->get_results(
+			$wpdb->prepare( "SELECT item.* FROM {$table} WHERE item.user_id=%d LIMIT %d OFFSET %d", $user->ID, (int) $this->items_per_batch, (int) $offset )
+		);
 
 		return array(
 			'total'  => $count,
@@ -239,7 +234,7 @@ final class BP_Notification_Export extends BP_Export {
 	 * @return mixed|void
 	 */
 	function bp_get_the_notification_description( $notification ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Callback function exists.
 		if ( isset( $bp->{$notification->component_name}->notification_callback ) && is_callable( $bp->{$notification->component_name}->notification_callback ) ) {

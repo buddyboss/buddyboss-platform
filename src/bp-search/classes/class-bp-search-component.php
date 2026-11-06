@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Search_Component extends BP_Component {
+class BBoss_Search_Component extends BBoss_Component {
 	/**
 	 * Start the search component creation process
 	 *
@@ -27,7 +27,7 @@ class BP_Search_Component extends BP_Component {
 		parent::start(
 			'search',
 			'Search',
-			buddypress()->plugin_dir
+			bboss()->plugin_dir
 		);
 	}
 

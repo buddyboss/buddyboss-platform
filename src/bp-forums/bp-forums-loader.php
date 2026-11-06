@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_setup_forums() {
-	buddypress()->forums = bbpress()->extend->buddypress = new BP_Forums_Component();
+function bboss_setup_forums() {
+	bboss()->forums = bboss_forums()->extend->buddypress = new BBoss_Forums_Component();
 }
-add_action( 'bp_setup_components', 'bp_setup_forums', 6 );
+add_action( 'bp_setup_components', 'bboss_setup_forums', 6 );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Message_Export class
+ * Export API: BBoss_Message_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Message_Export
+ * Class BBoss_Message_Export
  */
-final class BP_Message_Export extends BP_Export {
+final class BBoss_Message_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -23,8 +23,8 @@ final class BP_Message_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Message_Export();
-			$instance->setup( 'bp_message', __( 'Private Messages', 'buddyboss' ) );
+			$instance = new BBoss_Message_Export();
+			$instance->setup( 'bp_message', __( 'Private Messages', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -54,10 +54,10 @@ final class BP_Message_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_messages';
-			$group_label = __( 'Message Threads & Replies', 'buddyboss' );
+			$group_label = __( 'Message Threads & Replies', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
-			$permalink = bp_get_message_thread_view_link( $item->thread_id, $user->ID );
+			$permalink = bboss_get_message_thread_view_link( $item->thread_id, $user->ID );
 
 			// recipients
 			$recipients = array();
@@ -68,7 +68,7 @@ final class BP_Message_Export extends BP_Export {
 				if ( ! empty( $r_user ) ) {
 					// Resolve for the data subject ($user) so a recipient's last name hidden by
 					// profile-field visibility is not exported in the raw column.
-					$name = bp_core_get_user_displayname( $r_user->ID, $user->ID );
+					$name = bboss_core_get_user_displayname( $r_user->ID, $user->ID );
 					if ( empty( $name ) ) {
 						$name = $r_user->user_login;
 					}
@@ -81,23 +81,23 @@ final class BP_Message_Export extends BP_Export {
 
 			$data = array(
 				array(
-					'name'  => __( 'Message Subject', 'buddyboss' ),
+					'name'  => __( 'Message Subject', 'buddyboss-platform' ),
 					'value' => $item->subject,
 				),
 				array(
-					'name'  => __( 'Message Content', 'buddyboss' ),
+					'name'  => __( 'Message Content', 'buddyboss-platform' ),
 					'value' => $item->message,
 				),
 				array(
-					'name'  => __( 'Created Date (GMT)', 'buddyboss' ),
+					'name'  => __( 'Created Date (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_sent,
 				),
 				array(
-					'name'  => __( 'Message Recipients', 'buddyboss' ),
+					'name'  => __( 'Message Recipients', 'buddyboss-platform' ),
 					'value' => $recipients,
 				),
 				array(
-					'name'  => __( 'Thread URL', 'buddyboss' ),
+					'name'  => __( 'Thread URL', 'buddyboss-platform' ),
 					'value' => $permalink,
 				),
 			);
@@ -270,20 +270,15 @@ final class BP_Message_Export extends BP_Export {
 
 		$table = "{$bp->messages->global_tables["table_name_messages"]} item";
 
-		$query_select       = 'item.*';
-		$query_select_count = 'COUNT(item.id)';
-		$query_where        = 'item.sender_id=%d';
-
 		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
 
-		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID );
-		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID );
-
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		// Table name from $bp->messages; user ID, LIMIT and OFFSET bound as %d.
+		$count = (int) $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(item.id) FROM {$table} WHERE item.sender_id=%d", $user->ID )
+		);
+		$items = $wpdb->get_results(
+			$wpdb->prepare( "SELECT item.* FROM {$table} WHERE item.sender_id=%d LIMIT %d OFFSET %d", $user->ID, (int) $this->items_per_batch, (int) $offset )
+		);
 
 		$items = $this->messages_recipients( $items );
 

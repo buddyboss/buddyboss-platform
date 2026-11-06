@@ -45,7 +45,7 @@ class XProfile_Data extends BuddypressCommand {
 	public function set( $args, $assoc_args ) {
 		$user     = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
 		$field_id = $this->get_field_id( $assoc_args['field-id'] );
-		$field    = new \BP_XProfile_Field( $field_id );
+		$field    = new \BBoss_XProfile_Field( $field_id );
 
 		if ( empty( $field->name ) ) {
 			WP_CLI::error( 'XProfile field not found.' );
@@ -57,7 +57,7 @@ class XProfile_Data extends BuddypressCommand {
 			$value = explode( ',', $assoc_args['value'] );
 		}
 
-		$updated = xprofile_set_field_data( $field->id, $user->ID, $value );
+		$updated = bboss_xprofile_set_field_data( $field->id, $user->ID, $value );
 
 		if ( ! $updated ) {
 			WP_CLI::error( 'Could not set profile data.' );
@@ -115,10 +115,10 @@ class XProfile_Data extends BuddypressCommand {
 		$user = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
 
 		if ( isset( $assoc_args['field-id'] ) ) {
-			$data = xprofile_get_field_data( $assoc_args['field-id'], $user->ID, $assoc_args['multi-format'] );
+			$data = bboss_xprofile_get_field_data( $assoc_args['field-id'], $user->ID, $assoc_args['multi-format'] );
 			WP_CLI::print_value( $data, $assoc_args );
 		} else {
-			$data           = \BP_XProfile_ProfileData::get_all_for_user( $user->ID );
+			$data           = \BBoss_XProfile_ProfileData::get_all_for_user( $user->ID );
 			$formatted_data = array();
 
 			foreach ( $data as $field_name => $field_data ) {
@@ -185,12 +185,12 @@ class XProfile_Data extends BuddypressCommand {
 		if ( isset( $assoc_args['delete-all'] ) ) {
 			WP_CLI::confirm( sprintf( 'Are you sure you want to delete all XProfile data for the user %s (#%d)?', $user->user_login, $user->ID ), $assoc_args );
 
-			xprofile_remove_data( $user->ID );
+			bboss_xprofile_remove_data( $user->ID );
 			WP_CLI::success( 'XProfile data removed.' );
 		} else {
 			WP_CLI::confirm( 'Are you sure you want to delete that?', $assoc_args );
 
-			if ( xprofile_delete_field_data( $assoc_args['field-id'], $user->ID ) ) {
+			if ( bboss_xprofile_delete_field_data( $assoc_args['field-id'], $user->ID ) ) {
 				WP_CLI::success( 'XProfile data removed.' );
 			} else {
 				WP_CLI::error( 'Could not delete XProfile data.' );

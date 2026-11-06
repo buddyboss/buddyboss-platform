@@ -3,7 +3,7 @@
  * Archive Topic Content Template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -19,10 +19,10 @@ defined( 'ABSPATH' ) || exit;
 		<div class="bb-rl-entry-heading">
 			<?php
 			// Get total discussions count.
-			$stats             = bbp_get_statistics();
+			$stats             = bboss_bbp_get_statistics();
 			$total_discussions = isset( $stats['topic_count_int'] ) ? $stats['topic_count_int'] : 0;
 			?>
-			<h2><?php esc_html_e( 'Discussions', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo esc_html( $total_discussions ); ?></span></h2>
+			<h2><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?> <span class="bb-rl-heading-count"><?php echo esc_html( $total_discussions ); ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
@@ -42,23 +42,23 @@ defined( 'ABSPATH' ) || exit;
 					<div class="select-wrap">
 						<select id="bb-rl-forum-scope-options" data-bp-forum-scope-filter="forums" data-dropdown-align="true" data-select2-id="bb-rl-forum-scope-options" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
 							<?php
-							$forum_page = bbp_get_page_by_path( bbp_get_root_slug() );
+							$forum_page = bboss_bbp_get_page_by_path( bboss_bbp_get_root_slug() );
 							if ( ! empty( $forum_page ) ) {
 								$forum_url   = get_permalink( $forum_page->ID );
 								$forum_title = $forum_page->post_title;
 							} else {
-								$forum_url   = get_post_type_archive_link( bbp_get_forum_post_type() );
-								$forum_title = esc_html__( 'Forums', 'buddyboss' );
+								$forum_url   = get_post_type_archive_link( bboss_bbp_get_forum_post_type() );
+								$forum_title = esc_html__( 'Forums', 'buddyboss-platform' );
 							}
 							if ( ! empty( $forum_url ) && ! empty( $forum_title ) ) {
 								echo '<option value="' . esc_url( $forum_url ) . '">' . esc_html( $forum_title ) . '</option>';
 							}
 
 							// Add a default option for Discussions.
-							$discussion_url = get_post_type_archive_link( bbp_get_topic_post_type() );
+							$discussion_url = get_post_type_archive_link( bboss_bbp_get_topic_post_type() );
 							?>
 
-							<option value="<?php echo esc_url( $discussion_url ); ?>" <?php selected( is_post_type_archive( bbp_get_topic_post_type() ) ); ?>><?php esc_html_e( 'Discussions', 'buddyboss' ); ?></option>
+							<option value="<?php echo esc_url( $discussion_url ); ?>" <?php selected( is_post_type_archive( bboss_bbp_get_topic_post_type() ) ); ?>><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?></option>
 						</select>
 					</div>
 				</div>
@@ -72,15 +72,15 @@ defined( 'ABSPATH' ) || exit;
 			<?php do_action( 'bbp_template_before_topics_index' ); ?>
 
 
-			<?php if ( bbp_has_topics() ) : ?>
+			<?php if ( bboss_bbp_has_topics() ) : ?>
 
-				<?php bbp_get_template_part( 'loop', 'topics' ); ?>
+				<?php bboss_bbp_get_template_part( 'loop', 'topics' ); ?>
 
-				<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
+				<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
 
 			<?php else : ?>
 
-				<?php bbp_get_template_part( 'feedback', 'no-topics' ); ?>
+				<?php bboss_bbp_get_template_part( 'feedback', 'no-topics' ); ?>
 
 			<?php endif; ?>
 

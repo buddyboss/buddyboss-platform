@@ -14,13 +14,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 	/**
 	 * BuddyPress Global Search Main Controller class
 	 */
-	class BP_Search {
+	class BBoss_Search {
 		/**
 		 * The variable to hold the helper class objects for each type of searches.
 		 * E.g
 		 * [
-		 *    'posts' => an object of Bp_Search_Posts,
-		 *  'groups' => an object of Bp_Search_Groups
+		 *    'posts' => an object of BBoss_Search_Posts,
+		 *  'groups' => an object of BBoss_Search_Groups
 		 * ]
 		 *
 		 * @var array
@@ -59,7 +59,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @see BP_Search::instance()
+		 * @see BBoss_Search::instance()
 		 *
 		 * @return object bp_search_Plugin
 		 */
@@ -102,7 +102,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -111,7 +111,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -126,92 +126,92 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-types.php';
 
 			// load and associate helpers one by one.
-			if ( bp_is_search_post_type_enable( 'post' ) ) {
+			if ( bboss_is_search_post_type_enable( 'post' ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-posts.php';
-				$this->search_helpers['posts'] = new Bp_Search_Posts( 'post', 'posts' );
+				$this->search_helpers['posts'] = new BBoss_Search_Posts( 'post', 'posts' );
 				$this->searchable_items[]      = 'posts';
 			}
 
-			if ( bp_is_search_post_type_enable( 'page' ) ) {
+			if ( bboss_is_search_post_type_enable( 'page' ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-posts.php';
-				$this->search_helpers['pages'] = new Bp_Search_Posts( 'page', 'pages' );
+				$this->search_helpers['pages'] = new BBoss_Search_Posts( 'page', 'pages' );
 				$this->searchable_items[]      = 'pages';
 			}
 
-			if ( bp_is_active( 'forums' ) && bp_is_search_post_type_enable( bbp_get_forum_post_type() ) ) {
+			if ( bboss_is_active( 'forums' ) && bboss_is_search_post_type_enable( bboss_bbp_get_forum_post_type() ) ) {
 
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress.php';
 
-				if ( bp_is_search_post_type_enable( bbp_get_forum_post_type() ) ) {
+				if ( bboss_is_search_post_type_enable( bboss_bbp_get_forum_post_type() ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums.php';
-					$this->search_helpers['forum'] = Bp_Search_bbPress_Forums::instance();
+					$this->search_helpers['forum'] = BBoss_Search_bbPress_Forums::instance();
 					$this->searchable_items[]      = 'forum';
 				}
 
-				if ( bp_is_search_post_type_enable( bbp_get_topic_post_type() ) ) {
+				if ( bboss_is_search_post_type_enable( bboss_bbp_get_topic_post_type() ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-topics.php';
-					$this->search_helpers['topic'] = Bp_Search_bbPress_Topics::instance();
+					$this->search_helpers['topic'] = BBoss_Search_bbPress_Topics::instance();
 					$this->searchable_items[]      = 'topic';
 				}
 
-				if ( bp_is_search_post_type_enable( bbp_get_reply_post_type() ) ) {
+				if ( bboss_is_search_post_type_enable( bboss_bbp_get_reply_post_type() ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-replies.php';
-					$this->search_helpers['reply'] = Bp_Search_bbPress_Replies::instance();
+					$this->search_helpers['reply'] = BBoss_Search_bbPress_Replies::instance();
 					$this->searchable_items[]      = 'reply';
 				}
 			}
 
 			// Check BuddyPress is active.
-			if ( bp_is_search_members_enable() ) {
+			if ( bboss_is_search_members_enable() ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-members.php';
-				$this->search_helpers['members'] = Bp_Search_Members::instance();
+				$this->search_helpers['members'] = BBoss_Search_Members::instance();
 				$this->searchable_items[]        = 'members';
 			}
 
-			if ( bp_is_active( 'groups' ) && bp_is_search_groups_enable() ) {
+			if ( bboss_is_active( 'groups' ) && bboss_is_search_groups_enable() ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-groups.php';
-				$this->search_helpers['groups'] = Bp_Search_Groups::instance();
+				$this->search_helpers['groups'] = BBoss_Search_Groups::instance();
 				$this->searchable_items[]       = 'groups';
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_search_photos_enable() ) {
+			if ( bboss_is_active( 'media' ) && bboss_is_search_photos_enable() ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-media.php';
-				$this->search_helpers['photos'] = Bp_Search_Media::instance();
+				$this->search_helpers['photos'] = BBoss_Search_Media::instance();
 				$this->searchable_items[]       = 'photos';
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_search_albums_enable() ) {
+			if ( bboss_is_active( 'media' ) && bboss_is_search_albums_enable() ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-albums.php';
-				$this->search_helpers['albums'] = Bp_Search_Albums::instance();
+				$this->search_helpers['albums'] = BBoss_Search_Albums::instance();
 				$this->searchable_items[]       = 'albums';
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_active( 'document' ) && bp_is_search_documents_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+			if ( bboss_is_active( 'media' ) && bboss_is_active( 'document' ) && bboss_is_search_documents_enable() && ( bboss_is_group_document_support_enabled() || bboss_is_profile_document_support_enabled() ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-documents.php';
-				$this->search_helpers['documents'] = Bp_Search_Documents::instance();
+				$this->search_helpers['documents'] = BBoss_Search_Documents::instance();
 				$this->searchable_items[]          = 'documents';
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_active( 'video' ) && bp_is_search_videos_enable() && ( bp_is_group_video_support_enabled() || bp_is_profile_video_support_enabled() ) ) {
+			if ( bboss_is_active( 'media' ) && bboss_is_active( 'video' ) && bboss_is_search_videos_enable() && ( bboss_is_group_video_support_enabled() || bboss_is_profile_video_support_enabled() ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-video.php';
-				$this->search_helpers['videos'] = Bp_Search_Video::instance();
+				$this->search_helpers['videos'] = BBoss_Search_Video::instance();
 				$this->searchable_items[]       = 'videos';
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_active( 'document' ) && bp_is_search_folders_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+			if ( bboss_is_active( 'media' ) && bboss_is_active( 'document' ) && bboss_is_search_folders_enable() && ( bboss_is_group_document_support_enabled() || bboss_is_profile_document_support_enabled() ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-folders.php';
-				$this->search_helpers['folders'] = Bp_Search_Folders::instance();
+				$this->search_helpers['folders'] = BBoss_Search_Folders::instance();
 				$this->searchable_items[]        = 'folders';
 			}
 
-			if ( bp_is_active( 'activity' ) && bp_is_search_activity_enable() ) {
+			if ( bboss_is_active( 'activity' ) && bboss_is_search_activity_enable() ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-activities.php';
-				$this->search_helpers['activity'] = Bp_Search_Activities::instance();
+				$this->search_helpers['activity'] = BBoss_Search_Activities::instance();
 				$this->searchable_items[]         = 'activity';
 
-				if ( bp_is_search_activity_comments_enable() ) {
+				if ( bboss_is_search_activity_comments_enable() ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-activity-comments.php';
-					$this->search_helpers['activity_comment'] = Bp_Search_Activity_Comment::instance();
+					$this->search_helpers['activity_comment'] = BBoss_Search_Activity_Comment::instance();
 					$this->searchable_items[]                 = 'activity_comment';
 
 				}
@@ -224,9 +224,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			if ( ! empty( $additional_search_helpers ) ) {
 				foreach ( $additional_search_helpers as $search_type => $helper_object ) {
 					/**
-					 * All helper classes must inherit from bp_search_Type
+					 * All helper classes must inherit from BBoss_Search_Type
 					 */
-					if ( ! isset( $this->search_helpers[ $search_type ] ) && is_a( $helper_object, 'BP_Search_Type' ) ) {
+					if ( ! isset( $this->search_helpers[ $search_type ] ) && is_a( $helper_object, 'BBoss_Search_Type' ) ) {
 						$this->search_helpers[ $search_type ] = $helper_object;
 					}
 				}
@@ -251,9 +251,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$content = '';
 
 				self::instance()->prepare_search_page();
-				$content = bp_search_buffer_template_part( 'results-page-content', '', false );
+				$content = bboss_search_buffer_template_part( 'results-page-content', '', false );
 
-				echo $content;
+				echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template-part output (may contain forms and scripts); every template escapes its own values.
 
 				die();
 			}
@@ -372,9 +372,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				// Show "View All" link.
-				if ( absint( $this->search_results[$key]['total_match_count'] ) > absint( bp_search_get_form_option( 'bp_search_number_of_results', 5 ) ) ) {
+				if ( absint( $this->search_results[$key]['total_match_count'] ) > absint( bboss_search_get_form_option( 'bp_search_number_of_results', 5 ) ) ) {
 					$all_results_row  = array(
-						'value'      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss' ) . '</a></div>',
+						'value'      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss-platform' ) . '</a></div>',
 						'type'       => 'view_all_type',
 						'type_label' => '',
 					);
@@ -384,7 +384,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				// @todo give a settings screen for this field
 				$search_results[] = array(
 					'value' => '<div class="bp-search-ajax-item ui-state-disabled noresult">' .
-						esc_html__( 'No results found.', 'buddyboss' ) .
+						esc_html__( 'No results found.', 'buddyboss-platform' ) .
 					'</div>',
 					'label' => $this->search_args['search_term'],
 				);
@@ -437,7 +437,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'ajax_per_page' => 0,
 			);
 
-			$args = bp_parse_args( $args, $defaults );
+			$args = bboss_parse_args( $args, $defaults );
 
 			if ( true === $args['forum_search'] ) {
 				$this->searchable_items = array( 'forum', 'topic', 'reply' );
@@ -514,15 +514,15 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 					/**
 					 * the following variable will be an object of current search type helper class
-					 * e.g: an object of Bp_Search_Groups or Bp_Search_Posts etc.
+					 * e.g: an object of BBoss_Search_Groups or BBoss_Search_Posts etc.
 					 * so we can safely call the public methods defined in those classes.
 					 * This also means that all such classes must have a common set of methods.
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
-					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
+					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . absint( $args['number'] ) : '';
 					if (
-						bp_is_active( 'forums' ) &&
-						in_array( $search_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
+						bboss_is_active( 'forums' ) &&
+						in_array( $search_type, array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() ), true )
 					) {
 						$sql_queries[] = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY entry_date DESC $limit ) ";
 					} else {
@@ -543,10 +543,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
-					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				}
 
-				$results = $wpdb->get_results( $pre_search_query );
+				$results = $wpdb->get_results( $pre_search_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- UNION of each search helper's union_sql() (core helpers bind the search term with $wpdb->prepare(); their other values are prepared, int-cast, literal or registered taxonomy names; helpers added via bp_search_additional_search_helpers and the per-helper *_sql filters are extension points that build or alter their own SQL); ORDER BY is literal and every LIMIT value is absint()'d.
 				/*
 				 $results will have a structure like below */
 				/*
@@ -603,7 +603,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							$ordered_items_group[ $type ][ $item_id ] = $item;
 						}
 
-						$search_items = bp_search_items();
+						$search_items = bboss_search_items();
 						$search_url   = $this->search_page_search_url();
 
 						foreach ( $ordered_items_group as $type => &$items ) {
@@ -623,7 +623,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							$start_html          = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $label ) . "'>"
 										  . "<header class='results-group-header clearfix'>"
 										  . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . '</span></h3>'
-										  . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss' ), $total_results ) . '</a>'
+										  /* translators: %s: number. */
+										  . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss-platform' ), $total_results ) . '</a>'
 										  . '</header>'
 										  . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
 
@@ -639,7 +640,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							if ( $total_results > $args['number'] ) {
 								$end_html .= "<footer class='results-group-footer'>";
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
-											   sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results - $args['number'] ) .
+											   /* translators: %s: number. */
+											   sprintf( esc_html__( 'View (%d) more', 'buddyboss-platform' ), $total_results - $args['number'] ) .
 											 '</a>';
 								$end_html .= '</footer>';
 							}
@@ -688,9 +690,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				if (
 					true === $args['forum_search'] ||
 					(
-						bp_is_active( 'forums' ) &&
+						bboss_is_active( 'forums' ) &&
 						! empty( $args['search_subset'] ) &&
-						in_array( $args['search_subset'], array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
+						in_array( $args['search_subset'], array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() ), true )
 					)
 				) {
 					$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY entry_date DESC ';
@@ -699,13 +701,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
-					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				} elseif ( $args['per_page'] > 0 ) {
-					$offset           = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
-					$pre_search_query .= " LIMIT {$offset}, {$args['per_page']} ";
+					$offset            = ( (int) $args['current_page'] * absint( $args['per_page'] ) ) - absint( $args['per_page'] );
+					$pre_search_query .= ' LIMIT ' . $offset . ', ' . absint( $args['per_page'] ) . ' ';
 				}
 
-				$results = $wpdb->get_results( $pre_search_query );
+				$results = $wpdb->get_results( $pre_search_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- the search helper's union_sql() (core helpers bind the search term with $wpdb->prepare(); their other values are prepared, int-cast, literal or registered taxonomy names; helpers added via bp_search_additional_search_helpers and the per-helper *_sql filters are extension points that build or alter their own SQL); ORDER BY is literal and the LIMIT values are integers (absint()/int cast).
 
 				/*
 				 $results will have a structure like below */
@@ -792,7 +794,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			 * @since BuddyBoss 2.3.50
 			 *
 			 * @param array  $search_results Array of search results.
-			 * @param object $this           Object of BP_Search class.
+			 * @param object $this           Object of BBoss_Search class.
 			 */
 			$this->search_results = apply_filters( 'bp_search_query_final_results', $this->search_results, $this );
 		}
@@ -829,7 +831,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @return array
 		 */
 		public function sanitize_args( $args = '' ) {
-			$args = bp_parse_args( $args, array() );
+			$args = bboss_parse_args( $args, array() );
 
 			if ( isset( $args['search_term'] ) ) {
 				$args['search_term'] = sanitize_text_field( $args['search_term'] );
@@ -878,9 +880,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			if ( true == $this->search_args['forum_search'] ) {
 				// Full search url for bbpress forum search
 				if ( true === $default ) {
-					$base_url = bbp_get_search_url( false );
+					$base_url = bboss_bbp_get_search_url( false );
 				} else {
-					$base_url = bbp_get_search_url( false ) . $this->search_args['search_term'];
+					$base_url = bboss_bbp_get_search_url( false ) . $this->search_args['search_term'];
 				}
 
 				if ( true === $this->search_args['forum_search'] ) {
@@ -904,7 +906,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			// first print the 'all results' tab.
 			$class = 'all' == $this->search_args['search_subset'] ? 'active current selected' : '';
 			// this filter can be used to change display of 'all' to 'Everything' etc..
-			$all_label = __( 'All Results', 'buddyboss' );
+			$all_label = __( 'All Results', 'buddyboss-platform' );
 			$label     = apply_filters( 'bp_search_label_search_type', $all_label );
 
 			if ( $this->search_args['count_total'] && isset( $this->search_results['all'] ) ) {
@@ -912,10 +914,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			}
 
 			$tab_url = $search_url;
-			echo "<li class='{$class}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
+			printf( "<li class='%s'><a href='%s'>%s</a></li>", esc_attr( $class ), esc_url( $tab_url ), wp_kses_post( $label ) );
 
 			// then other tabs.
-			$search_items = bp_search_items();
+			$search_items = bboss_search_items();
 
 			if ( empty( $this->searchable_items ) && ! is_array( $this->searchable_items ) ) {
 				return;
@@ -938,7 +940,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				$tab_url = esc_url( add_query_arg( 'subset', $item, $search_url ) );
-				echo "<li class='{$class} {$item}' data-item='{$item}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
+				printf( "<li class='%s %s' data-item='%s'><a href='%s'>%s</a></li>", esc_attr( $class ), esc_attr( $item ), esc_attr( $item ), esc_url( $tab_url ), wp_kses_post( $label ) );
 			}
 		}
 
@@ -948,19 +950,19 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$current_tab = $this->search_args['search_subset'];
 
 				foreach ( $this->search_results[ $current_tab ]['items'] as $item_id => $item ) {
-					echo $item['html'];
+					echo $item['html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template-part output (may contain forms and scripts); every template escapes its own values.
 				}
 
 				if ( $current_tab != 'all' ) {
 					$page_slug = untrailingslashit( str_replace( home_url(), '', $this->search_page_url() ) );
 
-					bp_search_pagination_page_counts(
+					bboss_search_pagination_page_counts(
 						$this->search_results[ $current_tab ]['total_match_count'],
 						$this->search_args['per_page'],
 						$this->search_args['current_page']
 					);
 
-					bp_search_pagination(
+					bboss_search_pagination(
 						$this->search_results[ $current_tab ]['total_match_count'],
 						$this->search_args['per_page'],
 						$this->search_args['current_page'],
@@ -968,7 +970,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					);
 				}
 			} else {
-				bp_search_buffer_template_part( 'no-results' );
+				bboss_search_buffer_template_part( 'no-results' );
 			}
 		}
 
@@ -991,7 +993,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 */
 		public function get_available_search() {
 			$retval = array(
-				'' => __( 'All', 'buddyboss' ),
+				'' => __( 'All', 'buddyboss-platform' ),
 			);
 
 			if ( ! empty( $this->searchable_items ) && is_array( $this->searchable_items ) ) {

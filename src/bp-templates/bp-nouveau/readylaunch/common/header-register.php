@@ -6,7 +6,7 @@
  * It displays the site logo or community name and appropriate action links.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 <header class="bb-rl-login-header">
 	<div class="bb-rl-login-header-logo">
 		<?php
-		$bb_rl_light_logo = bb_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
+		$bb_rl_light_logo = bboss_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
 		if ( ! empty( $bb_rl_light_logo ) ) {
 			?>
 			<img src="<?php echo esc_url( $bb_rl_light_logo['url'] ); ?>" alt="<?php echo esc_attr( $bb_rl_light_logo['title'] ); ?>">
@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 			</style>
 			<?php
 		} else {
-			$community_name = bp_get_option( 'blogname', '' );
+			$community_name = bboss_get_option( 'blogname', '' );
 			?>
 			<h2>
 				<?php
@@ -47,13 +47,13 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 	<div class="bb-rl-login-header-actions">
 		<?php if ( is_user_logged_in() ) : ?>
-			<a href="<?php echo esc_url( wp_logout_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign Out', 'buddyboss' ); ?></a>
-		<?php elseif ( bp_is_register_page() ) : ?>
-			<span class="bb-rl-login-header-actions-text"><?php esc_html_e( 'Already have an account?', 'buddyboss' ); ?></span>
-			<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign In', 'buddyboss' ); ?></a>
+			<a href="<?php echo esc_url( wp_logout_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign Out', 'buddyboss-platform' ); ?></a>
+		<?php elseif ( bboss_is_register_page() ) : ?>
+			<span class="bb-rl-login-header-actions-text"><?php esc_html_e( 'Already have an account?', 'buddyboss-platform' ); ?></span>
+			<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign In', 'buddyboss-platform' ); ?></a>
 		<?php else : ?>
-			<span class="bb-rl-login-header-actions-text"><?php esc_html_e( 'Don\'t have an account?', 'buddyboss' ); ?></span>
-			<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign Up', 'buddyboss' ); ?></a>
+			<span class="bb-rl-login-header-actions-text"><?php esc_html_e( 'Don\'t have an account?', 'buddyboss-platform' ); ?></span>
+			<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign Up', 'buddyboss-platform' ); ?></a>
 		<?php endif; ?>
 	</div>
 </header>

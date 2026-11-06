@@ -14,37 +14,37 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function bp_core_register_widgets() {
+function bboss_core_register_widgets() {
 	add_action(
 		'widgets_init',
 		function() {
-			register_widget( 'BP_Core_Login_Widget' );
+			register_widget( 'BBoss_Core_Login_Widget' );
 		}
 	);
 	if ( is_multisite() ) {
 		add_action(
 			'widgets_init',
 			function() {
-				register_widget( 'BP_Core_Network_Posts_Widget' );
+				register_widget( 'BBoss_Core_Network_Posts_Widget' );
 			}
 		);
 	}
-	if ( function_exists( 'bp_get_following_ids' ) && class_exists( 'BP_Core_Follow_Following_Widget' ) ) {
+	if ( function_exists( 'bboss_get_following_ids' ) && class_exists( 'BBoss_Core_Follow_Following_Widget' ) ) {
 		add_action(
 			'widgets_init',
 			function() {
-				register_widget( 'BP_Core_Follow_Following_Widget' );
+				register_widget( 'BBoss_Core_Follow_Following_Widget' );
 			}
 		);
 	}
 
-	if ( function_exists( 'bp_get_following_ids' ) && class_exists( 'BP_Core_Follow_Follower_Widget' ) ) {
+	if ( function_exists( 'bboss_get_following_ids' ) && class_exists( 'BBoss_Core_Follow_Follower_Widget' ) ) {
 		add_action(
 			'widgets_init',
 			function() {
-				register_widget( 'BP_Core_Follow_Follower_Widget' );
+				register_widget( 'BBoss_Core_Follow_Follower_Widget' );
 			}
 		);
 	}
 }
-add_action( 'bp_register_widgets', 'bp_core_register_widgets' );
+add_action( 'bp_register_widgets', 'bboss_core_register_widgets' );

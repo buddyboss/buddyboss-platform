@@ -6,49 +6,52 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the loading of the signup screen.
  *
  * @since BuddyPress 1.1.0
  */
-function bp_core_screen_signup() {
-	$bp = buddypress();
+function bboss_core_screen_signup() {
+	$bp = bboss();
 
-	if ( ! bp_is_current_component( 'register' ) || bp_current_action() ) {
+	if ( ! bboss_is_current_component( 'register' ) || bboss_current_action() ) {
 		return;
 	}
 
-	$allow_custom_registration = bp_allow_custom_registration();
-	if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
+	$allow_custom_registration = bboss_allow_custom_registration();
+	if ( $allow_custom_registration && '' !== bboss_custom_register_page_url() ) {
 
 		// Check it's not a Email Invites
-		if ( bp_is_active( 'invites' ) && isset( $_GET ) && isset( $_GET['bp-invites'] ) && 'accept-member-invitation' === $_GET['bp-invites'] ) {
-			if ( parse_url( bp_custom_register_page_url(), PHP_URL_QUERY ) ) {
+		if ( bboss_is_active( 'invites' ) && isset( $_GET ) && isset( $_GET['bp-invites'] ) && 'accept-member-invitation' === $_GET['bp-invites'] ) {
+			if ( wp_parse_url( bboss_custom_register_page_url(), PHP_URL_QUERY ) ) {
 				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : '';
 				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : '';
-				$url = bp_custom_register_page_url() . '&bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
+				$url = bboss_custom_register_page_url() . '&bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
 			} else {
 				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : '';
 				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : '';
-				$url = bp_custom_register_page_url() . '?bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
+				$url = bboss_custom_register_page_url() . '?bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
 			}
-			bp_core_redirect( $url );
+			bboss_core_redirect( $url );
 			return;
 		} else {
-			bp_core_redirect( bp_custom_register_page_url() );
+			bboss_core_redirect( bboss_custom_register_page_url() );
 			return;
 		}
 	}
 
 	// Not a directory.
-	bp_update_is_directory( false, 'register' );
+	bboss_update_is_directory( false, 'register' );
 
 	// If the user is logged in, redirect away from here.
 	if ( is_user_logged_in() ) {
 
-		$redirect_to = bp_is_component_front_page( 'register' )
-			? bp_get_members_directory_permalink()
-			: bp_get_root_domain();
+		$redirect_to = bboss_is_component_front_page( 'register' )
+			? bboss_get_members_directory_permalink()
+			: bboss_get_root_domain();
 
 		/**
 		 * Filters the URL to redirect logged in users to when visiting registration page.
@@ -57,18 +60,18 @@ function bp_core_screen_signup() {
 		 *
 		 * @param string $redirect_to URL to redirect user to.
 		 */
-		bp_core_redirect( apply_filters( 'bp_loggedin_register_page_redirect_to', $redirect_to ) );
+		bboss_core_redirect( apply_filters( 'bp_loggedin_register_page_redirect_to', $redirect_to ) );
 
 		return;
 	}
 
 	$bp->signup->step = 'request-details';
 
-	if ( ! bp_get_signup_allowed() ) {
+	if ( ! bboss_get_signup_allowed() ) {
 		$bp->signup->step = 'registration-disabled';
 
 		// If the signup page is submitted, validate and save.
-	} elseif ( isset( $_POST['signup_submit'] ) && bp_verify_nonce_request( 'bp_new_signup' ) ) {
+	} elseif ( isset( $_POST['signup_submit'] ) && bboss_verify_nonce_request( 'bp_new_signup' ) ) {
 
 		/**
 		 * Fires before the validation of a new signup.
@@ -78,14 +81,14 @@ function bp_core_screen_signup() {
 		do_action( 'bp_signup_pre_validate' );
 
 		// Check the base account details for problems.
-		$account_details = bp_core_validate_user_signup( bp_get_signup_username_value(), bp_get_signup_email_value() );
+		$account_details = bboss_core_validate_user_signup( bboss_get_signup_username_value(), bboss_get_signup_email_value() );
 
-		$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
-		$password_opt = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
+		$email_opt    = function_exists( 'bboss_register_confirm_email' ) && true === bboss_register_confirm_email() ? true : false;
+		$password_opt = function_exists( 'bboss_register_confirm_password' ) && true === bboss_register_confirm_password() ? true : false;
 
 		// If there are errors with account details, set them for display.
 		if ( ! empty( $account_details['errors']->errors['user_name'] ) ) {
-			$nickname_field                        = 'field_' . bp_xprofile_nickname_field_id();
+			$nickname_field                        = 'field_' . bboss_xprofile_nickname_field_id();
 			$bp->signup->errors[ $nickname_field ] = $account_details['errors']->errors['user_name'][0];
 		}
 
@@ -95,7 +98,7 @@ function bp_core_screen_signup() {
 
 		// Check that both password fields are filled in.
 		if ( empty( $_POST['signup_password'] ) ) {
-			$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password.', 'buddyboss' );
+			$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password.', 'buddyboss-platform' );
 		}
 
 		// if email opt enabled.
@@ -103,12 +106,12 @@ function bp_core_screen_signup() {
 
 			// Check that both password fields are filled in.
 			if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
-				$bp->signup->errors['signup_email'] = __( 'Please make sure to enter your email twice.', 'buddyboss' );
+				$bp->signup->errors['signup_email'] = __( 'Please make sure to enter your email twice.', 'buddyboss-platform' );
 			}
 
 			// Check that the passwords match.
 			if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && strcasecmp( $_POST['signup_email'], $_POST['signup_email_confirm'] ) !== 0 ) {
-				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss' );
+				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss-platform' );
 			}
 		}
 
@@ -117,20 +120,20 @@ function bp_core_screen_signup() {
 
 			// Check that both password fields are filled in.
 			if ( empty( $_POST['signup_password'] ) || empty( $_POST['signup_password_confirm'] ) ) {
-				$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password twice.', 'buddyboss' );
+				$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password twice.', 'buddyboss-platform' );
 			}
 
 			// Check that the passwords match.
 			if ( ( ! empty( $_POST['signup_password'] ) && ! empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] != $_POST['signup_password_confirm'] ) {
-				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss' );
+				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss-platform' );
 			}
 		}
 
-		$bp->signup->username = bp_get_signup_username_value();
-		$bp->signup->email    = bp_get_signup_email_value();
+		$bp->signup->username = bboss_get_signup_username_value();
+		$bp->signup->email    = bboss_get_signup_email_value();
 
 		// Now we've checked account details, we can check profile information.
-		if ( bp_is_active( 'xprofile' ) ) {
+		if ( bboss_is_active( 'xprofile' ) ) {
 
 			// Make sure hidden field is passed and populated.
 			if ( isset( $_POST['signup_profile_field_ids'] ) && ! empty( $_POST['signup_profile_field_ids'] ) ) {
@@ -140,7 +143,7 @@ function bp_core_screen_signup() {
 
 				// Loop through the posted fields formatting any datebox values then validate the field.
 				foreach ( (array) $profile_field_ids as $field_id ) {
-					bp_xprofile_maybe_format_datebox_post_data( $field_id );
+					bboss_xprofile_maybe_format_datebox_post_data( $field_id );
 
 					// Trim post fields.
 					if ( isset( $_POST[ 'field_' . $field_id ] ) ) {
@@ -152,13 +155,13 @@ function bp_core_screen_signup() {
 					}
 
 					// Create errors for required fields without values.
-					if ( xprofile_check_is_required_field( $field_id ) && empty( $_POST[ 'field_' . $field_id ] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+					if ( bboss_xprofile_check_is_required_field( $field_id ) && empty( $_POST[ 'field_' . $field_id ] ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
 						$bp->signup->errors[ 'field_' . $field_id ] = sprintf(
 							'<div class="bp-messages bp-feedback error">
 								<span class="bp-icon" aria-hidden="true"></span>
 								<p>%s</p>
 							</div>',
-							__( 'This is a required field.', 'buddyboss' )
+							__( 'This is a required field.', 'buddyboss-platform' )
 						);
 					} else {
 						// Validate xprofile.
@@ -190,16 +193,16 @@ function bp_core_screen_signup() {
 					if (
 						// Guard against the memoized 0 this helper returns when no membertypes
 						// field exists, which would otherwise match a posted field id of "0".
-						bp_get_xprofile_member_type_field_id() > 0
-						&& (int) bp_get_xprofile_member_type_field_id() === (int) $field_id
+						bboss_get_xprofile_member_type_field_id() > 0
+						&& (int) bboss_get_xprofile_member_type_field_id() === (int) $field_id
 						&& ! empty( $bb_submitted_member_type )
-						&& ! bp_current_user_can( 'bp_moderate' )
+						&& ! bboss_current_user_can( 'bp_moderate' )
 						&& (
 							// An array is never a valid single-select submission; reject it
 							// (rather than skip validation) and short-circuit absint() so it
 							// is not called on an array.
 							is_array( $bb_submitted_member_type )
-							|| ! bb_is_member_type_allowed_on_registration( absint( $bb_submitted_member_type ) )
+							|| ! bboss_is_member_type_allowed_on_registration( absint( $bb_submitted_member_type ) )
 						)
 					) {
 						$bp->signup->errors[ 'field_' . $field_id ] = sprintf(
@@ -207,23 +210,23 @@ function bp_core_screen_signup() {
 								<span class="bp-icon" aria-hidden="true"></span>
 								<p>%s</p>
 							</div>',
-							__( 'Please select a valid profile type.', 'buddyboss' )
+							__( 'Please select a valid profile type.', 'buddyboss-platform' )
 						);
 					}
 				}
 
 				// This situation doesn't naturally occur so bounce to website root.
 			} else {
-				bp_core_redirect( bp_get_root_domain() );
+				bboss_core_redirect( bboss_get_root_domain() );
 			}
 		}
 
 		// Finally, let's check the blog details, if the user wants a blog and blog creation is enabled.
 		if ( isset( $_POST['signup_with_blog'] ) ) {
-			$active_signup = bp_core_get_root_option( 'registration' );
+			$active_signup = bboss_core_get_root_option( 'registration' );
 
 			if ( 'blog' == $active_signup || 'all' == $active_signup ) {
-				$blog_details = bp_core_validate_blog_signup( $_POST['signup_blog_url'], $_POST['signup_blog_title'] );
+				$blog_details = bboss_core_validate_blog_signup( $_POST['signup_blog_url'], $_POST['signup_blog_title'] );
 
 				// If there are errors with blog details, set them for display.
 				if ( ! empty( $blog_details['errors']->errors['blogname'] ) ) {
@@ -244,8 +247,8 @@ function bp_core_screen_signup() {
 		do_action( 'bp_signup_validate' );
 
 		// Adding error message for the legal agreement checkbox.
-		if ( true === bb_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
-			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss' );
+		if ( true === bboss_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
+			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss-platform' );
 		}
 
 		// Add any errors to the action for the field in the template for display.
@@ -261,7 +264,7 @@ function bp_core_screen_signup() {
 				add_action(
 					'bp_' . $fieldname . '_errors',
 					function() use ( $error_message ) {
-						echo apply_filters( 'bp_members_signup_error_message', '<div class="error">' . $error_message . '</div>' );
+						echo wp_kses_post( apply_filters( 'bp_members_signup_error_message', '<div class="error">' . $error_message . '</div>' ) );
 					}
 				);
 			}
@@ -269,12 +272,12 @@ function bp_core_screen_signup() {
 			$bp->signup->step = 'save-details';
 
 			// No errors! Let's register those deets.
-			$active_signup = bp_core_get_root_option( 'registration' );
+			$active_signup = bboss_core_get_root_option( 'registration' );
 
 			if ( 'none' != $active_signup ) {
 
 				// Make sure the profiles fields module is enabled.
-				if ( bp_is_active( 'xprofile' ) ) {
+				if ( bboss_is_active( 'xprofile' ) ) {
 					// Let's compact any profile field info into usermeta.
 					$profile_field_ids = explode( ',', $_POST['signup_profile_field_ids'] );
 
@@ -283,7 +286,7 @@ function bp_core_screen_signup() {
 					 * datebox values, then add to usermeta.
 					 */
 					foreach ( (array) $profile_field_ids as $field_id ) {
-						bp_xprofile_maybe_format_datebox_post_data( $field_id );
+						bboss_xprofile_maybe_format_datebox_post_data( $field_id );
 
 						if ( ! empty( $_POST[ 'field_' . $field_id ] ) ) {
 							$usermeta[ 'field_' . $field_id ] = $_POST[ 'field_' . $field_id ];
@@ -317,26 +320,26 @@ function bp_core_screen_signup() {
 
 				// Finally, sign up the user and/or blog.
 				if ( isset( $_POST['signup_with_blog'] ) && is_multisite() ) {
-					$wp_user_id = bp_core_signup_blog(
+					$wp_user_id = bboss_core_signup_blog(
 						$blog_details['domain'],
 						$blog_details['path'],
 						$blog_details['blog_title'],
-						bp_get_signup_username_value(),
-						bp_get_signup_email_value(),
+						bboss_get_signup_username_value(),
+						bboss_get_signup_email_value(),
 						$usermeta
 					);
 				} else {
-					$wp_user_id = bp_core_signup_user(
-						bp_get_signup_username_value(),
+					$wp_user_id = bboss_core_signup_user(
+						bboss_get_signup_username_value(),
 						$_POST['signup_password'],
-						bp_get_signup_email_value(),
+						bboss_get_signup_email_value(),
 						$usermeta
 					);
 				}
 
 				if ( is_wp_error( $wp_user_id ) ) {
 					$bp->signup->step = 'request-details';
-					bp_core_add_message( $wp_user_id->get_error_message(), 'error' );
+					bboss_core_add_message( $wp_user_id->get_error_message(), 'error' );
 				} else {
 					if ( ! empty( $wp_user_id ) && ! is_wp_error( $wp_user_id ) && ! empty( $_POST['legal_agreement'] ) ) {
 						update_user_meta( $wp_user_id, 'bb_legal_agreement', true );
@@ -368,22 +371,22 @@ function bp_core_screen_signup() {
 	 *
 	 * @param string $value Path to the Member registration template to load.
 	 */
-	bp_core_load_template( apply_filters( 'bp_core_template_register', array( 'register', 'registration/register' ) ) );
+	bboss_core_load_template( apply_filters( 'bp_core_template_register', array( 'register', 'registration/register' ) ) );
 }
-add_action( 'bp_screens', 'bp_core_screen_signup' );
+add_action( 'bp_screens', 'bboss_core_screen_signup' );
 
 /**
  * for check email id exist or not on ajax submit.
  *
  * @since BuddyBoss 1.2.1
  */
-function bp_signup_check_email_username() {
+function bboss_signup_check_email_username() {
 
 	$signup_username = '';
 	$signup_email    = '';
-	$account_details = bp_core_validate_user_signup( bp_get_signup_username_value(), bp_get_signup_email_value() );
-	$email_opt       = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
-	$password_opt    = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
+	$account_details = bboss_core_validate_user_signup( bboss_get_signup_username_value(), bboss_get_signup_email_value() );
+	$email_opt       = function_exists( 'bboss_register_confirm_email' ) && true === bboss_register_confirm_email() ? true : false;
+	$password_opt    = function_exists( 'bboss_register_confirm_password' ) && true === bboss_register_confirm_password() ? true : false;
 	// If there are errors with account details, set them for display.
 	if ( ! empty( $account_details['errors']->errors['user_name'] ) ) {
 		$signup_username = $account_details['errors']->errors['user_name'][0];
@@ -397,17 +400,17 @@ function bp_signup_check_email_username() {
 
 		// Check that both password fields are filled in.
 		if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
-			$signup_email = __( 'Please make sure to enter your email twice.', 'buddyboss' );
+			$signup_email = __( 'Please make sure to enter your email twice.', 'buddyboss-platform' );
 		}
 
 		// Check that the passwords match.
 		if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && strcasecmp( $_POST['signup_email'], $_POST['signup_email_confirm'] ) !== 0 ) {
-			$signup_email = __( 'The emails entered do not match.', 'buddyboss' );
+			$signup_email = __( 'The emails entered do not match.', 'buddyboss-platform' );
 		}
 	}
-	$nickname_field = 'field_' . bp_xprofile_nickname_field_id();
+	$nickname_field = 'field_' . bboss_xprofile_nickname_field_id();
 	$return         = array(
-		'field_id'        => bp_xprofile_nickname_field_id(),
+		'field_id'        => bboss_xprofile_nickname_field_id(),
 		'signup_email'    => $signup_email,
 		'signup_username' => $signup_username,
 
@@ -416,4 +419,4 @@ function bp_signup_check_email_username() {
 	wp_send_json( $return, true );
 }
 
-add_action( 'wp_ajax_nopriv_check_email', 'bp_signup_check_email_username' );
+add_action( 'wp_ajax_nopriv_check_email', 'bboss_signup_check_email_username' );

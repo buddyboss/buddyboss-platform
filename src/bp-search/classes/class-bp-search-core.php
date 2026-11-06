@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Search_Core' ) ) :
+if ( ! class_exists( 'BBoss_Search_Core' ) ) :
 
 	/**
 	 * BuddyPress Global Search Core Controller class
 	 */
-	class BP_Search_Core {
+	class BBoss_Search_Core {
 
 		/*
 		 Includes
@@ -83,7 +83,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 		 * @uses bp_search_Plugin::setup_globals() Setup the globals needed.
 		 * @uses bp_search_Plugin::setup_actions() Setup the hooks and actions.
 		 * @uses bp_search_Plugin::setup_textdomain() Setup the plugin's language file.
-		 * @see  BP_Search::instance()
+		 * @see  BBoss_Search::instance()
 		 *
 		 * @return object bp_search_Plugin
 		 */
@@ -112,7 +112,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 		 *
 		 * @since BuddyBoss Global Search (1.0.0)
 		 * @see bp_search_Plugin::instance()
-		 * @see buddypress()
+		 * @see bboss()
 		 */
 		private function __construct() {
 			/* Do nothing here */
@@ -124,7 +124,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -133,7 +133,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -268,7 +268,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 		private function load_main() {
 			$this->do_includes( $this->main_includes );
 
-			$this->search = BP_Search::instance();
+			$this->search = BBoss_Search::instance();
 
 			// Front End Assets
 			if ( ! is_admin() && ! is_network_admin() ) {
@@ -324,4 +324,4 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 
 endif;
 
-BP_Search_Core::instance();
+BBoss_Search_Core::instance();

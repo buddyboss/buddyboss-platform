@@ -85,13 +85,13 @@ if ( isset( $_GET['direct_allow'] ) ) { // phpcs:ignore WordPress.Security.Nonce
 // Include BB_Presence class.
 require_once __DIR__ . '/classes/class-bb-presence.php';
 
-BB_Presence::instance()->bb_presence_mu_loader();
+BBoss_Presence::instance()->bb_presence_mu_loader();
 
-$loggedin_user_id = ! empty( get_current_user_id() ) ? get_current_user_id() : BB_Presence::instance()->bb_get_loggedin_user_id();
+$loggedin_user_id = ! empty( get_current_user_id() ) ? get_current_user_id() : BBoss_Presence::instance()->bb_get_loggedin_user_id();
 
 // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 $users = ( isset( $_POST['ids'] ) ? $_POST['ids'] : array() );
 
-BB_Presence::instance()->bb_endpoint_render( $loggedin_user_id, $users );
+BBoss_Presence::instance()->bb_endpoint_render( $loggedin_user_id, $users );
 
 exit;

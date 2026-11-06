@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 2.4.0
  */
 #[\AllowDynamicProperties]
-class BP_Attachment_Cover_Image extends BP_Attachment {
+class BBoss_Attachment_Cover_Image extends BBoss_Attachment {
 	/**
 	 * The constuctor.
 	 *
@@ -25,21 +25,23 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	 */
 	public function __construct() {
 		// Allowed cover photo types & upload size.
-		$allowed_types        = bp_attachments_get_allowed_types( 'cover_image' );
-		$max_upload_file_size = bp_attachments_get_max_upload_file_size( 'cover_image' );
+		$allowed_types        = bboss_attachments_get_allowed_types( 'cover_image' );
+		$max_upload_file_size = bboss_attachments_get_max_upload_file_size( 'cover_image' );
 
 		parent::__construct(
 			array(
 				'action'                => 'bp_cover_image_upload',
 				'file_input'            => 'file',
 				'original_max_filesize' => $max_upload_file_size,
-				'base_dir'              => bp_attachments_uploads_dir_get( 'dir' ),
+				'base_dir'              => bboss_attachments_uploads_dir_get( 'dir' ),
 				'required_wp_files'     => array( 'file', 'image' ),
 
 				// Specific errors for cover photos.
 				'upload_error_strings'  => array(
-					11 => sprintf( __( 'That image is too big. Please upload one smaller than %s', 'buddyboss' ), size_format( $max_upload_file_size ) ),
-					12 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss' ), self::get_cover_image_types( $allowed_types ) ),
+					/* translators: %s: maximum allowed file size. */
+					11 => sprintf( __( 'That image is too big. Please upload one smaller than %s', 'buddyboss-platform' ), size_format( $max_upload_file_size ) ),
+					/* translators: %s: comma-separated list of allowed file types. */
+					12 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss-platform' ), self::get_cover_image_types( $allowed_types ) ),
 				),
 			)
 		);
@@ -55,7 +57,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	 */
 	public static function get_cover_image_types( $allowed_types = array() ) {
 		$types = array_map( 'strtoupper', $allowed_types );
-		$comma = _x( ',', 'cover photo types separator', 'buddyboss' );
+		$comma = _x( ',', 'cover photo types separator', 'buddyboss-platform' );
 		return join( $comma . ' ', $types );
 	}
 
@@ -81,7 +83,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 			$file['error'] = 11;
 
 			// File is of invalid type.
-		} elseif ( isset( $file['tmp_name'] ) && isset( $file['name'] ) && ! bp_attachments_check_filetype( $file['tmp_name'], $file['name'], bp_attachments_get_allowed_mimes( 'cover_image' ) ) ) {
+		} elseif ( isset( $file['tmp_name'] ) && isset( $file['name'] ) && ! bboss_attachments_check_filetype( $file['tmp_name'], $file['name'], bboss_attachments_get_allowed_mimes( 'cover_image' ) ) ) {
 			$file['error'] = 12;
 		}
 
@@ -98,7 +100,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	 * @return array $value Upload data (path, url, basedir...).
 	 */
 	public function upload_dir_filter( $upload_dir = array() ) {
-		return bp_attachments_cover_image_upload_dir();
+		return bboss_attachments_cover_image_upload_dir();
 	}
 
 	/**
@@ -218,14 +220,14 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 		// Get default script data.
 		$script_data = parent::script_data();
 
-		if ( bp_is_user() ) {
-			$item_id = bp_displayed_user_id();
+		if ( bboss_is_user() ) {
+			$item_id = bboss_displayed_user_id();
 
 			$script_data['bp_params'] = array(
 				'object'            => 'user',
 				'item_id'           => $item_id,
-				'has_cover_image'   => bp_attachments_get_user_has_cover_image( $item_id ),
-				'has_default_class' => ( ! bp_disable_cover_image_uploads() && 'custom' !== bb_get_default_profile_cover_type() ) ? 'has-default' : '',
+				'has_cover_image'   => bboss_attachments_get_user_has_cover_image( $item_id ),
+				'has_default_class' => ( ! bboss_disable_cover_image_uploads() && 'custom' !== bboss_get_default_profile_cover_type() ) ? 'has-default' : '',
 				'nonces'            => array(
 					'remove' => wp_create_nonce( 'bp_delete_cover_image' ),
 				),
@@ -233,18 +235,18 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 
 			// Set feedback messages.
 			$script_data['feedback_messages'] = array(
-				1 => __( 'Your new cover photo was uploaded successfully.', 'buddyboss' ),
-				2 => __( 'There was a problem deleting your cover photo. Please try again.', 'buddyboss' ),
-				3 => __( 'Your cover photo was deleted successfully.', 'buddyboss' ),
+				1 => __( 'Your new cover photo was uploaded successfully.', 'buddyboss-platform' ),
+				2 => __( 'There was a problem deleting your cover photo. Please try again.', 'buddyboss-platform' ),
+				3 => __( 'Your cover photo was deleted successfully.', 'buddyboss-platform' ),
 			);
-		} elseif ( bp_is_group() ) {
-			$item_id = bp_get_current_group_id();
+		} elseif ( bboss_is_group() ) {
+			$item_id = bboss_get_current_group_id();
 
 			$script_data['bp_params'] = array(
 				'object'            => 'group',
-				'item_id'           => bp_get_current_group_id(),
-				'has_cover_image'   => bp_attachments_get_group_has_cover_image( $item_id ),
-				'has_default_class' => ( ! bp_disable_group_cover_image_uploads() && 'custom' !== bb_get_default_group_cover_type() ) ? 'has-default' : '',
+				'item_id'           => bboss_get_current_group_id(),
+				'has_cover_image'   => bboss_attachments_get_group_has_cover_image( $item_id ),
+				'has_default_class' => ( ! bboss_disable_group_cover_image_uploads() && 'custom' !== bboss_get_default_group_cover_type() ) ? 'has-default' : '',
 				'nonces'            => array(
 					'remove' => wp_create_nonce( 'bp_delete_cover_image' ),
 				),
@@ -252,9 +254,9 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 
 			// Set feedback messages.
 			$script_data['feedback_messages'] = array(
-				1 => __( 'The group cover photo was uploaded successfully.', 'buddyboss' ),
-				2 => __( 'There was a problem deleting the group cover photo. Please try again.', 'buddyboss' ),
-				3 => __( 'The group cover photo was deleted successfully!', 'buddyboss' ),
+				1 => __( 'The group cover photo was uploaded successfully.', 'buddyboss-platform' ),
+				2 => __( 'There was a problem deleting the group cover photo. Please try again.', 'buddyboss-platform' ),
+				3 => __( 'The group cover photo was deleted successfully!', 'buddyboss-platform' ),
 			);
 		} else {
 

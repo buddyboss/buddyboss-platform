@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_Activities' ) ) :
+if ( ! class_exists( 'BBoss_Search_Activities' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search activities class
 	 */
-	class Bp_Search_Activities extends Bp_Search_Type {
+	class BBoss_Search_Activities extends BBoss_Search_Type {
 		private $type = 'activity';
 
 		/**
@@ -23,7 +23,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @return object Bp_Search_Activities
+		 * @return object BBoss_Search_Activities
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication.
@@ -31,7 +31,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 
 			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
-				$instance = new Bp_Search_Activities();
+				$instance = new BBoss_Search_Activities();
 			}
 
 			// Always return the instance.
@@ -62,16 +62,16 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			 */
 			global $wpdb, $bp;
 
-			$bp_prefix   = bp_core_get_table_prefix();
+			$bp_prefix   = bboss_core_get_table_prefix();
 			$search_term = htmlspecialchars( $search_term, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 			$query_placeholder = array();
 
 			$user_groups = array();
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 
 				// Fetch public groups.
-				$public_groups = groups_get_groups(
+				$public_groups = bboss_groups_get_groups(
 					array(
 						'fields'   => 'ids',
 						'status'   => 'public',
@@ -84,7 +84,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 					$public_groups = array();
 				}
 
-				$groups = groups_get_user_groups( bp_loggedin_user_id() );
+				$groups = bboss_groups_get_user_groups( bboss_loggedin_user_id() );
 				if ( ! empty( $groups['groups'] ) ) {
 					$user_groups = $groups['groups'];
 				} else {
@@ -95,14 +95,14 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			}
 
 			$friends = array();
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 
 				// Determine friends of user.
-				$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
+				$friends = bboss_friends_get_friend_user_ids( bboss_loggedin_user_id() );
 				if ( empty( $friends ) ) {
 					$friends = array( 0 );
 				}
-				array_push( $friends, bp_loggedin_user_id() );
+				array_push( $friends, bboss_loggedin_user_id() );
 			}
 
 			$sql['select'] = 'SELECT';
@@ -148,9 +148,9 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 				AND
 				(
 					( a.privacy IN ( '" . implode( "','", $privacy ) . "' ) AND a.component != 'groups' AND a.hide_sitewide = 0 ) " .
-					( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( a.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND a.component = 'groups' AND a.privacy = 'public' )" : '' ) .
-					( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( a.user_id IN ( '" . implode( "','", $friends ) . "' ) AND a.privacy = 'friends' AND a.hide_sitewide = 0 )" : '' ) .
-					( is_user_logged_in() ? " OR ( a.user_id = '" . bp_loggedin_user_id() . "' AND a.privacy = 'onlyme' )" : '' ) .
+					( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( a.item_id IN ( '" . implode( "','", array_map( 'intval', $user_groups ) ) . "' ) AND a.component = 'groups' AND a.privacy = 'public' )" : '' ) .
+					( bboss_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( a.user_id IN ( '" . implode( "','", array_map( 'intval', $friends ) ) . "' ) AND a.privacy = 'friends' AND a.hide_sitewide = 0 )" : '' ) .
+					( is_user_logged_in() ? " OR ( a.user_id = '" . bboss_loggedin_user_id() . "' AND a.privacy = 'onlyme' )" : '' ) .
 				')';
 
 			/**
@@ -172,7 +172,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			$query_placeholder[]     = $search_term_placeholder;
 			$query_placeholder[]     = $search_term_placeholder;
 			$query_placeholder[]     = $search_term_placeholder;
-			$sql                     = $wpdb->prepare( $sql, $query_placeholder );
+			$sql                     = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- as built by this method: table names from $bp->activity, the select part already $wpdb->prepare()'d, the search term bound here as %s (esc_like()'d), privacy values are the literals 'public'/'loggedin', group/friend ids int-cast, bp_loggedin_user_id() returns an int. FROM/WHERE pass through the documented bp_activity_search_join_sql / bp_activity_search_where_conditions filters (core listener: BP_Suspend_Activity); listeners may alter them.
 
 			return apply_filters(
 				'Bp_Search_Activities_sql',
@@ -194,7 +194,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 
 			do_action( 'bp_before_search_activity_html' );
 
-			if ( bp_has_activities(
+			if ( bboss_has_activities(
 				array(
 					'include'     => $post_ids,
 					'per_page'    => count( $post_ids_arr ),
@@ -202,17 +202,17 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 					'scope'       => false,
 				)
 			) ) {
-				while ( bp_activities() ) {
-					bp_the_activity();
+				while ( bboss_activities() ) {
+					bboss_the_activity();
 
 					$result = array(
-						'id'    => bp_get_activity_id(),
+						'id'    => bboss_get_activity_id(),
 						'type'  => $this->type,
 						'title' => $this->search_term,
-						'html'  => bp_search_buffer_template_part( 'loop/activity', $template_type, false ),
+						'html'  => bboss_search_buffer_template_part( 'loop/activity', $template_type, false ),
 					);
 
-					$this->search_results['items'][ bp_get_activity_id() ] = $result;
+					$this->search_results['items'][ bboss_get_activity_id() ] = $result;
 				}
 			}
 

@@ -9,9 +9,9 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Admin_Integration_tab' ) ) :
+if ( ! class_exists( 'BBoss_Admin_Integration_tab' ) ) :
 
-	class BP_Admin_Integration_tab extends BP_Admin_Tab {
+	class BBoss_Admin_Integration_tab extends BBoss_Admin_Tab {
 		public $global_tabs_var = 'bp_admin_integration_tabs';
 		public $menu_page       = 'bp-integrations';
 		public $required_plugin = '';
@@ -46,11 +46,11 @@ if ( ! class_exists( 'BP_Admin_Integration_tab' ) ) :
 		}
 
 		public function settings_saved() {
-			bp_core_redirect( bp_core_admin_integrations_url( $this->tab_name, array( 'updated' => 'true' ) ) );
+			bboss_core_redirect( bboss_core_admin_integrations_url( $this->tab_name, array( 'updated' => 'true' ) ) );
 		}
 
 		public function get_active_tab() {
-			return bp_core_get_admin_integration_active_tab();
+			return bboss_core_get_admin_integration_active_tab();
 		}
 
 		public function is_tab_visible() {

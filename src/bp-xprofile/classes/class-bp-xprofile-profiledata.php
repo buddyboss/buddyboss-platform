@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-class BP_XProfile_ProfileData {
+class BBoss_XProfile_ProfileData {
 
 	/**
 	 * XProfile ID.
@@ -57,7 +57,7 @@ class BP_XProfile_ProfileData {
 	public $last_updated;
 
 	/**
-	 * BP_XProfile_ProfileData constructor.
+	 * BBoss_XProfile_ProfileData constructor.
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
@@ -83,12 +83,11 @@ class BP_XProfile_ProfileData {
 
 		$cache_key   = "{$user_id}:{$field_id}";
 		$profiledata = wp_cache_get( $cache_key, 'bp_xprofile_data' );
-		$table_name  = bp_core_get_table_prefix() . 'bp_xprofile_data';
+		$table_name  = bboss_core_get_table_prefix() . 'bp_xprofile_data';
 
 		if ( false === $profiledata ) {
 
-			$sql         = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE field_id = %d AND user_id = %d", $field_id, $user_id );
-			$profiledata = $wpdb->get_row( $sql );
+			$profiledata = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_name} WHERE field_id = %d AND user_id = %d", $field_id, $user_id ) );
 
 			if ( $profiledata ) {
 				wp_cache_set( $cache_key, $profiledata, 'bp_xprofile_data' );
@@ -117,7 +116,7 @@ class BP_XProfile_ProfileData {
 		 *
 		 * @since BuddyBoss 3.3.0
 		 *
-		 * @param BP_XProfile_ProfileData $this Current instance of the profile data.
+		 * @param BBoss_XProfile_ProfileData $this Current instance of the profile data.
 		 */
 		do_action_ref_array( 'bp_xprofile_data_after_populate', array( $this ) );
 	}
@@ -143,7 +142,7 @@ class BP_XProfile_ProfileData {
 			$retval = true;
 		} else {
 
-			$table  = bp_core_get_table_prefix() . 'bp_xprofile_data';
+			$table  = bboss_core_get_table_prefix() . 'bp_xprofile_data';
 			$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$table} WHERE user_id = %d AND field_id = %d", $this->user_id, $this->field_id ) );
 		}
 
@@ -153,7 +152,7 @@ class BP_XProfile_ProfileData {
 		 * @since BuddyPress 1.2.7
 		 *
 		 * @param bool                    $retval Whether or not data already exists.
-		 * @param BP_XProfile_ProfileData $this   Instance of the current BP_XProfile_ProfileData class.
+		 * @param BBoss_XProfile_ProfileData $this   Instance of the current BBoss_XProfile_ProfileData class.
 		 */
 		return apply_filters_ref_array( 'xprofile_data_exists', array( (bool) $retval, $this ) );
 	}
@@ -169,7 +168,7 @@ class BP_XProfile_ProfileData {
 	 */
 	public function is_valid_field() {
 		global $wpdb;
-		$table  = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+		$table  = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
 
 		$cache_key = 'bp_xprofile_is_valid_field_' . $this->field_id;
 		$retval    = wp_cache_get( $cache_key, 'bp_xprofile' );
@@ -185,7 +184,7 @@ class BP_XProfile_ProfileData {
 		 * @since BuddyPress 1.2.7
 		 *
 		 * @param bool                    $retval Whether or not data is valid.
-		 * @param BP_XProfile_ProfileData $this   Instance of the current BP_XProfile_ProfileData class.
+		 * @param BBoss_XProfile_ProfileData $this   Instance of the current BBoss_XProfile_ProfileData class.
 		 */
 		return apply_filters_ref_array( 'xprofile_data_is_valid_field', array( (bool) $retval, $this ) );
 	}
@@ -200,7 +199,7 @@ class BP_XProfile_ProfileData {
 	public function save() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		/**
 		 * Filters the data's user ID before saving to the database.
@@ -231,7 +230,7 @@ class BP_XProfile_ProfileData {
 		 * @param string                  $field_value The field value.
 		 * @param int                     $data_id     The field data ID.
 		 * @param bool                    $reserialize Whether to reserialize arrays before returning. Defaults to true.
-		 * @param BP_XProfile_ProfileData $this        Current instance of the profile data being saved.
+		 * @param BBoss_XProfile_ProfileData $this        Current instance of the profile data being saved.
 		 */
 		$this->value = apply_filters( 'xprofile_data_value_before_save', $this->value, $this->id, true, $this );
 
@@ -243,7 +242,7 @@ class BP_XProfile_ProfileData {
 		 * @param int $last_updated The last updated timestamp.
 		 * @param int $data_id      The field data ID.
 		 */
-		$this->last_updated = apply_filters( 'xprofile_data_last_updated_before_save', bp_core_current_time(), $this->id );
+		$this->last_updated = apply_filters( 'xprofile_data_last_updated_before_save', bboss_core_current_time(), $this->id );
 
 		/**
 		 * Fires before the current profile data instance gets saved.
@@ -252,12 +251,12 @@ class BP_XProfile_ProfileData {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_XProfile_ProfileData $this Current instance of the profile data being saved.
+		 * @param BBoss_XProfile_ProfileData $this Current instance of the profile data being saved.
 		 */
 		do_action_ref_array( 'xprofile_data_before_save', array( $this ) );
 
 		if ( $this->is_valid_field() ) {
-			$table = bp_core_get_table_prefix() . 'bp_xprofile_data';
+			$table = bboss_core_get_table_prefix() . 'bp_xprofile_data';
 			if ( $this->exists() && strlen( trim( $this->value ) ) ) {
 				$result = $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d", $this->value, $this->last_updated, $this->user_id, $this->field_id ) );
 
@@ -279,7 +278,7 @@ class BP_XProfile_ProfileData {
 			 *
 			 * @since BuddyPress 1.0.0
 			 *
-			 * @param BP_XProfile_ProfileData $this Current instance of the profile data being saved.
+			 * @param BBoss_XProfile_ProfileData $this Current instance of the profile data being saved.
 			 */
 			do_action_ref_array( 'xprofile_data_after_save', array( $this ) );
 
@@ -301,15 +300,15 @@ class BP_XProfile_ProfileData {
 	public function delete() {
 		global $wpdb;
 
-		$bp         = buddypress();
-		$table_name = bp_core_get_table_prefix() . 'bp_xprofile_data';
+		$bp         = bboss();
+		$table_name = bboss_core_get_table_prefix() . 'bp_xprofile_data';
 
 		/**
 		 * Fires before the current profile data instance gets deleted.
 		 *
 		 * @since BuddyPress 1.9.0
 		 *
-		 * @param BP_XProfile_ProfileData $this Current instance of the profile data being deleted.
+		 * @param BBoss_XProfile_ProfileData $this Current instance of the profile data being deleted.
 		 */
 		do_action_ref_array( 'xprofile_data_before_delete', array( $this ) );
 
@@ -321,17 +320,17 @@ class BP_XProfile_ProfileData {
 		if ( $deleted ) {
 
 			// Delete profile visibility on user's field delete.
-			$user_visibility_levels = bp_get_user_meta( $this->user_id, 'bp_xprofile_visibility_levels', true );
+			$user_visibility_levels = bboss_get_user_meta( $this->user_id, 'bp_xprofile_visibility_levels', true );
 			if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ) {
 				$user_visibility_levels = array();
 			}
 
 			if ( ! empty( $user_visibility_levels ) && is_array( $user_visibility_levels ) && array_key_exists( $this->field_id, $user_visibility_levels ) ) {
 				unset( $user_visibility_levels[ $this->field_id ] );
-				bp_update_user_meta( $this->user_id, 'bp_xprofile_visibility_levels', $user_visibility_levels );
+				bboss_update_user_meta( $this->user_id, 'bp_xprofile_visibility_levels', $user_visibility_levels );
 			}
 
-			BB_XProfile_Visibility::delete_specific_data_for_user( $this->field_id, $this->user_id );
+			BBoss_XProfile_Visibility::delete_specific_data_for_user( $this->field_id, $this->user_id );
 		}
 
 		/**
@@ -339,7 +338,7 @@ class BP_XProfile_ProfileData {
 		 *
 		 * @since BuddyPress 1.9.0
 		 *
-		 * @param BP_XProfile_ProfileData $this Current instance of the profile data being deleted.
+		 * @param BBoss_XProfile_ProfileData $this Current instance of the profile data being deleted.
 		 */
 		do_action_ref_array( 'xprofile_data_after_delete', array( $this ) );
 
@@ -362,11 +361,11 @@ class BP_XProfile_ProfileData {
 
 		$data = array();
 
-		$uncached_field_ids = bp_xprofile_get_non_cached_field_ids( $user_id, $field_ids );
+		$uncached_field_ids = bboss_xprofile_get_non_cached_field_ids( $user_id, $field_ids );
 
 		// Prime the cache.
 		if ( ! empty( $uncached_field_ids ) ) {
-			$bp                     = buddypress();
+			$bp                     = bboss();
 			$uncached_field_ids_sql = implode( ',', wp_parse_id_list( $uncached_field_ids ) );
 			$uncached_data          = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, field_id, value, last_updated FROM {$bp->profile->table_name_data} WHERE field_id IN ({$uncached_field_ids_sql}) AND user_id = %d", $user_id ) );
 
@@ -439,7 +438,7 @@ class BP_XProfile_ProfileData {
 	 */
 	public static function get_all_for_user( $user_id ) {
 
-		$groups = bp_xprofile_get_groups(
+		$groups = bboss_xprofile_get_groups(
 			array(
 				'user_id'           => $user_id,
 				'hide_empty_groups' => true,
@@ -493,7 +492,7 @@ class BP_XProfile_ProfileData {
 		if ( empty( $field_id ) || empty( $user_id ) ) {
 			$fielddata_id = 0;
 		} else {
-			$bp = buddypress();
+			$bp = bboss();
 
 			// Check cache first.
 			$cache_key = "{$user_id}:{$field_id}";
@@ -524,7 +523,7 @@ class BP_XProfile_ProfileData {
 		global $wpdb, $bp;
 
 		if ( empty( $user_ids ) ) {
-			$user_ids = bp_displayed_user_id();
+			$user_ids = bboss_displayed_user_id();
 		}
 
 		$return_single_result = false;
@@ -546,7 +545,7 @@ class BP_XProfile_ProfileData {
 		// Prime caches.
 		if ( ! empty( $uncached_ids ) ) {
 			$uncached_ids_sql = implode( ',', $uncached_ids );
-			$table            = bp_core_get_table_prefix() . 'bp_xprofile_data';
+			$table            = bboss_core_get_table_prefix() . 'bp_xprofile_data';
 			$queried_data     = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, field_id, value, last_updated FROM {$table} WHERE field_id = %d AND user_id IN ({$uncached_ids_sql})", $field_id ) );
 
 			// Rekey.
@@ -622,10 +621,10 @@ class BP_XProfile_ProfileData {
 			return false;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( empty( $user_id ) ) {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		}
 
 		$field_sql = '';
@@ -644,8 +643,7 @@ class BP_XProfile_ProfileData {
 			$field_sql .= $wpdb->prepare( 'AND f.name = %s', $fields );
 		}
 
-		$sql    = $wpdb->prepare( "SELECT d.value, f.name FROM {$bp->profile->table_name_data} d, {$bp->profile->table_name_fields} f WHERE d.field_id = f.id AND d.user_id = %d AND f.parent_id = 0 $field_sql", $user_id );
-		$values = $wpdb->get_results( $sql );
+		$values = $wpdb->get_results( $wpdb->prepare( "SELECT d.value, f.name FROM {$bp->profile->table_name_data} d, {$bp->profile->table_name_fields} f WHERE d.field_id = f.id AND d.user_id = %d AND f.parent_id = 0 $field_sql", $user_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $field_sql is built above from $wpdb->prepare()'d name clauses (%s); table names from buddypress().
 
 		if ( empty( $values ) || is_wp_error( $values ) ) {
 			return false;
@@ -681,7 +679,7 @@ class BP_XProfile_ProfileData {
 	public static function delete_for_field( $field_id ) {
 		global $wpdb;
 
-		$bp      = buddypress();
+		$bp      = bboss();
 		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_data} WHERE field_id = %d", $field_id ) );
 		if ( empty( $deleted ) || is_wp_error( $deleted ) ) {
 			return false;
@@ -701,7 +699,7 @@ class BP_XProfile_ProfileData {
 	public static function get_last_updated( $user_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$cache_key    = 'bp_get_last_updated_' . $user_id;
 		$last_updated = wp_cache_get( $cache_key, 'bp_xprofile' );
@@ -725,7 +723,7 @@ class BP_XProfile_ProfileData {
 	public static function delete_data_for_user( $user_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$field_ids = $wpdb->get_col( $wpdb->prepare( "SELECT field_id FROM {$bp->profile->table_name_data} WHERE user_id = %d", $user_id ) );
 
@@ -734,7 +732,7 @@ class BP_XProfile_ProfileData {
 		}
 
 		foreach ( $field_ids as $field_id ) {
-			xprofile_delete_field_data( $field_id, $user_id );
+			bboss_xprofile_delete_field_data( $field_id, $user_id );
 		}
 
 		return count( $field_ids );
@@ -754,9 +752,9 @@ class BP_XProfile_ProfileData {
 
 		$exclude_sql = ! empty( $exclude_fullname ) ? ' AND pf.id != 1' : '';
 
-		$bp = buddypress();
+		$bp = bboss();
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT pf.type, pf.name, pd.value FROM {$bp->profile->table_name_data} pd INNER JOIN {$bp->profile->table_name_fields} pf ON pd.field_id = pf.id AND pd.user_id = %d {$exclude_sql} ORDER BY RAND() LIMIT 1", $user_id ) );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT pf.type, pf.name, pd.value FROM {$bp->profile->table_name_data} pd INNER JOIN {$bp->profile->table_name_fields} pf ON pd.field_id = pf.id AND pd.user_id = %d {$exclude_sql} ORDER BY RAND() LIMIT 1", $user_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $exclude_sql is a constant clause chosen by code; table names from buddypress().
 	}
 
 	/**
@@ -770,9 +768,9 @@ class BP_XProfile_ProfileData {
 	public static function get_fullname( $user_id = 0 ) {
 
 		if ( empty( $user_id ) ) {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		}
 
-		return xprofile_get_field_data( bp_xprofile_fullname_field_id(), $user_id );
+		return bboss_xprofile_get_field_data( bboss_xprofile_fullname_field_id(), $user_id );
 	}
 }

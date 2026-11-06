@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BB_REST_Forums_Link_Preview_Endpoint class
+ * BP REST: BBoss_REST_Forums_Link_Preview_Endpoint class
  *
  * @package BuddyBoss
  * @since 2.3.60
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 2.3.60
  */
-class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -21,7 +21,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 	 * @since 2.3.60
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'forums';
 	}
 
@@ -37,7 +37,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'url' => array(
-						'description' => __( 'URL for the generate link preview.', 'buddyboss' ),
+						'description' => __( 'URL for the generate link preview.', 'buddyboss-platform' ),
 						'type'        => 'string',
 						'required'    => true,
 					),
@@ -81,7 +81,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( ! wp_http_validate_url( $url ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_url',
-				__( 'Sorry, URL is not valid.', 'buddyboss' ),
+				__( 'Sorry, URL is not valid.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -97,13 +97,13 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 		);
 
 		// Get URL parsed data.
-		$parse_url_data = ( function_exists( 'bp_core_parse_url' ) ? bp_core_parse_url( $url ) : '' );
+		$parse_url_data = ( function_exists( 'bboss_core_parse_url' ) ? bboss_core_parse_url( $url ) : '' );
 
 		// If empty data then send error.
 		if ( empty( $parse_url_data ) ) {
 			return new WP_Error(
 				'bp_rest_unknown_error',
-				__( 'There was a problem generating a link preview.', 'buddyboss' ),
+				__( 'There was a problem generating a link preview.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -139,30 +139,30 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_component_required',
-			__( 'Sorry, Forums component was not enabled.', 'buddyboss' ),
+			__( 'Sorry, Forums component was not enabled.', 'buddyboss-platform' ),
 			array(
 				'status' => '404',
 			)
 		);
 
-		if ( bp_is_active( 'forums' ) ) {
+		if ( bboss_is_active( 'forums' ) ) {
 			$retval = true;
 		}
 
-		if ( true === $retval && ! ( is_user_logged_in() || bbp_allow_anonymous() ) ) {
+		if ( true === $retval && ! ( is_user_logged_in() || bboss_bbp_allow_anonymous() ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to generate link preview in the forums.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to generate link preview in the forums.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
 
-		if ( true === $retval && function_exists( 'bbp_use_autoembed' ) && true !== bbp_use_autoembed() ) {
+		if ( true === $retval && function_exists( 'bboss_bbp_use_autoembed' ) && true !== bboss_bbp_use_autoembed() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Link Previews is disabled.', 'buddyboss' ),
+				__( 'Sorry, Link Previews is disabled.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -195,19 +195,19 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'title'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Title for the link preview.', 'buddyboss' ),
+					'description' => __( 'Title for the link preview.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'description' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Description or HTML to generate the link preview.', 'buddyboss' ),
+					'description' => __( 'Description or HTML to generate the link preview.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'images'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Image URLs for the preview.', 'buddyboss' ),
+					'description' => __( 'Image URLs for the preview.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 					'items'       => array(
@@ -216,13 +216,13 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 				),
 				'error'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'If any errors to retrieving a the preview data.', 'buddyboss' ),
+					'description' => __( 'If any errors to retrieving a the preview data.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'wp_embed'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the URL is wp embed or not.', 'buddyboss' ),
+					'description' => __( 'Whether the URL is wp embed or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),

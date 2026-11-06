@@ -21,32 +21,32 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_groups_register_navigation_panel_fields() {
+function bboss_groups_register_navigation_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Group Navigation Settings.
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'group_navigation',
 		'group_navigation_settings',
 		array(
-			'title'    => __( 'Group Navigation', 'buddyboss' ),
+			'title'    => __( 'Group Navigation', 'buddyboss-platform' ),
 			'order'    => 10,
 			'help_url' => '638208',
 		)
 	);
 
 	// FIELD: Layout — Display group navigation vertically.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_navigation',
 		'group_navigation_settings',
 		array(
 			'name'              => 'bb_group_nav_display',
-			'label'             => __( 'Layout', 'buddyboss' ),
+			'label'             => __( 'Layout', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Display the group navigation vertically', 'buddyboss' ),
+			'description'       => __( 'Display the group navigation vertically', 'buddyboss-platform' ),
 			'default'           => 0,
 			'order'             => 10,
 			'sanitize_callback' => 'absint',
@@ -54,14 +54,14 @@ function bb_groups_register_navigation_panel_fields() {
 	);
 
 	// FIELD: Default Tab.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_navigation',
 		'group_navigation_settings',
 		array(
 			'name'              => 'bb_group_default_tab',
-			'label'             => __( 'Default Tab', 'buddyboss' ),
-			'description'       => __( 'The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
+			'label'             => __( 'Default Tab', 'buddyboss-platform' ),
+			'description'       => __( 'The dropdown only shows tabs that are available to all groups.', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'default'           => 'members',
 			'options'           => array(), // Populated at AJAX time via bb_group_navigation_enrich_field_data() so options reflect current component state.
@@ -73,18 +73,18 @@ function bb_groups_register_navigation_panel_fields() {
 	// -------------------------------------------------------------------------
 	// SECTION: Navigation Order.
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'group_navigation',
 		'group_navigation_order',
 		array(
-			'title' => __( 'Navigation Order', 'buddyboss' ),
+			'title' => __( 'Navigation Order', 'buddyboss-platform' ),
 			'order' => 20,
 		)
 	);
 
 	// FIELD: Navigation Order (drag-and-drop checkbox list).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_navigation',
 		'group_navigation_order',
@@ -95,7 +95,7 @@ function bb_groups_register_navigation_panel_fields() {
 			'default'           => array(),
 			'options'           => array(), // Populated at AJAX time via bb_group_navigation_enrich_field_data().
 			'order'             => 10,
-			'sanitize_callback' => 'bb_sanitize_group_nav_order',
+			'sanitize_callback' => 'bboss_sanitize_group_nav_order',
 		)
 	);
 
@@ -121,39 +121,39 @@ function bb_groups_register_navigation_panel_fields() {
  *
  * @return array Array of [ 'value' => slug, 'label' => name ] items.
  */
-function bb_get_group_default_tab_options() {
+function bboss_get_group_default_tab_options() {
 	// Base options — same logic as the removed legacy Customizer controls.
-	if ( bp_is_active( 'activity' ) ) {
+	if ( bboss_is_active( 'activity' ) ) {
 		$options = apply_filters(
 			'group_default_tab_options_list',
 			array(
-				'members'  => __( 'Members', 'buddyboss' ),
-				'activity' => __( 'Feed', 'buddyboss' ),
+				'members'  => __( 'Members', 'buddyboss-platform' ),
+				'activity' => __( 'Feed', 'buddyboss-platform' ),
 			)
 		);
 	} else {
 		$options = apply_filters(
 			'group_default_tab_options_list',
 			array(
-				'members' => __( 'Members', 'buddyboss' ),
+				'members' => __( 'Members', 'buddyboss-platform' ),
 			)
 		);
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
-		$options['photos'] = __( 'Photos', 'buddyboss' );
+	if ( bboss_is_active( 'media' ) && bboss_is_group_media_support_enabled() ) {
+		$options['photos'] = __( 'Photos', 'buddyboss-platform' );
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) {
-		$options['albums'] = __( 'Albums', 'buddyboss' );
+	if ( bboss_is_active( 'media' ) && bboss_is_group_albums_support_enabled() ) {
+		$options['albums'] = __( 'Albums', 'buddyboss-platform' );
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
-		$options['documents'] = __( 'Documents', 'buddyboss' );
+	if ( bboss_is_active( 'media' ) && bboss_is_group_document_support_enabled() ) {
+		$options['documents'] = __( 'Documents', 'buddyboss-platform' );
 	}
 
-	if ( bp_is_active( 'video' ) && function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled() ) {
-		$options['videos'] = __( 'Videos', 'buddyboss' );
+	if ( bboss_is_active( 'video' ) && function_exists( 'bboss_is_group_video_support_enabled' ) && bboss_is_group_video_support_enabled() ) {
+		$options['videos'] = __( 'Videos', 'buddyboss-platform' );
 	}
 
 	// Convert to Settings 2.0 select format.
@@ -174,21 +174,21 @@ function bb_get_group_default_tab_options() {
 /**
  * Build the checkbox_list options for Navigation Order.
  *
- * Uses BP_Nouveau_Customizer_Group_Nav to get all registered group
- * nav items (including third-party BP_Group_Extension items and items
+ * Uses BBoss_Nouveau_Customizer_Group_Nav to get all registered group
+ * nav items (including third-party BBoss_Group_Extension items and items
  * added via the `bp_nouveau_customizer_group_nav_items` filter).
  *
  * Items whose parent feature is inactive get `disabled => true` and
  * `badge_label => 'Hidden'`.
  *
  * Note: The "Send Messages" nav item depends on the current admin user's
- * membership in the fetched group (inherited from BP_Nouveau_Customizer_Group_Nav).
+ * membership in the fetched group (inherited from BBoss_Nouveau_Customizer_Group_Nav).
  *
  * @since BuddyBoss 3.0.0
  *
  * @return array Array of checkbox_list option items.
  */
-function bb_get_group_nav_items_for_settings() {
+function bboss_get_group_nav_items_for_settings() {
 	static $cached_options = null;
 	if ( null !== $cached_options ) {
 		return $cached_options;
@@ -203,7 +203,7 @@ function bb_get_group_nav_items_for_settings() {
 		return $cached_options;
 	}
 
-	if ( ! class_exists( 'BP_Nouveau_Customizer_Group_Nav' ) ) {
+	if ( ! class_exists( 'BBoss_Nouveau_Customizer_Group_Nav' ) ) {
 		return array();
 	}
 
@@ -212,7 +212,7 @@ function bb_get_group_nav_items_for_settings() {
 	// nav items — the actual nav tabs are determined by registered extensions, not
 	// per-group content. The most recent group is used as a proxy; this may miss
 	// group-specific extensions but covers the standard use-case.
-	$groups = groups_get_groups(
+	$groups = bboss_groups_get_groups(
 		array(
 			'per_page'    => 1,
 			'orderby'     => 'date_created',
@@ -231,7 +231,7 @@ function bb_get_group_nav_items_for_settings() {
 	$group_id = $groups['groups'][0]->id;
 
 	// Build nav via the same class the Customizer uses.
-	$group_nav = new BP_Nouveau_Customizer_Group_Nav( $group_id );
+	$group_nav = new BBoss_Nouveau_Customizer_Group_Nav( $group_id );
 
 	// Get nav items in saved order.
 	// Note: If the constructor failed (e.g., admin_init not fired), this returns empty.
@@ -244,7 +244,7 @@ function bb_get_group_nav_items_for_settings() {
 	// Skip nav items whose parent component/feature is inactive.
 	// Legacy Customizer only shows nav from active components
 	// (inactive components never register their nav items).
-	$inactive_slugs = bb_get_inactive_group_nav_slugs();
+	$inactive_slugs = bboss_get_inactive_group_nav_slugs();
 
 	$options = array();
 	foreach ( $nav_items as $nav_item ) {
@@ -280,12 +280,12 @@ function bb_get_group_nav_items_for_settings() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_clear_group_nav_items_cache() {
+function bboss_clear_group_nav_items_cache() {
 	delete_transient( 'bb_group_nav_items_for_settings' );
 }
-add_action( 'bb_feature_activated', 'bb_clear_group_nav_items_cache' );
-add_action( 'bb_feature_deactivated', 'bb_clear_group_nav_items_cache' );
-add_action( 'groups_group_create_complete', 'bb_clear_group_nav_items_cache' );
+add_action( 'bb_feature_activated', 'bboss_clear_group_nav_items_cache' );
+add_action( 'bb_feature_deactivated', 'bboss_clear_group_nav_items_cache' );
+add_action( 'groups_group_create_complete', 'bboss_clear_group_nav_items_cache' );
 
 /**
  * Get nav item slugs whose parent feature is inactive.
@@ -296,39 +296,39 @@ add_action( 'groups_group_create_complete', 'bb_clear_group_nav_items_cache' );
  *
  * @return array Array of nav item slugs that are inactive.
  */
-function bb_get_inactive_group_nav_slugs() {
+function bboss_get_inactive_group_nav_slugs() {
 	$inactive = array();
 
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		$inactive[] = 'activity';
 	}
 
-	if ( ! bp_is_active( 'media' ) || ! bp_is_group_media_support_enabled() ) {
+	if ( ! bboss_is_active( 'media' ) || ! bboss_is_group_media_support_enabled() ) {
 		$inactive[] = 'photos';
 	}
 
-	if ( ! bp_is_active( 'video' ) || ! function_exists( 'bp_is_group_video_support_enabled' ) || ! bp_is_group_video_support_enabled() ) {
+	if ( ! bboss_is_active( 'video' ) || ! function_exists( 'bboss_is_group_video_support_enabled' ) || ! bboss_is_group_video_support_enabled() ) {
 		$inactive[] = 'videos';
 	}
 
-	if ( ! bp_is_active( 'media' ) || ! bp_is_group_albums_support_enabled() ) {
+	if ( ! bboss_is_active( 'media' ) || ! bboss_is_group_albums_support_enabled() ) {
 		$inactive[] = 'albums';
 	}
 
-	if ( ! bp_is_active( 'media' ) || ! bp_is_group_document_support_enabled() ) {
+	if ( ! bboss_is_active( 'media' ) || ! bboss_is_group_document_support_enabled() ) {
 		$inactive[] = 'documents';
 	}
 
-	if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_is_group_forums_active' ) || ! bbp_is_group_forums_active() ) {
+	if ( ! bboss_is_active( 'forums' ) || ! function_exists( 'bboss_bbp_is_group_forums_active' ) || ! bboss_bbp_is_group_forums_active() ) {
 		$inactive[] = get_option( '_bbp_forum_slug', 'forum' );
 	}
 
 	// bp_disable_group_messages() returns true when group messages are ENABLED.
-	if ( ! bp_is_active( 'messages' ) || ! bp_disable_group_messages() ) {
+	if ( ! bboss_is_active( 'messages' ) || ! bboss_disable_group_messages() ) {
 		$inactive[] = 'messages';
 	}
 
-	if ( ! bp_enable_group_hierarchies() ) {
+	if ( ! bboss_enable_group_hierarchies() ) {
 		$inactive[] = 'subgroups';
 	}
 
@@ -343,7 +343,7 @@ function bb_get_inactive_group_nav_slugs() {
  * Populate group navigation field values from bp_nouveau_appearance.
  *
  * The standard Settings 2.0 get loop reads from individual wp_options
- * via bp_get_option(). Group navigation values live inside the nested
+ * via bboss_get_option(). Group navigation values live inside the nested
  * `bp_nouveau_appearance` option, so we intercept and override here.
  *
  * @since BuddyBoss 3.0.0
@@ -354,7 +354,7 @@ function bb_get_inactive_group_nav_slugs() {
  *
  * @return array Modified field data.
  */
-function bb_group_navigation_enrich_field_data( $field_data, $field, $feature_id = '' ) {
+function bboss_group_navigation_enrich_field_data( $field_data, $field, $feature_id = '' ) {
 	if ( 'groups' !== $feature_id ) {
 		return $field_data;
 	}
@@ -367,7 +367,7 @@ function bb_group_navigation_enrich_field_data( $field_data, $field, $feature_id
 	}
 
 	// Fetch appearance settings once for all fields.
-	$appearance = bp_nouveau_get_appearance_settings();
+	$appearance = bboss_nouveau_get_appearance_settings();
 
 	switch ( $field_name ) {
 		case 'bb_group_nav_display':
@@ -376,22 +376,22 @@ function bb_group_navigation_enrich_field_data( $field_data, $field, $feature_id
 
 		case 'bb_group_default_tab':
 			// Populate options at AJAX time so they reflect current component activation state.
-			$field_data['options'] = bb_get_group_default_tab_options();
+			$field_data['options'] = bboss_get_group_default_tab_options();
 			$field_data['value']   = sanitize_key( isset( $appearance['group_default_tab'] ) ? $appearance['group_default_tab'] : 'members' );
 			break;
 
 		case 'bb_group_nav_order':
 			// Populate options at AJAX time (admin_init has fired, so BP_Nouveau_Customizer_Group_Nav works).
-			$options               = bb_get_group_nav_items_for_settings();
+			$options               = bboss_get_group_nav_items_for_settings();
 			$field_data['options'] = $options;
-			$field_data['value']   = bb_build_group_nav_order_value( $options, $appearance );
+			$field_data['value']   = bboss_build_group_nav_order_value( $options, $appearance );
 			break;
 	}
 
 	return $field_data;
 }
 
-add_filter( 'bb_admin_settings_format_field_data', 'bb_group_navigation_enrich_field_data', 10, 3 );
+add_filter( 'bb_admin_settings_format_field_data', 'bboss_group_navigation_enrich_field_data', 10, 3 );
 
 /**
  * Build the checkbox_list value for group nav order.
@@ -401,14 +401,14 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_group_navigation_enrich_f
  *
  * @since BuddyBoss 3.0.0
  *
- * @param array $options    Optional. Pre-fetched nav item options from bb_get_group_nav_items_for_settings().
- * @param array $appearance Optional. Pre-fetched appearance settings from bp_nouveau_get_appearance_settings().
+ * @param array $options    Optional. Pre-fetched nav item options from bboss_get_group_nav_items_for_settings().
+ * @param array $appearance Optional. Pre-fetched appearance settings from bboss_nouveau_get_appearance_settings().
  *
  * @return array Associative array of slug => 1/0 in saved order.
  */
-function bb_build_group_nav_order_value( $options = array(), $appearance = array() ) {
+function bboss_build_group_nav_order_value( $options = array(), $appearance = array() ) {
 	if ( empty( $options ) ) {
-		$options = bb_get_group_nav_items_for_settings();
+		$options = bboss_get_group_nav_items_for_settings();
 	}
 
 	if ( empty( $options ) ) {
@@ -416,7 +416,7 @@ function bb_build_group_nav_order_value( $options = array(), $appearance = array
 	}
 
 	if ( empty( $appearance ) ) {
-		$appearance = bp_nouveau_get_appearance_settings();
+		$appearance = bboss_nouveau_get_appearance_settings();
 	}
 
 	// Get saved order (array of slugs) and hidden items.
@@ -471,7 +471,7 @@ function bb_build_group_nav_order_value( $options = array(), $appearance = array
  * @param array  $settings   Full submitted settings (JSON decoded).
  * @param array  $saved      Keys and values saved to options by core.
  */
-function bb_group_navigation_save_settings( $feature_id, $settings, $saved ) {
+function bboss_group_navigation_save_settings( $feature_id, $settings, $saved ) {
 	if ( 'groups' !== $feature_id ) {
 		return;
 	}
@@ -493,7 +493,7 @@ function bb_group_navigation_save_settings( $feature_id, $settings, $saved ) {
 	// Read current appearance option — use bp_nouveau_get_appearance_settings() so
 	// defaults are merged in. Using bp_get_option() directly would lose defaults on
 	// the first save if the option does not yet exist in the database.
-	$appearance = bp_nouveau_get_appearance_settings();
+	$appearance = bboss_nouveau_get_appearance_settings();
 	if ( ! is_array( $appearance ) ) {
 		$appearance = array();
 	}
@@ -534,7 +534,7 @@ function bb_group_navigation_save_settings( $feature_id, $settings, $saved ) {
 	// Update group_default_tab — validate against allowed options and hidden items.
 	$default_tab = isset( $appearance['group_default_tab'] ) ? $appearance['group_default_tab'] : 'members';
 	if ( array_key_exists( 'bb_group_default_tab', $settings ) ) {
-		$valid_tabs = wp_list_pluck( bb_get_group_default_tab_options(), 'value' );
+		$valid_tabs = wp_list_pluck( bboss_get_group_default_tab_options(), 'value' );
 		$tab        = sanitize_key( $settings['bb_group_default_tab'] );
 
 		if ( in_array( $tab, $valid_tabs, true ) ) {
@@ -556,15 +556,15 @@ function bb_group_navigation_save_settings( $feature_id, $settings, $saved ) {
 	$appearance['group_default_tab'] = $default_tab;
 
 	// Save the merged appearance option.
-	bp_update_option( 'bp_nouveau_appearance', $appearance );
+	bboss_update_option( 'bp_nouveau_appearance', $appearance );
 
 	// Delete the temporary per-field options that the core save loop created.
 	foreach ( $nav_fields as $field_name ) {
 		if ( array_key_exists( $field_name, $saved ) ) {
-			bp_delete_option( $field_name );
+			bboss_delete_option( $field_name );
 		}
 	}
 }
 
 // bb_sanitize_group_nav_order() is defined in callbacks.php alongside other sanitize callbacks.
-add_action( 'bb_admin_save_feature_settings_after', 'bb_group_navigation_save_settings', 10, 3 );
+add_action( 'bb_admin_save_feature_settings_after', 'bboss_group_navigation_save_settings', 10, 3 );

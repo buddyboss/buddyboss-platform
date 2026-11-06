@@ -6,15 +6,18 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the loading of the Activate screen.
  *
  * @since BuddyPress 1.1.0
  */
-function bp_core_screen_activation() {
+function bboss_core_screen_activation() {
 
 	// Bail if not viewing the activation page.
-	if ( ! bp_is_current_component( 'activate' ) ) {
+	if ( ! bboss_is_current_component( 'activate' ) ) {
 		return false;
 	}
 
@@ -23,9 +26,9 @@ function bp_core_screen_activation() {
 
 		// If activation page is also front page, set to members directory to
 		// avoid an infinite loop. Otherwise, set to root domain.
-		$redirect_to = bp_is_component_front_page( 'activate' )
-			? bp_get_members_directory_permalink()
-			: bp_get_root_domain();
+		$redirect_to = bboss_is_component_front_page( 'activate' )
+			? bboss_get_members_directory_permalink()
+			: bboss_get_root_domain();
 
 		// Trailing slash it, as we expect these URL's to be.
 		$redirect_to = trailingslashit( $redirect_to );
@@ -40,11 +43,11 @@ function bp_core_screen_activation() {
 		$redirect_to = apply_filters( 'bp_loggedin_activate_page_redirect_to', $redirect_to );
 
 		// Redirect away from the activation page.
-		bp_core_redirect( $redirect_to );
+		bboss_core_redirect( $redirect_to );
 	}
 
 	// Get BuddyPress.
-	$bp = buddypress();
+	$bp = bboss();
 
 	/**
 	 * Filters the template to load for the Member activation page screen.
@@ -53,9 +56,9 @@ function bp_core_screen_activation() {
 	 *
 	 * @param string $value Path to the Member activation template to load.
 	 */
-	bp_core_load_template( apply_filters( 'bp_core_template_activate', array( 'activate', 'registration/activate' ) ) );
+	bboss_core_load_template( apply_filters( 'bp_core_template_activate', array( 'activate', 'registration/activate' ) ) );
 }
-add_action( 'bp_screens', 'bp_core_screen_activation' );
+add_action( 'bp_screens', 'bboss_core_screen_activation' );
 
 
 /**
@@ -63,8 +66,8 @@ add_action( 'bp_screens', 'bp_core_screen_activation' );
  *
  * @since BuddyPress 3.0.0
  */
-function bp_members_action_activate_account() {
-	if ( ! bp_is_current_component( 'activate' ) ) {
+function bboss_members_action_activate_account() {
+	if ( ! bboss_is_current_component( 'activate' ) ) {
 		return;
 	}
 
@@ -84,7 +87,7 @@ function bp_members_action_activate_account() {
 		return;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	/**
 	 * Filters the activation signup.
@@ -94,16 +97,16 @@ function bp_members_action_activate_account() {
 	 * @param bool|int $value Value returned by activation.
 	 *                        Integer on success, boolean on failure.
 	 */
-	$user = apply_filters( 'bp_core_activate_account', bp_core_activate_signup( $key ) );
+	$user = apply_filters( 'bp_core_activate_account', bboss_core_activate_signup( $key ) );
 
 	// If there were errors, add a message and redirect.
 	if ( ! empty( $user->errors ) ) {
-		bp_core_add_message( $user->get_error_message(), 'error' );
-		bp_core_redirect( trailingslashit( bp_get_root_domain() . '/' . $bp->pages->activate->slug ) );
+		bboss_core_add_message( $user->get_error_message(), 'error' );
+		bboss_core_redirect( trailingslashit( bboss_get_root_domain() . '/' . $bp->pages->activate->slug ) );
 	}
 
-	bp_core_add_message( __( 'Your account is now active!', 'buddyboss' ) );
-	bp_core_redirect( add_query_arg( 'activated', '1', bp_get_activation_page() ) );
+	bboss_core_add_message( __( 'Your account is now active!', 'buddyboss-platform' ) );
+	bboss_core_redirect( add_query_arg( 'activated', '1', bboss_get_activation_page() ) );
 
 }
-add_action( 'bp_actions', 'bp_members_action_activate_account' );
+add_action( 'bp_actions', 'bboss_members_action_activate_account' );

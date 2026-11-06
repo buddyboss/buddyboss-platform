@@ -9,18 +9,18 @@ class BP_Tests_Core_Nav_BpCoreRemoveSubnavItem extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_should_remove_subnav_item() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$_bp_nav = $bp->bp_nav;
 		$_bp_options_nav = $bp->bp_options_nav;
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => 'foo',
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'Bar',
 			'slug' => 'bar',
 			'parent_slug' => 'foo',
@@ -30,7 +30,7 @@ class BP_Tests_Core_Nav_BpCoreRemoveSubnavItem extends BP_UnitTestCase {
 
 		$this->assertTrue( isset( $bp->bp_options_nav['foo']['bar'] ) );
 
-		bp_core_remove_subnav_item( 'foo', 'bar' );
+		bboss_core_remove_subnav_item( 'foo', 'bar' );
 
 		$this->assertFalse( isset( $bp->bp_options_nav['foo']['bar'] ) );
 
@@ -42,18 +42,18 @@ class BP_Tests_Core_Nav_BpCoreRemoveSubnavItem extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_should_fail_on_incorrect_parent() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$_bp_nav = $bp->bp_nav;
 		$_bp_options_nav = $bp->bp_options_nav;
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => 'foo',
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'Bar',
 			'slug' => 'bar',
 			'parent_slug' => 'foo',
@@ -63,7 +63,7 @@ class BP_Tests_Core_Nav_BpCoreRemoveSubnavItem extends BP_UnitTestCase {
 
 		$this->assertTrue( isset( $bp->bp_options_nav['foo']['bar'] ) );
 
-		bp_core_remove_subnav_item( 'bad-parent', 'bar' );
+		bboss_core_remove_subnav_item( 'bad-parent', 'bar' );
 
 		$this->assertTrue( isset( $bp->bp_options_nav['foo']['bar'] ) );
 
@@ -75,20 +75,20 @@ class BP_Tests_Core_Nav_BpCoreRemoveSubnavItem extends BP_UnitTestCase {
 		$g1 = self::factory()->group->create();
 
 		// In group context
-		$g_obj = groups_get_group( $g1 );
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$g_obj = bboss_groups_get_group( $g1 );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'Clam',
 			'slug' => 'clam',
-			'parent_slug' => bp_get_current_group_slug(),
-			'parent_url' => bp_get_group_permalink( $g_obj ),
+			'parent_slug' => bboss_get_current_group_slug(),
+			'parent_url' => bboss_get_group_permalink( $g_obj ),
 			'screen_function' => 'clam_subnav',
 		) );
 
-		bp_core_remove_subnav_item( $g_obj->slug, 'clam' );
+		bboss_core_remove_subnav_item( $g_obj->slug, 'clam' );
 
-		$nav = bp_get_nav_menu_items( 'groups' );
+		$nav = bboss_get_nav_menu_items( 'groups' );
 		$found = false;
 		foreach ( $nav as $_nav ) {
 			if ( 'clam' === $_nav->css_id ) {

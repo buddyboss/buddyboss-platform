@@ -18,20 +18,20 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool|string
  */
-function bp_member_type_exclude_users_from_directory_and_searches( $qs = false, $object = false ) {
+function bboss_member_type_exclude_users_from_directory_and_searches( $qs = false, $object = false ) {
 
 	_deprecated_function( __FUNCTION__, '1.2.9' );
 
-	$args = bp_parse_args( $qs );
+	$args = bboss_parse_args( $qs );
 
 	if ( $object !== 'members' ) {
 		return $qs;
 	}
 
-	if ( bp_is_members_directory() && isset( $args['scope'] ) && 'all' === $args['scope'] ) {
+	if ( bboss_is_members_directory() && isset( $args['scope'] ) && 'all' === $args['scope'] ) {
 
 		// get removed profile type post ids
-		$bp_member_type_ids = bp_get_removed_member_types();
+		$bp_member_type_ids = bboss_get_removed_member_types();
 		// get removed profile type names/slugs
 		$bp_member_type_names = array();
 		if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
@@ -66,11 +66,11 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs = false, 
  *
  * @return int
  */
-function bp_fixed_all_member_type_count( $count ) {
+function bboss_fixed_all_member_type_count( $count ) {
 
 	_deprecated_function( __FUNCTION__, '1.2.9' );
 
-	$exclude_user_ids = bp_get_users_of_removed_member_types();
+	$exclude_user_ids = bboss_get_users_of_removed_member_types();
 	if ( isset( $exclude_user_ids ) && ! empty( $exclude_user_ids ) ) {
 		$count = $count - count( $exclude_user_ids );
 	}
@@ -84,7 +84,7 @@ function bp_fixed_all_member_type_count( $count ) {
  *
  * @param $query
  */
-function bp_member_type_query( $query ) {
+function bboss_member_type_query( $query ) {
 
 	_deprecated_function( __FUNCTION__, '1.2.9' );
 
@@ -121,7 +121,7 @@ function bp_member_type_query( $query ) {
  *
  * @return string
  */
-function bp_member_type_shortcode_filter( $query_string, $object ) {
+function bboss_member_type_shortcode_filter( $query_string, $object ) {
 
 	_deprecated_function( __FUNCTION__, '1.2.9' );
 
@@ -129,7 +129,7 @@ function bp_member_type_shortcode_filter( $query_string, $object ) {
 		return '';
 	}
 
-	if ( 'members' == $object && bp_current_component() !== 'members' ) {
+	if ( 'members' == $object && bboss_current_component() !== 'members' ) {
 		$_COOKIE['bp-members-filter'] = 'alphabetical';
 		$_COOKIE['bp-members-scope']  = 'all';
 	}

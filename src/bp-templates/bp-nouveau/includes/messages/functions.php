@@ -18,8 +18,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array The same array with the specific messages styles.
  */
-function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
-	if ( ! bp_is_user_messages() ) {
+function bboss_nouveau_messages_enqueue_styles( $styles = array() ) {
+	if ( ! bboss_is_user_messages() ) {
 		return $styles;
 	}
 
@@ -27,9 +27,9 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
 		$styles,
 		array(
 			'bp-nouveau-messages-at' => array(
-				'file'         => buddypress()->plugin_url . 'bp-core/css/mentions%1$s%2$s.css',
+				'file'         => bboss()->plugin_url . 'bp-core/css/mentions%1$s%2$s.css',
 				'dependencies' => array( 'bp-nouveau' ),
-				'version'      => bp_get_version(),
+				'version'      => bboss_get_version(),
 			),
 		)
 	);
@@ -44,7 +44,7 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
  *
  * @return array The same array with the specific messages scripts.
  */
-function bp_nouveau_messages_register_scripts( $scripts = array() ) {
+function bboss_nouveau_messages_register_scripts( $scripts = array() ) {
 	if ( ! isset( $scripts['bp-nouveau'] ) ) {
 		return $scripts;
 	}
@@ -53,9 +53,9 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 		$scripts,
 		array(
 			'bp-nouveau-messages-at' => array(
-				'file'         => buddypress()->plugin_url . 'bp-core/js/mentions%s.js',
+				'file'         => bboss()->plugin_url . 'bp-core/js/mentions%s.js',
 				'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
-				'version'      => bp_get_version(),
+				'version'      => bboss_get_version(),
 				'footer'       => true,
 			),
 			'bp-nouveau-messages'    => array(
@@ -72,8 +72,8 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_messages_enqueue_scripts() {
-	if ( ! bp_is_user_messages() ) {
+function bboss_nouveau_messages_enqueue_scripts() {
+	if ( ! bboss_is_user_messages() ) {
 		return;
 	}
 
@@ -124,11 +124,11 @@ function bp_nouveau_messages_enqueue_scripts() {
 	);
 
 	foreach ( $template_parts as $template_part ) {
-		bp_get_template_part( 'common/js-templates/messages/' . $template_part );
+		bboss_get_template_part( 'common/js-templates/messages/' . $template_part );
 	}
 
 	// Add The tiny MCE init specific function.
-	add_filter( 'tiny_mce_before_init', 'bp_nouveau_messages_at_on_tinymce_init', 10, 2 );
+	add_filter( 'tiny_mce_before_init', 'bboss_nouveau_messages_at_on_tinymce_init', 10, 2 );
 }
 
 /**
@@ -139,85 +139,86 @@ function bp_nouveau_messages_enqueue_scripts() {
  * @param  array $params Associative array containing the JS Strings needed by scripts
  * @return array         The same array with specific strings for the messages UI if needed.
  */
-function bp_nouveau_messages_localize_scripts( $params = array() ) {
-	if ( ! bp_is_user_messages() ) {
+function bboss_nouveau_messages_localize_scripts( $params = array() ) {
+	if ( ! bboss_is_user_messages() ) {
 		return $params;
 	}
 
 	$current_thread_type = '';
-	if ( bp_is_messages_component() && is_user_logged_in() ) {
+	if ( bboss_is_messages_component() && is_user_logged_in() ) {
 		$current_thread_type = 'unarchived';
-		if ( 'archived' === bp_current_action() ) {
+		if ( 'archived' === bboss_current_action() ) {
 			$current_thread_type = 'archived';
 		}
 	}
 
 	$params['messages'] = array(
 		'i18n'                       => array(
-			'search_recipients' => __( 'Search members', 'buddyboss' ),
+			'search_recipients' => __( 'Search members', 'buddyboss-platform' ),
 		),
 		'errors'                     => array(
-			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
-			'message_content' => __( 'Please add some content to your message.', 'buddyboss' ),
-			'no_messages'     => __( 'Sorry, no messages were found.', 'buddyboss' ),
-			'media_fail'      => __( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
+			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss-platform' ),
+			'message_content' => __( 'Please add some content to your message.', 'buddyboss-platform' ),
+			'no_messages'     => __( 'Sorry, no messages were found.', 'buddyboss-platform' ),
+			'media_fail'      => __( 'To change the media type, remove existing media from your post.', 'buddyboss-platform' ),
 		),
 		'nonces'                     => array(
 			'send'           => wp_create_nonce( 'messages_send_message' ),
 			'load_recipient' => wp_create_nonce( 'messages_load_recipient' ),
 		),
-		'loading'                    => __( 'Loading messages.', 'buddyboss' ),
+		'loading'                    => __( 'Loading messages.', 'buddyboss-platform' ),
 		'doingAction'                => array(
-			'read'          => __( 'Marking read.', 'buddyboss' ),
-			'unread'        => __( 'Marking unread.', 'buddyboss' ),
-			'delete'        => __( 'Deleting messages.', 'buddyboss' ),
-			'star'          => __( 'Starring messages.', 'buddyboss' ),
-			'unstar'        => __( 'Unstarring messages.', 'buddyboss' ),
-			'hide_thread'   => __( 'Archiving conversation.', 'buddyboss' ),
-			'unhide_thread' => __( 'Unarchiving conversation.', 'buddyboss' ),
+			'read'          => __( 'Marking read.', 'buddyboss-platform' ),
+			'unread'        => __( 'Marking unread.', 'buddyboss-platform' ),
+			'delete'        => __( 'Deleting messages.', 'buddyboss-platform' ),
+			'star'          => __( 'Starring messages.', 'buddyboss-platform' ),
+			'unstar'        => __( 'Unstarring messages.', 'buddyboss-platform' ),
+			'hide_thread'   => __( 'Archiving conversation.', 'buddyboss-platform' ),
+			'unhide_thread' => __( 'Unarchiving conversation.', 'buddyboss-platform' ),
 		),
-		'type_message'               => __( 'Write a message...', 'buddyboss' ),
-		'delete_confirmation'        => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss' ),
-		'delete_thread_confirmation' => __( 'As a site admin you are able to delete conversations. Are you sure you want to permanently delete this conversation and all of its messages? This cannot be undone.', 'buddyboss' ),
-		'bulk_actions'               => bp_nouveau_messages_get_bulk_actions(),
-		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
+		'type_message'               => __( 'Write a message...', 'buddyboss-platform' ),
+		'delete_confirmation'        => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss-platform' ),
+		'delete_thread_confirmation' => __( 'As a site admin you are able to delete conversations. Are you sure you want to permanently delete this conversation and all of its messages? This cannot be undone.', 'buddyboss-platform' ),
+		'bulk_actions'               => bboss_nouveau_messages_get_bulk_actions(),
+		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss-platform' ),
 		'toOthers'                   => array(
-			'one'   => __( '1 other', 'buddyboss' ),
-			'more'  => __( '%d others', 'buddyboss' ),
-			'other' => __( 'others', 'buddyboss' ),
+			'one'   => __( '1 other', 'buddyboss-platform' ),
+			/* translators: %d: number of other recipients. */
+			'more'  => __( '%d others', 'buddyboss-platform' ),
+			'other' => __( 'others', 'buddyboss-platform' ),
 		),
-		'rootUrl'                    => urldecode( wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ) ),
-		'hasThreads'                 => bp_has_message_threads( bp_ajax_querystring( 'messages' ) ),
-		'today'                      => __( 'Today', 'buddyboss' ),
+		'rootUrl'                    => urldecode( wp_parse_url( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() ), PHP_URL_PATH ) ),
+		'hasThreads'                 => bboss_has_message_threads( bboss_ajax_querystring( 'messages' ) ),
+		'today'                      => __( 'Today', 'buddyboss-platform' ),
 		'video_default_url'          => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
-		'message_url'                => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ),
-		'message_archived_url'       => trailingslashit( bb_get_messages_archived_url() ),
-		'current_thread_id'          => (int) bp_action_variable( 0 ),
-		'is_blocked_by_members'      => function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids( get_current_user_id() ) : array(),
+		'message_url'                => trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() ),
+		'message_archived_url'       => trailingslashit( bboss_get_messages_archived_url() ),
+		'current_thread_id'          => (int) bboss_action_variable( 0 ),
+		'is_blocked_by_members'      => function_exists( 'bboss_moderation_get_blocked_by_user_ids' ) ? bboss_moderation_get_blocked_by_user_ids( get_current_user_id() ) : array(),
 		'current_thread_type'        => $current_thread_type,
-		'gif_media'                  => __( 'Sent a gif', 'buddyboss' ),
-		'single_media'               => __( 'Sent a photo', 'buddyboss' ),
-		'multiple_media'             => __( 'Sent some photos', 'buddyboss' ),
-		'single_video'               => __( 'Sent a video', 'buddyboss' ),
-		'multiple_video'             => __( 'Sent some videos', 'buddyboss' ),
-		'single_document'            => __( 'Sent a document', 'buddyboss' ),
-		'multiple_document'          => __( 'Sent some documents', 'buddyboss' ),
+		'gif_media'                  => __( 'Sent a gif', 'buddyboss-platform' ),
+		'single_media'               => __( 'Sent a photo', 'buddyboss-platform' ),
+		'multiple_media'             => __( 'Sent some photos', 'buddyboss-platform' ),
+		'single_video'               => __( 'Sent a video', 'buddyboss-platform' ),
+		'multiple_video'             => __( 'Sent some videos', 'buddyboss-platform' ),
+		'single_document'            => __( 'Sent a document', 'buddyboss-platform' ),
+		'multiple_document'          => __( 'Sent some documents', 'buddyboss-platform' ),
 	);
 
 	// Star private messages.
-	if ( bp_is_active( 'messages', 'star' ) ) {
+	if ( bboss_is_active( 'messages', 'star' ) ) {
 		$params['messages'] = array_merge(
 			$params['messages'],
 			array(
 				'strings'          => array(
-					'text_unstar'         => __( 'Unstar', 'buddyboss' ),
-					'text_star'           => __( 'Star', 'buddyboss' ),
-					'title_unstar'        => __( 'Starred', 'buddyboss' ),
-					'title_star'          => __( 'Not starred', 'buddyboss' ),
-					'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
-					'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss' ),
+					'text_unstar'         => __( 'Unstar', 'buddyboss-platform' ),
+					'text_star'           => __( 'Star', 'buddyboss-platform' ),
+					'title_unstar'        => __( 'Starred', 'buddyboss-platform' ),
+					'title_star'          => __( 'Not starred', 'buddyboss-platform' ),
+					'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss-platform' ),
+					'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss-platform' ),
 				),
-				'is_single_thread' => (int) bp_is_messages_conversation(),
+				'is_single_thread' => (int) bboss_is_messages_conversation(),
 				'star_counter'     => 0,
 				'unstar_counter'   => 0,
 			)
@@ -232,10 +233,10 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_messages_adjust_nav() {
-	$bp = buddypress();
+function bboss_nouveau_messages_adjust_nav() {
+	$bp = bboss();
 
-	$secondary_nav_items = $bp->members->nav->get_secondary( array( 'parent_slug' => bp_get_messages_slug() ), false );
+	$secondary_nav_items = $bp->members->nav->get_secondary( array( 'parent_slug' => bboss_get_messages_slug() ), false );
 
 	if ( empty( $secondary_nav_items ) ) {
 		return;
@@ -247,14 +248,14 @@ function bp_nouveau_messages_adjust_nav() {
 		}
 
 		if ( 'notices' === $secondary_nav_item->slug ) {
-			bp_core_remove_subnav_item( bp_get_messages_slug(), $secondary_nav_item->slug, 'members' );
+			bboss_core_remove_subnav_item( bboss_get_messages_slug(), $secondary_nav_item->slug, 'members' );
 		} elseif ( 'compose' === $secondary_nav_item->slug ) {
 			$bp->members->nav->edit_nav(
 				array(
-					'user_has_access' => bp_is_my_profile(),
+					'user_has_access' => bboss_is_my_profile(),
 				),
 				$secondary_nav_item->slug,
-				bp_get_messages_slug()
+				bboss_get_messages_slug()
 			);
 		}
 	}
@@ -265,12 +266,12 @@ function bp_nouveau_messages_adjust_nav() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
+function bboss_nouveau_messages_adjust_admin_nav( $admin_nav ) {
 	if ( empty( $admin_nav ) ) {
 		return $admin_nav;
 	}
 
-	$user_messages_link = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
+	$user_messages_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() );
 
 	foreach ( $admin_nav as $nav_iterator => $nav ) {
 		$nav_id = str_replace( 'my-account-messages-', '', $nav['id'] );
@@ -281,7 +282,7 @@ function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
 					array(
 						'page' => 'bp-notices',
 					),
-					bp_get_admin_url( 'admin.php' )
+					bboss_get_admin_url( 'admin.php' )
 				)
 			);
 		}
@@ -295,17 +296,17 @@ function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_add_notice_notification_for_user( $notifications, $user_id ) {
-	if ( ! bp_is_active( 'messages' ) || ! doing_action( 'admin_bar_menu' ) ) {
+function bboss_nouveau_add_notice_notification_for_user( $notifications, $user_id ) {
+	if ( ! bboss_is_active( 'messages' ) || ! doing_action( 'admin_bar_menu' ) ) {
 		return $notifications;
 	}
 
-	$notice = BP_Messages_Notice::get_active();
+	$notice = BBoss_Messages_Notice::get_active();
 	if ( empty( $notice->id ) ) {
 		return $notifications;
 	}
 
-	$closed_notices = bp_get_user_meta( $user_id, 'closed_notices', true );
+	$closed_notices = bboss_get_user_meta( $user_id, 'closed_notices', true );
 	if ( empty( $closed_notices ) ) {
 		$closed_notices = array();
 	}
@@ -332,24 +333,24 @@ function bp_nouveau_add_notice_notification_for_user( $notifications, $user_id )
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_format_notice_notification_for_user( $array ) {
+function bboss_nouveau_format_notice_notification_for_user( $array ) {
 	if ( ! empty( $array['text'] ) || ! doing_action( 'admin_bar_menu' ) ) {
 		return $array;
 	}
 
 	return array(
-		'text' => __( 'New sitewide notice', 'buddyboss' ),
-		'link' => bp_loggedin_user_domain(),
+		'text' => __( 'New sitewide notice', 'buddyboss-platform' ),
+		'link' => bboss_loggedin_user_domain(),
 	);
 }
 
 /**
- * Unregister BP_Messages_Sitewide_Notices_Widget.
+ * Unregister BBoss_Messages_Sitewide_Notices_Widget.
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_unregister_notices_widget() {
-	unregister_widget( 'BP_Messages_Sitewide_Notices_Widget' );
+function bboss_nouveau_unregister_notices_widget() {
+	unregister_widget( 'BBoss_Messages_Sitewide_Notices_Widget' );
 }
 
 /**
@@ -357,27 +358,27 @@ function bp_nouveau_unregister_notices_widget() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_push_sitewide_notices() {
+function bboss_nouveau_push_sitewide_notices() {
 	// Do not show notices if user is not logged in.
 	if ( ! is_user_logged_in() ) {
 		return;
 	}
 
-	$notice = BP_Messages_Notice::get_active();
+	$notice = BBoss_Messages_Notice::get_active();
 	if ( empty( $notice ) ) {
 		return;
 	}
 
-	$user_id = bp_loggedin_user_id();
+	$user_id = bboss_loggedin_user_id();
 
-	$closed_notices = bp_get_user_meta( $user_id, 'closed_notices', true );
+	$closed_notices = bboss_get_user_meta( $user_id, 'closed_notices', true );
 	if ( empty( $closed_notices ) ) {
 		$closed_notices = array();
 	}
 
 	if ( $notice->id && is_array( $closed_notices ) && ! in_array( $notice->id, $closed_notices ) ) {
 		// Inject the notice into the template_message if no other message has priority.
-		$bp = buddypress();
+		$bp = bboss();
 
 		/**
 		 * The "bp-message" cookie takes precedence over notices because it needs to be immediately displayed
@@ -405,7 +406,7 @@ function bp_nouveau_push_sitewide_notices() {
  *
  * @return array          The filtered WP Editor buttons list.
  */
-function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
+function bboss_nouveau_invites_mce_buttons( $buttons = array() ) {
 	$remove_buttons = array(
 		'wp_more',
 		'spellchecker',
@@ -434,7 +435,7 @@ function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
  * @param array                                              $buttons The WP Editor buttons list.
  * @param array          The filtered WP Editor buttons list.
  */
-function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
+function bboss_nouveau_messages_mce_buttons( $buttons = array() ) {
 	$remove_buttons = array(
 		'wp_more',
 		'spellchecker',
@@ -460,7 +461,7 @@ function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
+function bboss_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
 	// We only apply the mentions init to the visual post editor in the WP dashboard.
 	if ( 'message_content' === $editor_id ) {
 		$settings['init_instance_callback'] = 'window.bp.Nouveau.Messages.tinyMCEinit';
@@ -474,8 +475,8 @@ function bp_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_message_date( $date, $date_format = '' ) {
-	$now  = bp_core_current_time( true, 'timestamp' );
+function bboss_nouveau_get_message_date( $date, $date_format = '' ) {
+	$now  = bboss_core_current_time( true, 'timestamp' );
 	$date = strtotime( $date );
 
 	$now_date  = getdate( $now );
@@ -484,7 +485,7 @@ function bp_nouveau_get_message_date( $date, $date_format = '' ) {
 	// $date_format = 'Y/m/d';
 
 	// Use Timezone string if set.
-	$timezone_string = bp_get_option( 'timezone_string' );
+	$timezone_string = bboss_get_option( 'timezone_string' );
 	if ( ! empty( $timezone_string ) ) {
 		$timezone_object = timezone_open( $timezone_string );
 		$datetime_object = date_create( "@{$date}" );
@@ -492,12 +493,12 @@ function bp_nouveau_get_message_date( $date, $date_format = '' ) {
 		if ( false !== $timezone_object && false !== $datetime_object ) {
 			$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
 		} else {
-			$timezone_offset = bp_get_option( 'gmt_offset' );
+			$timezone_offset = bboss_get_option( 'gmt_offset' );
 		}
 
 		// Fall back on less reliable gmt_offset
 	} else {
-		$timezone_offset = bp_get_option( 'gmt_offset' );
+		$timezone_offset = bboss_get_option( 'gmt_offset' );
 	}
 
 	// Calculate time based on the offset
@@ -533,9 +534,9 @@ function bp_nouveau_get_message_date( $date, $date_format = '' ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_messages_get_bulk_actions() {
+function bboss_nouveau_messages_get_bulk_actions() {
 	ob_start();
-	bp_messages_bulk_management_dropdown();
+	bboss_messages_bulk_management_dropdown();
 
 	$bulk_actions = array();
 	$bulk_options = ob_get_clean();
@@ -565,16 +566,16 @@ function bp_nouveau_messages_get_bulk_actions() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_messages_notification_filters() {
+function bboss_nouveau_messages_notification_filters() {
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		return;
 	}
 
-	bp_nouveau_notifications_register_filter(
+	bboss_nouveau_notifications_register_filter(
 		array(
 			'id'       => 'new_message',
-			'label'    => __( 'New private messages', 'buddyboss' ),
+			'label'    => __( 'New private messages', 'buddyboss-platform' ),
 			'position' => 115,
 		)
 	);
@@ -589,7 +590,7 @@ function bp_nouveau_messages_notification_filters() {
  * @param array $hooks The list of hooks to fire.
  * @return array       An associative containing the caught content.
  */
-function bp_nouveau_messages_catch_hook_content( $hooks = array() ) {
+function bboss_nouveau_messages_catch_hook_content( $hooks = array() ) {
 	$content = array();
 
 	ob_start();
@@ -602,7 +603,7 @@ function bp_nouveau_messages_catch_hook_content( $hooks = array() ) {
 		do_action( $hook );
 
 		// Catch the sanitized content.
-		$content[ $js_key ] = bp_strip_script_and_style_tags( ob_get_contents() );
+		$content[ $js_key ] = bboss_strip_script_and_style_tags( ob_get_contents() );
 
 		// Clean the buffer.
 		ob_clean();

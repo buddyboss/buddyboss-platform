@@ -25,20 +25,20 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_groups_register_access_control_fields() {
+function bboss_groups_register_access_control_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Member Access Controls.
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'access_controls',
 		'member_access_controls',
 		array(
-			'title'      => __( 'Member Access Controls', 'buddyboss' ),
+			'title'      => __( 'Member Access Controls', 'buddyboss-platform' ),
 			'order'      => 10,
 			'help_url'   => '638206',
-			'pro_notice' => bb_admin_settings_get_pro_notice(
+			'pro_notice' => bboss_admin_settings_get_pro_notice(
 				array(
 					'type'    => 'access_controls',
 					'context' => 'section',
@@ -48,41 +48,41 @@ function bb_groups_register_access_control_fields() {
 	);
 
 	// FIELD: Create Groups access control.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'access_controls',
 		'member_access_controls',
 		array(
 			'name'              => 'bb-access-control-create-groups',
-			'label'             => __( 'Create Groups', 'buddyboss' ),
+			'label'             => __( 'Create Groups', 'buddyboss-platform' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can create groups based on:', 'buddyboss' ),
+			'description'       => __( 'Select which members can create groups based on:', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 10,
-			'sanitize_callback' => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bb_sanitize_access_control_fallback',
+			'sanitize_callback' => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bboss_sanitize_access_control_fallback',
 		)
 	);
 
 	// FIELD: Join Groups access control.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'access_controls',
 		'member_access_controls',
 		array(
 			'name'              => 'bb-access-control-join-groups',
-			'label'             => __( 'Join Groups', 'buddyboss' ),
+			'label'             => __( 'Join Groups', 'buddyboss-platform' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can join public groups or request to join private groups based on:', 'buddyboss' ),
+			'description'       => __( 'Select which members can join public groups or request to join private groups based on:', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 20,
-			'sanitize_callback' => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bb_sanitize_access_control_fallback',
+			'sanitize_callback' => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bboss_sanitize_access_control_fallback',
 		)
 	);
 
 	// FIELD: Admin notice (displayed once at the end of the section).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'access_controls',
 		'member_access_controls',
@@ -90,7 +90,7 @@ function bb_groups_register_access_control_fields() {
 			'name'        => 'bb-groups-access-control-notice',
 			'label'       => '',
 			'type'        => 'notice',
-			'description' => __( 'These settings do not apply to administrators.', 'buddyboss' ),
+			'description' => __( 'These settings do not apply to administrators.', 'buddyboss-platform' ),
 			'notice_type' => 'info',
 			'order'       => 100,
 		)

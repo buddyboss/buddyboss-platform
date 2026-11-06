@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! function_exists( 'bb_enable_group_subscriptions' ) ) {
+if ( ! function_exists( 'bboss_enable_group_subscriptions' ) ) {
 	/**
 	 * Is group subscription turned off?
 	 *
@@ -24,7 +24,7 @@ if ( ! function_exists( 'bb_enable_group_subscriptions' ) ) {
 	 *
 	 * @return bool True if group subscription is enabled, otherwise false.
 	 */
-	function bb_enable_group_subscriptions( $default = true ) {
+	function bboss_enable_group_subscriptions( $default = true ) {
 		// Only a call without the Add-ons module is a deprecated one.
 		if ( ! function_exists( 'bb_addons_group_subscription_init' ) ) {
 			_deprecated_function( __FUNCTION__, 'BuddyBoss 3.7.0', 'BuddyBoss Add-ons' );
@@ -37,6 +37,6 @@ if ( ! function_exists( 'bb_enable_group_subscriptions' ) ) {
 		 *
 		 * @param bool $value Whether group subscription is turned off.
 		 */
-		return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
+		return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bboss_get_option( 'bb_enable_group_subscriptions', $default ) );
 	}
 }

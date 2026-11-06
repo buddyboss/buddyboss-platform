@@ -8,13 +8,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 use TUTOR\Input;
 
 /**
- * BB_Tutor_Plugin_Compatibility Class
+ * BBoss_Tutor_Plugin_Compatibility Class
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
  * @since BuddyBoss 2.1.7
  */
-class BB_Tutor_Plugin_Compatibility {
+class BBoss_Tutor_Plugin_Compatibility {
 
 	/**
 	 * The single instance of the class.
@@ -26,7 +26,7 @@ class BB_Tutor_Plugin_Compatibility {
 	private static $instance = null;
 
 	/**
-	 * BB_Tutor_Plugin_Compatibility constructor.
+	 * BBoss_Tutor_Plugin_Compatibility constructor.
 	 */
 	public function __construct() {
 		$this->compatibility_init();
@@ -70,7 +70,7 @@ class BB_Tutor_Plugin_Compatibility {
 		$page_now = $GLOBALS['pagenow'];
 
 		if ( 'tutor_login' === $page_now ) {
-			remove_action( 'login_form', 'bb_recaptcha_login', 99 );
+			remove_action( 'login_form', 'bboss_recaptcha_login', 99 );
 		}
 	}
 
@@ -89,7 +89,7 @@ class BB_Tutor_Plugin_Compatibility {
 	 */
 	public function bb_remove_tutor_login_authentication( $user ) {
 		if ( Input::has( 'tutor_action' ) ) {
-			remove_filter( 'authenticate', 'bb_recaptcha_validate_login', 99999, 1 );
+			remove_filter( 'authenticate', 'bboss_recaptcha_validate_login', 99999, 1 );
 		}
 
 		return $user;
@@ -97,4 +97,4 @@ class BB_Tutor_Plugin_Compatibility {
 
 }
 
-BB_Tutor_Plugin_Compatibility::instance();
+BBoss_Tutor_Plugin_Compatibility::instance();

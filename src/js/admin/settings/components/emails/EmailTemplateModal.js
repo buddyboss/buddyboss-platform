@@ -202,12 +202,12 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 					setRegisteredValues( editValues );
 					setCustomMeta( response.data.custom_meta || [] );
 				} else {
-					setError( ( response.data && response.data.message ) || __( 'Failed to load template.', 'buddyboss' ) );
+					setError( ( response.data && response.data.message ) || __( 'Failed to load template.', 'buddyboss-platform' ) );
 				}
 			} ).catch( function () {
 				if ( isMountedRef.current ) {
 					setIsLoading( false );
-					setError( __( 'An error occurred loading the template.', 'buddyboss' ) );
+					setError( __( 'An error occurred loading the template.', 'buddyboss-platform' ) );
 				}
 			} );
 
@@ -328,14 +328,14 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 					onSaved( response.data );
 				}
 			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to save template.', 'buddyboss' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to save template.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
 			setIsSaving( false );
-			setError( __( 'An error occurred. Please try again.', 'buddyboss' ) );
+			setError( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
 		} );
 	};
 
@@ -364,8 +364,8 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 	};
 
 	var modalTitle = emailId
-		? __( 'Edit Email Template', 'buddyboss' )
-		: __( 'Add New Email', 'buddyboss' );
+		? __( 'Edit Email Template', 'buddyboss-platform' )
+		: __( 'Add New Email', 'buddyboss-platform' );
 
 	return (
 		<Modal
@@ -425,7 +425,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 						{/* Custom Fields repeater — between details and publish per Figma */}
 						<div className="bb-email-template-modal__field bb-email-template-modal__custom-fields">
 							<label className="bb-email-template-modal__field-label">
-								{ __( 'Custom Fields', 'buddyboss' ) }
+								{ __( 'Custom Fields', 'buddyboss-platform' ) }
 							</label>
 							<div className="bb-email-template-modal__custom-fields-list">
 								{ customMeta.map( function ( meta, index ) {
@@ -433,7 +433,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 										<div key={ index } className="bb-email-template-modal__custom-field-row">
 											<div className={ 'bb-email-template-modal__meta-key-autocomplete' + ( openDropdown === index ? ' is-open' : '' ) }>
 												<TextControl
-													label={ __( 'Name', 'buddyboss' ) }
+													label={ __( 'Name', 'buddyboss-platform' ) }
 													value={ meta.key }
 													onChange={ function ( val ) {
 														handleUpdateCustomField( index, 'key', val );
@@ -444,7 +444,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 													onFocus={ function () {
 														setOpenDropdown( index );
 													} }
-													placeholder={ __( 'Select or type name', 'buddyboss' ) }
+													placeholder={ __( 'Select or type name', 'buddyboss-platform' ) }
 													autoComplete="off"
 													__nextHasNoMarginBottom
 												/>
@@ -462,7 +462,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 															<div className="bb-email-template-modal__meta-key-search">
 																<input
 																	type="text"
-																	placeholder={ __( 'Search', 'buddyboss' ) }
+																	placeholder={ __( 'Search', 'buddyboss-platform' ) }
 																	onMouseDown={ function ( e ) {
 																		e.stopPropagation();
 																	} }
@@ -502,7 +502,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 																	);
 																} ) : (
 																	<div className="bb-email-template-modal__meta-key-empty">
-																		{ __( 'No suggestions found.', 'buddyboss' ) }
+																		{ __( 'No suggestions found.', 'buddyboss-platform' ) }
 																	</div>
 																) }
 															</div>
@@ -511,12 +511,12 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 												) }
 											</div>
 											<TextControl
-												label={ __( 'Value', 'buddyboss' ) }
+												label={ __( 'Value', 'buddyboss-platform' ) }
 												value={ meta.value }
 												onChange={ function ( val ) {
 													handleUpdateCustomField( index, 'value', val );
 												} }
-												placeholder={ __( 'Enter value', 'buddyboss' ) }
+												placeholder={ __( 'Enter value', 'buddyboss-platform' ) }
 												__nextHasNoMarginBottom
 											/>
 											<Button
@@ -536,17 +536,17 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 									variant="tertiary"
 								>
 									<i className="bb-icons-rl-plus"></i>
-									{ __( 'Add Custom Field', 'buddyboss' ) }
+									{ __( 'Add Custom Field', 'buddyboss-platform' ) }
 								</Button>
 								<p className="bb-email-template-modal__field-help">
-									{ __( 'Custom fields can be used to add extra metadata to a post that you can', 'buddyboss' ) }
+									{ __( 'Custom fields can be used to add extra metadata to a post that you can', 'buddyboss-platform' ) }
 									{ ' ' }
 									<a
 										href="https://wordpress.org/documentation/article/assign-custom-fields/"
 										target="_blank"
 										rel="noopener noreferrer"
 									>
-										{ __( 'use in your theme', 'buddyboss' ) }
+										{ __( 'use in your theme', 'buddyboss-platform' ) }
 									</a>
 									{ '.' }
 								</p>
@@ -557,7 +557,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 						{ ! situations && (
 							<div className="bb-email-template-modal__field bb-email-template-modal__situation">
 								<label className="bb-email-template-modal__field-label">
-									{ __( 'Situation', 'buddyboss' ) }
+									{ __( 'Situation', 'buddyboss-platform' ) }
 								</label>
 								<div className="bb-email-template-modal__situation-loading">
 									<Spinner />
@@ -567,7 +567,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 						{ situations && Object.keys( situations ).length > 0 && (
 							<div className="bb-email-template-modal__field bb-email-template-modal__situation">
 								<label className="bb-email-template-modal__field-label">
-									{ __( 'Situation', 'buddyboss' ) }
+									{ __( 'Situation', 'buddyboss-platform' ) }
 								</label>
 								<TabPanel
 									className="bb-email-template-modal__situation-tabs"
@@ -600,7 +600,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 												} ) }
 												{ 0 === catTerms.length && (
 													<p className="bb-email-template-modal__situation-empty">
-														{ __( 'No situations in this category.', 'buddyboss' ) }
+														{ __( 'No situations in this category.', 'buddyboss-platform' ) }
 													</p>
 												) }
 											</div>
@@ -608,7 +608,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 									} }
 								</TabPanel>
 								<p className="bb-email-template-modal__field-help">
-									{ __( 'Choose when this email will be sent.', 'buddyboss' ) }
+									{ __( 'Choose when this email will be sent.', 'buddyboss-platform' ) }
 								</p>
 							</div>
 						) }
@@ -664,7 +664,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 					onClick={ handleClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -672,7 +672,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 					isBusy={ isSaving }
 					disabled={ isSaving || isLoading }
 				>
-					{ isSaving ? __( 'Saving...', 'buddyboss' ) : __( 'Save', 'buddyboss' ) }
+					{ isSaving ? __( 'Saving...', 'buddyboss-platform' ) : __( 'Save', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

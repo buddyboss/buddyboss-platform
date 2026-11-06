@@ -9,6 +9,9 @@
  * @package BuddyBoss\MemberpressLMS
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use memberpress\quizzes\models as models;
 
 ?>
@@ -47,15 +50,15 @@ use memberpress\quizzes\models as models;
 					<?php if ( $has_completed_lesson ) : ?>
 						<span class="mpcs-button is-outline"
 							href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>">
-							<?php esc_html_e( 'View', 'buddyboss' ); ?>
+							<?php esc_html_e( 'View', 'buddyboss-platform' ); ?>
 						</span>
 					<?php elseif ( $lesson_available ) : ?>
 						<span class="mpcs-button is-purple"
 							href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>">
 							<?php if ( $attempt instanceof models\Attempt && $attempt->is_draft() ) : ?>
-								<?php esc_html_e( 'Continue', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Continue', 'buddyboss-platform' ); ?>
 							<?php else : ?>
-								<?php esc_html_e( 'Start', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Start', 'buddyboss-platform' ); ?>
 							<?php endif; ?>
 						</span>
 					<?php endif; ?>
@@ -65,6 +68,6 @@ use memberpress\quizzes\models as models;
 	</a>
 <?php else : ?>
 	</span>
-	<span class="mpcs-lesson-locked-tooltip"><?php esc_html_e( 'Lesson unavailable. You must complete all previous lessons and quizzes before you start this lesson.', 'buddyboss' ); ?></span>
+	<span class="mpcs-lesson-locked-tooltip"><?php esc_html_e( 'Lesson unavailable. You must complete all previous lessons and quizzes before you start this lesson.', 'buddyboss-platform' ); ?></span>
 <?php endif; ?>
 </div>

@@ -14,7 +14,7 @@
  * There are a few common places that additional actions can currently be found
  *
  *  - Forums: In {@link bbPress::setup_actions()} in bbpress.php
- *  - Admin: More in {@link BBP_Admin::setup_actions()} in admin.php
+ *  - Admin: More in {@link BBoss_BBP_Admin::setup_actions()} in admin.php
  *
  * @see bbp-core-actions.php
  * @see bbp-core-filters.php
@@ -39,50 +39,50 @@ defined( 'ABSPATH' ) || exit;
  *
  *           v--WordPress Actions       v--Forums Sub-actions
  */
-add_action( 'admin_menu', 'bbp_admin_menu' );
-add_action( 'admin_init', 'bbp_admin_init' );
-add_action( 'admin_head', 'bbp_admin_head' );
-add_action( 'admin_notices', 'bbp_admin_notices' );
-add_action( 'custom_menu_order', 'bbp_admin_custom_menu_order' );
-add_action( 'menu_order', 'bbp_admin_menu_order' );
-add_action( 'wpmu_new_blog', 'bbp_new_site', 10, 6 );
+add_action( 'admin_menu', 'bboss_bbp_admin_menu' );
+add_action( 'admin_init', 'bboss_bbp_admin_init' );
+add_action( 'admin_head', 'bboss_bbp_admin_head' );
+add_action( 'admin_notices', 'bboss_bbp_admin_notices' );
+add_action( 'custom_menu_order', 'bboss_bbp_admin_custom_menu_order' );
+add_action( 'menu_order', 'bboss_bbp_admin_menu_order' );
+add_action( 'wpmu_new_blog', 'bboss_bbp_new_site', 10, 6 );
 
 // Hook on to admin_init
-add_action( 'bbp_admin_init', 'bbp_setup_updater', 999 );
-add_action( 'bbp_admin_init', 'bbp_register_importers' );
-add_action( 'bbp_admin_init', 'bbp_register_admin_scripts' );
-add_action( 'bbp_admin_init', 'bbp_register_admin_style' );
-add_action( 'bbp_admin_init', 'bbp_register_admin_settings' );
+add_action( 'bbp_admin_init', 'bboss_bbp_setup_updater', 999 );
+add_action( 'bbp_admin_init', 'bboss_bbp_register_importers' );
+add_action( 'bbp_admin_init', 'bboss_bbp_register_admin_scripts' );
+add_action( 'bbp_admin_init', 'bboss_bbp_register_admin_style' );
+add_action( 'bbp_admin_init', 'bboss_bbp_register_admin_settings' );
 
 // Initialize the admin area
-add_action( 'bbp_init', 'bbp_admin' );
+add_action( 'bbp_init', 'bboss_bbp_admin' );
 
 // Reset the menu order
-add_action( 'bbp_admin_menu', 'bbp_admin_separator' );
+add_action( 'bbp_admin_menu', 'bboss_bbp_admin_separator' );
 
 // Activation
-add_action( 'bbp_activation', 'bbp_delete_rewrite_rules' );
-add_action( 'bbp_activation', 'bbp_make_current_user_keymaster' );
+add_action( 'bbp_activation', 'bboss_bbp_delete_rewrite_rules' );
+add_action( 'bbp_activation', 'bboss_bbp_make_current_user_keymaster' );
 
 // Deactivation
-add_action( 'bbp_deactivation', 'bbp_remove_caps' );
-add_action( 'bbp_deactivation', 'bbp_remove_roles' );
-add_action( 'bbp_deactivation', 'bbp_delete_rewrite_rules' );
+add_action( 'bbp_deactivation', 'bboss_bbp_remove_caps' );
+add_action( 'bbp_deactivation', 'bboss_bbp_remove_roles' );
+add_action( 'bbp_deactivation', 'bboss_bbp_delete_rewrite_rules' );
 
 // New Site
-add_action( 'bbp_new_site', 'bbp_create_initial_content', 8 );
+add_action( 'bbp_new_site', 'bboss_bbp_create_initial_content', 8 );
 
 // Handle submission of Tools pages.
 // `load-tools_page_bbp-repair` retired in BuddyBoss 3.1.0 — the Repair
 // Forums page moved into the Settings 2.0 Tools tab and the React UI
 // dispatches each item via wp_ajax_bp_admin_forum_repair_tools_wrapper_function.
-add_action( 'load-tools_page_bbp-reset', 'bbp_admin_reset_handler' );
+add_action( 'load-tools_page_bbp-reset', 'bboss_bbp_admin_reset_handler' );
 
 // Add sample permalink filter
-add_filter( 'post_type_link', 'bbp_filter_sample_permalink', 10, 4 );
+add_filter( 'post_type_link', 'bboss_bbp_filter_sample_permalink', 10, 4 );
 
 // Add quick stats to dashboard glance elements.
-add_filter( 'dashboard_glance_items', 'bbp_filter_dashboard_glance_items', -99 );
+add_filter( 'dashboard_glance_items', 'bboss_bbp_filter_dashboard_glance_items', -99 );
 
 /**
  * When a new site is created in a multisite installation, run the activation
@@ -97,10 +97,10 @@ add_filter( 'dashboard_glance_items', 'bbp_filter_dashboard_glance_items', -99 )
  * @param int     $site_id
  * @param array() $meta
  */
-function bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+function bboss_bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
 
 	// Bail if plugin is not network activated
-	if ( ! is_plugin_active_for_network( bbpress()->basename ) ) {
+	if ( ! is_plugin_active_for_network( bboss_forums()->basename ) ) {
 		return;
 	}
 
@@ -125,14 +125,14 @@ function bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
  * @param bool   $sample Optional, defaults to false. Is it a sample permalink.
  *
  * @uses is_admin() To make sure we're on an admin page
- * @uses bbp_is_custom_post_type() To get the forum post type
+ * @uses bboss_bbp_is_custom_post_type() To get the forum post type
  *
  * @return string The custom post type permalink
  */
-function bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $sample = false ) {
+function bboss_bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $sample = false ) {
 
 	// Bail if not on an admin page and not getting a sample permalink
-	if ( ! empty( $sample ) && is_admin() && bbp_is_custom_post_type() ) {
+	if ( ! empty( $sample ) && is_admin() && bboss_bbp_is_custom_post_type() ) {
 		return urldecode( $post_link );
 	}
 
@@ -148,7 +148,7 @@ function bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $s
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_init'
  */
-function bbp_admin_init() {
+function bboss_bbp_admin_init() {
 	do_action( 'bbp_admin_init' );
 }
 
@@ -158,7 +158,7 @@ function bbp_admin_init() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_menu'
  */
-function bbp_admin_menu() {
+function bboss_bbp_admin_menu() {
 	do_action( 'bbp_admin_menu' );
 }
 
@@ -168,7 +168,7 @@ function bbp_admin_menu() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_head'
  */
-function bbp_admin_head() {
+function bboss_bbp_admin_head() {
 	do_action( 'bbp_admin_head' );
 }
 
@@ -178,7 +178,7 @@ function bbp_admin_head() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_notices'
  */
-function bbp_admin_notices() {
+function bboss_bbp_admin_notices() {
 	do_action( 'bbp_admin_notices' );
 }
 
@@ -188,7 +188,7 @@ function bbp_admin_notices() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_notices'
  */
-function bbp_register_importers() {
+function bboss_bbp_register_importers() {
 	do_action( 'bbp_register_importers' );
 }
 
@@ -198,7 +198,7 @@ function bbp_register_importers() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_notices'
  */
-function bbp_register_admin_style() {
+function bboss_bbp_register_admin_style() {
 	do_action( 'bbp_register_admin_style' );
 }
 
@@ -207,7 +207,7 @@ function bbp_register_admin_style() {
  *
  * @since 2.6.0 bbPress (r6912)
  */
-function bbp_register_admin_scripts() {
+function bboss_bbp_register_admin_scripts() {
 	do_action( 'bbp_register_admin_scripts' );
 }
 
@@ -217,6 +217,6 @@ function bbp_register_admin_scripts() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_register_admin_settings'
  */
-function bbp_register_admin_settings() {
+function bboss_bbp_register_admin_settings() {
 	do_action( 'bbp_register_admin_settings' );
 }

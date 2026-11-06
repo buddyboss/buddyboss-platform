@@ -136,13 +136,13 @@ export function UpgradeModal( { feature, onClose } ) {
 
 	var tierLabel;
 	if ( 'plus' === feature.upgrade_tier ) {
-		tierLabel = __( 'UPGRADE SCALE', 'buddyboss' );
+		tierLabel = __( 'UPGRADE SCALE', 'buddyboss-platform' );
 	} else if ( 'start' === feature.upgrade_tier ) {
 		// Features that moved into the BuddyBoss Addons plugin upsell to the
 		// add-on plan rather than Pro.
-		tierLabel = __( 'UPGRADE START', 'buddyboss' );
+		tierLabel = __( 'UPGRADE START', 'buddyboss-platform' );
 	} else {
-		tierLabel = __( 'UPGRADE LAUNCH', 'buddyboss' );
+		tierLabel = __( 'UPGRADE LAUNCH', 'buddyboss-platform' );
 	}
 
 	// PHP wraps upgrade_description with wp_kses_post so marketing can use
@@ -153,6 +153,11 @@ export function UpgradeModal( { feature, onClose } ) {
 	// without this double-sanitisation layer.
 	var bodyText = feature.upgrade_description || feature.description || '';
 	var media    = resolveUpgradeMedia( feature );
+
+	// A build without pricing links sends no `bbAdminData.pricingUrls`; the
+	// call-to-action link is then shown only when the feature has its own URL.
+	const pricingUrls     = ( window.bbAdminData && window.bbAdminData.pricingUrls ) || {};
+	const showUpgradeLink = !! ( feature.upgrade_url || pricingUrls.default );
 
 	return (
 		<Modal
@@ -176,15 +181,17 @@ export function UpgradeModal( { feature, onClose } ) {
 						dangerouslySetInnerHTML={ { __html: sanitizeHtml( bodyText ) } }
 					/>
 
-					<a
-						href={ safeUrl( feature.upgrade_url ) || 'https://www.buddyboss.com/pricing/' }
-						target="_blank"
-						rel="noopener noreferrer"
-						className={`bb-upgrade-modal__cta bb-upgrade-modal__cta--${feature.upgrade_tier || 'plus'}`}
-					>
-						<i className="bb-icons-rl bb-icons-rl-crown-simple"></i>
-						{tierLabel}
-					</a>
+					{ showUpgradeLink && (
+						<a
+							href={ safeUrl( feature.upgrade_url ) }
+							target="_blank"
+							rel="noopener noreferrer"
+							className={`bb-upgrade-modal__cta bb-upgrade-modal__cta--${feature.upgrade_tier || 'plus'}`}
+						>
+							<i className="bb-icons-rl bb-icons-rl-crown-simple"></i>
+							{tierLabel}
+						</a>
+					) }
 				</div>
 			</div>
 		</Modal>

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Groups_Group_Members_Template {
+class BBoss_Groups_Group_Members_Template {
 
 	/**
 	 * @since BuddyPress 1.0.0
@@ -99,7 +99,8 @@ class BP_Groups_Group_Members_Template {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-			_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			/* translators: 1: method name, 2: file path. */
+			_deprecated_argument( __METHOD__, '2.0.0', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'group_id',
@@ -111,13 +112,13 @@ class BP_Groups_Group_Members_Template {
 				6 => 'group_role',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
-				'group_id'            => bp_get_current_group_id(),
+				'group_id'            => bboss_get_current_group_id(),
 				'page'                => 1,
 				'per_page'            => 20,
 				'page_arg'            => 'mlpage',
@@ -133,22 +134,22 @@ class BP_Groups_Group_Members_Template {
 		);
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 
 		/**
 		 * Check the current group is the same as the supplied group ID.
-		 * It can differ when using {@link bp_group_has_members()} outside the Groups screens.
+		 * It can differ when using {@link bboss_group_has_members()} outside the Groups screens.
 		 */
-		$current_group = groups_get_current_group();
-		if ( empty( $current_group ) || ( $current_group && $current_group->id !== bp_get_current_group_id() ) ) {
-			$current_group = groups_get_group( $r['group_id'] );
+		$current_group = bboss_groups_get_current_group();
+		if ( empty( $current_group ) || ( $current_group && $current_group->id !== bboss_get_current_group_id() ) ) {
+			$current_group = bboss_groups_get_group( $r['group_id'] );
 		}
 
 		// Assemble the base URL for pagination.
-		$base_url = trailingslashit( bp_get_group_permalink( $current_group ) . bp_current_action() );
-		if ( bp_action_variable() ) {
-			$base_url = trailingslashit( $base_url . bp_action_variable() );
+		$base_url = trailingslashit( bboss_get_group_permalink( $current_group ) . bboss_current_action() );
+		if ( bboss_action_variable() ) {
+			$base_url = trailingslashit( $base_url . bboss_action_variable() );
 		}
 
 		$members_args = $r;
@@ -157,7 +158,7 @@ class BP_Groups_Group_Members_Template {
 		$members_args['per_page'] = $this->pag_num;
 
 		// Get group members for this loop.
-		$this->members = groups_get_group_members( $members_args );
+		$this->members = bboss_groups_get_group_members( $members_args );
 
 		if ( empty( $r['max'] ) || ( $r['max'] >= (int) $this->members['count'] ) ) {
 			$this->total_member_count = (int) $this->members['count'];
@@ -249,7 +250,7 @@ class BP_Groups_Group_Members_Template {
 			 * @since BuddyPress 2.3.0 `$this` parameter added.
 			 * @since BuddyPress 2.7.0 Action renamed from `loop_end`.
 			 *
-			 * @param BP_Groups_Group_Members_Template $this Instance of the current Members template.
+			 * @param BBoss_Groups_Group_Members_Template $this Instance of the current Members template.
 			 */
 			do_action( 'group_members_loop_end', $this );
 
@@ -280,7 +281,7 @@ class BP_Groups_Group_Members_Template {
 			 * @since BuddyPress 2.3.0 `$this` parameter added.
 			 * @since BuddyPress 2.7.0 Action renamed from `loop_start`.
 			 *
-			 * @param BP_Groups_Group_Members_Template $this Instance of the current Members template.
+			 * @param BBoss_Groups_Group_Members_Template $this Instance of the current Members template.
 			 */
 			do_action( 'group_members_loop_start', $this );
 		}

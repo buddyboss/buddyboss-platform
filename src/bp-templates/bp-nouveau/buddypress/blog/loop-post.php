@@ -15,27 +15,27 @@ defined( 'ABSPATH' ) || exit;
 
 $bb_blog_card_context = get_query_var( 'bb_blog_card_context' );
 $bb_blog_card_context = in_array( $bb_blog_card_context, array( 'member-posts', 'bookmarks' ), true ) ? $bb_blog_card_context : 'member-posts';
-$bb_blog_is_owner     = bp_is_my_profile() || current_user_can( 'edit_others_posts' );
+$bb_blog_is_owner     = bboss_is_my_profile() || current_user_can( 'edit_others_posts' );
 
 $bb_blog_post_id     = get_the_ID();
 $bb_blog_status      = get_post_status();
 $bb_blog_categories  = get_the_category();
 $bb_blog_author_id   = (int) get_the_author_meta( 'ID' );
-$bb_blog_author_url  = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $bb_blog_author_id ) : get_author_posts_url( $bb_blog_author_id );
-$bb_blog_author_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $bb_blog_author_id ) : get_the_author();
+$bb_blog_author_url  = function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $bb_blog_author_id ) : get_author_posts_url( $bb_blog_author_id );
+$bb_blog_author_name = function_exists( 'bboss_core_get_user_displayname' ) ? bboss_core_get_user_displayname( $bb_blog_author_id ) : get_the_author();
 
 $bb_blog_show_status = 'member-posts' === $bb_blog_card_context && $bb_blog_is_owner;
 $bb_blog_show_menu   = 'member-posts' === $bb_blog_card_context;
 
 $bb_blog_status_labels = array(
-	'publish' => __( 'Published', 'buddyboss' ),
-	'pending' => __( 'In Review', 'buddyboss' ),
-	'draft'   => __( 'Draft', 'buddyboss' ),
-	'future'  => __( 'Scheduled', 'buddyboss' ),
+	'publish' => __( 'Published', 'buddyboss-platform' ),
+	'pending' => __( 'In Review', 'buddyboss-platform' ),
+	'draft'   => __( 'Draft', 'buddyboss-platform' ),
+	'future'  => __( 'Scheduled', 'buddyboss-platform' ),
 );
 
 if ( '' === trim( (string) $bb_blog_author_name ) ) {
-	$bb_blog_author_name = __( 'Unknown Member', 'buddyboss' );
+	$bb_blog_author_name = __( 'Unknown Member', 'buddyboss-platform' );
 }
 ?>
 <article class="bb-member-blog__item" id="post-<?php the_ID(); ?>">
@@ -59,7 +59,7 @@ if ( '' === trim( (string) $bb_blog_author_name ) ) {
 				<h3 class="bb-member-blog__title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 				<?php if ( $bb_blog_show_menu ) : ?>
 					<div class="bb-member-blog__menu bb_more_options">
-						<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
+						<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>">
 							<i class="bb-icon-f bb-icon-ellipsis-h" aria-hidden="true"></i>
 						</a>
 						<ul class="bb_more_options_list">
@@ -67,7 +67,7 @@ if ( '' === trim( (string) $bb_blog_author_name ) ) {
 							/** This filter is documented in bp-templates/bp-nouveau/readylaunch/blog/loop-post.php */
 							if ( apply_filters( 'bb_blog_card_show_view_post_menu_item', true, get_the_ID() ) ) :
 								?>
-								<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></li>
+								<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss-platform' ); ?></a></li>
 								<?php
 							endif;
 							/** This action is documented in bp-templates/bp-nouveau/readylaunch/blog/loop-post.php */
@@ -81,11 +81,11 @@ if ( '' === trim( (string) $bb_blog_author_name ) ) {
 		</div>
 		<div class="bb-member-blog__footer">
 			<div class="bb-member-blog__author">
-				<?php $bb_blog_hp_attr = bb_get_hover_card_profile_attr( $bb_blog_author_id ); ?>
+				<?php $bb_blog_hp_attr = bboss_get_hover_card_profile_attr( $bb_blog_author_id ); ?>
 				<a class="bb-member-blog__avatar" href="<?php echo esc_url( $bb_blog_author_url ); ?>"<?php echo $bb_blog_hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped via esc_attr() in bb_get_hover_card_profile_attr(). ?>>
 					<?php
-					if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-						echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
+					if ( function_exists( 'bboss_core_fetch_avatar' ) ) {
+						echo bboss_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
 							array(
 								'item_id' => $bb_blog_author_id,
 								'type'    => 'thumb',

@@ -17,12 +17,12 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 #[\AllowDynamicProperties]
-class BP_Activity_Component extends BP_Component {
+class BBoss_Activity_Component extends BBoss_Component {
 
 	/**
 	 * The acceptable visibility levels for activity.
 	 *
-	 * @see bp_activity_get_visibility_levels()
+	 * @see bboss_activity_get_visibility_levels()
 	 *
 	 * @since BuddyBoss 1.2.3
 	 * @var array
@@ -38,7 +38,7 @@ class BP_Activity_Component extends BP_Component {
 		parent::start(
 			'activity',
 			'Activity Feeds',
-			buddypress()->plugin_dir,
+			bboss()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 25,
 				'search_query_arg'         => 'activity_search',
@@ -52,9 +52,9 @@ class BP_Activity_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::includes() for a description of arguments.
+	 * @see BBoss_Component::includes() for a description of arguments.
 	 *
-	 * @param array $includes See BP_Component::includes() for a description.
+	 * @param array $includes See BBoss_Component::includes() for a description.
 	 */
 	public function includes( $includes = array() ) {
 
@@ -69,20 +69,20 @@ class BP_Activity_Component extends BP_Component {
 		);
 
 		// Notifications support.
-		if ( bp_is_active( 'notifications' ) ) {
+		if ( bboss_is_active( 'notifications' ) ) {
 			$includes[] = 'notifications';
 		}
 
 		// Load Akismet support if Akismet is configured.
-		$akismet_key = bp_get_option( 'wordpress_api_key' );
+		$akismet_key = bboss_get_option( 'wordpress_api_key' );
 
 		/** This filter is documented in bp-activity/bp-activity-akismet.php */
-		if ( defined( 'AKISMET_VERSION' ) && class_exists( 'Akismet' ) && ( ! empty( $akismet_key ) || defined( 'WPCOM_API_KEY' ) ) && apply_filters( 'bp_activity_use_akismet', bp_is_akismet_active() ) ) {
+		if ( defined( 'AKISMET_VERSION' ) && class_exists( 'Akismet' ) && ( ! empty( $akismet_key ) || defined( 'WPCOM_API_KEY' ) ) && apply_filters( 'bp_activity_use_akismet', bboss_is_akismet_active() ) ) {
 			$includes[] = 'akismet';
 		}
 
 		// Embeds.
-		if ( bp_is_active( $this->id, 'embeds' ) ) {
+		if ( bboss_is_active( $this->id, 'embeds' ) ) {
 			$includes[] = 'embeds';
 		}
 
@@ -111,41 +111,41 @@ class BP_Activity_Component extends BP_Component {
 		 *
 		 * For PHPUnit, we load these files in tests/phpunit/includes/install.php.
 		 */
-		if ( bp_is_current_component( 'activity' ) ) {
+		if ( bboss_is_current_component( 'activity' ) ) {
 			// Authenticated actions - Only fires when JS is disabled.
 			if ( is_user_logged_in() &&
-				in_array( bp_current_action(), array( 'delete', 'spam', 'post', 'reply', 'favorite', 'unfavorite' ), true )
+				in_array( bboss_current_action(), array( 'delete', 'spam', 'post', 'reply', 'favorite', 'unfavorite' ), true )
 			) {
-				require $this->path . 'bp-activity/actions/' . bp_current_action() . '.php';
+				require $this->path . 'bp-activity/actions/' . bboss_current_action() . '.php';
 			}
 
 			// RSS feeds.
-			if ( bp_is_current_action( 'feed' ) || bp_is_action_variable( 'feed', 0 ) ) {
+			if ( bboss_is_current_action( 'feed' ) || bboss_is_action_variable( 'feed', 0 ) ) {
 				require $this->path . 'bp-activity/actions/feeds.php';
 			}
 
 			// Screens - Directory.
-			if ( bp_is_activity_directory() ) {
+			if ( bboss_is_activity_directory() ) {
 				require $this->path . 'bp-activity/screens/directory.php';
 			}
 
 			// Screens - User main nav.
-			if ( bp_is_user() ) {
+			if ( bboss_is_user() ) {
 				require $this->path . 'bp-activity/screens/just-me.php';
 			}
 
 			// Screens - User secondary nav.
-			if ( bp_is_user() && in_array( bp_current_action(), array( 'friends', 'groups', 'favorites', 'mentions', 'following' ), true ) ) {
-				require $this->path . 'bp-activity/screens/' . bp_current_action() . '.php';
+			if ( bboss_is_user() && in_array( bboss_current_action(), array( 'friends', 'groups', 'favorites', 'mentions', 'following' ), true ) ) {
+				require $this->path . 'bp-activity/screens/' . bboss_current_action() . '.php';
 			}
 
 			// Screens - Single permalink.
-			if ( bp_is_current_action( 'p' ) || is_numeric( bp_current_action() ) ) {
+			if ( bboss_is_current_action( 'p' ) || is_numeric( bboss_current_action() ) ) {
 				require $this->path . 'bp-activity/screens/permalink.php';
 			}
 
 			// Theme compatibility.
-			new BP_Activity_Theme_Compat();
+			new BBoss_Activity_Theme_Compat();
 		}
 	}
 
@@ -157,33 +157,33 @@ class BP_Activity_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::setup_globals() for a description of arguments.
+	 * @see BBoss_Component::setup_globals() for a description of arguments.
 	 *
-	 * @param array $args See BP_Component::setup_globals() for a description.
+	 * @param array $args See BBoss_Component::setup_globals() for a description.
 	 */
 	public function setup_globals( $args = array() ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Define a slug, if necessary.
-		if ( ! defined( 'BP_ACTIVITY_SLUG' ) ) {
-			define( 'BP_ACTIVITY_SLUG', $this->id );
+		if ( ! defined( 'BBOSS_ACTIVITY_SLUG' ) ) {
+			define( 'BBOSS_ACTIVITY_SLUG', $this->id );
 		}
 
-		if ( ! defined( 'BP_FOLLOW_SLUG' ) ) {
-			define( 'BP_FOLLOW_SLUG', $this->id . '_follow' );
+		if ( ! defined( 'BBOSS_FOLLOW_SLUG' ) ) {
+			define( 'BBOSS_FOLLOW_SLUG', $this->id . '_follow' );
 		}
 
 		// Register the visibility levels. See bp_activity_get_visibility_levels() to filter.
 		$this->visibility_levels = array(
-			'public'   => __( 'Public', 'buddyboss' ),
-			'loggedin' => __( 'All Members', 'buddyboss' ),
+			'public'   => __( 'Public', 'buddyboss-platform' ),
+			'loggedin' => __( 'All Members', 'buddyboss-platform' ),
 		);
 
-		if ( bp_is_active( 'friends' ) ) {
-			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+		if ( bboss_is_active( 'friends' ) ) {
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss-platform' );
 		}
 
-		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss-platform' );
 
 		$this->published_status = 'published';
 		$this->scheduled_status = 'scheduled';
@@ -201,39 +201,39 @@ class BP_Activity_Component extends BP_Component {
 		);
 
 		// Fetch the default directory title.
-		$default_directory_titles = bp_core_get_directory_page_default_titles();
+		$default_directory_titles = bboss_core_get_directory_page_default_titles();
 		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// All globals for activity component.
 		// Note that global_tables is included in this array.
 		$args = array(
-			'slug'                  => BP_ACTIVITY_SLUG,
-			'root_slug'             => isset( $bp->pages->activity->slug ) ? $bp->pages->activity->slug : BP_ACTIVITY_SLUG,
+			'slug'                  => BBOSS_ACTIVITY_SLUG,
+			'root_slug'             => isset( $bp->pages->activity->slug ) ? $bp->pages->activity->slug : BBOSS_ACTIVITY_SLUG,
 			'has_directory'         => true,
 			'directory_title'       => isset( $bp->pages->activity->title ) ? $bp->pages->activity->title : $default_directory_title,
-			'notification_callback' => 'bp_activity_format_notifications',
-			'search_string'         => __( 'Search Feed&hellip;', 'buddyboss' ),
+			'notification_callback' => 'bboss_activity_format_notifications',
+			'search_string'         => __( 'Search Feed&hellip;', 'buddyboss-platform' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
 		);
 
 		parent::setup_globals( $args );
 
-		if ( bp_is_activity_follow_active() ) {
+		if ( bboss_is_activity_follow_active() ) {
 			// locally cache total count values for logged-in user.
 			if ( is_user_logged_in() ) {
-				$bp->loggedin_user->total_follow_counts = bp_total_follow_counts(
+				$bp->loggedin_user->total_follow_counts = bboss_total_follow_counts(
 					array(
-						'user_id' => bp_loggedin_user_id(),
+						'user_id' => bboss_loggedin_user_id(),
 					)
 				);
 			}
 
 			// locally cache total count values for displayed user.
-			if ( bp_is_user() && ( bp_loggedin_user_id() !== bp_displayed_user_id() ) ) {
-				$bp->displayed_user->total_follow_counts = bp_total_follow_counts(
+			if ( bboss_is_user() && ( bboss_loggedin_user_id() !== bboss_displayed_user_id() ) ) {
+				$bp->displayed_user->total_follow_counts = bboss_total_follow_counts(
 					array(
-						'user_id' => bp_displayed_user_id(),
+						'user_id' => bboss_displayed_user_id(),
 					)
 				);
 			}
@@ -245,36 +245,36 @@ class BP_Activity_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::setup_nav() for a description of arguments.
+	 * @see BBoss_Component::setup_nav() for a description of arguments.
 	 *
-	 * @param array $main_nav Optional. See BP_Component::setup_nav() for description.
-	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for description.
+	 * @param array $main_nav Optional. See BBoss_Component::setup_nav() for description.
+	 * @param array $sub_nav  Optional. See BBoss_Component::setup_nav() for description.
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
 		// Stop if there is no user displayed or logged in.
-		if ( ! is_user_logged_in() && ! bp_displayed_user_id() ) {
+		if ( ! is_user_logged_in() && ! bboss_displayed_user_id() ) {
 			return;
 		}
 
 		// Determine user to use.
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
-			$user_domain = bp_loggedin_user_domain();
+		if ( bboss_displayed_user_domain() ) {
+			$user_domain = bboss_displayed_user_domain();
+		} elseif ( bboss_loggedin_user_domain() ) {
+			$user_domain = bboss_loggedin_user_domain();
 		} else {
 			return;
 		}
 
-		$slug          = bp_get_activity_slug();
+		$slug          = bboss_get_activity_slug();
 		$activity_link = trailingslashit( $user_domain . $slug );
 
 		// Add 'Activity' to the main navigation.
 		$main_nav = array(
-			'name'                => __( 'Timeline', 'buddyboss' ),
+			'name'                => __( 'Timeline', 'buddyboss-platform' ),
 			'slug'                => $slug,
 			'position'            => 25,
-			'screen_function'     => 'bp_activity_screen_my_activity',
+			'screen_function'     => 'bboss_activity_screen_my_activity',
 			'default_subnav_slug' => 'just-me',
 			'item_css_id'         => $this->id,
 		);
@@ -287,10 +287,10 @@ class BP_Activity_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
+	 * @see BBoss_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
 	 *
-	 * @param array $wp_admin_nav See BP_Component::setup_admin_bar() for a
+	 * @param array $wp_admin_nav See BBoss_Component::setup_admin_bar() for a
 	 *                            description.
 	 */
 	public function setup_admin_bar( $wp_admin_nav = array() ) {
@@ -299,27 +299,27 @@ class BP_Activity_Component extends BP_Component {
 		if ( is_user_logged_in() ) {
 
 			// Setup the logged in user variables.
-			$activity_link = trailingslashit( bp_loggedin_user_domain() . bp_get_activity_slug() );
+			$activity_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_activity_slug() );
 
 			// Unread message count.
-			if ( bp_activity_do_mentions() ) {
-				$count = bp_get_total_mention_count_for_user( bp_loggedin_user_id() );
+			if ( bboss_activity_do_mentions() ) {
+				$count = bboss_get_total_mention_count_for_user( bboss_loggedin_user_id() );
 				if ( ! empty( $count ) ) {
 					$title = sprintf(
 						/* translators: %s: Unread mention count for the current user */
-						__( 'Mentions %s', 'buddyboss' ),
-						'<span class="count">' . bp_core_number_format( $count ) . '</span>'
+						__( 'Mentions %s', 'buddyboss-platform' ),
+						'<span class="count">' . bboss_core_number_format( $count ) . '</span>'
 					);
 				} else {
-					$title = __( 'Mentions', 'buddyboss' );
+					$title = __( 'Mentions', 'buddyboss-platform' );
 				}
 			}
 
 			// Add the "Activity" sub menu.
 			$wp_admin_nav[] = array(
-				'parent' => buddypress()->my_account_menu_id,
+				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Timeline', 'buddyboss' ),
+				'title'  => __( 'Timeline', 'buddyboss-platform' ),
 				'href'   => $activity_link,
 			);
 		}
@@ -335,20 +335,21 @@ class BP_Activity_Component extends BP_Component {
 	public function setup_title() {
 
 		// Adjust title based on view.
-		if ( bp_is_activity_component() ) {
-			$bp = buddypress();
+		if ( bboss_is_activity_component() ) {
+			$bp = bboss();
 
-			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Activity', 'buddyboss' );
+			if ( bboss_is_my_profile() ) {
+				$bp->bp_options_title = __( 'My Activity', 'buddyboss-platform' );
 			} else {
-				$bp->bp_options_avatar = bp_core_fetch_avatar(
+				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
-						'item_id' => bp_displayed_user_id(),
+						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						/* translators: %s: displayed user's full name. */
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
-				$bp->bp_options_title  = bp_get_displayed_user_fullname();
+				$bp->bp_options_title  = bboss_get_displayed_user_fullname();
 			}
 		}
 
@@ -381,16 +382,16 @@ class BP_Activity_Component extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init( array(
-			'BP_REST_Activity_Endpoint',
-			'BP_REST_Activity_Comment_Endpoint',
-			'BP_REST_Activity_Details_Endpoint',
-			'BP_REST_Activity_Link_Preview_Endpoint',
+			'BBoss_REST_Activity_Endpoint',
+			'BBoss_REST_Activity_Comment_Endpoint',
+			'BBoss_REST_Activity_Details_Endpoint',
+			'BBoss_REST_Activity_Link_Preview_Endpoint',
 		) );
 	}
 
@@ -399,7 +400,7 @@ class BP_Activity_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 	 */
 	public function blocks_init( $blocks = array() ) {
 		parent::blocks_init( array() );

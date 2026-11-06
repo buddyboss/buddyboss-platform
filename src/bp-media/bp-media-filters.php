@@ -4,86 +4,86 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'bp_media_album_after_save', 'bp_media_update_media_privacy' );
-add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+add_action( 'bp_media_album_after_save', 'bboss_media_update_media_privacy' );
+add_action( 'delete_attachment', 'bboss_media_delete_attachment_media', 0 );
 
 // Activity.
-add_action( 'bp_after_directory_activity_list', 'bp_media_add_theatre_template' );
-add_action( 'bp_after_single_activity_content', 'bp_media_add_theatre_template' );
-add_action( 'bp_after_member_activity_content', 'bp_media_add_theatre_template' );
-add_action( 'bp_after_group_activity_content', 'bp_media_add_theatre_template' );
-add_action( 'bp_after_single_activity', 'bp_media_add_theatre_template' );
-add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
-add_action( 'bp_activity_after_comment_content', 'bp_media_activity_comment_entry' );
-add_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
-add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
-add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
-add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
-add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' ); // Delete activity medias.
-add_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
-add_filter( 'bp_activity_get_edit_data', 'bp_media_get_edit_activity_data' );
+add_action( 'bp_after_directory_activity_list', 'bboss_media_add_theatre_template' );
+add_action( 'bp_after_single_activity_content', 'bboss_media_add_theatre_template' );
+add_action( 'bp_after_member_activity_content', 'bboss_media_add_theatre_template' );
+add_action( 'bp_after_group_activity_content', 'bboss_media_add_theatre_template' );
+add_action( 'bp_after_single_activity', 'bboss_media_add_theatre_template' );
+add_action( 'bp_activity_entry_content', 'bboss_media_activity_entry' );
+add_action( 'bp_activity_after_comment_content', 'bboss_media_activity_comment_entry' );
+add_action( 'bp_activity_posted_update', 'bboss_media_update_activity_media_meta', 10, 3 );
+add_action( 'bp_groups_posted_update', 'bboss_media_groups_activity_update_media_meta', 10, 4 );
+add_action( 'bp_activity_comment_posted', 'bboss_media_activity_comments_update_media_meta', 10, 3 );
+add_action( 'bp_activity_comment_posted_notification_skipped', 'bboss_media_activity_comments_update_media_meta', 10, 3 );
+add_action( 'bp_activity_after_delete', 'bboss_media_delete_activity_media' ); // Delete activity medias.
+add_action( 'bp_activity_after_save', 'bboss_media_activity_update_media_privacy', 2 );
+add_filter( 'bp_activity_get_edit_data', 'bboss_media_get_edit_activity_data' );
 
 // Forums.
-add_action( 'bbp_template_after_single_topic', 'bp_media_add_theatre_template' );
-add_action( 'bbp_new_reply', 'bp_media_forums_new_post_media_save', 999 );
-add_action( 'bbp_new_topic', 'bp_media_forums_new_post_media_save', 999 );
-add_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
+add_action( 'bbp_template_after_single_topic', 'bboss_media_add_theatre_template' );
+add_action( 'bbp_new_reply', 'bboss_media_forums_new_post_media_save', 999 );
+add_action( 'bbp_new_topic', 'bboss_media_forums_new_post_media_save', 999 );
+add_action( 'edit_post', 'bboss_media_forums_new_post_media_save', 999 );
 
-add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
-add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+add_filter( 'bbp_get_reply_content', 'bboss_media_forums_embed_attachments', 98, 2 );
+add_filter( 'bbp_get_topic_content', 'bboss_media_forums_embed_attachments', 98, 2 );
 
 // Messages..
-add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
-add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_attached_media', 10, 2 ); // Delete thread medias.
-add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_delete_attached_media', 10, 4 ); // Delete messages medias.
+add_action( 'messages_message_sent', 'bboss_media_attach_media_to_message' );
+add_action( 'bp_messages_thread_after_delete', 'bboss_media_messages_delete_attached_media', 10, 2 ); // Delete thread medias.
+add_action( 'bp_messages_thread_messages_after_update', 'bboss_media_user_messages_delete_attached_media', 10, 4 ); // Delete messages medias.
 // add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );.
-add_filter( 'bp_messages_message_validated_content', 'bp_media_message_validated_content', 20, 3 );
+add_filter( 'bp_messages_message_validated_content', 'bboss_media_message_validated_content', 20, 3 );
 
-add_action( 'bp_core_activation_notice', 'bp_media_activation_notice' );
-add_action( 'wp_ajax_bp_media_import_status_request', 'bp_media_import_status_request' );
-add_filter( 'bp_repair_list', 'bp_media_add_admin_repair_items' );
+add_action( 'bp_core_activation_notice', 'bboss_media_activation_notice' );
+add_action( 'wp_ajax_bp_media_import_status_request', 'bboss_media_import_status_request' );
+add_filter( 'bp_repair_list', 'bboss_media_add_admin_repair_items' );
 
 // Download Media.
-add_action( 'init', 'bp_media_download_url_file' );
+add_action( 'init', 'bboss_media_download_url_file' );
 
-add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
+add_filter( 'bp_search_label_search_type', 'bboss_media_search_label_search' );
 
-add_filter( 'bp_get_activity_entry_css_class', 'bp_media_activity_entry_css_class' );
+add_filter( 'bp_get_activity_entry_css_class', 'bboss_media_activity_entry_css_class' );
 
 // Delete symlinks for media when before saved.
-add_action( 'bp_media_before_save', 'bp_media_delete_symlinks' );
+add_action( 'bp_media_before_save', 'bboss_media_delete_symlinks' );
 
 // Create symlinks for media when saved.
-add_action( 'bp_media_after_save', 'bp_media_create_symlinks' );
+add_action( 'bp_media_after_save', 'bboss_media_create_symlinks' );
 
 // Clear media symlinks on delete.
-add_action( 'bp_media_before_delete', 'bp_media_clear_media_symlinks_on_delete', 10 );
+add_action( 'bp_media_before_delete', 'bboss_media_clear_media_symlinks_on_delete', 10 );
 
 // Filter attachments in the query to filter media and documents.
-add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
-add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
+add_filter( 'posts_join', 'bboss_media_filter_attachments_query_posts_join', 10, 2 );
+add_filter( 'posts_where', 'bboss_media_filter_attachments_query_posts_where', 10, 2 );
 
-add_filter( 'bp_get_activity_entry_css_class', 'bp_video_activity_entry_css_class' );
+add_filter( 'bp_get_activity_entry_css_class', 'bboss_video_activity_entry_css_class' );
 
-add_action( 'bp_add_rewrite_rules', 'bb_setup_media_preview' );
-add_filter( 'query_vars', 'bb_setup_query_media_preview' );
-add_action( 'template_include', 'bb_setup_template_for_media_preview', PHP_INT_MAX );
+add_action( 'bp_add_rewrite_rules', 'bboss_setup_media_preview' );
+add_filter( 'query_vars', 'bboss_setup_query_media_preview' );
+add_action( 'template_include', 'bboss_setup_template_for_media_preview', PHP_INT_MAX );
 
 // Setup rewrite rule to access attachment media.
-add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_media_preview' );
-add_filter( 'query_vars', 'bb_setup_attachment_media_preview_query' );
-add_action( 'template_include', 'bb_setup_attachment_media_preview_template', PHP_INT_MAX );
+add_action( 'bp_add_rewrite_rules', 'bboss_setup_attachment_media_preview' );
+add_filter( 'query_vars', 'bboss_setup_attachment_media_preview_query' );
+add_action( 'template_include', 'bboss_setup_attachment_media_preview_template', PHP_INT_MAX );
 
-add_filter( 'bb_activity_comment_get_edit_data', 'bp_media_get_edit_activity_data' );
+add_filter( 'bb_activity_comment_get_edit_data', 'bboss_media_get_edit_activity_data' );
 /**
  * Add Media items for search
  */
-function bp_media_search_label_search( $type ) {
+function bboss_media_search_label_search( $type ) {
 
 	if ( 'albums' === $type ) {
-		$type = __( 'Albums', 'buddyboss' );
+		$type = __( 'Albums', 'buddyboss-platform' );
 	} elseif ( 'photos' === $type ) {
-		$type = __( 'Photos', 'buddyboss' );
+		$type = __( 'Photos', 'buddyboss-platform' );
 	}
 
 	return $type;
@@ -92,8 +92,8 @@ function bp_media_search_label_search( $type ) {
 /**
  * Add media theatre template for activity pages
  */
-function bp_media_add_theatre_template() {
-	bp_get_template_part( 'media/theatre' );
+function bboss_media_add_theatre_template() {
+	bboss_get_template_part( 'media/theatre' );
 }
 
 /**
@@ -103,7 +103,7 @@ function bp_media_add_theatre_template() {
  *
  * @return void|bool
  */
-function bp_media_activity_entry() {
+function bboss_media_activity_entry() {
 	global $activities_template;
 
 	$activity = '';
@@ -111,7 +111,7 @@ function bp_media_activity_entry() {
 		$activity = $activities_template->activity;
 	}
 
-	$is_media = bb_media_get_activity_media(
+	$is_media = bboss_bb_media_get_activity_media(
 		$activity,
 		array(
 			'user_id' => false
@@ -119,7 +119,7 @@ function bp_media_activity_entry() {
 	);
 
 	if ( ! empty( $is_media ) ) {
-		print $is_media;
+		print (int) $is_media;
 	}
 }
 
@@ -133,9 +133,9 @@ function bp_media_activity_entry() {
  *
  * @return string
  */
-function bp_media_activity_append_media( $content, $activity ) {
+function bboss_media_activity_append_media( $content, $activity ) {
 
-	$is_media = bb_media_get_activity_media( $activity );
+	$is_media = bboss_bb_media_get_activity_media( $activity );
 	if ( ! empty( $is_media ) ) {
 		$content .= $is_media;
 	}
@@ -146,17 +146,17 @@ function bp_media_activity_append_media( $content, $activity ) {
 /**
  * Get activity comment entry media to render on front end
  */
-function bp_media_activity_comment_entry( $comment_id ) {
+function bboss_media_activity_comment_entry( $comment_id ) {
 	global $media_template;
 
-	$activity_metas = bb_activity_get_metadata( $comment_id );
+	$activity_metas = bboss_activity_get_metadata( $comment_id );
 	$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
 	if ( empty( $media_ids ) ) {
 		return;
 	}
 
-	$comment  = new BP_Activity_Activity( $comment_id );
-	$activity = new BP_Activity_Activity( $comment->item_id );
+	$comment  = new BBoss_Activity_Activity( $comment_id );
+	$activity = new BBoss_Activity_Activity( $comment->item_id );
 
 	$args = array(
 		'include'  => $media_ids,
@@ -167,11 +167,11 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'per_page' => 0,
 	);
 
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-		if ( bp_is_group_media_support_enabled() ) {
+	if ( bboss_is_active( 'groups' ) && bboss()->groups->id === $activity->component ) {
+		if ( bboss_is_group_media_support_enabled() ) {
 			$args['privacy'][] = 'comment';
 			$args['privacy'][] = 'grouponly';
-			if ( ! bp_is_group_albums_support_enabled() ) {
+			if ( ! bboss_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-media';
 			}
 		} else {
@@ -179,11 +179,11 @@ function bp_media_activity_comment_entry( $comment_id ) {
 			$args['album_id'] = 'existing-media';
 		}
 	} else {
-		$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
-		if ( ! bp_is_profile_media_support_enabled() ) {
+		$args['privacy'] = bboss_media_query_privacy( $activity->user_id, 0, $activity->component );
+		if ( ! bboss_is_profile_media_support_enabled() ) {
 			$args['user_id'] = 'null';
 		}
-		if ( ! bp_is_profile_albums_support_enabled() ) {
+		if ( ! bboss_is_profile_albums_support_enabled() ) {
 			$args['album_id'] = 'existing-media';
 		}
 	}
@@ -194,29 +194,29 @@ function bp_media_activity_comment_entry( $comment_id ) {
 	}
 
 	if (
-		bp_is_active( 'forums' )
+		bboss_is_active( 'forums' )
 		&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
-		&& bp_is_forums_media_support_enabled()
+		&& bboss_is_forums_media_support_enabled()
 	) {
 		$args['privacy'][] = 'forums';
 	}
 
 	$args['privacy'] = array_unique( $args['privacy'] );
 
-	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
+	if ( ! empty( $media_ids ) && bboss_has_media( $args ) ) {
 		?>
 		<div class="bb-activity-media-wrap
 			<?php
-			$max_length = bb_media_get_activity_comment_max_thumb_length();
+			$max_length = bboss_media_get_activity_comment_max_thumb_length();
 			echo esc_attr( 'bb-media-length-' . ( $media_template->media_count > $max_length ? $max_length : $media_template->media_count ) );
 			echo $media_template->media_count > $max_length ? esc_attr( ' bb-media-length-more' ) : '';
 			?>
 			">
 				<?php
-				bp_get_template_part( 'media/media-move' );
-				while ( bp_media() ) {
-					bp_the_media();
-					bp_get_template_part( 'media/activity-entry' );
+				bboss_get_template_part( 'media/media-move' );
+				while ( bboss_media() ) {
+					bboss_the_media();
+					bboss_get_template_part( 'media/activity-entry' );
 				}
 				?>
 		</div>
@@ -235,24 +235,24 @@ function bp_media_activity_comment_entry( $comment_id ) {
  *
  * @return bool
  */
-function bp_media_update_activity_media_meta( $content, $user_id, $activity_id ) {
+function bboss_media_update_activity_media_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit, $bb_activity_comment_edit;
 
 	$medias           = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$medias           = ! empty( $medias ) ? $medias : array();
-	$actions          = bb_filter_input_string( INPUT_POST, 'action' );
-	$moderated_medias = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+	$actions          = bboss_filter_input_string( INPUT_POST, 'action' );
+	$moderated_medias = bboss_activity_get_meta( $activity_id, 'bp_media_ids', true );
 
 	if ( ! empty( $medias ) ) {
 		$media_order = array_column( $medias, 'menu_order' );
 		array_multisort( $media_order, SORT_ASC, $medias );
 	}
 
-	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_medias ) ) {
+	if ( bboss_is_active( 'moderation' ) && ! empty( $moderated_medias ) ) {
 		$moderated_medias = explode( ',', $moderated_medias );
 		foreach ( $moderated_medias as $media_id ) {
-			if ( bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) ) {
-				$bp_media               = new BP_Media( $media_id );
+			if ( bboss_moderation_is_content_hidden( $media_id, BBoss_Moderation_Media::$moderation_type ) ) {
+				$bp_media               = new BBoss_Media( $media_id );
 				$medias[]['media_id']   = $media_id;
 				$medias[]['album_id']   = $bp_media->album_id;
 				$medias[]['group_id']   = $bp_media->group_id;
@@ -275,22 +275,22 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 				)
 			)
 		) {
-			$old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+			$old_media_ids = bboss_activity_get_meta( $activity_id, 'bp_media_ids', true );
 
 			if ( ! empty( $old_media_ids ) ) {
 				// Delete media if not exists anymore in activity.
 				$old_media_ids = explode( ',', $old_media_ids );
 				if ( ! empty( $old_media_ids ) ) {
 					foreach ( $old_media_ids as $media_id ) {
-						bp_media_delete( array( 'id' => $media_id ), 'activity' );
+						bboss_media_delete( array( 'id' => $media_id ), 'activity' );
 					}
 				}
-				bp_activity_delete_meta( $activity_id, 'bp_media_ids' );
+				bboss_activity_delete_meta( $activity_id, 'bp_media_ids' );
 
 				// Delete media meta from activity for activity comment.
 				if ( $bb_activity_comment_edit ) {
-					bp_activity_delete_meta( $activity_id, 'bp_media_id' );
-					bp_activity_delete_meta( $activity_id, 'bp_media_activity' );
+					bboss_activity_delete_meta( $activity_id, 'bp_media_id' );
+					bboss_activity_delete_meta( $activity_id, 'bp_media_activity' );
 				}
 			}
 		}
@@ -303,7 +303,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 
 	// Update activity comment attached document privacy with parent one.
 	if ( ! empty( $activity_id ) && isset( $actions ) && 'new_activity_comment' === $actions ) {
-		$parent_activity = new BP_Activity_Activity( $activity_id );
+		$parent_activity = new BBoss_Activity_Activity( $activity_id );
 		if ( 'groups' === $parent_activity->component ) {
 			$_POST['privacy'] = 'grouponly';
 		} elseif ( ! empty( $parent_activity->privacy ) ) {
@@ -311,46 +311,46 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 		}
 	}
 
-	remove_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
-	remove_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
-	remove_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
-	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
-	remove_action( 'bp_activity_posted_update', 'bb_activity_at_name_send_emails', 12, 3 );
+	remove_action( 'bp_activity_posted_update', 'bboss_media_update_activity_media_meta', 10, 3 );
+	remove_action( 'bp_groups_posted_update', 'bboss_media_groups_activity_update_media_meta', 10, 4 );
+	remove_action( 'bp_activity_comment_posted', 'bboss_media_activity_comments_update_media_meta', 10, 3 );
+	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bboss_media_activity_comments_update_media_meta', 10, 3 );
+	remove_action( 'bp_activity_posted_update', 'bboss_bb_activity_at_name_send_emails', 12, 3 );
 
-	$media_ids = bp_media_add_handler( $medias, $_POST['privacy'] );
+	$media_ids = bboss_media_add_handler( $medias, $_POST['privacy'] );
 
-	add_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
-	add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
-	add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
-	add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
-	add_action( 'bp_activity_posted_update', 'bb_activity_at_name_send_emails', 12, 3 );
+	add_action( 'bp_activity_posted_update', 'bboss_media_update_activity_media_meta', 10, 3 );
+	add_action( 'bp_groups_posted_update', 'bboss_media_groups_activity_update_media_meta', 10, 4 );
+	add_action( 'bp_activity_comment_posted', 'bboss_media_activity_comments_update_media_meta', 10, 3 );
+	add_action( 'bp_activity_comment_posted_notification_skipped', 'bboss_media_activity_comments_update_media_meta', 10, 3 );
+	add_action( 'bp_activity_posted_update', 'bboss_bb_activity_at_name_send_emails', 12, 3 );
 
 	// save media meta for activity.
 	if ( ! empty( $activity_id ) ) {
 
 		// Delete media if not exists in current media ids.
 		if ( isset( $_POST['edit'] ) || isset( $_POST['edit_comment'] ) ) {
-			$old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+			$old_media_ids = bboss_activity_get_meta( $activity_id, 'bp_media_ids', true );
 			$old_media_ids = explode( ',', $old_media_ids );
 
 			if ( ! empty( $old_media_ids ) ) {
 
 				foreach ( $old_media_ids as $media_id ) {
-					if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) && ! in_array( $media_id, $media_ids ) ) {
+					if ( bboss_is_active( 'moderation' ) && bboss_moderation_is_content_hidden( $media_id, BBoss_Moderation_Media::$moderation_type ) && ! in_array( $media_id, $media_ids ) ) {
 						$media_ids[] = $media_id;
 					}
 					if ( ! in_array( $media_id, $media_ids ) ) {
-						bp_media_delete( array( 'id' => $media_id ), 'activity' );
+						bboss_media_delete( array( 'id' => $media_id ), 'activity' );
 					}
 				}
 
 				// This is hack to update/delete parent activity if new media added in edit.
-				bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', array_unique( array_merge( $media_ids, $old_media_ids ) ) ) );
+				bboss_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', array_unique( array_merge( $media_ids, $old_media_ids ) ) ) );
 			}
 		}
 
 		// update new media ids here in the activity meta.
-		bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $media_ids ) );
+		bboss_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $media_ids ) );
 	}
 }
 
@@ -366,8 +366,8 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
  *
  * @return bool
  */
-function bp_media_groups_activity_update_media_meta( $content, $user_id, $group_id, $activity_id ) {
-	bp_media_update_activity_media_meta( $content, $user_id, $activity_id );
+function bboss_media_groups_activity_update_media_meta( $content, $user_id, $group_id, $activity_id ) {
+	bboss_media_update_activity_media_meta( $content, $user_id, $activity_id );
 }
 
 /**
@@ -381,10 +381,10 @@ function bp_media_groups_activity_update_media_meta( $content, $user_id, $group_
  *
  * @return bool
  */
-function bp_media_activity_comments_update_media_meta( $comment_id, $r, $activity ) {
+function bboss_media_activity_comments_update_media_meta( $comment_id, $r, $activity ) {
 	global $bp_new_activity_comment;
 	$bp_new_activity_comment = $comment_id;
-	bp_media_update_activity_media_meta( false, false, $comment_id );
+	bboss_media_update_activity_media_meta( false, false, $comment_id );
 }
 
 /**
@@ -394,9 +394,9 @@ function bp_media_activity_comments_update_media_meta( $comment_id, $r, $activit
  *
  * @param $activities
  */
-function bp_media_delete_activity_media( $activities ) {
+function bboss_media_delete_activity_media( $activities ) {
 	if ( ! empty( $activities ) ) {
-		remove_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
+		remove_action( 'bp_activity_after_delete', 'bboss_media_delete_activity_media' );
 		foreach ( $activities as $activity ) {
 
 			// Do not delete attached media, if the activity belongs to a forum topic/reply.
@@ -409,12 +409,12 @@ function bp_media_delete_activity_media( $activities ) {
 			}
 
 			// Get activity metas
-			$activity_metas = bb_activity_get_metadata( $activity->id );
+			$activity_metas = bboss_activity_get_metadata( $activity->id );
 
 			$activity_id    = $activity->id;
 			$media_activity = $activity_metas['bp_media_activity'][0] ?? '';
 			if ( ! empty( $media_activity ) && '1' == $media_activity ) {
-				bp_media_delete( array( 'activity_id' => $activity_id ) );
+				bboss_media_delete( array( 'activity_id' => $activity_id ) );
 			}
 
 			// get media ids attached to activity.
@@ -423,11 +423,11 @@ function bp_media_delete_activity_media( $activities ) {
 			if ( ! empty( $media_ids ) ) {
 				$media_ids = explode( ',', $media_ids );
 				foreach ( $media_ids as $media_id ) {
-					bp_media_delete( array( 'id' => $media_id ) );
+					bboss_media_delete( array( 'id' => $media_id ) );
 				}
 			}
 		}
-		add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
+		add_action( 'bp_activity_after_delete', 'bboss_media_delete_activity_media' );
 	}
 }
 
@@ -438,17 +438,17 @@ function bp_media_delete_activity_media( $activities ) {
  *
  * @param $album
  */
-function bp_media_update_media_privacy( $album ) {
+function bboss_media_update_media_privacy( $album ) {
 
 	if ( ! empty( $album->id ) ) {
 
 		$privacy      = $album->privacy;
-		$media_ids    = BP_Media::get_album_media_ids( $album->id );
+		$media_ids    = BBoss_Media::get_album_media_ids( $album->id );
 		$activity_ids = array();
 
 		if ( ! empty( $media_ids ) ) {
 			foreach ( $media_ids as $media ) {
-				$media_obj          = new BP_Media( $media );
+				$media_obj          = new BBoss_Media( $media );
 				$media_obj->privacy = $privacy;
 				$media_obj->save();
 
@@ -470,7 +470,7 @@ function bp_media_update_media_privacy( $album ) {
 			$activity_ids = array_unique( $activity_ids );
 
 			foreach ( $activity_ids as $activity_id ) {
-				$activity = new BP_Activity_Activity( $activity_id );
+				$activity = new BBoss_Activity_Activity( $activity_id );
 
 				if ( ! empty( $activity ) ) {
 					$activity->privacy        = $privacy;
@@ -490,7 +490,7 @@ function bp_media_update_media_privacy( $album ) {
  *
  * @param $post_id
  */
-function bp_media_forums_new_post_media_save( $post_id ) {
+function bboss_media_forums_new_post_media_save( $post_id ) {
 
 	if ( ! empty( $_POST['bbp_media'] ) ) {
 
@@ -513,7 +513,7 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 			$existing_media_ids = explode( ',', $existing_media_ids );
 
 			foreach ( $existing_media_ids as $existing_media_id ) {
-				$existing_media[ $existing_media_id ] = new BP_Media( $existing_media_id );
+				$existing_media[ $existing_media_id ] = new BBoss_Media( $existing_media_id );
 
 				if ( ! empty( $existing_media[ $existing_media_id ]->attachment_id ) ) {
 					$existing_media_attachment_ids[] = $existing_media[ $existing_media_id ]->attachment_id;
@@ -545,11 +545,11 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 			}
 
 			// Only the user's own unsaved upload can become a new media.
-			if ( ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+			if ( ! bboss_user_can_adopt_attachment( $attachment_id ) ) {
 				continue;
 			}
 
-			$media_id = bp_media_add(
+			$media_id = bboss_media_add(
 				array(
 					'attachment_id' => $attachment_id,
 					'title'         => $title,
@@ -574,18 +574,18 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		update_post_meta( $post_id, 'bp_media_ids', $media_ids );
 
 		// save media meta for activity.
-		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
+		if ( ! empty( $main_activity_id ) && bboss_is_active( 'activity' ) ) {
 			if ( ! empty( $media_ids ) ) {
-				bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+				bboss_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
 			} else {
-				bp_activity_delete_meta( $main_activity_id, 'bp_media_ids' );
+				bboss_activity_delete_meta( $main_activity_id, 'bp_media_ids' );
 			}
 		}
 
 		// delete medias which were not saved or removed from form.
 		if ( ! empty( $existing_media_ids ) ) {
 			foreach ( $existing_media_ids as $media_id ) {
-				bp_media_delete( array( 'id' => $media_id ) );
+				bboss_media_delete( array( 'id' => $media_id ) );
 			}
 		}
 	}
@@ -601,7 +601,7 @@ function bp_media_forums_new_post_media_save( $post_id ) {
  *
  * @return string
  */
-function bp_media_forums_embed_attachments( $content, $id ) {
+function bboss_media_forums_embed_attachments( $content, $id ) {
 	global $media_template;
 
 	// Do not embed attachment in wp-admin area.
@@ -612,15 +612,15 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 	$forum_id = 0;
 
 	// Get current forum ID.
-	if ( bbp_get_reply_post_type() === get_post_type( $id ) ) {
-		$forum_id = bbp_get_reply_forum_id( $id );
-	} elseif ( bbp_get_topic_post_type() === get_post_type( $id ) ) {
-		$forum_id = bbp_get_topic_forum_id( $id );
-	} elseif ( bbp_get_forum_post_type() === get_post_type( $id ) ) {
+	if ( bboss_bbp_get_reply_post_type() === get_post_type( $id ) ) {
+		$forum_id = bboss_bbp_get_reply_forum_id( $id );
+	} elseif ( bboss_bbp_get_topic_post_type() === get_post_type( $id ) ) {
+		$forum_id = bboss_bbp_get_topic_forum_id( $id );
+	} elseif ( bboss_bbp_get_forum_post_type() === get_post_type( $id ) ) {
 		$forum_id = $id;
 	}
 
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 	$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
 
 	if (
@@ -629,15 +629,15 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 				empty( $group_id ) ||
 				(
 					! empty( $group_id ) &&
-					! bp_is_active( 'groups' )
+					! bboss_is_active( 'groups' )
 				)
 			) &&
-			! bp_is_forums_media_support_enabled()
+			! bboss_is_forums_media_support_enabled()
 		) ||
 		(
-			bp_is_active( 'groups' ) &&
+			bboss_is_active( 'groups' ) &&
 			! empty( $group_id ) &&
-			! bp_is_group_media_support_enabled()
+			! bboss_is_group_media_support_enabled()
 		)
 	) {
 		return $content;
@@ -645,7 +645,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 
 	$media_ids = get_post_meta( $id, 'bp_media_ids', true );
 
-	if ( ! empty( $media_ids ) && bp_has_media(
+	if ( ! empty( $media_ids ) && bboss_has_media(
 		array(
 			'include'  => $media_ids,
 			'order_by' => 'menu_order',
@@ -658,14 +658,14 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 		?>
 		<div class="bb-activity-media-wrap forums-media-wrap
 		<?php
-		echo 'bb-media-length-' . $media_template->media_count;
+		echo esc_attr( 'bb-media-length-' . $media_template->media_count );
 		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
 		?>
 		">
 			<?php
-			while ( bp_media() ) {
-				bp_the_media();
-				bp_get_template_part( 'media/activity-entry' );
+			while ( bboss_media() ) {
+				bboss_the_media();
+				bboss_get_template_part( 'media/activity-entry' );
 			}
 			?>
 		</div>
@@ -684,11 +684,11 @@ function bp_media_forums_embed_attachments( $content, $id ) {
  *
  * @param $message
  */
-function bp_media_attach_media_to_message( &$message ) {
+function bboss_media_attach_media_to_message( &$message ) {
 	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
 
 	if (
-		bb_user_has_access_upload_media( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
+		bboss_user_has_access_upload_media( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
 		! empty( $message->id ) &&
 		(
 			! empty( $_POST['media'] ) ||
@@ -715,10 +715,10 @@ function bp_media_attach_media_to_message( &$message ) {
 
 				if ( ! empty( $media_id ) ) {
 					// Attach already created media.
-					$media = new BP_Media( $media_id );
+					$media = new BBoss_Media( $media_id );
 
 					// Only the sender's own media can be attached to the message.
-					if ( empty( $media->id ) || ! in_array( (int) $media->user_id, array( (int) $message->sender_id, bp_loggedin_user_id() ), true ) ) {
+					if ( empty( $media->id ) || ! in_array( (int) $media->user_id, array( (int) $message->sender_id, bboss_loggedin_user_id() ), true ) ) {
 						continue;
 					}
 
@@ -734,7 +734,7 @@ function bp_media_attach_media_to_message( &$message ) {
 			}
 
 			if ( ! empty( $media_ids ) ) {
-				bp_messages_update_meta( $message->id, 'bp_media_ids', implode( ',', $media_ids ) );
+				bboss_messages_update_meta( $message->id, 'bp_media_ids', implode( ',', $media_ids ) );
 			}
 		}
 	}
@@ -748,7 +748,7 @@ function bp_media_attach_media_to_message( &$message ) {
  * @param $thread_id
  * @param $message_ids
  */
-function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
+function bboss_media_messages_delete_attached_media( $thread_id, $message_ids ) {
 
 	if ( empty( $message_ids ) ) {
 		return;
@@ -759,7 +759,7 @@ function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
 	foreach ( $message_ids as $message_id ) {
 
 		// get media ids attached to message.
-		$message_media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+		$message_media_ids = bboss_messages_get_meta( $message_id, 'bp_media_ids', true );
 
 		if ( ! empty( $message_media_ids ) ) {
 			$media_ids = array_merge( $media_ids, wp_parse_id_list( $message_media_ids ) );
@@ -769,12 +769,12 @@ function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
 	$media_ids = array_unique( array_filter( $media_ids ) );
 
 	// Keep the items that a message in another thread still uses, such as a group message sent to members individually.
-	if ( ! empty( $media_ids ) && function_exists( 'bb_messages_get_attachment_ids_used_elsewhere' ) ) {
-		$media_ids = array_diff( $media_ids, bb_messages_get_attachment_ids_used_elsewhere( 'bp_media_ids', $media_ids, $thread_id ) );
+	if ( ! empty( $media_ids ) && function_exists( 'bboss_messages_get_attachment_ids_used_elsewhere' ) ) {
+		$media_ids = array_diff( $media_ids, bboss_messages_get_attachment_ids_used_elsewhere( 'bp_media_ids', $media_ids, $thread_id ) );
 	}
 
 	foreach ( $media_ids as $media_id ) {
-		bp_media_delete( array( 'id' => $media_id ) );
+		bboss_media_delete( array( 'id' => $media_id ) );
 	}
 }
 
@@ -786,18 +786,18 @@ function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
  * @param $thread_id
  * @param $message_ids
  */
-function bp_media_user_messages_delete_attached_media( $thread_id, $message_ids, $user_id, $update_message_ids ) {
+function bboss_media_user_messages_delete_attached_media( $thread_id, $message_ids, $user_id, $update_message_ids ) {
 
 	if ( ! empty( $update_message_ids ) ) {
 		foreach ( $update_message_ids as $message_id ) {
 
 			// get media ids attached to message..
-			$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+			$media_ids = bboss_messages_get_meta( $message_id, 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) ) {
 				$media_ids = explode( ',', $media_ids );
 				foreach ( $media_ids as $media_id ) {
-					bp_media_delete( array( 'id' => $media_id ) );
+					bboss_media_delete( array( 'id' => $media_id ) );
 				}
 			}
 		}
@@ -815,12 +815,12 @@ function bp_media_user_messages_delete_attached_media( $thread_id, $message_ids,
  *
  * @return bool
  */
-function bp_media_message_validated_content( $validated_content, $content, $post ) {
+function bboss_media_message_validated_content( $validated_content, $content, $post ) {
 	$group_id  = ! empty( $post['group'] ) ? (int) sanitize_text_field( wp_unslash( $post['group'] ) ) : 0;
 	$thread_id = ! empty( $post['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $post['thread_id'] ) ) : 0;
 
 	if (
-		! bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) ||
+		! bboss_user_has_access_upload_media( $group_id, bboss_loggedin_user_id(), 0, $thread_id, 'message' ) ||
 		! isset( $post['media'] )
 	) {
 		return (bool) $validated_content;
@@ -834,12 +834,12 @@ function bp_media_message_validated_content( $validated_content, $content, $post
  *
  * @since BuddyPress 3.0.0
  */
-function bp_media_import_admin_menu() {
+function bboss_media_import_admin_menu() {
 
 	add_submenu_page(
 		'buddyboss-platform',
-		__( 'Import Media', 'buddyboss' ),
-		__( 'Import Media', 'buddyboss' ),
+		__( 'Import Media', 'buddyboss-platform' ),
+		__( 'Import Media', 'buddyboss-platform' ),
 		'manage_options',
 		'bp-media-import',
 		'bp_media_import_submenu_page'
@@ -847,14 +847,14 @@ function bp_media_import_admin_menu() {
 
 }
 
-add_action( bp_core_admin_hook(), 'bp_media_import_admin_menu' );
+add_action( bboss_core_admin_hook(), 'bboss_media_import_admin_menu' );
 
 /**
  * Import Media menu page
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_import_submenu_page() {
+function bboss_media_import_submenu_page() {
 	global $wpdb;
 	global $bp;
 
@@ -899,18 +899,18 @@ function bp_media_import_submenu_page() {
 					<div class="import-panel-content">
 						<h2>
 							<?php
-							$meta_icon = bb_admin_icons( 'bp-member-type-import' );
+							$meta_icon = bboss_admin_icons( 'bp-member-type-import' );
 							if ( ! empty( $meta_icon ) ) {
 								echo '<i class="' . esc_attr( $meta_icon ) . '"></i>';
 							}
-							esc_html_e( 'Import Media', 'buddyboss' );
+							esc_html_e( 'Import Media', 'buddyboss-platform' );
 							?>
 						</h2>
 
 						<?php
 						if ( $check ) {
 							?>
-							<p><?php _e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss-platform' ); ?></p>
 							<?php
 						} elseif ( $is_updating ) {
 							$total_media   = get_option( 'bp_media_import_total_media', 0 );
@@ -927,40 +927,40 @@ function bp_media_import_submenu_page() {
 							$media_ids     = get_option( 'bp_media_import_media_ids', array() );
 							?>
 							<p>
-								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss-platform' ); ?>
 							</p>
 							<label style="display: none;"
-								   id="bp-media-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
+								   id="bp-media-resetting"><strong><?php echo esc_html__( 'Migration in progress', 'buddyboss-platform' ) . '...'; ?></strong></label>
 							<table class="form-table">
 								<tr>
-									<th scope="row"><?php _e( 'Albums', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Albums', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-albums-total"><?php echo $total_albums; ?></span></td>
+										<span id="bp-media-import-albums-done"><?php echo (int) $albums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-albums-total"><?php echo (int) $total_albums; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Media', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Media', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
+										<span id="bp-media-import-media-done"><?php echo (int) $media_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $total_media; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Forums', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Forums', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $forums_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo (int) $forums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $forums_total; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Discussions', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $topics_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo (int) $topics_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $topics_total; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Replies', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Replies', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $replies_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo (int) $replies_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $replies_total; ?></span></td>
 								</tr>
 							</table>
 							<p>
@@ -971,7 +971,7 @@ function bp_media_import_submenu_page() {
 								<input type="hidden" value="1" name="bp-media-re-run-import"
 									   id="bp-media-re-run-import"/>
 								<input type="submit" style="display: none;"
-									   value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+									   value="<?php esc_html_e( 'Re-Run Migration', 'buddyboss-platform' ); ?>"
 									   id="bp-media-import-submit" name="bp-media-import-submit"
 									   class="button-primary"/>
 								<?php
@@ -980,20 +980,20 @@ function bp_media_import_submenu_page() {
 							$albums_ids = get_option( 'bp_media_import_albums_ids', array() );
 							$media_ids  = get_option( 'bp_media_import_media_ids', array() );
 							?>
-							<p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss-platform' ); ?></p>
 
 							<?php if ( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
 								<input type="hidden" value="1" name="bp-media-re-run-import"
 									   id="bp-media-re-run-import"/>
-								<input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+								<input type="submit" value="<?php esc_html_e( 'Re-Run Migration', 'buddyboss-platform' ); ?>"
 									   id="bp-media-import-submit" name="bp-media-import-submit"
 									   class="button-primary"/>
 								<?php
 							}
 						} else {
 							?>
-							<p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ); ?></p>
-							<input type="submit" value="<?php _e( 'Run Migration', 'buddyboss' ); ?>"
+							<p><?php echo wp_kses_post( __( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss-platform' ) ); ?></p>
+							<input type="submit" value="<?php esc_html_e( 'Run Migration', 'buddyboss-platform' ); ?>"
 								   id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 						<?php } ?>
 					</div>
@@ -1011,7 +1011,7 @@ function bp_media_import_submenu_page() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_activation_notice() {
+function bboss_media_activation_notice() {
 	global $wpdb;
 	global $bp;
 
@@ -1028,7 +1028,7 @@ function bp_media_activation_notice() {
 
 		if ( ! empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_table}' ;" ) ) && ! empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_albums_table}' ;" ) ) ) {
 
-			$admin_url = bp_get_admin_url(
+			$admin_url = bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page' => 'bp-media-import',
@@ -1039,12 +1039,12 @@ function bp_media_activation_notice() {
 			);
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>',
-				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own media component. You should  import the media into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss' ),
+				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own media component. You should  import the media into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss-platform' ),
 				esc_url( $admin_url ),
-				__( 'Import Media', 'buddyboss' )
+				__( 'Import Media', 'buddyboss-platform' )
 			);
 
-			bp_core_add_admin_notice( $notice );
+			bboss_core_add_admin_notice( $notice );
 		}
 	}
 }
@@ -1056,10 +1056,10 @@ function bp_media_activation_notice() {
  *
  * @param int $attachment_id ID of the attachment being deleted.
  */
-function bp_media_delete_attachment_media( $attachment_id ) {
+function bboss_media_delete_attachment_media( $attachment_id ) {
 	global $wpdb;
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d", $attachment_id ) );
 
@@ -1067,11 +1067,11 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 		return false;
 	}
 
-	remove_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+	remove_action( 'delete_attachment', 'bboss_media_delete_attachment_media', 0 );
 
-	bp_media_delete( array( 'id' => $media->id ), 'attachment' );
+	bboss_media_delete( array( 'id' => $media->id ), 'attachment' );
 
-	add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+	add_action( 'delete_attachment', 'bboss_media_delete_attachment_media', 0 );
 }
 
 /**
@@ -1081,11 +1081,11 @@ function bp_media_delete_attachment_media( $attachment_id ) {
  *
  * @param array $medias DB results of media items.
  */
-function bp_media_clear_media_symlinks_on_delete( $medias ) {
+function bboss_media_clear_media_symlinks_on_delete( $medias ) {
 	if ( ! empty( $medias[0] ) ) {
 		foreach ( (array) $medias as $deleted_media ) {
 			if ( isset( $deleted_media->id ) ) {
-				bp_media_delete_symlinks( $deleted_media->id );
+				bboss_media_delete_symlinks( $deleted_media->id );
 			}
 		}
 	}
@@ -1096,17 +1096,17 @@ function bp_media_clear_media_symlinks_on_delete( $medias ) {
  *
  * @since BuddyBoss 1.2.3
  *
- * @param BP_Activity_Activity $activity Activity object.
+ * @param BBoss_Activity_Activity $activity Activity object.
  */
-function bp_media_activity_update_media_privacy( $activity ) {
-	$activity_metas = bb_activity_get_metadata( $activity->id );
+function bboss_media_activity_update_media_privacy( $activity ) {
+	$activity_metas = bboss_activity_get_metadata( $activity->id );
 	$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
 
 	if ( ! empty( $media_ids ) ) {
 		$media_ids = explode( ',', $media_ids );
 
 		foreach ( $media_ids as $media_id ) {
-			$media = new BP_Media( $media_id );
+			$media = new BBoss_Media( $media_id );
 			// Do not update the privacy if the media is added to forum.
 			if (
 				! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) &&
@@ -1128,16 +1128,16 @@ function bp_media_activity_update_media_privacy( $activity ) {
  * @param $thread_id
  * @param $message_ids
  */
-function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
+function bboss_group_messages_delete_meta( $thread_id, $message_ids ) {
 
-	if ( false === bp_disable_group_messages() ) {
+	if ( false === bboss_disable_group_messages() ) {
 		return;
 	}
 
 	if ( ! empty( $message_ids ) ) {
 		foreach ( $message_ids as $message_id ) {
-			if ( bp_loggedin_user_id() === messages_get_message_sender( $message_id ) ) {
-				bp_messages_delete_meta( $message_id );
+			if ( bboss_loggedin_user_id() === bboss_messages_get_message_sender( $message_id ) ) {
+				bboss_messages_delete_meta( $message_id );
 			}
 		}
 	}
@@ -1148,13 +1148,24 @@ function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
  * Set up activity arguments for use with the 'media' scope.
  *
  * @since BuddyBoss 1.4.2
+ * @since BuddyBoss 3.7.1 Only matches when specific activity IDs are requested.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
  *
  * @return array $retval
  */
-function bp_activity_filter_media_scope( $retval = array(), $filter = array() ) {
+function bboss_activity_filter_media_scope( $retval = array(), $filter = array() ) {
+
+	// This scope matches hidden sub-activities of every group and profile, so it only serves
+	// lookups of specific IDs the caller has already checked. Combined with a scope that shows
+	// hidden items, such as `favorites,media`, it would list them all (PROD-10649).
+	if ( empty( $filter['in'] ) ) {
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
+	}
 
 	$retval = array(
 		'relation' => 'AND',
@@ -1172,7 +1183,7 @@ function bp_activity_filter_media_scope( $retval = array(), $filter = array() ) 
 	return $retval;
 }
 
-add_filter( 'bp_activity_set_media_scope_args', 'bp_activity_filter_media_scope', 10, 2 );
+add_filter( 'bp_activity_set_media_scope_args', 'bboss_activity_filter_media_scope', 10, 2 );
 
 /**
  * Add media repair list item.
@@ -1182,21 +1193,21 @@ add_filter( 'bp_activity_set_media_scope_args', 'bp_activity_filter_media_scope'
  * @since BuddyBoss 1.4.4
  * @return array Repair list items.
  */
-function bp_media_add_admin_repair_items( $repair_list ) {
-	if ( bp_is_active( 'activity' ) ) {
+function bboss_media_add_admin_repair_items( $repair_list ) {
+	if ( bboss_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-media',
-			esc_html__( 'Repair media', 'buddyboss' ),
+			esc_html__( 'Repair media', 'buddyboss-platform' ),
 			'bp_media_admin_repair_media',
 		);
 		$repair_list[] = array(
 			'bp-media-forum-privacy-repair',
-			esc_html__( 'Repair forum media privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum media privacy', 'buddyboss-platform' ),
 			'bp_media_forum_privacy_repair',
 		);
 		$repair_list[] = array(
 			'bp-media-message-repair',
-			esc_html__( 'Repair messages media', 'buddyboss' ),
+			esc_html__( 'Repair messages media', 'buddyboss-platform' ),
 			'bp_media_message_privacy_repair',
 		);
 	}
@@ -1209,18 +1220,18 @@ function bp_media_add_admin_repair_items( $repair_list ) {
  *
  * @since BuddyBoss 1.5.5
  */
-function bp_media_message_privacy_repair() {
+function bboss_media_message_privacy_repair() {
 	global $wpdb;
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-	$bp     = buddypress();
+	$bp     = bboss();
 
-	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' AND type = 'photo' LIMIT 20 OFFSET $offset ";
-	$medias      = $wpdb->get_results( $media_query );
+	// Table name from $bp->media; OFFSET bound as %d.
+	$medias = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' AND type = 'photo' LIMIT 20 OFFSET %d ", $offset ) );
 
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
 			if ( ! empty( $media->id ) ) {
-				$media_obj              = new BP_Media( $media->id );
+				$media_obj              = new BBoss_Media( $media->id );
 				$media_obj->album_id    = 0;
 				$media_obj->group_id    = 0;
 				$media_obj->activity_id = 0;
@@ -1229,7 +1240,8 @@ function bp_media_message_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		/* translators: %s: number. */
+		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss-platform' ), bboss_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1239,7 +1251,7 @@ function bp_media_message_privacy_repair() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing messages media &hellip; Complete!', 'buddyboss' ),
+			'message' => __( 'Repairing messages media &hellip; Complete!', 'buddyboss-platform' ),
 		);
 	}
 }
@@ -1249,38 +1261,36 @@ function bp_media_message_privacy_repair() {
  *
  * @since BuddyBoss 1.4.4
  */
-function bp_media_admin_repair_media() {
+function bboss_media_admin_repair_media() {
 	global $wpdb;
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-	$bp     = buddypress();
+	$bp     = bboss();
 
-	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 AND type = 'photo' LIMIT 50 OFFSET $offset ";
-	$medias      = $wpdb->get_results( $media_query );
+	// Table name from $bp->media; OFFSET bound as %d.
+	$medias = $wpdb->get_results( $wpdb->prepare( "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 AND type = 'photo' LIMIT 50 OFFSET %d ", $offset ) );
 
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
 			if ( ! empty( $media->id ) && ! empty( $media->activity_id ) ) {
-				$activity = new BP_Activity_Activity( $media->activity_id );
+				$activity = new BBoss_Activity_Activity( $media->activity_id );
 				if ( ! empty( $activity->id ) ) {
 					if ( 'activity_comment' === $activity->type ) {
-						$activity = new BP_Activity_Activity( $activity->item_id );
+						$activity = new BBoss_Activity_Activity( $activity->item_id );
 					}
-					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-						$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . ' ';
-						$wpdb->query( $update_query );
+					if ( bboss_is_active( 'groups' ) && bboss()->groups->id === $activity->component ) {
+						$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET group_id=%d, privacy='grouponly' WHERE id=%d ", $activity->item_id, $media->id ) );
 					}
 					if ( 'media' === $activity->privacy ) {
 						if ( ! empty( $activity->secondary_item_id ) ) {
-							$media_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+							$media_activity = new BBoss_Activity_Activity( $activity->secondary_item_id );
 							if ( ! empty( $media_activity->id ) ) {
 								if ( 'activity_comment' === $media_activity->type ) {
-									$media_activity = new BP_Activity_Activity( $media_activity->item_id );
+									$media_activity = new BBoss_Activity_Activity( $media_activity->item_id );
 								}
-								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $media_activity->component ) {
-									$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $media_activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . ' ';
-									$wpdb->query( $update_query );
+								if ( bboss_is_active( 'groups' ) && bboss()->groups->id === $media_activity->component ) {
+									$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET group_id=%d, privacy='grouponly' WHERE id=%d ", $media_activity->item_id, $media->id ) );
 									$activity->item_id   = $media_activity->item_id;
-									$activity->component = buddypress()->groups->id;
+									$activity->component = bboss()->groups->id;
 								}
 							}
 						}
@@ -1292,7 +1302,8 @@ function bp_media_admin_repair_media() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		/* translators: %s: number. */
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss-platform' ), bboss_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1302,7 +1313,7 @@ function bp_media_admin_repair_media() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing media &hellip; Complete!', 'buddyboss' ),
+			'message' => __( 'Repairing media &hellip; Complete!', 'buddyboss-platform' ),
 		);
 	}
 }
@@ -1312,25 +1323,31 @@ function bp_media_admin_repair_media() {
  *
  * @since BuddyBoss 1.4.2
  */
-function bp_media_forum_privacy_repair() {
+function bboss_media_forum_privacy_repair() {
 	global $wpdb;
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-	$bp     = buddypress();
+	$bp     = bboss();
 
-	$squery  = "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
-	$records = $wpdb->get_col( $squery );
+	// Table names from $wpdb; OFFSET bound as %d.
+	$records = $wpdb->get_col( $wpdb->prepare( "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET %d ", $offset ) );
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
 			if ( ! empty( $record ) ) {
-				$media_ids = get_post_meta( $record, 'bp_media_ids', true );
-				if ( $media_ids ) {
-					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ')';
-					$wpdb->query( $update_query );
+				// The meta is a comma-separated list of media ids; bind one %d per id (it was spliced in raw).
+				$media_ids = array_filter( wp_parse_id_list( get_post_meta( $record, 'bp_media_ids', true ) ) );
+				if ( ! empty( $media_ids ) ) {
+					$wpdb->query(
+						$wpdb->prepare(
+							"UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . implode( ',', array_fill( 0, count( $media_ids ), '%d' ) ) . ')',
+							$media_ids
+						)
+					);
 				}
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		/* translators: %s: number. */
+		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss-platform' ), bboss_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1338,11 +1355,12 @@ function bp_media_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss' );
+		/* translators: %s: progress text. */
+		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss-platform' );
 
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
@@ -1357,19 +1375,19 @@ function bp_media_forum_privacy_repair() {
  *
  * @return array
  */
-function bp_media_filter_public_scope( $retval = array(), $filter = array() ) {
+function bboss_media_filter_public_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-				? bp_displayed_user_id()
-				: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+				? bboss_displayed_user_id()
+				: bboss_loggedin_user_id();
 	}
 
 	$privacy = array( 'public' );
-	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
+	if ( is_user_logged_in() && bboss_is_profile_media_support_enabled() ) {
 		$privacy[] = 'loggedin';
 	}
 
@@ -1382,7 +1400,7 @@ function bp_media_filter_public_scope( $retval = array(), $filter = array() ) {
 		),
 	);
 
-	if ( ! bp_is_profile_media_support_enabled() && ! bp_is_profile_albums_support_enabled() ) {
+	if ( ! bboss_is_profile_media_support_enabled() && ! bboss_is_profile_albums_support_enabled() ) {
 		$args[] = array(
 			'column'  => 'user_id',
 			'compare' => '=',
@@ -1390,7 +1408,7 @@ function bp_media_filter_public_scope( $retval = array(), $filter = array() ) {
 		);
 	}
 
-	if ( ! bp_is_profile_albums_support_enabled() ) {
+	if ( ! bboss_is_profile_albums_support_enabled() ) {
 		$args[] = array(
 			'column'  => 'album_id',
 			'compare' => '=',
@@ -1422,7 +1440,7 @@ function bp_media_filter_public_scope( $retval = array(), $filter = array() ) {
 	return $retval;
 }
 
-add_filter( 'bp_media_set_public_scope_args', 'bp_media_filter_public_scope', 10, 2 );
+add_filter( 'bp_media_set_public_scope_args', 'bboss_media_filter_public_scope', 10, 2 );
 
 /**
  * Force download - this is the default method.
@@ -1432,19 +1450,19 @@ add_filter( 'bp_media_set_public_scope_args', 'bp_media_filter_public_scope', 10
  *
  * @since BuddyBoss 1.4.1
  */
-function bp_media_download_file_force( $file_path, $filename ) {
-	$parsed_file_path = bp_media_parse_file_path( $file_path );
-	$download_range   = bp_media_get_download_range( @filesize( $parsed_file_path['file_path'] ) ); // @codingStandardsIgnoreLine.
+function bboss_media_download_file_force( $file_path, $filename ) {
+	$parsed_file_path = bboss_media_parse_file_path( $file_path );
+	$download_range   = bboss_media_get_download_range( @filesize( $parsed_file_path['file_path'] ) ); // @codingStandardsIgnoreLine.
 
-	bp_media_download_headers( $parsed_file_path['file_path'], $filename, $download_range );
+	bboss_media_download_headers( $parsed_file_path['file_path'], $filename, $download_range );
 
 	$start  = isset( $download_range['start'] ) ? $download_range['start'] : 0;
 	$length = isset( $download_range['length'] ) ? $download_range['length'] : 0;
-	if ( ! bp_media_readfile_chunked( $parsed_file_path['file_path'], $start, $length ) ) {
+	if ( ! bboss_media_readfile_chunked( $parsed_file_path['file_path'], $start, $length ) ) {
 		if ( $parsed_file_path['remote_file'] ) {
-			bp_media_download_file_redirect( $file_path );
+			bboss_media_download_file_redirect( $file_path );
 		} else {
-			bp_media_download_error( __( 'File not found', 'buddyboss' ) );
+			bboss_media_download_error( __( 'File not found', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -1460,11 +1478,11 @@ function bp_media_download_file_force( $file_path, $filename ) {
  *
  * @since BuddyBoss 1.4.1
  */
-function bp_media_download_error( $message, $title = '', $status = 404 ) {
+function bboss_media_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
-		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss' ) . '</a>';
+		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss-platform' ) . '</a>';
 	}
-	wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
+	wp_die( wp_kses_post( $message ), esc_html( $title ), array( 'response' => (int) $status ) );
 }
 
 /**
@@ -1475,7 +1493,7 @@ function bp_media_download_error( $message, $title = '', $status = 404 ) {
  *
  * @since BuddyBoss 1.4.1
  */
-function bp_media_download_file_redirect( $file_path, $filename = '' ) {
+function bboss_media_download_file_redirect( $file_path, $filename = '' ) {
 	header( 'Location: ' . $file_path );
 	exit;
 }
@@ -1493,11 +1511,11 @@ function bp_media_download_file_redirect( $file_path, $filename = '' ) {
  * @return bool Success or fail
  * @since BuddyBoss 1.4.1
  */
-function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
-	if ( ! defined( 'BP_MEDIA_CHUNK_SIZE' ) ) {
-		define( 'BP_MEDIA_CHUNK_SIZE', 1024 * 1024 );
+function bboss_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
+	if ( ! defined( 'BBOSS_MEDIA_CHUNK_SIZE' ) ) {
+		define( 'BBOSS_MEDIA_CHUNK_SIZE', 1024 * 1024 );
 	}
-	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 
 	if ( false === $handle ) {
 		return false;
@@ -1507,7 +1525,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 		$length = @filesize( $file ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 	}
 
-	$read_length = (int) BP_MEDIA_CHUNK_SIZE;
+	$read_length = (int) BBOSS_MEDIA_CHUNK_SIZE;
 
 	if ( $length ) {
 		$end = $start + $length - 1;
@@ -1521,7 +1539,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 				$read_length = $end - $p + 1;
 			}
 
-			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.XSS.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread
+			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_operations_fread
 			$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 			if ( ob_get_length() ) {
@@ -1539,7 +1557,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 		}
 	}
 
-	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose
+	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 }
 
 /**
@@ -1552,13 +1570,13 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
  *
  * @since BuddyBoss 1.4.1
  */
-function bp_media_download_headers( $file_path, $filename, $download_range = array() ) {
-	bp_media_check_server_config();
-	bp_media_clean_buffers();
-	bp_media_nocache_headers();
+function bboss_media_download_headers( $file_path, $filename, $download_range = array() ) {
+	bboss_media_check_server_config();
+	bboss_media_clean_buffers();
+	bboss_media_nocache_headers();
 
 	header( 'X-Robots-Tag: noindex, nofollow', true );
-	header( 'Content-Type: ' . bp_media_get_download_content_type( $file_path ) );
+	header( 'Content-Type: ' . bboss_media_get_download_content_type( $file_path ) );
 	header( 'Content-Description: File Transfer' );
 	header( 'Content-Disposition: attachment; filename="' . $filename . '";' );
 	header( 'Content-Transfer-Encoding: binary' );
@@ -1595,7 +1613,7 @@ function bp_media_download_headers( $file_path, $filename, $download_range = arr
  *
  * @param int $limit Time limit.
  */
-function bp_media_set_time_limit( $limit = 0 ) {
+function bboss_media_set_time_limit( $limit = 0 ) {
 	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) ) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
 		@set_time_limit( $limit ); // @codingStandardsIgnoreLine
 	}
@@ -1606,8 +1624,8 @@ function bp_media_set_time_limit( $limit = 0 ) {
  *
  * @since BuddyBoss 1.4.1
  */
-function bp_media_check_server_config() {
-	bp_media_set_time_limit( 0 );
+function bboss_media_check_server_config() {
+	bboss_media_set_time_limit( 0 );
 	if ( function_exists( 'apache_setenv' ) ) {
 		@apache_setenv( 'no-gzip', 1 ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_apache_setenv
 	}
@@ -1622,7 +1640,7 @@ function bp_media_check_server_config() {
  *
  * @since BuddyBoss 1.4.1
  */
-function bp_media_clean_buffers() {
+function bboss_media_clean_buffers() {
 	if ( ob_get_level() ) {
 		$levels = ob_get_level();
 		for ( $i = 0; $i < $levels; $i ++ ) {
@@ -1641,10 +1659,10 @@ function bp_media_clean_buffers() {
  * @return mixed
  * @since BuddyBoss 1.4.1
  */
-function bp_media_set_nocache_constants( $return = true ) {
-	bp_media_maybe_define_constant( 'DONOTCACHEPAGE', true );
-	bp_media_maybe_define_constant( 'DONOTCACHEOBJECT', true );
-	bp_media_maybe_define_constant( 'DONOTCACHEDB', true );
+function bboss_media_set_nocache_constants( $return = true ) {
+	bboss_media_maybe_define_constant( 'DONOTCACHEPAGE', true );
+	bboss_media_maybe_define_constant( 'DONOTCACHEOBJECT', true );
+	bboss_media_maybe_define_constant( 'DONOTCACHEDB', true );
 
 	return $return;
 }
@@ -1657,7 +1675,7 @@ function bp_media_set_nocache_constants( $return = true ) {
  * @param string $name  Constant name.
  * @param mixed  $value Value.
  */
-function bp_media_maybe_define_constant( $name, $value ) {
+function bboss_media_maybe_define_constant( $name, $value ) {
 	if ( ! defined( $name ) ) {
 		define( $name, $value );
 	}
@@ -1668,8 +1686,8 @@ function bp_media_maybe_define_constant( $name, $value ) {
  *
  * @since BuddyBoss 1.4.1
  */
-function bp_media_nocache_headers() {
-	bp_media_set_nocache_constants();
+function bboss_media_nocache_headers() {
+	bboss_media_set_nocache_constants();
 	nocache_headers();
 }
 
@@ -1681,7 +1699,7 @@ function bp_media_nocache_headers() {
  * @return string
  * @since BuddyBoss 1.4.1
  */
-function bp_media_get_download_content_type( $file_path ) {
+function bboss_media_get_download_content_type( $file_path ) {
 	$file_extension = strtolower( substr( strrchr( $file_path, '.' ), 1 ) );
 	$ctype          = 'application/force-download';
 
@@ -1713,7 +1731,7 @@ function bp_media_get_download_content_type( $file_path ) {
  * }
  * @since BuddyBoss 1.4.1
  */
-function bp_media_get_download_range( $file_size ) {
+function bboss_media_get_download_range( $file_size ) {
 	$start          = 0;
 	$download_range = array(
 		'start'            => $start,
@@ -1784,7 +1802,7 @@ function bp_media_get_download_range( $file_size ) {
  * @return array
  * @since BuddyBoss 1.4.1
  */
-function bp_media_parse_file_path( $file_path ) {
+function bboss_media_parse_file_path( $file_path ) {
 	$wp_uploads     = wp_upload_dir();
 	$wp_uploads_dir = $wp_uploads['basedir'];
 	$wp_uploads_url = $wp_uploads['baseurl'];
@@ -1852,12 +1870,12 @@ function bp_media_parse_file_path( $file_path ) {
  *
  * @since BuddyBoss 1.5.0
  */
-function bp_media_get_edit_activity_data( $activity ) {
+function bboss_media_get_edit_activity_data( $activity ) {
 
 	if ( ! empty( $activity['id'] ) ) {
 
 		// Fetch media ids of activity.
-		$activity_metas = bb_activity_get_metadata( $activity['id'] );
+		$activity_metas = bboss_activity_get_metadata( $activity['id'] );
 		$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
 		$media_id       = ! empty( $activity_metas['bp_media_id'][0] ) ? $activity_metas['bp_media_id'][0] : '';
 
@@ -1876,11 +1894,11 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 			foreach ( $media_ids as $media_id ) {
 
-				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $media_id, BP_Moderation_Media::$moderation_type ) ) {
+				if ( bboss_is_active( 'moderation' ) && bboss_moderation_is_content_hidden( $media_id, BBoss_Moderation_Media::$moderation_type ) ) {
 					continue;
 				}
 
-				$media = new BP_Media( $media_id );
+				$media = new BBoss_Media( $media_id );
 
 				if ( empty( $media->id ) ) {
 					continue;
@@ -1889,8 +1907,8 @@ function bp_media_get_edit_activity_data( $activity ) {
 				$activity['media'][] = array(
 					'id'            => $media_id,
 					'attachment_id' => $media->attachment_id,
-					'thumb'         => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-activity-image' ),
-					'url'           => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' ),
+					'thumb'         => bboss_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-activity-image' ),
+					'url'           => bboss_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' ),
 					'name'          => $media->title,
 					'group_id'      => $media->group_id,
 					'album_id'      => $media->album_id,
@@ -1916,8 +1934,8 @@ function bp_media_get_edit_activity_data( $activity ) {
 			$activity['gif'] = $gif_raw_data;
 		}
 
-		$activity['profile_media'] = bp_is_profile_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), 0 );
-		$activity['group_media']   = bp_is_group_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
+		$activity['profile_media'] = bboss_is_profile_media_support_enabled() && bboss_media_user_can_upload( bboss_loggedin_user_id(), 0 );
+		$activity['group_media']   = bboss_is_group_media_support_enabled() && bboss_media_user_can_upload( bboss_loggedin_user_id(), ( bboss_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
 	}
 
 	return $activity;
@@ -1932,11 +1950,11 @@ function bp_media_get_edit_activity_data( $activity ) {
  *
  * @return string
  */
-function bp_media_activity_entry_css_class( $class ) {
+function bboss_media_activity_entry_css_class( $class ) {
 
-	if ( bp_is_active( 'media' ) && bp_is_active( 'activity' ) ) {
+	if ( bboss_is_active( 'media' ) && bboss_is_active( 'activity' ) ) {
 
-		$activity_metas = bb_activity_get_metadata( bp_get_activity_id() );
+		$activity_metas = bboss_activity_get_metadata( bboss_get_activity_id() );
 		$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
 		if ( ! empty( $media_ids ) ) {
 			$class .= ' media-activity-wrap';
@@ -1954,7 +1972,7 @@ function bp_media_activity_entry_css_class( $class ) {
  * @return string
  * @since BuddyBoss 1.7.0
  */
-function bp_media_protect_download_rewite_rules( $rewrite ) {
+function bboss_media_protect_download_rewite_rules( $rewrite ) {
 	if ( ! is_multisite() ) {
 		return $rewrite;
 	}
@@ -1968,14 +1986,14 @@ function bp_media_protect_download_rewite_rules( $rewrite ) {
 
 	return $rule . $rewrite;
 }
-add_filter( 'mod_rewrite_rules', 'bp_media_protect_download_rewite_rules' );
+add_filter( 'mod_rewrite_rules', 'bboss_media_protect_download_rewite_rules' );
 
 /**
  * Function will protect the download album.
  *
  * @since BuddyBoss 1.7.0
  */
-function bp_media_check_download_album_protection() {
+function bboss_media_check_download_album_protection() {
 
 	$upload_dir = wp_get_upload_dir();
 	$files      = array(
@@ -2040,15 +2058,15 @@ Options -ExecCGI
 
 	foreach ( $files as $file ) {
 		if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
-			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 			if ( $file_handle ) {
-				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 			}
 		}
 	}
 }
-add_action( 'bp_init', 'bp_media_check_download_album_protection', 9999 );
+add_action( 'bp_init', 'bboss_media_check_download_album_protection', 9999 );
 
 /**
  * Filter attachments query posts join sql.
@@ -2060,7 +2078,7 @@ add_action( 'bp_init', 'bp_media_check_download_album_protection', 9999 );
  * @return mixed|string
  * @since BuddyBoss 1.7.0
  */
-function bp_media_filter_attachments_query_posts_join( $join, $wp_query ) {
+function bboss_media_filter_attachments_query_posts_join( $join, $wp_query ) {
 	global $wpdb;
 	if ( 'attachment' === $wp_query->query_vars['post_type'] ) {
 		$join .= " LEFT JOIN {$wpdb->postmeta} AS bb_mt1 ON ({$wpdb->posts}.ID = bb_mt1.post_id AND bb_mt1.meta_key = 'bp_media_upload' )  LEFT JOIN {$wpdb->postmeta} AS bb_mt2 ON ({$wpdb->posts}.ID = bb_mt2.post_id AND bb_mt2.meta_key = 'bp_document_upload' )  LEFT JOIN {$wpdb->postmeta} AS bb_mt3 ON ({$wpdb->posts}.ID = bb_mt3.post_id AND bb_mt3.meta_key = 'bp_video_upload' )";
@@ -2079,7 +2097,7 @@ function bp_media_filter_attachments_query_posts_join( $join, $wp_query ) {
  * @return mixed|string
  * @since BuddyBoss 1.7.0
  */
-function bp_media_filter_attachments_query_posts_where( $where, $wp_query ) {
+function bboss_media_filter_attachments_query_posts_where( $where, $wp_query ) {
 	global $wpdb;
 	if ( 'attachment' === $wp_query->query_vars['post_type'] ) {
 		$where .= " AND ( ( bb_mt1.post_id IS NULL AND bb_mt2.post_id IS NULL AND bb_mt3.post_id IS NULL ) OR ( {$wpdb->posts}.post_parent != 0 ) )";
@@ -2097,12 +2115,12 @@ function bp_media_filter_attachments_query_posts_where( $where, $wp_query ) {
  *
  * @return string
  */
-function bp_video_activity_entry_css_class( $class ) {
+function bboss_video_activity_entry_css_class( $class ) {
 
-	if ( bp_is_active( 'video' ) && bp_is_active( 'activity' ) ) {
+	if ( bboss_is_active( 'video' ) && bboss_is_active( 'activity' ) ) {
 
 		// Get activity metas.
-		$activity_metas = bb_activity_get_metadata( bp_get_activity_id() );
+		$activity_metas = bboss_activity_get_metadata( bboss_get_activity_id() );
 
 		$video_ids = ! empty( $activity_metas['bp_video_ids'] ) ? $activity_metas['bp_video_ids'] : '';
 		if ( ! empty( $video_ids ) ) {
@@ -2118,7 +2136,7 @@ function bp_video_activity_entry_css_class( $class ) {
  *
  * @since BuddyBoss 1.7.2
  */
-function bb_setup_media_preview() {
+function bboss_setup_media_preview() {
 	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
 	add_rewrite_rule( 'bb-media-preview/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-media-preview=$matches[1]&id1=$matches[2]&size=$matches[3]&receiver=$matches[4]', 'top' );
@@ -2133,7 +2151,7 @@ function bb_setup_media_preview() {
  *
  * @since BuddyBoss 1.7.2
  */
-function bb_setup_query_media_preview( $query_vars ) {
+function bboss_setup_query_media_preview( $query_vars ) {
 	$query_vars[] = 'bb-media-preview';
 	$query_vars[] = 'id1';
 	$query_vars[] = 'size';
@@ -2151,7 +2169,7 @@ function bb_setup_query_media_preview( $query_vars ) {
  *
  * @return string
  */
-function bb_setup_template_for_media_preview( $template ) {
+function bboss_setup_template_for_media_preview( $template ) {
 	if ( get_query_var( 'bb-media-preview' ) === false || empty( get_query_var( 'bb-media-preview' ) ) ) {
 		return $template;
 	}
@@ -2163,7 +2181,7 @@ function bb_setup_template_for_media_preview( $template ) {
 	 */
 	do_action( 'bb_setup_template_for_media_preview' );
 
-	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/preview.php';
+	return trailingslashit( bboss()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/preview.php';
 }
 
 /**
@@ -2171,7 +2189,7 @@ function bb_setup_template_for_media_preview( $template ) {
  *
  * @since BuddyBoss 2.0.4
  */
-function bb_setup_attachment_media_preview() {
+function bboss_setup_attachment_media_preview() {
 	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]', 'top' );
 	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]&size=$matches[2]', 'top' );
 	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]&size=$matches[2]&media-thread-id=$matches[3]', 'top' );
@@ -2186,11 +2204,11 @@ function bb_setup_attachment_media_preview() {
  *
  * @return array
  */
-function bb_setup_attachment_media_preview_query( $query_vars ) {
+function bboss_setup_attachment_media_preview_query( $query_vars ) {
 	$query_vars[] = 'media-attachment-id';
 	$query_vars[] = 'size';
 
-	if ( bp_is_active( 'messages' ) ) {
+	if ( bboss_is_active( 'messages' ) ) {
 		$query_vars[] = 'media-thread-id';
 	}
 
@@ -2206,7 +2224,7 @@ function bb_setup_attachment_media_preview_query( $query_vars ) {
  *
  * @return string
  */
-function bb_setup_attachment_media_preview_template( $template ) {
+function bboss_setup_attachment_media_preview_template( $template ) {
 
 	if ( ! empty( get_query_var( 'media-attachment-id' ) ) ) {
 		/**
@@ -2216,7 +2234,7 @@ function bb_setup_attachment_media_preview_template( $template ) {
 		 */
 		do_action( 'bb_setup_attachment_media_preview_template' );
 
-		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/attachment.php';
+		return trailingslashit( bboss()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/attachment.php';
 	}
 
 	return $template;
@@ -2231,7 +2249,7 @@ function bb_setup_attachment_media_preview_template( $template ) {
  *
  * @return mixed|string
  */
-function bb_media_remove_specific_trailing_slash( $redirect_url ) {
+function bboss_media_remove_specific_trailing_slash( $redirect_url ) {
 	if (
 		strpos( $redirect_url, 'bb-attachment-media-preview' ) !== false ||
 		strpos( $redirect_url, 'bb-media-preview' ) !== false
@@ -2240,7 +2258,7 @@ function bb_media_remove_specific_trailing_slash( $redirect_url ) {
 	}
 	return $redirect_url;
 }
-add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 9999 );
+add_filter( 'redirect_canonical', 'bboss_media_remove_specific_trailing_slash', 9999 );
 
 /**
  * Put photo attachment as media.
@@ -2251,14 +2269,14 @@ add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 999
  *
  * @return mixed
  */
-function bb_messages_media_save( $attachment ) {
+function bboss_messages_media_save( $attachment ) {
 	$thread_id            = ! empty( $_POST['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['thread_id'] ) ) : 0;
 	$group_id             = ! empty( $_POST['group_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group_id'] ) ) : 0;
 	$component            = ! empty( $_POST['component'] ) ? sanitize_text_field( wp_unslash( $_POST['component'] ) ) : '';
-	$is_message_component = ( bp_is_group_messages() || bp_is_messages_component() || ( ! empty( $component ) && 'messages' === $component ) );
+	$is_message_component = ( bboss_is_group_messages() || bboss_is_messages_component() || ( ! empty( $component ) && 'messages' === $component ) );
 
-	if ( empty( $group_id ) && bp_is_group_messages() ) {
-		$group = groups_get_current_group();
+	if ( empty( $group_id ) && bboss_is_group_messages() ) {
+		$group = bboss_groups_get_current_group();
 		if ( ! empty( $group ) ) {
 			$group_id = $group->id;
 		}
@@ -2266,7 +2284,7 @@ function bb_messages_media_save( $attachment ) {
 
 	if (
 		$is_message_component &&
-		bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) &&
+		bboss_user_has_access_upload_media( $group_id, bboss_loggedin_user_id(), 0, $thread_id, 'message' ) &&
 		! empty( $attachment )
 	) {
 
@@ -2276,10 +2294,10 @@ function bb_messages_media_save( $attachment ) {
 			'privacy' => 'message',
 		);
 
-		remove_action( 'bp_media_add', 'bp_activity_media_add', 9 );
-		remove_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
+		remove_action( 'bp_media_add', 'bboss_activity_media_add', 9 );
+		remove_filter( 'bp_media_add_handler', 'bboss_activity_create_parent_media_activity', 9 );
 
-		$media_ids = bp_media_add_handler( $medias, 'message' );
+		$media_ids = bboss_media_add_handler( $medias, 'message' );
 
 		if ( ! is_wp_error( $media_ids ) ) {
 			// Message not actually sent.
@@ -2294,8 +2312,8 @@ function bb_messages_media_save( $attachment ) {
 			update_post_meta( $attachment->ID, 'thread_id', $thread_id );
 		}
 
-		add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
-		add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
+		add_action( 'bp_media_add', 'bboss_activity_media_add', 9 );
+		add_filter( 'bp_media_add_handler', 'bboss_activity_create_parent_media_activity', 9 );
 
 		return $media_ids;
 
@@ -2304,7 +2322,7 @@ function bb_messages_media_save( $attachment ) {
 	return false;
 }
 
-add_action( 'bb_media_upload', 'bb_messages_media_save' );
+add_action( 'bb_media_upload', 'bboss_messages_media_save' );
 
 // =============================================================================
 // Master section-toggle enforcement (Settings 2.0).
@@ -2338,19 +2356,19 @@ add_action( 'bb_media_upload', 'bb_messages_media_save' );
  *
  * @return bool False if photos section is off, otherwise the original value.
  */
-function bb_media_photos_force_disable( $enabled ) {
-	if ( ! (bool) bp_get_option( 'bb_media_photos_support', 1 ) ) {
+function bboss_media_photos_force_disable( $enabled ) {
+	if ( ! (bool) bboss_get_option( 'bb_media_photos_support', 1 ) ) {
 		return false;
 	}
 
 	return $enabled;
 }
-add_filter( 'bp_is_profile_media_support_enabled', 'bb_media_photos_force_disable' );
-add_filter( 'bp_is_profile_albums_support_enabled', 'bb_media_photos_force_disable' );
-add_filter( 'bp_is_group_media_support_enabled', 'bb_media_photos_force_disable' );
-add_filter( 'bp_is_group_albums_support_enabled', 'bb_media_photos_force_disable' );
-add_filter( 'bp_is_messages_media_support_enabled', 'bb_media_photos_force_disable' );
-add_filter( 'bp_is_forums_media_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_profile_media_support_enabled', 'bboss_media_photos_force_disable' );
+add_filter( 'bp_is_profile_albums_support_enabled', 'bboss_media_photos_force_disable' );
+add_filter( 'bp_is_group_media_support_enabled', 'bboss_media_photos_force_disable' );
+add_filter( 'bp_is_group_albums_support_enabled', 'bboss_media_photos_force_disable' );
+add_filter( 'bp_is_messages_media_support_enabled', 'bboss_media_photos_force_disable' );
+add_filter( 'bp_is_forums_media_support_enabled', 'bboss_media_photos_force_disable' );
 
 /**
  * Force video-related support functions to return false when the Videos
@@ -2365,17 +2383,17 @@ add_filter( 'bp_is_forums_media_support_enabled', 'bb_media_photos_force_disable
  *
  * @return bool False if videos are unavailable or switched off, otherwise the original value.
  */
-function bb_media_videos_force_disable( $enabled ) {
-	if ( ! bp_is_active( 'video' ) || ! (bool) bp_get_option( 'bb_media_videos_support', 1 ) ) {
+function bboss_media_videos_force_disable( $enabled ) {
+	if ( ! bboss_is_active( 'video' ) || ! (bool) bboss_get_option( 'bb_media_videos_support', 1 ) ) {
 		return false;
 	}
 
 	return $enabled;
 }
-add_filter( 'bp_is_profile_video_support_enabled', 'bb_media_videos_force_disable' );
-add_filter( 'bp_is_group_video_support_enabled', 'bb_media_videos_force_disable' );
-add_filter( 'bp_is_messages_video_support_enabled', 'bb_media_videos_force_disable' );
-add_filter( 'bp_is_forums_video_support_enabled', 'bb_media_videos_force_disable' );
+add_filter( 'bp_is_profile_video_support_enabled', 'bboss_media_videos_force_disable' );
+add_filter( 'bp_is_group_video_support_enabled', 'bboss_media_videos_force_disable' );
+add_filter( 'bp_is_messages_video_support_enabled', 'bboss_media_videos_force_disable' );
+add_filter( 'bp_is_forums_video_support_enabled', 'bboss_media_videos_force_disable' );
 
 /**
  * Force document-related support functions to return false when the Documents
@@ -2390,17 +2408,17 @@ add_filter( 'bp_is_forums_video_support_enabled', 'bb_media_videos_force_disable
  *
  * @return bool False if documents are unavailable or switched off, otherwise the original value.
  */
-function bb_media_documents_force_disable( $enabled ) {
-	if ( ! bp_is_active( 'document' ) || ! (bool) bp_get_option( 'bb_media_documents_support', 1 ) ) {
+function bboss_media_documents_force_disable( $enabled ) {
+	if ( ! bboss_is_active( 'document' ) || ! (bool) bboss_get_option( 'bb_media_documents_support', 1 ) ) {
 		return false;
 	}
 
 	return $enabled;
 }
-add_filter( 'bp_is_profile_document_support_enabled', 'bb_media_documents_force_disable' );
-add_filter( 'bp_is_group_document_support_enabled', 'bb_media_documents_force_disable' );
-add_filter( 'bp_is_messages_document_support_enabled', 'bb_media_documents_force_disable' );
-add_filter( 'bp_is_forums_document_support_enabled', 'bb_media_documents_force_disable' );
+add_filter( 'bp_is_profile_document_support_enabled', 'bboss_media_documents_force_disable' );
+add_filter( 'bp_is_group_document_support_enabled', 'bboss_media_documents_force_disable' );
+add_filter( 'bp_is_messages_document_support_enabled', 'bboss_media_documents_force_disable' );
+add_filter( 'bp_is_forums_document_support_enabled', 'bboss_media_documents_force_disable' );
 
 /**
  * Force emoji-related support functions to return false when the Emoji
@@ -2412,17 +2430,17 @@ add_filter( 'bp_is_forums_document_support_enabled', 'bb_media_documents_force_d
  *
  * @return bool False if emoji section is off, otherwise the original value.
  */
-function bb_media_emoji_force_disable( $enabled ) {
-	if ( ! (bool) bp_get_option( 'bb_media_emoji_support', 1 ) ) {
+function bboss_media_emoji_force_disable( $enabled ) {
+	if ( ! (bool) bboss_get_option( 'bb_media_emoji_support', 1 ) ) {
 		return false;
 	}
 
 	return $enabled;
 }
-add_filter( 'bp_is_profiles_emoji_support_enabled', 'bb_media_emoji_force_disable' );
-add_filter( 'bp_is_groups_emoji_support_enabled', 'bb_media_emoji_force_disable' );
-add_filter( 'bp_is_messages_emoji_support_enabled', 'bb_media_emoji_force_disable' );
-add_filter( 'bp_is_forums_emoji_support_enabled', 'bb_media_emoji_force_disable' );
+add_filter( 'bp_is_profiles_emoji_support_enabled', 'bboss_media_emoji_force_disable' );
+add_filter( 'bp_is_groups_emoji_support_enabled', 'bboss_media_emoji_force_disable' );
+add_filter( 'bp_is_messages_emoji_support_enabled', 'bboss_media_emoji_force_disable' );
+add_filter( 'bp_is_forums_emoji_support_enabled', 'bboss_media_emoji_force_disable' );
 
 /**
  * Force GIF-related support functions to return false when the Animated GIFs
@@ -2430,7 +2448,7 @@ add_filter( 'bp_is_forums_emoji_support_enabled', 'bb_media_emoji_force_disable'
  * provider is loaded at all.
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss 3.7.0 Also disabled when {@see bb_giphy_provider_available()}
+ * @since BuddyBoss 3.7.0 Also disabled when {@see bboss_giphy_provider_available()}
  *                              is false — the GIF save/render backend is being
  *                              extracted to the BuddyBoss Addons plugin, and the
  *                              UI must never render against a missing backend.
@@ -2439,17 +2457,17 @@ add_filter( 'bp_is_forums_emoji_support_enabled', 'bb_media_emoji_force_disable'
  *
  * @return bool False if GIFs section is off or no provider is loaded, otherwise the original value.
  */
-function bb_media_gifs_force_disable( $enabled ) {
-	if ( ! bb_giphy_provider_available() || ! (bool) bp_get_option( 'bb_media_gif_support', 1 ) ) {
+function bboss_media_gifs_force_disable( $enabled ) {
+	if ( ! bboss_giphy_provider_available() || ! (bool) bboss_get_option( 'bb_media_gif_support', 1 ) ) {
 		return false;
 	}
 
 	return $enabled;
 }
-add_filter( 'bp_is_profiles_gif_support_enabled', 'bb_media_gifs_force_disable' );
-add_filter( 'bp_is_groups_gif_support_enabled', 'bb_media_gifs_force_disable' );
-add_filter( 'bp_is_messages_gif_support_enabled', 'bb_media_gifs_force_disable' );
-add_filter( 'bp_is_forums_gif_support_enabled', 'bb_media_gifs_force_disable' );
+add_filter( 'bp_is_profiles_gif_support_enabled', 'bboss_media_gifs_force_disable' );
+add_filter( 'bp_is_groups_gif_support_enabled', 'bboss_media_gifs_force_disable' );
+add_filter( 'bp_is_messages_gif_support_enabled', 'bboss_media_gifs_force_disable' );
+add_filter( 'bp_is_forums_gif_support_enabled', 'bboss_media_gifs_force_disable' );
 
 /**
  * Turn the GIF picker off in the front-end scripts when the GIPHY library is not available.
@@ -2463,8 +2481,8 @@ add_filter( 'bp_is_forums_gif_support_enabled', 'bb_media_gifs_force_disable' );
  *
  * @return array
  */
-function bb_media_hide_gif_picker_without_library( $params ) {
-	if ( ! isset( $params['media']['gif'] ) || ! is_array( $params['media']['gif'] ) || bb_media_gif_picker_available() ) {
+function bboss_media_hide_gif_picker_without_library( $params ) {
+	if ( ! isset( $params['media']['gif'] ) || ! is_array( $params['media']['gif'] ) || bboss_media_gif_picker_available() ) {
 		return $params;
 	}
 
@@ -2475,4 +2493,4 @@ function bb_media_hide_gif_picker_without_library( $params ) {
 
 	return $params;
 }
-add_filter( 'bp_core_get_js_strings', 'bb_media_hide_gif_picker_without_library', 30 );
+add_filter( 'bp_core_get_js_strings', 'bboss_media_hide_gif_picker_without_library', 30 );

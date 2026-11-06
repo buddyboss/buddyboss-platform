@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return object
  */
-function bp_get_current_blog_roles() {
+function bboss_get_current_blog_roles() {
 	global $wp_roles;
 
 	// Sanity check on roles global variable.
@@ -56,7 +56,7 @@ function bp_get_current_blog_roles() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_add_caps() {
+function bboss_add_caps() {
 	global $wp_roles;
 
 	// Load roles if not set.
@@ -66,7 +66,7 @@ function bp_add_caps() {
 
 	// Loop through available roles and add them.
 	foreach ( $wp_roles->role_objects as $role ) {
-		foreach ( bp_get_caps_for_role( $role->name ) as $cap ) {
+		foreach ( bboss_get_caps_for_role( $role->name ) as $cap ) {
 			$role->add_cap( $cap );
 		}
 	}
@@ -88,7 +88,7 @@ function bp_add_caps() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_remove_caps() {
+function bboss_remove_caps() {
 	global $wp_roles;
 
 	// Load roles if not set.
@@ -98,7 +98,7 @@ function bp_remove_caps() {
 
 	// Loop through available roles and remove them.
 	foreach ( $wp_roles->role_objects as $role ) {
-		foreach ( bp_get_caps_for_role( $role->name ) as $cap ) {
+		foreach ( bboss_get_caps_for_role( $role->name ) as $cap ) {
 			$role->remove_cap( $cap );
 		}
 	}
@@ -128,7 +128,7 @@ function bp_remove_caps() {
  * @param mixed  $args    See {@link WP_User::has_cap()}.
  * @return array Actual capabilities for meta capability. See {@link WP_User::has_cap()}.
  */
-function bp_map_meta_caps( $caps, $cap, $user_id, $args ) {
+function bboss_map_meta_caps( $caps, $cap, $user_id, $args ) {
 
 	/**
 	 * Filters the community caps mapping to be built in WordPress caps.
@@ -150,7 +150,7 @@ function bp_map_meta_caps( $caps, $cap, $user_id, $args ) {
  *
  * @return array Community capabilities.
  */
-function bp_get_community_caps() {
+function bboss_get_community_caps() {
 
 	// Forum meta caps.
 	$caps = array();
@@ -173,7 +173,7 @@ function bp_get_community_caps() {
  * @param string $role The role for which you're loading caps.
  * @return array Capabilities for $role.
  */
-function bp_get_caps_for_role( $role = '' ) {
+function bboss_get_caps_for_role( $role = '' ) {
 
 	// Which role are we looking for?
 	switch ( $role ) {
@@ -216,10 +216,10 @@ function bp_get_caps_for_role( $role = '' ) {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_set_current_user_default_role() {
+function bboss_set_current_user_default_role() {
 
 	// Bail if not multisite or not root blog.
-	if ( ! is_multisite() || ! bp_is_root_blog() ) {
+	if ( ! is_multisite() || ! bboss_is_root_blog() ) {
 		return;
 	}
 
@@ -229,12 +229,12 @@ function bp_set_current_user_default_role() {
 	}
 
 	// Bail if user is not active.
-	if ( bp_is_user_inactive() ) {
+	if ( bboss_is_user_inactive() ) {
 		return;
 	}
 
 	// Set the current users default role.
-	buddypress()->current_user->set_role( bp_get_option( 'default_role', 'subscriber' ) );
+	bboss()->current_user->set_role( bboss_get_option( 'default_role', 'subscriber' ) );
 }
 
 /**
@@ -253,7 +253,7 @@ function bp_set_current_user_default_role() {
  * }
  * @return bool True if the user has the cap for the given parameters.
  */
-function bp_current_user_can( $capability, $args = array() ) {
+function bboss_current_user_can( $capability, $args = array() ) {
 	// Backward compatibility for older $blog_id parameter.
 	if ( is_int( $args ) ) {
 		$site_id         = $args;
@@ -272,14 +272,14 @@ function bp_current_user_can( $capability, $args = array() ) {
 
 	// Use root blog if no ID passed.
 	if ( empty( $args['site_id'] ) ) {
-		$args['site_id'] = bp_get_root_blog_id();
+		$args['site_id'] = bboss_get_root_blog_id();
 	}
 
 	/** This filter is documented in /bp-core/bp-core-template.php */
 	$current_user_id = apply_filters( 'bp_loggedin_user_id', get_current_user_id() );
 
 	// Call bp_user_can().
-	$retval = bp_user_can( $current_user_id, $capability, $args );
+	$retval = bboss_user_can( $current_user_id, $capability, $args );
 
 	/**
 	 * Filters whether or not the current user has a given capability.
@@ -311,8 +311,8 @@ function bp_current_user_can( $capability, $args = array() ) {
  * }
  * @return bool True if the user has the cap for the given parameters.
  */
-function bp_user_can( $user_id, $capability, $args = array() ) {
-	$site_id = bp_get_root_blog_id();
+function bboss_user_can( $user_id, $capability, $args = array() ) {
+	$site_id = bboss_get_root_blog_id();
 
 	// Get the site ID if set, but don't pass along to user_can().
 	if ( isset( $args['site_id'] ) ) {
@@ -373,7 +373,7 @@ function bp_user_can( $user_id, $capability, $args = array() ) {
  * @param array  $args    Miscellaneous arguments passed to the user_has_cap filter.
  * @return array $allcaps The user's cap list, with 'bp_moderate' appended, if relevant.
  */
-function _bp_enforce_bp_moderate_cap_for_admins( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+function bboss__bp_enforce_bp_moderate_cap_for_admins( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
 	// Bail if not checking the 'bp_moderate' cap.
 	if ( 'bp_moderate' !== $cap ) {
@@ -381,19 +381,19 @@ function _bp_enforce_bp_moderate_cap_for_admins( $caps = array(), $cap = '', $us
 	}
 
 	// Bail if BuddyPress is not network activated.
-	if ( bp_is_network_activated() ) {
+	if ( bboss_is_network_activated() ) {
 		return $caps;
 	}
 
 	// Never trust inactive users.
-	if ( bp_is_user_inactive( $user_id ) ) {
+	if ( bboss_is_user_inactive( $user_id ) ) {
 		return $caps;
 	}
 
 	// Only users that can 'manage_options' on this site can 'bp_moderate'.
 	return array( 'manage_options' );
 }
-add_filter( 'map_meta_cap', '_bp_enforce_bp_moderate_cap_for_admins', 10, 4 );
+add_filter( 'map_meta_cap', 'bboss__bp_enforce_bp_moderate_cap_for_admins', 10, 4 );
 
 /** Deprecated ****************************************************************/
 
@@ -405,8 +405,8 @@ add_filter( 'map_meta_cap', '_bp_enforce_bp_moderate_cap_for_admins', 10, 4 );
  * @since BuddyPress 1.6.0
  * @deprecated 1.7.0
  */
-function bp_add_roles() {
-	_doing_it_wrong( 'bp_add_roles', __( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss' ), '1.7' );
+function bboss_add_roles() {
+	_doing_it_wrong( 'bp_add_roles', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
 }
 
 /**
@@ -417,8 +417,8 @@ function bp_add_roles() {
  * @since BuddyPress 1.6.0
  * @deprecated 1.7.0
  */
-function bp_remove_roles() {
-	_doing_it_wrong( 'bp_remove_roles', __( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss' ), '1.7' );
+function bboss_remove_roles() {
+	_doing_it_wrong( 'bp_remove_roles', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
 }
 
 
@@ -431,8 +431,8 @@ function bp_remove_roles() {
  * @since BuddyPress 1.6.0
  * @deprecated 1.7.0
  */
-function bp_get_participant_role() {
-	_doing_it_wrong( 'bp_get_participant_role', __( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss' ), '1.7' );
+function bboss_get_participant_role() {
+	_doing_it_wrong( 'bp_get_participant_role', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
 }
 
 /**
@@ -441,6 +441,6 @@ function bp_get_participant_role() {
  * @since BuddyPress 1.6.0
  * @deprecated 1.7.0
  */
-function bp_get_moderator_role() {
-	_doing_it_wrong( 'bp_get_moderator_role', __( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss' ), '1.7' );
+function bboss_get_moderator_role() {
+	_doing_it_wrong( 'bp_get_moderator_role', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
 }

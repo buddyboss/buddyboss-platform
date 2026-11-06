@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Flagged_Members_Ajax
+ * Class BBoss_Admin_Flagged_Members_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Flagged_Members_Ajax {
+class BBoss_Admin_Flagged_Members_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -65,9 +65,9 @@ class BB_Admin_Flagged_Members_Ajax {
 	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_verify_request() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'You do not have permission to perform this action.', 'buddyboss' ) ),
+				array( 'message' => __( 'You do not have permission to perform this action.', 'buddyboss-platform' ) ),
 				403
 			);
 		}
@@ -85,7 +85,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	 * the current admin. Without it, clicking through from the admin lands
 	 * on the same suspension/block UI a regular member would see, defeating
 	 * the purpose of the panel. The bypass is honoured by
-	 * `bp-moderation-filters.php` and `BP_Moderation_Abstract`, which both
+	 * `bp-moderation-filters.php` and `BBoss_Moderation_Abstract`, which both
 	 * read `modbypass` from `INPUT_GET`.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -96,7 +96,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	 *                string when the user has no resolvable domain.
 	 */
 	private function bb_get_admin_profile_url( $user_id ) {
-		$domain = bp_core_get_user_domain( (int) $user_id );
+		$domain = bboss_core_get_user_domain( (int) $user_id );
 
 		if ( empty( $domain ) ) {
 			return '';
@@ -128,7 +128,7 @@ class BB_Admin_Flagged_Members_Ajax {
 			'page'         => $page,
 			'per_page'     => $per_page,
 			'count_total'  => true,
-			'in_types'     => array( BP_Moderation_Members::$moderation_type ),
+			'in_types'     => array( BBoss_Moderation_Members::$moderation_type ),
 			'reported'     => false,
 			'search_terms' => ! empty( $search ) ? $search : false,
 		);
@@ -139,12 +139,12 @@ class BB_Admin_Flagged_Members_Ajax {
 		// Apply the same "all" filter as the old list table: show items with reported, user_report, or hide_sitewide.
 		add_filter( 'bp_moderation_get_where_conditions', array( $this, 'bb_update_where_conditions' ), 10, 2 );
 
-		$result = BP_Moderation::get( $moderation_args );
+		$result = BBoss_Moderation::get( $moderation_args );
 
 		remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'bb_update_where_conditions' ), 10 );
 
 		$members = array();
-		$admins  = bb_moderation_get_admin_user_ids();
+		$admins  = bboss_moderation_get_admin_user_ids();
 
 		// Pre-warm user caches to avoid N+1 queries in the loop.
 		if ( ! empty( $result['moderations'] ) ) {
@@ -153,7 +153,7 @@ class BB_Admin_Flagged_Members_Ajax {
 		}
 
 		// Bypass suspension filters so admin sees real names, avatars, and profile URLs.
-		bb_moderation_bypass_suspend_filters();
+		bboss_moderation_bypass_suspend_filters();
 
 		if ( ! empty( $result['moderations'] ) ) {
 			foreach ( $result['moderations'] as $item ) {
@@ -168,17 +168,17 @@ class BB_Admin_Flagged_Members_Ajax {
 				// while the background job is still processing content.
 				$suspend_in_progress = false;
 				if ( ! $is_admin ) {
-					$suspend_id = BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type );
+					$suspend_id = BBoss_Core_Suspend::get_suspend_id( $user_id, BBoss_Moderation_Members::$moderation_type );
 					if ( $suspend_id ) {
-						$suspend_in_progress = ! empty( bb_suspend_get_meta( $suspend_id, 'suspend' ) ) || ! empty( bb_suspend_get_meta( $suspend_id, 'unsuspend' ) );
+						$suspend_in_progress = ! empty( bboss_suspend_get_meta( $suspend_id, 'suspend' ) ) || ! empty( bboss_suspend_get_meta( $suspend_id, 'unsuspend' ) );
 					}
 				}
 
 				$members[] = array(
 					'id'                  => (int) $item->id,
 					'user_id'             => $user_id,
-					'display_name'        => bp_core_get_user_displayname( $user_id ),
-					'avatar'              => bp_core_fetch_avatar(
+					'display_name'        => bboss_core_get_user_displayname( $user_id ),
+					'avatar'              => bboss_core_fetch_avatar(
 						array(
 							'item_id' => $user_id,
 							'type'    => 'thumb',
@@ -197,7 +197,7 @@ class BB_Admin_Flagged_Members_Ajax {
 			}
 		}
 
-		bb_moderation_restore_suspend_filters();
+		bboss_moderation_restore_suspend_filters();
 
 		// Get status counts for the filter dropdown.
 		$status_counts = $this->bb_get_status_counts();
@@ -223,9 +223,9 @@ class BB_Admin_Flagged_Members_Ajax {
 	 */
 	private function bb_get_status_counts() {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
-		$member_type = BP_Moderation_Members::$moderation_type;
+		$member_type = BBoss_Moderation_Members::$moderation_type;
 
 		// Single query with conditional aggregation instead of two separate COUNT queries.
 		$row = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -257,28 +257,28 @@ class BB_Admin_Flagged_Members_Ajax {
 		$moderation_id = isset( $_POST['moderation_id'] ) ? absint( $_POST['moderation_id'] ) : 0;
 
 		if ( empty( $user_id ) || empty( $moderation_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid member ID.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid member ID.', 'buddyboss-platform' ) ) );
 		}
 
 		// Load the moderation record directly by ID.
 		global $wpdb;
-		$bp  = buddypress();
+		$bp  = bboss();
 		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} WHERE id = %d", $moderation_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( empty( $row ) || (int) $row->item_id !== $user_id ) {
-			wp_send_json_error( array( 'message' => __( 'No moderation record found for this member.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No moderation record found for this member.', 'buddyboss-platform' ) ) );
 		}
 
 		// Member summary.
 		$is_suspended = (int) $row->hide_sitewide === 1;
-		$block_count  = (int) bp_moderation_get_meta( $moderation_id, '_count' );
-		$report_count = (int) bp_moderation_get_meta( $moderation_id, '_count_user_reported' );
+		$block_count  = (int) bboss_moderation_get_meta( $moderation_id, '_count' );
+		$report_count = (int) bboss_moderation_get_meta( $moderation_id, '_count_user_reported' );
 
 		// Bypass suspension filters so admin sees real names, avatars, and profile URLs.
-		bb_moderation_bypass_suspend_filters();
+		bboss_moderation_bypass_suspend_filters();
 
 		// Get reporters (user_report = 1).
-		$reporters_raw = BP_Moderation::get_moderation_reporters(
+		$reporters_raw = BBoss_Moderation::get_moderation_reporters(
 			$moderation_id,
 			array( 'user_repoted' => true )
 		);
@@ -304,8 +304,8 @@ class BB_Admin_Flagged_Members_Ajax {
 
 				$reporters[] = array(
 					'user_id'       => (int) $reporter->user_id,
-					'display_name'  => bp_core_get_user_displayname( $reporter->user_id ),
-					'avatar'        => bp_core_fetch_avatar(
+					'display_name'  => bboss_core_get_user_displayname( $reporter->user_id ),
+					'avatar'        => bboss_core_fetch_avatar(
 						array(
 							'item_id' => $reporter->user_id,
 							'type'    => 'thumb',
@@ -317,7 +317,7 @@ class BB_Admin_Flagged_Members_Ajax {
 					'profile_url'   => $this->bb_get_admin_profile_url( $reporter->user_id ),
 					'category_name' => ( ! is_wp_error( $term_data ) && ! empty( $term_data->name ) )
 						? wp_specialchars_decode( $term_data->name, ENT_QUOTES )
-						: __( 'Other', 'buddyboss' ),
+						: __( 'Other', 'buddyboss-platform' ),
 					'category_desc' => ( ! is_wp_error( $term_data ) && ! empty( $term_data->description ) )
 						? wp_specialchars_decode( $term_data->description, ENT_QUOTES )
 						: sanitize_text_field( $reporter->content ),
@@ -329,7 +329,7 @@ class BB_Admin_Flagged_Members_Ajax {
 		}
 
 		// Get blockers (user_report = 0).
-		$blockers_raw = BP_Moderation::get_moderation_reporters(
+		$blockers_raw = BBoss_Moderation::get_moderation_reporters(
 			$moderation_id,
 			array( 'user_repoted' => false )
 		);
@@ -345,8 +345,8 @@ class BB_Admin_Flagged_Members_Ajax {
 			foreach ( $blockers_raw as $blocker ) {
 				$blockers[] = array(
 					'user_id'      => (int) $blocker->user_id,
-					'display_name' => bp_core_get_user_displayname( $blocker->user_id ),
-					'avatar'       => bp_core_fetch_avatar(
+					'display_name' => bboss_core_get_user_displayname( $blocker->user_id ),
+					'avatar'       => bboss_core_fetch_avatar(
 						array(
 							'item_id' => $blocker->user_id,
 							'type'    => 'thumb',
@@ -365,8 +365,8 @@ class BB_Admin_Flagged_Members_Ajax {
 
 		$response = array(
 			'user_id'       => $user_id,
-			'display_name'  => bp_core_get_user_displayname( $user_id ),
-			'avatar'        => bp_core_fetch_avatar(
+			'display_name'  => bboss_core_get_user_displayname( $user_id ),
+			'avatar'        => bboss_core_fetch_avatar(
 				array(
 					'item_id' => $user_id,
 					'type'    => 'thumb',
@@ -383,7 +383,7 @@ class BB_Admin_Flagged_Members_Ajax {
 			'blockers'      => $blockers,
 		);
 
-		bb_moderation_restore_suspend_filters();
+		bboss_moderation_restore_suspend_filters();
 
 		wp_send_json_success( $response );
 	}
@@ -399,22 +399,22 @@ class BB_Admin_Flagged_Members_Ajax {
 		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
 
 		if ( empty( $user_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid member ID.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid member ID.', 'buddyboss-platform' ) ) );
 		}
 
 		// Don't allow suspending administrators.
 		if ( user_can( $user_id, 'administrator' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Cannot suspend an administrator.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Cannot suspend an administrator.', 'buddyboss-platform' ) ) );
 		}
 
-		if ( bp_moderation_is_user_suspended( $user_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'This member is already suspended.', 'buddyboss' ) ) );
+		if ( bboss_moderation_is_user_suspended( $user_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'This member is already suspended.', 'buddyboss-platform' ) ) );
 		}
 
-		BP_Suspend_Member::suspend_user( $user_id );
+		BBoss_Suspend_Member::suspend_user( $user_id );
 
 		wp_send_json_success(
-			array( 'message' => __( 'Member suspended successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Member suspended successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -429,17 +429,17 @@ class BB_Admin_Flagged_Members_Ajax {
 		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
 
 		if ( empty( $user_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid member ID.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid member ID.', 'buddyboss-platform' ) ) );
 		}
 
-		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'This member is not currently suspended.', 'buddyboss' ) ) );
+		if ( ! bboss_moderation_is_user_suspended( $user_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'This member is not currently suspended.', 'buddyboss-platform' ) ) );
 		}
 
-		BP_Suspend_Member::unsuspend_user( $user_id );
+		BBoss_Suspend_Member::unsuspend_user( $user_id );
 
 		wp_send_json_success(
-			array( 'message' => __( 'Member unsuspended successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Member unsuspended successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -457,16 +457,16 @@ class BB_Admin_Flagged_Members_Ajax {
 		$user_ids = isset( $_POST['user_ids'] ) ? array_map( 'absint', wp_unslash( (array) $_POST['user_ids'] ) ) : array();
 
 		if ( empty( $action ) || empty( $user_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action or no members selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action or no members selected.', 'buddyboss-platform' ) ) );
 		}
 
 		$allowed_actions = array( 'suspend', 'unsuspend' );
 		if ( ! in_array( $action, $allowed_actions, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid bulk action.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid bulk action.', 'buddyboss-platform' ) ) );
 		}
 
 		// Don't allow suspending administrators.
-		$admins  = bb_moderation_get_admin_user_ids();
+		$admins  = bboss_moderation_get_admin_user_ids();
 		$success = 0;
 
 		foreach ( $user_ids as $user_id ) {
@@ -475,15 +475,15 @@ class BB_Admin_Flagged_Members_Ajax {
 			}
 
 			if ( 'suspend' === $action ) {
-				if ( bp_moderation_is_user_suspended( $user_id ) ) {
+				if ( bboss_moderation_is_user_suspended( $user_id ) ) {
 					continue;
 				}
-				BP_Suspend_Member::suspend_user( $user_id );
+				BBoss_Suspend_Member::suspend_user( $user_id );
 			} else {
-				if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
+				if ( ! bboss_moderation_is_user_suspended( $user_id ) ) {
 					continue;
 				}
-				BP_Suspend_Member::unsuspend_user( $user_id );
+				BBoss_Suspend_Member::unsuspend_user( $user_id );
 			}
 
 			$success++;
@@ -492,7 +492,7 @@ class BB_Admin_Flagged_Members_Ajax {
 		wp_send_json_success(
 			array(
 				/* translators: %d: Number of members. */
-				'message' => sprintf( __( '%d member(s) updated successfully.', 'buddyboss' ), $success ),
+				'message' => sprintf( __( '%d member(s) updated successfully.', 'buddyboss-platform' ), $success ),
 				'count'   => $success,
 			)
 		);
@@ -502,7 +502,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	 * Filter WHERE conditions for "all" flagged members view.
 	 *
 	 * Shows items with reported, user_report, or hide_sitewide set — replicates
-	 * the old BP_Moderation_List_Table logic.
+	 * the old BBoss_Moderation_List_Table logic.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -527,4 +527,4 @@ class BB_Admin_Flagged_Members_Ajax {
 }
 
 // Initialize.
-new BB_Admin_Flagged_Members_Ajax();
+new BBoss_Admin_Flagged_Members_Ajax();

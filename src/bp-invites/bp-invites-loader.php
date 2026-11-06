@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_setup_invites() {
-	buddypress()->invites = new BP_Invites_Component();
+function bboss_setup_invites() {
+	bboss()->invites = new BBoss_Invites_Component();
 }
-add_action( 'bp_setup_components', 'bp_setup_invites', 6 );
+add_action( 'bp_setup_components', 'bboss_setup_invites', 6 );

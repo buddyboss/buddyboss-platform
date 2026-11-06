@@ -13,11 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * BB_CDN_Helpers Class
+ * BBoss_CDN_Helpers Class
  *
  * This class handles compatibility code for third party plugins used in conjunction with the Platform
  */
-class BB_CDN_Helpers {
+class BBoss_CDN_Helpers {
 
 	/**
 	 * The single instance of the class.
@@ -29,7 +29,7 @@ class BB_CDN_Helpers {
 	private static $instance = null;
 
 	/**
-	 * BB_CDN_Helpers constructor.
+	 * BBoss_CDN_Helpers constructor.
 	 *
 	 * @since BuddyBoss 2.6.10
 	 */
@@ -103,4 +103,4 @@ class BB_CDN_Helpers {
 	}
 }
 
-BB_CDN_Helpers::instance();
+BBoss_CDN_Helpers::instance();

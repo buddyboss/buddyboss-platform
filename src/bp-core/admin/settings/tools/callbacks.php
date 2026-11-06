@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool True when both Mothership helper classes are loaded.
  */
-function bb_tools_mothership_available() {
+function bboss_tools_mothership_available() {
 	return class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
 		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
 }
@@ -40,7 +40,7 @@ function bb_tools_mothership_available() {
  *
  * @return bool True when the Mothership connector reports an active license.
  */
-function bb_tools_is_license_active() {
+function bboss_tools_is_license_active() {
 	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
 		return false;
 	}
@@ -57,8 +57,11 @@ function bb_tools_is_license_active() {
  *
  * @return string Admin URL for the license activation screen.
  */
-function bb_tools_get_license_url() {
-	return admin_url( 'admin.php?page=buddyboss-license' );
+function bboss_tools_get_license_url() {
+	// Empty in builds without the BuddyBoss licence screen (the wordpress.org edition).
+	$url = '';
+
+	return $url;
 }
 
 /**
@@ -67,15 +70,17 @@ function bb_tools_get_license_url() {
  * The Activation Required CTA component calls this on mount to decide
  * whether the action button shows "Install Now", "Activate Now", or
  * "Activate License" (when the addon is not installed and no valid license
- * is present to install it with).
+ * is present to install it with). Builds without the in-dashboard installer
+ * report `download` with a `download_url` instead of `not-installed`.
  *
  * @since BuddyBoss 3.1.0
+ * @since BuddyBoss [BBVERSION] Reports the `download` state when the installer is not in the build.
  *
  * @return void
  */
-function bb_tools_ajax_check_plugin_state() {
+function bboss_tools_ajax_check_plugin_state() {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
 
@@ -98,18 +103,25 @@ function bb_tools_ajax_check_plugin_state() {
 	// Not installed: if the Mothership license layer is present but the license
 	// is inactive, the addon cannot be pulled from the BuddyBoss add-on server —
 	// surface a license-activation CTA instead of a dead "Install Now" button.
-	if ( bb_tools_mothership_available() && ! bb_tools_is_license_active() ) {
+	if ( bboss_tools_mothership_available() && ! bboss_tools_is_license_active() ) {
 		wp_send_json_success(
 			array(
 				'state'       => 'needs-license',
-				'license_url' => bb_tools_get_license_url(),
+				'license_url' => bboss_tools_get_license_url(),
 			)
 		);
 	}
 
-	wp_send_json_success( array( 'state' => 'not-installed' ) );
+	// Builds without the in-dashboard installer (the wordpress.org edition) reach this
+	// instead: the addon is downloaded from the BuddyBoss account and uploaded by hand.
+	wp_send_json_success(
+		array(
+			'state'        => 'download',
+			'download_url' => 'https://www.buddyboss.com/my-account/',
+		)
+	);
 }
-add_action( 'wp_ajax_bb_tools_check_plugin_state', 'bb_tools_ajax_check_plugin_state' );
+add_action( 'wp_ajax_bb_tools_check_plugin_state', 'bboss_tools_ajax_check_plugin_state' );
 
 /**
  * AJAX: Activate the buddyboss-tools plugin.
@@ -118,9 +130,9 @@ add_action( 'wp_ajax_bb_tools_check_plugin_state', 'bb_tools_ajax_check_plugin_s
  *
  * @return void
  */
-function bb_tools_ajax_activate_plugin() {
+function bboss_tools_ajax_activate_plugin() {
 	if ( ! current_user_can( 'activate_plugins' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
 
@@ -137,7 +149,7 @@ function bb_tools_ajax_activate_plugin() {
 		}
 		wp_send_json_error(
 			array(
-				'message' => __( 'Plugin activation failed. Please try again.', 'buddyboss' ),
+				'message' => __( 'Plugin activation failed. Please try again.', 'buddyboss-platform' ),
 				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $result->get_error_message() : '',
 			)
 		);
@@ -145,118 +157,4 @@ function bb_tools_ajax_activate_plugin() {
 
 	wp_send_json_success();
 }
-add_action( 'wp_ajax_bb_tools_activate_plugin', 'bb_tools_ajax_activate_plugin' );
-
-/**
- * AJAX: Install the buddyboss-tools plugin via the WP plugin installer.
- *
- * buddyboss-tools is a licensed BuddyBoss addon served from the BuddyBoss
- * add-on server, not wordpress.org. When the Mothership license layer is
- * present this handler requires an active license and resolves the authorized
- * package URL from the add-ons API. Without a valid license it returns a
- * license-activation error. On installs without the Mothership layer it falls
- * back to the generic plugin-install API (wordpress.org or a runtime
- * `plugins_api` filter).
- *
- * @since BuddyBoss 3.1.0
- *
- * @return void
- */
-function bb_tools_ajax_install_plugin() {
-	if ( ! current_user_can( 'install_plugins' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
-	}
-	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
-
-	require_once ABSPATH . 'wp-admin/includes/file.php';
-	require_once ABSPATH . 'wp-admin/includes/misc.php';
-	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-	require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-
-	$download_url = '';
-
-	if ( bb_tools_mothership_available() ) {
-
-		// License-gated path: the addon is not on wordpress.org, so a valid,
-		// activated license is required to fetch it from the add-on server.
-		if ( ! bb_tools_is_license_active() ) {
-			wp_send_json_error(
-				array(
-					'message'     => __( 'Please activate your BuddyBoss license to install this add-on.', 'buddyboss' ),
-					'license_url' => bb_tools_get_license_url(),
-				)
-			);
-		}
-
-		$product      = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-tools' );
-		$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
-
-		if ( '' === $download_url ) {
-			wp_send_json_error(
-				array(
-					'message'     => __( 'The BuddyBoss Tools add-on is not available under your current license.', 'buddyboss' ),
-					'license_url' => bb_tools_get_license_url(),
-				)
-			);
-		}
-	} else {
-
-		// Fallback for environments without the Mothership license layer.
-		$api = plugins_api(
-			'plugin_information',
-			array(
-				'slug'   => 'buddyboss-tools',
-				'fields' => array( 'sections' => false ),
-			)
-		);
-
-		if ( is_wp_error( $api ) ) {
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces plugin-api lookup failures.
-				error_log( sprintf( 'BB Tools: plugins_api(buddyboss-tools) failed: %s', $api->get_error_message() ) );
-			}
-			wp_send_json_error(
-				array(
-					'message' => __( 'Could not look up plugin information. Please try again.', 'buddyboss' ),
-					'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $api->get_error_message() : '',
-				)
-			);
-		}
-
-		$download_url = $api->download_link;
-	}
-
-	$skin     = new WP_Ajax_Upgrader_Skin();
-	$upgrader = new Plugin_Upgrader( $skin );
-	$result   = $upgrader->install( $download_url );
-
-	if ( is_wp_error( $result ) ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces installer failures.
-			error_log( sprintf( 'BB Tools: Plugin_Upgrader->install(buddyboss-tools) failed: %s', $result->get_error_message() ) );
-		}
-		wp_send_json_error(
-			array(
-				'message' => __( 'Plugin installation failed. Please try again.', 'buddyboss' ),
-				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $result->get_error_message() : '',
-			)
-		);
-	}
-
-	$activate = activate_plugin( 'buddyboss-tools/buddyboss-tools.php' );
-	if ( is_wp_error( $activate ) ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces post-install activation failures.
-			error_log( sprintf( 'BB Tools: activate_plugin(buddyboss-tools) failed after install: %s', $activate->get_error_message() ) );
-		}
-		wp_send_json_error(
-			array(
-				'message' => __( 'Plugin installed but activation failed. Please try again.', 'buddyboss' ),
-				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $activate->get_error_message() : '',
-			)
-		);
-	}
-
-	wp_send_json_success();
-}
-add_action( 'wp_ajax_bb_tools_install_plugin', 'bb_tools_ajax_install_plugin' );
+add_action( 'wp_ajax_bb_tools_activate_plugin', 'bboss_tools_ajax_activate_plugin' );

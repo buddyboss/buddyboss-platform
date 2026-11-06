@@ -22,17 +22,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_admin_settings_register_forums_feature() {
+function bboss_admin_settings_register_forums_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'forums',
 		array(
-			'label'              => __( 'Forum Discussions', 'buddyboss' ),
-			'description'        => __( 'Allow members to hold discussions in Q&A-style forums, which can operate independently or be linked to social groups.', 'buddyboss' ),
+			'label'              => __( 'Forum Discussions', 'buddyboss-platform' ),
+			'description'        => __( 'Allow members to hold discussions in Q&A-style forums, which can operate independently or be linked to social groups.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chats-circle',
@@ -41,7 +41,7 @@ function bb_admin_settings_register_forums_feature() {
 			'category'           => 'community',
 			'standalone'         => true,
 			'is_active_callback' => function () {
-				return bp_is_active( 'forums' );
+				return bboss_is_active( 'forums' );
 			},
 			'settings_route'     => '/settings/forums',
 			'order'              => 80,
@@ -51,7 +51,7 @@ function bb_admin_settings_register_forums_feature() {
 
 	// When forums is disabled, only the feature card is needed (so admin can re-enable).
 	// Side panels, sections, and fields depend on forum functions that aren't loaded.
-	if ( ! bp_is_active( 'forums' ) ) {
+	if ( ! bboss_is_active( 'forums' ) ) {
 		return;
 	}
 
@@ -73,16 +73,16 @@ function bb_admin_settings_register_forums_feature() {
 	// =========================================================================
 
 	// Side Panel 1: Forum Settings (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'forums',
 		'forum_settings',
 		array(
-			'title'      => __( 'Forum Settings', 'buddyboss' ),
+			'title'      => __( 'Forum Settings', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -97,16 +97,16 @@ function bb_admin_settings_register_forums_feature() {
 	);
 
 	// Side Panel 2: Forum Features.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'forums',
 		'forum_features',
 		array(
-			'title'      => __( 'Forum Features', 'buddyboss' ),
+			'title'      => __( 'Forum Features', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chats-teardrop',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -121,16 +121,16 @@ function bb_admin_settings_register_forums_feature() {
 	);
 
 	// Side Panel 3: Forum Directories.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'forums',
 		'forum_directories',
 		array(
-			'title'      => __( 'Forum Directories', 'buddyboss' ),
+			'title'      => __( 'Forum Directories', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-grid-nine',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -145,16 +145,16 @@ function bb_admin_settings_register_forums_feature() {
 	);
 
 	// Side Panel 4: Permalinks.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'forums',
 		'forum_permalinks',
 		array(
-			'title'      => __( 'Permalinks', 'buddyboss' ),
+			'title'      => __( 'Permalinks', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-pencil-simple',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -169,11 +169,11 @@ function bb_admin_settings_register_forums_feature() {
 	);
 
 	// Side Panel 5: All Forums (custom list screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'forums',
 		'all_forums',
 		array(
-			'title'      => __( 'Forums', 'buddyboss' ),
+			'title'      => __( 'Forums', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chat-text',
@@ -185,11 +185,11 @@ function bb_admin_settings_register_forums_feature() {
 	);
 
 	// Side Panel 6: Discussions (custom list screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'forums',
 		'discussions',
 		array(
-			'title'      => __( 'Discussions', 'buddyboss' ),
+			'title'      => __( 'Discussions', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chats',
@@ -200,12 +200,12 @@ function bb_admin_settings_register_forums_feature() {
 	);
 
 	// Side Panel 7: Discussion Tags (only when topic tags are enabled).
-	if ( bbp_allow_topic_tags() ) {
-		bb_register_side_panel(
+	if ( bboss_bbp_allow_topic_tags() ) {
+		bboss_register_side_panel(
 			'forums',
 			'discussion_tags',
 			array(
-				'title'      => __( 'Discussion Tags', 'buddyboss' ),
+				'title'      => __( 'Discussion Tags', 'buddyboss-platform' ),
 				'icon'       => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-tag',
@@ -217,11 +217,11 @@ function bb_admin_settings_register_forums_feature() {
 	}
 
 	// Side Panel 8: Replies.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'forums',
 		'replies',
 		array(
-			'title'      => __( 'Replies', 'buddyboss' ),
+			'title'      => __( 'Replies', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrow-bend-up-left',
@@ -236,16 +236,16 @@ function bb_admin_settings_register_forums_feature() {
 	// =========================================================================
 
 	// Panel 1: Forum Settings.
-	bb_forums_register_settings_panel_fields();
+	bboss_forums_register_settings_panel_fields();
 
 	// Panel 2: Forum Features.
-	bb_forums_register_features_panel_fields();
+	bboss_forums_register_features_panel_fields();
 
 	// Panel 3: Forum Directories.
-	bb_forums_register_directories_panel_fields();
+	bboss_forums_register_directories_panel_fields();
 
 	// Panel 4: Permalinks.
-	bb_forums_register_permalinks_panel_fields();
+	bboss_forums_register_permalinks_panel_fields();
 
 	/**
 	 * Fires after all Forums settings panels are registered.
@@ -256,4 +256,4 @@ function bb_admin_settings_register_forums_feature() {
 	do_action( 'bb_forums_after_register_settings_fields' );
 }
 
-add_action( 'bb_register_features', 'bb_admin_settings_register_forums_feature', 25 );
+add_action( 'bb_register_features', 'bboss_admin_settings_register_forums_feature', 25 );

@@ -23,12 +23,12 @@ defined( 'ABSPATH' ) || exit;
  * @param string $screen            Notification Screen type.
  * @return string $return Formatted @mention notification.
  */
-function bp_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $id = 0, $screen = 'web' ) {
+function bboss_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $id = 0, $screen = 'web' ) {
 	$action_filter = $action;
 	$return        = false;
 	$activity_id   = $item_id;
 	$user_id       = $secondary_item_id;
-	$user_fullname = bp_core_get_user_displayname( $user_id );
+	$user_fullname = bboss_core_get_user_displayname( $user_id );
 	$amount        = '';
 	$text          = '';
 	$link          = '';
@@ -36,8 +36,9 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 	switch ( $action ) {
 		case 'new_at_mention':
 			$action_filter = 'at_mentions';
-			$link          = bp_activity_get_permalink( $item_id );
-			$title         = sprintf( __( '@%s Mentions', 'buddyboss' ), bp_get_loggedin_user_username() );
+			$link          = bboss_activity_get_permalink( $item_id );
+			/* translators: %s: logged-in user's username. */
+			$title         = sprintf( __( '@%s Mentions', 'buddyboss-platform' ), bboss_get_loggedin_user_username() );
 			$amount        = 'single';
 
 			/**
@@ -56,40 +57,46 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			$link = apply_filters( 'bp_activity_new_at_mention_permalink', $link, $item_id, $secondary_item_id, $total_items );
 
 			if ( (int) $total_items > 1 ) {
-				$text   = sprintf( __( 'You have %1$d new mentions', 'buddyboss' ), (int) $total_items );
+				/* translators: %d: total number of new mentions. */
+				$text   = sprintf( __( 'You have %1$d new mentions', 'buddyboss-platform' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$text = sprintf( __( '%1$s mentioned you', 'buddyboss' ), $user_fullname );
+				/* translators: %s: full name of the user who mentioned you. */
+				$text = sprintf( __( '%1$s mentioned you', 'buddyboss-platform' ), $user_fullname );
 			}
 			break;
 
 		case 'update_reply':
-			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity reply', 'buddyboss' );
+			$link   = bboss_get_notifications_permalink();
+			$title  = __( 'New Activity reply', 'buddyboss-platform' );
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
 				$link   = add_query_arg( 'type', $action, $link );
-				$text   = sprintf( __( 'You have %1$d new replies', 'buddyboss' ), (int) $total_items );
+				/* translators: %d: total number of new replies. */
+				$text   = sprintf( __( 'You have %1$d new replies', 'buddyboss-platform' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$link = add_query_arg( 'rid', (int) $id, bp_activity_get_permalink( $activity_id ) );
-				$text = sprintf( __( '%1$s commented on one of your updates', 'buddyboss' ), $user_fullname );
+				$link = add_query_arg( 'rid', (int) $id, bboss_activity_get_permalink( $activity_id ) );
+				/* translators: %s: full name of the user who commented. */
+				$text = sprintf( __( '%1$s commented on one of your updates', 'buddyboss-platform' ), $user_fullname );
 			}
 			break;
 
 		case 'comment_reply':
-			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity comment reply', 'buddyboss' );
+			$link   = bboss_get_notifications_permalink();
+			$title  = __( 'New Activity comment reply', 'buddyboss-platform' );
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
 				$link   = add_query_arg( 'type', $action, $link );
-				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddyboss' ), (int) $total_items );
+				/* translators: %d: total number of new comment replies. */
+				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddyboss-platform' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_id ) );
-				$text = sprintf( __( '%1$s replied to one of your activity comments', 'buddyboss' ), $user_fullname );
+				$link = add_query_arg( 'crid', (int) $id, bboss_activity_get_permalink( $activity_id ) );
+				/* translators: %s: full name of the user who replied. */
+				$text = sprintf( __( '%1$s replied to one of your activity comments', 'buddyboss-platform' ), $user_fullname );
 			}
 			break;
 
@@ -200,34 +207,34 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
  * @param string $content (not used) Notification content.
  * @param int    $receiver_user_id   ID of user receiving notification.
  */
-function bp_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id ) {
+function bboss_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id ) {
 
 	// Specify the Notification type.
 	$component_action = 'new_at_mention';
-	$component_name   = buddypress()->activity->id;
+	$component_name   = bboss()->activity->id;
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		$component_action = 'bb_new_mention';
 	}
 
-	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	add_action( 'bp_notification_after_save', 'bboss_activity_add_notification_metas', 5 );
 
-	bp_notifications_add_notification(
+	bboss_notifications_add_notification(
 		array(
 			'user_id'           => $receiver_user_id,
 			'item_id'           => $activity->id,
 			'secondary_item_id' => $activity->user_id,
 			'component_name'    => $component_name,
 			'component_action'  => $component_action,
-			'date_notified'     => bp_core_current_time(),
+			'date_notified'     => bboss_core_current_time(),
 			'is_new'            => 1,
 		)
 	);
 
-	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	remove_action( 'bp_notification_after_save', 'bboss_activity_add_notification_metas', 5 );
 
 }
-add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notification', 10, 5 );
+add_action( 'bp_activity_sent_mention_email', 'bboss_activity_at_mention_add_notification', 10, 5 );
 
 /**
  * Notify a member one of their activity received a reply.
@@ -235,34 +242,34 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  * @since BuddyPress 2.6.0
  * @since BuddyBoss 2.8.50 Added the `$params` parameter.
  *
- * @param BP_Activity_Activity $activity     The original activity.
+ * @param BBoss_Activity_Activity $activity     The original activity.
  * @param int                  $comment_id   ID for the newly received comment.
  * @param int                  $commenter_id ID of the user who made the comment.
  * @param array                $params       Arguments used with the original activity comment.
  */
-function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params ) {
+function bboss_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params ) {
 	// Stop sending notification to user who has muted notifications.
 	if ( $activity->user_id !== $commenter_id ) {
-		if ( bb_user_has_mute_notification( $activity->id, $activity->user_id ) ) {
+		if ( bboss_user_has_mute_notification( $activity->id, $activity->user_id ) ) {
 			return;
 		}
 	}
 
 	// Try to find mentions.
-	$usernames = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
+	$usernames = bboss_activity_do_mentions() ? bboss_activity_find_mentions( $params['content'] ) : array();
 
 	// Bail out the replied notification because he will recieve a "mentioned you" notification.
 	if ( ! empty( $usernames ) && array_key_exists( $activity->user_id, $usernames ) ) {
-		if ( true === bb_is_notification_enabled( $activity->user_id, 'bb_new_mention' ) ) {
+		if ( true === bboss_is_notification_enabled( $activity->user_id, 'bb_new_mention' ) ) {
 			return;
 		}
 	}
 
 	if (
-		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-		bb_moderation_allowed_specific_notification(
+		function_exists( 'bboss_moderation_allowed_specific_notification' ) &&
+		bboss_moderation_allowed_specific_notification(
 			array(
-				'type'              => buddypress()->activity->id,
+				'type'              => bboss()->activity->id,
 				'group_id'          => 'groups' === $activity->component ? $activity->item_id : '',
 				'recipient_user_id' => $activity->user_id,
 				'sender_id'         => $activity->user_id,
@@ -274,29 +281,29 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 
 	// Specify the Notification type.
 	$component_action = 'update_reply';
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		$component_action = 'bb_activity_comment';
 	}
 
-	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
-	add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+	add_action( 'bp_notification_after_save', 'bboss_activity_add_notification_metas', 5 );
+	add_action( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
 
-	bp_notifications_add_notification(
+	bboss_notifications_add_notification(
 		array(
 			'user_id'           => $activity->user_id,
 			'item_id'           => $comment_id,
 			'secondary_item_id' => $commenter_id,
-			'component_name'    => buddypress()->activity->id,
+			'component_name'    => bboss()->activity->id,
 			'component_action'  => $component_action,
-			'date_notified'     => bp_core_current_time(),
+			'date_notified'     => bboss_core_current_time(),
 			'is_new'            => 1,
 		)
 	);
-	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
-	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	remove_action( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
+	remove_action( 'bp_notification_after_save', 'bboss_activity_add_notification_metas', 5 );
 
 }
-add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update_reply_add_notification', 10, 4 );
+add_action( 'bp_activity_sent_reply_to_update_notification', 'bboss_activity_update_reply_add_notification', 10, 4 );
 
 /**
  * Notify a member one of their activity comment received a reply.
@@ -304,36 +311,36 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
  * @since BuddyPress 2.6.0
  * @since BuddyBoss 2.8.50 Added the `$params` parameter.
  *
- * @param BP_Activity_Activity $activity_comment The parent activity.
+ * @param BBoss_Activity_Activity $activity_comment The parent activity.
  * @param int                  $comment_id       ID for the newly received comment.
  * @param int                  $commenter_id     ID of the user who made the comment.
  * @param array                $params           Arguments used with the original activity comment.
  */
-function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id, $params ) {
-	$original_activity = new BP_Activity_Activity( $activity_comment->item_id );
+function bboss_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id, $params ) {
+	$original_activity = new BBoss_Activity_Activity( $activity_comment->item_id );
 
 	// Stop sending notification to user who has muted notifications.
 	if ( $activity_comment->user_id !== $commenter_id ) {
-		if ( bb_user_has_mute_notification( $original_activity->id, $activity_comment->user_id ) ) {
+		if ( bboss_user_has_mute_notification( $original_activity->id, $activity_comment->user_id ) ) {
 			return;
 		}
 	}
 
 	// Try to find mentions.
-	$usernames = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
+	$usernames = bboss_activity_do_mentions() ? bboss_activity_find_mentions( $params['content'] ) : array();
 
 	// Bail out the replied notification because he will recieve a "mentioned you" notification.
 	if ( ! empty( $usernames ) && array_key_exists( $activity_comment->user_id, $usernames ) ) {
-		if ( true === bb_is_notification_enabled( $activity_comment->user_id, 'bb_new_mention' ) ) {
+		if ( true === bboss_is_notification_enabled( $activity_comment->user_id, 'bb_new_mention' ) ) {
 			return;
 		}
 	}
 
 	if (
-		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-		bb_moderation_allowed_specific_notification(
+		function_exists( 'bboss_moderation_allowed_specific_notification' ) &&
+		bboss_moderation_allowed_specific_notification(
 			array(
-				'type'              => buddypress()->activity->id,
+				'type'              => bboss()->activity->id,
 				'group_id'          => 'groups' === $original_activity->component ? $original_activity->item_id : '',
 				'recipient_user_id' => $activity_comment->user_id,
 				'sender_id'         => $original_activity->user_id,
@@ -345,28 +352,28 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 
 	// Specify the Notification type.
 	$component_action = 'comment_reply';
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		$component_action = 'bb_activity_comment';
 	}
 
-	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
-	add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+	add_action( 'bp_notification_after_save', 'bboss_activity_add_notification_metas', 5 );
+	add_action( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
 
-	bp_notifications_add_notification(
+	bboss_notifications_add_notification(
 		array(
 			'user_id'           => $activity_comment->user_id,
 			'item_id'           => $comment_id,
 			'secondary_item_id' => $commenter_id,
-			'component_name'    => buddypress()->activity->id,
+			'component_name'    => bboss()->activity->id,
 			'component_action'  => $component_action,
-			'date_notified'     => bp_core_current_time(),
+			'date_notified'     => bboss_core_current_time(),
 			'is_new'            => 1,
 		)
 	);
-	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
-	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+	remove_action( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
+	remove_action( 'bp_notification_after_save', 'bboss_activity_add_notification_metas', 5 );
 }
-add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 4 );
+add_action( 'bp_activity_sent_reply_to_reply_notification', 'bboss_activity_comment_reply_add_notification', 10, 4 );
 
 /**
  * Mark at-mention notifications as read when users visit their Mentions page.
@@ -376,15 +383,15 @@ add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment
  *
  * @param int $user_id The id of the user whose notifications are marked as read.
  */
-function bp_activity_remove_screen_notifications( $user_id = 0 ) {
+function bboss_activity_remove_screen_notifications( $user_id = 0 ) {
 	// Only mark read if the current user is looking at his own mentions.
-	if ( empty( $user_id ) || (int) $user_id !== (int) bp_loggedin_user_id() ) {
+	if ( empty( $user_id ) || (int) $user_id !== (int) bboss_loggedin_user_id() ) {
 		return;
 	}
 
-	bp_notifications_mark_notifications_by_type( $user_id, buddypress()->activity->id, 'new_at_mention' );
+	bboss_notifications_mark_notifications_by_type( $user_id, bboss()->activity->id, 'new_at_mention' );
 }
-add_action( 'bp_activity_clear_new_mentions', 'bp_activity_remove_screen_notifications', 10, 1 );
+add_action( 'bp_activity_clear_new_mentions', 'bboss_activity_remove_screen_notifications', 10, 1 );
 
 /**
  * Mark notifications as read when a user visits an activity permalink.
@@ -392,17 +399,17 @@ add_action( 'bp_activity_clear_new_mentions', 'bp_activity_remove_screen_notific
  * @since BuddyPress 2.0.0
  * @since BuddyPress 3.2.0 Marks replies to parent update and replies to an activity comment as read.
  *
- * @param BP_Activity_Activity $activity Activity object.
+ * @param BBoss_Activity_Activity $activity Activity object.
  */
-function bp_activity_remove_screen_notifications_single_activity_permalink( $activity ) {
+function bboss_activity_remove_screen_notifications_single_activity_permalink( $activity ) {
 	if ( ! is_user_logged_in() ) {
 		return;
 	}
 
 	// Mark as read any notifications for the current user related to this activity item.
-	bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $activity->id, buddypress()->activity->id, 'new_at_mention' );
-	bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $activity->id, buddypress()->activity->id, 'bb_new_mention' );
-	bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $activity->id, buddypress()->activity->id, 'bb_activity_following_post' );
+	bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), $activity->id, bboss()->activity->id, 'new_at_mention' );
+	bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), $activity->id, bboss()->activity->id, 'bb_new_mention' );
+	bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), $activity->id, bboss()->activity->id, 'bb_activity_following_post' );
 
 	$comment_id = 0;
 	// For replies to a parent update.
@@ -416,44 +423,44 @@ function bp_activity_remove_screen_notifications_single_activity_permalink( $act
 
 	// Mark individual activity reply notification as read.
 	if ( ! empty( $comment_id ) ) {
-		BP_Notifications_Notification::update(
+		BBoss_Notifications_Notification::update(
 			array(
 				'is_new' => false,
 			),
 			array(
-				'user_id' => bp_loggedin_user_id(),
+				'user_id' => bboss_loggedin_user_id(),
 				'id'      => $comment_id,
 			)
 		);
 	}
 }
-add_action( 'bp_activity_screen_single_activity_permalink', 'bp_activity_remove_screen_notifications_single_activity_permalink' );
+add_action( 'bp_activity_screen_single_activity_permalink', 'bboss_activity_remove_screen_notifications_single_activity_permalink' );
 
 /**
  * Mark non-mention notifications as read when user visits our read permalink.
  *
  * In particular, 'update_reply' and 'comment_reply' notifications are handled
- * here. See {@link bp_activity_format_notifications()} for more info.
+ * here. See {@link bboss_activity_format_notifications()} for more info.
  *
  * @since BuddyPress 2.6.0
  */
-function bp_activity_remove_screen_notifications_for_non_mentions() {
+function bboss_activity_remove_screen_notifications_for_non_mentions() {
 	if ( false === is_singular() || false === is_user_logged_in() || empty( $_GET['nid'] ) ) {
 		return;
 	}
 
 	// Mark notification as read.
-	BP_Notifications_Notification::update(
+	BBoss_Notifications_Notification::update(
 		array(
 			'is_new' => false,
 		),
 		array(
-			'user_id' => bp_loggedin_user_id(),
+			'user_id' => bboss_loggedin_user_id(),
 			'id'      => (int) $_GET['nid'],
 		)
 	);
 }
-add_action( 'bp_screens', 'bp_activity_remove_screen_notifications_for_non_mentions' );
+add_action( 'bp_screens', 'bboss_activity_remove_screen_notifications_for_non_mentions' );
 
 /**
  * Delete at-mention notifications when the corresponding activity item is deleted.
@@ -462,19 +469,19 @@ add_action( 'bp_screens', 'bp_activity_remove_screen_notifications_for_non_menti
  *
  * @param array $activity_ids_deleted IDs of deleted activity items.
  */
-function bp_activity_at_mention_delete_notification( $activity_ids_deleted = array() ) {
+function bboss_activity_at_mention_delete_notification( $activity_ids_deleted = array() ) {
 	// Let's delete all without checking if content contains any mentions
 	// to avoid a query to get the activity.
 	if ( ! empty( $activity_ids_deleted ) ) {
 		foreach ( $activity_ids_deleted as $activity_id ) {
-			bp_notifications_delete_all_notifications_by_type( $activity_id, buddypress()->activity->id );
-			if ( bp_is_active( 'groups' ) ) {
-				bp_notifications_delete_all_notifications_by_type( $activity_id, buddypress()->groups->id );
+			bboss_notifications_delete_all_notifications_by_type( $activity_id, bboss()->activity->id );
+			if ( bboss_is_active( 'groups' ) ) {
+				bboss_notifications_delete_all_notifications_by_type( $activity_id, bboss()->groups->id );
 			}
 		}
 	}
 }
-add_action( 'bp_activity_deleted_activities', 'bp_activity_at_mention_delete_notification', 10 );
+add_action( 'bp_activity_deleted_activities', 'bboss_activity_at_mention_delete_notification', 10 );
 
 /**
  * Add a notification for post comments to the post author or post commenter.
@@ -488,12 +495,12 @@ add_action( 'bp_activity_deleted_activities', 'bp_activity_at_mention_delete_not
  * @param array      $activity_args        Activity comment arguments.
  * @param object     $activity_post_object The post type tracking args object.
  */
-function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $post_type_comment, $activity_args, $activity_post_object ) {
+function bboss_activity_add_notification_for_synced_blog_comment( $activity_id, $post_type_comment, $activity_args, $activity_post_object ) {
 	// If activity comments are disabled for WP posts, stop now!
 	if (
 		empty( $post_type_comment->post ) ||
 		empty( $post_type_comment->post->post_type ) ||
-		! bb_is_post_type_feed_comment_enable( $post_type_comment->post->post_type ) ||
+		! bboss_is_post_type_feed_comment_enable( $post_type_comment->post->post_type ) ||
 		empty( $activity_id )
 	) {
 		return;
@@ -509,26 +516,26 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 			}
 
 			// Stop sending notification to user who has muted notifications.
-			if ( bb_user_has_mute_notification( $activity_args['activity_id'], $post_type_comment->post->post_author ) ) {
+			if ( bboss_user_has_mute_notification( $activity_args['activity_id'], $post_type_comment->post->post_author ) ) {
 				return;
 			}
 
 			$component_action = 'update_reply';
-			if ( ! bb_enabled_legacy_email_preference() ) {
+			if ( ! bboss_enabled_legacy_email_preference() ) {
 				$component_action = 'bb_activity_comment';
 			}
 
-			add_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			add_action( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
 
 			if ( ! empty( $post_type_comment->comment_parent ) ) {
 				$parent_comment = get_comment( $post_type_comment->comment_parent );
 				if ( ! empty( $parent_comment->user_id ) && (int) $parent_comment->user_id !== (int) $post_type_comment->post->post_author ) {
-					bp_notifications_add_notification(
+					bboss_notifications_add_notification(
 						array(
 							'user_id'           => $post_type_comment->post->post_author,
 							'item_id'           => $activity_id,
 							'secondary_item_id' => $post_type_comment->user_id,
-							'component_name'    => buddypress()->activity->id,
+							'component_name'    => bboss()->activity->id,
 							'component_action'  => $component_action,
 							'date_notified'     => $post_type_comment->comment_date_gmt,
 							'is_new'            => 1,
@@ -536,12 +543,12 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 					);
 				}
 			} else {
-				bp_notifications_add_notification(
+				bboss_notifications_add_notification(
 					array(
 						'user_id'           => $post_type_comment->post->post_author,
 						'item_id'           => $activity_id,
 						'secondary_item_id' => $post_type_comment->user_id,
-						'component_name'    => buddypress()->activity->id,
+						'component_name'    => bboss()->activity->id,
 						'component_action'  => $component_action,
 						'date_notified'     => $post_type_comment->comment_date_gmt,
 						'is_new'            => 1,
@@ -549,18 +556,18 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 				);
 			}
 
-			remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			remove_action( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
 		}
 	}
 }
-add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notification_for_synced_blog_comment', 20, 4 );
+add_action( 'bp_blogs_comment_sync_activity_comment', 'bboss_activity_add_notification_for_synced_blog_comment', 20, 4 );
 
 /**
  * Mark notifications as read when a user visits an single post.
  *
  * @since BuddyBoss 1.5.4
  */
-function bp_activity_remove_screen_notifications_single_post() {
+function bboss_activity_remove_screen_notifications_single_post() {
 
 	$reply_id         = filter_input( INPUT_GET, 'rid', FILTER_VALIDATE_INT );
 	$comment_reply_id = filter_input( INPUT_GET, 'crid', FILTER_VALIDATE_INT );
@@ -587,50 +594,50 @@ function bp_activity_remove_screen_notifications_single_post() {
 
 	// Mark individual activity reply notification as read.
 	if ( ! empty( $comment_id ) ) {
-		$updated = BP_Notifications_Notification::update(
+		$updated = BBoss_Notifications_Notification::update(
 			array(
 				'is_new' => false,
 			),
 			array(
-				'user_id'        => bp_loggedin_user_id(),
+				'user_id'        => bboss_loggedin_user_id(),
 				'id'             => $comment_id,
 				'component_name' => 'activity',
 			)
 		);
 
 		if ( 1 === $updated ) {
-			$notifications_data = bp_notifications_get_notification( $comment_id );
+			$notifications_data = bboss_notifications_get_notification( $comment_id );
 			if ( isset( $notifications_data->item_id ) ) {
-				BP_Notifications_Notification::update(
+				BBoss_Notifications_Notification::update(
 					array(
 						'is_new' => false,
 					),
 					array(
-						'user_id'        => bp_loggedin_user_id(),
+						'user_id'        => bboss_loggedin_user_id(),
 						'item_id'        => $notifications_data->item_id,
 						'component_name' => $notifications_data->component_name,
 					)
 				);
 
 				if ( 'activity' === $notifications_data->component_name ) {
-					$activity = new BP_Activity_Activity( $notifications_data->item_id );
+					$activity = new BBoss_Activity_Activity( $notifications_data->item_id );
 					$post_id  = 0;
 					if ( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
 						// Get activity object.
-						$comment_activity = new BP_Activity_Activity( $activity->item_id );
+						$comment_activity = new BBoss_Activity_Activity( $activity->item_id );
 						if ( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
 							$comment_post_type = $comment_activity->secondary_item_id;
 							$get_post_type     = get_post_type( $comment_post_type );
-							$post_id           = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
+							$post_id           = bboss_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
 						}
 
 						if ( ! empty( $post_id ) ) {
-							BP_Notifications_Notification::update(
+							BBoss_Notifications_Notification::update(
 								array(
 									'is_new' => false,
 								),
 								array(
-									'user_id'        => bp_loggedin_user_id(),
+									'user_id'        => bboss_loggedin_user_id(),
 									'item_id'        => $post_id,
 									'component_name' => 'core',
 								)
@@ -642,7 +649,7 @@ function bp_activity_remove_screen_notifications_single_post() {
 		}
 	}
 }
-add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single_post' );
+add_action( 'template_redirect', 'bboss_activity_remove_screen_notifications_single_post' );
 
 /**
  * Create notification meta based on activity.
@@ -651,10 +658,10 @@ add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single
  *
  * @param object $notification Notification object.
  */
-function bb_activity_add_notification_metas( $notification ) {
+function bboss_activity_add_notification_metas( $notification ) {
 
 	if (
-		bb_enabled_legacy_email_preference() ||
+		bboss_enabled_legacy_email_preference() ||
 		empty( $notification->id ) ||
 		empty( $notification->item_id ) ||
 		empty( $notification->component_action ) ||
@@ -664,7 +671,7 @@ function bb_activity_add_notification_metas( $notification ) {
 	}
 
 	$activity_id = $notification->item_id;
-	$activity    = new BP_Activity_Activity( $activity_id );
+	$activity    = new BBoss_Activity_Activity( $activity_id );
 
 	if ( empty( $activity->id ) ) {
 		return;
@@ -672,21 +679,21 @@ function bb_activity_add_notification_metas( $notification ) {
 
 	if ( 'activity_comment' === $activity->type ) {
 		if ( ! empty( $activity->item_id ) ) {
-			$parent_activity = new BP_Activity_Activity( $activity->item_id );
+			$parent_activity = new BBoss_Activity_Activity( $activity->item_id );
 			if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
-				bp_notifications_update_meta( $notification->id, 'type', 'post_comment' );
+				bboss_notifications_update_meta( $notification->id, 'type', 'post_comment' );
 			} elseif ( ! empty( $parent_activity ) && 'activity_update' === $parent_activity->type && $activity->item_id === $activity->secondary_item_id ) {
-				bp_notifications_update_meta( $notification->id, 'type', 'activity_post' );
+				bboss_notifications_update_meta( $notification->id, 'type', 'activity_post' );
 			} else {
-				bp_notifications_update_meta( $notification->id, 'type', 'activity_comment' );
+				bboss_notifications_update_meta( $notification->id, 'type', 'activity_comment' );
 			}
 		} else {
-			bp_notifications_update_meta( $notification->id, 'type', 'activity_comment' );
+			bboss_notifications_update_meta( $notification->id, 'type', 'activity_comment' );
 		}
 	} elseif ( 'blogs' === $activity->component ) {
-		bp_notifications_update_meta( $notification->id, 'type', 'post_comment' );
+		bboss_notifications_update_meta( $notification->id, 'type', 'post_comment' );
 	} else {
-		bp_notifications_update_meta( $notification->id, 'type', 'activity_post' );
+		bboss_notifications_update_meta( $notification->id, 'type', 'activity_post' );
 	}
 }
 
@@ -695,20 +702,20 @@ function bb_activity_add_notification_metas( $notification ) {
  *
  * @since BuddyBoss 2.3.80
  *
- * @param BP_Activity_Follow $follower Contains following data.
+ * @param BBoss_Activity_Follow $follower Contains following data.
  */
-function bb_activity_follow_withdraw_notifications( $follower ) {
+function bboss_activity_follow_withdraw_notifications( $follower ) {
 
-	if ( empty( $follower ) || ! bp_is_activity_follow_active() || empty( $follower->leader_id ) ) {
+	if ( empty( $follower ) || ! bboss_is_activity_follow_active() || empty( $follower->leader_id ) ) {
 		return;
 	}
 
-	bp_notifications_delete_notifications_by_item_id(
+	bboss_notifications_delete_notifications_by_item_id(
 		$follower->leader_id, // Following user id.
 		$follower->id,
-		buddypress()->activity->id,
+		bboss()->activity->id,
 		'bb_following_new',
 		$follower->follower_id // Current user id.
 	);
 }
-add_action( 'bp_stop_following', 'bb_activity_follow_withdraw_notifications', 10, 1 );
+add_action( 'bp_stop_following', 'bboss_activity_follow_withdraw_notifications', 10, 1 );

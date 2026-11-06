@@ -28,8 +28,8 @@ defined( 'ABSPATH' ) || exit;
  * @param string $name The role name.
  * @return string Translated role name on success, original name on failure.
  */
-function bbp_translate_user_role( $name ) {
-	return translate_with_gettext_context( before_last_bar( $name ), 'User role', 'buddyboss' );
+function bboss_bbp_translate_user_role( $name ) {
+	return translate_with_gettext_context( before_last_bar( $name ), 'User role', 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.LowLevelTranslationFunction,WordPress.WP.I18n.NonSingularStringLiteralText -- mirrors core's translate_user_role() for the plugin's own role names (registered as translatable strings where the roles are defined).
 }
 
 /**
@@ -37,20 +37,20 @@ function bbp_translate_user_role( $name ) {
  *
  * @since BuddyPress 2.6.0 Forums
  */
-function bbp_dummy_role_names() {
+function bboss_bbp_dummy_role_names() {
 
 	/* translators: user role */
-	__( 'Organizer', 'buddyboss' );
+	__( 'Organizer', 'buddyboss-platform' );
 
 	/* translators: user role */
-	__( 'Moderator', 'buddyboss' );
+	__( 'Moderator', 'buddyboss-platform' );
 
 	/* translators: user role */
-	__( 'Participant', 'buddyboss' );
+	__( 'Participant', 'buddyboss-platform' );
 
 	/* translators: user role */
-	__( 'Spectator', 'buddyboss' );
+	__( 'Spectator', 'buddyboss-platform' );
 
 	/* translators: user role */
-	__( 'Blocked', 'buddyboss' );
+	__( 'Blocked', 'buddyboss-platform' );
 }

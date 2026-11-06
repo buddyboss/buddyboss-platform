@@ -9,21 +9,24 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="create-popup-album-wrap popup-on-fly-create-album" style="display: none;">
 
 	<div class="bb-field-wrap">
-		<label for="new_album_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss' ); ?></label>
-		<input id="new_album_name_input" class="popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>">
+		<label for="new_album_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss-platform' ); ?></label>
+		<input id="new_album_name_input" class="popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss-platform' ); ?>">
 	</div>
 	<?php
-	if ( ! bp_is_group() ) :
-		bp_get_template_part( 'media/media-privacy' );
+	if ( ! bboss_is_group() ) :
+		bboss_get_template_part( 'media/media-privacy' );
 	endif;
 	?>
 	<div class="db-modal-buttons">
-		<a class="close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-		<a class="button bp-media-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss' ); ?></a>
+		<a class="close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+		<a class="button bp-media-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss-platform' ); ?></a>
 	</div>
 </div>

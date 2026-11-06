@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for activity and group topics (BB_Topics_Manager).
+ * Tests for activity and group topics (BBoss_Topics_Manager).
  *
  * BB_Tests_Topics_Manager_Ajax pins PROD-10664: group organizers manage the
  * topics of a group they organize through the topics AJAX handlers, and only
@@ -22,7 +22,7 @@ if ( ! function_exists( 'bb_is_enabled_group_activity_topics' ) ) {
 	 * @return bool
 	 */
 	function bb_is_enabled_group_activity_topics( $enable_group_topics = false ) {
-		return (bool) apply_filters( 'bb_is_enabled_group_activity_topics', bp_get_option( 'bb-enable-group-activity-topics', $enable_group_topics ) );
+		return (bool) apply_filters( 'bb_is_enabled_group_activity_topics', bboss_get_option( 'bb-enable-group-activity-topics', $enable_group_topics ) );
 	}
 }
 
@@ -35,7 +35,7 @@ if ( ! function_exists( 'bb_get_group_activity_topic_options' ) ) {
 	 * @return string
 	 */
 	function bb_get_group_activity_topic_options( $group_topic_options = 'only_from_activity_topics' ) {
-		return apply_filters( 'bb_get_group_activity_topic_options', bp_get_option( 'bb-group-activity-topics-options', $group_topic_options ) );
+		return apply_filters( 'bb_get_group_activity_topic_options', bboss_get_option( 'bb-group-activity-topics-options', $group_topic_options ) );
 	}
 }
 
@@ -73,7 +73,7 @@ if ( ! function_exists( 'bb_can_user_post_to_group_activity_topic' ) ) {
 	 * @return bool
 	 */
 	function bb_can_user_post_to_group_activity_topic( $user_id, $group_id, $topic_id ) {
-		$topic_permission = bb_topics_manager_instance()->bb_get_topic_permission_type(
+		$topic_permission = bboss_topics_manager_instance()->bb_get_topic_permission_type(
 			array(
 				'topic_id'  => $topic_id,
 				'item_id'   => $group_id,
@@ -81,13 +81,13 @@ if ( ! function_exists( 'bb_can_user_post_to_group_activity_topic' ) ) {
 			)
 		);
 
-		if ( groups_is_user_admin( $user_id, $group_id ) ) {
+		if ( bboss_groups_is_user_admin( $user_id, $group_id ) ) {
 			return true;
 		}
-		if ( groups_is_user_mod( $user_id, $group_id ) ) {
+		if ( bboss_groups_is_user_mod( $user_id, $group_id ) ) {
 			return in_array( $topic_permission, array( 'mods', 'members' ), true );
 		}
-		if ( groups_is_user_member( $user_id, $group_id ) ) {
+		if ( bboss_groups_is_user_member( $user_id, $group_id ) ) {
 			return 'members' === $topic_permission;
 		}
 
@@ -131,7 +131,7 @@ abstract class BB_Topics_Manager_TestCase extends BP_UnitTestCase {
 	protected $alpha, $beta, $gamma;
 
 	/**
-	 * @var BB_Topics_Manager
+	 * @var BBoss_Topics_Manager
 	 */
 	protected $manager;
 
@@ -144,11 +144,11 @@ abstract class BB_Topics_Manager_TestCase extends BP_UnitTestCase {
 		$this->error_level = error_reporting();
 		error_reporting( $this->error_level & ~E_WARNING );
 
-		bp_update_option( 'bb_enable_activity_topics', 1 );
-		bp_update_option( 'bb-enable-group-activity-topics', 1 );
-		bp_update_option( 'bb-group-activity-topics-options', 'only_from_activity_topics' );
+		bboss_update_option( 'bb_enable_activity_topics', 1 );
+		bboss_update_option( 'bb-enable-group-activity-topics', 1 );
+		bboss_update_option( 'bb-group-activity-topics-options', 'only_from_activity_topics' );
 
-		$this->manager = bb_topics_manager_instance();
+		$this->manager = bboss_topics_manager_instance();
 		$this->manager->create_tables();
 
 		$this->admin           = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -161,7 +161,7 @@ abstract class BB_Topics_Manager_TestCase extends BP_UnitTestCase {
 		$this->other_group = self::factory()->group->create( array( 'creator_id' => $this->other_organizer ) );
 
 		$this->add_user_to_group( $this->moderator, $this->own_group );
-		$mod = new BP_Groups_Member( $this->moderator, $this->own_group );
+		$mod = new BBoss_Groups_Member( $this->moderator, $this->own_group );
 		$mod->promote( 'mod' );
 		$this->add_user_to_group( $this->member, $this->own_group );
 		$this->add_user_to_group( $this->organizer, $this->other_group );
@@ -233,7 +233,7 @@ abstract class BB_Topics_Manager_TestCase extends BP_UnitTestCase {
 	/**
 	 * Call one of the topics AJAX handlers as $user_id and decode the JSON it sent.
 	 *
-	 * @param string      $method       Handler method on BB_Topics_Manager.
+	 * @param string      $method       Handler method on BBoss_Topics_Manager.
 	 * @param int         $user_id      Acting user.
 	 * @param array       $post         Request body (without nonce).
 	 * @param string      $nonce_action Nonce action, or '' to send an invalid nonce.
@@ -293,7 +293,7 @@ abstract class BB_Topics_Manager_TestCase extends BP_UnitTestCase {
 	 */
 	protected function relationship( $topic_id, $item_type, $item_id ) {
 		global $wpdb;
-		$table = bp_core_get_table_prefix() . 'bb_topic_relationships';
+		$table = bboss_core_get_table_prefix() . 'bb_topic_relationships';
 
 		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE topic_id = %d AND item_type = %s AND item_id = %d", $topic_id, $item_type, $item_id ) ); // phpcs:ignore
 	}
@@ -339,7 +339,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 	}
 
 	public function test_organizer_can_add_custom_topic_in_allow_both_mode() {
-		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		bboss_update_option( 'bb-group-activity-topics-options', 'allow_both' );
 
 		$response = $this->add_ajax( $this->organizer, array( 'name' => 'Organizer Custom' ) );
 
@@ -351,7 +351,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 	}
 
 	public function test_organizer_can_add_custom_topic_in_create_own_mode() {
-		bp_update_option( 'bb-group-activity-topics-options', 'create_own_topics' );
+		bboss_update_option( 'bb-group-activity-topics-options', 'create_own_topics' );
 
 		$this->assert_success( $this->add_ajax( $this->organizer, array( 'name' => 'Own Only Topic' ) ) );
 	}
@@ -377,7 +377,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 	}
 
 	public function test_organizer_denied_when_group_topics_disabled() {
-		bp_update_option( 'bb-enable-group-activity-topics', 0 );
+		bboss_update_option( 'bb-enable-group-activity-topics', 0 );
 
 		$this->assert_denied( $this->add_ajax( $this->organizer, array( 'name' => 'Gamma Topic' ) ) );
 	}
@@ -404,7 +404,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 	 */
 
 	public function test_posted_slug_is_ignored_for_organizer() {
-		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		bboss_update_option( 'bb-group-activity-topics-options', 'allow_both' );
 
 		$response = $this->add_ajax(
 			$this->organizer,
@@ -524,7 +524,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 				'user_id'   => $this->organizer,
 			)
 		);
-		bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
+		bboss_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
 			array(
 				'topic_id'    => $this->alpha,
 				'activity_id' => $activity,
@@ -549,7 +549,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 		$this->assert_success( $response );
 		$this->assertNull( $this->relationship( $this->alpha, 'groups', $this->own_group ) );
 		$this->assertNotNull( $this->relationship( $this->alpha, 'activity', 0 ), 'The global topic stays.' );
-		$this->assertSame( $this->gamma, (int) bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity ) );
+		$this->assertSame( $this->gamma, (int) bboss_activity_topics_manager_instance()->bb_get_activity_topic( $activity ) );
 		$this->assertSame(
 			'gamma-topic',
 			$this->manager->bb_get_redirected_topic_slug( array( 'old_slug' => 'alpha-topic', 'item_type' => 'groups', 'item_id' => $this->own_group ) ),
@@ -633,7 +633,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 
 		$target_id = (int) ( $this->own_group . '0' );
 		$wpdb->insert(
-			buddypress()->groups->table_name,
+			bboss()->groups->table_name,
 			array(
 				'id'           => $target_id,
 				'creator_id'   => $this->other_organizer,
@@ -641,7 +641,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 				'slug'         => 'target-' . $target_id,
 				'description'  => '',
 				'status'       => 'public',
-				'date_created' => bp_core_current_time(),
+				'date_created' => bboss_core_current_time(),
 			)
 		);
 		self::set_current_user( $this->admin );
@@ -736,7 +736,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 	 */
 
 	public function test_global_topic_cannot_be_renamed_or_swapped_inside_a_group() {
-		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		bboss_update_option( 'bb-group-activity-topics-options', 'allow_both' );
 
 		foreach ( array( 'Renamed X', 'Gamma Topic' ) as $name ) {
 			$response = $this->add_ajax( $this->organizer, array( 'name' => $name, 'topic_id' => $this->alpha ) );
@@ -751,7 +751,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 	}
 
 	public function test_custom_group_topic_can_still_be_renamed() {
-		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		bboss_update_option( 'bb-group-activity-topics-options', 'allow_both' );
 		$custom = $this->add_topic( 'Old Custom', 'groups', $this->own_group );
 
 		$response = $this->add_ajax( $this->organizer, array( 'name' => 'New Custom', 'topic_id' => $custom ) );
@@ -766,7 +766,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 	 */
 
 	public function test_activity_topic_name_wins_over_earlier_group_topic_name() {
-		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		bboss_update_option( 'bb-group-activity-topics-options', 'allow_both' );
 		$this->assert_success( $this->add_ajax( $this->organizer, array( 'name' => 'ANNOUNCEMENTS!!!' ) ) );
 		$this->assertSame( 'ANNOUNCEMENTS!!!', $this->manager->bb_get_topic_by( 'slug', 'announcements' )->name );
 
@@ -794,7 +794,7 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 	}
 
 	public function test_group_rename_does_not_change_shared_topic_name() {
-		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		bboss_update_option( 'bb-group-activity-topics-options', 'allow_both' );
 		self::set_current_user( $this->admin );
 		$custom = $this->add_topic( 'Shared Name', 'groups', $this->other_group );
 		$this->add_topic( 'Shared Name', 'groups', $this->own_group );
@@ -888,7 +888,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 				'user_id'   => $this->admin,
 			)
 		);
-		bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
+		bboss_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
 			array(
 				'topic_id'    => $topic_id,
 				'activity_id' => $activity,
@@ -901,7 +901,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	}
 
 	protected function activity_topic( $activity_id ) {
-		return (int) bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
+		return (int) bboss_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
 	}
 
 	/*
@@ -909,26 +909,26 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	 */
 
 	public function test_enable_topics_setting() {
-		bp_update_option( 'bb_enable_activity_topics', 0 );
-		$this->assertFalse( bb_is_enabled_activity_topics() );
+		bboss_update_option( 'bb_enable_activity_topics', 0 );
+		$this->assertFalse( bboss_is_enabled_activity_topics() );
 
-		bp_update_option( 'bb_enable_activity_topics', 1 );
-		$this->assertTrue( bb_is_enabled_activity_topics() );
+		bboss_update_option( 'bb_enable_activity_topics', 1 );
+		$this->assertTrue( bboss_is_enabled_activity_topics() );
 	}
 
 	public function test_topic_required_setting() {
-		bp_update_option( 'bb_activity_topic_required', 0 );
-		$this->assertFalse( bb_is_activity_topic_required() );
+		bboss_update_option( 'bb_activity_topic_required', 0 );
+		$this->assertFalse( bboss_is_activity_topic_required() );
 
-		bp_update_option( 'bb_activity_topic_required', 1 );
-		$this->assertTrue( bb_is_activity_topic_required() );
+		bboss_update_option( 'bb_activity_topic_required', 1 );
+		$this->assertTrue( bboss_is_activity_topic_required() );
 	}
 
 	public function test_required_topic_refuses_relationship_without_topic() {
-		bp_update_option( 'bb_activity_topic_required', 1 );
+		bboss_update_option( 'bb_activity_topic_required', 1 );
 		$activity = self::factory()->activity->create( array( 'user_id' => $this->admin ) );
 
-		$result = bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
+		$result = bboss_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
 			array(
 				'topic_id'    => 0,
 				'activity_id' => $activity,
@@ -1145,14 +1145,14 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	public function test_feed_filter_by_topic_returns_only_tagged_posts() {
 		// The manager is a singleton that adds its query filters once, in its constructor, and the
 		// test case restores the hook table after every test, so attach them again here.
-		$activity_topics = bb_activity_topics_manager_instance();
+		$activity_topics = bboss_activity_topics_manager_instance();
 		add_filter( 'bp_activity_get_join_sql', array( $activity_topics, 'bb_activity_topic_get_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_get_where_conditions', array( $activity_topics, 'bb_activity_topic_get_where_conditions' ), 10, 2 );
 
 		$tagged   = $this->tagged_activity( $this->alpha );
 		$untagged = self::factory()->activity->create( array( 'user_id' => $this->admin ) );
 
-		$result = bp_activity_get( array( 'topic_id' => $this->alpha, 'per_page' => 50 ) );
+		$result = bboss_activity_get( array( 'topic_id' => $this->alpha, 'per_page' => 50 ) );
 		$ids    = wp_list_pluck( $result['activities'], 'id' );
 
 		$this->assertContains( $tagged, array_map( 'intval', $ids ) );
@@ -1163,8 +1163,8 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	 * Post an activity update through the nouveau AJAX handler and return the JSON reply.
 	 */
 	protected function post_update( $user_id, $post ) {
-		if ( ! function_exists( 'bp_nouveau_ajax_post_update' ) ) {
-			require_once BP_PLUGIN_DIR . 'bp-templates/bp-nouveau/includes/activity/ajax.php';
+		if ( ! function_exists( 'bboss_nouveau_ajax_post_update' ) ) {
+			require_once BBOSS_PLUGIN_DIR . 'bp-templates/bp-nouveau/includes/activity/ajax.php';
 		}
 
 		self::set_current_user( $user_id );
@@ -1201,7 +1201,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	}
 
 	public function test_topic_permission_is_checked_when_topic_is_not_required() {
-		bp_update_option( 'bb_activity_topic_required', 0 );
+		bboss_update_option( 'bb_activity_topic_required', 0 );
 		self::set_current_user( $this->admin );
 		$restricted = $this->add_topic( 'Admins Only', 'activity', 0, 'mods_admins' );
 
@@ -1219,7 +1219,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	}
 
 	public function test_group_topic_permission_and_ownership_are_checked_when_topic_is_not_required() {
-		bp_update_option( 'bb_activity_topic_required', 0 );
+		bboss_update_option( 'bb_activity_topic_required', 0 );
 		self::set_current_user( $this->admin );
 		$organizers_only = $this->add_topic( 'Organizers Only Topic', 'groups', $this->own_group, 'admins' );
 
@@ -1250,7 +1250,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	}
 
 	/**
-	 * Messages the topic check in bp_nouveau_ajax_post_update() can send.
+	 * Messages the topic check in bboss_nouveau_ajax_post_update() can send.
 	 */
 	protected function assert_not_refused_for_topic( $response, $message = '' ) {
 		$this->assertIsArray( $response, $message );
@@ -1267,7 +1267,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	 * A member's activity tagged with a topic, by the member.
 	 */
 	protected function member_activity( $topic_id, $component = 'activity', $item_id = 0 ) {
-		bp_update_option( '_bp_enable_activity_edit', 1 );
+		bboss_update_option( '_bp_enable_activity_edit', 1 );
 
 		$activity = self::factory()->activity->create(
 			array(
@@ -1278,7 +1278,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 				'content'   => 'Original content',
 			)
 		);
-		bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
+		bboss_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
 			array(
 				'topic_id'    => $topic_id,
 				'activity_id' => $activity,
@@ -1311,7 +1311,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	 * @dataProvider data_topic_required
 	 */
 	public function test_edit_keeps_existing_topic_after_its_permission_changed( $required ) {
-		bp_update_option( 'bb_activity_topic_required', $required );
+		bboss_update_option( 'bb_activity_topic_required', $required );
 		$activity = $this->member_activity( $this->alpha );
 		$this->restrict_activity_topic( $this->alpha );
 
@@ -1328,7 +1328,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	 * @dataProvider data_topic_required
 	 */
 	public function test_edit_without_topic_field_is_not_blocked( $required ) {
-		bp_update_option( 'bb_activity_topic_required', $required );
+		bboss_update_option( 'bb_activity_topic_required', $required );
 		$activity = $this->member_activity( $this->alpha );
 
 		$response = $this->post_update( $this->member, array( 'id' => $activity, 'content' => 'Edited content', 'object' => 'user' ) );
@@ -1341,7 +1341,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	 * @dataProvider data_topic_required
 	 */
 	public function test_edit_to_restricted_topic_is_refused( $required ) {
-		bp_update_option( 'bb_activity_topic_required', $required );
+		bboss_update_option( 'bb_activity_topic_required', $required );
 		self::set_current_user( $this->admin );
 		$restricted = $this->add_topic( 'Admins Only', 'activity', 0, 'mods_admins' );
 		$activity   = $this->member_activity( $this->alpha );
@@ -1357,9 +1357,9 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	}
 
 	public function test_topics_off_ignores_topic_and_required_setting() {
-		bp_update_option( 'bb_activity_topic_required', 1 );
+		bboss_update_option( 'bb_activity_topic_required', 1 );
 		$activity = $this->member_activity( $this->alpha );
-		bp_update_option( 'bb_enable_activity_topics', 0 );
+		bboss_update_option( 'bb_enable_activity_topics', 0 );
 
 		foreach ( array( 0, $this->beta ) as $topic_id ) {
 			$this->assert_not_refused_for_topic(
@@ -1370,7 +1370,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	}
 
 	public function test_edit_to_allowed_topic_and_removing_topic() {
-		bp_update_option( 'bb_activity_topic_required', 0 );
+		bboss_update_option( 'bb_activity_topic_required', 0 );
 		$activity = $this->member_activity( $this->alpha );
 
 		$this->assert_not_refused_for_topic(
@@ -1384,7 +1384,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 			'Removing the topic when it is not required'
 		);
 
-		bp_update_option( 'bb_activity_topic_required', 1 );
+		bboss_update_option( 'bb_activity_topic_required', 1 );
 		$response = $this->post_update( $this->member, array( 'id' => $activity, 'content' => 'No topic', 'object' => 'user', 'topic_id' => 0 ) );
 		$this->assertFalse( $response['success'] );
 		$this->assertSame( 'Please select a topic before posting.', $response['data']['message'] );
@@ -1394,7 +1394,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	 * @dataProvider data_topic_required
 	 */
 	public function test_group_edit_keeps_existing_topic_but_checks_a_new_one( $required ) {
-		bp_update_option( 'bb_activity_topic_required', $required );
+		bboss_update_option( 'bb_activity_topic_required', $required );
 		self::set_current_user( $this->admin );
 		$custom          = $this->add_topic( 'Members Then Admins', 'groups', $this->own_group, 'members' );
 		$organizers_only = $this->add_topic( 'Organizers Only Topic', 'groups', $this->own_group, 'admins' );
@@ -1435,13 +1435,13 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	 * @dataProvider data_topic_settings
 	 */
 	public function test_organizer_edits_topic_that_has_posts( $mode, $required ) {
-		bp_update_option( 'bb_activity_topic_required', $required );
-		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		bboss_update_option( 'bb_activity_topic_required', $required );
+		bboss_update_option( 'bb-group-activity-topics-options', 'allow_both' );
 		self::set_current_user( $this->admin );
 		$custom   = $this->add_topic( 'Posts Custom', 'groups', $this->own_group );
 		$global   = $this->member_activity( $this->alpha, 'groups', $this->own_group );
 		$tagged   = $this->member_activity( $custom, 'groups', $this->own_group );
-		bp_update_option( 'bb-group-activity-topics-options', $mode );
+		bboss_update_option( 'bb-group-activity-topics-options', $mode );
 
 		// Permission-only edits keep every post on its topic.
 		$this->assert_success( $this->add_ajax( $this->organizer, array( 'name' => 'posts-custom', 'topic_id' => $custom, 'permission_type' => 'admins' ) ), 'custom permission' );
@@ -1470,7 +1470,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	}
 
 	public function test_permission_label_is_not_stored_as_permission_type() {
-		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		bboss_update_option( 'bb-group-activity-topics-options', 'allow_both' );
 		$custom = $this->add_topic( 'Label Custom', 'groups', $this->own_group );
 
 		foreach ( array( 'organizer' => $this->organizer, 'admin' => $this->admin ) as $who => $user_id ) {
@@ -1489,18 +1489,18 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 		$restricted = $this->add_topic( 'Admins Only', 'activity', 0, 'mods_admins' );
 
 		self::set_current_user( $this->member );
-		$this->assertFalse( bb_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $restricted ) );
-		$this->assertTrue( bb_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $this->alpha ) );
+		$this->assertFalse( bboss_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $restricted ) );
+		$this->assertTrue( bboss_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $this->alpha ) );
 
 		self::set_current_user( $this->admin );
-		$this->assertTrue( bb_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $restricted ) );
+		$this->assertTrue( bboss_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $restricted ) );
 	}
 	/**
 	 * Number of activity/topic rows for a topic. A refused post must not add one.
 	 */
 	protected function topic_rows( $topic_id ) {
 		global $wpdb;
-		$table = bp_core_get_table_prefix() . 'bb_activity_topic_relationship';
+		$table = bboss_core_get_table_prefix() . 'bb_activity_topic_relationship';
 
 		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE topic_id = %d", $topic_id ) ); // phpcs:ignore
 	}
@@ -1519,7 +1519,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	 * @dataProvider data_object_spellings
 	 */
 	public function test_object_spelling_cannot_bypass_topic_permission_check( $object, $kind ) {
-		bp_update_option( 'bb_activity_topic_required', 0 );
+		bboss_update_option( 'bb_activity_topic_required', 0 );
 		self::set_current_user( $this->admin );
 		$staff_only      = $this->add_topic( 'Staff Only Topic', 'activity', 0, 'mods_admins' );
 		$organizers_only = $this->add_topic( 'Organizers Only Topic', 'groups', $this->own_group, 'admins' );

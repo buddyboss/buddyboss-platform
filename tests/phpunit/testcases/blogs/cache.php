@@ -16,18 +16,18 @@ class BP_Tests_Blogs_Cache extends BP_UnitTestCase {
 		$b1 = self::factory()->blog->create();
 		$b2 = self::factory()->blog->create();
 
-		bp_blogs_add_blogmeta( $b1, 'foo', 'bar' );
-		bp_blogs_add_blogmeta( $b1, 'foo2', 'bar2' );
-		bp_blogs_add_blogmeta( $b2, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( $b1, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( $b1, 'foo2', 'bar2' );
+		bboss_blogs_add_blogmeta( $b2, 'foo', 'bar' );
 
 		// Need this info
-		$b1_name = bp_blogs_get_blogmeta( $b1, 'name' );
-		$b1_description = bp_blogs_get_blogmeta( $b1, 'description' );
-		$b1_last_activity = bp_blogs_get_blogmeta( $b1, 'last_activity' );
+		$b1_name = bboss_blogs_get_blogmeta( $b1, 'name' );
+		$b1_description = bboss_blogs_get_blogmeta( $b1, 'description' );
+		$b1_last_activity = bboss_blogs_get_blogmeta( $b1, 'last_activity' );
 
-		$b2_name = bp_blogs_get_blogmeta( $b2, 'name' );
-		$b2_description = bp_blogs_get_blogmeta( $b2, 'description' );
-		$b2_last_activity = bp_blogs_get_blogmeta( $b2, 'last_activity' );
+		$b2_name = bboss_blogs_get_blogmeta( $b2, 'name' );
+		$b2_description = bboss_blogs_get_blogmeta( $b2, 'description' );
+		$b2_last_activity = bboss_blogs_get_blogmeta( $b2, 'last_activity' );
 
 		// Clear caches (due to _get_)
 		wp_cache_delete( $b1, 'bp_blog_meta' );
@@ -37,7 +37,7 @@ class BP_Tests_Blogs_Cache extends BP_UnitTestCase {
 		$this->assertFalse( wp_cache_get( $b1, 'bp_blog_meta' ) );
 		$this->assertFalse( wp_cache_get( $b2, 'bp_blog_meta' ) );
 
-		bp_blogs_update_meta_cache( array( $b1, $b2 ) );
+		bboss_blogs_update_meta_cache( array( $b1, $b2 ) );
 
 		$b1_expected = array(
 			'name' => array(
@@ -103,21 +103,21 @@ class BP_Tests_Blogs_Cache extends BP_UnitTestCase {
 		$b1 = self::factory()->blog->create();
 		$b2 = self::factory()->blog->create();
 
-		bp_blogs_record_blog( $b1, $u, true );
-		bp_blogs_record_blog( $b2, $u, true );
+		bboss_blogs_record_blog( $b1, $u, true );
+		bboss_blogs_record_blog( $b2, $u, true );
 
-		bp_blogs_add_blogmeta( $b1, 'foo', 'bar' );
-		bp_blogs_add_blogmeta( $b1, 'foo2', 'bar2' );
-		bp_blogs_add_blogmeta( $b2, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( $b1, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( $b1, 'foo2', 'bar2' );
+		bboss_blogs_add_blogmeta( $b2, 'foo', 'bar' );
 
 		// Need this info
-		$b1_name = bp_blogs_get_blogmeta( $b1, 'name' );
-		$b1_description = bp_blogs_get_blogmeta( $b1, 'description' );
-		$b1_last_activity = bp_blogs_get_blogmeta( $b1, 'last_activity' );
+		$b1_name = bboss_blogs_get_blogmeta( $b1, 'name' );
+		$b1_description = bboss_blogs_get_blogmeta( $b1, 'description' );
+		$b1_last_activity = bboss_blogs_get_blogmeta( $b1, 'last_activity' );
 
-		$b2_name = bp_blogs_get_blogmeta( $b2, 'name' );
-		$b2_description = bp_blogs_get_blogmeta( $b2, 'description' );
-		$b2_last_activity = bp_blogs_get_blogmeta( $b2, 'last_activity' );
+		$b2_name = bboss_blogs_get_blogmeta( $b2, 'name' );
+		$b2_description = bboss_blogs_get_blogmeta( $b2, 'description' );
+		$b2_last_activity = bboss_blogs_get_blogmeta( $b2, 'last_activity' );
 
 		// Clear caches (due to _get_)
 		wp_cache_delete( $b1, 'bp_blog_meta' );
@@ -127,7 +127,7 @@ class BP_Tests_Blogs_Cache extends BP_UnitTestCase {
 		$this->assertFalse( wp_cache_get( $b1, 'bp_blog_meta' ) );
 		$this->assertFalse( wp_cache_get( $b2, 'bp_blog_meta' ) );
 
-		bp_has_blogs( array(
+		bboss_has_blogs( array(
 			'user_id' => $u,
 		) );
 
@@ -197,21 +197,21 @@ class BP_Tests_Blogs_Cache extends BP_UnitTestCase {
 		$b1 = self::factory()->blog->create();
 		$b2 = self::factory()->blog->create();
 
-		bp_blogs_record_blog( $b1, $u, true );
-		bp_blogs_record_blog( $b2, $u, true );
+		bboss_blogs_record_blog( $b1, $u, true );
+		bboss_blogs_record_blog( $b2, $u, true );
 
-		bp_blogs_add_blogmeta( $b1, 'foo', 'bar' );
-		bp_blogs_add_blogmeta( $b1, 'foo2', 'bar2' );
-		bp_blogs_add_blogmeta( $b2, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( $b1, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( $b1, 'foo2', 'bar2' );
+		bboss_blogs_add_blogmeta( $b2, 'foo', 'bar' );
 
 		// Need this info
-		$b1_name = bp_blogs_get_blogmeta( $b1, 'name' );
-		$b1_description = bp_blogs_get_blogmeta( $b1, 'description' );
-		$b1_last_activity = bp_blogs_get_blogmeta( $b1, 'last_activity' );
+		$b1_name = bboss_blogs_get_blogmeta( $b1, 'name' );
+		$b1_description = bboss_blogs_get_blogmeta( $b1, 'description' );
+		$b1_last_activity = bboss_blogs_get_blogmeta( $b1, 'last_activity' );
 
-		$b2_name = bp_blogs_get_blogmeta( $b2, 'name' );
-		$b2_description = bp_blogs_get_blogmeta( $b2, 'description' );
-		$b2_last_activity = bp_blogs_get_blogmeta( $b2, 'last_activity' );
+		$b2_name = bboss_blogs_get_blogmeta( $b2, 'name' );
+		$b2_description = bboss_blogs_get_blogmeta( $b2, 'description' );
+		$b2_last_activity = bboss_blogs_get_blogmeta( $b2, 'last_activity' );
 
 		// Clear caches (due to _get_)
 		wp_cache_delete( $b1, 'bp_blog_meta' );
@@ -221,7 +221,7 @@ class BP_Tests_Blogs_Cache extends BP_UnitTestCase {
 		$this->assertFalse( wp_cache_get( $b1, 'bp_blog_meta' ) );
 		$this->assertFalse( wp_cache_get( $b2, 'bp_blog_meta' ) );
 
-		bp_has_blogs( array(
+		bboss_has_blogs( array(
 			'update_meta_cache' => false,
 		) );
 
@@ -245,11 +245,11 @@ class BP_Tests_Blogs_Cache extends BP_UnitTestCase {
 
 		// prime cache
 		// no blogs are created by default, so count is zero
-		bp_blogs_total_blogs();
+		bboss_blogs_total_blogs();
 		$first_query_count = $wpdb->num_queries;
 
 		// run function again
-		bp_blogs_total_blogs();
+		bboss_blogs_total_blogs();
 
 		// check if function references cache or hits the DB by comparing query count
 		$this->assertEquals( $first_query_count, $wpdb->num_queries );
@@ -277,16 +277,16 @@ class BP_Tests_Blogs_Cache extends BP_UnitTestCase {
 			)
 		) );
 
-		bp_blogs_record_blog( $b1, $u );
-		bp_blogs_record_blog( $b2, $u );
+		bboss_blogs_record_blog( $b1, $u );
+		bboss_blogs_record_blog( $b2, $u );
 
 		// prime total blog count
-		bp_blogs_total_blogs();
+		bboss_blogs_total_blogs();
 
 		// delete a blog
 		wpmu_delete_blog( $b2 );
 
-		$this->assertEquals( 1, bp_blogs_total_blogs() );
+		$this->assertEquals( 1, bboss_blogs_total_blogs() );
 	}
 
 	/**
@@ -300,10 +300,10 @@ class BP_Tests_Blogs_Cache extends BP_UnitTestCase {
 		$u = self::factory()->user->create();
 
 		$b1 = self::factory()->blog->create();
-		bp_blogs_record_blog( $b1, $u, true );
+		bboss_blogs_record_blog( $b1, $u, true );
 
 		// prime cache
-		bp_blogs_get_blogmeta( $b1, 'url' );
+		bboss_blogs_get_blogmeta( $b1, 'url' );
 		$this->assertNotEmpty( wp_cache_get( $b1, 'bp_blog_meta' ) );
 
 		// updating blog details should purge cache

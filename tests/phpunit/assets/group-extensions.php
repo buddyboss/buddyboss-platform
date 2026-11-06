@@ -1,11 +1,11 @@
 <?php
 
 /**
- * The following implementations of BP_Group_Extension act as dummy plugins
+ * The following implementations of BBoss_Group_Extension act as dummy plugins
  * for our unit tests
  */
 
-class BPTest_Group_Extension_Parse_Legacy_Properties extends BP_Group_Extension {
+class BPTest_Group_Extension_Parse_Legacy_Properties extends BBoss_Group_Extension {
 	function __construct() {
 		$class_name = get_class( $this );
 		$this->name = $class_name;
@@ -43,7 +43,7 @@ class BPTest_Group_Extension_Parse_Legacy_Properties extends BP_Group_Extension 
 	}
 }
 
-class BPTest_Group_Extension_Setup_Screens_Use_Global_Fallbacks extends BP_Group_Extension {
+class BPTest_Group_Extension_Setup_Screens_Use_Global_Fallbacks extends BBoss_Group_Extension {
 	function __construct() {
 		$class_name = get_class( $this );
 		$this->slug = sanitize_title( $class_name );
@@ -68,7 +68,7 @@ class BPTest_Group_Extension_Setup_Screens_Use_Global_Fallbacks extends BP_Group
 	function settings_screen_save( $group_id = null ) {}
 }
 
-class BPTest_Group_Extension_Setup_Screens_Define_Edit_Screens_Locally extends BP_Group_Extension {
+class BPTest_Group_Extension_Setup_Screens_Define_Edit_Screens_Locally extends BBoss_Group_Extension {
 	function __construct() {
 		$class_name = get_class( $this );
 		$this->slug = sanitize_title( $class_name );
@@ -96,7 +96,7 @@ class BPTest_Group_Extension_Setup_Screens_Define_Edit_Screens_Locally extends B
 
 }
 
-class BPTest_Group_Extension_Access_Root_Property extends BP_Group_Extension {
+class BPTest_Group_Extension_Access_Root_Property extends BBoss_Group_Extension {
 	function __construct() {
 		$class_name = get_class( $this );
 
@@ -110,7 +110,7 @@ class BPTest_Group_Extension_Access_Root_Property extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Access_Init_Property_Using_Legacy_Location extends BP_Group_Extension {
+class BPTest_Group_Extension_Access_Init_Property_Using_Legacy_Location extends BBoss_Group_Extension {
 	function __construct() {
 		$class_name = get_class( $this );
 
@@ -128,7 +128,7 @@ class BPTest_Group_Extension_Access_Init_Property_Using_Legacy_Location extends 
 	}
 }
 
-class BPTest_Group_Extension_Get_Screen_Callback_Fallbacks extends BP_Group_Extension {
+class BPTest_Group_Extension_Get_Screen_Callback_Fallbacks extends BBoss_Group_Extension {
 	function __construct() {
 		$class_name = get_class( $this );
 
@@ -147,7 +147,7 @@ class BPTest_Group_Extension_Get_Screen_Callback_Fallbacks extends BP_Group_Exte
 	function edit_screen_save( $group_id = null ) {}
 }
 
-class BPTest_Group_Extension_Enable_Nav_Item_True extends BP_Group_Extension {
+class BPTest_Group_Extension_Enable_Nav_Item_True extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -161,7 +161,7 @@ class BPTest_Group_Extension_Enable_Nav_Item_True extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Enable_Nav_Item_False extends BP_Group_Extension {
+class BPTest_Group_Extension_Enable_Nav_Item_False extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -175,7 +175,7 @@ class BPTest_Group_Extension_Enable_Nav_Item_False extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Visibility_Private extends BP_Group_Extension {
+class BPTest_Group_Extension_Visibility_Private extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -189,7 +189,7 @@ class BPTest_Group_Extension_Visibility_Private extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Visibility_Public extends BP_Group_Extension {
+class BPTest_Group_Extension_Visibility_Public extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -203,7 +203,7 @@ class BPTest_Group_Extension_Visibility_Public extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Inferred_Access_Settings_EnableNavItem_True extends BP_Group_Extension {
+class BPTest_Group_Extension_Inferred_Access_Settings_EnableNavItem_True extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -217,7 +217,7 @@ class BPTest_Group_Extension_Inferred_Access_Settings_EnableNavItem_True extends
 	}
 }
 
-class BPTest_Group_Extension_Inferred_Access_Settings_EnableNavItem_False extends BP_Group_Extension {
+class BPTest_Group_Extension_Inferred_Access_Settings_EnableNavItem_False extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -230,7 +230,7 @@ class BPTest_Group_Extension_Inferred_Access_Settings_EnableNavItem_False extend
 		parent::init( $args );
 	}
 }
-class BPTest_Group_Extension_Access_Anyone extends BP_Group_Extension {
+class BPTest_Group_Extension_Access_Anyone extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -244,7 +244,7 @@ class BPTest_Group_Extension_Access_Anyone extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Access_Loggedin extends BP_Group_Extension {
+class BPTest_Group_Extension_Access_Loggedin extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -258,7 +258,7 @@ class BPTest_Group_Extension_Access_Loggedin extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Access_Member extends BP_Group_Extension {
+class BPTest_Group_Extension_Access_Member extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -272,7 +272,7 @@ class BPTest_Group_Extension_Access_Member extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Access_AdminMod extends BP_Group_Extension {
+class BPTest_Group_Extension_Access_AdminMod extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -289,7 +289,7 @@ class BPTest_Group_Extension_Access_AdminMod extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Access_Admin extends BP_Group_Extension {
+class BPTest_Group_Extension_Access_Admin extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -303,7 +303,7 @@ class BPTest_Group_Extension_Access_Admin extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Access_Noone extends BP_Group_Extension {
+class BPTest_Group_Extension_Access_Noone extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -317,7 +317,7 @@ class BPTest_Group_Extension_Access_Noone extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_ShowTab_Anyone extends BP_Group_Extension {
+class BPTest_Group_Extension_ShowTab_Anyone extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -332,7 +332,7 @@ class BPTest_Group_Extension_ShowTab_Anyone extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_ShowTab_Loggedin extends BP_Group_Extension {
+class BPTest_Group_Extension_ShowTab_Loggedin extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -347,7 +347,7 @@ class BPTest_Group_Extension_ShowTab_Loggedin extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_ShowTab_Member extends BP_Group_Extension {
+class BPTest_Group_Extension_ShowTab_Member extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -362,7 +362,7 @@ class BPTest_Group_Extension_ShowTab_Member extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_ShowTab_AdminMod extends BP_Group_Extension {
+class BPTest_Group_Extension_ShowTab_AdminMod extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -380,7 +380,7 @@ class BPTest_Group_Extension_ShowTab_AdminMod extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_ShowTab_Admin extends BP_Group_Extension {
+class BPTest_Group_Extension_ShowTab_Admin extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -395,7 +395,7 @@ class BPTest_Group_Extension_ShowTab_Admin extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_ShowTab_Noone extends BP_Group_Extension {
+class BPTest_Group_Extension_ShowTab_Noone extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 
@@ -410,7 +410,7 @@ class BPTest_Group_Extension_ShowTab_Noone extends BP_Group_Extension {
 	}
 }
 
-class BPTest_Group_Extension_Widget_Method extends BP_Group_Extension {
+class BPTest_Group_Extension_Widget_Method extends BBoss_Group_Extension {
 	public function __construct() {
 		$class_name = get_class( $this );
 

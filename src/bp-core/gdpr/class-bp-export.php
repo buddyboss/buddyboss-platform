@@ -1,6 +1,6 @@
 <?php
 /**
- * BP_Export base class
+ * BBoss_Export base class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Export
+ * Class BBoss_Export
  *
  * @since BuddyBoss 1.0.0
  */
-abstract class BP_Export {
+abstract class BBoss_Export {
 
 	protected $exporter_name   = '';
 	protected $exporter_label  = '';

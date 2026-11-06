@@ -43,7 +43,7 @@ export const HelpSliderModal = ({ isOpen, onClose, children, title }) => {
             <nav className="bb-rl-help-modal-toc" style={{
               marginBottom: 20, padding: 15, background: '#f8f9fa', borderRadius: 0, borderLeft: '4px solid #007cba'
             }}>
-              <h3 style={{ margin: '0 0 10px 0', fontSize: 16 }}>{__('Contents', 'buddyboss')}</h3>
+              <h3 style={{ margin: '0 0 10px 0', fontSize: 16 }}>{__('Contents', 'buddyboss-platform')}</h3>
               <ol style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 {toc.map(({ text, anchor }) => (
                   <li key={anchor} style={{ marginBottom: 8 }}>

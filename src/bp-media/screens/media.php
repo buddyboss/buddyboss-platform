@@ -6,15 +6,18 @@
  * @since BuddyBoss 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load the Media screen.
  *
  * @since BuddyPress 1.0.0
  */
-function media_screen() {
+function bboss_media_screen() {
 
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
@@ -32,5 +35,5 @@ function media_screen() {
 	 *
 	 * @param string $template Path to the media template to load.
 	 */
-	bp_core_load_template( apply_filters( 'media_template', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'media_template', 'members/single/home' ) );
 }

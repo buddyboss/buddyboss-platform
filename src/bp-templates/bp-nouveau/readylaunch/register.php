@@ -6,7 +6,7 @@
  * It includes necessary scripts and styles for the registration form functionality.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -16,13 +16,52 @@ defined( 'ABSPATH' ) || exit;
 
 wp_enqueue_script( 'bp-select2' );
 wp_enqueue_style( 'bp-select2' );
-wp_enqueue_script( 'jquery-magnific-popup' );
-wp_enqueue_style( 'jquery-magnific-popup' );
-wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
-wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
+wp_enqueue_style( 'bb-rl-login-fonts', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bboss_get_version() );
+wp_enqueue_style( 'bb-rl-login-style-icons', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bboss_get_version() );
 wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
-wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bp_get_version() );
+wp_enqueue_style( 'bb-rl-login-style', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bboss_get_version() );
 wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
+
+/*
+ * Registration page behaviour, attached through the script API instead of a raw <script> tag.
+ * The handle has no file: it only carries the inline code, prints in the footer, and depends on
+ * the registered Magnific Popup and Select2 handles so they always load first (dependencies are
+ * resolved at print time, after bp_enqueue_scripts has registered them). A nowdoc keeps the JS
+ * free of PHP interpolation.
+ */
+$bb_rl_register_js = <<<'JS'
+	jQuery( document ).ready( function( $ ) {
+		$( '.register-page select[multiple]' ).select2();
+
+		$( '.bb-password-wrap .bb-toggle-password' ).on( 'click', function( e ) {
+			e.preventDefault();
+			var $this = $( this );
+			var $input = $this.closest( '.bb-password-wrap' ).find( 'input' );
+			var $icon = $this.find( 'i' );
+			if ( $input.attr( 'type' ) === 'password' ) {
+				$input.attr( 'type', 'text' );
+				$icon.addClass( 'bb-icon-eye-slash' ).removeClass( 'bb-icon-eye' );
+			} else {
+				$input.attr( 'type', 'password' );
+				$icon.addClass( 'bb-icon-eye' ).removeClass( 'bb-icon-eye-slash' );
+			}
+		} );
+
+		if ( $( '.popup-modal-register' ).length ) {
+			$( '.popup-modal-register' ).magnificPopup(
+				{
+					type            : 'inline',
+					preloader       : false,
+					fixedBgPos      : true,
+					fixedContentPos : true
+				}
+			);
+		}
+	} );
+JS;
+wp_register_script( 'bb-rl-register', false, array( 'jquery', 'bp-select2', 'bp-nouveau-magnific-popup' ), bboss_get_version(), true );
+wp_add_inline_script( 'bb-rl-register', $bb_rl_register_js );
+wp_enqueue_script( 'bb-rl-register' );
 ?>
 
 <html <?php language_attributes(); ?>>
@@ -33,10 +72,10 @@ wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 </head>
 <body <?php body_class( 'bb-rl-register' ); ?>>
 
-	<?php bp_get_template_part( 'common/header-register' ); ?>
+	<?php bboss_get_template_part( 'common/header-register' ); ?>
 	<div class="register-page-main">
 		<?php
-		$bb_rl_light_logo = bb_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
+		$bb_rl_light_logo = bboss_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
 		if ( ! empty( $bb_rl_light_logo ) ) :
 			$logo_url   = esc_url( $bb_rl_light_logo['url'] );
 			$logo_title = ! empty( $bb_rl_light_logo['title'] ) ? $bb_rl_light_logo['title'] : '';
@@ -57,36 +96,6 @@ wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 		endif;
 		?>
 	</div>
-	<script>
-		jQuery( document ).ready( function( $ ) {
-			$( '.register-page select[multiple]' ).select2();
-
-			$( '.bb-password-wrap .bb-toggle-password' ).on( 'click', function( e ) {
-				e.preventDefault();
-				var $this = $( this );
-				var $input = $this.closest( '.bb-password-wrap' ).find( 'input' );
-				var $icon = $this.find( 'i' );
-				if ( $input.attr( 'type' ) === 'password' ) {
-					$input.attr( 'type', 'text' );
-					$icon.addClass( 'bb-icon-eye-slash' ).removeClass( 'bb-icon-eye' );
-				} else {
-					$input.attr( 'type', 'password' );
-					$icon.addClass( 'bb-icon-eye' ).removeClass( 'bb-icon-eye-slash' );
-				}
-			} );
-
-			if ( $( '.popup-modal-register' ).length ) {
-				$( '.popup-modal-register' ).magnificPopup(
-					{
-						type            : 'inline',
-						preloader       : false,
-						fixedBgPos      : true,
-						fixedContentPos : true
-					}
-				);
-			}
-		} );
-	</script>
 	<?php wp_footer(); ?>
 </body>
 </html>

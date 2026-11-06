@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.10.0
  */
-abstract class BB_Setup_Wizard_Manager {
+abstract class BBoss_Setup_Wizard_Manager {
 
 	/**
 	 * Wizard identifier
@@ -291,7 +291,7 @@ abstract class BB_Setup_Wizard_Manager {
 
 		$query_args['bb_wizard_activation'] = $this->wizard_id;
 
-		$admin_url = bp_get_admin_url(
+		$admin_url = bboss_get_admin_url(
 			add_query_arg(
 				$query_args,
 				'admin.php'
@@ -635,7 +635,7 @@ abstract class BB_Setup_Wizard_Manager {
 	}
 
 	/**
-	 * Send telemetry event if BB_Telemetry is available
+	 * Send telemetry event if BBoss_Telemetry is available
 	 *
 	 * @since BuddyBoss 2.10.0
 	 *
@@ -645,7 +645,7 @@ abstract class BB_Setup_Wizard_Manager {
 	 */
 	private function send_telemetry_event( $event_type, $data ) {
 		// Only send telemetry if BB_Telemetry is available and BuddyBoss options are enabled.
-		if ( class_exists( 'BB_Telemetry' ) ) {
+		if ( class_exists( 'BBoss_Telemetry' ) ) {
 			// Hook into BB_Telemetry system.
 			add_filter(
 				'bb_telemetry_platform_options',
@@ -656,7 +656,7 @@ abstract class BB_Setup_Wizard_Manager {
 			);
 
 			// Force immediate telemetry sending after each onboarding step.
-			$telemetry_instance = BB_Telemetry::instance();
+			$telemetry_instance = BBoss_Telemetry::instance();
 			if ( $telemetry_instance ) {
 				$telemetry_instance->bb_send_telemetry_report_to_analytics();
 			}
@@ -709,8 +709,8 @@ abstract class BB_Setup_Wizard_Manager {
 	 * @return mixed Option value.
 	 */
 	private function get_option( $option_name, $default = false ) {
-		if ( function_exists( 'bp_get_option' ) ) {
-			return bp_get_option( $option_name, $default );
+		if ( function_exists( 'bboss_get_option' ) ) {
+			return bboss_get_option( $option_name, $default );
 		}
 		return get_option( $option_name, $default );
 	}
@@ -725,8 +725,8 @@ abstract class BB_Setup_Wizard_Manager {
 	 * @return bool Success status.
 	 */
 	private function update_option( $option_name, $value ) {
-		if ( function_exists( 'bp_update_option' ) ) {
-			return bp_update_option( $option_name, $value );
+		if ( function_exists( 'bboss_update_option' ) ) {
+			return bboss_update_option( $option_name, $value );
 		}
 		// Force autoload=false for wizard options to prevent them from being loaded on every page.
 		return update_option( $option_name, $value, false );
@@ -811,7 +811,7 @@ abstract class BB_Setup_Wizard_Manager {
 			'preferences' => $preferences,
 			'assets'      => array_merge(
 				array(
-					'pluginUrl' => buddypress()->plugin_url,
+					'pluginUrl' => bboss()->plugin_url,
 					'reactDir'  => $this->config['react_directory'],
 				),
 				$this->config['react_assets']
@@ -837,7 +837,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -862,7 +862,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -871,7 +871,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! current_user_can( $this->config['capability_required'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss' ),
+					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -889,7 +889,7 @@ abstract class BB_Setup_Wizard_Manager {
 			// Skip progress tracking but still return success.
 			wp_send_json_success(
 				array(
-					'message'  => __( 'Step acknowledged.', 'buddyboss' ),
+					'message'  => __( 'Step acknowledged.', 'buddyboss-platform' ),
 					'step'     => $step,
 					'progress' => $this->get_progress(),
 				)
@@ -901,7 +901,7 @@ abstract class BB_Setup_Wizard_Manager {
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Step progress saved successfully.', 'buddyboss' ),
+				'message'  => __( 'Step progress saved successfully.', 'buddyboss-platform' ),
 				'step'     => $step,
 				'progress' => $this->get_progress(),
 			)
@@ -919,7 +919,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -928,7 +928,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! current_user_can( $this->config['capability_required'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss' ),
+					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -948,7 +948,7 @@ abstract class BB_Setup_Wizard_Manager {
 
 		wp_send_json_success(
 			array(
-				'message'     => __( 'Preferences saved successfully.', 'buddyboss' ),
+				'message'     => __( 'Preferences saved successfully.', 'buddyboss-platform' ),
 				'preferences' => $preferences,
 			)
 		);
@@ -965,7 +965,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
 				)
 			);
 		}

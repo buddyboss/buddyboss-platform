@@ -8,18 +8,21 @@
  * @version 1.0.0
  */
 
-bp_nouveau_member_hook( 'before', 'settings_template' );
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
-$data = bb_core_notification_preferences_data();
+bboss_nouveau_member_hook( 'before', 'settings_template' );
+
+$data = bboss_core_notification_preferences_data();
 ?>
 	<h2 class="screen-heading email-settings-screen"><?php echo wp_kses_post( $data['screen_title'] ); ?></h2>
 
-	<?php bp_get_template_part( 'members/single/parts/notification-subnav' ); ?>
+	<?php bboss_get_template_part( 'members/single/parts/notification-subnav' ); ?>
 
 	<div class="subscription-views">
 		<?php
-		$types               = bb_get_subscriptions_types();
-		$types_with_singular = bb_get_subscriptions_types( true );
+		$types               = bboss_get_subscriptions_types();
+		$types_with_singular = bboss_get_subscriptions_types( true );
 
 		/**
 		 * Filters the subscription types displayed in the member Subscriptions
@@ -74,4 +77,4 @@ $data = bb_core_notification_preferences_data();
 	</div>
 <?php
 
-bp_nouveau_member_hook( 'after', 'settings_template' );
+bboss_nouveau_member_hook( 'after', 'settings_template' );

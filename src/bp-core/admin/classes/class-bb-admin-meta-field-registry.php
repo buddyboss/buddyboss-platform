@@ -14,7 +14,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * BB_Admin_Meta_Field_Registry class.
+ * BBoss_Admin_Meta_Field_Registry class.
  *
  * Singleton registry that stores field definitions per component and provides
  * helpers to collect field data for AJAX responses and to persist
@@ -22,13 +22,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Meta_Field_Registry {
+class BBoss_Admin_Meta_Field_Registry {
 
 	/**
 	 * Singleton instance.
 	 *
 	 * @since BuddyBoss 3.0.0
-	 * @var BB_Admin_Meta_Field_Registry|null
+	 * @var BBoss_Admin_Meta_Field_Registry|null
 	 */
 	private static $instance = null;
 
@@ -62,7 +62,7 @@ class BB_Admin_Meta_Field_Registry {
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @return BB_Admin_Meta_Field_Registry
+	 * @return BBoss_Admin_Meta_Field_Registry
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -101,7 +101,7 @@ class BB_Admin_Meta_Field_Registry {
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
-		 * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+		 * @param BBoss_Admin_Meta_Field_Registry $registry  The registry instance.
 		 * @param string                       $component The component identifier.
 		 */
 		do_action( "bb_register_{$component}_meta_fields", $this, $component );
@@ -229,7 +229,7 @@ class BB_Admin_Meta_Field_Registry {
 	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $component Component identifier.
-	 * @param object $item      The item being edited (e.g. BP_Activity_Activity, BP_Groups_Group).
+	 * @param object $item      The item being edited (e.g. BBoss_Activity_Activity, BBoss_Groups_Group).
 	 * @return array Array of field data for JSON response.
 	 */
 	public function get_fields_data( $component, $item ) {

@@ -9,24 +9,27 @@
  * @version 1.5.6
  */
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
-switch ( bp_current_action() ) :
+$is_send_ajax_request = bboss_is_send_ajax_request();
+
+switch ( bboss_current_action() ) :
 	case 'blocked-members':
-		bp_nouveau_member_hook( 'before', 'moderation_content' );
+		bboss_nouveau_member_hook( 'before', 'moderation_content' );
 		?>
 		<div class="moderation" data-bp-list="moderation">
 			<?php
 			if ( $is_send_ajax_request ) {
 				echo '<div id="bp-ajax-loader">';
-				bp_nouveau_user_feedback( 'moderation-block-member-loading' );
+				bboss_nouveau_user_feedback( 'moderation-block-member-loading' );
 				echo '</div>';
 			} else {
-				bp_get_template_part( 'moderation/moderation-loop' );
+				bboss_get_template_part( 'moderation/moderation-loop' );
 			}
 			?>
 		</div>
 		<?php
-		bp_nouveau_member_hook( 'after', 'moderation_content' );
+		bboss_nouveau_member_hook( 'after', 'moderation_content' );
 		break;
 endswitch;

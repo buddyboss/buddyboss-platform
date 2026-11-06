@@ -16,7 +16,7 @@ add_action(
 		$ajax_actions = array(
 			array(
 				'moderation_filter' => array(
-					'function' => 'bp_nouveau_ajax_object_template_loader',
+					'function' => 'bboss_nouveau_ajax_object_template_loader',
 					'nopriv'   => true,
 				),
 			),

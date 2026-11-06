@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
+class BBoss_Moderation_Forum_Replies extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -24,13 +24,13 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	public static $moderation_type = 'forum_reply';
 
 	/**
-	 * BP_Moderation_Forum_Replies constructor.
+	 * BBoss_Moderation_Forum_Replies constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			return;
 		}
 
@@ -56,7 +56,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		add_filter( 'bbp_get_reply_content', array( $this, 'bb_reply_content_remove_mention_link' ), 10, 2 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
-		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		if ( ! bboss_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 
@@ -74,7 +74,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 
 		// Prepare report button for reply when activity moderation is disabled.
-		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
+		if ( bboss_is_active( 'activity' ) && ! bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Activity::$moderation_type ) ) {
 			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
 		}
 
@@ -91,7 +91,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public static function get_permalink( $reply_id ) {
-		$url = get_the_permalink( bbp_get_reply_topic_id( $reply_id ) ) . '#post-' . $reply_id;
+		$url = get_the_permalink( bboss_bbp_get_reply_topic_id( $reply_id ) ) . '#post-' . $reply_id;
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
 	}
@@ -119,7 +119,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Forum Replies', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Forum Replies', 'buddyboss-platform' );
 
 		return $content_types;
 	}
@@ -139,7 +139,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		$this->alias = $suspend->alias;
 
 		// Remove has blocked/is blocked members replies from widget.
-		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
+		if ( function_exists( 'bboss_did_filter' ) && bboss_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
 			// Remove has blocked members replies from widget.
 			$sql = $this->exclude_where_query();
 			if ( ! empty( $sql ) ) {
@@ -147,11 +147,11 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			}
 
 			// Remove is blocked members replies from widget.
-			$where['moderation_widget_forums'] = '( ' . $wpdb->posts . '.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+			$where['moderation_widget_forums'] = '( ' . $wpdb->posts . '.post_author NOT IN ( ' . bboss_moderation_get_blocked_by_sql() . ' ) )';
 		}
 
-		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
-			$where['moderation_widget_replies'] = '( ' . $wpdb->posts . '.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+		if ( function_exists( 'bboss_did_filter' ) && bboss_did_filter( 'bbp_after_replies_widget_settings_parse_args' ) ) {
+			$where['moderation_widget_replies'] = '( ' . $wpdb->posts . '.post_author NOT IN ( ' . bboss_moderation_get_blocked_by_sql() . ' ) )';
 		}
 
 		return $where;
@@ -195,10 +195,10 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			}
 		}
 
-		$reply_id        = bbp_get_reply_id();
-		$reply_author_id = bbp_get_reply_author_id( $reply_id );
+		$reply_id        = bboss_bbp_get_reply_id();
+		$reply_author_id = bboss_bbp_get_reply_author_id( $reply_id );
 
-		if ( $this->is_content_hidden( $reply_id ) || bb_moderation_is_user_blocked_by( $reply_author_id ) ) {
+		if ( $this->is_content_hidden( $reply_id ) || bboss_moderation_is_user_blocked_by( $reply_author_id ) ) {
 			return 'loop-blocked-single-reply.php';
 		}
 
@@ -220,7 +220,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			return $retval;
 		}
 
-		$reply = bbp_get_reply( (int) $item_id );
+		$reply = bboss_bbp_get_reply( (int) $item_id );
 
 		if ( empty( $reply ) || empty( $reply->ID ) ) {
 			return false;
@@ -240,8 +240,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		$author_id = self::get_content_owner_id( $item_id );
 
-		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bp_moderation_is_user_suspended( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
-			 ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bboss_moderation_is_user_suspended( $author_id ) && bboss_moderation_is_user_blocked( $author_id ) ) ||
+			 ( $this->is_reporting_enabled() && BBoss_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
 			return true;
 		}
 		return false;
@@ -258,7 +258,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_button_text( $button_text, $item_id ) {
-		return esc_html__( 'Report Reply', 'buddyboss' );
+		return esc_html__( 'Report Reply', 'buddyboss-platform' );
 	}
 
 	/**
@@ -272,7 +272,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_content_type( $content_type, $item_id ) {
-		return esc_html__( 'Reply', 'buddyboss' );
+		return esc_html__( 'Reply', 'buddyboss-platform' );
 	}
 
 	/**
@@ -286,7 +286,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 * @return array|string
 	 */
 	public function update_report_button_args( $report_button, $args ) {
-		$activity = new BP_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
+		$activity = new BBoss_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
 
 		if ( empty( $activity->id ) || 'bbp_reply_create' !== $activity->type ) {
 			return $report_button;
@@ -295,7 +295,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		$args['button_attr']['data-bp-content-id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
 		$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
 
-		$report_button = bp_moderation_get_report_button( $args, false );
+		$report_button = bboss_moderation_get_report_button( $args, false );
 
 		return $report_button;
 	}
@@ -315,7 +315,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			return $content;
 		}
 
-		$content = bb_moderation_remove_mention_link( $content );
+		$content = bboss_moderation_remove_mention_link( $content );
 
 		return $content;
 	}
@@ -338,7 +338,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		$is_forum_activity = false;
 		if (
-			bp_is_active( 'forums' )
+			bboss_is_active( 'forums' )
 			&& in_array(
 				$activity->type,
 				array(
@@ -350,14 +350,14 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			$is_forum_activity = true;
 		}
 		if ( true === $is_forum_activity ) {
-			if ( bp_moderation_is_user_blocked( $activity->user_id ) ) {
-				$content = bb_moderation_has_blocked_message( $content, $this->item_type, $activity->id );
+			if ( bboss_moderation_is_user_blocked( $activity->user_id ) ) {
+				$content = bboss_moderation_has_blocked_message( $content, $this->item_type, $activity->id );
 			}
-			if ( bb_moderation_is_user_blocked_by( $activity->user_id ) ) {
-				$content = bb_moderation_is_blocked_message( $content, $this->item_type, $activity->id );
+			if ( bboss_moderation_is_user_blocked_by( $activity->user_id ) ) {
+				$content = bboss_moderation_is_blocked_message( $content, $this->item_type, $activity->id );
 			}
-			if ( bp_moderation_is_user_suspended( $activity->user_id ) ) {
-				$content = bb_moderation_is_suspended_message( $content, $this->item_type, $activity->id );
+			if ( bboss_moderation_is_user_suspended( $activity->user_id ) ) {
+				$content = bboss_moderation_is_suspended_message( $content, $this->item_type, $activity->id );
 			}
 		}
 

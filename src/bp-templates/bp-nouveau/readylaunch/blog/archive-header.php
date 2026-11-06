@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$bb_rl_blog_title       = __( 'Blog', 'buddyboss' );
+$bb_rl_blog_title       = __( 'Blog', 'buddyboss-platform' );
 $bb_rl_blog_description = '';
 
 if ( is_category() || is_tag() ) {
@@ -19,7 +19,7 @@ if ( is_category() || is_tag() ) {
 	$bb_rl_blog_description = term_description();
 } elseif ( is_author() ) {
 	/* translators: %s: author display name. */
-	$bb_rl_blog_title = sprintf( __( 'Posts by %s', 'buddyboss' ), get_the_author_meta( 'display_name', (int) get_query_var( 'author' ) ) );
+	$bb_rl_blog_title = sprintf( __( 'Posts by %s', 'buddyboss-platform' ), get_the_author_meta( 'display_name', (int) get_query_var( 'author' ) ) );
 } elseif ( is_date() ) {
 	$bb_rl_blog_title = get_the_archive_title();
 }
@@ -55,11 +55,11 @@ $bb_rl_blog_current_url = is_category() ? get_category_link( $bb_rl_blog_current
 	</div>
 
 	<div class="bb-rl-blog-archive-header__controls">
-		<div class="bb-rl-blog-view-switcher" role="group" aria-label="<?php esc_attr_e( 'Blog layout', 'buddyboss' ); ?>">
-			<button type="button" class="bb-rl-blog-view-switcher__button is-active" data-bb-rl-blog-view="grid" aria-pressed="true" aria-label="<?php esc_attr_e( 'Grid view', 'buddyboss' ); ?>">
+		<div class="bb-rl-blog-view-switcher" role="group" aria-label="<?php esc_attr_e( 'Blog layout', 'buddyboss-platform' ); ?>">
+			<button type="button" class="bb-rl-blog-view-switcher__button is-active" data-bb-rl-blog-view="grid" aria-pressed="true" aria-label="<?php esc_attr_e( 'Grid view', 'buddyboss-platform' ); ?>">
 				<i class="bb-icons-rl bb-icons-rl-squares-four" aria-hidden="true"></i>
 			</button>
-			<button type="button" class="bb-rl-blog-view-switcher__button" data-bb-rl-blog-view="list" aria-pressed="false" aria-label="<?php esc_attr_e( 'List view', 'buddyboss' ); ?>">
+			<button type="button" class="bb-rl-blog-view-switcher__button" data-bb-rl-blog-view="list" aria-pressed="false" aria-label="<?php esc_attr_e( 'List view', 'buddyboss-platform' ); ?>">
 				<i class="bb-icons-rl bb-icons-rl-rows" aria-hidden="true"></i>
 			</button>
 		</div>
@@ -68,9 +68,9 @@ $bb_rl_blog_current_url = is_category() ? get_category_link( $bb_rl_blog_current
 
 		<?php if ( ! empty( $bb_rl_blog_categories ) ) : ?>
 			<label class="bb-rl-blog-filter">
-				<span class="bb-rl-blog-filter__label"><?php esc_html_e( 'Category', 'buddyboss' ); ?></span>
+				<span class="bb-rl-blog-filter__label"><?php esc_html_e( 'Category', 'buddyboss-platform' ); ?></span>
 				<select class="bb-rl-blog-filter__select" data-bb-rl-blog-filter="category">
-					<option value="<?php echo esc_url( $bb_rl_blog_is_asc ? add_query_arg( $bb_rl_blog_sort_arg, $bb_rl_blog_home_url ) : $bb_rl_blog_home_url ); ?>"><?php esc_html_e( 'All', 'buddyboss' ); ?></option>
+					<option value="<?php echo esc_url( $bb_rl_blog_is_asc ? add_query_arg( $bb_rl_blog_sort_arg, $bb_rl_blog_home_url ) : $bb_rl_blog_home_url ); ?>"><?php esc_html_e( 'All', 'buddyboss-platform' ); ?></option>
 					<?php
 					foreach ( $bb_rl_blog_categories as $bb_rl_blog_category ) :
 						$bb_rl_blog_category_url = get_category_link( $bb_rl_blog_category );
@@ -86,10 +86,10 @@ $bb_rl_blog_current_url = is_category() ? get_category_link( $bb_rl_blog_current
 		<?php endif; ?>
 
 		<label class="bb-rl-blog-filter">
-			<span class="bb-rl-blog-filter__label"><?php esc_html_e( 'Activity', 'buddyboss' ); ?></span>
+			<span class="bb-rl-blog-filter__label"><?php esc_html_e( 'Activity', 'buddyboss-platform' ); ?></span>
 			<select class="bb-rl-blog-filter__select" data-bb-rl-blog-filter="sort">
-				<option value="<?php echo esc_url( $bb_rl_blog_current_url ); ?>" <?php selected( ! $bb_rl_blog_is_asc ); ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></option>
-				<option value="<?php echo esc_url( add_query_arg( $bb_rl_blog_sort_arg, $bb_rl_blog_current_url ) ); ?>" <?php selected( $bb_rl_blog_is_asc ); ?>><?php esc_html_e( 'Oldest', 'buddyboss' ); ?></option>
+				<option value="<?php echo esc_url( $bb_rl_blog_current_url ); ?>" <?php selected( ! $bb_rl_blog_is_asc ); ?>><?php esc_html_e( 'Newest', 'buddyboss-platform' ); ?></option>
+				<option value="<?php echo esc_url( add_query_arg( $bb_rl_blog_sort_arg, $bb_rl_blog_current_url ) ); ?>" <?php selected( $bb_rl_blog_is_asc ); ?>><?php esc_html_e( 'Oldest', 'buddyboss-platform' ); ?></option>
 			</select>
 		</label>
 

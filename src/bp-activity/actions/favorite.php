@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Mark activity as liked.
  *
@@ -13,13 +16,13 @@
  *
  * @return bool False on failure.
  */
-function bp_activity_action_mark_favorite() {
-	if ( ! is_user_logged_in() || ! bp_is_activity_component() || ! bp_is_current_action( 'favorite' ) ) {
+function bboss_activity_action_mark_favorite() {
+	if ( ! is_user_logged_in() || ! bboss_is_activity_component() || ! bboss_is_current_action( 'favorite' ) ) {
 		return false;
 	}
 
-	if ( empty( $activity_id ) && bp_action_variable( 0 ) ) {
-		$activity_id = (int) bp_action_variable( 0 );
+	if ( empty( $activity_id ) && bboss_action_variable( 0 ) ) {
+		$activity_id = (int) bboss_action_variable( 0 );
 	}
 
 	// Not viewing a specific activity item.
@@ -31,7 +34,7 @@ function bp_activity_action_mark_favorite() {
 	check_admin_referer( 'mark_favorite' );
 
 	// Load up the activity item.
-	$activity = new BP_Activity_Activity( $activity_id );
+	$activity = new BBoss_Activity_Activity( $activity_id );
 
 	if ( empty( $activity->id ) ) {
 		return false;
@@ -39,15 +42,15 @@ function bp_activity_action_mark_favorite() {
 
 	if ( 'activity_comment' === $activity->type ) {
 		$type     = 'activity_comment';
-		$message  = __( 'Activity comment post saved.', 'buddyboss' );
+		$message  = __( 'Activity comment post saved.', 'buddyboss-platform' );
 		$redirect = wp_get_referer() . '#acomment-display-' . $activity_id;
 	} else {
 		$type     = 'activity';
-		$message  = __( 'Activity post saved.', 'buddyboss' );
+		$message  = __( 'Activity post saved.', 'buddyboss-platform' );
 		$redirect = wp_get_referer() . '#activity-' . $activity_id;
 	}
 
-	$reacted = bp_activity_add_user_favorite(
+	$reacted = bboss_activity_add_user_favorite(
 		$activity_id,
 		0,
 		array(
@@ -56,11 +59,11 @@ function bp_activity_action_mark_favorite() {
 		)
 	);
 	if ( is_wp_error( $reacted ) ) {
-		bp_core_add_message( $reacted->get_error_message(), 'error' );
+		bboss_core_add_message( $reacted->get_error_message(), 'error' );
 	} else {
-		bp_core_add_message( $message );
+		bboss_core_add_message( $message );
 	}
 
-	bp_core_redirect( $redirect );
+	bboss_core_redirect( $redirect );
 }
-add_action( 'bp_actions', 'bp_activity_action_mark_favorite' );
+add_action( 'bp_actions', 'bboss_activity_action_mark_favorite' );

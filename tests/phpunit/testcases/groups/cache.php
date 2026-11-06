@@ -12,25 +12,25 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 		$g1 = self::factory()->group->create();
 		$g2 = self::factory()->group->create();
 
-		$time = bp_core_current_time();
+		$time = bboss_core_current_time();
 
 		// Set up some data
-		groups_update_groupmeta( $g1, 'total_member_count', 4 );
-		groups_update_groupmeta( $g1, 'last_activity', $time );
-		groups_update_groupmeta( $g1, 'foo', 'bar' );
+		bboss_groups_update_groupmeta( $g1, 'total_member_count', 4 );
+		bboss_groups_update_groupmeta( $g1, 'last_activity', $time );
+		bboss_groups_update_groupmeta( $g1, 'foo', 'bar' );
 
-		groups_update_groupmeta( $g2, 'total_member_count', 81 );
-		groups_update_groupmeta( $g2, 'last_activity', $time );
-		groups_update_groupmeta( $g2, 'foo', 'baz' );
+		bboss_groups_update_groupmeta( $g2, 'total_member_count', 81 );
+		bboss_groups_update_groupmeta( $g2, 'last_activity', $time );
+		bboss_groups_update_groupmeta( $g2, 'foo', 'baz' );
 
 		// Prime the cache for $g1
-		groups_update_groupmeta( $g1, 'foo', 'bar' );
-		groups_get_groupmeta( $g1, 'foo' );
+		bboss_groups_update_groupmeta( $g1, 'foo', 'bar' );
+		bboss_groups_get_groupmeta( $g1, 'foo' );
 
 		// Ensure an empty cache for $g2
 		wp_cache_delete( $g2, 'group_meta' );
 
-		bp_groups_update_meta_cache( array( $g1, $g2 ) );
+		bboss_groups_update_meta_cache( array( $g1, $g2 ) );
 
 		$expected = array(
 			$g1 => array(
@@ -73,12 +73,12 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 		$g = self::factory()->group->create();
 
 		// Prime cache
-		groups_get_group( $g );
+		bboss_groups_get_group( $g );
 
 		$this->assertNotEmpty( wp_cache_get( $g, 'bp_groups' ) );
 
 		// Trigger flush
-		groups_update_groupmeta( $g, 'foo', 'bar' );
+		bboss_groups_update_groupmeta( $g, 'foo', 'bar' );
 
 		$this->assertFalse( wp_cache_get( $g, 'bp_groups' ) );
 	}
@@ -91,13 +91,13 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 		$g = self::factory()->group->create();
 
 		// Prime cache
-		groups_update_groupmeta( $g, 'foo', 'bar' );
-		groups_get_group( $g );
+		bboss_groups_update_groupmeta( $g, 'foo', 'bar' );
+		bboss_groups_get_group( $g );
 
 		$this->assertNotEmpty( wp_cache_get( $g, 'bp_groups' ) );
 
 		// Trigger flush
-		groups_update_groupmeta( $g, 'foo', 'baz' );
+		bboss_groups_update_groupmeta( $g, 'foo', 'baz' );
 		$this->assertFalse( wp_cache_get( $g, 'bp_groups' ) );
 	}
 
@@ -108,17 +108,17 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 		$g = self::factory()->group->create();
 
 		// Prime cache
-		groups_get_group( $g );
+		bboss_groups_get_group( $g );
 
 		// fake an activity
 		$a = new stdClass;
-		$a->component = buddypress()->groups->id;
+		$a->component = bboss()->groups->id;
 		$a->item_id = $g;
 		$activities = array(
 			$a,
 		);
 
-		bp_groups_prefetch_activity_object_data( $activities );
+		bboss_groups_prefetch_activity_object_data( $activities );
 
 		// This assertion is not really necessary - just checks to see
 		// whether a fatal error has occurred above
@@ -133,15 +133,15 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 		$g2 = self::factory()->group->create();
 
 		// Prime cache
-		groups_get_group( $g1 );
+		bboss_groups_get_group( $g1 );
 
 		// fake activities
 		$a1 = new stdClass;
-		$a1->component = buddypress()->groups->id;
+		$a1->component = bboss()->groups->id;
 		$a1->item_id = $g1;
 
 		$a2 = new stdClass;
-		$a2->component = buddypress()->groups->id;
+		$a2->component = bboss()->groups->id;
 		$a2->item_id = $g2;
 
 		$activities = array(
@@ -149,7 +149,7 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 			$a2,
 		);
 
-		bp_groups_prefetch_activity_object_data( $activities );
+		bboss_groups_prefetch_activity_object_data( $activities );
 
 		$this->assertNotEmpty( wp_cache_get( $g1, 'bp_groups' ) );
 		$this->assertNotEmpty( wp_cache_get( $g2, 'bp_groups' ) );
@@ -164,20 +164,20 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array( 'creator_id' => $u1 ) );
 
 		// User 2 joins the group
-		groups_join_group( $g, $u2 );
+		bboss_groups_join_group( $g, $u2 );
 
 		// prime cache
-		groups_get_group_admins( $g );
+		bboss_groups_get_group_admins( $g );
 
 		// promote user 2 to an admin
-		bp_update_is_item_admin( true );
-		groups_promote_member( $u2, $g, 'admin' );
+		bboss_update_is_item_admin( true );
+		bboss_groups_promote_member( $u2, $g, 'admin' );
 
 		// assert that cache is invalidated
 		$this->assertEmpty( wp_cache_get( $g, 'bp_group_admins' ) );
 
 		// assert new cached value
-		$this->assertEquals( 2, count( groups_get_group_admins( $g ) ) );
+		$this->assertEquals( 2, count( bboss_groups_get_group_admins( $g ) ) );
 	}
 
 	/**
@@ -189,17 +189,17 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array( 'creator_id' => $u1 ) );
 
 		// User 2 joins the group
-		groups_join_group( $g, $u2 );
+		bboss_groups_join_group( $g, $u2 );
 
 		// prime cache
-		groups_get_group_mods( $g );
+		bboss_groups_get_group_mods( $g );
 
 		// promote user 2 to an admin
-		bp_update_is_item_admin( true );
-		groups_promote_member( $u2, $g, 'mod' );
+		bboss_update_is_item_admin( true );
+		bboss_groups_promote_member( $u2, $g, 'mod' );
 
 		// assert new cached value
-		$this->assertEquals( 1, count( groups_get_group_mods( $g ) ) );
+		$this->assertEquals( 1, count( bboss_groups_get_group_mods( $g ) ) );
 	}
 
 	/**
@@ -211,13 +211,13 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array( 'creator_id' => $u1 ) );
 
 		// prime cache
-		groups_get_group_mods( $g );
+		bboss_groups_get_group_mods( $g );
 
 		// promote user 2 to an admin via BP_Groups_Member::save()
 		self::add_user_to_group( $u2, $g, array( 'is_mod' => 1 ) );
 
 		// assert new cached value
-		$this->assertEquals( 1, count( groups_get_group_mods( $g ) ) );
+		$this->assertEquals( 1, count( bboss_groups_get_group_mods( $g ) ) );
 	}
 
 	/**
@@ -229,7 +229,7 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array( 'creator_id' => $u1 ) );
 
 		// prime cache
-		groups_get_group_admins( $g );
+		bboss_groups_get_group_admins( $g );
 
 		// promote user 2 to an admin via BP_Groups_Member::save()
 		self::add_user_to_group( $u2, $g, array( 'is_admin' => 1 ) );
@@ -238,7 +238,7 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 		$this->assertEmpty( wp_cache_get( $g, 'bp_group_admins' ) );
 
 		// assert new cached value
-		$this->assertEquals( 2, count( groups_get_group_admins( $g ) ) );
+		$this->assertEquals( 2, count( bboss_groups_get_group_admins( $g ) ) );
 	}
 
 	/**
@@ -250,11 +250,11 @@ class BP_Tests_Group_Cache extends BP_UnitTestCase {
 
 		// prime cache
 		// no groups are created by default, so count is zero
-		groups_get_total_group_count();
+		bboss_groups_get_total_group_count();
 		$first_query_count = $wpdb->num_queries;
 
 		// run function again
-		groups_get_total_group_count();
+		bboss_groups_get_total_group_count();
 
 		// check if function references cache or hits the DB by comparing query count
 		$this->assertEquals( $first_query_count, $wpdb->num_queries );

@@ -8,44 +8,47 @@
  * @version 1.0.0
  */
 
-remove_filter( 'bp_get_add_follow_button', 'bb_bp_get_add_follow_button' );
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
-if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifications() && ! bp_is_user_profile_edit() && ! bp_is_user_change_avatar() && ! bp_is_user_change_cover_image() ) :
+remove_filter( 'bp_get_add_follow_button', 'bboss_bp_get_add_follow_button' );
 
-	$profile_header_layout_style = bb_get_profile_header_layout_style();
-	$is_enabled_online_status    = bb_enabled_profile_header_layout_element( 'online-status' );
-	$is_enabled_profile_type     = bb_enabled_profile_header_layout_element( 'profile-type' );
-	$is_enabled_member_handle    = bb_enabled_profile_header_layout_element( 'member-handle' );
-	$is_enabled_joined_date      = bb_enabled_profile_header_layout_element( 'joined-date' );
-	$is_enabled_last_active      = bb_enabled_profile_header_layout_element( 'last-active' );
-	$is_enabled_followers        = bb_enabled_profile_header_layout_element( 'followers' );
-	$is_enabled_following        = bb_enabled_profile_header_layout_element( 'following' );
-	$is_enabled_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+if ( ! bboss_is_user_messages() && ! bboss_is_user_settings() && ! bboss_is_user_notifications() && ! bboss_is_user_profile_edit() && ! bboss_is_user_change_avatar() && ! bboss_is_user_change_cover_image() ) :
+
+	$profile_header_layout_style = bboss_get_profile_header_layout_style();
+	$is_enabled_online_status    = bboss_enabled_profile_header_layout_element( 'online-status' );
+	$is_enabled_profile_type     = bboss_enabled_profile_header_layout_element( 'profile-type' );
+	$is_enabled_member_handle    = bboss_enabled_profile_header_layout_element( 'member-handle' );
+	$is_enabled_joined_date      = bboss_enabled_profile_header_layout_element( 'joined-date' );
+	$is_enabled_last_active      = bboss_enabled_profile_header_layout_element( 'last-active' );
+	$is_enabled_followers        = bboss_enabled_profile_header_layout_element( 'followers' );
+	$is_enabled_following        = bboss_enabled_profile_header_layout_element( 'following' );
+	$is_enabled_social_networks  = bboss_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bboss_enabled_member_social_networks' ) && bboss_enabled_member_social_networks();
 
 	$my_profile                     = '';
 	$user_social_networks_urls      = '';
 	$social_networks_urls_div_class = 'social-networks-hide';
 	if ( $is_enabled_social_networks ) {
 
-		add_filter( 'bp_get_user_social_networks_urls', 'bb_get_user_social_networks_urls_with_visibility', 10, 3 );
-		$user_social_networks_urls = bp_get_user_social_networks_urls();
-		remove_filter( 'bp_get_user_social_networks_urls', 'bb_get_user_social_networks_urls_with_visibility', 10, 3 );
+		add_filter( 'bp_get_user_social_networks_urls', 'bboss_get_user_social_networks_urls_with_visibility', 10, 3 );
+		$user_social_networks_urls = bboss_get_user_social_networks_urls();
+		remove_filter( 'bp_get_user_social_networks_urls', 'bboss_get_user_social_networks_urls_with_visibility', 10, 3 );
 
 		if ( ! empty( $user_social_networks_urls ) ) {
 			$social_networks_urls_div_class = 'network_profiles';
 		}
 	}
 
-	$bp_is_my_profile          = bp_is_my_profile();
-	$bp_displayed_user_id      = bp_displayed_user_id();
-	$is_activity_enabled       = bp_is_active( 'activity' );
-	$bp_activity_do_mentions   = $is_activity_enabled && bp_activity_do_mentions();
-	$bp_get_last_activity      = bp_get_last_activity();
-	$bb_get_member_joined_date = bb_get_member_joined_date();
+	$bp_is_my_profile          = bboss_is_my_profile();
+	$bp_displayed_user_id      = bboss_displayed_user_id();
+	$is_activity_enabled       = bboss_is_active( 'activity' );
+	$bp_activity_do_mentions   = $is_activity_enabled && bboss_activity_do_mentions();
+	$bp_get_last_activity      = bboss_get_last_activity();
+	$bb_get_member_joined_date = bboss_get_member_joined_date();
 
 	$member_type = '';
-	if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() && $is_enabled_profile_type ) {
-		$member_type = bp_get_user_member_type( $bp_displayed_user_id );
+	if ( true === bboss_member_type_enable_disable() && true === bboss_member_type_display_on_profile() && $is_enabled_profile_type ) {
+		$member_type = bboss_get_user_member_type( $bp_displayed_user_id );
 	}
 
 	if ( $bp_is_my_profile ) {
@@ -55,28 +58,28 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 	<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?> bb-cover-image-container">
 
-		<div id="item-header-cover-image" class="<?php echo esc_attr( bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
+		<div id="item-header-cover-image" class="<?php echo esc_attr( bboss_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 
 			<?php
-			$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $bp_displayed_user_id ) ? 'bp-user-suspended' : '';
-			$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $bp_displayed_user_id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+			$moderation_class = function_exists( 'bboss_moderation_is_user_suspended' ) && bboss_moderation_is_user_suspended( $bp_displayed_user_id ) ? 'bp-user-suspended' : '';
+			$moderation_class = function_exists( 'bboss_moderation_is_user_blocked' ) && bboss_moderation_is_user_blocked( $bp_displayed_user_id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
 			<div id="item-header-avatar" class="<?php echo esc_attr( $moderation_class ); ?>">
 				<?php
 				if ( $is_enabled_online_status ) {
-					bb_user_presence_html( $bp_displayed_user_id );
+					bboss_user_presence_html( $bp_displayed_user_id );
 				}
 
-				if ( $bp_is_my_profile && ! bp_disable_avatar_uploads() ) {
+				if ( $bp_is_my_profile && ! bboss_disable_avatar_uploads() ) {
 					?>
-					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
+					<a href="<?php bboss_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss-platform' ); ?>">
 						<i class="bb-icon-rf bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
 					<?php
 				}
 
-				bp_displayed_user_avatar( 'type=full' );
+				bboss_displayed_user_avatar( 'type=full' );
 
 				if ( ! empty( $member_type ) ) {
 					echo wp_kses_post( $member_type );
@@ -88,7 +91,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 				<div class="flex">
 					<div class="bb-user-content-wrap">
 						<div class="flex align-items-center member-title-wrap">
-							<h2 class="user-nicename"><?php echo wp_kses_post( bp_core_get_user_displayname( $bp_displayed_user_id ) ); ?></h2>
+							<h2 class="user-nicename"><?php echo wp_kses_post( bboss_core_get_user_displayname( $bp_displayed_user_id ) ); ?></h2>
 
 							<?php
 							if ( ! empty( $member_type ) ) {
@@ -97,7 +100,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 							?>
 						</div>
 
-						<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
+						<?php bboss_nouveau_member_hook( 'before', 'header_meta' ); ?>
 
 						<div class="header-meta-wrap">
 
@@ -105,7 +108,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 								<div class="item-meta">
 
 									<?php if ( $is_activity_enabled && $bp_activity_do_mentions && $is_enabled_member_handle ) : ?>
-										<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
+										<span class="mention-name">@<?php bboss_displayed_user_mentionname(); ?></span>
 										<?php
 									endif;
 
@@ -125,7 +128,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 										<?php
 									endif;
 
-									bp_nouveau_member_hook( 'before', 'in_header_meta' );
+									bboss_nouveau_member_hook( 'before', 'in_header_meta' );
 
 									if ( $bp_get_last_activity && $is_enabled_last_active ) :
 										echo wp_kses_post( $bp_get_last_activity );
@@ -135,19 +138,19 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 								<?php
 							endif;
 
-							bp_nouveau_member_hook( '', 'header_profile_meta' );
+							bboss_nouveau_member_hook( '', 'header_profile_meta' );
 
-							if ( function_exists( 'bp_is_activity_follow_active' ) && $is_activity_enabled && bp_is_activity_follow_active() && ( $is_enabled_followers || $is_enabled_following ) ) {
+							if ( function_exists( 'bboss_is_activity_follow_active' ) && $is_activity_enabled && bboss_is_activity_follow_active() && ( $is_enabled_followers || $is_enabled_following ) ) {
 								?>
 								<div class="flex align-items-top member-social">
 									<div class="flex align-items-center">
 										<?php
 										if ( $is_enabled_followers ) {
-											bb_get_followers_count();
+											bboss_get_followers_count();
 										}
 
 										if ( $is_enabled_following ) {
-											bb_get_following_count();
+											bboss_get_following_count();
 										}
 										?>
 									</div>
@@ -156,8 +159,8 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 							}
 
 							$additional_class = '';
-							if ( function_exists( 'bb_get_user_social_networks_field_value' ) ) {
-								$networks_field_value = bb_get_user_social_networks_field_value();
+							if ( function_exists( 'bboss_get_user_social_networks_field_value' ) ) {
+								$networks_field_value = bboss_get_user_social_networks_field_value();
 								if ( is_array( $networks_field_value ) && count( $networks_field_value ) > 6 ) {
 									$additional_class = 'left-align';
 								}
@@ -166,7 +169,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 							if ( ! empty( $user_social_networks_urls ) ) {
 								?>
 								<div class="flex align-items-center member-social-links <?php echo esc_attr( $additional_class ); ?>">
-									<?php echo wp_kses( $user_social_networks_urls, bb_members_allow_html_tags() ); ?>
+									<?php echo wp_kses( $user_social_networks_urls, bboss_members_allow_html_tags() ); ?>
 								</div>
 								<?php
 							}
@@ -178,7 +181,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 					<div class="member-header-actions-wrap">
 						<?php
-							bp_nouveau_member_header_buttons(
+							bboss_nouveau_member_header_buttons(
 								array(
 									'container_classes' => array( 'member-header-actions' ),
 									'prefix_link_text'  => '<i></i>',
@@ -189,7 +192,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 								)
 							);
 
-							bp_nouveau_member_header_bubble_buttons(
+							bboss_nouveau_member_header_bubble_buttons(
 								array(
 									'container_classes' => array( 'bb_more_options' ),
 									'is_tooltips'       => false,
@@ -207,7 +210,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 		</div><!-- #item-header-cover-image -->
 	</div><!-- #cover-image-container -->
 	<?php
-	add_filter( 'bp_get_add_follow_button', 'bb_bp_get_add_follow_button' );
+	add_filter( 'bp_get_add_follow_button', 'bboss_bp_get_add_follow_button' );
 
 endif;
 ?>
@@ -219,7 +222,7 @@ endif;
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">
-						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
+						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss-platform' ); ?></span></h4>
 						<a class="bb-close-remove-connection bb-model-close-button" href="#">
 							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
@@ -229,15 +232,15 @@ endif;
 							<?php
 							echo sprintf(
 								/* translators: %s: The member name with HTML tags. */
-								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
+								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss-platform' ),
 								'<span class="bb-user-name"></span>'
 							);
 							?>
 						</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
-						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

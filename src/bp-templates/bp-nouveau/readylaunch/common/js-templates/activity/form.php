@@ -3,7 +3,7 @@
  * Activity Post form JS Templates for ReadyLaunch.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -47,5 +47,5 @@ $template_parts = apply_filters(
 );
 
 foreach ( $template_parts as $template_part ) {
-	bp_get_template_part( 'common/js-templates/activity/' . $template_part );
+	bboss_get_template_part( 'common/js-templates/activity/' . $template_part );
 }

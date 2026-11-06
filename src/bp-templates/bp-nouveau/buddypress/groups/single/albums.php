@@ -10,8 +10,11 @@
  * @version 1.0.0
  */
 
-if ( bb_enable_content_counts() && 'albums' === bp_current_action() && ! bp_is_single_album() ) {
-	$count = bp_media_get_total_group_album_count();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+if ( bboss_enable_content_counts() && 'albums' === bboss_current_action() && ! bboss_is_single_album() ) {
+	$count = bboss_media_get_total_group_album_count();
 	?>
 	<div class="bb-item-count">
 		<?php
@@ -22,7 +25,7 @@ if ( bb_enable_content_counts() && 'albums' === bp_current_action() && ! bp_is_s
 					'<span class="bb-count">%d</span> Album',
 					'<span class="bb-count">%d</span> Albums',
 					$count,
-					'buddyboss'
+					'buddyboss-platform'
 				),
 				array( 'span' => array( 'class' => true ) )
 			),
@@ -37,33 +40,33 @@ if ( bb_enable_content_counts() && 'albums' === bp_current_action() && ! bp_is_s
 <div class="bb-media-container group-albums">
 
 	<?php
-	bp_get_template_part( 'media/theatre' );
+	bboss_get_template_part( 'media/theatre' );
 
-	if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) {
-		bp_get_template_part( 'video/theatre' );
+	if ( bboss_is_active( 'video' ) && bboss_is_group_video_support_enabled() ) {
+		bboss_get_template_part( 'video/theatre' );
 	}
 
-	if ( bp_is_group_document_support_enabled() ) {
-		bp_get_template_part( 'document/theatre' );
+	if ( bboss_is_group_document_support_enabled() ) {
+		bboss_get_template_part( 'document/theatre' );
 	}
-	if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) {
-		bp_get_template_part( 'video/add-video-thumbnail' );
+	if ( bboss_is_active( 'video' ) && bboss_is_group_video_support_enabled() ) {
+		bboss_get_template_part( 'video/add-video-thumbnail' );
 	}
 
-	switch ( bp_current_action() ) :
+	switch ( bboss_current_action() ) :
 
 		// Home/Media/Albums.
 		case 'albums':
-			if ( ! bp_is_single_album() ) {
-				bp_get_template_part( 'media/albums' );
+			if ( ! bboss_is_single_album() ) {
+				bboss_get_template_part( 'media/albums' );
 			} else {
-				bp_get_template_part( 'media/single-album' );
+				bboss_get_template_part( 'media/single-album' );
 			}
 			break;
 
 		// Any other.
 		default:
-			bp_get_template_part( 'groups/single/plugins' );
+			bboss_get_template_part( 'groups/single/plugins' );
 			break;
 	endswitch;
 	?>

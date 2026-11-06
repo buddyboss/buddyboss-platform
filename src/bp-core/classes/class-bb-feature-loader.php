@@ -18,13 +18,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Feature_Loader {
+class BBoss_Feature_Loader {
 
 	/**
 	 * Singleton instance.
 	 *
 	 * @since BuddyBoss 3.0.0
-	 * @var BB_Feature_Loader
+	 * @var BBoss_Feature_Loader
 	 */
 	private static $instance = null;
 
@@ -80,7 +80,7 @@ class BB_Feature_Loader {
 	 * Get singleton instance.
 	 *
 	 * @since BuddyBoss 3.0.0
-	 * @return BB_Feature_Loader
+	 * @return BBoss_Feature_Loader
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -202,7 +202,7 @@ class BB_Feature_Loader {
 	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_load_active_features() {
-		$registry = bb_feature_registry();
+		$registry = bboss_feature_registry();
 
 		foreach ( $this->php_loaders as $feature_id => $loader ) {
 			if ( $this->bb_is_feature_loaded( $feature_id ) ) {
@@ -234,7 +234,7 @@ class BB_Feature_Loader {
 			return;
 		}
 
-		$registry = bb_feature_registry();
+		$registry = bboss_feature_registry();
 
 		foreach ( $this->admin_loaders as $feature_id => $loader ) {
 			if ( $this->bb_is_admin_feature_loaded( $feature_id ) ) {
@@ -262,7 +262,7 @@ class BB_Feature_Loader {
 	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_load_rest_features() {
-		$registry = bb_feature_registry();
+		$registry = bboss_feature_registry();
 
 		foreach ( $this->rest_loaders as $feature_id => $loader ) {
 			if ( $registry->bb_is_feature_active( $feature_id ) ) {
@@ -284,7 +284,7 @@ class BB_Feature_Loader {
 	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_process_deferred_loaders() {
-		$registry = bb_feature_registry();
+		$registry = bboss_feature_registry();
 
 		foreach ( $this->deferred_loaders as $hook => $loaders ) {
 			add_action(

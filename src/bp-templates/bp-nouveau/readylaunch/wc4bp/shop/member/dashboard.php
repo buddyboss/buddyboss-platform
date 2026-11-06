@@ -5,7 +5,7 @@
  * This template is a Readylaunch-specific version of the WC4BP dashboard template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch\WC4BP
+ * @subpackage BBoss_Nouveau\ReadyLaunch\WC4BP
  * @since BuddyBoss 3.1.0
  * @version 1.0.0
  */
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="woocommerce woocommerce--bb-rl">
 	<p>
 		<?php
-		$dashboard_desc = __( 'On this page you can find all the content added by third-party plugins within WooCommerce. In case the tab you want is not shown, we recommend going to <strong>WooCommerce - Settings - Advanced</strong> and checking the configuration of the endpoints', 'buddyboss' );
+		$dashboard_desc = __( 'On this page you can find all the content added by third-party plugins within WooCommerce. In case the tab you want is not shown, we recommend going to <strong>WooCommerce - Settings - Advanced</strong> and checking the configuration of the endpoints', 'buddyboss-platform' );
 		echo wp_kses( $dashboard_desc, array( 'strong' => array() ) );
 		?>
 	</p>

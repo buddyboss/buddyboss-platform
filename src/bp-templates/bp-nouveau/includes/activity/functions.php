@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array The same array with the specific activity scripts.
  */
-function bp_nouveau_activity_register_scripts( $scripts = array() ) {
+function bboss_nouveau_activity_register_scripts( $scripts = array() ) {
 	if ( ! isset( $scripts['bp-nouveau'] ) ) {
 		return $scripts;
 	}
@@ -33,7 +33,11 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 			),
 			'bp-nouveau-activity-post-form' => array(
 				'file'         => 'js/buddypress-activity-post-form%s.js',
-				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone' ),
+				// wp-a11y: the draft notices are CSS-gated to the open composer, so the
+				// ones raised by the page-load draft fetch are announced through
+				// wp.a11y.speak() instead of their own role="alert". Both template packs
+				// resolve through this one handle, so declaring it here covers ReadyLaunch.
+				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone', 'wp-a11y' ),
 				'footer'       => true,
 			),
 			'bp-nouveau-activity-reacted'           => array(
@@ -50,14 +54,14 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity_enqueue_scripts() {
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_video_component() && ! bp_is_document_component() && ! bp_is_media_directory() && ! bp_is_document_directory() && ! bp_is_video_directory() && ! bp_is_group_media() && ! bp_is_group_document() && ! bp_is_group_video() && ! bp_is_group_albums() && ! bp_is_group_folders() && ! bp_is_messages_component() ) { // media popup overlay needs activity scripts.
+function bboss_nouveau_activity_enqueue_scripts() {
+	if ( ! bboss_is_activity_component() && ! bboss_is_group_activity() && ! bboss_is_media_component() && ! bboss_is_video_component() && ! bboss_is_document_component() && ! bboss_is_media_directory() && ! bboss_is_document_directory() && ! bboss_is_video_directory() && ! bboss_is_group_media() && ! bboss_is_group_document() && ! bboss_is_group_video() && ! bboss_is_group_albums() && ! bboss_is_group_folders() && ! bboss_is_messages_component() ) { // media popup overlay needs activity scripts.
 		return;
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
 	// The "who reacted" popup serves both post and comment reactions.
-	if ( bb_is_reaction_activity_posts_enabled() || bb_is_reaction_activity_comments_enabled() ) {
+	if ( bboss_is_reaction_activity_posts_enabled() || bboss_is_reaction_activity_comments_enabled() ) {
 		wp_enqueue_script( 'bp-nouveau-activity-reacted' );
 	}
 	wp_enqueue_script( 'bp-medium-editor' );
@@ -66,13 +70,13 @@ function bp_nouveau_activity_enqueue_scripts() {
 
 	// Enqueue activity form parts and js required for single activity.
 
-	if ( bp_nouveau_current_user_can( 'publish_activity' ) ) {
+	if ( bboss_nouveau_current_user_can( 'publish_activity' ) ) {
 		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
-		bp_get_template_part( 'common/js-templates/activity/form' );
+		bboss_get_template_part( 'common/js-templates/activity/form' );
 	}
 
 	// Add activity reaction popup js template.
-	bb_load_reaction_popup_modal_js_template();
+	bboss_load_reaction_popup_modal_js_template();
 }
 
 /**
@@ -84,9 +88,9 @@ function bp_nouveau_activity_enqueue_scripts() {
  *
  * @return array The same array with specific strings for the Activity Post form UI if needed.
  */
-function bp_nouveau_activity_localize_scripts( $params = array() ) {
+function bboss_nouveau_activity_localize_scripts( $params = array() ) {
 	static $group_query_cache = array();
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_document_component() && ! bp_is_media_directory() && ! bp_is_document_directory() && ! bp_is_group_media() && ! bp_is_group_document() && ! bp_is_group_albums() && ! bp_is_group_folders() && ( ! isset( $_REQUEST ) && ! isset( $_REQUEST['bp_search'] ) ) ) {
+	if ( ! bboss_is_activity_component() && ! bboss_is_group_activity() && ! bboss_is_media_component() && ! bboss_is_document_component() && ! bboss_is_media_directory() && ! bboss_is_document_directory() && ! bboss_is_group_media() && ! bboss_is_group_document() && ! bboss_is_group_albums() && ! bboss_is_group_folders() && ( ! isset( $_REQUEST ) && ! isset( $_REQUEST['bp_search'] ) ) ) {
 		// media popup overlay needs activity scripts.
 		return $params;
 	}
@@ -94,60 +98,60 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// Draft activity meta key.
 	$draft_activity_meta_key = 'draft_user';
 
-	if ( 0 < bp_displayed_user_id() ) {
-		$draft_activity_meta_key = 'draft_user_' . bp_displayed_user_id();
+	if ( 0 < bboss_displayed_user_id() ) {
+		$draft_activity_meta_key = 'draft_user_' . bboss_displayed_user_id();
 	}
 
-	$is_activity_post_title_required = bb_is_activity_post_title_enabled();
+	$is_activity_post_title_required = bboss_is_activity_post_title_enabled();
 
 	$activity_params = array(
-		'user_id'                         => bp_loggedin_user_id(),
+		'user_id'                         => bboss_loggedin_user_id(),
 		'object'                          => 'user',
 		'backcompat'                      => (bool) has_action( 'bp_activity_post_form_options' ),
 		'post_nonce'                      => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
 		'post_draft_nonce'                => wp_create_nonce( 'post_draft_activity' ),
 		'excluded_hosts'                  => array(),
-		'user_can_post'                   => ( is_user_logged_in() && bb_user_can_create_activity() ),
-		'is_activity_edit'                => bp_is_activity_edit() ? (int) bp_current_action() : false,
-		'displayed_user_id'               => bp_displayed_user_id(),
+		'user_can_post'                   => ( is_user_logged_in() && bboss_user_can_create_activity() ),
+		'is_activity_edit'                => bboss_is_activity_edit() ? (int) bboss_current_action() : false,
+		'displayed_user_id'               => bboss_displayed_user_id(),
 		'errors'                          => array(
-			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
-			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
-			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
+			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss-platform' ),
+			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss-platform' ),
+			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss-platform' ),
 		),
 		'is_activity_post_title_required' => $is_activity_post_title_required,
-		'activity_post_title_maxlength'   => bb_activity_post_title_max_length(),
-		'post_title_tooltip_error'        => esc_html__( 'Please enter a title', 'buddyboss' ),
+		'activity_post_title_maxlength'   => bboss_activity_post_title_max_length(),
+		'post_title_tooltip_error'        => esc_html__( 'Please enter a title', 'buddyboss-platform' ),
 	);
 
-	$user_displayname = bp_get_loggedin_user_fullname();
+	$user_displayname = bboss_get_loggedin_user_fullname();
 
-	if ( buddypress()->avatar->show_avatars ) {
-		$width  = bp_core_avatar_thumb_width();
-		$height = bp_core_avatar_thumb_height();
+	if ( bboss()->avatar->show_avatars ) {
+		$width  = bboss_core_avatar_thumb_width();
+		$height = bboss_core_avatar_thumb_height();
 		$activity_params = array_merge( $activity_params, array(
-			'avatar_url'        => bp_get_loggedin_user_avatar( array(
+			'avatar_url'        => bboss_get_loggedin_user_avatar( array(
 				'width'  => $width,
 				'height' => $height,
 				'html'   => false,
 			) ),
 			'avatar_width'      => $width,
 			'avatar_height'     => $height,
-			'user_display_name' => bp_core_get_user_displayname( bp_loggedin_user_id() ),
-			'user_domain'       => bp_loggedin_user_domain(),
+			'user_display_name' => bboss_core_get_user_displayname( bboss_loggedin_user_id() ),
+			'user_domain'       => bboss_loggedin_user_domain(),
 			'avatar_alt'        => sprintf(
 			/* translators: %s = member name */
-				__( 'Profile photo of %s', 'buddyboss' ),
+				__( 'Profile photo of %s', 'buddyboss-platform' ),
 				$user_displayname
 			),
 		) );
 	}
 
-	if ( bp_is_activity_autoload_active() ) {
+	if ( bboss_is_activity_autoload_active() ) {
 		$activity_params['autoload'] = true;
 	}
 
-	if ( bp_is_activity_link_preview_active() ) {
+	if ( bboss_is_activity_link_preview_active() ) {
 		$activity_params['link_preview'] = true;
 	}
 
@@ -168,7 +172,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	$activity_buttons = apply_filters( 'bp_nouveau_activity_buttons', array() );
 
 	if ( ! empty( $activity_buttons ) ) {
-		$activity_params['buttons'] = bp_sort_by_key( $activity_buttons, 'order', 'num' );
+		$activity_params['buttons'] = bboss_sort_by_key( $activity_buttons, 'order', 'num' );
 
 		// Enqueue Buttons scripts and styles
 		foreach ( $activity_params['buttons'] as $key_button => $buttons ) {
@@ -189,48 +193,48 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	// Activity Objects
-	if ( ! bp_is_single_item() && ! bp_is_user() ) {
+	if ( ! bboss_is_single_item() && ! bboss_is_user() ) {
 		$activity_objects = array(
 			'profile' => array(
-				'text'                     => __( 'Post in: Profile', 'buddyboss' ),
+				'text'                     => __( 'Post in: Profile', 'buddyboss-platform' ),
 				'autocomplete_placeholder' => '',
 				'priority'                 => 5,
 			),
 		);
 
 		// the groups component is active & the current user is at least a member of 1 group
-		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1, 'search_terms' => false ) ) ) {
+		if ( bboss_is_active( 'groups' ) && bboss_has_groups( array( 'user_id' => bboss_loggedin_user_id(), 'max' => 1, 'search_terms' => false ) ) ) {
 			$activity_objects['group'] = array(
-				'text'                      => esc_html__( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss' ),
+				'text'                      => esc_html__( 'Post in: Group', 'buddyboss-platform' ),
+				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss-platform' ),
 				'priority'                  => 10,
-				'loading_group_placeholder' => esc_html__( 'Loading groups...', 'buddyboss' ),
-				'finding_group_placeholder' => esc_html__( 'Finding groups...', 'buddyboss' ),
-				'no_groups_found'           => esc_html__( 'No groups found.', 'buddyboss' ),
+				'loading_group_placeholder' => esc_html__( 'Loading groups...', 'buddyboss-platform' ),
+				'finding_group_placeholder' => esc_html__( 'Finding groups...', 'buddyboss-platform' ),
+				'no_groups_found'           => esc_html__( 'No groups found.', 'buddyboss-platform' ),
 			);
 			$group_args = array(
-				'user_id'     => bp_loggedin_user_id(),
+				'user_id'     => bboss_loggedin_user_id(),
 				'show_hidden' => true,
-				'per_page'    => bb_activity_post_form_groups_per_page(),
+				'per_page'    => bboss_activity_post_form_groups_per_page(),
 				'orderby'     => 'name',
 				'order'       => 'ASC',
 				'page'        => 1,
 			);
 			$cache_key  = 'bbp_default_groups_' . md5( maybe_serialize( $group_args ) );
 			if ( ! isset( $group_query_cache[ $cache_key ] ) ) {
-				add_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
-				add_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
-				$group_query_cache[ $cache_key ] = groups_get_groups( $group_args );
-				remove_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
-				remove_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
+				add_filter( 'bp_groups_get_join_sql', 'bboss_groups_get_join_sql_for_activity', 10, 2 );
+				add_filter( 'bp_groups_get_where_conditions', 'bboss_groups_get_where_conditions_for_activity', 10, 2 );
+				$group_query_cache[ $cache_key ] = bboss_groups_get_groups( $group_args );
+				remove_filter( 'bp_groups_get_join_sql', 'bboss_groups_get_join_sql_for_activity', 10, 2 );
+				remove_filter( 'bp_groups_get_where_conditions', 'bboss_groups_get_where_conditions_for_activity', 10, 2 );
 			}
 			$groups = $group_query_cache[ $cache_key ];
 
 			$activity_objects['group_list'] = array();
 			if ( isset( $groups['groups'] ) ) {
-				$activity_objects['group_list']       = array_map( 'bp_nouveau_prepare_group_for_js', $groups['groups'] );
+				$activity_objects['group_list']       = array_map( 'bboss_nouveau_prepare_group_for_js', $groups['groups'] );
 				$activity_objects['group_count']      = isset( $groups['total'] ) ? $groups['total'] : 0;
-				$activity_objects['group_total_page'] = ceil( $groups['total'] / bb_activity_post_form_groups_per_page() );
+				$activity_objects['group_total_page'] = ceil( $groups['total'] / bboss_activity_post_form_groups_per_page() );
 			}
 		}
 
@@ -245,68 +249,145 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_strings = array(
-		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss' ), bp_core_get_user_displayname( bp_loggedin_user_id() ) ),
-		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss' ),
-		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss' ),
-		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss' ),
-		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss' ),
-		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss' ),
-		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
-		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
-		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
-		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),
-		'pinPost'             => esc_html__( 'Pin to Feed', 'buddyboss' ),
-		'unpinPost'           => esc_html__( 'Unpin from Feed', 'buddyboss' ),
-		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss' ),
-		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
-		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss' ),
-		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss' ),
-		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
-		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
-		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
-		'whatsNewTitle'       => $is_activity_post_title_required ? esc_attr__( 'Title', 'buddyboss' ) : esc_attr__( 'Title (optional)', 'buddyboss' ),
+		/* translators: %s: logged-in user display name. */
+		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss-platform' ), bboss_core_get_user_displayname( bboss_loggedin_user_id() ) ),
+		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss-platform' ),
+		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss-platform' ),
+		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss-platform' ),
+		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss-platform' ),
+		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss-platform' ),
+		/* translators: %d: number of comments (singular). */
+		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss-platform' ),
+		/* translators: %d: number of comments (plural). */
+		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss-platform' ),
+		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss-platform' ),
+		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss-platform' ),
+		'pinPost'             => esc_html__( 'Pin to Feed', 'buddyboss-platform' ),
+		'unpinPost'           => esc_html__( 'Unpin from Feed', 'buddyboss-platform' ),
+		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss-platform' ),
+		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss-platform' ),
+		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss-platform' ),
+		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss-platform' ),
+		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss-platform' ),
+		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss-platform' ),
+		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss-platform' ),
+		'whatsNewTitle'       => $is_activity_post_title_required ? esc_attr__( 'Title', 'buddyboss-platform' ) : esc_attr__( 'Title (optional)', 'buddyboss-platform' ),
 	);
 
-	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
+	if ( bboss_get_displayed_user() && ! bboss_is_my_profile() ) {
 		/* translators: %s = user name */
-		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss-platform' ), bboss_get_user_firstname( bboss_get_displayed_user_fullname() ) );
 	}
 
-	if ( bp_is_group() ) {
-		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss' );
+	if ( bboss_is_group() ) {
+		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss-platform' );
 
 		$activity_params = array_merge(
 			$activity_params,
 			array(
 				'object'       => 'group',
-				'item_id'      => bp_get_current_group_id(),
-				'item_name'    => bp_get_current_group_name(),
-				'group_avatar' => bp_disable_group_avatar_uploads() ? '' : bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
+				'item_id'      => bboss_get_current_group_id(),
+				'item_name'    => bboss_get_current_group_name(),
+				'group_avatar' => bboss_disable_group_avatar_uploads() ? '' : bboss_get_group_avatar_url( bboss_groups_get_group( bboss_get_current_group_id() ) ), // Add group avatar in get activity data object.
 			)
 		);
 
-		$draft_activity_meta_key = 'draft_group_' . bp_get_current_group_id();
+		$draft_activity_meta_key = 'draft_group_' . bboss_get_current_group_id();
 	}
 
-	// Get draft activity.
-	$draft_activity                    = bp_get_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key, true );
-	$activity_params['draft_activity'] = $draft_activity;
+	// Localize only whether a server draft exists - the draft itself is fetched
+	// lazily when localStorage is empty. The full draft used to be echoed into
+	// nearly every page's HTML; the key keeps its historical ''
+	// no-draft value for third-party readers.
+	$activity_params['draft_activity'] = '';
+	// The key is resolved through bp_get_user_meta_key() because every draft
+	// writer stores through bp_update_user_meta() - probing the raw literal
+	// would report "no draft" on installs that filter user meta keys.
+	//
+	// Gated on posting permission, mirroring the composer's OWN visibility gate
+	// (activity/post-form.php: hidden only when ! bb_user_can_create_activity()
+	// AND not a group activity page). A member who cannot create activity has no
+	// composer to restore into, so telling the JS a draft exists would only fire
+	// the lazy fetch for a form they can never open.
+	//
+	// The gate is SKIPPED for group drafts (draft_group_N, set above under
+	// bp_is_group()): bb_user_can_create_activity() is the SITE-WIDE 'user'-object
+	// switch and does not govern group posting - the group composer renders
+	// regardless, and group posting is authorized separately per group - so
+	// gating a group draft on it would make a member's valid, still-fetchable
+	// draft_group_N invisible when the switch is filtered false for them.
+	$activity_params['has_draft'] = ( bboss_is_group() || bboss_user_can_create_activity() )
+		&& (
+			metadata_exists( 'user', bboss_loggedin_user_id(), bboss_get_user_meta_key( $draft_activity_meta_key ) )
+			// An evicted draft whose hand-back never reached this browser is
+			// fetched and restored like a stored one (V06).
+			|| false !== bboss_draft_get_held_entry( bboss_loggedin_user_id(), $draft_activity_meta_key )
+		);
+
+	// Interim guard until pasted images are routed through the media uploader:
+	// a pasted bitmap becomes a multi-megabyte inline base64 image, which the
+	// draft and publish pipelines strip - blocking at paste is honest feedback
+	// instead of silently losing the member's image.
+	$activity_params['paste_image_blocked_message'] = __( 'Pasting images isn\'t supported. Please use the photo button to attach images.', 'buddyboss-platform' );
+
+	// The draft is fetched lazily now, so a failed read leaves the composer
+	// empty over a draft that still exists on the server. Without a message the
+	// member assumes nothing was saved, retypes, and the next autosave replaces
+	// the draft the fetch could not read. Mirrors the forum packs'
+	// draft_fetch_failed_message.
+	$activity_params['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss-platform' );
+
+	// A save/discard refused with no specific server message (an expired nonce,
+	// or a moderator removing posting rights mid-session) must not surface as
+	// success. The forum packs already fall back to these strings; the activity
+	// packs surfaced only a server-provided message and were silent otherwise
+	// (M3 parity).
+	$activity_params['draft_save_failed_message']    = __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' );
+	$activity_params['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss-platform' );
+
+	// The lazy restore is suppressed when the member has already started typing
+	// while the fetch was in flight - overwriting their text would be the real
+	// bug. The forum packs tell the member the stored draft is intact but was
+	// not loaded; the activity packs took the same branch silently, which reads
+	// as a lost draft (M11 parity).
+	$activity_params['draft_not_restored_message'] = __( 'You have a saved draft. It was not loaded because you had already started writing here.', 'buddyboss-platform' );
+
+	// Members must be told the draft has a lifetime, or the expiry cron reads
+	// as unexplained data loss when a draft is gone after a few weeks away.
+	// Empty when expiry is disabled, so the JS renders nothing.
+	$draft_retention_days = bboss_draft_retention_days();
+	$activity_params['draft_retention_days']   = (int) $draft_retention_days;
+	$activity_params['draft_conflict_message'] = bboss_draft_conflict_message();
+
+	$activity_params['draft_retention_message'] = $draft_retention_days ? sprintf(
+		/* translators: %s: Number of days a draft is kept. */
+		_n( 'Drafts are kept for %s day.', 'Drafts are kept for %s days.', $draft_retention_days, 'buddyboss-platform' ),
+		number_format_i18n( $draft_retention_days )
+	) : '';
+
+	// Budget eviction removes an OLDER draft to make room for this save. The
+	// member must be told, or drafts appear to vanish at random.
+	$activity_params['draft_evicted_message'] = __( 'You had too many saved drafts, so your oldest draft is now saved only in this browser.', 'buddyboss-platform' );
+
+	// The per-draft cap, so the composer can decide what to drop from an
+	// oversized payload instead of guessing at a threshold.
+	$activity_params['draft_max_size'] = bboss_draft_max_size();
 
 	$activity_params['access_control_settings'] = array(
-		'can_create_activity'          => bb_user_can_create_activity(),
-		'can_create_activity_media'    => bb_user_can_create_media(),
-		'can_create_activity_document' => bb_user_can_create_document(),
+		'can_create_activity'          => bboss_user_can_create_activity(),
+		'can_create_activity_media'    => bboss_user_can_create_media(),
+		'can_create_activity_document' => bboss_user_can_create_document(),
 	);
 
 	// Comment threading settings for JavaScript.
-	$threading_enabled = bb_is_activity_comment_threading_enabled();
+	$threading_enabled = bboss_is_activity_comment_threading_enabled();
 
 	$activity_params['comment_threading'] = array(
 		'enabled'   => $threading_enabled,
-		'max_depth' => $threading_enabled ? (int) bb_get_activity_comment_threading_depth() : 1,
+		'max_depth' => $threading_enabled ? (int) bboss_get_activity_comment_threading_depth() : 1,
 	);
 
 	$params['activity'] = array(
@@ -322,15 +403,15 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_activity_directory_nav_items() {
+function bboss_nouveau_get_activity_directory_nav_items() {
 	$nav_items = array();
 
 	$nav_items['all'] = array(
 		'component' => 'activity',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array( 'dynamic', 'selected' ),
-		'link'      => bp_get_activity_directory_permalink(),
-		'text'      => __( 'All Updates', 'buddyboss' ),
+		'link'      => bboss_get_activity_directory_permalink(),
+		'text'      => __( 'All Updates', 'buddyboss-platform' ),
 		'count'     => false,
 		'position'  => 5,
 	);
@@ -356,7 +437,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 	foreach ( $deprecated_hooks as $deprectated_hook ) {
 		list( $hook, $component, $position ) = $deprectated_hook;
 
-		$extra_nav_items = bp_nouveau_parse_hooked_dir_nav( $hook, $component, $position );
+		$extra_nav_items = bboss_nouveau_parse_hooked_dir_nav( $hook, $component, $position );
 
 		if ( ! empty( $extra_nav_items ) ) {
 			$nav_items = array_merge( $nav_items, $extra_nav_items );
@@ -376,7 +457,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 }
 
 /**
- * Make sure bp_get_activity_show_filters() will return the filters and the context
+ * Make sure bboss_get_activity_show_filters() will return the filters and the context
  * instead of the output.
  *
  * @since BuddyPress 3.0.0
@@ -387,7 +468,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
  *
  * @return array
  */
-function bp_nouveau_get_activity_filters_array( $output = '', $filters = array(), $context = '' ) {
+function bboss_nouveau_get_activity_filters_array( $output = '', $filters = array(), $context = '' ) {
 	return array(
 		'filters' => $filters,
 		'context' => $context,
@@ -401,12 +482,12 @@ function bp_nouveau_get_activity_filters_array( $output = '', $filters = array()
  *
  * @return array the filters
  */
-function bp_nouveau_get_activity_filters() {
-	add_filter( 'bp_get_activity_show_filters', 'bp_nouveau_get_activity_filters_array', 10, 3 );
+function bboss_nouveau_get_activity_filters() {
+	add_filter( 'bp_get_activity_show_filters', 'bboss_nouveau_get_activity_filters_array', 10, 3 );
 
-	$filters_data = bp_get_activity_show_filters();
+	$filters_data = bboss_get_activity_show_filters();
 
-	remove_filter( 'bp_get_activity_show_filters', 'bp_nouveau_get_activity_filters_array', 10, 3 );
+	remove_filter( 'bp_get_activity_show_filters', 'bboss_nouveau_get_activity_filters_array', 10, 3 );
 
 	$action = '';
 	if ( 'group' === $filters_data['context'] ) {
@@ -420,7 +501,7 @@ function bp_nouveau_get_activity_filters() {
 	$filters = $filters_data['filters'];
 
 	if ( $action ) {
-		return bp_nouveau_parse_hooked_options( $action, $filters );
+		return bboss_nouveau_parse_hooked_options( $action, $filters );
 	}
 
 	return $filters;
@@ -431,12 +512,12 @@ function bp_nouveau_get_activity_filters() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity_secondary_avatars( $action, $activity ) {
+function bboss_nouveau_activity_secondary_avatars( $action, $activity ) {
 	switch ( $activity->component ) {
 		case 'groups':
 		case 'friends':
 			// Only insert avatar if one exists.
-			if ( $secondary_avatar = bp_get_activity_secondary_avatar() ) {
+			if ( $secondary_avatar = bboss_get_activity_secondary_avatar() ) {
 				$reverse_content = strrev( $action );
 				$position        = strpos( $reverse_content, 'a<' );
 				$action          = substr_replace( $action, $secondary_avatar, -$position - 2, 0 );
@@ -452,12 +533,12 @@ function bp_nouveau_activity_secondary_avatars( $action, $activity ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity_scope_newest_class( $classes = '' ) {
+function bboss_nouveau_activity_scope_newest_class( $classes = '' ) {
 	if ( ! is_user_logged_in() ) {
 		return $classes;
 	}
 
-	$user_id    = bp_loggedin_user_id();
+	$user_id    = bboss_loggedin_user_id();
 	$my_classes = array();
 
 	/*
@@ -471,34 +552,34 @@ function bp_nouveau_activity_scope_newest_class( $classes = '' ) {
 	}
 
 	// Add specific classes to perform specific actions on the client side.
-	if ( $scope && bp_is_activity_directory() ) {
-		$component = bp_get_activity_object_name();
+	if ( $scope && bboss_is_activity_directory() ) {
+		$component = bboss_get_activity_object_name();
 
 		/*
 		 * These classes will be used to count the number of newest activities for
 		 * the 'Mentions', 'My Groups' & 'My Connections' tabs
 		 */
 		if ( 'all' === $scope ) {
-			if ( 'groups' === $component && bp_is_active( $component ) ) {
+			if ( 'groups' === $component && bboss_is_active( $component ) ) {
 				// Is the current user a member of the group the activity is attached to?
-				if ( groups_is_user_member( $user_id, bp_get_activity_item_id() ) ) {
+				if ( bboss_groups_is_user_member( $user_id, bboss_get_activity_item_id() ) ) {
 					$my_classes[] = 'bp-my-groups';
 				}
 			}
 
 			// Connections can post in groups the user is a member of
-			if ( bp_is_active( 'friends' ) && (int) $user_id !== (int) bp_get_activity_user_id() ) {
-				if ( friends_check_friendship( $user_id, bp_get_activity_user_id() ) ) {
+			if ( bboss_is_active( 'friends' ) && (int) $user_id !== (int) bboss_get_activity_user_id() ) {
+				if ( bboss_friends_check_friendship( $user_id, bboss_get_activity_user_id() ) ) {
 					$my_classes[] = 'bp-my-friends';
 				}
 			}
 
 			// A mention can be posted by a friend within a group
-			if ( true === bp_activity_do_mentions() ) {
-				$new_mentions = bp_get_user_meta( $user_id, 'bp_new_mentions', true );
+			if ( true === bboss_activity_do_mentions() ) {
+				$new_mentions = bboss_get_user_meta( $user_id, 'bp_new_mentions', true );
 
 				// The current activity is one of the new mentions
-				if ( is_array( $new_mentions ) && in_array( bp_get_activity_id(), $new_mentions ) ) {
+				if ( is_array( $new_mentions ) && in_array( bboss_get_activity_id(), $new_mentions ) ) {
 					$my_classes[] = 'bp-my-mentions';
 				}
 			}
@@ -539,9 +620,9 @@ function bp_nouveau_activity_scope_newest_class( $classes = '' ) {
  *
  * @return array The activity arguments.
  */
-function bp_nouveau_activity_widget_query() {
+function bboss_nouveau_activity_widget_query() {
 	$args       = array();
-	$bp_nouveau = bp_nouveau();
+	$bp_nouveau = bboss_nouveau();
 
 	if ( isset( $bp_nouveau->activity->widget_args ) ) {
 		$args = $bp_nouveau->activity->widget_args;
@@ -562,32 +643,32 @@ function bp_nouveau_activity_widget_query() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity_notification_filters() {
+function bboss_nouveau_activity_notification_filters() {
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		return;
 	}
 
 	$notifications = array(
 		array(
 			'id'       => 'new_at_mention',
-			'label'    => __( 'New mentions', 'buddyboss' ),
+			'label'    => __( 'New mentions', 'buddyboss-platform' ),
 			'position' => 5,
 		),
 		array(
 			'id'       => 'update_reply',
-			'label'    => __( 'New update replies', 'buddyboss' ),
+			'label'    => __( 'New update replies', 'buddyboss-platform' ),
 			'position' => 15,
 		),
 		array(
 			'id'       => 'comment_reply',
-			'label'    => __( 'New update comment replies', 'buddyboss' ),
+			'label'    => __( 'New update comment replies', 'buddyboss-platform' ),
 			'position' => 25,
 		),
 	);
 
 	foreach ( $notifications as $notification ) {
-		bp_nouveau_notifications_register_filter( $notification );
+		bboss_nouveau_notifications_register_filter( $notification );
 	}
 }
 
@@ -600,7 +681,7 @@ function bp_nouveau_activity_notification_filters() {
  *
  * @return array the controls to add.
  */
-function bp_nouveau_activity_customizer_controls( $controls = array() ) {
+function bboss_nouveau_activity_customizer_controls( $controls = array() ) {
 	return array_merge( $controls, array(
 //		'act_dir_layout' => array(
 //			'label'      => __( 'Use column navigation for the Activity directory.', 'buddyboss' ),

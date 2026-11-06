@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.0.1
  */
-class BP_XProfile_Field_Type_Placeholder extends BP_XProfile_Field_Type {
+class BBoss_XProfile_Field_Type_Placeholder extends BBoss_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the placeholder field type.
@@ -56,9 +56,9 @@ class BP_XProfile_Field_Type_Placeholder extends BP_XProfile_Field_Type {
 	 *
 	 * @since BuddyPress 2.0.1
 	 *
-	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
+	 * @param BBoss_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
 	 *                                         field's child options.
 	 */
-	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = '' ) {}
+	public function admin_new_field_html( BBoss_XProfile_Field $current_field, $control_type = '' ) {}
 }

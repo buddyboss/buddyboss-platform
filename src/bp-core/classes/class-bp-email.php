@@ -13,13 +13,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.5.0
  */
-class BP_Email {
+class BBoss_Email {
 	/**
 	 * Addressee details (BCC).
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @var BP_Email_Recipient[] BCC recipients.
+	 * @var BBoss_Email_Recipient[] BCC recipients.
 	 */
 	protected $bcc = array();
 
@@ -28,7 +28,7 @@ class BP_Email {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @var BP_Email_Recipient[] CC recipients.
+	 * @var BBoss_Email_Recipient[] CC recipients.
 	 */
 	protected $cc = array();
 
@@ -64,7 +64,7 @@ class BP_Email {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @var BP_Email_Recipient Sender details.
+	 * @var BBoss_Email_Recipient Sender details.
 	 */
 	protected $from = null;
 
@@ -91,7 +91,7 @@ class BP_Email {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @var BP_Email_Recipient "Reply to" details.
+	 * @var BBoss_Email_Recipient "Reply to" details.
 	 */
 	protected $reply_to = null;
 
@@ -118,7 +118,7 @@ class BP_Email {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @var BP_Email_Recipient[] Email recipients.
+	 * @var BBoss_Email_Recipient[] Email recipients.
 	 * }
 	 */
 	protected $to = array();
@@ -164,7 +164,7 @@ class BP_Email {
 
 		// SERVER_NAME isn't always set (e.g CLI).
 		if ( ! empty( $_SERVER['SERVER_NAME'] ) ) {
-			$domain = strtolower( $_SERVER['SERVER_NAME'] );
+			$domain = strtolower( sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ) );
 			if ( substr( $domain, 0, 4 ) === 'www.' ) {
 				$domain = substr( $domain, 4 );
 			}
@@ -179,7 +179,7 @@ class BP_Email {
 		}
 
 		// This was escaped with esc_html on the way into the database in sanitize_option().
-		$from_name    = wp_specialchars_decode( bp_get_option( 'blogname' ), ENT_QUOTES );
+		$from_name    = wp_specialchars_decode( bboss_get_option( 'blogname' ), ENT_QUOTES );
 		$from_address = "wordpress@$domain";
 
 		/** This filter is documented in wp-includes/pluggable.php */
@@ -189,15 +189,15 @@ class BP_Email {
 		$from_name = apply_filters( 'wp_mail_from_name', $from_name );
 
 		$this->set_from( $from_address, $from_name );
-		$this->set_reply_to( bp_get_option( 'admin_email' ), $from_name );
+		$this->set_reply_to( bboss_get_option( 'admin_email' ), $from_name );
 
 		/**
-		 * Fires inside __construct() method for BP_Email class.
+		 * Fires inside __construct() method for BBoss_Email class.
 		 *
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $email_type Unique identifier for this type of email.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		do_action( 'bp_email', $email_type, $this );
 	}
@@ -245,7 +245,7 @@ class BP_Email {
 		 * @param string $property_name
 		 * @param string $transform How to transform the return value.
 		 *                          Accepts 'raw' (default) or 'replace-tokens'.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$retval = apply_filters( "bp_email_get_{$property_name}", $this->$property_name, $property_name, $transform, $this );
 
@@ -256,7 +256,7 @@ class BP_Email {
 				// Fall through.
 
 			case 'replace-tokens':
-				$retval = bp_core_replace_tokens_in_text( $retval, $this->get_tokens( 'raw' ) );
+				$retval = bboss_core_replace_tokens_in_text( $retval, $this->get_tokens( 'raw' ) );
 				// Fall through.
 
 			case 'raw':
@@ -273,7 +273,7 @@ class BP_Email {
 		 * @param string $property_name
 		 * @param string $transform How to transform the return value.
 		 *                          Accepts 'raw' (default) or 'replace-tokens'.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		return apply_filters( 'bp_email_get_property', $retval, $property_name, $transform, $this );
 	}
@@ -302,7 +302,7 @@ class BP_Email {
 	 *
 	 * @param string $transform Optional. How to transform the return value.
 	 *                          Accepts 'raw' (default) or 'replace-tokens'.
-	 * @return BP_Email_Recipient[] BCC recipients.
+	 * @return BBoss_Email_Recipient[] BCC recipients.
 	 */
 	public function get_bcc( $transform = 'raw' ) {
 		return $this->get( 'bcc', $transform );
@@ -317,7 +317,7 @@ class BP_Email {
 	 *
 	 * @param string $transform Optional. How to transform the return value.
 	 *                          Accepts 'raw' (default) or 'replace-tokens'.
-	 * @return BP_Email_Recipient[] CC recipients.
+	 * @return BBoss_Email_Recipient[] CC recipients.
 	 */
 	public function get_cc( $transform = 'raw' ) {
 		return $this->get( 'cc', $transform );
@@ -393,7 +393,7 @@ class BP_Email {
 	 *
 	 * @param string $transform Optional. How to transform the return value.
 	 *                          Accepts 'raw' (default) or 'replace-tokens'.
-	 * @return BP_Email_Recipient "From" recipient.
+	 * @return BBoss_Email_Recipient "From" recipient.
 	 */
 	public function get_from( $transform = 'raw' ) {
 		return $this->get( 'from', $transform );
@@ -421,7 +421,7 @@ class BP_Email {
 	 *
 	 * @param string $transform Optional. How to transform the return value.
 	 *                          Accepts 'raw' (default) or 'replace-tokens'.
-	 * @return BP_Email_Recipient "Reply to" recipient.
+	 * @return BBoss_Email_Recipient "Reply to" recipient.
 	 */
 	public function get_reply_to( $transform = 'raw' ) {
 		return $this->get( 'reply_to', $transform );
@@ -466,7 +466,7 @@ class BP_Email {
 	 *
 	 * @param string $transform Optional. How to transform the return value.
 	 *                          Accepts 'raw' (default) or 'replace-tokens'.
-	 * @return BP_Email_Recipient[] "To" recipients.
+	 * @return BBoss_Email_Recipient[] "To" recipients.
 	 */
 	public function get_to( $transform = 'raw' ) {
 		return $this->get( 'to', $transform );
@@ -495,7 +495,7 @@ class BP_Email {
 	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string[] $headers Key/value pairs of header name/values (strings).
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_headers( array $headers ) {
 		$new_headers = array();
@@ -513,7 +513,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string[] $new_headers Key/value pairs of new header name/values (strings).
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->headers = apply_filters( 'bp_email_set_headers', $new_headers, $this );
 
@@ -536,17 +536,17 @@ class BP_Email {
 	 * @param string                   $name Optional. If $bcc_address is a string, this is the recipient's name.
 	 * @param string                   $operation Optional. If "replace", $to_address replaces current setting (default).
 	 *                                            If "add", $to_address is added to the current setting.
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_bcc( $bcc_address, $name = '', $operation = 'replace' ) {
 		$bcc = ( $operation !== 'replace' ) ? $this->bcc : array();
 
 		if ( is_array( $bcc_address ) ) {
 			foreach ( $bcc_address as $address ) {
-				$bcc[] = new BP_Email_Recipient( $address );
+				$bcc[] = new BBoss_Email_Recipient( $address );
 			}
 		} else {
-			$bcc[] = new BP_Email_Recipient( $bcc_address, $name );
+			$bcc[] = new BBoss_Email_Recipient( $bcc_address, $name );
 		}
 
 		/**
@@ -554,13 +554,13 @@ class BP_Email {
 		 *
 		 * @since BuddyPress 2.5.0
 		 *
-		 * @param BP_Email_Recipient[] $bcc BCC recipients.
+		 * @param BBoss_Email_Recipient[] $bcc BCC recipients.
 		 * @param string|array|int|WP_User $bcc_address Either an email address, user ID, WP_User object,
 		 *                                              or an array containing any combination of the above.
 		 * @param string $name Optional. If $bcc_address is a string, this is the recipient's name.
 		 * @param string $operation If "replace", $to_address replaced previous recipients. If "add",
 		 *                          $to_address was added to the array of recipients.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->bcc = apply_filters( 'bp_email_set_bcc', $bcc, $bcc_address, $name, $operation, $this );
 
@@ -583,17 +583,17 @@ class BP_Email {
 	 * @param string                   $name Optional. If $cc_address is a string, this is the recipient's name.
 	 * @param string                   $operation Optional. If "replace", $to_address replaces current setting (default).
 	 *                                            If "add", $to_address is added to the current setting.
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_cc( $cc_address, $name = '', $operation = 'replace' ) {
 		$cc = ( $operation !== 'replace' ) ? $this->cc : array();
 
 		if ( is_array( $cc_address ) ) {
 			foreach ( $cc_address as $address ) {
-				$cc[] = new BP_Email_Recipient( $address );
+				$cc[] = new BBoss_Email_Recipient( $address );
 			}
 		} else {
-			$cc[] = new BP_Email_Recipient( $cc_address, $name );
+			$cc[] = new BBoss_Email_Recipient( $cc_address, $name );
 		}
 
 		/**
@@ -601,13 +601,13 @@ class BP_Email {
 		 *
 		 * @since BuddyPress 2.5.0
 		 *
-		 * @param BP_Email_Recipient[] $cc CC recipients.
+		 * @param BBoss_Email_Recipient[] $cc CC recipients.
 		 * @param string|array|int|WP_User $cc_address Either an email address, user ID, WP_User object,
 		 *                                             or an array containing any combination of the above.
 		 * @param string $name Optional. If $cc_address is a string, this is the recipient's name.
 		 * @param string $operation If "replace", $to_address replaced previous recipients. If "add",
 		 *                          $to_address was added to the array of recipients.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->cc = apply_filters( 'bp_email_set_cc', $cc, $cc_address, $name, $operation, $this );
 
@@ -620,7 +620,7 @@ class BP_Email {
 	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $content HTML email content.
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_content_html( $content ) {
 
@@ -630,7 +630,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $content HTML email content.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->content_html = apply_filters( 'bp_email_set_content_html', $content, $this );
 
@@ -643,7 +643,7 @@ class BP_Email {
 	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $content Plain text email content.
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_content_plaintext( $content ) {
 
@@ -653,7 +653,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $content Plain text email content.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->content_plaintext = apply_filters( 'bp_email_set_content_plaintext', $content, $this );
 
@@ -666,7 +666,7 @@ class BP_Email {
 	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $content_type Email content type ("html" or "plaintext").
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_content_type( $content_type ) {
 		if ( ! in_array( $content_type, array( 'html', 'plaintext' ), true ) ) {
@@ -682,7 +682,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $content_type Email content type ("html" or "plaintext").
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->content_type = apply_filters( 'bp_email_set_content_type', $content_type, $this );
 
@@ -696,20 +696,20 @@ class BP_Email {
 	 *
 	 * @param string|array|int|WP_User $email_address Either an email address, user ID, or WP_User object.
 	 * @param string                   $name Optional. If $email_address is a string, this is the recipient's name.
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_from( $email_address, $name = '' ) {
-		$from = new BP_Email_Recipient( $email_address, $name );
+		$from = new BBoss_Email_Recipient( $email_address, $name );
 
 		/**
 		 * Filters the new value of the email's "from" property.
 		 *
 		 * @since BuddyPress 2.5.0
 		 *
-		 * @param BP_Email_Recipient $from Sender details.
+		 * @param BBoss_Email_Recipient $from Sender details.
 		 * @param string|array|int|WP_User $email_address Either an email address, user ID, or WP_User object.
 		 * @param string $name Optional. If $email_address is a string, this is the recipient's name.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->from = apply_filters( 'bp_email_set_from', $from, $email_address, $name, $this );
 
@@ -724,7 +724,7 @@ class BP_Email {
 	 * @since BuddyPress 2.5.0
 	 *
 	 * @param WP_Post $post
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_post_object( WP_Post $post ) {
 
@@ -734,7 +734,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param WP_Post $post A Post.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->post_object = apply_filters( 'bp_email_set_post_object', $post, $this );
 
@@ -748,7 +748,7 @@ class BP_Email {
 			// Load the template.
 			add_filter( 'bp_locate_template_and_load', '__return_true' );
 
-			bp_locate_template( bp_email_get_template( $this->post_object ), true, false );
+			bboss_locate_template( bboss_email_get_template( $this->post_object ), true, false );
 
 			remove_filter( 'bp_locate_template_and_load', '__return_true' );
 
@@ -768,21 +768,21 @@ class BP_Email {
 	 * @param string|array|int|WP_User $email_address Either an email address, user ID, WP_User object,
 	 *                                                or an array containing any combination of the above.
 	 * @param string                   $name Optional. If $email_address is a string, this is the recipient's name.
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_reply_to( $email_address, $name = '' ) {
-		$reply_to = new BP_Email_Recipient( $email_address, $name );
+		$reply_to = new BBoss_Email_Recipient( $email_address, $name );
 
 		/**
 		 * Filters the new value of the email's "reply to" property.
 		 *
 		 * @since BuddyPress 2.5.0
 		 *
-		 * @param BP_Email_Recipient $reply_to "Reply to" recipient.
+		 * @param BBoss_Email_Recipient $reply_to "Reply to" recipient.
 		 * @param string|array|int|WP_User $email_address Either an email address, user ID, WP_User object,
 		 *                                                or an array containing any combination of the above.
 		 * @param string $name Optional. If $email_address is a string, this is the recipient's name.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->reply_to = apply_filters( 'bp_email_set_reply_to', $reply_to, $email_address, $name, $this );
 
@@ -795,7 +795,7 @@ class BP_Email {
 	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $subject Email subject.
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_subject( $subject ) {
 
@@ -805,7 +805,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $subject Email subject.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->subject = apply_filters( 'bp_email_set_subject', $subject, $this );
 
@@ -821,7 +821,7 @@ class BP_Email {
 	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $template Email template. Assumed to be HTML.
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_template( $template ) {
 
@@ -831,7 +831,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $template Email template. Assumed to be HTML.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->template = apply_filters( 'bp_email_set_template', $template, $this );
 
@@ -860,7 +860,7 @@ class BP_Email {
 	 * @param string                   $operation  Optional. If "replace", $to_address replaces current setting
 	 *                                             (default). If "add", $to_address is added to the current setting.
 	 *
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_to( $to_address, $name = '', $operation = 'replace' ) {
 		$to = ( $operation !== 'replace' ) ? $this->to : array();
@@ -869,10 +869,10 @@ class BP_Email {
 
 		if ( is_array( $to_address ) ) {
 			foreach ( $to_address as $address ) {
-				$to[] = new BP_Email_Recipient( $address );
+				$to[] = new BBoss_Email_Recipient( $address );
 			}
 		} else {
-			$to[] = new BP_Email_Recipient( $to_address, $name, $tokens );
+			$to[] = new BBoss_Email_Recipient( $to_address, $name, $tokens );
 		}
 
 		/**
@@ -880,12 +880,12 @@ class BP_Email {
 		 *
 		 * @since BuddyPress 2.5.0
 		 *
-		 * @param BP_Email_Recipient[] "To" recipients.
+		 * @param BBoss_Email_Recipient[] "To" recipients.
 		 * @param string $to_address "To" address.
 		 * @param string $name "To" name.
 		 * @param string $operation If "replace", $to_address replaced previous recipients. If "add",
 		 *                          $to_address was added to the array of recipients.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		$this->to = apply_filters( 'bp_email_set_to', $to, $to_address, $name, $operation, $this );
 
@@ -902,7 +902,7 @@ class BP_Email {
 	 *
 	 * @param string[] $tokens Associative array, contains key/value pairs of token name/value.
 	 *                         Values are a string or a callable function.
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function set_tokens( array $tokens ) {
 		$formatted_tokens = array();
@@ -921,7 +921,7 @@ class BP_Email {
 		 *                                   and replacement values (value).
 		 * @param string[] $tokens           Associative pairing of unformatted token
 		 *                                   names (key) and replacement values (value).
-		 * @param BP_Email $this             Current instance of the email type class.
+		 * @param BBoss_Email $this             Current instance of the email type class.
 		 */
 		$this->tokens = apply_filters( 'bp_email_set_tokens', $formatted_tokens, $tokens, $this );
 
@@ -962,7 +962,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param bool|WP_Error $retval Returns true if validation succesful, else a descriptive WP_Error.
-		 * @param BP_Email $this Current instance of the email type class.
+		 * @param BBoss_Email $this Current instance of the email type class.
 		 */
 		return apply_filters( 'bp_email_validate', $retval, $this );
 	}
@@ -975,7 +975,7 @@ class BP_Email {
 	 * @param string[] $tokens Associative array, contains key/value pairs of token name/value.
 	 *                         Values are a string or a callable function.
 	 *
-	 * @return BP_Email
+	 * @return BBoss_Email
 	 */
 	public function bb_set_original_tokens( array $tokens ) {
 		/**
@@ -984,7 +984,7 @@ class BP_Email {
 		 * @since BuddyBoss 2.7.00
 		 *
 		 * @param string[] $tokens Associative pairing of token names (key) and replacement values (value).
-		 * @param BP_Email $this   Current instance of the email type class.
+		 * @param BBoss_Email $this   Current instance of the email type class.
 		 */
 		$this->original_tokens = apply_filters( 'bb_email_set_original_tokens', $tokens, $this );
 

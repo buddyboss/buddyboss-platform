@@ -5,7 +5,7 @@
  * @package BuddyBoss
  * @since 0.1.0
  */
-class Rest_BBP_Walker_Reply extends Walker {
+class BBoss_Rest_BBP_Walker_Reply extends Walker {
 
 	/**
 	 * Tree type.
@@ -38,7 +38,7 @@ class Rest_BBP_Walker_Reply extends Walker {
 	 * @since 2.6.0 bbPress (r5389)
 	 */
 	public function __construct() {
-		$this->tree_type = bbp_get_reply_post_type();
+		$this->tree_type = bboss_bbp_get_reply_post_type();
 	}
 
 	/**
@@ -53,7 +53,7 @@ class Rest_BBP_Walker_Reply extends Walker {
 	 * @param array  $args   Uses 'style' argument for type of HTML list.
 	 */
 	public function start_lvl( &$output = '', $depth = 0, $args = array() ) {
-		bbpress()->reply_query->reply_depth = (int) $depth + 1;
+		bboss_forums()->reply_query->reply_depth = (int) $depth + 1;
 	}
 
 	/**
@@ -68,7 +68,7 @@ class Rest_BBP_Walker_Reply extends Walker {
 	 * @param array  $args   Will only append content if style argument value is 'ol' or 'ul'.
 	 */
 	public function end_lvl( &$output = '', $depth = 0, $args = array() ) {
-		bbpress()->reply_query->reply_depth = (int) $depth + 1;
+		bboss_forums()->reply_query->reply_depth = (int) $depth + 1;
 	}
 
 	/**

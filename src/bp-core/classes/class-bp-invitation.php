@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.3.5
  *
  */
-class BP_Invitation {
+class BBoss_Invitation {
 
 	/**
 	 * The invitation ID.
@@ -202,7 +202,7 @@ class BP_Invitation {
 		 *
 		 * @since BuddyBoss 1.3.5
 		 *
-		 * @param BP_Invitation object $this Characteristics of the invitation to be saved.
+		 * @param BBoss_Invitation object $this Characteristics of the invitation to be saved.
 		 */
 		do_action_ref_array( 'bp_invitation_before_save', array( &$this ) );
 
@@ -229,7 +229,7 @@ class BP_Invitation {
 		 *
 		 * @since BuddyBoss 1.3.5
 		 *
-		 * @param BP_Invitation object $this Characteristics of the invitation just saved.
+		 * @param BBoss_Invitation object $this Characteristics of the invitation just saved.
 		 */
 		do_action_ref_array( 'bp_invitation_after_save', array( &$this ) );
 
@@ -247,7 +247,7 @@ class BP_Invitation {
 	 */
 	public function populate() {
 		global $wpdb;
-		$invites_table_name = BP_Invitation_Manager::get_table_name();
+		$invites_table_name = BBoss_Invitation_Manager::get_table_name();
 
 		// Check cache for invitation data.
 		$invitation = wp_cache_get( $this->id, 'bp_invitations' );
@@ -305,7 +305,7 @@ class BP_Invitation {
 	 */
 	protected static function _insert( $data = array(), $data_format = array() ) {
 		global $wpdb;
-		return $wpdb->insert( BP_Invitation_Manager::get_table_name(), $data, $data_format );
+		return $wpdb->insert( BBoss_Invitation_Manager::get_table_name(), $data, $data_format );
 	}
 
 	/**
@@ -317,7 +317,7 @@ class BP_Invitation {
 	 *
 	 * @param array $data         Array of invitation data to update, passed to
 	 *                            {@link wpdb::update()}. Accepts any property of a
-	 *                            BP_Invitation object.
+	 *                            BBoss_Invitation object.
 	 * @param array $where        The WHERE params as passed to wpdb::update().
 	 *                            Typically consists of array( 'ID' => $id ) to specify the ID
 	 *                            of the item being updated. See {@link wpdb::update()}.
@@ -327,7 +327,7 @@ class BP_Invitation {
 	 */
 	protected static function _update( $data = array(), $where = array(), $data_format = array(), $where_format = array() ) {
 		global $wpdb;
-		return $wpdb->update( BP_Invitation_Manager::get_table_name(), $data, $where, $data_format, $where_format );
+		return $wpdb->update( BBoss_Invitation_Manager::get_table_name(), $data, $where, $data_format, $where_format );
 	}
 
 	/**
@@ -339,24 +339,24 @@ class BP_Invitation {
 	 *
 	 * @param array $where        Array of WHERE clauses to filter by, passed to
 	 *                            {@link wpdb::delete()}. Accepts any property of a
-	 *                            BP_Invitation object.
+	 *                            BBoss_Invitation object.
 	 * @param array $where_format See {@link wpdb::insert()}.
 	 * @return int|false The number of rows updated, or false on error.
 	 */
 	protected static function _delete( $where = array(), $where_format = array() ) {
 		global $wpdb;
-		return $wpdb->delete( BP_Invitation_Manager::get_table_name(), $where, $where_format );
+		return $wpdb->delete( BBoss_Invitation_Manager::get_table_name(), $where, $where_format );
 	}
 
 	/**
 	 * Assemble the WHERE clause of a get() SQL statement.
 	 *
-	 * Used by BP_Invitation::get() to create its WHERE
+	 * Used by BBoss_Invitation::get() to create its WHERE
 	 * clause.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @param array $args See {@link BP_Invitation::get()} for more details.
+	 * @param array $args See {@link BBoss_Invitation::get()} for more details.
 	 * @return string WHERE clause.
 	 */
 	protected static function get_where_sql( $args = array() ) {
@@ -461,7 +461,7 @@ class BP_Invitation {
 
 		// search_terms
 		if ( ! empty( $args['search_terms'] ) ) {
-			$search_terms_like = '%' . bp_esc_like( $args['search_terms'] ) . '%';
+			$search_terms_like = '%' . bboss_esc_like( $args['search_terms'] ) . '%';
 			$where_conditions['search_terms'] = $wpdb->prepare( "( i.class LIKE %s )", $search_terms_like, $search_terms_like );
 		}
 
@@ -486,12 +486,12 @@ class BP_Invitation {
 	/**
 	 * Assemble the ORDER BY clause of a get() SQL statement.
 	 *
-	 * Used by BP_Invitation::get() to create its ORDER BY
+	 * Used by BBoss_Invitation::get() to create its ORDER BY
 	 * clause.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @param array $args See {@link BP_Invitation::get()} for more details.
+	 * @param array $args See {@link BBoss_Invitation::get()} for more details.
 	 * @return string ORDER BY clause.
 	 */
 	protected static function get_order_by_sql( $args = array() ) {
@@ -523,7 +523,7 @@ class BP_Invitation {
 
 		// Sort order direction
 		if ( ! empty( $args['sort_order'] ) ) {
-			$sort_order               = bp_esc_sql_order( $args['sort_order'] );
+			$sort_order               = bboss_esc_sql_order( $args['sort_order'] );
 			$conditions['sort_order'] = "{$sort_order}";
 			if ( ! empty( $args['id'] ) && 'in' === $args['order_by'] ) {
 				$conditions['sort_order'] = '';
@@ -541,11 +541,11 @@ class BP_Invitation {
 	/**
 	 * Assemble the LIMIT clause of a get() SQL statement.
 	 *
-	 * Used by BP_Invitation::get() to create its LIMIT clause.
+	 * Used by BBoss_Invitation::get() to create its LIMIT clause.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @param array $args See {@link BP_Invitation::get()} for more details.
+	 * @param array $args See {@link BBoss_Invitation::get()} for more details.
 	 * @return string LIMIT clause.
 	 */
 	protected static function get_paged_sql( $args = array() ) {
@@ -581,7 +581,7 @@ class BP_Invitation {
 	 *
 	 *     $args = array(
 	 *         'user_id' => 4,
-	 *         'class'   => 'BP_Groups_Invitation_Manager',
+	 *         'class'   => 'BBoss_Groups_Invitation_Manager',
 	 *     );
 	 *
 	 * This will be converted to:
@@ -589,7 +589,7 @@ class BP_Invitation {
 	 *     array(
 	 *         'data' => array(
 	 *             'user_id' => 4,
-	 *             'class'   => 'BP_Groups_Invitation_Manager',
+	 *             'class'   => 'BBoss_Groups_Invitation_Manager',
 	 *         ),
 	 *         'format' => array(
 	 *             '%d',
@@ -602,7 +602,7 @@ class BP_Invitation {
 	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param array $args Associative array of filter arguments.
-	 *                    See {@BP_Invitation::get()} for a breakdown.
+	 *                    See {@BBoss_Invitation::get()} for a breakdown.
 	 * @return array Associative array of 'data' and 'format' args.
 	 */
 	protected static function get_query_clauses( $args = array() ) {
@@ -743,17 +743,17 @@ class BP_Invitation {
 	 *                                           all items).
   	 *     @type string       $fields            Which fields to return. Specify 'item_ids' to fetch a list of Item_IDs.
   	 *                                           Specify 'ids' to fetch a list of Invitation IDs.
- 	 *                                           Default: 'all' (return BP_Invitation objects).
+ 	 *                                           Default: 'all' (return BBoss_Invitation objects).
 	 * }
 	 *
-	 * @return array BP_Invitation objects | IDs of found invit.
+	 * @return array BBoss_Invitation objects | IDs of found invit.
 	 */
 	public static function get( $args = array() ) {
 		global $wpdb;
-		$invites_table_name = BP_Invitation_Manager::get_table_name();
+		$invites_table_name = BBoss_Invitation_Manager::get_table_name();
 
 		// Parse the arguments
-		$r  = bp_parse_args( $args, array(
+		$r  = bboss_parse_args( $args, array(
 			'id'                => false,
 			'user_id'           => false,
 			'inviter_id'        => false,
@@ -842,10 +842,10 @@ class BP_Invitation {
 		 */
 		$paged_invites_sql = apply_filters( 'bp_invitations_get_paged_invitations_sql', $paged_invites_sql, $sql, $r );
 
-		$cached = bp_core_get_incremented_cache( $paged_invites_sql, 'bp_invitations' );
+		$cached = bboss_core_get_incremented_cache( $paged_invites_sql, 'bp_invitations' );
 		if ( false === $cached ) {
-			$paged_invite_ids = $wpdb->get_col( $paged_invites_sql );
-			bp_core_set_incremented_cache( $paged_invites_sql, 'bp_invitations', $paged_invite_ids );
+			$paged_invite_ids = $wpdb->get_col( $paged_invites_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filters bp_invitations_get_join_sql / bp_invitations_get_where_conditions / bp_invitations_get_paged_invitations_sql; as built here: table from BP_Invitation_Manager::get_table_name(), literal field list, WHERE from get_where_sql() (ids via wp_parse_id_list(), emails/class/type/search %s-prepared, sent/accepted literal), ORDER BY columns whitelisted against self::$columns or FIELD() of int ids, order via bp_esc_sql_order(), LIMIT %d-prepared.
+			bboss_core_set_incremented_cache( $paged_invites_sql, 'bp_invitations', $paged_invite_ids );
 		} else {
 			$paged_invite_ids = $cached;
 		}
@@ -856,7 +856,7 @@ class BP_Invitation {
 			return array_map( 'intval', $paged_invite_ids );
 		}
 
-		$uncached_ids = bp_get_non_cached_ids( $paged_invite_ids, 'bp_invitations' );
+		$uncached_ids = bboss_get_non_cached_ids( $paged_invite_ids, 'bp_invitations' );
 		if ( $uncached_ids ) {
 			$ids_sql = implode( ',', array_map( 'intval', $uncached_ids ) );
 			$data_objects = $wpdb->get_results( "SELECT i.* FROM {$invites_table_name} i WHERE i.id IN ({$ids_sql})" );
@@ -867,7 +867,7 @@ class BP_Invitation {
 
 		$paged_invites = array();
 		foreach ( $paged_invite_ids as $paged_invite_id ) {
-			$paged_invites[] = new BP_Invitation( $paged_invite_id );
+			$paged_invites[] = new BBoss_Invitation( $paged_invite_id );
 		}
 
 		return $paged_invites;
@@ -878,15 +878,15 @@ class BP_Invitation {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::get() for a description of
+	 * @see BBoss_Invitation::get() for a description of
 	 *      arguments.
 	 *
-	 * @param array $args See {@link BP_Invitation::get()}.
+	 * @param array $args See {@link BBoss_Invitation::get()}.
 	 * @return int Count of located items.
 	 */
 	public static function get_total_count( $args ) {
 		global $wpdb;
-		$invites_table_name = BP_Invitation_Manager::get_table_name();
+		$invites_table_name = BBoss_Invitation_Manager::get_table_name();
 
 		// Build the query
 		$select_sql = "SELECT COUNT(*)";
@@ -906,7 +906,7 @@ class BP_Invitation {
 		$sql        = "{$select_sql} {$from_sql} {$where_sql}";
 
 		// Return the queried results
-		return $wpdb->get_var( $sql );
+		return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filters bp_invitations_get_join_sql / bp_invitations_get_where_conditions; as built here: literal COUNT select, table from BP_Invitation_Manager::get_table_name(), WHERE from get_where_sql() (see get()).
 	}
 
 	/**
@@ -914,15 +914,15 @@ class BP_Invitation {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::get() for a description of
+	 * @see BBoss_Invitation::get() for a description of
 	 *      accepted update/where arguments.
 	 *
 	 * @param array $update_args Associative array of fields to update,
 	 *                           and the values to update them to. Of the format
-	 *                           array( 'user_id' => 4, 'class' => 'BP_Groups_Invitation_Manager', ).
+	 *                           array( 'user_id' => 4, 'class' => 'BBoss_Groups_Invitation_Manager', ).
 	 * @param array $where_args  Associative array of columns/values, to
 	 *                           determine which rows should be updated. Of the format
-	 *                           array( 'item_id' => 7, 'class' => 'BP_Groups_Invitation_Manager', ).
+	 *                           array( 'item_id' => 7, 'class' => 'BBoss_Groups_Invitation_Manager', ).
 	 * @return int|bool Number of rows updated on success, false on failure.
 	 */
 	public static function update( $update_args = array(), $where_args = array() ) {
@@ -970,12 +970,12 @@ class BP_Invitation {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::get() for a description of
+	 * @see BBoss_Invitation::get() for a description of
 	 *      accepted where arguments.
 	 *
 	 * @param array $args Associative array of columns/values, to determine
 	 *                    which rows should be deleted.  Of the format
-	 *                    array( 'item_id' => 7, 'class' => 'BP_Groups_Invitation_Manager', ).
+	 *                    array( 'item_id' => 7, 'class' => 'BBoss_Groups_Invitation_Manager', ).
 	 * @return int|bool Number of rows deleted on success, false on failure.
 	 */
 	public static function delete( $args = array() ) {
@@ -999,7 +999,7 @@ class BP_Invitation {
 			wp_cache_delete( $invite_id, 'bp_invitations' );
 
 			// Delete invite metas.
-			invitation_delete_invitemeta( $invite_id );
+			bboss_invitation_delete_invitemeta( $invite_id );
 		}
 
 		$retval = self::_delete( $where['data'], $where['format'] );
@@ -1023,7 +1023,7 @@ class BP_Invitation {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::delete() for explanation of
+	 * @see BBoss_Invitation::delete() for explanation of
 	 *      return value.
 	 *
 	 * @param int $id ID of the invitation item to be deleted.
@@ -1069,7 +1069,7 @@ class BP_Invitation {
 	 * Mark invitations as sent that are found by user_id, inviter_id, item id, and optional
 	 * secondary item id, and class name.
 	 *
-	 * @param array $args See BP_Invitation::update().
+	 * @param array $args See BBoss_Invitation::update().
 	 *
 	 * @return bool|int
 	 * @since BuddyBoss 1.3.5
@@ -1119,7 +1119,7 @@ class BP_Invitation {
 	 *
 	 * @since BuddyBoss 1.2.5
 	 *
- 	 * @param array $args See BP_Invitation::update().
+ 	 * @param array $args See BBoss_Invitation::update().
 	 */
 	public static function mark_accepted_by_data( $args ) {
 

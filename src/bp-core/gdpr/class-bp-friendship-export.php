@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Friendship_Export class
+ * Export API: BBoss_Friendship_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Friendship_Export
+ * Class BBoss_Friendship_Export
  */
-final class BP_Friendship_Export extends BP_Export {
+final class BBoss_Friendship_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -24,8 +24,8 @@ final class BP_Friendship_Export extends BP_Export {
 
 		if ( null === $instance ) {
 
-			$instance = new BP_Friendship_Export();
-			$instance->setup( 'bp_friendship', __( 'Friendship', 'buddyboss' ) );
+			$instance = new BBoss_Friendship_Export();
+			$instance->setup( 'bp_friendship', __( 'Friendship', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -55,7 +55,7 @@ final class BP_Friendship_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_friends';
-			$group_label = __( 'Connections', 'buddyboss' );
+			$group_label = __( 'Connections', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			if ( $item->initiator_user_id == $user->ID ) {
@@ -68,31 +68,31 @@ final class BP_Friendship_Export extends BP_Export {
 
 			if ( $item->is_confirmed == '0' && $is_initiator ) {
 				$group_id   .= '_pending_sent';
-				$group_label = __( 'Pending Sent Connection Requests', 'buddyboss' );
+				$group_label = __( 'Pending Sent Connection Requests', 'buddyboss-platform' );
 			}
 
 			if ( $item->is_confirmed == '0' && ! $is_initiator ) {
 				$group_id   .= '_pending_received';
-				$group_label = __( 'Pending Received Connection Requests', 'buddyboss' );
+				$group_label = __( 'Pending Received Connection Requests', 'buddyboss-platform' );
 			}
 
 			$data = array(
 				array(
-					'name'  => __( 'Connection Name', 'buddyboss' ),
+					'name'  => __( 'Connection Name', 'buddyboss-platform' ),
 					// Resolve for the data subject ($user) so a last name the connection has
 					// hidden by profile-field visibility is not exported in the raw column.
-					'value' => bp_core_get_user_displayname( $friend_user_id, $user->ID ),
+					'value' => bboss_core_get_user_displayname( $friend_user_id, $user->ID ),
 				),
 				array(
-					'name'  => __( 'Sent Created (GMT)', 'buddyboss' ),
+					'name'  => __( 'Sent Created (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_created,
 				),
 			);
 
 			if ( $item->is_confirmed == '1' ) {
-				$is_initiator_value = ( ( $is_initiator ) ? __( 'Yes', 'buddyboss' ) : __( 'No', 'buddyboss' ) );
+				$is_initiator_value = ( ( $is_initiator ) ? __( 'Yes', 'buddyboss-platform' ) : __( 'No', 'buddyboss-platform' ) );
 				$data[]             = array(
-					'name'  => __( 'Request Initiator', 'buddyboss' ),
+					'name'  => __( 'Request Initiator', 'buddyboss-platform' ),
 					'value' => $is_initiator_value,
 				);
 			}
@@ -134,7 +134,7 @@ final class BP_Friendship_Export extends BP_Export {
 		$items_removed  = true;
 		$items_retained = false;
 
-		friends_remove_data( $user->ID );
+		bboss_friends_remove_data( $user->ID );
 
 		$done = true;
 
@@ -160,20 +160,16 @@ final class BP_Friendship_Export extends BP_Export {
 
 		$table = "{$friends_table} item";
 
-		$query_select       = 'item.*';
-		$query_select_count = 'COUNT(item.id)';
-		$query_where        = 'item.initiator_user_id=%d OR item.friend_user_id=%d';
+		$items_per_batch = absint( $this->items_per_batch );
+		$offset          = ( absint( $page ) - 1 ) * $items_per_batch;
 
-		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
-
-		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID, $user->ID );
-		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID, $user->ID );
-
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		// Table name from $bp->friends; user IDs, LIMIT and OFFSET bound as %d.
+		$count = (int) $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(item.id) FROM {$table} WHERE item.initiator_user_id=%d OR item.friend_user_id=%d", $user->ID, $user->ID )
+		);
+		$items = $wpdb->get_results(
+			$wpdb->prepare( "SELECT item.* FROM {$table} WHERE item.initiator_user_id=%d OR item.friend_user_id=%d LIMIT %d OFFSET %d", $user->ID, $user->ID, $items_per_batch, $offset )
+		);
 
 		return array(
 			'total'  => $count,

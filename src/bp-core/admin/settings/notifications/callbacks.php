@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Sanitized position value.
  */
-function bb_notifications_sanitize_position( $value ) {
+function bboss_notifications_sanitize_position( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'left', 'right' );
 
@@ -44,7 +44,7 @@ function bb_notifications_sanitize_position( $value ) {
  *
  * @return string Sanitized visibility value.
  */
-function bb_notifications_sanitize_visibility( $value ) {
+function bboss_notifications_sanitize_visibility( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'never', '5', '10', '30', '60', '120', '180', '240', '300' );
 
@@ -68,9 +68,9 @@ function bb_notifications_sanitize_visibility( $value ) {
  *
  * @return array Sanitized notification types.
  */
-function bb_notifications_sanitize_types( $value ) {
+function bboss_notifications_sanitize_types( $value ) {
 	if ( ! is_array( $value ) ) {
-		return bp_get_option( 'bb_enabled_notification', array() );
+		return bboss_get_option( 'bb_enabled_notification', array() );
 	}
 
 	// Sanitize: rebuild with sanitized keys, only 'yes' or 'no' values.
@@ -94,7 +94,7 @@ function bb_notifications_sanitize_types( $value ) {
 	}
 
 	// Whitelist against registered preferences and collect read-only fields in a single pass.
-	$notification_preferences = bb_register_notification_preferences();
+	$notification_preferences = bboss_register_notification_preferences();
 	$registered_keys          = array();
 	$preferences              = array();
 	if ( ! empty( $notification_preferences ) ) {
@@ -121,7 +121,7 @@ function bb_notifications_sanitize_types( $value ) {
 	// When no registered keys are available (e.g., notifications component toggled off
 	// mid-request), preserve the existing stored value rather than accepting unfiltered input.
 	if ( empty( $registered_keys ) ) {
-		return bp_get_option( 'bb_enabled_notification', array() );
+		return bboss_get_option( 'bb_enabled_notification', array() );
 	}
 
 	$enabled_notification = array_intersect_key( $enabled_notification, array_flip( $registered_keys ) );

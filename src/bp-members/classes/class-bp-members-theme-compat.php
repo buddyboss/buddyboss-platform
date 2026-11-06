@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  */
-class BP_Members_Theme_Compat {
+class BBoss_Members_Theme_Compat {
 
 	/**
 	 * Set up the members component theme compatibility.
@@ -36,16 +36,16 @@ class BP_Members_Theme_Compat {
 	public function is_members() {
 
 		// Bail if not looking at the members component or a user's page.
-		if ( ! bp_is_members_component() && ! bp_is_user() ) {
+		if ( ! bboss_is_members_component() && ! bboss_is_user() ) {
 			return;
 		}
 
 		// User page.
-		if ( bp_is_user() ) {
+		if ( bboss_is_user() ) {
 
 			// If we're on a single activity permalink page, we shouldn't use the members
 			// template, so stop here!
-			if ( bp_is_active( 'activity' ) && bp_is_single_activity() ) {
+			if ( bboss_is_active( 'activity' ) && bboss_is_single_activity() ) {
 				return;
 			}
 
@@ -61,8 +61,8 @@ class BP_Members_Theme_Compat {
 			add_filter( 'bp_replace_the_content', array( $this, 'single_dummy_content' ) );
 
 			// Members Directory.
-		} elseif ( ! bp_current_action() && ! bp_current_item() ) {
-			bp_update_is_directory( true, 'members' );
+		} elseif ( ! bboss_current_action() && ! bboss_current_item() ) {
+			bboss_update_is_directory( true, 'members' );
 
 			/**
 			 * Fires if looking at Members directory when needing theme compat.
@@ -87,15 +87,15 @@ class BP_Members_Theme_Compat {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @param array $templates The templates from bp_get_theme_compat_templates().
+	 * @param array $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function directory_template_hierarchy( $templates = array() ) {
 
 		// Set up the template hierarchy.
 		$new_templates = array();
-		if ( '' !== bp_get_current_member_type() ) {
-			$new_templates[] = 'members/index-directory-type-' . sanitize_file_name( bp_get_current_member_type() ) . '.php';
+		if ( '' !== bboss_get_current_member_type() ) {
+			$new_templates[] = 'members/index-directory-type-' . sanitize_file_name( bboss_get_current_member_type() ) . '.php';
 		}
 		$new_templates[] = 'members/index-directory.php';
 
@@ -121,11 +121,11 @@ class BP_Members_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
-		$members_page_id = bp_core_get_directory_page_id( 'members' );
-		bp_theme_compat_reset_post(
+		$members_page_id = bboss_core_get_directory_page_id( 'members' );
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $members_page_id ) ? $members_page_id : 0,
-				'post_title'     => bp_get_directory_title( 'members' ),
+				'post_title'     => bboss_get_directory_title( 'members' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',
@@ -143,7 +143,7 @@ class BP_Members_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_content() {
-		return bp_buffer_template_part( 'members/index', null, false );
+		return bboss_buffer_template_part( 'members/index', null, false );
 	}
 
 	/** Single ****************************************************************/
@@ -157,12 +157,12 @@ class BP_Members_Theme_Compat {
 	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $templates The templates from
-	 *                          bp_get_theme_compat_templates().
+	 *                          bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function single_template_hierarchy( $templates ) {
 		// Setup some variables we're going to reference in our custom templates.
-		$user_nicename = buddypress()->displayed_user->userdata->user_nicename;
+		$user_nicename = bboss()->displayed_user->userdata->user_nicename;
 
 		/**
 		 * Filters the template hierarchy for theme compat and member pages.
@@ -174,10 +174,10 @@ class BP_Members_Theme_Compat {
 		$new_templates = apply_filters(
 			'bp_template_hierarchy_members_single_item',
 			array(
-				'members/single/index-id-' . (int) bp_displayed_user_id() . '.php',
+				'members/single/index-id-' . (int) bboss_displayed_user_id() . '.php',
 				'members/single/index-nicename-' . sanitize_file_name( $user_nicename ) . '.php',
-				'members/single/index-action-' . sanitize_file_name( bp_current_action() ) . '.php',
-				'members/single/index-component-' . sanitize_file_name( bp_current_component() ) . '.php',
+				'members/single/index-action-' . sanitize_file_name( bboss_current_action() ) . '.php',
+				'members/single/index-component-' . sanitize_file_name( bboss_current_component() ) . '.php',
 				'members/single/index.php',
 			)
 		);
@@ -195,11 +195,11 @@ class BP_Members_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_post() {
-		$members_page_id = bp_core_get_directory_page_id( 'members' );
-		bp_theme_compat_reset_post(
+		$members_page_id = bboss_core_get_directory_page_id( 'members' );
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $members_page_id ) ? $members_page_id : 0,
-				'post_title'     => bp_get_displayed_user_fullname(),
+				'post_title'     => bboss_get_displayed_user_fullname(),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',
@@ -217,6 +217,6 @@ class BP_Members_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_content() {
-		return bp_buffer_template_part( 'members/single/home', null, false );
+		return bboss_buffer_template_part( 'members/single/home', null, false );
 	}
 }

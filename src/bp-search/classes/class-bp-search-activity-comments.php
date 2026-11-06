@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
+if ( ! class_exists( 'BBoss_Search_Activity_Comment' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search activity comment class
 	 */
-	class Bp_Search_Activity_Comment extends Bp_Search_Type {
+	class BBoss_Search_Activity_Comment extends BBoss_Search_Type {
 		private $type = 'activity_comment';
 
 		/**
@@ -23,7 +23,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @return object Bp_Search_Activities
+		 * @return object BBoss_Search_Activities
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication
@@ -31,7 +31,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 
 			// Only run these methods if they haven't been run previously
 			if ( null === $instance ) {
-				$instance = new Bp_Search_Activity_Comment();
+				$instance = new BBoss_Search_Activity_Comment();
 			}
 
 			// Always return the instance
@@ -65,10 +65,10 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 			$query_placeholder = array();
 
 			$user_groups = array();
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 
 				// Fetch public groups.
-				$public_groups = groups_get_groups(
+				$public_groups = bboss_groups_get_groups(
 					array(
 						'fields'   => 'ids',
 						'status'   => 'public',
@@ -81,7 +81,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 					$public_groups = array();
 				}
 
-				$groups = groups_get_user_groups( bp_loggedin_user_id() );
+				$groups = bboss_groups_get_user_groups( bboss_loggedin_user_id() );
 				if ( ! empty( $groups['groups'] ) ) {
 					$user_groups = $groups['groups'];
 				} else {
@@ -92,14 +92,14 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 			}
 
 			$friends = array();
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 
 				// Determine friends of user.
-				$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
+				$friends = bboss_friends_get_friend_user_ids( bboss_loggedin_user_id() );
 				if ( empty( $friends ) ) {
 					$friends = array( 0 );
 				}
-				array_push( $friends, bp_loggedin_user_id() );
+				array_push( $friends, bboss_loggedin_user_id() );
 			}
 
 			$privacy = array( 'public' );
@@ -137,9 +137,9 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 				AND
 				(
 					( ac.privacy IN ( '" . implode( "','", $privacy ) . "' ) and ac.component != 'groups' ) " .
-					( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( ac.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND ac.component = 'groups' )" : '' ) .
-					( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( ac.user_id IN ( '" . implode( "','", $friends ) . "' ) AND ac.privacy = 'friends' )" : '' ) .
-					( is_user_logged_in() ? " OR ( ac.user_id = '" . bp_loggedin_user_id() . "' AND ac.privacy = 'onlyme' )" : '' ) .
+					( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( ac.item_id IN ( '" . implode( "','", array_map( 'intval', $user_groups ) ) . "' ) AND ac.component = 'groups' )" : '' ) .
+					( bboss_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( ac.user_id IN ( '" . implode( "','", array_map( 'intval', $friends ) ) . "' ) AND ac.privacy = 'friends' )" : '' ) .
+					( is_user_logged_in() ? " OR ( ac.user_id = '" . bboss_loggedin_user_id() . "' AND ac.privacy = 'onlyme' )" : '' ) .
 				')';
 
 			/**
@@ -158,7 +158,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
 			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
+			$sql                 = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- as built by this method: table name from $bp->activity, the search term bound here as %s (esc_like()'d), privacy values are the literals 'public'/'loggedin', group/friend ids int-cast, bp_loggedin_user_id() returns an int. FROM/WHERE pass through the documented bp_activity_comments_search_join_sql / bp_activity_comments_search_where_conditions filters (core listener: BP_Suspend_Activity_Comment); listeners may alter them.
 
 			return apply_filters(
 				'Bp_Search_Activity_Comment_sql',
@@ -178,7 +178,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 
 			$post_ids = implode( ',', $post_ids_arr );
 
-			if ( bp_has_activities(
+			if ( bboss_has_activities(
 				array(
 					'display_comments' => 'stream',
 					'include'          => $post_ids,
@@ -188,17 +188,17 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 				)
 			) ) {
 
-				while ( bp_activities() ) {
-					bp_the_activity();
+				while ( bboss_activities() ) {
+					bboss_the_activity();
 
 					$result = array(
-						'id'    => bp_get_activity_id(),
+						'id'    => bboss_get_activity_id(),
 						'type'  => $this->type,
 						'title' => $this->search_term,
-						'html'  => bp_search_buffer_template_part( 'loop/activity-comment', $template_type, false ),
+						'html'  => bboss_search_buffer_template_part( 'loop/activity-comment', $template_type, false ),
 					);
 
-					$this->search_results['items'][ bp_get_activity_id() ] = $result;
+					$this->search_results['items'][ bboss_get_activity_id() ] = $result;
 				}
 			}
 		}

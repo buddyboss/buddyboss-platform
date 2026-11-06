@@ -6,7 +6,7 @@
  * It determines whether to load BuddyPress integration or standard page content.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,9 +14,9 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_get_template_part( 'header/readylaunch-header' );
+bboss_get_template_part( 'header/readylaunch-header' );
 
-$readylaunch_instance = bb_load_readylaunch();
+$readylaunch_instance = bboss_load_readylaunch();
 
 if ( have_posts() ) {
 	/* Start the Loop */
@@ -27,4 +27,4 @@ if ( have_posts() ) {
 	endwhile;
 }
 
-bp_get_template_part( 'footer/readylaunch-footer' );
+bboss_get_template_part( 'footer/readylaunch-footer' );

@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Reply_Endpoint class
+ * BP REST: BBoss_REST_Reply_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,26 +13,26 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Reply_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 
 	/**
-	 * BP_REST_Forums_Endpoint Instance.
+	 * BBoss_REST_Forums_Endpoint Instance.
 	 *
-	 * @var BP_REST_Forums_Endpoint
+	 * @var BBoss_REST_Forums_Endpoint
 	 */
 	protected $forum_endpoint;
 
 	/**
-	 * BP_REST_Topics_Endpoint Instance.
+	 * BBoss_REST_Topics_Endpoint Instance.
 	 *
-	 * @var BP_REST_Topics_Endpoint
+	 * @var BBoss_REST_Topics_Endpoint
 	 */
 	protected $topic_endpoint;
 
 	/**
-	 * Rest_BBP_Walker_Reply Instance.
+	 * BBoss_Rest_BBP_Walker_Reply Instance.
 	 *
-	 * @var Rest_BBP_Walker_Reply
+	 * @var BBoss_Rest_BBP_Walker_Reply
 	 */
 	protected $bbb_walker_reply;
 
@@ -42,11 +42,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace        = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace        = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base        = 'reply';
-		$this->forum_endpoint   = new BP_REST_Forums_Endpoint();
-		$this->topic_endpoint   = new BP_REST_Topics_Endpoint();
-		$this->bbb_walker_reply = new Rest_BBP_Walker_Reply();
+		$this->forum_endpoint   = new BBoss_REST_Forums_Endpoint();
+		$this->topic_endpoint   = new BBoss_REST_Topics_Endpoint();
+		$this->bbb_walker_reply = new BBoss_Rest_BBP_Walker_Reply();
 	}
 
 	/**
@@ -81,7 +81,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -110,7 +110,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Retrieve Replies.
-	 * - from bbp_has_replies().
+	 * - from bboss_bbp_has_replies().
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -180,7 +180,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( isset( $request['thread_replies'] ) ) {
 			$thread_replies = (bool) $request['thread_replies'];
 		} else {
-			$thread_replies = (bool) ( bbp_thread_replies() );
+			$thread_replies = (bool) ( bboss_bbp_thread_replies() );
 		}
 
 		if ( is_array( $args['orderby'] ) ) {
@@ -205,10 +205,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		$args = apply_filters( 'bp_rest_reply_get_items_query_args', $args, $request );
 
-		$default_thread_replies = (bool) ( bbp_thread_replies() );
+		$default_thread_replies = (bool) ( bboss_bbp_thread_replies() );
 
 		$default = array(
-			'post_type'                => bbp_get_reply_post_type(),
+			'post_type'                => bboss_bbp_get_reply_post_type(),
 			'ignore_sticky_posts'      => true,
 			'max_num_pages'            => false,
 			'hierarchical'             => $default_thread_replies,
@@ -219,14 +219,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		// What are the default allowed statuses (based on user caps).
-		if ( bbp_get_view_all( 'edit_others_replies' ) ) {
+		if ( bboss_bbp_get_view_all( 'edit_others_replies' ) ) {
 
 			// Default view=all statuses.
-			$post_statuses = array_keys( bbp_get_topic_statuses() );
+			$post_statuses = array_keys( bboss_bbp_get_topic_statuses() );
 
 			// Add support for private status.
 			if ( current_user_can( 'read_private_replies' ) ) {
-				$post_statuses[] = bbp_get_private_status_id();
+				$post_statuses[] = bboss_bbp_get_private_status_id();
 			}
 
 			// Join post statuses together.
@@ -238,7 +238,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		// Parse arguments against default values.
-		$r = bbp_parse_args( $args, $default, 'has_replies' );
+		$r = bboss_bbp_parse_args( $args, $default, 'has_replies' );
 
 		$replies_per_page = $r['posts_per_page'];
 		$page_number      = $r['paged'];
@@ -261,11 +261,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$r['posts_per_page'] = $replies_per_page;
 
 			// Parse arguments.
-			$walk_arg = bbp_parse_args(
+			$walk_arg = bboss_bbp_parse_args(
 				array(),
 				array(
 					'walker'       => '',
-					'max_depth'    => bbp_thread_replies_depth(),
+					'max_depth'    => bboss_bbp_thread_replies_depth(),
 					'callback'     => null,
 					'end_callback' => null,
 					'page'         => $r['page'],
@@ -287,7 +287,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$replies_query = new WP_Query( $r );
 		}
 
-		if ( false === $thread_replies && bbp_thread_replies() ) {
+		if ( false === $thread_replies && bboss_bbp_thread_replies() ) {
 			if ( ! empty( $replies_query->posts ) ) {
 				foreach ( $replies_query->posts as $k => $v ) {
 					$replies_query->posts[ $k ]->reply_to = (int) get_post_meta( $v->ID, '_bbp_reply_to', true );
@@ -297,11 +297,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$r['page'] = 1;
 
 			// Parse arguments.
-			$walk_arg = bbp_parse_args(
+			$walk_arg = bboss_bbp_parse_args(
 				array(),
 				array(
 					'walker'       => '',
-					'max_depth'    => bbp_thread_replies_depth(),
+					'max_depth'    => bboss_bbp_thread_replies_depth(),
 					'callback'     => null,
 					'end_callback' => null,
 					'page'         => $r['page'],
@@ -329,7 +329,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, $replies_query->found_posts, $replies_per_page );
+		$response = bboss_rest_response_add_total_headers( $response, $replies_query->found_posts, $replies_per_page );
 
 		/**
 		 * Fires after a list of replies is fetched via the REST API.
@@ -356,10 +356,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -395,31 +395,31 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$reply = bbp_get_reply( $request['id'] );
+		$reply = bboss_bbp_get_reply( $request['id'] );
 
-		if ( bbp_thread_replies() ) {
+		if ( bboss_bbp_thread_replies() ) {
 
 			$reply_args = array(
-				'post_type'      => bbp_get_reply_post_type(),
+				'post_type'      => bboss_bbp_get_reply_post_type(),
 				'post_parent'    => $reply->post_parent,
 				'paged'          => 1,
 				'posts_per_page' => - 1,
 			);
 
 			// get all post status for moderator and admin.
-			if ( bbp_get_view_all() ) {
+			if ( bboss_bbp_get_view_all() ) {
 
 				// Default view=all statuses.
 				$post_statuses = array(
-					bbp_get_public_status_id(),
-					bbp_get_closed_status_id(),
-					bbp_get_spam_status_id(),
-					bbp_get_trash_status_id(),
+					bboss_bbp_get_public_status_id(),
+					bboss_bbp_get_closed_status_id(),
+					bboss_bbp_get_spam_status_id(),
+					bboss_bbp_get_trash_status_id(),
 				);
 
 				// Add support for private status.
 				if ( current_user_can( 'read_private_replies' ) ) {
-					$post_statuses[] = bbp_get_private_status_id();
+					$post_statuses[] = bboss_bbp_get_private_status_id();
 				}
 
 				// Join post statuses together.
@@ -437,11 +437,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 
 			// Parse arguments.
-			$walk_arg = bbp_parse_args(
+			$walk_arg = bboss_bbp_parse_args(
 				array(),
 				array(
 					'walker'       => '',
-					'max_depth'    => bbp_thread_replies_depth(),
+					'max_depth'    => bboss_bbp_thread_replies_depth(),
 					'callback'     => null,
 					'end_callback' => null,
 					'page'         => 1,
@@ -491,22 +491,22 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
 
-		$reply = bbp_get_reply( $request->get_param( 'id' ) );
+		$reply = bboss_bbp_get_reply( $request->get_param( 'id' ) );
 
 		if ( true === $retval && empty( $reply->ID ) ) {
 			$retval = new WP_Error(
 				'bp_rest_reply_invalid_id',
-				__( 'Invalid reply ID.', 'buddyboss' ),
+				__( 'Invalid reply ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -516,7 +516,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ( ! isset( $reply->post_type ) || 'reply' !== $reply->post_type ) ) {
 			$retval = new WP_Error(
 				'bp_rest_reply_invalid_id',
-				__( 'Invalid reply ID.', 'buddyboss' ),
+				__( 'Invalid reply ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -528,7 +528,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! current_user_can( $post_type->cap->read_post, $reply->ID ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to access this reply.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to access this reply.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -606,7 +606,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 		/** Reply Author */
 		// User is anonymous.
-		if ( bbp_is_anonymous() ) {
+		if ( bboss_bbp_is_anonymous() ) {
 
 			$anonymous_args = array(
 				'bbp_anonymous_name'    => ! empty( $request['anonymous_name'] ) ? sanitize_text_field( $request['anonymous_name'] ) : '',
@@ -615,11 +615,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 
 			// Filter anonymous data (variable is used later).
-			$anonymous_data = bbp_filter_anonymous_post_data( $anonymous_args );
+			$anonymous_data = bboss_bbp_filter_anonymous_post_data( $anonymous_args );
 
 			// Anonymous data checks out, so set cookies, etc...
 			if ( ! empty( $anonymous_data ) && is_array( $anonymous_data ) ) {
-				bbp_set_current_anonymous_user_data( $anonymous_data );
+				bboss_bbp_set_current_anonymous_user_data( $anonymous_data );
 			}
 
 			// User is logged in.
@@ -629,7 +629,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! current_user_can( 'publish_replies' ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_permission',
-					__( 'Sorry, You do not have permission to reply.', 'buddyboss' ),
+					__( 'Sorry, You do not have permission to reply.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -637,7 +637,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 
 			// Reply author is current user.
-			$reply_author = bbp_get_current_user_id();
+			$reply_author = bboss_bbp_get_current_user_id();
 		}
 
 		/** Topic ID */
@@ -645,7 +645,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( empty( $reply->bbp_topic_id ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_topic_id',
-				__( 'Sorry, Discussion ID is missing.', 'buddyboss' ),
+				__( 'Sorry, Discussion ID is missing.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -655,7 +655,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		} elseif ( ! is_numeric( $reply->bbp_topic_id ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_topic_id',
-				__( 'Sorry, Discussion ID must be a number.', 'buddyboss' ),
+				__( 'Sorry, Discussion ID must be a number.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -669,17 +669,17 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( 0 > $posted_topic_id ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_topic_id',
-					__( 'Sorry, Discussion ID cannot be a negative number.', 'buddyboss' ),
+					__( 'Sorry, Discussion ID cannot be a negative number.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
 				);
 
 				// Topic does not exist.
-			} elseif ( ! bbp_get_topic( $posted_topic_id ) ) {
+			} elseif ( ! bboss_bbp_get_topic( $posted_topic_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_topic_id',
-					__( 'Sorry, Discussion does not exist.', 'buddyboss' ),
+					__( 'Sorry, Discussion does not exist.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -694,7 +694,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		/** Forum ID */
 		// Try to use the forum id of the topic.
 		if ( ! isset( $reply->bbp_forum_id ) && ! empty( $topic_id ) ) {
-			$forum_id = bbp_get_topic_forum_id( $topic_id );
+			$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 
 			// Error check the POST'ed forum id.
 		} elseif ( isset( $reply->bbp_forum_id ) ) {
@@ -703,7 +703,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( empty( $reply->bbp_forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_forum_id',
-					__( 'Sorry, Forum ID is missing.', 'buddyboss' ),
+					__( 'Sorry, Forum ID is missing.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -713,7 +713,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			} elseif ( ! is_numeric( $reply->bbp_forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_forum_id',
-					__( 'Sorry, Forum ID must be a number.', 'buddyboss' ),
+					__( 'Sorry, Forum ID must be a number.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -729,7 +729,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				if ( 0 === $posted_forum_id ) {
 					return new WP_Error(
 						'bp_rest_bbp_topic_forum_id',
-						__( 'Sorry, Forum ID is missing.', 'buddyboss' ),
+						__( 'Sorry, Forum ID is missing.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -739,17 +739,17 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				} elseif ( 0 > $posted_forum_id ) {
 					return new WP_Error(
 						'bp_rest_bbp_topic_forum_id',
-						__( 'Sorry, Forum ID cannot be a negative number.', 'buddyboss' ),
+						__( 'Sorry, Forum ID cannot be a negative number.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
 					);
 
 					// Forum does not exist.
-				} elseif ( ! bbp_get_forum( $posted_forum_id ) ) {
+				} elseif ( ! bboss_bbp_get_forum( $posted_forum_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_topic_forum_id',
-						__( 'Sorry, Forum does not exist.', 'buddyboss' ),
+						__( 'Sorry, Forum does not exist.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -766,10 +766,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $forum_id ) ) {
 
 			// Forum is a category.
-			if ( bbp_is_forum_category( $forum_id ) ) {
+			if ( bboss_bbp_is_forum_category( $forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_new_reply_forum_category',
-					__( 'This forum is a category. No replies can be created in this forum.', 'buddyboss' ),
+					__( 'This forum is a category. No replies can be created in this forum.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -779,10 +779,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			} else {
 
 				// Forum is closed and user cannot access.
-				if ( bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
+				if ( bboss_bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_new_reply_forum_closed',
-						__( 'This forum has been closed to new replies.', 'buddyboss' ),
+						__( 'This forum has been closed to new replies.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -795,15 +795,15 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				 * We need to check manually because bbpress updating that caps only on group forum page and
 				 * in API those conditional tag will not work.
 				 */
-				if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
-					$group_ids = bb_get_child_forum_group_ids( $forum_id );
+				if ( function_exists( 'bboss_get_child_forum_group_ids' ) ) {
+					$group_ids = bboss_get_child_forum_group_ids( $forum_id );
 				} else {
-					$group_ids = bbp_get_forum_group_ids( $forum_id );
+					$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 				}
 				if ( ! empty( $group_ids ) ) {
 					$is_member = false;
 					foreach ( $group_ids as $group_id ) {
-						if ( groups_is_user_member( get_current_user_id(), $group_id ) ) {
+						if ( bboss_groups_is_user_member( get_current_user_id(), $group_id ) ) {
 							$is_member = true;
 							break;
 						}
@@ -811,14 +811,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				}
 
 				// Forum is private and user cannot access.
-				if ( bbp_is_forum_private( $forum_id ) ) {
+				if ( bboss_bbp_is_forum_private( $forum_id ) ) {
 					if (
 						( empty( $group_ids ) && ! current_user_can( 'read_private_forums' ) )
 						|| ( ! empty( $group_ids ) && ! $is_member )
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_new_reply_forum_private',
-							__( 'This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss' ),
+							__( 'This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -826,14 +826,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					}
 
 					// Forum is hidden and user cannot access.
-				} elseif ( bbp_is_forum_hidden( $forum_id ) ) {
+				} elseif ( bboss_bbp_is_forum_hidden( $forum_id ) ) {
 					if (
 						( empty( $group_ids ) && ! current_user_can( 'read_hidden_forums' ) )
 						|| ( ! empty( $group_ids ) && ! $is_member )
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_new_reply_forum_hidden',
-							__( 'This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss' ),
+							__( 'This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -846,7 +846,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		/** Unfiltered HTML */
 		// Remove kses filters from title and content for capable users and if the nonce is verified.
 		remove_filter( 'bbp_new_reply_pre_title', 'wp_filter_kses' );
-		remove_filter( 'bbp_new_reply_pre_content', 'bbp_encode_bad', 10 );
+		remove_filter( 'bbp_new_reply_pre_content', 'bboss_bbp_encode_bad', 10 );
 
 		/** Reply Title */
 		if ( ! empty( $reply->bbp_reply_title ) ) {
@@ -875,20 +875,20 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					! empty( $request['bbp_media_gif']['mp4'] )
 				) ||
 				(
-					function_exists( 'bp_is_forums_video_support_enabled' )
-					&& false !== bp_is_forums_video_support_enabled()
+					function_exists( 'bboss_is_forums_video_support_enabled' )
+					&& false !== bboss_is_forums_video_support_enabled()
 					&& ! empty( $request['bbp_videos'] )
 				) ||
 				(
-					function_exists( 'bbp_use_autoembed' )
-					&& false !== bbp_use_autoembed()
+					function_exists( 'bboss_bbp_use_autoembed' )
+					&& false !== bboss_bbp_use_autoembed()
 					&& ! empty( $request['link_url'] )
 				)
 			)
 		) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_content',
-				__( 'Sorry, Your reply cannot be empty.', 'buddyboss' ),
+				__( 'Sorry, Your reply cannot be empty.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -896,16 +896,16 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( empty( $forum_id ) && ! empty( $topic_id ) ) {
-			$forum_id = bbp_get_topic_forum_id( $topic_id );
+			$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 		}
 
 		$reply_forum = ! empty( $forum_id ) ? $forum_id : 0;
-		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
-			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $reply_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bboss_user_has_access_upload_media' ) ) {
+			$can_send_media = bboss_user_has_access_upload_media( 0, bboss_loggedin_user_id(), $reply_forum, 0, 'forum' );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the media.', 'buddyboss' ),
+					__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -913,12 +913,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
-			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $reply_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bboss_user_has_access_upload_document' ) ) {
+			$can_send_document = bboss_user_has_access_upload_document( 0, bboss_loggedin_user_id(), $reply_forum, 0, 'forum' );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -926,12 +926,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
-			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $reply_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_videos'] ) && function_exists( 'bboss_user_has_access_upload_video' ) ) {
+			$can_send_video = bboss_user_has_access_upload_video( 0, bboss_loggedin_user_id(), $reply_forum, 0, 'forum' );
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the video.', 'buddyboss' ),
+					__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -939,12 +939,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $reply_forum, 0, 'forum' );
+		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bboss_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bboss_user_has_access_upload_gif( 0, bboss_loggedin_user_id(), $reply_forum, 0, 'forum' );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+					__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -956,10 +956,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
 		/** Reply Flooding */
-		if ( ! bbp_check_for_flood( $anonymous_data, $reply_author ) ) {
+		if ( ! bboss_bbp_check_for_flood( $anonymous_data, $reply_author ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_flood',
-				__( 'Slow down; you move too fast.', 'buddyboss' ),
+				__( 'Slow down; you move too fast.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -967,9 +967,9 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		/** Reply Duplicate */
-		if ( ! bbp_check_for_duplicate(
+		if ( ! bboss_bbp_check_for_duplicate(
 			array(
-				'post_type'      => bbp_get_reply_post_type(),
+				'post_type'      => bboss_bbp_get_reply_post_type(),
 				'post_author'    => $reply_author,
 				'post_content'   => $reply_content,
 				'post_parent'    => $topic_id,
@@ -978,7 +978,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_duplicate',
-				__( 'Duplicate reply detected; it looks as though you\'ve already said that!', 'buddyboss' ),
+				__( 'Duplicate reply detected; it looks as though you\'ve already said that!', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -986,10 +986,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		/** Reply Blacklist */
-		if ( ! bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
+		if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_blacklist',
-				__( 'Sorry, Your reply cannot be created at this time.', 'buddyboss' ),
+				__( 'Sorry, Your reply cannot be created at this time.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -998,26 +998,26 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 		/** Reply Status */
 		// Maybe put into moderation.
-		if ( ! bbp_check_for_moderation( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
-			$reply_status = bbp_get_pending_status_id();
+		if ( ! bboss_bbp_check_for_moderation( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
+			$reply_status = bboss_bbp_get_pending_status_id();
 
 			// Default.
 		} else {
-			$reply_status = bbp_get_public_status_id();
+			$reply_status = bboss_bbp_get_public_status_id();
 		}
 
 		/** Reply To */
 		// Handle Reply To of the reply; $_REQUEST for non-JS submissions.
 		if ( isset( $reply->bbp_reply_to ) ) {
-			$reply_to = bbp_validate_reply_to( $reply->bbp_reply_to );
+			$reply_to = bboss_bbp_validate_reply_to( $reply->bbp_reply_to );
 		}
 
 		/** Topic Closed */
 		// If topic is closed, moderators can still reply.
-		if ( bbp_is_topic_closed( $topic_id ) && ! current_user_can( 'moderate' ) ) {
+		if ( bboss_bbp_is_topic_closed( $topic_id ) && ! current_user_can( 'moderate' ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_topic_closed',
-				__( 'Sorry, Discussion is closed.', 'buddyboss' ),
+				__( 'Sorry, Discussion is closed.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1026,7 +1026,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 		/** Topic Tags */
 		// Either replace terms.
-		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $reply->bbp_topic_tags ) ) {
+		if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $reply->bbp_topic_tags ) ) {
 			$terms = esc_attr( wp_strip_all_tags( $reply->bbp_topic_tags ) );
 
 			// ...or remove them.
@@ -1035,14 +1035,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 			// Existing terms.
 		} else {
-			$terms = bbp_get_topic_tag_names( $topic_id );
+			$terms = bboss_bbp_get_topic_tag_names( $topic_id );
 		}
 
 		/** Additional Actions (Before Save) */
 		do_action( 'bbp_new_reply_pre_extras', $topic_id, $forum_id );
 
 		// Bail if errors.
-		if ( bbp_has_errors() ) {
+		if ( bboss_bbp_has_errors() ) {
 			return;
 		}
 
@@ -1058,9 +1058,9 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				'post_content'   => $reply_content,
 				'post_status'    => $reply_status,
 				'post_parent'    => $topic_id,
-				'post_type'      => bbp_get_reply_post_type(),
+				'post_type'      => bboss_bbp_get_reply_post_type(),
 				'comment_status' => 'closed',
-				'menu_order'     => bbp_get_topic_reply_count( $topic_id, false ) + 1,
+				'menu_order'     => bboss_bbp_get_topic_reply_count( $topic_id, false ) + 1,
 			)
 		);
 
@@ -1070,8 +1070,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( empty( $reply_id ) || is_wp_error( $reply_id ) ) {
 			$append_error = (
 				( is_wp_error( $reply_id ) && $reply_id->get_error_message() )
-				? __( 'The following problem(s) have been found with your reply: ', 'buddyboss' ) . $reply_id->get_error_message()
-				: __( 'We are facing a problem to creating a reply.', 'buddyboss' )
+				? __( 'The following problem(s) have been found with your reply: ', 'buddyboss-platform' ) . $reply_id->get_error_message()
+				: __( 'We are facing a problem to creating a reply.', 'buddyboss-platform' )
 			);
 
 			return new WP_Error(
@@ -1088,20 +1088,20 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$terms = apply_filters( 'bbp_new_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
 		// Insert terms.
-		if ( function_exists( 'bb_add_topic_tags' ) ) {
+		if ( function_exists( 'bboss_add_topic_tags' ) ) {
 			if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
 				$terms = explode( ',', $terms );
 			} else {
 				$terms = (array) $terms;
 			}
-			$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id() );
+			$terms = bboss_add_topic_tags( $terms, $topic_id, bboss_bbp_get_topic_tag_tax_id() );
 		}
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_tags',
-				__( 'There was a problem adding the tags to the topic.', 'buddyboss' ),
+				__( 'There was a problem adding the tags to the topic.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1111,13 +1111,13 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		/** Trash Check */
 		// If this reply starts as trash, add it to pre_trashed_replies.
 		// for the topic, so it is properly restored.
-		if ( bbp_is_topic_trash( $topic_id ) || ( bbp_get_trash_status_id() === $reply_data['post_status'] ) ) {
+		if ( bboss_bbp_is_topic_trash( $topic_id ) || ( bboss_bbp_get_trash_status_id() === $reply_data['post_status'] ) ) {
 
 			// Trash the reply.
 			wp_trash_post( $reply_id );
 
 			// Only add to pre-trashed array if topic is trashed.
-			if ( bbp_is_topic_trash( $topic_id ) ) {
+			if ( bboss_bbp_is_topic_trash( $topic_id ) ) {
 
 				// Get pre_trashed_replies for topic.
 				$pre_trashed_replies = (array) get_post_meta( $topic_id, '_bbp_pre_trashed_replies', true );
@@ -1131,11 +1131,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 			/** Spam Check */
 			// If reply or topic are spam, officially spam this reply.
-		} elseif ( bbp_is_topic_spam( $topic_id ) || ( bbp_get_spam_status_id() === $reply_data['post_status'] ) ) {
-			add_post_meta( $reply_id, '_bbp_spam_meta_status', bbp_get_public_status_id() );
+		} elseif ( bboss_bbp_is_topic_spam( $topic_id ) || ( bboss_bbp_get_spam_status_id() === $reply_data['post_status'] ) ) {
+			add_post_meta( $reply_id, '_bbp_spam_meta_status', bboss_bbp_get_public_status_id() );
 
 			// Only add to pre-spammed array if topic is spam.
-			if ( bbp_is_topic_spam( $topic_id ) ) {
+			if ( bboss_bbp_is_topic_spam( $topic_id ) ) {
 
 				// Get pre_spammed_replies for topic.
 				$pre_spammed_replies = (array) get_post_meta( $topic_id, '_bbp_pre_spammed_replies', true );
@@ -1152,29 +1152,29 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * Removed notification sent and called additionally.
 		 * Due to we have moved all filters on title and content.
 		 */
-		remove_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 9999, 5 );
-		remove_action( 'bbp_new_reply', 'bbp_buddypress_add_notification', 9999, 7 );
+		remove_action( 'bbp_new_reply', 'bboss_bbp_notify_topic_subscribers', 9999, 5 );
+		remove_action( 'bbp_new_reply', 'bboss_bbp_buddypress_add_notification', 9999, 7 );
 
 		/** Update counts, etc... */
 		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
 
-		if ( ! empty( $topic_id ) && 0 === $reply_to && function_exists( 'bbp_update_total_parent_reply' ) ) {
+		if ( ! empty( $topic_id ) && 0 === $reply_to && function_exists( 'bboss_bbp_update_total_parent_reply' ) ) {
 			// Update total parent.
-			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, false ) + 1, 'add' );
+			bboss_bbp_update_total_parent_reply( $reply_id, $topic_id, bboss_bbp_get_topic_reply_count( $topic_id, false ) + 1, 'add' );
 		}
 
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_new_reply_post_extras', $reply_id );
 
-		$reply         = bbp_get_reply( $reply_id );
+		$reply         = bboss_bbp_get_reply( $reply_id );
 		$fields_update = $this->update_additional_fields_for_object( $reply, $request );
 
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
 
-		if ( function_exists( 'bbp_buddypress_add_notification' ) ) {
-			bbp_buddypress_add_notification( $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
+		if ( function_exists( 'bboss_bbp_buddypress_add_notification' ) ) {
+			bboss_bbp_buddypress_add_notification( $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
 		}
 
 		/**
@@ -1195,11 +1195,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 		$response = $this->get_item( $object );
 
-		if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
+		if ( function_exists( 'bboss_bbp_notify_topic_subscribers' ) ) {
 			/**
 			 * Sends notification emails for new replies to subscribed topics.
 			 */
-			bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author );
+			bboss_bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author );
 		}
 
 		return $response;
@@ -1216,13 +1216,13 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create a reply.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to create a reply.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
 		);
 
-		if ( is_user_logged_in() || bbp_allow_anonymous() ) {
+		if ( is_user_logged_in() || bboss_bbp_allow_anonymous() ) {
 			$retval = true;
 		}
 
@@ -1283,7 +1283,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( empty( $reply_new->bbp_reply_id ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_reply_id',
-				__( 'Reply ID not found.', 'buddyboss' ),
+				__( 'Reply ID not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1292,14 +1292,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			// Reply id was passed.
 		} elseif ( is_numeric( $reply_new->bbp_reply_id ) ) {
 			$reply_id = (int) $reply_new->bbp_reply_id;
-			$reply    = bbp_get_reply( $reply_id );
+			$reply    = bboss_bbp_get_reply( $reply_id );
 		}
 
 		// Reply does not exist.
 		if ( empty( $reply ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_reply_not_found',
-				__( 'The reply you want to edit was not found.', 'buddyboss' ),
+				__( 'The reply you want to edit was not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1309,13 +1309,13 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		} else {
 
 			// Check users ability to create new reply.
-			if ( ! bbp_is_reply_anonymous( $reply_id ) ) {
+			if ( ! bboss_bbp_is_reply_anonymous( $reply_id ) ) {
 
 				// User cannot edit this reply.
 				if ( ! current_user_can( 'edit_reply', $reply_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_edit_reply_permissions',
-						__( 'You do not have permission to edit that reply.', 'buddyboss' ),
+						__( 'You do not have permission to edit that reply.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -1323,7 +1323,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				}
 
 				// Set reply author.
-				$reply_author = bbp_get_reply_author_id( $reply_id );
+				$reply_author = bboss_bbp_get_reply_author_id( $reply_id );
 
 				// It is an anonymous post.
 			} else {
@@ -1335,7 +1335,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				);
 
 				// Filter anonymous data.
-				$anonymous_data = bbp_filter_anonymous_post_data( $anonymous_args );
+				$anonymous_data = bboss_bbp_filter_anonymous_post_data( $anonymous_args );
 			}
 		}
 
@@ -1362,22 +1362,22 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 		// Remove kses filters from title and content for capable users.
 		remove_filter( 'bbp_new_reply_pre_title', 'wp_filter_kses' );
-		remove_filter( 'bbp_new_reply_pre_content', 'bbp_encode_bad', 10 );
+		remove_filter( 'bbp_new_reply_pre_content', 'bboss_bbp_encode_bad', 10 );
 
 		/** Reply Topic */
-		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 
 		/** Topic Forum */
-		$forum_id = bbp_get_topic_forum_id( $topic_id );
+		$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 
 		// Forum exists.
-		if ( ! empty( $forum_id ) && ( bbp_get_reply_forum_id( $reply_id ) !== $forum_id ) ) {
+		if ( ! empty( $forum_id ) && ( bboss_bbp_get_reply_forum_id( $reply_id ) !== $forum_id ) ) {
 
 			// Forum is a category.
-			if ( bbp_is_forum_category( $forum_id ) ) {
+			if ( bboss_bbp_is_forum_category( $forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_edit_reply_forum_category',
-					__( 'This forum is a category. No replies can be created in this forum.', 'buddyboss' ),
+					__( 'This forum is a category. No replies can be created in this forum.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1387,10 +1387,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			} else {
 
 				// Forum is closed and user cannot access.
-				if ( bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
+				if ( bboss_bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_edit_reply_forum_closed',
-						__( 'This forum has been closed to new replies.', 'buddyboss' ),
+						__( 'This forum has been closed to new replies.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -1403,15 +1403,15 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				 * We need to check manually because bbpress updating that caps only on group forum page and
 				 * in API those conditional tag will not work.
 				 */
-				if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
-					$group_ids = bb_get_child_forum_group_ids( $forum_id );
+				if ( function_exists( 'bboss_get_child_forum_group_ids' ) ) {
+					$group_ids = bboss_get_child_forum_group_ids( $forum_id );
 				} else {
-					$group_ids = bbp_get_forum_group_ids( $forum_id );
+					$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 				}
 				if ( ! empty( $group_ids ) ) {
 					$is_member = false;
 					foreach ( $group_ids as $group_id ) {
-						if ( groups_is_user_member( get_current_user_id(), $group_id ) ) {
+						if ( bboss_groups_is_user_member( get_current_user_id(), $group_id ) ) {
 							$is_member = true;
 							break;
 						}
@@ -1419,14 +1419,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				}
 
 				// Forum is private and user cannot access.
-				if ( bbp_is_forum_private( $forum_id ) ) {
+				if ( bboss_bbp_is_forum_private( $forum_id ) ) {
 					if (
 						( empty( $group_ids ) && ! current_user_can( 'read_private_forums' ) )
 						|| ( ! empty( $group_ids ) && ! $is_member )
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_edit_reply_forum_private',
-							__( 'This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss' ),
+							__( 'This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)
@@ -1434,14 +1434,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					}
 
 					// Forum is hidden and user cannot access.
-				} elseif ( bbp_is_forum_hidden( $forum_id ) ) {
+				} elseif ( bboss_bbp_is_forum_hidden( $forum_id ) ) {
 					if (
 						( empty( $group_ids ) && ! current_user_can( 'read_hidden_forums' ) )
 						|| ( ! empty( $group_ids ) && ! $is_member )
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_edit_reply_forum_hidden',
-							__( 'This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss' ),
+							__( 'This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)
@@ -1477,20 +1477,20 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					! empty( $request['bbp_media_gif']['url'] ) &&
 					! empty( $request['bbp_media_gif']['mp4'] )
 				) || (
-					function_exists( 'bp_is_forums_video_support_enabled' )
-					&& false !== bp_is_forums_video_support_enabled()
+					function_exists( 'bboss_is_forums_video_support_enabled' )
+					&& false !== bboss_is_forums_video_support_enabled()
 					&& ! empty( $request['bbp_videos'] )
 				) ||
 				(
-					function_exists( 'bbp_use_autoembed' )
-					&& false !== bbp_use_autoembed()
+					function_exists( 'bboss_bbp_use_autoembed' )
+					&& false !== bboss_bbp_use_autoembed()
 					&& ! empty( $request['link_url'] )
 				)
 			)
 		) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_reply_content',
-				__( 'Your reply cannot be empty.', 'buddyboss' ),
+				__( 'Your reply cannot be empty.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1498,16 +1498,16 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( empty( $forum_id ) && ! empty( $topic_id ) ) {
-			$forum_id = bbp_get_topic_forum_id( $topic_id );
+			$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 		}
 
 		$reply_forum = ! empty( $forum_id ) ? $forum_id : 0;
-		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
-			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $reply_forum, 0 );
+		if ( ! empty( $request['bbp_media'] ) && function_exists( 'bboss_user_has_access_upload_media' ) ) {
+			$can_send_media = bboss_user_has_access_upload_media( 0, bboss_loggedin_user_id(), $reply_forum, 0 );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the media.', 'buddyboss' ),
+					__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1515,12 +1515,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
-			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $reply_forum, 0 );
+		if ( ! empty( $request['bbp_documents'] ) && function_exists( 'bboss_user_has_access_upload_document' ) ) {
+			$can_send_document = bboss_user_has_access_upload_document( 0, bboss_loggedin_user_id(), $reply_forum, 0 );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1528,12 +1528,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
-			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $reply_forum, 0 );
+		if ( ! empty( $request['bbp_videos'] ) && function_exists( 'bboss_user_has_access_upload_video' ) ) {
+			$can_send_video = bboss_user_has_access_upload_video( 0, bboss_loggedin_user_id(), $reply_forum, 0 );
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the video.', 'buddyboss' ),
+					__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1541,12 +1541,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $reply_forum, 0 );
+		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bboss_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bboss_user_has_access_upload_gif( 0, bboss_loggedin_user_id(), $reply_forum, 0 );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+					__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1555,10 +1555,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		/** Reply Blacklist */
-		if ( ! bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
+		if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_blacklist',
-				__( 'Sorry, Your reply cannot be edited at this time.', 'buddyboss' ),
+				__( 'Sorry, Your reply cannot be edited at this time.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1567,11 +1567,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 		/** Reply Status */
 		// Maybe put into moderation.
-		if ( ! bbp_check_for_moderation( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
+		if ( ! bboss_bbp_check_for_moderation( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
 
 			// Set post status to pending if public.
-			if ( bbp_get_public_status_id() === $reply->post_status ) {
-				$reply_status = bbp_get_pending_status_id();
+			if ( bboss_bbp_get_public_status_id() === $reply->post_status ) {
+				$reply_status = bboss_bbp_get_pending_status_id();
 			}
 
 			// Use existing post_status.
@@ -1582,12 +1582,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		/** Reply To */
 		// Handle Reply To of the reply; $_REQUEST for non-JS submissions.
 		if ( isset( $reply_new->bbp_reply_to ) ) {
-			$reply_to = bbp_validate_reply_to( $reply_new->bbp_reply_to );
+			$reply_to = bboss_bbp_validate_reply_to( $reply_new->bbp_reply_to );
 		}
 
 		/** Topic Tags */
 		// Either replace terms.
-		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $reply_new->bbp_topic_tags ) ) {
+		if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $reply_new->bbp_topic_tags ) ) {
 			$terms = esc_attr( wp_strip_all_tags( $reply_new->bbp_topic_tags ) );
 
 			// ...or remove them.
@@ -1596,7 +1596,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 			// Existing terms.
 		} else {
-			$terms = bbp_get_topic_tag_names( $topic_id );
+			$terms = bboss_bbp_get_topic_tag_names( $topic_id );
 		}
 
 		/** Additional Actions (Before Save) */
@@ -1614,18 +1614,18 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				'post_status'  => $reply_status,
 				'post_parent'  => $topic_id,
 				'post_author'  => $reply_author,
-				'post_type'    => bbp_get_reply_post_type(),
+				'post_type'    => bboss_bbp_get_reply_post_type(),
 			)
 		);
 
 		// Toggle revisions to avoid duplicates.
-		if ( post_type_supports( bbp_get_reply_post_type(), 'revisions' ) ) {
+		if ( post_type_supports( bboss_bbp_get_reply_post_type(), 'revisions' ) ) {
 			$revisions_removed = true;
-			remove_post_type_support( bbp_get_reply_post_type(), 'revisions' );
+			remove_post_type_support( bboss_bbp_get_reply_post_type(), 'revisions' );
 		}
 
-		if ( function_exists( 'bp_media_forums_new_post_media_save' ) ) {
-			remove_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
+		if ( function_exists( 'bboss_media_forums_new_post_media_save' ) ) {
+			remove_action( 'edit_post', 'bboss_media_forums_new_post_media_save', 999 );
 		}
 
 		if ( function_exists( 'bp_document_forums_new_post_document_save' ) ) {
@@ -1635,8 +1635,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		// Insert topic.
 		$reply_id = wp_update_post( $reply_data );
 
-		if ( function_exists( 'bp_media_forums_new_post_media_save' ) ) {
-			add_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
+		if ( function_exists( 'bboss_media_forums_new_post_media_save' ) ) {
+			add_action( 'edit_post', 'bboss_media_forums_new_post_media_save', 999 );
 		}
 
 		if ( function_exists( 'bp_document_forums_new_post_document_save' ) ) {
@@ -1646,7 +1646,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		// Toggle revisions back on.
 		if ( true === $revisions_removed ) {
 			$revisions_removed = false;
-			add_post_type_support( bbp_get_reply_post_type(), 'revisions' );
+			add_post_type_support( bboss_bbp_get_reply_post_type(), 'revisions' );
 		}
 
 		/** Topic Tags */
@@ -1654,20 +1654,20 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$terms = apply_filters( 'bbp_edit_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
 		// Insert terms.
-		if ( function_exists( 'bb_add_topic_tags' ) ) {
+		if ( function_exists( 'bboss_add_topic_tags' ) ) {
 			if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
 				$terms = explode( ',', $terms );
 			} else {
 				$terms = (array) $terms;
 			}
-			$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
+			$terms = bboss_add_topic_tags( $terms, $topic_id, bboss_bbp_get_topic_tag_tax_id(), bboss_bbp_get_topic_tag_names( $topic_id ) );
 		}
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_tags',
-				__( 'There was a problem adding the tags to the topic.', 'buddyboss' ),
+				__( 'There was a problem adding the tags to the topic.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1677,8 +1677,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( empty( $reply_id ) || is_wp_error( $reply_id ) ) {
 			$append_error = (
 				( is_wp_error( $reply_id ) && $reply_id->get_error_message() )
-				? __( 'The following problem(s) have been found with your reply: ', 'buddyboss' ) . $reply_id->get_error_message() . __( 'Please try again.', 'buddyboss' )
-				: __( 'We are facing a problem to updating a reply.', 'buddyboss' )
+				? __( 'The following problem(s) have been found with your reply: ', 'buddyboss-platform' ) . $reply_id->get_error_message() . __( 'Please try again.', 'buddyboss-platform' )
+				: __( 'We are facing a problem to updating a reply.', 'buddyboss-platform' )
 			);
 
 			return new WP_Error(
@@ -1695,7 +1695,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 		/** Revisions */
 		// Update locks.
-		update_post_meta( $reply_id, '_edit_last', bbp_get_current_user_id() );
+		update_post_meta( $reply_id, '_edit_last', bboss_bbp_get_current_user_id() );
 		delete_post_meta( $reply_id, '_edit_lock' );
 
 		// Revision Reason.
@@ -1707,11 +1707,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $reply_new->bbp_log_reply_edit ) && ( true === $reply_new->bbp_log_reply_edit ) ) {
 			$revision_id = wp_save_post_revision( $reply_id );
 			if ( ! empty( $revision_id ) ) {
-				bbp_update_reply_revision_log(
+				bboss_bbp_update_reply_revision_log(
 					array(
 						'reply_id'    => $reply_id,
 						'revision_id' => $revision_id,
-						'author_id'   => bbp_get_current_user_id(),
+						'author_id'   => bboss_bbp_get_current_user_id(),
 						'reason'      => $reply_edit_reason,
 					)
 				);
@@ -1721,7 +1721,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		/** Additional Actions (After Save) */
 		do_action( 'bbp_edit_reply_post_extras', $reply_id );
 
-		$reply         = bbp_get_reply( $reply_id );
+		$reply         = bboss_bbp_get_reply( $reply_id );
 		$reply->edit   = true;
 		$fields_update = $this->update_additional_fields_for_object( $reply, $request );
 
@@ -1758,19 +1758,19 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create a reply.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to create a reply.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
 		);
 
-		if ( is_user_logged_in() || bbp_allow_anonymous() ) {
+		if ( is_user_logged_in() || bboss_bbp_allow_anonymous() ) {
 			$retval = $this->get_item_permissions_check( $request );
-			$reply  = bbp_get_reply( $request->get_param( 'id' ) );
-			if ( bbp_get_user_id( 0, true, true ) !== $reply->post_author && ! current_user_can( 'edit_reply', $request['id'] ) ) {
+			$reply  = bboss_bbp_get_reply( $request->get_param( 'id' ) );
+			if ( bboss_bbp_get_user_id( 0, true, true ) !== $reply->post_author && ! current_user_can( 'edit_reply', $request['id'] ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this reply.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to update this reply.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1807,17 +1807,17 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 
-		$reply    = bbp_get_reply( $request['id'] );
-		$topic_id = bbp_get_reply_topic_id( $reply->ID );
+		$reply    = bboss_bbp_get_reply( $request['id'] );
+		$topic_id = bboss_bbp_get_reply_topic_id( $reply->ID );
 
 		$previous = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $reply, $request )
 		);
 
 		$success = wp_delete_post( $reply->ID );
-		if ( false !== $success && ! is_wp_error( $success ) && function_exists( 'bbp_update_total_parent_reply' ) ) {
+		if ( false !== $success && ! is_wp_error( $success ) && function_exists( 'bboss_bbp_update_total_parent_reply' ) ) {
 			// Update total parent reply count when any parent trashed.
-			bbp_update_total_parent_reply( $reply->ID, $topic_id, '', 'update' );
+			bboss_bbp_update_total_parent_reply( $reply->ID, $topic_id, '', 'update' );
 		}
 
 		// Build the response.
@@ -1854,7 +1854,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1866,7 +1866,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( true === $retval && ! current_user_can( 'delete_reply', $request->get_param( 'id' ) ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to delete this reply.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to delete this reply.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1902,7 +1902,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 			$args = array(
 				'id' => array(
-					'description' => __( 'A unique numeric ID for the reply.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the reply.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'required'    => true,
 				),
@@ -1942,14 +1942,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$args['content']['required'] = true;
 
 			$args['reply_to'] = array(
-				'description'       => __( 'Parent Reply ID for reply.', 'buddyboss' ),
+				'description'       => __( 'Parent Reply ID for reply.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
 			$args['topic_id'] = array(
-				'description'       => __( 'ID of the topic to perform the reply on it.', 'buddyboss' ),
+				'description'       => __( 'ID of the topic to perform the reply on it.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -1957,7 +1957,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['forum_id'] = array(
-				'description'       => __( 'Forum ID to reply on.', 'buddyboss' ),
+				'description'       => __( 'Forum ID to reply on.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => false,
 				'sanitize_callback' => 'absint',
@@ -1965,14 +1965,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['tags'] = array(
-				'description'       => __( 'Tags to add into the topic.', 'buddyboss' ),
+				'description'       => __( 'Tags to add into the topic.', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
 			$args['subscribe'] = array(
-				'description'       => __( 'Whether user subscribe topic or not.', 'buddyboss' ),
+				'description'       => __( 'Whether user subscribe topic or not.', 'buddyboss-platform' ),
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 				'validate_callback' => 'rest_validate_request_arg',
@@ -1983,13 +1983,13 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$key = 'update_item';
 
 			$args['reason'] = array(
-				'description'       => __( 'Reason for editing a reply.', 'buddyboss' ),
+				'description'       => __( 'Reason for editing a reply.', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
 			$args['log'] = array(
-				'description'       => __( 'Keep a log of reply edit.', 'buddyboss' ),
+				'description'       => __( 'Keep a log of reply edit.', 'buddyboss-platform' ),
 				'type'              => 'boolean',
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
@@ -2026,7 +2026,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			'date'                  => $this->forum_endpoint->prepare_date_response( $reply->post_date_gmt, $reply->post_date ),
 			'date_gmt'              => $this->forum_endpoint->prepare_date_response( $reply->post_date_gmt ),
 			'guid'                  => array(
-				'rendered' => esc_url( bbp_get_reply_permalink( $reply->ID ) ),
+				'rendered' => esc_url( bboss_bbp_get_reply_permalink( $reply->ID ) ),
 				'raw'      => $reply->guid,
 			),
 			'modified'              => $this->forum_endpoint->prepare_date_response( $reply->post_modified_gmt, $reply->post_modified ),
@@ -2034,23 +2034,23 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			'password'              => $reply->post_password,
 			'slug'                  => $reply->post_name,
 			'status'                => $reply->post_status,
-			'link'                  => bbp_get_reply_permalink( $reply->ID ),
+			'link'                  => bboss_bbp_get_reply_permalink( $reply->ID ),
 			'author'                => (int) $reply->post_author,
 			'parent'                => (int) $reply->post_parent,
 			'depth'                 => (int) ( isset( $reply->depth ) && ! empty( $reply->depth ) ) ? $reply->depth : 1,
-			'reply_to'              => bbp_get_reply_to( $reply->ID ),
-			'is_reply_anonymous'    => (int) bbp_is_reply_anonymous( $reply->ID ),
+			'reply_to'              => bboss_bbp_get_reply_to( $reply->ID ),
+			'is_reply_anonymous'    => (int) bboss_bbp_is_reply_anonymous( $reply->ID ),
 			'anonymous_author_data' => (
-				bbp_is_reply_anonymous( $reply->ID )
+				bboss_bbp_is_reply_anonymous( $reply->ID )
 				? array(
-					'name'    => bbp_get_reply_author_display_name( $reply->ID ),
-					'email'   => bbp_get_reply_author_email( $reply->ID ),
-					'website' => bbp_get_reply_author_url( $reply->ID ),
-					'avatar'  => get_avatar_url( bbp_get_reply_author_email( $reply->ID ) ),
+					'name'    => bboss_bbp_get_reply_author_display_name( $reply->ID ),
+					'email'   => bboss_bbp_get_reply_author_email( $reply->ID ),
+					'website' => bboss_bbp_get_reply_author_url( $reply->ID ),
+					'avatar'  => get_avatar_url( bboss_bbp_get_reply_author_email( $reply->ID ) ),
 				)
 				: false
 			),
-			'classes'               => bbp_get_reply_class( $reply->ID ),
+			'classes'               => bboss_bbp_get_reply_class( $reply->ID ),
 			'title'                 => '',
 			'content'               => array(),
 			'short_content'         => '',
@@ -2060,7 +2060,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 		$data['title'] = array(
 			'raw'      => $reply->post_title,
-			'rendered' => bbp_get_reply_title( $reply->ID ),
+			'rendered' => bboss_bbp_get_reply_title( $reply->ID ),
 		);
 
 		/* Prepare content */
@@ -2071,29 +2071,29 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$data['short_content'] = wp_trim_excerpt( '', $reply->ID );
 
 		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
-		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		remove_filter( 'bbp_get_reply_content', 'bboss_media_forums_embed_attachments', 98, 2 );
 		remove_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
-		remove_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 ); // Remove link preview.
-		remove_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 ); // Remove link embed from content.
+		remove_filter( 'bbp_get_reply_content', 'bboss_forums_link_preview', 999, 2 ); // Remove link preview.
+		remove_filter( 'bbp_get_reply_content', 'bboss_bbp_reply_content_autoembed_paragraph', 99999, 1 ); // Remove link embed from content.
 		remove_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
-			'raw'      => bb_rest_raw_content( $reply->post_content ),
-			'rendered' => bbp_get_reply_content( $reply->ID ),
+			'raw'      => bboss_rest_raw_content( $reply->post_content ),
+			'rendered' => bboss_bbp_get_reply_content( $reply->ID ),
 		);
 
 		// GIF, media, video and document embeds may be absent (Add-ons module or component inactive); only re-add loaded callbacks.
 		if ( function_exists( 'bp_media_forums_embed_gif' ) ) {
 			add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
 		}
-		if ( function_exists( 'bp_media_forums_embed_attachments' ) ) {
-			add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		if ( function_exists( 'bboss_media_forums_embed_attachments' ) ) {
+			add_filter( 'bbp_get_reply_content', 'bboss_media_forums_embed_attachments', 98, 2 );
 		}
 		if ( function_exists( 'bp_video_forums_embed_attachments' ) ) {
 			add_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
 		}
-		add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 ); // Restore link preview.
-		add_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 ); // Restore link embed to content
+		add_filter( 'bbp_get_reply_content', 'bboss_forums_link_preview', 999, 2 ); // Restore link preview.
+		add_filter( 'bbp_get_reply_content', 'bboss_bbp_reply_content_autoembed_paragraph', 99999, 1 ); // Restore link embed to content
 		if ( function_exists( 'bp_document_forums_embed_attachments' ) ) {
 			add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 		}
@@ -2111,7 +2111,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 			$data['link_embed_url'] = $link_embed;
 
-			$embed_data = bp_core_parse_url( $link_embed );
+			$embed_data = bboss_core_parse_url( $link_embed );
 
 			if (
 				isset( $embed_data['wp_embed'] ) &&
@@ -2122,7 +2122,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				$data['preview_data'] = $this->forum_endpoint->bp_rest_forums_remove_lazyload( $data['preview_data'], $reply->ID );
 			}
 		} else {
-			$data['preview_data'] = bb_forums_link_preview( '', $reply->ID );
+			$data['preview_data'] = bboss_forums_link_preview( '', $reply->ID );
 
 			// No saved preview: fall back to the embed the web shows for the content URL.
 			if ( empty( $data['preview_data'] ) ) {
@@ -2135,24 +2135,24 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$forum_id = bbp_get_reply_forum_id( $reply->ID );
+		$forum_id = bboss_bbp_get_reply_forum_id( $reply->ID );
 
 		if ( ! empty( $forum_id ) ) {
 			$this->forum_endpoint->group = (
-				function_exists( 'bbp_is_forum_group_forum' )
-				&& bbp_is_forum_group_forum( $forum_id )
-				&& function_exists( 'groups_get_group' )
+				function_exists( 'bboss_bbp_is_forum_group_forum' )
+				&& bboss_bbp_is_forum_group_forum( $forum_id )
+				&& function_exists( 'bboss_groups_get_group' )
 			)
 			? (
-				! empty( bbp_get_forum_group_ids( $forum_id ) )
-				? groups_get_group( current( bbp_get_forum_group_ids( $forum_id ) ) )
+				! empty( bboss_bbp_get_forum_group_ids( $forum_id ) )
+				? bboss_groups_get_group( current( bboss_bbp_get_forum_group_ids( $forum_id ) ) )
 				: ''
 			)
 			: '';
 		}
 
-		if ( class_exists( 'BBP_Forums_Group_Extension' ) ) {
-			$group_forum_extention = new BBP_Forums_Group_Extension();
+		if ( class_exists( 'BBoss_BBP_Forums_Group_Extension' ) ) {
+			$group_forum_extention = new BBoss_BBP_Forums_Group_Extension();
 			// Allow group member to view private/hidden forums.
 			add_filter( 'bbp_map_meta_caps', array( $group_forum_extention, 'map_group_forum_meta_caps' ), 10, 4 );
 
@@ -2177,7 +2177,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		// Pass group ids for embedded members endpoint.
 		$group_ids = '';
 		if ( ! empty( $args['post_parent'] ) ) {
-			$group = bbp_get_forum_group_ids( bbp_get_topic_forum_id( $args['post_parent'] ) );
+			$group = bboss_bbp_get_forum_group_ids( bboss_bbp_get_topic_forum_id( $args['post_parent'] ) );
 			if ( ! empty( $group ) ) {
 				$group_ids = count( $group ) > 1 ? implode( ', ', $group ) : $group[0];
 			}
@@ -2217,62 +2217,62 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'                       => array(
-					'description' => __( 'Unique identifier for the reply.', 'buddyboss' ),
+					'description' => __( 'Unique identifier for the reply.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'date'                     => array(
-					'description' => __( 'The date the object was published, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the object was published, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_gmt'                 => array(
-					'description' => __( 'The date the object was published, as GMT.', 'buddyboss' ),
+					'description' => __( 'The date the object was published, as GMT.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'guid'                     => array(
-					'description' => __( 'The url identifier for the reply.', 'buddyboss' ),
+					'description' => __( 'The url identifier for the reply.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'GUID for the reply, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'GUID for the reply, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'GUID for the reply, transformed for display.', 'buddyboss' ),
+							'description' => __( 'GUID for the reply, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'modified'                 => array(
-					'description' => __( 'The date for reply was last modified, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date for reply was last modified, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'modified_gmt'             => array(
-					'description' => __( 'The date for reply was last modified, as GMT.', 'buddyboss' ),
+					'description' => __( 'The date for reply was last modified, as GMT.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'password'                 => array(
-					'description' => __( 'A password to protect access to the post.', 'buddyboss' ),
+					'description' => __( 'A password to protect access to the post.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
 				),
 				'slug'                     => array(
-					'description' => __( 'An alphanumeric unique identifier for the reply.', 'buddyboss' ),
+					'description' => __( 'An alphanumeric unique identifier for the reply.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -2280,85 +2280,85 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					),
 				),
 				'status'                   => array(
-					'description' => __( 'The current status of the reply.', 'buddyboss' ),
+					'description' => __( 'The current status of the reply.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'link'                     => array(
-					'description' => __( 'The permalink to this reply on the site.', 'buddyboss' ),
+					'description' => __( 'The permalink to this reply on the site.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'format'      => 'uri',
 				),
 				'author'                   => array(
-					'description' => __( 'The ID for the author of the reply.', 'buddyboss' ),
+					'description' => __( 'The ID for the author of the reply.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'parent'                   => array(
-					'description' => __( 'ID of the parent topic.', 'buddyboss' ),
+					'description' => __( 'ID of the parent topic.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'depth'                    => array(
-					'description' => __( 'Depth for the reply.', 'buddyboss' ),
+					'description' => __( 'Depth for the reply.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'reply_to'                 => array(
-					'description' => __( 'Parent reply ID.', 'buddyboss' ),
+					'description' => __( 'Parent reply ID.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'is_reply_anonymous'       => array(
-					'description' => __( 'Whether the post is by an anonymous user or not.', 'buddyboss' ),
+					'description' => __( 'Whether the post is by an anonymous user or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'anonymous_author_data'    => array(
-					'description' => __( 'An anonymous users data.', 'buddyboss' ),
+					'description' => __( 'An anonymous users data.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'properties'  => array(
 						'name'    => array(
-							'description' => __( 'Name of the anonymous user.', 'buddyboss' ),
+							'description' => __( 'Name of the anonymous user.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'email'   => array(
-							'description' => __( 'Email address of the anonymous user.', 'buddyboss' ),
+							'description' => __( 'Email address of the anonymous user.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'website' => array(
-							'description' => __( 'Website of the anonymous user.', 'buddyboss' ),
+							'description' => __( 'Website of the anonymous user.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'avatar'  => array(
-							'description' => __( 'Avatar url of the anonymous user.', 'buddyboss' ),
+							'description' => __( 'Avatar url of the anonymous user.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'classes'                  => array(
-					'description' => __( 'Classes lists for the reply.', 'buddyboss' ),
+					'description' => __( 'Classes lists for the reply.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'title'                    => array(
-					'description' => __( 'The title of the reply.', 'buddyboss' ),
+					'description' => __( 'The title of the reply.', 'buddyboss-platform' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the title of the reply, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the title of the reply, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'The title of the reply, transformed for display.', 'buddyboss' ),
+							'description' => __( 'The title of the reply, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
@@ -2366,65 +2366,65 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				),
 				'content'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The content of the reply.', 'buddyboss' ),
+					'description' => __( 'The content of the reply.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the reply, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the reply, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'HTML content for the reply, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML content for the reply, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'short_content'            => array(
-					'description' => __( 'Short content of the reply.', 'buddyboss' ),
+					'description' => __( 'Short content of the reply.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'preview_data'             => array(
-					'description' => __( 'WordPress Embed and link preview data.', 'buddyboss' ),
+					'description' => __( 'WordPress Embed and link preview data.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'link_embed_url'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'WordPress Embed URL.', 'buddyboss' ),
+					'description' => __( 'WordPress Embed URL.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'current_user_permissions' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current user\'s permission with the reply.', 'buddyboss' ),
+					'description' => __( 'Current user\'s permission with the reply.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'edit'  => array(
-							'description' => __( 'Whether the current user can edit the reply or not.', 'buddyboss' ),
+							'description' => __( 'Whether the current user can edit the reply or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'move'  => array(
-							'description' => __( 'Whether the current user can move the reply or not.', 'buddyboss' ),
+							'description' => __( 'Whether the current user can move the reply or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'split' => array(
-							'description' => __( 'Whether the current user can spit the reply or not.', 'buddyboss' ),
+							'description' => __( 'Whether the current user can spit the reply or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'spam'  => array(
-							'description' => __( 'Whether the current user can spam the reply or not.', 'buddyboss' ),
+							'description' => __( 'Whether the current user can spam the reply or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'trash' => array(
-							'description' => __( 'Whether the current user can trash the reply or not.', 'buddyboss' ),
+							'description' => __( 'Whether the current user can trash the reply or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
@@ -2432,23 +2432,23 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				),
 				'action_states'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Available actions with current user for reply.', 'buddyboss' ),
+					'description' => __( 'Available actions with current user for reply.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'spam'  => array(
-							'description' => __( 'Check whether the reply status is spam or not.', 'buddyboss' ),
+							'description' => __( 'Check whether the reply status is spam or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'trash' => array(
-							'description' => __( 'Check whether the reply status is trash or not.', 'buddyboss' ),
+							'description' => __( 'Check whether the reply status is trash or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'revisions'                => array(
-					'description' => __( 'Revisions for reply.', 'buddyboss' ),
+					'description' => __( 'Revisions for reply.', 'buddyboss-platform' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'type'        => 'object',
 				),
@@ -2474,7 +2474,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'view';
 
 		$params['author'] = array(
-			'description'       => __( 'Author ID, or comma-separated list of IDs.', 'buddyboss' ),
+			'description'       => __( 'Author ID, or comma-separated list of IDs.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
@@ -2482,7 +2482,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['author_exclude'] = array(
-			'description'       => __( 'An array of author IDs not to query from.', 'buddyboss' ),
+			'description'       => __( 'An array of author IDs not to query from.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2490,7 +2490,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'An array of reply IDs not to retrieve.', 'buddyboss' ),
+			'description'       => __( 'An array of reply IDs not to retrieve.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2498,7 +2498,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'An array of reply IDs to retrieve.', 'buddyboss' ),
+			'description'       => __( 'An array of reply IDs to retrieve.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2506,14 +2506,14 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['offset'] = array(
-			'description'       => __( 'The number of reply to offset before retrieval.', 'buddyboss' ),
+			'description'       => __( 'The number of reply to offset before retrieval.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Designates ascending or descending order of replies.', 'buddyboss' ),
+			'description'       => __( 'Designates ascending or descending order of replies.', 'buddyboss-platform' ),
 			'default'           => 'asc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -2522,7 +2522,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Sort retrieved replies by parameter.', 'buddyboss' ),
+			'description'       => __( 'Sort retrieved replies by parameter.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'type' => 'string',
@@ -2538,12 +2538,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					'include'
 				),
 			),
-			'sanitize_callback' => 'bp_rest_sanitize_string_list',
+			'sanitize_callback' => 'bboss_rest_sanitize_string_list',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['parent'] = array(
-			'description'       => __( 'Topic or Reply ID to retrieve all the child replies.', 'buddyboss' ),
+			'description'       => __( 'Topic or Reply ID to retrieve all the child replies.', 'buddyboss-platform' ),
 			'default'           => '0',
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -2551,8 +2551,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['thread_replies'] = array(
-			'description'       => __( 'Calculated value and the thread replies depth.', 'buddyboss' ),
-			'default'           => bbp_thread_replies(),
+			'description'       => __( 'Calculated value and the thread replies depth.', 'buddyboss-platform' ),
+			'default'           => bboss_bbp_thread_replies(),
 			'type'              => 'boolean',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -2586,7 +2586,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $post->post_author ) . $group ),
+				'href'       => rest_url( bboss_rest_get_user_url( $post->post_author ) . $group ),
 				'embeddable' => true,
 			),
 		);
@@ -2616,7 +2616,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		// Get reply.
-		$reply = bbp_get_reply( $reply_id );
+		$reply = bboss_bbp_get_reply( $reply_id );
 
 		return array(
 			'edit'  => (
@@ -2624,7 +2624,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				(
 					! empty( $reply_id ) &&
 					current_user_can( 'edit_reply', $reply_id ) &&
-					! bbp_past_edit_lock( $reply->post_date_gmt )
+					! bboss_bbp_past_edit_lock( $reply->post_date_gmt )
 				)
 			),
 			'move'  => ! empty( $reply ) && current_user_can( 'moderate', $reply_id ),
@@ -2647,15 +2647,15 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		return array(
-			'spam'  => ( ! empty( bbp_is_reply_spam( $reply_id ) ) ? bbp_is_reply_spam( $reply_id ) : false ),
-			'trash' => ( ! empty( bbp_is_reply_trash( $reply_id ) ) ? bbp_is_reply_trash( $reply_id ) : false ),
+			'spam'  => ( ! empty( bboss_bbp_is_reply_spam( $reply_id ) ) ? bboss_bbp_is_reply_spam( $reply_id ) : false ),
+			'trash' => ( ! empty( bboss_bbp_is_reply_trash( $reply_id ) ) ? bboss_bbp_is_reply_trash( $reply_id ) : false ),
 		);
 
 	}
 
 	/**
 	 * Get revisions for reply.
-	 * from: bbp_get_reply_revision_log()
+	 * from: bboss_bbp_get_reply_revision_log()
 	 *
 	 * @param int $reply_id ID of the reply.
 	 *
@@ -2664,15 +2664,15 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	protected function get_reply_revisions( $reply_id = 0 ) {
 
 		// Create necessary variables.
-		$reply_id = bbp_get_reply_id( $reply_id );
+		$reply_id = bboss_bbp_get_reply_id( $reply_id );
 
 		// Show the topic reply log if this is a topic in a reply loop.
-		if ( bbp_is_topic( $reply_id ) ) {
+		if ( bboss_bbp_is_topic( $reply_id ) ) {
 			return $this->topic_endpoint->get_topic_revisions( $reply_id );
 		}
 
 		// Get the reply revision log.
-		$revision_log = bbp_get_reply_raw_revision_log( $reply_id );
+		$revision_log = bboss_bbp_get_reply_raw_revision_log( $reply_id );
 
 		// Check reply and revision log exist.
 		if ( empty( $reply_id ) || empty( $revision_log ) || ! is_array( $revision_log ) ) {
@@ -2680,7 +2680,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		}
 
 		// Get the actual revisions.
-		$revisions = bbp_get_reply_revisions( $reply_id );
+		$revisions = bboss_bbp_get_reply_revisions( $reply_id );
 		if ( empty( $revisions ) ) {
 			return false;
 		}
@@ -2703,9 +2703,9 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 
 			$retval[] = array(
-				'time'        => esc_html( bbp_get_time_since( bbp_convert_date( $revision->post_modified ) ) ),
+				'time'        => esc_html( bboss_bbp_get_time_since( bboss_bbp_convert_date( $revision->post_modified ) ) ),
 				'author_id'   => $author_id,
-				'author_name' => bbp_get_reply_author_display_name( $revision->ID ),
+				'author_name' => bboss_bbp_get_reply_author_display_name( $revision->ID ),
 				'avatar'      => ( ! empty( $author_id ) ? get_avatar_url( $author_id, 300 ) : '' ),
 				'reason'      => $reason,
 			);

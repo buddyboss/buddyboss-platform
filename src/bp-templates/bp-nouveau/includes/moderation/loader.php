@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.5.6
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Moderation {
+class BBoss_Nouveau_Moderation {
 
 	/**
 	 * Constructor
@@ -52,7 +52,7 @@ class BP_Nouveau_Moderation {
 
 			// Load AJAX code only on AJAX requests.
 		} else {
-			if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && isset( $_REQUEST['action'] ) && 0 === strpos( $_REQUEST['action'], 'moderation_' ) ) {
+			if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && isset( $_REQUEST['action'] ) && 0 === strpos( $_REQUEST['action'], 'moderation_' ) ) {
 				require $this->dir . 'ajax.php';
 			}
 		}
@@ -65,7 +65,7 @@ class BP_Nouveau_Moderation {
 	 */
 	protected function setup_actions() {
 		// Enqueue the scripts for the new UI
-		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_moderation_enqueue_scripts' );
+		add_action( 'bp_nouveau_enqueue_scripts', 'bboss_nouveau_moderation_enqueue_scripts' );
 	}
 
 	/**
@@ -76,10 +76,10 @@ class BP_Nouveau_Moderation {
 	protected function setup_filters() {
 
 		// Register messages scripts
-		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_moderation_register_scripts', 10, 1 );
+		add_filter( 'bp_nouveau_register_scripts', 'bboss_nouveau_moderation_register_scripts', 10, 1 );
 
 		// Localize Scripts
-		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_moderation_localize_scripts', 10, 1 );
+		add_filter( 'bp_core_get_js_strings', 'bboss_nouveau_moderation_localize_scripts', 10, 1 );
 	}
 }
 
@@ -88,12 +88,12 @@ class BP_Nouveau_Moderation {
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_nouveau_moderation( $bp_nouveau = null ) {
+function bboss_nouveau_moderation( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->moderation = new BP_Nouveau_Moderation();
+	$bp_nouveau->moderation = new BBoss_Nouveau_Moderation();
 }
 
-add_action( 'bp_nouveau_includes', 'bp_nouveau_moderation', 10, 1 );
+add_action( 'bp_nouveau_includes', 'bboss_nouveau_moderation', 10, 1 );

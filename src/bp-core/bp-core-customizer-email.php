@@ -16,25 +16,25 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param WP_Customize_Manager $wp_customize The Customizer object.
  */
-function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
-	if ( ! bp_is_email_customizer() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+function bboss_email_init_customizer( WP_Customize_Manager $wp_customize ) {
+	if ( ! bboss_is_email_customizer() && ( ! defined( 'BBOSS_DOING_AJAX' ) || ! BBOSS_DOING_AJAX ) ) {
 		return;
 	}
 
 	$wp_customize->add_panel(
 		'bp_mailtpl',
 		array(
-			'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
-			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
+			'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss-platform' ),
+			'title'       => __( 'BuddyBoss Emails', 'buddyboss-platform' ),
 		)
 	);
 
-	$sections = bp_email_get_customizer_sections();
+	$sections = bboss_email_get_customizer_sections();
 	foreach ( $sections as $section_id => $args ) {
 		$wp_customize->add_section( $section_id, $args );
 	}
 
-	$settings = bp_email_get_customizer_settings();
+	$settings = bboss_email_get_customizer_settings();
 	foreach ( $settings as $setting_id => $args ) {
 		$wp_customize->add_setting( $setting_id, $args );
 	}
@@ -48,7 +48,7 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 	 */
 	do_action( 'bp_email_customizer_register_sections', $wp_customize );
 
-	$controls = bp_email_get_customizer_controls();
+	$controls = bboss_email_get_customizer_controls();
 	foreach ( $controls as $control_id => $args ) {
 		$wp_customize->add_control( new $args['class']( $wp_customize, $control_id, $args ) );
 	}
@@ -57,7 +57,7 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 	 * Hook actions/filters for further configuration.
 	 */
 
-	add_filter( 'customize_section_active', 'bp_email_customizer_hide_sections', 12, 2 );
+	add_filter( 'customize_section_active', 'bboss_email_customizer_hide_sections', 12, 2 );
 
 	if ( is_customize_preview() ) {
 		/*
@@ -66,14 +66,14 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 		 * Scripts can't be registered in bp_core_register_common_styles() etc because
 		 * the Customizer loads very, very early.
 		 */
-		$bp  = buddypress();
-		$min = bp_core_get_minified_asset_suffix();
+		$bp  = bboss();
+		$min = bboss_core_get_minified_asset_suffix();
 
 		wp_enqueue_script(
 			'bp-customizer-receiver-emails',
 			"{$bp->plugin_url}bp-core/admin/js/customizer-receiver-emails{$min}.js",
 			array( 'customize-preview' ),
-			bp_get_version(),
+			bboss_get_version(),
 			true
 		);
 
@@ -82,11 +82,11 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 		// Include the preview loading style.
 		add_action( 'wp_footer', array( $wp_customize, 'customize_preview_loading_style' ) );
 
-		remove_action( 'wp_footer', 'bb_moderation_content_report_popup' );
-		remove_action( 'wp_footer', 'bb_on_screen_notification_template' );
+		remove_action( 'wp_footer', 'bboss_moderation_content_report_popup' );
+		remove_action( 'wp_footer', 'bboss_on_screen_notification_template' );
 	}
 }
-add_action( 'bp_customize_register', 'bp_email_init_customizer' );
+add_action( 'bp_customize_register', 'bboss_email_init_customizer' );
 
 /**
  * Are we looking at the email customizer?
@@ -95,7 +95,7 @@ add_action( 'bp_customize_register', 'bp_email_init_customizer' );
  *
  * @return bool
  */
-function bp_is_email_customizer() {
+function bboss_is_email_customizer() {
 	return isset( $_GET['bp_customizer'] ) && 'email' === $_GET['bp_customizer']; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 }
 
@@ -108,12 +108,12 @@ function bp_is_email_customizer() {
  * @param WP_Customize_Section $section {@see WP_Customize_Section} instance.
  * @return bool
  */
-function bp_email_customizer_hide_sections( $active, $section ) {
-	if ( ! bp_is_email_customizer() ) {
+function bboss_email_customizer_hide_sections( $active, $section ) {
+	if ( ! bboss_is_email_customizer() ) {
 		return $active;
 	}
 
-	return in_array( $section->id, array_keys( bp_email_get_customizer_sections() ), true );
+	return in_array( $section->id, array_keys( bboss_email_get_customizer_sections() ), true );
 }
 
 /**
@@ -123,7 +123,7 @@ function bp_email_customizer_hide_sections( $active, $section ) {
  *
  * @return array
  */
-function bp_email_get_customizer_sections() {
+function bboss_email_get_customizer_sections() {
 
 	/**
 	 * Filter Customizer sections for emails.
@@ -138,17 +138,17 @@ function bp_email_get_customizer_sections() {
 			'section_bp_mailtpl_header' => array(
 				'capability' => 'bp_moderate',
 				'panel'      => 'bp_mailtpl',
-				'title'      => __( 'Header', 'buddyboss' ),
+				'title'      => __( 'Header', 'buddyboss-platform' ),
 			),
 			'section_bp_mailtpl_body'   => array(
 				'capability' => 'bp_moderate',
 				'panel'      => 'bp_mailtpl',
-				'title'      => __( 'Body', 'buddyboss' ),
+				'title'      => __( 'Body', 'buddyboss-platform' ),
 			),
 			'section_bp_mailtpl_footer' => array(
 				'capability' => 'bp_moderate',
 				'panel'      => 'bp_mailtpl',
-				'title'      => __( 'Footer', 'buddyboss' ),
+				'title'      => __( 'Footer', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -161,8 +161,8 @@ function bp_email_get_customizer_sections() {
  *
  * @return array
  */
-function bp_email_get_customizer_settings() {
-	$defaults = bp_email_get_appearance_settings();
+function bboss_email_get_customizer_settings() {
+	$defaults = bboss_email_get_appearance_settings();
 
 	/**
 	 * Filter Customizer settings for emails.
@@ -304,7 +304,7 @@ function bp_email_get_customizer_settings() {
  *
  * @return array
  */
-function bp_email_get_customizer_controls() {
+function bboss_email_get_customizer_controls() {
 
 	/**
 	 * Filter Customizer controls for emails.
@@ -318,7 +318,7 @@ function bp_email_get_customizer_controls() {
 		array(
 			'bp_mailtpl_logo'                      => array(
 				'class'       => 'WP_Customize_Cropped_Image_Control',
-				'label'       => __( 'Upload Logo', 'buddyboss' ),
+				'label'       => __( 'Upload Logo', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[logo]',
 				'width'       => 180,
@@ -328,9 +328,9 @@ function bp_email_get_customizer_controls() {
 			),
 
 			'bp_mailtpl_site_title_logo_size'      => array(
-				'class'       => 'BP_Customizer_Control_Range',
-				'label'       => __( 'Site Title logo size', 'buddyboss' ),
-				'description' => __( 'Used when logo is set.', 'buddyboss' ),
+				'class'       => 'BBoss_Customizer_Control_Range',
+				'label'       => __( 'Site Title logo size', 'buddyboss-platform' ),
+				'description' => __( 'Used when logo is set.', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[site_title_logo_size]',
 
@@ -343,16 +343,16 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_site_title_text_color'     => array(
 				'class'       => 'WP_Customize_Color_Control',
-				'label'       => __( 'Site Title color', 'buddyboss' ),
-				'description' => __( 'Used when logo is not set.', 'buddyboss' ),
+				'label'       => __( 'Site Title color', 'buddyboss-platform' ),
+				'description' => __( 'Used when logo is not set.', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[site_title_text_color]',
 			),
 
 			'bp_mailtpl_site_title_text_size'      => array(
-				'class'       => 'BP_Customizer_Control_Range',
-				'label'       => __( 'Site Title text size', 'buddyboss' ),
-				'description' => __( 'Used when logo is not set.', 'buddyboss' ),
+				'class'       => 'BBoss_Customizer_Control_Range',
+				'label'       => __( 'Site Title text size', 'buddyboss-platform' ),
+				'description' => __( 'Used when logo is not set.', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[site_title_text_size]',
 
@@ -365,14 +365,14 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_recipient_text_color'      => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Recipient Color', 'buddyboss' ),
+				'label'    => __( 'Recipient Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_header',
 				'settings' => 'bp_email_options[recipient_text_color]',
 			),
 
 			'bp_mailtpl_recipient_text_size'       => array(
-				'class'       => 'BP_Customizer_Control_Range',
-				'label'       => __( 'Recipient Text Size', 'buddyboss' ),
+				'class'       => 'BBoss_Customizer_Control_Range',
+				'label'       => __( 'Recipient Text Size', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[recipient_text_size]',
 
@@ -385,42 +385,42 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_email_bg'                  => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Email Background Color', 'buddyboss' ),
+				'label'    => __( 'Email Background Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[email_bg]',
 			),
 
 			'bp_mailtpl_body_bg'                   => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Body Background Color', 'buddyboss' ),
+				'label'    => __( 'Body Background Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[body_bg]',
 			),
 
 			'bp_mailtpl_body_border_color'         => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Body Border Color', 'buddyboss' ),
+				'label'    => __( 'Body Border Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[body_border_color]',
 			),
 
 			'bp_mailtpl_body_text_color'           => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Body Primary Text Color', 'buddyboss' ),
+				'label'    => __( 'Body Primary Text Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[body_text_color]',
 			),
 
 			'bp_mailtpl_body_secondary_text_color' => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Body Secondary Text Color', 'buddyboss' ),
+				'label'    => __( 'Body Secondary Text Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[body_secondary_text_color]',
 			),
 
 			'bp_mailtpl_body_text_size'            => array(
-				'class'       => 'BP_Customizer_Control_Range',
-				'label'       => __( 'Body Text Size', 'buddyboss' ),
+				'class'       => 'BBoss_Customizer_Control_Range',
+				'label'       => __( 'Body Text Size', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_body',
 				'settings'    => 'bp_email_options[body_text_size]',
 
@@ -433,22 +433,22 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_quote_bg'                  => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Quote Background Color', 'buddyboss' ),
+				'label'    => __( 'Quote Background Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[quote_bg]',
 			),
 
 			'bp_mailtpl_highlight_color'           => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Links and Buttons Color', 'buddyboss' ),
+				'label'    => __( 'Links and Buttons Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[highlight_color]',
 			),
 
 			'bp_mailtpl_footer_text'               => array(
 				'class'       => 'WP_Customize_Control',
-				'description' => __( 'Change the email footer content.', 'buddyboss' ),
-				'label'       => __( 'Footer Text', 'buddyboss' ),
+				'description' => __( 'Change the email footer content.', 'buddyboss-platform' ),
+				'label'       => __( 'Footer Text', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_footer',
 				'settings'    => 'bp_email_options[footer_text]',
 				'type'        => 'textarea',
@@ -456,14 +456,14 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_footer_text_color'         => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Footer Text Color', 'buddyboss' ),
+				'label'    => __( 'Footer Text Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_footer',
 				'settings' => 'bp_email_options[footer_text_color]',
 			),
 
 			'bp_mailtpl_footer_text_size'          => array(
-				'class'       => 'BP_Customizer_Control_Range',
-				'label'       => __( 'Footer Text Size', 'buddyboss' ),
+				'class'       => 'BBoss_Customizer_Control_Range',
+				'label'       => __( 'Footer Text Size', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_footer',
 				'settings'    => 'bp_email_options[footer_text_size]',
 
@@ -482,12 +482,12 @@ function bp_email_get_customizer_controls() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_email_get_redirect_to_customizer_url() {
+function bboss_email_get_redirect_to_customizer_url() {
 	$switched = false;
 
 	// Switch to the root blog, where the email posts live.
-	if ( ! bp_is_root_blog() ) {
-		switch_to_blog( bp_get_root_blog_id() );
+	if ( ! bboss_is_root_blog() ) {
+		switch_to_blog( bboss_get_root_blog_id() );
 		$switched = true;
 	}
 
@@ -496,7 +496,7 @@ function bp_email_get_redirect_to_customizer_url() {
 			'fields'                 => 'ids',
 			// 'orderby'                => 'rand',
 			'post_status'            => 'publish',
-			'post_type'              => bp_get_email_post_type(),
+			'post_type'              => bboss_get_email_post_type(),
 			'posts_per_page'         => 1,
 			'suppress_filters'       => false,
 			'update_post_meta_cache' => false,
@@ -517,7 +517,7 @@ function bp_email_get_redirect_to_customizer_url() {
 			'return'           => rawurlencode(
 				add_query_arg(
 					array(
-						'post_type' => bp_get_email_post_type(),
+						'post_type' => bboss_get_email_post_type(),
 					),
 					admin_url( 'edit.php' )
 				)
@@ -539,12 +539,14 @@ function bp_email_get_redirect_to_customizer_url() {
  *
  * @since BuddyPress 2.5.0
  */
-function bp_email_redirect_to_customizer() {
+function bboss_email_redirect_to_customizer() {
 
-	printf(
-		'<script>window.location = "%s";</script>',
-		esc_url_raw( bp_email_get_redirect_to_customizer_url() )
-	);
+	$inline_js = 'window.location = ' . wp_json_encode( esc_url_raw( bboss_email_get_redirect_to_customizer_url() ) ) . ';';
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the URL is esc_url_raw()'d and wp_json_encode()'d above. WordPress < 5.7 only.
+	}
 
 	exit;
 }
@@ -557,17 +559,17 @@ function bp_email_redirect_to_customizer() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_email_remove_widgets_panel( $components ) {
+function bboss_email_remove_widgets_panel( $components ) {
 	$i = array_search( 'widgets', $components );
 
-	if ( bp_is_email_customizer() && false !== $i ) {
+	if ( bboss_is_email_customizer() && false !== $i ) {
 		unset( $components[ $i ] );
 	}
 
 	return $components;
 }
 
-add_filter( 'customize_loaded_components', 'bp_email_remove_widgets_panel' );
+add_filter( 'customize_loaded_components', 'bboss_email_remove_widgets_panel' );
 
 /**
  * Set default avatar to customise email template.
@@ -577,14 +579,14 @@ add_filter( 'customize_loaded_components', 'bp_email_remove_widgets_panel' );
  * @param string $avatar Default avatar.
  * @return string The default avatar URL based on backend setting.
  */
-function bb_email_customizer_default_avatar( $avatar = '' ) {
+function bboss_email_customizer_default_avatar( $avatar = '' ) {
 
 	if ( empty( $avatar ) ) {
-		$show_avatar                 = bp_get_option( 'show_avatars' );
-		$profile_avatar_type         = bb_get_profile_avatar_type();
-		$default_profile_avatar_type = bb_get_default_profile_avatar_type();
+		$show_avatar                 = bboss_get_option( 'show_avatars' );
+		$profile_avatar_type         = bboss_get_profile_avatar_type();
+		$default_profile_avatar_type = bboss_get_default_profile_avatar_type();
 
-		if ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' !== bp_get_option( 'avatar_default', 'mystery' ) ) {
+		if ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' !== bboss_get_option( 'avatar_default', 'mystery' ) ) {
 			$avatar = get_avatar_url(
 				'',
 				array(
@@ -597,5 +599,5 @@ function bb_email_customizer_default_avatar( $avatar = '' ) {
 	return $avatar;
 }
 
-add_filter( 'bp_email_customizer_default_avatar', 'bb_email_customizer_default_avatar', 10 );
-add_filter( 'bp_email_default_avatar', 'bb_email_customizer_default_avatar', 10 );
+add_filter( 'bp_email_customizer_default_avatar', 'bboss_email_customizer_default_avatar', 10 );
+add_filter( 'bp_email_default_avatar', 'bboss_email_customizer_default_avatar', 10 );

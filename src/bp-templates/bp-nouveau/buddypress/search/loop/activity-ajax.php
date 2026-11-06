@@ -8,12 +8,15 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_activity">
-	<a href='<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bp_get_activity_thread_permalink() ) ); ?>'>
+	<a href='<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bboss_get_activity_thread_permalink() ) ); ?>'>
 		<div class="item-avatar">
 			<?php
-			bp_activity_avatar(
+			bboss_activity_avatar(
 				array(
 					'type'   => 'thumb',
 					'height' => 50,
@@ -25,31 +28,31 @@
 
 		<div class="item">
 			<div class="item-title">
-				<?php echo wp_kses_post( bp_get_activity_action( array( 'no_timestamp' => true ) ) ); ?>
+				<?php echo wp_kses_post( bboss_get_activity_action( array( 'no_timestamp' => true ) ) ); ?>
 			</div>
 
 			<?php
-			if ( bb_activity_has_post_title() ) {
+			if ( bboss_activity_has_post_title() ) {
 				?>
 				<div class="activity-title bb-activity-search-title">
-					<h2><?php echo wp_kses_post( bb_activity_post_title() ); ?></h2>
+					<h2><?php echo wp_kses_post( bboss_activity_post_title() ); ?></h2>
 				</div>
 				<?php
 			}
 			?>
 			
-			<?php if ( bp_activity_has_content() ) : ?>
+			<?php if ( bboss_activity_has_content() ) : ?>
 				<div class="item-desc">
-					<?php echo wp_kses_post( bp_search_activity_intro( 30 ) ); ?>
+					<?php echo wp_kses_post( bboss_search_activity_intro( 30 ) ); ?>
 				</div>
 			<?php endif; ?>
 			<div class="item-meta activity-header">
 				<?php
-				$activity_date_recorded = bp_get_activity_date_recorded();
+				$activity_date_recorded = bboss_get_activity_date_recorded();
 				printf(
 					'<time class="time-since" data-livestamp="%1$s">%2$s</time>',
-					bp_core_get_iso8601_date( $activity_date_recorded ),
-					bp_core_time_since( $activity_date_recorded )
+					esc_attr( bboss_core_get_iso8601_date( $activity_date_recorded ) ),
+					esc_html( bboss_core_time_since( $activity_date_recorded ) )
 				);
 				?>
 			</div>

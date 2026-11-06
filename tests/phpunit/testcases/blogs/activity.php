@@ -6,7 +6,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 	 * @group activity_tracking
 	 */
 	public function test_bp_blogs_loader_post_tracking_args_filter() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$expected = array( 'new_blog_post', 'new_blog_comment' );
 
@@ -14,7 +14,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 			$expected = array_merge( array( 'new_blog' ), $expected );
 		}
 
-		$actions = bp_activity_get_actions();
+		$actions = bboss_activity_get_actions();
 		$actions = array_keys( (array) $actions->blogs );
 
 		$this->assertEquals( $expected, $actions );
@@ -32,15 +32,15 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		$b = self::factory()->blog->create();
 		$u = self::factory()->user->create();
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'type' => 'new_blog',
 			'user_id' => $u,
 			'item_id' => $b,
 		) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
-		$expected = sprintf( '%s created the site %s', bp_core_get_userlink( $u ), '<a href="' . get_blog_option( $b, 'home' ) . '">' . get_blog_option( $b, 'blogname' ) . '</a>' );
+		$expected = sprintf( '%s created the site %s', bboss_core_get_userlink( $u ), '<a href="' . get_blog_option( $b, 'home' ) . '">' . get_blog_option( $b, 'blogname' ) . '</a>' );
 
 		$this->assertSame( $expected, $a_obj->action );
 	}
@@ -59,19 +59,19 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 			'post_author' => $u,
 		) );
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'type' => 'new_blog_post',
 			'user_id' => $u,
 			'item_id' => 1,
 			'secondary_item_id' => $p,
 		) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
-		$user_link = bp_core_get_userlink( $u );
+		$user_link = bboss_core_get_userlink( $u );
 		$blog_url = get_home_url();
 		$post_url = add_query_arg( 'p', $p, trailingslashit( $blog_url ) );
-		$post_title = bp_activity_get_meta( $a, 'post_title' );
+		$post_title = bboss_activity_get_meta( $a, 'post_title' );
 		$post_link = '<a href="' . $post_url . '">' . $post_title . '</a>';
 
 		$expected = sprintf( '%s wrote a new post, %s', $user_link, $post_link );
@@ -93,22 +93,22 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 			'post_author' => $u,
 		) );
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'type' => 'new_blog_post',
 			'user_id' => $u,
 			'item_id' => 1,
 			'secondary_item_id' => $p,
 		) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
-		$user_link = bp_core_get_userlink( $u );
+		$user_link = bboss_core_get_userlink( $u );
 		$blog_url = get_home_url();
 		$post_url = add_query_arg( 'p', $p, trailingslashit( $blog_url ) );
-		$post_title = bp_activity_get_meta( $a, 'post_title' );
+		$post_title = bboss_activity_get_meta( $a, 'post_title' );
 		$post_link = '<a href="' . $post_url . '">' . $post_title . '</a>';
 
-		$expected = sprintf( '%s wrote a new post, %s, on the site %s', $user_link, $post_link, '<a href="' . $blog_url . '">' . bp_blogs_get_blogmeta( $a_obj->item_id, 'name' ) . '</a>' );
+		$expected = sprintf( '%s wrote a new post, %s, on the site %s', $user_link, $post_link, '<a href="' . $blog_url . '">' . bboss_blogs_get_blogmeta( $a_obj->item_id, 'name' ) . '</a>' );
 
 		$this->assertSame( $expected, $a_obj->action );
 	}
@@ -133,16 +133,16 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		restore_current_blog();
 
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'type' => 'new_blog_post',
 			'user_id' => $u,
 			'item_id' => $b,
 			'secondary_item_id' => $p,
 		) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
-		$user_link = bp_core_get_userlink( $u );
+		$user_link = bboss_core_get_userlink( $u );
 		$blog_url = get_blog_option( $a_obj->item_id, 'home' );
 		$post_url = add_query_arg( 'p', $p, trailingslashit( $blog_url ) );
 		$post_title = $p_obj->post_title;
@@ -178,16 +178,16 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		restore_current_blog();
 
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'type' => 'new_blog_comment',
 			'user_id' => $u,
 			'item_id' => $b,
 			'secondary_item_id' => $c,
 		) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
-		$user_link = bp_core_get_userlink( $u );
+		$user_link = bboss_core_get_userlink( $u );
 		$blog_url = get_blog_option( $a_obj->item_id, 'home' );
 		$post_url = add_query_arg( 'p', $p, trailingslashit( $blog_url ) );
 		$post_title = $p_obj->post_title;
@@ -211,13 +211,13 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		$b = self::factory()->blog->create();
 		$u = self::factory()->user->create();
 
-		$recorded_blog          = new BP_Blogs_Blog;
+		$recorded_blog          = new BBoss_Blogs_Blog;
 		$recorded_blog->user_id = $u;
 		$recorded_blog->blog_id = $b;
 		$recorded_blog_id       = $recorded_blog->save();
 
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'type' => 'new_blog',
 			'user_id' => $u,
 			'item_id' => $b,
@@ -244,7 +244,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 
 		$u = self::factory()->user->create();
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'type' => 'new_blog_post',
 			'user_id' => $u,
 			'item_id' => $b,
@@ -275,7 +275,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 
 		$u = self::factory()->user->create();
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'type' => 'new_blog_comment',
 			'user_id' => $u,
 			'item_id' => $b,
@@ -346,7 +346,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		restore_current_blog();
 
 		// Check our activity meta to see if the post title is different.
-		$aids = bp_activity_get( array(
+		$aids = bboss_activity_get( array(
 			'fields' => 'ids',
 			'filter' => array(
 				'action' => 'new_blog_comment'
@@ -355,13 +355,13 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		$aids= $aids['activities'];
 		foreach ( $aids as $aid ) {
 			// Skip the check for the correct blog.
-			$a = new BP_Activity_Activity( $aid );
+			$a = new BBoss_Activity_Activity( $aid );
 			if ( $a->item_id == $b1 ) {
 				continue;
 			}
 
 			// Assert that post title is different.
-			$post_title = bp_activity_get_meta( $aid, 'post_title' );
+			$post_title = bboss_activity_get_meta( $aid, 'post_title' );
 			$this->assertFalse( 'Updated' === $post_title, 'Post title should not be the same across all sites with the same post comment ID' );
 		}
 	}
@@ -370,7 +370,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 	 * @ticket BP6126
 	 */
 	public function test_check_activity_actions_are_set_when_creating_activity_object() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( isset( $bp->activity->actions ) ) {
 			unset( $bp->activity->actions );
@@ -379,14 +379,14 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		$u = self::factory()->user->create();
 		$p = self::factory()->post->create( array( 'post_author' => $u, ) );
 		$a = self::factory()->activity->create( array(
-			'component'         => buddypress()->blogs->id,
+			'component'         => bboss()->blogs->id,
 			'item_id'           => 1,
 			'secondary_item_id' => $p,
 			'type'              => 'new_blog_post',
 			'user_id'           => $u,
 		) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 		$this->assertTrue( ! empty( $a_obj->action ) );
 
 	}
@@ -400,7 +400,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 			return;
 		}
 
-		buddypress()->activity->actions = new stdClass();
+		bboss()->activity->actions = new stdClass();
 
 		$u = self::factory()->user->create();
 		$p = wp_insert_post( array(
@@ -410,15 +410,15 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 			'post_content' => 'foo bar',
 		) );
 
-		$user_link = bp_core_get_userlink( $u );
+		$user_link = bboss_core_get_userlink( $u );
 		$blog_url = get_home_url();
 		$post_url = add_query_arg( 'p', $p, trailingslashit( $blog_url ) );
 		$post_link = '<a href="' . $post_url . '">(no title)</a>';
 
 		// Set activity actions
-		bp_activity_get_actions();
+		bboss_activity_get_actions();
 
-		$a_obj = bp_activity_get( array(
+		$a_obj = bboss_activity_get( array(
 			'item_id'           => 1,
 			'secondary_item_id' => $p,
 		) );
@@ -437,7 +437,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 			return;
 		}
 
-		buddypress()->activity->actions = new stdClass();
+		bboss()->activity->actions = new stdClass();
 
 		$u = self::factory()->user->create();
 		$p = wp_insert_post( array(
@@ -447,16 +447,16 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 			'post_content' => 'foo bar',
 		) );
 
-		$user_link  = bp_core_get_userlink( $u );
+		$user_link  = bboss_core_get_userlink( $u );
 		$blog_url   = get_home_url();
 		$post_url   = add_query_arg( 'p', $p, trailingslashit( $blog_url ) );
 		$post_title = get_the_title( $p );
 		$post_link  = '<a href="' . $post_url . '">' . $post_title . '</a>';
 
 		// Set actions
-		bp_activity_get_actions();
+		bboss_activity_get_actions();
 
-		$a_obj = bp_activity_get( array(
+		$a_obj = bboss_activity_get( array(
 			'item_id'           => 1,
 			'secondary_item_id' => $p,
 		) );
@@ -475,7 +475,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		$post_link = '<a href="' . $post_url . '">(no title)</a>';
 		$expected = sprintf( '%s wrote a new post, %s', $user_link, $post_link );
 
-		$a_obj = bp_activity_get( array(
+		$a_obj = bboss_activity_get( array(
 			'item_id'           => 1,
 			'secondary_item_id' => $p,
 		) );
@@ -504,16 +504,16 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		) );
 
 		// grab the activity ID for the activity comment
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'      => 'new_blog_post',
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'filter'    => array(
 				'item_id' => get_current_blog_id(),
 				'secondary_item_id' => $post_id
 			),
 		) );
 
-		$a2 = bp_activity_new_comment( array(
+		$a2 = bboss_activity_new_comment( array(
 			'content'     => 'this content shoud be in a new post comment',
 			'user_id'     => $u,
 			'activity_id' => $a1,
@@ -522,7 +522,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		$approved_comments = get_approved_comments( $post_id );
 		$comment = reset( $approved_comments );
 
-		$this->assertTrue( (int) $comment->comment_ID === (int) bp_activity_get_meta( $a2, 'bp_blogs_post_comment_id' ), 'The comment ID should be in the activity meta' );
+		$this->assertTrue( (int) $comment->comment_ID === (int) bboss_activity_get_meta( $a2, 'bp_blogs_post_comment_id' ), 'The comment ID should be in the activity meta' );
 		$this->assertTrue( (int) $a2 === (int) get_comment_meta( $comment->comment_ID, 'bp_activity_comment_id', true ), 'The activity ID should be in the comment meta' );
 
 		// reset
@@ -552,22 +552,22 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		) );
 
 		// grab the activity ID for the activity comment
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'      => 'new_blog_post',
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'filter'    => array(
 				'item_id' => get_current_blog_id(),
 				'secondary_item_id' => $post_id
 			),
 		) );
 
-		$a2 = bp_activity_new_comment( array(
+		$a2 = bboss_activity_new_comment( array(
 			'content'     => 'the generated comment should be deleted once the activity comment is removed',
 			'user_id'     => $u,
 			'activity_id' => $a1,
 		) );
 
-		bp_activity_delete_comment( $a1, $a2 );
+		bboss_activity_delete_comment( $a1, $a2 );
 
 		$post_comments = get_comments( array( 'post_id' => $post_id ) );
 
@@ -600,37 +600,37 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		) );
 
 		// grab the activity ID for the activity comment
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'      => 'new_blog_post',
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'filter'    => array(
 				'item_id' => get_current_blog_id(),
 				'secondary_item_id' => $post_id
 			),
 		) );
 
-		$a2 = bp_activity_new_comment( array(
+		$a2 = bboss_activity_new_comment( array(
 			'content'     => 'the generated comment should be spamed/unspamed once the activity comment is spamed/unspamed',
 			'user_id'     => $u,
 			'activity_id' => $a1,
 		) );
 
-		$activity = new BP_Activity_Activity( $a2 );
+		$activity = new BBoss_Activity_Activity( $a2 );
 
-		bp_activity_mark_as_spam( $activity );
+		bboss_activity_mark_as_spam( $activity );
 		$activity->save();
 
 		$post_comments = get_comments( array( 'post_id' => $post_id, 'status' => 'approve' ) );
 
 		$this->assertEmpty( $post_comments, 'A post comment should be spammed when the corresponding activity is spammed' );
 
-		bp_activity_mark_as_ham( $activity );
+		bboss_activity_mark_as_ham( $activity );
 		$activity->save();
 
 		$post_comments = get_comments( array( 'post_id' => $post_id, 'status' => 'approve' ) );
 		$comment = reset( $post_comments );
 
-		$this->assertTrue( (int) $comment->comment_ID === (int) bp_activity_get_meta( $a2, 'bp_blogs_post_comment_id' ), 'The comment ID should be in the activity meta' );
+		$this->assertTrue( (int) $comment->comment_ID === (int) bboss_activity_get_meta( $a2, 'bp_blogs_post_comment_id' ), 'The comment ID should be in the activity meta' );
 		$this->assertTrue( (int) $a2 === (int) get_comment_meta( $comment->comment_ID, 'bp_activity_comment_id', true ), 'The activity ID should be in the comment meta' );
 
 		// reset
@@ -660,26 +660,26 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		) );
 
 		// grab the activity ID for the activity comment
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'      => 'new_blog_post',
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'filter'    => array(
 				'item_id' => get_current_blog_id(),
 				'secondary_item_id' => $post_id
 			),
 		) );
 
-		$a2 = bp_activity_new_comment( array(
+		$a2 = bboss_activity_new_comment( array(
 			'content'     => 'the generated comment should be spamed/unspamed once the activity comment is spamed/unspamed',
 			'user_id'     => $u,
 			'activity_id' => $a1,
 		) );
 
-		$c = bp_activity_get_meta( $a2, 'bp_blogs_post_comment_id' );
+		$c = bboss_activity_get_meta( $a2, 'bp_blogs_post_comment_id' );
 
-		$activity = new BP_Activity_Activity( $a2 );
+		$activity = new BBoss_Activity_Activity( $a2 );
 
-		bp_activity_mark_as_spam( $activity );
+		bboss_activity_mark_as_spam( $activity );
 		$activity->save();
 
 		wp_unspam_comment( $c );
@@ -687,7 +687,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		$post_comments = get_comments( array( 'post_id' => $post_id, 'status' => 'approve' ) );
 		$comment = reset( $post_comments );
 
-		$this->assertTrue( (int) $comment->comment_ID === (int) bp_activity_get_meta( $a2, 'bp_blogs_post_comment_id' ), 'The comment ID should be in the activity meta' );
+		$this->assertTrue( (int) $comment->comment_ID === (int) bboss_activity_get_meta( $a2, 'bp_blogs_post_comment_id' ), 'The comment ID should be in the activity meta' );
 		$this->assertTrue( (int) $a2 === (int) get_comment_meta( $comment->comment_ID, 'bp_activity_comment_id', true ), 'The activity ID should be in the comment meta' );
 
 		// reset
@@ -718,34 +718,34 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		) );
 
 		// grab the activity ID for the activity comment
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'      => 'new_blog_post',
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'filter'    => array(
 				'item_id' => get_current_blog_id(),
 				'secondary_item_id' => $post_id
 			),
 		) );
 
-		$a2 = bp_activity_new_comment( array(
+		$a2 = bboss_activity_new_comment( array(
 			'content'     => 'the generated comment should be spamed/unspamed once the activity comment is spamed/unspamed',
 			'user_id'     => $u,
 			'activity_id' => $a1,
 		) );
 
-		$c = bp_activity_get_meta( $a2, 'bp_blogs_post_comment_id' );
+		$c = bboss_activity_get_meta( $a2, 'bp_blogs_post_comment_id' );
 
 		wp_trash_comment( $c );
 
-		$activity = new BP_Activity_Activity( $a2 );
+		$activity = new BBoss_Activity_Activity( $a2 );
 
-		bp_activity_mark_as_ham( $activity );
+		bboss_activity_mark_as_ham( $activity );
 		$activity->save();
 
 		$post_comments = get_comments( array( 'post_id' => $post_id, 'status' => 'approve' ) );
 		$comment = reset( $post_comments );
 
-		$this->assertTrue( (int) $comment->comment_ID === (int) bp_activity_get_meta( $a2, 'bp_blogs_post_comment_id' ), 'The comment ID should be in the activity meta' );
+		$this->assertTrue( (int) $comment->comment_ID === (int) bboss_activity_get_meta( $a2, 'bp_blogs_post_comment_id' ), 'The comment ID should be in the activity meta' );
 		$this->assertTrue( (int) $a2 === (int) get_comment_meta( $comment->comment_ID, 'bp_activity_comment_id', true ), 'The activity ID should be in the comment meta' );
 
 		// reset
@@ -775,9 +775,9 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		) );
 
 		// Grab the activity ID for the activity comment.
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'      => 'new_blog_post',
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'filter'    => array(
 				'item_id' => get_current_blog_id(),
 				'secondary_item_id' => $post_id
@@ -788,7 +788,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 		add_action( 'bp_activity_before_save', array( $this, 'set_activity_to_spam' ) );
 
 		// Create spammed activity comment.
-		$a2 = bp_activity_new_comment( array(
+		$a2 = bboss_activity_new_comment( array(
 			'content'     => 'this activity comment shoud not be created as a new post comment. yolo.',
 			'user_id'     => $u,
 			'activity_id' => $a1,

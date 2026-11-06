@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.9.00
  */
-class BB_Group_Readylaunch {
+class BBoss_Group_Readylaunch {
 
 	/**
 	 * The single instance of the class.
@@ -31,7 +31,7 @@ class BB_Group_Readylaunch {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @return BB_Group_Readylaunch|null
+	 * @return BBoss_Group_Readylaunch|null
 	 */
 	public static function instance() {
 
@@ -55,18 +55,18 @@ class BB_Group_Readylaunch {
 		add_action( 'bb_rl_footer', array( $this, 'bb_rl_load_popup' ) );
 
 		// Remove post content.
-		remove_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
+		remove_action( 'bp_before_directory_groups_page', 'bboss_group_directory_page_content' );
 
 		add_filter( 'bp_get_group_description_excerpt', array( $this, 'bb_rl_get_group_description_excerpt' ), 10, 1 );
 
-		if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+		if ( function_exists( 'bboss_disable_group_messages' ) && true === bboss_disable_group_messages() ) {
 			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_get_js_strings_for_groups' ), 11, 1 );
 		}
 
 		add_filter( 'bp_get_group_join_button', array( $this, 'bb_rl_modify_bp_get_group_join_button' ) );
 		add_filter( 'bp_nouveau_ajax_joinleave_group', array( $this, 'bb_rl_modify_group_request_membership_response' ), 10 );
 
-		add_action( 'wp_ajax_groups_membership_requested', 'bp_nouveau_ajax_joinleave_group' );
+		add_action( 'wp_ajax_groups_membership_requested', 'bboss_nouveau_ajax_joinleave_group' );
 	}
 
 	/**
@@ -82,28 +82,28 @@ class BB_Group_Readylaunch {
 	public function bb_rl_get_groups_bubble_buttons( $buttons, $group ) {
 		$buttons['about-group'] = array(
 			'id'             => 'about-group',
-			'link_text'      => __( 'About group', 'buddyboss' ),
+			'link_text'      => __( 'About group', 'buddyboss-platform' ),
 			'position'       => 10,
 			'component'      => 'groups',
 			'button_element' => 'a',
 			'button_attr'    => array(
 				'id'                   => 'about-group-' . $group->id,
-				'href'                 => bp_get_group_permalink( $group ) . '#model--about-group-' . $group->id,
+				'href'                 => bboss_get_group_permalink( $group ) . '#model--about-group-' . $group->id,
 				'class'                => 'button item-button bp-secondary-action about-group',
 				'data-bp-content-type' => 'group-info',
 			),
 		);
 
-		if ( bp_is_item_admin() ) {
+		if ( bboss_is_item_admin() ) {
 			$buttons['group-manage'] = array(
 				'id'             => 'group-manage',
-				'link_text'      => __( 'Manage', 'buddyboss' ),
+				'link_text'      => __( 'Manage', 'buddyboss-platform' ),
 				'position'       => 20,
 				'component'      => 'groups',
 				'button_element' => 'a',
 				'button_attr'    => array(
 					'id'                   => 'group-manage-' . $group->id,
-					'href'                 => trailingslashit( bp_get_group_permalink( $group ) ) . 'admin',
+					'href'                 => trailingslashit( bboss_get_group_permalink( $group ) ) . 'admin',
 					'class'                => 'button item-button bp-secondary-action group-manage',
 					'data-bp-content-type' => 'group-manage',
 				),
@@ -111,13 +111,13 @@ class BB_Group_Readylaunch {
 
 			$buttons['delete-group'] = array(
 				'id'             => 'delete-group',
-				'link_text'      => __( 'Delete', 'buddyboss' ),
+				'link_text'      => __( 'Delete', 'buddyboss-platform' ),
 				'position'       => 1000,
 				'component'      => 'groups',
 				'button_element' => 'a',
 				'button_attr'    => array(
 					'id'                   => 'delete-group-' . $group->id,
-					'href'                 => bp_get_group_permalink( $group ) . '/admin/delete-group',
+					'href'                 => bboss_get_group_permalink( $group ) . '/admin/delete-group',
 					'class'                => 'button item-button bp-secondary-action delete-group',
 					'data-bp-content-type' => 'delete-group',
 				),
@@ -128,12 +128,12 @@ class BB_Group_Readylaunch {
 
 			$is_only_admin = false;
 			// Stop sole admins from abandoning their group.
-			$group_admins = groups_get_group_admins( $group->id );
-			if ( ( 1 === count( $group_admins ) ) && ( bp_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
+			$group_admins = bboss_groups_get_group_admins( $group->id );
+			if ( ( 1 === count( $group_admins ) ) && ( bboss_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
 				$is_only_admin = true;
 			}
 
-			$nonce_url = wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'leave-group' ), 'groups_leave_group' );
+			$nonce_url = wp_nonce_url( trailingslashit( bboss_get_group_permalink( $group ) . 'leave-group' ), 'groups_leave_group' );
 
 			// Setup button attributes.
 			$buttons['leave_group'] = array(
@@ -144,13 +144,13 @@ class BB_Group_Readylaunch {
 				'wrapper_class'     => 'group-button ' . $group->status,
 				'wrapper_id'        => 'groupbutton-' . $group->id,
 				'link_href'         => $nonce_url,
-				'link_text'         => esc_html__( 'Leave group', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Leave group', 'buddyboss-platform' ),
 				'link_class'        => 'group-button leave-group',
 				'button_attr'       => array(
-					'data-title'           => esc_html__( 'Leave Group', 'buddyboss' ),
-					'data-title-displayed' => esc_html__( 'Leave group', 'buddyboss' ),
+					'data-title'           => esc_html__( 'Leave Group', 'buddyboss-platform' ),
+					'data-title-displayed' => esc_html__( 'Leave group', 'buddyboss-platform' ),
 					'data-bb-group-name'   => esc_attr( $group->name ),
-					'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) ),
+					'data-bb-group-link'   => esc_url( bboss_get_group_permalink( $group ) ),
 					'data-bp-btn-action'   => 'leave_group',
 					'data-bp-nonce'        => $nonce_url,
 				),
@@ -170,12 +170,12 @@ class BB_Group_Readylaunch {
 	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_load_popup() {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 		if ( empty( $group_id ) ) {
 			return;
 		}
 
-		$group = groups_get_group( $group_id );
+		$group = bboss_groups_get_group( $group_id );
 
 		?>
 		<div class="bb-rl-action-popup bb-rl-about-group" id="model--about-group-<?php echo esc_attr( $group_id ); ?>">
@@ -187,7 +187,7 @@ class BB_Group_Readylaunch {
 								<h4>
 									<span class="target_name">
 										<?php
-											esc_html_e( 'About group', 'buddyboss' );
+											esc_html_e( 'About group', 'buddyboss-platform' );
 										?>
 									</span>
 								</h4>
@@ -221,7 +221,7 @@ class BB_Group_Readylaunch {
 								<h4>
 									<span class="target_name">
 										<?php
-											esc_html_e( 'Group Description', 'buddyboss' );
+											esc_html_e( 'Group Description', 'buddyboss-platform' );
 										?>
 									</span>
 								</h4>
@@ -234,7 +234,7 @@ class BB_Group_Readylaunch {
 								<div class="bb-rl-group-desc">
 									<div class="group-description">
 										<?php
-										echo wp_kses_post( bp_get_group_description( $group ) );
+										echo wp_kses_post( bboss_get_group_description( $group ) );
 										?>
 									</div>
 								</div>
@@ -263,7 +263,7 @@ class BB_Group_Readylaunch {
 		?>
 		<div class="bb-rl-modal-content">
 			<?php
-			if ( function_exists( 'bp_get_group_status_description' ) ) {
+			if ( function_exists( 'bboss_get_group_status_description' ) ) {
 				?>
 				<div class="highlight bb-rl-group-meta bp-group-status">
 					<div class="bb-rl-group-meta-figure">
@@ -286,7 +286,7 @@ class BB_Group_Readylaunch {
 					<div class="bb-rl-group-meta-data">
 						<h3>
 							<?php
-							$group_meta = bp_nouveau_group_meta();
+							$group_meta = bboss_nouveau_group_meta();
 							if ( is_object( $group_meta ) && isset( $group_meta->status ) ) {
 								echo wp_kses( $group_meta->status, array( 'span' => array( 'class' => array() ) ) );
 							}
@@ -294,7 +294,7 @@ class BB_Group_Readylaunch {
 						</h3>
 						<span class="bb-rl-meta-desc flex">
 							<?php
-							echo esc_attr( bp_get_group_status_description( $group ) );
+							echo esc_attr( bboss_get_group_status_description( $group ) );
 							?>
 						</span>
 					</div>
@@ -302,7 +302,7 @@ class BB_Group_Readylaunch {
 				<?php
 			}
 
-			if ( function_exists( 'bp_get_group_member_count' ) ) {
+			if ( function_exists( 'bboss_get_group_member_count' ) ) {
 				?>
 				<div class="highlight bb-rl-group-meta bp-group-count">
 					<div class="bb-rl-group-meta-figure">
@@ -311,12 +311,12 @@ class BB_Group_Readylaunch {
 					<div class="bb-rl-group-meta-data">
 						<h3>
 							<?php
-							echo esc_html( bp_get_group_member_count() );
+							echo esc_html( bboss_get_group_member_count() );
 							?>
 						</h3>
 						<span class="bb-rl-meta-desc flex">
 							<?php
-							esc_html_e( 'Total members in the group', 'buddyboss' );
+							esc_html_e( 'Total members in the group', 'buddyboss-platform' );
 							?>
 						</span>
 					</div>
@@ -334,14 +334,14 @@ class BB_Group_Readylaunch {
 						<?php
 						printf(
 						/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-							esc_html__( 'Active %s', 'buddyboss' ),
-							wp_kses_post( bp_get_group_last_active( $group ) )
+							esc_html__( 'Active %s', 'buddyboss-platform' ),
+							wp_kses_post( bboss_get_group_last_active( $group ) )
 						);
 						?>
 					</h3>
 					<span class="bb-rl-meta-desc flex">
 						<?php
-						esc_html_e( 'Last post by any member', 'buddyboss' );
+						esc_html_e( 'Last post by any member', 'buddyboss-platform' );
 						?>
 					</span>
 				</div>
@@ -353,8 +353,8 @@ class BB_Group_Readylaunch {
 				'group_role' => array( 'admin' ),
 				'per_page'   => 0,
 			);
-			if ( bp_group_has_members( $group_query ) ) {
-				$admins        = groups_get_group_admins( $group_id );
+			if ( bboss_group_has_members( $group_query ) ) {
+				$admins        = bboss_groups_get_group_admins( $group_id );
 				$total_admins  = is_array( $admins ) ? count( $admins ) : 0;
 				$max_avatars   = 5;
 				$current_index = 0;
@@ -363,59 +363,59 @@ class BB_Group_Readylaunch {
 					<h3>
 						<?php
 						if ( 'widget' === $action ) {
-							esc_html_e( 'Organizers', 'buddyboss' );
+							esc_html_e( 'Organizers', 'buddyboss-platform' );
 						} else {
-							esc_html_e( 'Group Organizers', 'buddyboss' );
+							esc_html_e( 'Group Organizers', 'buddyboss-platform' );
 						}
 						?>
 					</h3>
-					<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> members-list bb-rl-group-organizers">
+					<ul id="members-list" class="<?php bboss_nouveau_loop_classes(); ?> members-list bb-rl-group-organizers">
 						<?php
-						while ( bp_group_members() ) :
-							bp_group_the_member();
+						while ( bboss_group_members() ) :
+							bboss_group_the_member();
 							++$current_index;
 							if ( 'widget' === $action ) {
 								if ( $current_index <= $max_avatars ) {
 									?>
 									<li class="organizer-avatar" style="display:inline-block;vertical-align:middle;margin-right:-8px;">
-										<a href="<?php bp_group_member_domain(); ?>">
-											<?php bp_group_member_avatar(); ?>
+										<a href="<?php bboss_group_member_domain(); ?>">
+											<?php bboss_group_member_avatar(); ?>
 										</a>
 									</li>
 									<?php
 								}
 							} else {
-								$member_user_id  = bp_get_member_user_id();
-								$group_member_id = bp_get_group_member_id();
+								$member_user_id  = bboss_get_member_user_id();
+								$group_member_id = bboss_get_group_member_id();
 
 								// Member's last activity.
-								$member_last_activity = bp_get_last_activity( $member_user_id );
+								$member_last_activity = bboss_get_last_activity( $member_user_id );
 
 								// Get Primary action.
 								$is_blocked = false;
 								if (
-									bp_is_active( 'moderation' ) &&
-									bb_moderation_is_user_blocked_by( $member_user_id )
+									bboss_is_active( 'moderation' ) &&
+									bboss_moderation_is_user_blocked_by( $member_user_id )
 								) {
 									$is_blocked = true;
 								}
 								?>
-								<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $group_member_id ); ?>" data-bp-item-component="members">
+								<li <?php bboss_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $group_member_id ); ?>" data-bp-item-component="members">
 									<div class="list-wrap">
 										<div class="list-wrap-inner">
 											<div class="item-avatar">
-												<a href="<?php bp_group_member_domain(); ?>">
-													<?php bp_group_member_avatar(); ?>
+												<a href="<?php bboss_group_member_domain(); ?>">
+													<?php bboss_group_member_avatar(); ?>
 												</a>
 											</div>
 											<div class="item">
 												<div class="item-block">
-													<h2 class="list-title member-name"><?php bp_group_member_link(); ?></h2>
+													<h2 class="list-title member-name"><?php bboss_group_member_link(); ?></h2>
 													<div class="list-meta">
 														<?php
-														$is_enabled_member_type = ( function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() );
+														$is_enabled_member_type = ( function_exists( 'bboss_member_type_enable_disable' ) && true === bboss_member_type_enable_disable() && true === bboss_member_type_display_on_profile() );
 														if ( $is_enabled_member_type ) {
-															echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( bp_get_user_member_type( $member_user_id ) ) . '</p>';
+															echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( bboss_get_user_member_type( $member_user_id ) ) . '</p>';
 														}
 														if ( ! $is_blocked && $member_last_activity ) {
 															?>
@@ -442,7 +442,7 @@ class BB_Group_Readylaunch {
 								<?php
 								printf(
 									/* translators: %d = number of additional group organizers */
-									esc_html__( '+%d more', 'buddyboss' ),
+									esc_html__( '+%d more', 'buddyboss-platform' ),
 									absint( $total_admins - $max_avatars )
 								);
 								?>
@@ -456,8 +456,8 @@ class BB_Group_Readylaunch {
 			}
 
 			if (
-				! bp_nouveau_groups_front_page_description() &&
-				bp_nouveau_group_has_meta( 'description' )
+				! bboss_nouveau_groups_front_page_description() &&
+				bboss_nouveau_group_has_meta( 'description' )
 			) {
 				?>
 				<div class="item-wrap-box bp-dir-hori-nav bb-rl-wrap-box bb-rl-group-desc">
@@ -466,7 +466,7 @@ class BB_Group_Readylaunch {
 						?>
 						<h3>
 							<?php
-							echo esc_html_x( 'Description', 'Group description', 'buddyboss' );
+							echo esc_html_x( 'Description', 'Group description', 'buddyboss-platform' );
 							?>
 						</h3>
 						<?php
@@ -474,7 +474,7 @@ class BB_Group_Readylaunch {
 					?>
 					<div class="group-description">
 						<?php
-						bp_group_description_excerpt();
+						bboss_group_description_excerpt();
 						?>
 					</div>
 				</div>
@@ -494,12 +494,12 @@ class BB_Group_Readylaunch {
 	 * @param int $group_id Group ID.
 	 */
 	public static function bb_readylaunch_invite( $group_id = 0 ) {
-		if ( bp_is_active( 'friends' ) && bp_groups_user_can_send_invites() && ! empty( $group_id ) ) {
-			$current_group = groups_get_group( $group_id );
-			$group_link    = bp_get_group_permalink( $current_group );
+		if ( bboss_is_active( 'friends' ) && bboss_groups_user_can_send_invites() && ! empty( $group_id ) ) {
+			$current_group = bboss_groups_get_group( $group_id );
+			$group_link    = bboss_get_group_permalink( $current_group );
 			if ( $current_group->user_has_access ) {
 				$invite_link = trailingslashit( $group_link ) . 'invite';
-				echo '<span class="bb-group-member-invite"><a data-balloon-pos="right" data-balloon="' . esc_attr__( 'Send Invites', 'buddyboss' ) . '" href="' . esc_url( $invite_link ) . '"><i class="bb-icons-rl-user-plus"></i><span class="bb-rl-screen-reader-text">' . esc_html__( 'Send Invites', 'buddyboss' ) . '</span></a></span>';
+				echo '<span class="bb-group-member-invite"><a data-balloon-pos="right" data-balloon="' . esc_attr__( 'Send Invites', 'buddyboss-platform' ) . '" href="' . esc_url( $invite_link ) . '"><i class="bb-icons-rl-user-plus"></i><span class="bb-rl-screen-reader-text">' . esc_html__( 'Send Invites', 'buddyboss-platform' ) . '</span></a></span>';
 			}
 		}
 	}
@@ -594,9 +594,9 @@ class BB_Group_Readylaunch {
 	 * @return string Modified excerpt.
 	 */
 	public function bb_rl_get_group_description_excerpt( $excerpt ) {
-		$group_link = '... <a href="#" id="group-description-' . esc_attr( bp_get_current_group_id() ) . '" class="bb-rl-more-link">' . esc_html__( 'Show more', 'buddyboss' ) . '</a>';
+		$group_link = '... <a href="#" id="group-description-' . esc_attr( bboss_get_current_group_id() ) . '" class="bb-rl-more-link">' . esc_html__( 'Show more', 'buddyboss-platform' ) . '</a>';
 
-		return bp_create_excerpt( $excerpt, 160, array( 'ending' => $group_link ) );
+		return bboss_create_excerpt( $excerpt, 160, array( 'ending' => $group_link ) );
 	}
 
 	/**
@@ -611,7 +611,7 @@ class BB_Group_Readylaunch {
 	 */
 	public static function bb_rl_add_count_after_label( $label, $group_id, $label_name ) {
 		if ( 'member_plural_label_name' === $label_name ) {
-			$members = groups_get_group_members(
+			$members = bboss_groups_get_group_members(
 				array(
 					'group_id'            => $group_id,
 					'exclude_admins_mods' => true,
@@ -623,10 +623,10 @@ class BB_Group_Readylaunch {
 			);
 			$label   = $label . ( ! empty( $members['count'] ) ? ' (' . $members['count'] . ')' : '' );
 		} elseif ( 'organizer_plural_label_name' === $label_name ) {
-			$admins = groups_get_group_admins( $group_id );
+			$admins = bboss_groups_get_group_admins( $group_id );
 			$label  = $label . ( ! empty( $admins ) ? ' (' . count( $admins ) . ')' : '' );
 		} elseif ( 'moderator_plural_label_name' === $label_name ) {
-			$mods  = groups_get_group_mods( $group_id );
+			$mods  = bboss_groups_get_group_mods( $group_id );
 			$label = $label . ( ! empty( $mods ) ? ' (' . count( $mods ) . ')' : '' );
 		} else {
 			$label = $label;
@@ -646,7 +646,7 @@ class BB_Group_Readylaunch {
 	 */
 	public function bb_rl_get_js_strings_for_groups( $params ) {
 		if ( isset( $params['group_messages'] ) && isset( $params['group_messages']['type_message'] ) ) {
-			$params['group_messages']['type_message'] = __( 'Type a message', 'buddyboss' );
+			$params['group_messages']['type_message'] = __( 'Type a message', 'buddyboss-platform' );
 		}
 
 		return $params;
@@ -668,11 +668,11 @@ class BB_Group_Readylaunch {
 		}
 
 		if ( 'public' === $group->status ) {
-			$description = __( 'Anyone can join the group.', 'buddyboss' );
+			$description = __( 'Anyone can join the group.', 'buddyboss-platform' );
 		} elseif ( 'hidden' === $group->status ) {
-			$description = __( 'Only invited member can join the group & group will not listed anywhere.', 'buddyboss' );
+			$description = __( 'Only invited member can join the group & group will not listed anywhere.', 'buddyboss-platform' );
 		} elseif ( 'private' === $group->status ) {
-			$description = __( 'Only people who requested membership and are accepted can join the group.', 'buddyboss' );
+			$description = __( 'Only people who requested membership and are accepted can join the group.', 'buddyboss-platform' );
 		}
 
 		return $description;
@@ -693,7 +693,7 @@ class BB_Group_Readylaunch {
 		$last_activity_date = date_i18n( 'd M Y', strtotime( $last_activity_date ) );
 		$last_activity      = sprintf(
 		/* translators: 1: User joined date. */
-			esc_html__( 'Joined %s', 'buddyboss' ),
+			esc_html__( 'Joined %s', 'buddyboss-platform' ),
 			esc_html( $last_activity_date )
 		);
 
@@ -714,9 +714,9 @@ class BB_Group_Readylaunch {
 	public static function bb_rl_modify_nav_link_text( $link_text, $nav_item, $nav_scope ) {
 		if ( ! empty( $nav_item->slug ) && ! empty( $nav_scope ) && 'groups' === $nav_scope ) {
 			if ( 'public-message' === $nav_item->slug ) {
-				$link_text = __( 'Group message', 'buddyboss' );
+				$link_text = __( 'Group message', 'buddyboss-platform' );
 			} elseif ( 'private-message' === $nav_item->slug ) {
-				$link_text = __( 'Private message', 'buddyboss' );
+				$link_text = __( 'Private message', 'buddyboss-platform' );
 			}
 		}
 
@@ -739,8 +739,8 @@ class BB_Group_Readylaunch {
 
 		if ( 'membership_requested' === $button['id'] ) {
 			$button['link_class']                         .= ' bb-rl-cancel-request bp-toggle-action-button';
-			$button['button_attr']['data-title']           = esc_html__( 'Cancel Request', 'buddyboss' );
-			$button['button_attr']['data-title-displayed'] = esc_html__( 'Request Sent', 'buddyboss' );
+			$button['button_attr']['data-title']           = esc_html__( 'Cancel Request', 'buddyboss-platform' );
+			$button['button_attr']['data-title-displayed'] = esc_html__( 'Request Sent', 'buddyboss-platform' );
 		}
 		return $button;
 	}
@@ -761,7 +761,7 @@ class BB_Group_Readylaunch {
 		}
 
 		if ( 'groups_request_membership' === $action ) {
-			$response['feedback'] = esc_html__( 'Your membership request has been sent! The group organizer will review it, and you\'ll be notified once they respond. ', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'Your membership request has been sent! The group organizer will review it, and you\'ll be notified once they respond. ', 'buddyboss-platform' );
 		}
 
 		if ( 'groups_membership_requested' === $action ) {
@@ -770,11 +770,11 @@ class BB_Group_Readylaunch {
 				return $response;
 			}
 
-			$group = groups_get_group( $group_id );
+			$group = bboss_groups_get_group( $group_id );
 
-			if ( ! groups_delete_membership_request( false, bp_loggedin_user_id(), $group_id ) ) {
+			if ( ! bboss_groups_delete_membership_request( false, bboss_loggedin_user_id(), $group_id ) ) {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error canceling membership request.', 'buddyboss' ) ),
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error canceling membership request.', 'buddyboss-platform' ) ),
 					'type'     => 'error',
 				);
 			} else {
@@ -782,10 +782,10 @@ class BB_Group_Readylaunch {
 				$group->is_pending = '0';
 
 				$response = array(
-					'contents'  => bp_get_group_join_button( $group ),
-					'is_group'  => bp_is_group(),
+					'contents'  => bboss_get_group_join_button( $group ),
+					'is_group'  => bboss_is_group(),
 					'type'      => 'success',
-					'group_url' => ( bp_is_group() ? bp_get_group_permalink( $group ) : '' ),
+					'group_url' => ( bboss_is_group() ? bboss_get_group_permalink( $group ) : '' ),
 				);
 			}
 		}

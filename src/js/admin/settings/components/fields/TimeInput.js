@@ -76,7 +76,7 @@ export function TimeInput( props ) {
 	var label = props.label || '';
 	var value = props.value || '';
 	var onChange = props.onChange;
-	var placeholder = props.placeholder || __( 'hh:mm', 'buddyboss' );
+	var placeholder = props.placeholder || __( 'hh:mm', 'buddyboss-platform' );
 	var disabled = props.disabled || false;
 	var interval = props.interval || 60;
 
@@ -245,7 +245,7 @@ export function TimeInput( props ) {
 							className="bb-admin-time-input__list"
 							ref={ listRef }
 							role="listbox"
-							aria-label={ __( 'Select time', 'buddyboss' ) }
+							aria-label={ __( 'Select time', 'buddyboss-platform' ) }
 						>
 							{ timeSlots.map( function ( time ) {
 								var isSelected = time === normalizedInput;

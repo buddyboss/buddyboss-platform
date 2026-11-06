@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Suspend_Album extends BP_Suspend_Abstract {
+class BBoss_Suspend_Album extends BBoss_Suspend_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	public static $type = 'media_album';
 
 	/**
-	 * BP_Suspend_Album constructor.
+	 * BBoss_Suspend_Album constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -82,7 +82,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			$args['page']     = $page;
 		}
 
-		$albums = bp_album_get( $args );
+		$albums = bboss_album_get( $args );
 
 		if ( ! empty( $albums['albums'] ) ) {
 			$album_ids = $albums['albums'];
@@ -90,7 +90,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $album_ids ) ) {
 			foreach ( $album_ids as $k => $album_id ) {
-				if ( BP_Core_Suspend::check_suspended_content( $album_id, self::$type, true ) ) {
+				if ( BBoss_Core_Suspend::check_suspended_content( $album_id, self::$type, true ) ) {
 					unset( $album_ids[ $k ] );
 				}
 			}
@@ -124,7 +124,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			$args['page']     = $page;
 		}
 
-		$albums = bp_album_get( $args );
+		$albums = bboss_album_get( $args );
 
 		if ( ! empty( $albums['albums'] ) ) {
 			$album_ids = $albums['albums'];
@@ -196,7 +196,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 
 			$exclude_group_sql = '';
 			// Allow group media albums for blocked/suspended users.
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				$exclude_group_sql = ' OR m.privacy = "grouponly" ';
 			}
 
@@ -222,7 +222,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $album_id,
@@ -244,7 +244,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::add_suspend( $suspend_args );
+		BBoss_Core_Suspend::add_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $album_id;
 
@@ -282,7 +282,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $album_id,
@@ -300,7 +300,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			isset( $suspend_args['type'] ) &&
 			$suspend_args['type'] !== self::$type
 		) {
-			$album_author_id = BP_Moderation_Album::get_content_owner_id( $album_id );
+			$album_author_id = BBoss_Moderation_Album::get_content_owner_id( $album_id );
 			if ( isset( $suspend_args['blocked_user'] ) && $album_author_id === $suspend_args['blocked_user'] ) {
 				unset( $suspend_args['blocked_user'] );
 			}
@@ -316,7 +316,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::remove_suspend( $suspend_args );
+		BBoss_Core_Suspend::remove_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $album_id;
 
@@ -355,7 +355,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			return $related_contents;
 		}
 
-		$related_contents[ BP_Suspend_Media::$type ] = BP_Media::get_album_media_ids( $album_id );
+		$related_contents[ BBoss_Suspend_Media::$type ] = BBoss_Media::get_album_media_ids( $album_id );
 
 		return $related_contents;
 	}
@@ -365,7 +365,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param BP_Media_Album $album Current instance of album being saved. Passed by reference.
+	 * @param BBoss_Media_Album $album Current instance of album being saved. Passed by reference.
 	 */
 	public function sync_moderation_data_on_save( $album ) {
 
@@ -373,14 +373,14 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$sub_items     = bp_moderation_get_sub_items( $album->id, BP_Moderation_Album::$moderation_type );
+		$sub_items     = bboss_moderation_get_sub_items( $album->id, BBoss_Moderation_Album::$moderation_type );
 		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $album->id;
-		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Album::$moderation_type;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BBoss_Moderation_Album::$moderation_type;
 
-		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+		$suspended_record = BBoss_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
 
 		if ( empty( $suspended_record ) ) {
-			$suspended_record = BP_Core_Suspend::get_recode( $album->user_id, BP_Moderation_Members::$moderation_type );
+			$suspended_record = BBoss_Core_Suspend::get_recode( $album->user_id, BBoss_Moderation_Members::$moderation_type );
 		}
 
 		if ( empty( $suspended_record ) ) {
@@ -404,7 +404,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 		}
 
 		foreach ( $albums as $album ) {
-			BP_Core_Suspend::delete_suspend( $album->id, $this->item_type );
+			BBoss_Core_Suspend::delete_suspend( $album->id, $this->item_type );
 		}
 	}
 }

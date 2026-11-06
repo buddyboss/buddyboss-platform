@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-class BP_Nouveau extends BP_Theme_Compat {
+class BBoss_Nouveau extends BBoss_Theme_Compat {
 	/**
 	 * Instance of this class.
 	 */
@@ -68,14 +68,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_globals() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		foreach ( $bp->theme_compat->packages['nouveau'] as $property => $value ) {
 			$this->{$property} = $value;
 		}
 
 		$this->includes_dir  = trailingslashit( $this->dir ) . 'includes/';
-		$this->directory_nav = new BP_Core_Nav();
+		$this->directory_nav = new BBoss_Core_Nav();
 	}
 
 	/**
@@ -97,7 +97,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			add_action(
 				'admin_init',
 				function() {
-					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX ) {
+					if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX ) {
 						require $this->includes_dir . 'ajax.php';
 					}
 				},
@@ -108,24 +108,24 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_action(
 			'bp_customize_register',
 			function() {
-				if ( bp_is_root_blog() && current_user_can( 'customize' ) ) {
+				if ( bboss_is_root_blog() && current_user_can( 'customize' ) ) {
 					require $this->includes_dir . 'customizer.php';
 				}
 			},
 			0
 		);
 
-		foreach ( bp_core_get_packaged_component_ids() as $component ) {
+		foreach ( bboss_core_get_packaged_component_ids() as $component ) {
 			$component_loader = trailingslashit( $this->includes_dir ) . $component . '/loader.php';
 
-			if ( ! bp_is_active( $component ) || ! file_exists( $component_loader ) ) {
+			if ( ! bboss_is_active( $component ) || ! file_exists( $component_loader ) ) {
 				continue;
 			}
 
 			require $component_loader;
 		}
 
-		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+		if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) {
 			$component_loader = trailingslashit( $this->includes_dir ) . 'follow/loader.php';
 
 			if ( file_exists( $component_loader ) ) {
@@ -138,7 +138,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 *
 		 * @since BuddyPress 3.0.0
 		 *
-		 * @param BP_Nouveau $value Current BP_Nouveau instance.
+		 * @param BBoss_Nouveau $value Current BBoss_Nouveau instance.
 		 */
 		do_action_ref_array( 'bp_nouveau_includes', array( &$this ) );
 	}
@@ -159,7 +159,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$top_offset = $avatar_height;
 		}
 
-		bp_set_theme_compat_feature(
+		bboss_set_theme_compat_feature(
 			$this->id,
 			array(
 				'name'     => 'cover_image',
@@ -167,7 +167,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 					'components'   => array( 'xprofile', 'groups' ),
 					'width'        => $width,
 					'height'       => $top_offset + round( $avatar_height / 2 ),
-					'callback'     => 'bp_nouveau_theme_cover_image',
+					'callback'     => 'bboss_nouveau_theme_cover_image',
 					'theme_handle' => 'bp-nouveau',
 				),
 			)
@@ -191,7 +191,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		// Scripts.
 		add_action( 'bp_enqueue_scripts', array( $this, 'register_scripts' ), 2 ); // Register theme JS.
-		remove_action( 'bp_enqueue_scripts', 'bp_core_confirmation_js' );
+		remove_action( 'bp_enqueue_scripts', 'bboss_core_confirmation_js' );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 1 ); // Enqueue theme CSS.
 		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS.
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS.
@@ -209,7 +209,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_filter( 'body_class', array( $this, 'add_nojs_body_class' ), 20, 1 );
 
 		// Ajax querystring.
-		add_filter( 'bp_ajax_querystring', 'bp_nouveau_ajax_querystring', 10, 2 );
+		add_filter( 'bp_ajax_querystring', 'bboss_nouveau_ajax_querystring', 10, 2 );
 
 		// Register directory nav items.
 		add_action( 'bp_screens', array( $this, 'setup_directory_nav' ), 15 );
@@ -230,7 +230,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 *
 		 * @since BuddyPress 3.0.0
 		 *
-		 * @param BP_Nouveau $this Current BP_Nouveau instance.
+		 * @param BBoss_Nouveau $this Current BBoss_Nouveau instance.
 		 */
 		do_action_ref_array( 'bp_theme_compat_actions', array( &$this ) );
 	}
@@ -248,7 +248,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function bbp_set_forum_selected_menu_class( $classes = array(), $item = false ) {
 
 		// Return if forums not active.
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			return $classes;
 		}
 
@@ -266,7 +266,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			return $classes;
 		}
 
-		if ( bbp_get_forum_post_type() === get_post_type() || bbp_get_topic_post_type() === get_post_type() ) {
+		if ( bboss_bbp_get_forum_post_type() === get_post_type() || bboss_bbp_get_topic_post_type() === get_post_type() ) {
 			// Unset current_page_parent class if exists.
 			if ( in_array( 'current_page_parent', $classes ) ) {
 				unset( $classes[ array_search( 'current_page_parent', $classes ) ] );
@@ -304,49 +304,52 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		// update!
-		$forum_page_id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+		$forum_page_id = (int) bboss_get_option( '_bbp_root_slug_custom_slug' );
 
 		if ( $forum_page_id > 0 && $forum_page_id === $post_id ) {
 			$slug = get_page_uri( $forum_page_id );
 			if ( '' !== $slug ) {
-				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
-				bp_update_option( 'rewrite_rules', '' );
+				bboss_update_option( '_bbp_root_slug', urldecode( $slug ) );
+				bboss_update_option( 'rewrite_rules', '' );
 			}
 		}
 	}
 
 	public function platform_login_scripts() {
-		?>
-		<script>
-			jQuery( document ).ready( function () {
-				if ( jQuery('.popup-modal-register').length ) {
-					jQuery('.popup-modal-register').magnificPopup({
-						type: 'inline',
-						preloader: false,
-						fixedContentPos: true,
-						modal: true
-					});
-					jQuery('.popup-modal-dismiss').click(function (e) {
-						e.preventDefault();
-						$.magnificPopup.close();
-					});
-				}
-				if ( jQuery('.popup-modal-login').length ) {
-					jQuery('.popup-modal-login').magnificPopup({
-						type: 'inline',
-						preloader: false,
-						fixedBgPos: true,
-						fixedContentPos: true
-					});
-					jQuery('.popup-modal-dismiss').click(function (e) {
-						e.preventDefault();
-						$.magnificPopup.close();
-					});
-				}
-			});
-		</script>
-		<?php
-
+		// Login/register popups on the login screen, printed through the script API (was a raw <script>).
+		$inline_js = <<<'JS'
+jQuery( document ).ready( function () {
+	if ( jQuery('.popup-modal-register').length ) {
+		jQuery('.popup-modal-register').magnificPopup({
+			type: 'inline',
+			preloader: false,
+			fixedContentPos: true,
+			modal: true
+		});
+		jQuery('.popup-modal-dismiss').click(function (e) {
+			e.preventDefault();
+			$.magnificPopup.close();
+		});
+	}
+	if ( jQuery('.popup-modal-login').length ) {
+		jQuery('.popup-modal-login').magnificPopup({
+			type: 'inline',
+			preloader: false,
+			fixedBgPos: true,
+			fixedContentPos: true
+		});
+		jQuery('.popup-modal-dismiss').click(function (e) {
+			e.preventDefault();
+			$.magnificPopup.close();
+		});
+	}
+});
+JS;
+		if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+			wp_print_inline_script_tag( $inline_js );
+		} else {
+			echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+		}
 	}
 
 	/**
@@ -364,7 +367,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			return;
 		}
 
-		$min = bp_core_get_minified_asset_suffix();
+		$min = bboss_core_get_minified_asset_suffix();
 		$rtl = '';
 
 		if ( is_rtl() ) {
@@ -372,7 +375,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		// BB icon version.
-		$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
+		$bb_icon_version = function_exists( 'bboss_icon_font_map_data' ) ? bboss_icon_font_map_data( 'version' ) : '';
 		$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : $this->version;
 
 		/**
@@ -442,7 +445,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 				// Locate the asset if needed.
 				if ( false === strpos( $style['file'], '://' ) ) {
-					$asset = bp_locate_template_asset( $file );
+					$asset = bboss_locate_template_asset( $file );
 
 					if ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) {
 						continue;
@@ -451,7 +454,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 					$file = $asset['uri'];
 				}
 
-				$data = bp_parse_args(
+				$data = bboss_parse_args(
 					$style,
 					array(
 						'dependencies' => array(),
@@ -474,8 +477,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function register_scripts() {
-		$min          = bp_core_get_minified_asset_suffix();
-		$dependencies = bp_core_get_js_dependencies();
+		$min          = bboss_core_get_minified_asset_suffix();
+		$dependencies = bboss_core_get_js_dependencies();
 		$bp_confirm   = array_search( 'bp-confirm', $dependencies );
 
 		unset( $dependencies[ $bp_confirm ] );
@@ -515,7 +518,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		// Add The password verify if needed.
-		if ( bp_is_active( 'settings' ) || bp_get_signup_allowed() ) {
+		if ( bboss_is_active( 'settings' ) || bboss_get_signup_allowed() ) {
 			$scripts['bp-nouveau-password-verify'] = array(
 				'file'         => 'js/password-verify%s.js',
 				'dependencies' => array( 'bp-nouveau', 'password-strength-meter' ),
@@ -524,21 +527,21 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		$scripts['bp-nouveau-magnific-popup'] = array(
-			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
+			'file'         => bboss()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
 		);
 
-		if ( bp_is_active( 'media' ) ) {
+		if ( bboss_is_active( 'media' ) ) {
 
 			$scripts['bp-nouveau-codemirror'] = array(
-				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/codemirror%s.js',
+				'file'         => bboss()->plugin_url . 'bp-core/js/vendor/codemirror%s.js',
 				'dependencies' => array(),
 				'footer'       => true,
 			);
 
 			$scripts['bp-nouveau-codemirror-css'] = array(
-				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/css%s.js',
+				'file'         => bboss()->plugin_url . 'bp-core/js/vendor/css%s.js',
 				'dependencies' => array(),
 				'footer'       => true,
 			);
@@ -554,7 +557,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 			// Locate the asset if needed.
 			if ( false === strpos( $script['file'], '://' ) ) {
-				$asset = bp_locate_template_asset( $file );
+				$asset = bboss_locate_template_asset( $file );
 
 				if ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) {
 					continue;
@@ -563,7 +566,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 				$file = $asset['uri'];
 			}
 
-			$data = bp_parse_args(
+			$data = bboss_parse_args(
 				$script,
 				array(
 					'dependencies' => array(),
@@ -575,7 +578,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			wp_register_script( $handle, $file, $data['dependencies'], $data['version'], $data['footer'] );
 		}
 
-		wp_localize_script( 'bp-nouveau-messages-at', 'BP_Mentions_Options', bp_at_mention_default_options() );
+		wp_localize_script( 'bp-nouveau-messages-at', 'BP_Mentions_Options', bboss_at_mention_default_options() );
 	}
 
 	/**
@@ -585,18 +588,18 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function enqueue_scripts() {
 
-		if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) || bp_is_active( 'moderation' ) ) {
+		if ( bboss_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) || bboss_is_active( 'moderation' ) ) {
 			wp_enqueue_script( 'bp-nouveau-magnific-popup' );
 		}
 
 		wp_enqueue_script( 'bp-nouveau' );
 		wp_enqueue_script( 'guillotine-js' );
 
-		if ( bp_is_register_page() || bp_is_user_settings_general() ) {
+		if ( bboss_is_register_page() || bboss_is_user_settings_general() ) {
 			wp_enqueue_script( 'bp-nouveau-password-verify' );
 		}
 
-		if ( is_singular() && bp_is_blog_page() && get_option( 'thread_comments' ) ) {
+		if ( is_singular() && bboss_is_blog_page() && get_option( 'thread_comments' ) ) {
 			wp_enqueue_script( 'comment-reply' );
 		}
 
@@ -654,57 +657,57 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function localize_scripts() {
 
 		$params = array(
-			'ajaxurl'                    => bp_core_ajax_url(),
-			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
-			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
-			'confirm'                    => __( 'Are you sure?', 'buddyboss' ),
-			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-			'show_x_comments'            => __( 'View more comments', 'buddyboss' ),
-			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
+			'ajaxurl'                    => bboss_core_ajax_url(),
+			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss-platform' ),
+			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss-platform' ),
+			'confirm'                    => __( 'Are you sure?', 'buddyboss-platform' ),
+			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss-platform' ),
+			'show_x_comments'            => __( 'View more comments', 'buddyboss-platform' ),
+			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss-platform' ),
 			'object_nav_parent'          => '#buddypress',
-			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss' ),
-			'empty_field'                => __( 'New Field', 'buddyboss' ),
-			'close'                      => __( 'Close', 'buddyboss' ),
-			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss' ),
+			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss-platform' ),
+			'empty_field'                => __( 'New Field', 'buddyboss-platform' ),
+			'close'                      => __( 'Close', 'buddyboss-platform' ),
+			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss-platform' ),
 			'group_leave_confirm'        => sprintf(
 				'<p>%s<span class="bb-group-name"></span>?</p>',
-				esc_html__( 'Are you sure you want to leave ', 'buddyboss' )
+				esc_html__( 'Are you sure you want to leave ', 'buddyboss-platform' )
 			),
 			'wpTime'                     => current_time( 'Y-m-d H:i:s' ),
-			'wpTimezone'                 => bp_get_option( 'timezone_string' ),
+			'wpTimezone'                 => bboss_get_option( 'timezone_string' ),
 			'dir_labels'                 => array(
 				'members'   => array(
-					'singular' => esc_html__( 'Member', 'buddyboss' ),
-					'plural'   => esc_html__( 'Members', 'buddyboss' ),
+					'singular' => esc_html__( 'Member', 'buddyboss-platform' ),
+					'plural'   => esc_html__( 'Members', 'buddyboss-platform' ),
 				),
 				'followers' => array(
-					'singular' => esc_html__( 'Follower', 'buddyboss' ),
-					'plural'   => esc_html__( 'Followers', 'buddyboss' ),
+					'singular' => esc_html__( 'Follower', 'buddyboss-platform' ),
+					'plural'   => esc_html__( 'Followers', 'buddyboss-platform' ),
 				),
 			),
 			'rest_url'                   => untrailingslashit( home_url( 'wp-json/buddyboss/v1' ) ),
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
 			// Shown in a hover pop-up card when its request fails.
-			'card_load_error'            => __( 'Failed to load data.', 'buddyboss' ),
-			'member_label'               => __( 'member', 'buddyboss' ),
-			'members_label'              => __( 'members', 'buddyboss' ),
+			'card_load_error'            => __( 'Failed to load data.', 'buddyboss-platform' ),
+			'member_label'               => __( 'member', 'buddyboss-platform' ),
+			'members_label'              => __( 'members', 'buddyboss-platform' ),
 			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card.
 			// The cards previously read BP_Nouveau.activity.params.user_id, which carries the
 			// same value but is only registered when the Activity component is enabled — with
 			// Activity off the unguarded property read threw and killed every hover card on
 			// the site. Localizing it on the shared handle makes the guard component-agnostic.
-			'loggedin_user_id'           => bp_loggedin_user_id(),
+			'loggedin_user_id'           => bboss_loggedin_user_id(),
 		);
 
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bboss_is_active( 'friends' ) ) {
 			$params['dir_labels']['connections'] = array(
-				'singular' => esc_html__( 'Connection', 'buddyboss' ),
-				'plural'   => esc_html__( 'Connections', 'buddyboss' ),
+				'singular' => esc_html__( 'Connection', 'buddyboss-platform' ),
+				'plural'   => esc_html__( 'Connections', 'buddyboss-platform' ),
 			);
 		}
 
 		// If the Object/Item nav are in the sidebar.
-		if ( bp_nouveau_is_object_nav_in_sidebar() ) {
+		if ( bboss_nouveau_is_object_nav_in_sidebar() ) {
 			$params['object_nav_parent'] = '.buddypress_object_nav';
 		}
 
@@ -715,12 +718,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 *
 		 * @param array $value Array of supported components.
 		 */
-		$supported_objects = (array) apply_filters( 'bp_nouveau_supported_components', bp_core_get_packaged_component_ids() );
+		$supported_objects = (array) apply_filters( 'bp_nouveau_supported_components', bboss_core_get_packaged_component_ids() );
 		$object_nonces     = array();
 		$group_sub_objects = false;
 
 		foreach ( $supported_objects as $key_object => $object ) {
-			if ( ! bp_is_active( $object ) || 'forums' === $object ) {
+			if ( ! bboss_is_active( $object ) || 'forums' === $object ) {
 				unset( $supported_objects[ $key_object ] );
 				continue;
 			}
@@ -739,7 +742,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		// Nonce for revoking a sent email invite from the member's Sent Invites screen.
-		if ( bp_is_active( 'invites' ) ) {
+		if ( bboss_is_active( 'invites' ) ) {
 			$object_nonces['invites_revoke'] = wp_create_nonce( 'bb_invites_revoke' );
 		}
 
@@ -751,22 +754,26 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$params['objects'] = $supported_objects;
 		$params['nonces']  = $object_nonces;
 
+		// Nonce for the cover image reposition AJAX action (bb_save_cover_position).
+		// @since BuddyBoss [BBVERSION].
+		$params['coverPositionNonce'] = wp_create_nonce( 'bb_save_cover_position' );
+
 		// Used to transport the settings inside the Ajax requests
 		if ( is_customize_preview() ) {
-			$params['customizer_settings'] = bp_nouveau_get_temporary_setting( 'any' );
+			$params['customizer_settings'] = bboss_nouveau_get_temporary_setting( 'any' );
 		}
 
 		// Add localize variable for performance tab.
-		$params['is_send_ajax_request'] = function_exists( 'bb_is_send_ajax_request' ) ? bb_is_send_ajax_request() : '';
+		$params['is_send_ajax_request'] = function_exists( 'bboss_is_send_ajax_request' ) ? bboss_is_send_ajax_request() : '';
 
 		// Add localize variable for enable content counts.
-		$params['bb_enable_content_counts'] = bb_enable_content_counts();
+		$params['bb_enable_content_counts'] = bboss_enable_content_counts();
 
 		// Add localize variable for more menu items.
-		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss' );
+		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss-platform' );
 
 		// Add localize variable for more menu text.
-		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
+		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss-platform' );
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
@@ -788,14 +795,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function presence_localize_scripts() {
 
 		$params = array(
-			'heartbeat_enabled'         => bb_is_heartbeat_enabled(),
-			'presence_interval'         => bb_presence_interval(),
-			'presence_default_interval' => bb_presence_default_interval(),
-			'presence_time_span'        => bb_presence_time_span(),
-			'idle_inactive_span'        => bb_idle_inactive_span(),
+			'heartbeat_enabled'         => bboss_is_heartbeat_enabled(),
+			'presence_interval'         => bboss_presence_interval(),
+			'presence_default_interval' => bboss_presence_default_interval(),
+			'presence_time_span'        => bboss_presence_time_span(),
+			'idle_inactive_span'        => bboss_idle_inactive_span(),
 			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
-			'native_presence'           => (bool) bp_get_option( 'bb_use_core_native_presence', false ),
-			'native_presence_url'       => buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php',
+			'native_presence'           => (bool) bboss_get_option( 'bb_use_core_native_presence', false ),
+			'native_presence_url'       => bboss()->plugin_url . 'bp-core/bb-core-native-presence.php',
 			'presence_rest_url'         => home_url( 'wp-json/buddyboss/v1/members/presence' ),
 		);
 
@@ -829,7 +836,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 *
 		 * @param bool $value Whether or not we are viewing a directory.
 		 */
-		if ( true === (bool) apply_filters( 'bp_nouveau_theme_compat_page_templates_directory_only', ! bp_is_directory() ) ) {
+		if ( true === (bool) apply_filters( 'bp_nouveau_theme_compat_page_templates_directory_only', ! bboss_is_directory() ) ) {
 			return $templates;
 		}
 
@@ -837,20 +844,20 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$page_id = 0;
 
 		// Get the WordPress Page ID for the current view.
-		foreach ( (array) buddypress()->pages as $component => $bp_page ) {
+		foreach ( (array) bboss()->pages as $component => $bp_page ) {
 
 			// Handles the majority of components.
-			if ( bp_is_current_component( $component ) ) {
+			if ( bboss_is_current_component( $component ) ) {
 				$page_id = (int) $bp_page->id;
 			}
 
 			// Stop if not on a user page.
-			if ( ! bp_is_user() && ! empty( $page_id ) ) {
+			if ( ! bboss_is_user() && ! empty( $page_id ) ) {
 				break;
 			}
 
 			// The Members component requires an explicit check due to overlapping components.
-			if ( bp_is_user() && ( 'members' === $component ) ) {
+			if ( bboss_is_user() && ( 'members' === $component ) ) {
 				$page_id = (int) $bp_page->id;
 				break;
 			}
@@ -886,7 +893,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
-	 * @see bp_buffer_template_part()
+	 * @see bboss_buffer_template_part()
 	 *
 	 * @param string $retval Current template part contents.
 	 *
@@ -903,7 +910,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Add our 'buddypress' div wrapper.
 		return sprintf(
 			'<div id="buddypress" class="%1$s">%2$s</div><!-- #buddypress -->%3$s',
-			esc_attr( bp_nouveau_get_container_classes() ),
+			esc_attr( bboss_nouveau_get_container_classes() ),
 			$retval,  // Constructed HTML.
 			"\n"
 		);
@@ -917,19 +924,19 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function setup_directory_nav() {
 		$nav_items = array();
 
-		if ( bp_is_members_directory() ) {
-			$nav_items = bp_nouveau_get_members_directory_nav_items();
-		} elseif ( bp_is_activity_directory() && function_exists( 'bp_nouveau_get_activity_directory_nav_items' ) ) {
-			$nav_items = bp_nouveau_get_activity_directory_nav_items();
-		} elseif ( bp_is_groups_directory() && function_exists( 'bp_nouveau_get_groups_directory_nav_items' ) ) {
-			$nav_items = bp_nouveau_get_groups_directory_nav_items();
-		} elseif ( bp_is_blogs_directory() ) {
-			$nav_items = bp_nouveau_get_blogs_directory_nav_items();
-		} elseif ( bp_is_media_directory() ) {
-			$nav_items = bp_nouveau_get_media_directory_nav_items();
-		} elseif ( bp_is_document_directory() && function_exists( 'bp_nouveau_get_document_directory_nav_items' ) ) {
+		if ( bboss_is_members_directory() ) {
+			$nav_items = bboss_nouveau_get_members_directory_nav_items();
+		} elseif ( bboss_is_activity_directory() && function_exists( 'bboss_nouveau_get_activity_directory_nav_items' ) ) {
+			$nav_items = bboss_nouveau_get_activity_directory_nav_items();
+		} elseif ( bboss_is_groups_directory() && function_exists( 'bboss_nouveau_get_groups_directory_nav_items' ) ) {
+			$nav_items = bboss_nouveau_get_groups_directory_nav_items();
+		} elseif ( bboss_is_blogs_directory() ) {
+			$nav_items = bboss_nouveau_get_blogs_directory_nav_items();
+		} elseif ( bboss_is_media_directory() ) {
+			$nav_items = bboss_nouveau_get_media_directory_nav_items();
+		} elseif ( bboss_is_document_directory() && function_exists( 'bp_nouveau_get_document_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_document_directory_nav_items();
-		} elseif ( bp_is_video_directory() && function_exists( 'bp_nouveau_get_video_directory_nav_items' ) ) {
+		} elseif ( bboss_is_video_directory() && function_exists( 'bp_nouveau_get_video_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_video_directory_nav_items();
 		}
 
@@ -938,7 +945,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		foreach ( $nav_items as $nav_item ) {
-			if ( empty( $nav_item['component'] ) || $nav_item['component'] !== bp_current_component() ) {
+			if ( empty( $nav_item['component'] ) || $nav_item['component'] !== bboss_current_component() ) {
 				continue;
 			}
 
@@ -953,7 +960,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function neutralize_core_template_notices() {
-		remove_action( 'template_notices', 'bp_core_render_message' );
+		remove_action( 'template_notices', 'bboss_core_render_message' );
 	}
 
 	/**
@@ -965,16 +972,16 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @return string       the BP Uri.
 	 */
 	public function customizer_set_uri( $path ) {
-		if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
+		if ( ! defined( 'BBOSS_DOING_AJAX' ) || ! BBOSS_DOING_AJAX ) {
 			return $path;
 		}
 
-		$uri = parse_url( $path );
+		$uri = wp_parse_url( $path );
 
 		if ( false === strpos( $uri['path'], 'customize.php' ) ) {
 			return $path;
 		} else {
-			$vars = bp_parse_args( $uri['query'], array() );
+			$vars = bboss_parse_args( $uri['query'], array() );
 
 			if ( ! empty( $vars['url'] ) ) {
 				$path = str_replace( get_site_url(), '', urldecode( $vars['url'] ) );
@@ -990,13 +997,13 @@ class BP_Nouveau extends BP_Theme_Compat {
  *
  * @since BuddyPress 3.0.0
  *
- * @return BP_Nouveau the main instance of the class
+ * @return BBoss_Nouveau the main instance of the class
  */
-function bp_nouveau() {
-	return BP_Nouveau::get_instance();
+function bboss_nouveau() {
+	return BBoss_Nouveau::get_instance();
 }
 
 /**
  * Launch BP Nouveau!
  */
-bp_nouveau();
+bboss_nouveau();

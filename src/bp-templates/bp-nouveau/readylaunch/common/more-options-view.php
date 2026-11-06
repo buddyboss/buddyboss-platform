@@ -6,7 +6,7 @@
  * providing users with extra actions and settings.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -16,6 +16,6 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb_rl_more_dropdown__title">
-	<span class="bb_rl_more_dropdown__title__text"><?php esc_html_e( 'Options', 'buddyboss' ); ?></span>
+	<span class="bb_rl_more_dropdown__title__text"><?php esc_html_e( 'Options', 'buddyboss-platform' ); ?></span>
 	<span class="bb_rl_more_dropdown__close_button" role="button"><i class="bb-icons-rl-x"></i></span>
 </div>

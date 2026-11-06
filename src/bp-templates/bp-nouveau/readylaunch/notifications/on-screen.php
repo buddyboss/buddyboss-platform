@@ -9,31 +9,34 @@
  * @version 1.0.0
  */
 
-remove_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
-add_filter( 'bp_ajax_querystring', 'bb_notifications_on_screen_notifications_add', 20, 2 );
-add_filter( 'bb_notifications_get_where_conditions', 'bb_notifications_on_screen_get_where_conditions', 20, 3 );
-$on_screen_notification_query_string = apply_filters( 'bb_on_screen_notification_query_string', bp_ajax_querystring( 'notifications' ) );
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
-if ( bp_has_notifications( $on_screen_notification_query_string ) ) :
-	while ( bp_the_notifications() ) :
-		bp_the_notification();
+remove_filter( 'bp_notifications_get_registered_components', 'bboss_notification_exclude_group_message_notification', 999, 1 );
+add_filter( 'bp_ajax_querystring', 'bboss_notifications_on_screen_notifications_add', 20, 2 );
+add_filter( 'bb_notifications_get_where_conditions', 'bboss_notifications_on_screen_get_where_conditions', 20, 3 );
+$on_screen_notification_query_string = apply_filters( 'bb_on_screen_notification_query_string', bboss_ajax_querystring( 'notifications' ) );
+
+if ( bboss_has_notifications( $on_screen_notification_query_string ) ) :
+	while ( bboss_the_notifications() ) :
+		bboss_the_notification();
 		?>
-		<li class="read-item <?php echo isset( buddypress()->notifications->query_loop->notification->is_new ) && buddypress()->notifications->query_loop->notification->is_new ? 'unread' : ''; ?>">
+		<li class="read-item <?php echo isset( bboss()->notifications->query_loop->notification->is_new ) && bboss()->notifications->query_loop->notification->is_new ? 'unread' : ''; ?>">
 			<span class="bb-full-link">
-				<?php bp_the_notification_description(); ?>
+				<?php bboss_the_notification_description(); ?>
 			</span>
 			<div class="notification-avatar">
-				<?php bb_notification_avatar(); ?>
+				<?php bboss_notification_avatar(); ?>
 			</div>
 			<div class="notification-content">
 				<span class="bb-full-link">
-					<?php bp_the_notification_description(); ?>
+					<?php bboss_the_notification_description(); ?>
 				</span>
-				<span><?php bp_the_notification_description(); ?></span>
-				<span class="posted"><?php bp_the_notification_time_since(); ?></span>
+				<span><?php bboss_the_notification_description(); ?></span>
+				<span class="posted"><?php bboss_the_notification_time_since(); ?></span>
 			</div>
 			<div class="actions">
-				<a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" data-notification-id="<?php bp_the_notification_id(); ?>">
+				<a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>" data-notification-id="<?php bboss_the_notification_id(); ?>">
 					<span class="bb-icons-rl-x" aria-hidden="true"></span>
 				</a>
 			</div>
@@ -41,6 +44,6 @@ if ( bp_has_notifications( $on_screen_notification_query_string ) ) :
 		<?php
 	endwhile;
 endif;
-remove_filter( 'bb_notifications_get_where_conditions', 'bb_notifications_on_screen_get_where_conditions', 20, 3 );
-remove_filter( 'bp_ajax_querystring', 'bb_notifications_on_screen_notifications_add', 20, 2 );
-add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
+remove_filter( 'bb_notifications_get_where_conditions', 'bboss_notifications_on_screen_get_where_conditions', 20, 3 );
+remove_filter( 'bp_ajax_querystring', 'bboss_notifications_on_screen_notifications_add', 20, 2 );
+add_filter( 'bp_notifications_get_registered_components', 'bboss_notification_exclude_group_message_notification', 999, 1 );

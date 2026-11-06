@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Members_Permissions_Endpoint class
+ * BP REST: BBoss_REST_Members_Permissions_Endpoint class
  *
  * @package BuddyBoss
  * @since 1.5.7
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.5.7
  */
-class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Allow batch.
@@ -28,7 +28,7 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 	 * @since 1.5.7
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'members';
 	}
 
@@ -70,72 +70,72 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_items( $request ) {
 
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 
 		$data = array();
 
-		$data['can_create_activity'] = bp_is_active( 'activity' ) && (
-			! function_exists( 'bb_user_can_create_activity' ) ||
+		$data['can_create_activity'] = bboss_is_active( 'activity' ) && (
+			! function_exists( 'bboss_user_can_create_activity' ) ||
 			(
-				function_exists( 'bb_user_can_create_activity' ) &&
-				bb_user_can_create_activity()
+				function_exists( 'bboss_user_can_create_activity' ) &&
+				bboss_user_can_create_activity()
 			)
 		);
-		$data['can_create_group']    = bp_is_active( 'groups' ) && ! bp_restrict_group_creation() && bp_user_can_create_groups();
-		$data['can_join_group']      = bp_is_active( 'groups' ) && $this->bp_rest_check_user_group_join( $user_id );
+		$data['can_create_group']    = bboss_is_active( 'groups' ) && ! bboss_restrict_group_creation() && bboss_user_can_create_groups();
+		$data['can_join_group']      = bboss_is_active( 'groups' ) && $this->bp_rest_check_user_group_join( $user_id );
 
 		$data['can_create_media'] = (
-			function_exists( 'bb_user_has_access_upload_media' )
-			? bb_user_has_access_upload_media( 0, $user_id, 0, 0, 'profile' )
-			: bp_is_active( 'media' ) && bp_is_profile_media_support_enabled() && ( ! function_exists( 'bb_user_can_create_media' ) || bb_user_can_create_media() )
+			function_exists( 'bboss_user_has_access_upload_media' )
+			? bboss_user_has_access_upload_media( 0, $user_id, 0, 0, 'profile' )
+			: bboss_is_active( 'media' ) && bboss_is_profile_media_support_enabled() && ( ! function_exists( 'bboss_user_can_create_media' ) || bboss_user_can_create_media() )
 		);
 
 		$data['can_create_forum_media'] = (
-			function_exists( 'bb_user_has_access_upload_media' )
-			? bb_user_has_access_upload_media( 0, $user_id, 0, 0, 'forum' )
-			: bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() && ( ! function_exists( 'bb_user_can_create_media' ) || bb_user_can_create_media() )
+			function_exists( 'bboss_user_has_access_upload_media' )
+			? bboss_user_has_access_upload_media( 0, $user_id, 0, 0, 'forum' )
+			: bboss_is_active( 'media' ) && bboss_is_forums_media_support_enabled() && ( ! function_exists( 'bboss_user_can_create_media' ) || bboss_user_can_create_media() )
 		);
 
 		$data['can_create_message_media'] = (
-			function_exists( 'bb_user_has_access_upload_media' )
-			? bb_user_has_access_upload_media( 0, $user_id, 0, 0, 'message' )
-			: bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ( ! function_exists( 'bb_user_can_create_media' ) || bb_user_can_create_media() )
+			function_exists( 'bboss_user_has_access_upload_media' )
+			? bboss_user_has_access_upload_media( 0, $user_id, 0, 0, 'message' )
+			: bboss_is_active( 'media' ) && bboss_is_messages_media_support_enabled() && ( ! function_exists( 'bboss_user_can_create_media' ) || bboss_user_can_create_media() )
 		);
 
 		$data['can_create_document'] = (
-			function_exists( 'bb_user_has_access_upload_document' )
-			? bb_user_has_access_upload_document( 0, $user_id, 0, 0, 'profile' )
-			: bp_is_active( 'document' ) && bp_is_profile_document_support_enabled() && ( ! function_exists( 'bb_user_can_create_document' ) || bb_user_can_create_document() )
+			function_exists( 'bboss_user_has_access_upload_document' )
+			? bboss_user_has_access_upload_document( 0, $user_id, 0, 0, 'profile' )
+			: bboss_is_active( 'document' ) && bboss_is_profile_document_support_enabled() && ( ! function_exists( 'bboss_user_can_create_document' ) || bboss_user_can_create_document() )
 		);
 
 		$data['can_create_forum_document'] = (
-			function_exists( 'bb_user_has_access_upload_document' )
-			? bb_user_has_access_upload_document( 0, $user_id, 0, 0, 'forum' )
-			: bp_is_active( 'document' ) && bp_is_forums_document_support_enabled() && ( ! function_exists( 'bb_user_can_create_document' ) || bb_user_can_create_document() )
+			function_exists( 'bboss_user_has_access_upload_document' )
+			? bboss_user_has_access_upload_document( 0, $user_id, 0, 0, 'forum' )
+			: bboss_is_active( 'document' ) && bboss_is_forums_document_support_enabled() && ( ! function_exists( 'bboss_user_can_create_document' ) || bboss_user_can_create_document() )
 		);
 
 		$data['can_create_message_document'] = (
-			function_exists( 'bb_user_has_access_upload_document' )
-			? bb_user_has_access_upload_document( 0, $user_id, 0, 0, 'message' )
-			: bp_is_active( 'document' ) && bp_is_messages_document_support_enabled() && ( ! function_exists( 'bb_user_can_create_document' ) || bb_user_can_create_document() )
+			function_exists( 'bboss_user_has_access_upload_document' )
+			? bboss_user_has_access_upload_document( 0, $user_id, 0, 0, 'message' )
+			: bboss_is_active( 'document' ) && bboss_is_messages_document_support_enabled() && ( ! function_exists( 'bboss_user_can_create_document' ) || bboss_user_can_create_document() )
 		);
 
 		$data['can_create_video'] = (
-			function_exists( 'bb_user_has_access_upload_video' )
-			? bb_user_has_access_upload_video( 0, $user_id, 0, 0, 'profile' )
-			: bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() && ( ! function_exists( 'bb_user_can_create_video' ) || bb_user_can_create_video() )
+			function_exists( 'bboss_user_has_access_upload_video' )
+			? bboss_user_has_access_upload_video( 0, $user_id, 0, 0, 'profile' )
+			: bboss_is_active( 'video' ) && bboss_is_profile_video_support_enabled() && ( ! function_exists( 'bboss_user_can_create_video' ) || bboss_user_can_create_video() )
 		);
 
 		$data['can_create_forum_video'] = (
-			function_exists( 'bb_user_has_access_upload_video' )
-			? bb_user_has_access_upload_video( 0, $user_id, 0, 0, 'forum' )
-			: bp_is_active( 'video' ) && bp_is_forums_video_support_enabled() && ( ! function_exists( 'bb_user_can_create_video' ) || bb_user_can_create_video() )
+			function_exists( 'bboss_user_has_access_upload_video' )
+			? bboss_user_has_access_upload_video( 0, $user_id, 0, 0, 'forum' )
+			: bboss_is_active( 'video' ) && bboss_is_forums_video_support_enabled() && ( ! function_exists( 'bboss_user_can_create_video' ) || bboss_user_can_create_video() )
 		);
 
 		$data['can_create_message_video'] = (
-			function_exists( 'bb_user_has_access_upload_video' )
-			? bb_user_has_access_upload_video( 0, $user_id, 0, 0, 'message' )
-			: bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() && ( ! function_exists( 'bb_user_can_create_video' ) || bb_user_can_create_video() )
+			function_exists( 'bboss_user_has_access_upload_video' )
+			? bboss_user_has_access_upload_video( 0, $user_id, 0, 0, 'message' )
+			: bboss_is_active( 'video' ) && bboss_is_messages_video_support_enabled() && ( ! function_exists( 'bboss_user_can_create_video' ) || bboss_user_can_create_video() )
 		);
 
 		$data['can_create_poll'] = function_exists( 'bb_can_user_create_poll_activity' ) ? bb_can_user_create_poll_activity( array( 'user_id' => $user_id ) ) : false;
@@ -167,7 +167,7 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+			__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -202,79 +202,79 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'can_create_activity'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create activity or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create activity or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_group'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create group or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create group or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_join_group'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can join the group or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can join the group or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_media'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the media or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the media or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_forum_media'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the media into forums or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the media into forums or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_message_media'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the media into messages or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the media into messages or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_document'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the document or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the document or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_forum_document'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the document into forums or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the document into forums or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_message_document' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the document into messages or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the document into messages or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_video'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the video or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the video or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_forum_video'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the video into forums or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the video into forums or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_message_video'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the video into messages or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the video into messages or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_poll'             => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the poll into activity or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the poll into activity or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),

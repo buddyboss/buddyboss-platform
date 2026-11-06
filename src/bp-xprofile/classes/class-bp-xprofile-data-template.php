@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-class BP_XProfile_Data_Template {
+class BBoss_XProfile_Data_Template {
 
 	/**
 	 * The loop iterator.
@@ -101,7 +101,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Get activity items, as specified by parameters.
 	 *
-	 * @see BP_XProfile_Group::get() for more details about parameters.
+	 * @see BBoss_XProfile_Group::get() for more details about parameters.
 	 *
 	 * @since BuddyPress 1.5.0
 	 * @since BuddyPress 2.4.0 Introduced `$member_type` argument.
@@ -131,7 +131,8 @@ class BP_XProfile_Data_Template {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-			_deprecated_argument( __METHOD__, '2.3.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			/* translators: 1: method name, 2: file path. */
+			_deprecated_argument( __METHOD__, '2.3.0', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'user_id',
@@ -146,10 +147,10 @@ class BP_XProfile_Data_Template {
 				9 => 'update_meta_cache',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'profile_group_id'       => false,
@@ -167,7 +168,7 @@ class BP_XProfile_Data_Template {
 			)
 		);
 
-		$this->groups      = bp_xprofile_get_groups( $r );
+		$this->groups      = bboss_xprofile_get_groups( $r );
 		$this->group_count = count( $this->groups );
 		$this->user_id     = $r['user_id'];
 	}
@@ -359,7 +360,7 @@ class BP_XProfile_Data_Template {
 
 		// Valid field values of 0 or '0' get caught by empty(), so we have an extra check for these. See #BP5731.
 		if ( ! empty( $field->data ) && ( ! empty( $field->data->value ) || ( '0' === $field->data->value ) ) ) {
-			$value = bb_xprofile_safe_unserialize( $field->data->value ); // Object injection guard.
+			$value = bboss_xprofile_safe_unserialize( $field->data->value ); // Object injection guard.
 		} else {
 			$value = false;
 		}

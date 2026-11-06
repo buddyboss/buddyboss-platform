@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.1.0
  */
-class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
+class BBoss_Groups_Member_Suggestions extends BBoss_Members_Suggestions {
 
 	/**
 	 * Default arguments for this suggestions service.
@@ -54,17 +54,17 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                        $args  Array of arguments for the suggestion service query.
-		 * @param BP_Groups_Member_Suggestions $this  Instance of the current suggestion class.
+		 * @param BBoss_Groups_Member_Suggestions $this  Instance of the current suggestion class.
 		 */
 		$this->args = apply_filters( 'bp_groups_member_suggestions_args', $this->args, $this );
 
 		// Check for invalid or missing mandatory parameters.
-		if ( ! $this->args['group_id'] || ! bp_is_active( 'groups' ) ) {
+		if ( ! $this->args['group_id'] || ! bboss_is_active( 'groups' ) ) {
 			return new WP_Error( 'missing_requirement' );
 		}
 
 		// Check that the specified group_id exists, and that the current user can access it.
-		$the_group = groups_get_group( absint( $this->args['group_id'] ) );
+		$the_group = bboss_groups_get_group( absint( $this->args['group_id'] ) );
 
 		if ( $the_group->id === 0 || ! $the_group->user_has_access ) {
 			return new WP_Error( 'access_denied' );
@@ -76,7 +76,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		 * @since BuddyPress 2.1.0
 		 *
 		 * @param bool|WP_Error                $value True if valid, WP_Error if not.
-		 * @param BP_Groups_Member_Suggestions $this  Instance of the current suggestion class.
+		 * @param BBoss_Groups_Member_Suggestions $this  Instance of the current suggestion class.
 		 */
 		return apply_filters( 'bp_groups_member_suggestions_validate_args', parent::validate(), $this );
 	}
@@ -125,7 +125,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 				'page'       => 1,
 				'per_page'   => $this->args['limit'],
 			);
-			$group_users = new BP_Group_Member_Query( $group_query );
+			$group_users = new BBoss_Group_Member_Query( $group_query );
 
 			if ( $group_users->results ) {
 				$user_query['exclude'] = wp_list_pluck( $group_users->results, 'ID' );
@@ -140,7 +140,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                        $user_query Array of arguments for the query.
-		 * @param BP_Groups_Member_Suggestions $this       Instance of the current suggestion class.
+		 * @param BBoss_Groups_Member_Suggestions $this       Instance of the current suggestion class.
 		 */
 		$user_query = apply_filters( 'bp_groups_member_suggestions_query_args', $user_query, $this );
 		if ( is_wp_error( $user_query ) ) {
@@ -148,23 +148,23 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		}
 
 		if ( isset( $user_query['group_id'] ) ) {
-			$user_query = new BP_Group_Member_Query( $user_query );
+			$user_query = new BBoss_Group_Member_Query( $user_query );
 		} else {
-			$user_query = new BP_User_Query( $user_query );
+			$user_query = new BBoss_User_Query( $user_query );
 		}
 
 		$results = array();
 		foreach ( $user_query->results as $user ) {
 			$result                = new stdClass();
-			$result->ID            = bp_activity_get_user_mentionname( $user->ID );
+			$result->ID            = bboss_activity_get_user_mentionname( $user->ID );
 			$result->user_nicename = $user->user_nicename;
-			$result->image         = bp_core_fetch_avatar(
+			$result->image         = bboss_core_fetch_avatar(
 				array(
 					'html'    => false,
 					'item_id' => $user->ID,
 				)
 			);
-			$result->name          = bp_core_get_user_displayname( $user->ID );
+			$result->name          = bboss_core_get_user_displayname( $user->ID );
 			$result->user_id       = $user->ID;
 
 			if ( isset( $this->args['count_total'] ) && $this->args['count_total'] ) {
@@ -184,7 +184,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                        $results Array of member suggestions.
-		 * @param BP_Groups_Member_Suggestions $this    Instance of the current suggestion class.
+		 * @param BBoss_Groups_Member_Suggestions $this    Instance of the current suggestion class.
 		 */
 		return apply_filters( 'bp_groups_member_suggestions_get_suggestions', $results, $this );
 	}

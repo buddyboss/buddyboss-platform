@@ -5,7 +5,7 @@
  * This template is a Readylaunch-specific version of the WC4BP view-order template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch\WC4BP
+ * @subpackage BBoss_Nouveau\ReadyLaunch\WC4BP
  * @since BuddyBoss 3.1.0
  * @version 1.0.0
  */
@@ -24,7 +24,7 @@ $bb_rl_original_post_name  = isset( $post->post_name ) ? $post->post_name : '';
 $bb_rl_original_post_title = isset( $post->post_title ) ? $post->post_title : '';
 
 $post->post_name     = 'view-order';
-$post->post_title    = __( 'Order Details', 'buddyboss' );
+$post->post_title    = __( 'Order Details', 'buddyboss-platform' );
 $bp_action_variables = $bp->action_variables;
 ?>
 
@@ -36,7 +36,7 @@ $bp_action_variables = $bp->action_variables;
 			woocommerce_account_view_order( $order_id );
 		}
 	} else {
-		printf( '<div class="woocommerce-error">%s</div>', esc_html__( 'Please enter a valid order ID', 'buddyboss' ) );
+		printf( '<div class="woocommerce-error">%s</div>', esc_html__( 'Please enter a valid order ID', 'buddyboss-platform' ) );
 	}
 	?>
 </div>

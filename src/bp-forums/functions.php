@@ -20,11 +20,11 @@ defined( 'ABSPATH' ) || exit;
  * @since bbPress (r5232)
  * @return string
  */
-function bbp_get_component_name() {
+function bboss_bbp_get_component_name() {
 
 	// Use existing ID.
-	if ( ! empty( bbpress()->extend->buddypress->id ) ) {
-		$retval = bbpress()->extend->buddypress->id;
+	if ( ! empty( bboss_forums()->extend->buddypress->id ) ) {
+		$retval = bboss_forums()->extend->buddypress->id;
 
 		// Use default.
 	} else {
@@ -45,14 +45,14 @@ function bbp_get_component_name() {
  *
  * @return int User ID
  */
-function bbp_filter_user_id( $user_id = 0, $displayed_user_fallback = true, $current_user_fallback = false ) {
+function bboss_bbp_filter_user_id( $user_id = 0, $displayed_user_fallback = true, $current_user_fallback = false ) {
 
 	// Define local variable.
 	$bbp_user_id = 0;
 
 	// Get possible user ID's.
-	$did = bp_displayed_user_id();
-	$lid = bp_loggedin_user_id();
+	$did = bboss_displayed_user_id();
+	$lid = bboss_loggedin_user_id();
 
 	// Easy empty checking.
 	if ( ! empty( $user_id ) && is_numeric( $user_id ) ) {
@@ -68,7 +68,7 @@ function bbp_filter_user_id( $user_id = 0, $displayed_user_fallback = true, $cur
 	return $bbp_user_id;
 }
 
-add_filter( 'bbp_get_user_id', 'bbp_filter_user_id', 10, 3 );
+add_filter( 'bbp_get_user_id', 'bboss_bbp_filter_user_id', 10, 3 );
 
 /**
  * Filter the Forums is_single_user function with BuddyBoss equivalent
@@ -79,15 +79,15 @@ add_filter( 'bbp_get_user_id', 'bbp_filter_user_id', 10, 3 );
  *
  * @return bool True if viewing single user, false if not
  */
-function bbp_filter_is_single_user( $is = false ) {
+function bboss_bbp_filter_is_single_user( $is = false ) {
 	if ( ! empty( $is ) ) {
 		return $is;
 	}
 
-	return bp_is_user();
+	return bboss_is_user();
 }
 
-add_filter( 'bbp_is_single_user', 'bbp_filter_is_single_user', 10, 1 );
+add_filter( 'bbp_is_single_user', 'bboss_bbp_filter_is_single_user', 10, 1 );
 
 /**
  * Filter the Forums is_user_home function with BuddyBoss equivalent
@@ -98,15 +98,15 @@ add_filter( 'bbp_is_single_user', 'bbp_filter_is_single_user', 10, 1 );
  *
  * @return bool True if viewing single user, false if not
  */
-function bbp_filter_is_user_home( $is = false ) {
+function bboss_bbp_filter_is_user_home( $is = false ) {
 	if ( ! empty( $is ) ) {
 		return $is;
 	}
 
-	return bp_is_my_profile();
+	return bboss_is_my_profile();
 }
 
-add_filter( 'bbp_is_user_home', 'bbp_filter_is_user_home', 10, 1 );
+add_filter( 'bbp_is_user_home', 'bboss_bbp_filter_is_user_home', 10, 1 );
 
 /**
  * Add the topic title to the <title> if viewing a single group forum topic
@@ -120,20 +120,20 @@ add_filter( 'bbp_is_user_home', 'bbp_filter_is_user_home', 10, 1 );
  *
  * @return string The possibly modified title
  */
-function bbp_filter_modify_page_title( $new_title = '', $old_title = '', $sep = '' ) {
+function bboss_bbp_filter_modify_page_title( $new_title = '', $old_title = '', $sep = '' ) {
 
 	// Only filter if group forums are active.
-	if ( bbp_is_group_forums_active() ) {
+	if ( bboss_bbp_is_group_forums_active() ) {
 
 		// Only filter for single group forum topics.
-		if ( bp_is_group_forum_topic() || bp_is_group_forum_topic_edit() ) {
+		if ( bboss_is_group_forum_topic() || bboss_is_group_forum_topic_edit() ) {
 
 			// Get the topic.
 			$topic = get_posts(
 				array(
-					'name'                   => bp_action_variable( 1 ),
+					'name'                   => bboss_action_variable( 1 ),
 					'post_status'            => 'publish',
-					'post_type'              => bbp_get_topic_post_type(),
+					'post_type'              => bboss_bbp_get_topic_post_type(),
 					'numberposts'            => 1,
 					'update_post_meta_cache' => false,
 					'update_post_term_cache' => false,
@@ -141,7 +141,7 @@ function bbp_filter_modify_page_title( $new_title = '', $old_title = '', $sep = 
 			);
 
 			// Add the topic title to the <title>.
-			$new_title .= bbp_get_topic_title( $topic[0]->ID ) . ' ' . $sep . ' ';
+			$new_title .= bboss_bbp_get_topic_title( $topic[0]->ID ) . ' ' . $sep . ' ';
 		}
 	}
 
@@ -149,7 +149,7 @@ function bbp_filter_modify_page_title( $new_title = '', $old_title = '', $sep = 
 	return $new_title;
 }
 
-add_action( 'bp_modify_page_title', 'bbp_filter_modify_page_title', 10, 3 );
+add_action( 'bp_modify_page_title', 'bboss_bbp_filter_modify_page_title', 10, 3 );
 
 /** BuddyBoss Screens ********************************************************/
 
@@ -159,11 +159,11 @@ add_action( 'bp_modify_page_title', 'bbp_filter_modify_page_title', 10, 3 );
  * @since bbPress (r3552)
  *
  * @uses  add_action() To add the content hook
- * @uses  bp_core_load_template() To load the plugins template
+ * @uses  bboss_core_load_template() To load the plugins template
  */
-function bbp_member_forums_screen_topics() {
-	add_action( 'bp_template_content', 'bbp_member_forums_topics_content' );
-	bp_core_load_template( apply_filters( 'bbp_member_forums_screen_topics', 'members/single/plugins' ) );
+function bboss_bbp_member_forums_screen_topics() {
+	add_action( 'bp_template_content', 'bboss_bbp_member_forums_topics_content' );
+	bboss_core_load_template( apply_filters( 'bbp_member_forums_screen_topics', 'members/single/plugins' ) );
 }
 
 /**
@@ -172,11 +172,11 @@ function bbp_member_forums_screen_topics() {
  * @since bbPress (r3552)
  *
  * @uses  add_action() To add the content hook
- * @uses  bp_core_load_template() To load the plugins template
+ * @uses  bboss_core_load_template() To load the plugins template
  */
-function bbp_member_forums_screen_replies() {
-	add_action( 'bp_template_content', 'bbp_member_forums_replies_content' );
-	bp_core_load_template( apply_filters( 'bbp_member_forums_screen_replies', 'members/single/plugins' ) );
+function bboss_bbp_member_forums_screen_replies() {
+	add_action( 'bp_template_content', 'bboss_bbp_member_forums_replies_content' );
+	bboss_core_load_template( apply_filters( 'bbp_member_forums_screen_replies', 'members/single/plugins' ) );
 }
 
 /**
@@ -185,11 +185,11 @@ function bbp_member_forums_screen_replies() {
  * @since bbPress (r3552)
  *
  * @uses  add_action() To add the content hook
- * @uses  bp_core_load_template() To load the plugins template
+ * @uses  bboss_core_load_template() To load the plugins template
  */
-function bbp_member_forums_screen_favorites() {
-	add_action( 'bp_template_content', 'bbp_member_forums_favorites_content' );
-	bp_core_load_template( apply_filters( 'bbp_member_forums_screen_favorites', 'members/single/plugins' ) );
+function bboss_bbp_member_forums_screen_favorites() {
+	add_action( 'bp_template_content', 'bboss_bbp_member_forums_favorites_content' );
+	bboss_core_load_template( apply_filters( 'bbp_member_forums_screen_favorites', 'members/single/plugins' ) );
 }
 
 /**
@@ -198,11 +198,11 @@ function bbp_member_forums_screen_favorites() {
  * @since bbPress (r3552)
  *
  * @uses  add_action() To add the content hook
- * @uses  bp_core_load_template() To load the plugins template
+ * @uses  bboss_core_load_template() To load the plugins template
  */
-function bbp_member_forums_screen_subscriptions() {
-	add_action( 'bp_template_content', 'bbp_member_forums_subscriptions_content' );
-	bp_core_load_template( apply_filters( 'bbp_member_forums_screen_subscriptions', 'members/single/plugins' ) );
+function bboss_bbp_member_forums_screen_subscriptions() {
+	add_action( 'bp_template_content', 'bboss_bbp_member_forums_subscriptions_content' );
+	bboss_core_load_template( apply_filters( 'bbp_member_forums_screen_subscriptions', 'members/single/plugins' ) );
 }
 
 /** BuddyBoss Templates ******************************************************/
@@ -212,12 +212,12 @@ function bbp_member_forums_screen_subscriptions() {
  *
  * @since bbPress (r3552)
  *
- * @uses  bbp_get_template_part()s
+ * @uses  bboss_bbp_get_template_part()s
  */
-function bbp_member_forums_topics_content() {
+function bboss_bbp_member_forums_topics_content() {
 	?>
 	<div id="bbpress-forums">
-		<?php bbp_get_template_part( 'user', 'topics-created' ); ?>
+		<?php bboss_bbp_get_template_part( 'user', 'topics-created' ); ?>
 	</div>
 	<?php
 }
@@ -227,12 +227,12 @@ function bbp_member_forums_topics_content() {
  *
  * @since bbPress (r3552)
  *
- * @uses  bbp_get_template_part()
+ * @uses  bboss_bbp_get_template_part()
  */
-function bbp_member_forums_replies_content() {
+function bboss_bbp_member_forums_replies_content() {
 	?>
 	<div id="bbpress-forums">
-		<?php bbp_get_template_part( 'user', 'replies-created' ); ?>
+		<?php bboss_bbp_get_template_part( 'user', 'replies-created' ); ?>
 	</div>
 	<?php
 }
@@ -242,12 +242,12 @@ function bbp_member_forums_replies_content() {
  *
  * @since bbPress (r3552)
  *
- * @uses  bbp_get_template_part()
+ * @uses  bboss_bbp_get_template_part()
  */
-function bbp_member_forums_favorites_content() {
+function bboss_bbp_member_forums_favorites_content() {
 	?>
 	<div id="bbpress-forums">
-		<?php bbp_get_template_part( 'user', 'favorites' ); ?>
+		<?php bboss_bbp_get_template_part( 'user', 'favorites' ); ?>
 	</div>
 	<?php
 }
@@ -257,12 +257,12 @@ function bbp_member_forums_favorites_content() {
  *
  * @since bbPress (r3552)
  *
- * @uses  bbp_get_template_part()
+ * @uses  bboss_bbp_get_template_part()
  */
-function bbp_member_forums_subscriptions_content() {
+function bboss_bbp_member_forums_subscriptions_content() {
 	?>
 	<div id="bbpress-forums">
-		<?php bbp_get_template_part( 'user', 'subscriptions' ); ?>
+		<?php bboss_bbp_get_template_part( 'user', 'subscriptions' ); ?>
 	</div>
 	<?php
 }
@@ -283,19 +283,19 @@ function bbp_member_forums_subscriptions_content() {
  *
  * @param type $group_id
  */
-function bbp_get_group_forum_ids( $group_id = 0 ) {
+function bboss_bbp_get_group_forum_ids( $group_id = 0 ) {
 
 	// Assume no forums.
 	$forum_ids = array();
 
 	// Use current group if none is set.
 	if ( empty( $group_id ) ) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 	}
 
 	// Get the forums.
 	if ( ! empty( $group_id ) ) {
-		$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
+		$forum_ids = bboss_groups_get_groupmeta( $group_id, 'forum_id' );
 	}
 
 	// Make sure result is an array.
@@ -316,14 +316,14 @@ function bbp_get_group_forum_ids( $group_id = 0 ) {
  *
  * @param type $forum_id
  */
-function bbp_get_forum_group_ids( $forum_id = 0 ) {
+function bboss_bbp_get_forum_group_ids( $forum_id = 0 ) {
 
 	// Assume no forums.
 	$group_ids = array();
 
 	// Use current group if none is set.
 	if ( empty( $forum_id ) ) {
-		$forum_id = bbp_get_forum_id();
+		$forum_id = bboss_bbp_get_forum_id();
 	}
 
 	// Get the forums.
@@ -349,18 +349,18 @@ function bbp_get_forum_group_ids( $forum_id = 0 ) {
  *
  * @param type $group_id
  */
-function bbp_update_group_forum_ids( $group_id = 0, $forum_ids = array() ) {
+function bboss_bbp_update_group_forum_ids( $group_id = 0, $forum_ids = array() ) {
 
 	// Use current group if none is set.
 	if ( empty( $group_id ) ) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 	}
 
 	// Trim out any empties.
 	$forum_ids = array_filter( $forum_ids );
 
 	// Get the forums.
-	return groups_update_groupmeta( $group_id, 'forum_id', $forum_ids );
+	return bboss_groups_update_groupmeta( $group_id, 'forum_id', $forum_ids );
 }
 
 /**
@@ -370,8 +370,8 @@ function bbp_update_group_forum_ids( $group_id = 0, $forum_ids = array() ) {
  *
  * @param type $forum_id
  */
-function bbp_update_forum_group_ids( $forum_id = 0, $group_ids = array() ) {
-	$forum_id = bbp_get_forum_id( $forum_id );
+function bboss_bbp_update_forum_group_ids( $forum_id = 0, $group_ids = array() ) {
+	$forum_id = bboss_bbp_get_forum_id( $forum_id );
 
 	// Trim out any empties.
 	$group_ids = array_filter( $group_ids );
@@ -387,24 +387,24 @@ function bbp_update_forum_group_ids( $forum_id = 0, $group_ids = array() ) {
  *
  * @param type $group_id
  */
-function bbp_add_group_id_to_forum( $forum_id = 0, $group_id = 0 ) {
+function bboss_bbp_add_group_id_to_forum( $forum_id = 0, $group_id = 0 ) {
 
 	// Validate forum_id.
-	$forum_id = bbp_get_forum_id( $forum_id );
+	$forum_id = bboss_bbp_get_forum_id( $forum_id );
 
 	// Use current group if none is set.
 	if ( empty( $group_id ) ) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 	}
 
 	// Get current group IDs.
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 
 	// Maybe update the groups forums.
 	if ( ! in_array( $group_id, $group_ids ) ) {
 		$group_ids[] = $group_id;
 
-		return bbp_update_forum_group_ids( $forum_id, $group_ids );
+		return bboss_bbp_update_forum_group_ids( $forum_id, $group_ids );
 	}
 }
 
@@ -415,24 +415,24 @@ function bbp_add_group_id_to_forum( $forum_id = 0, $group_id = 0 ) {
  *
  * @param type $group_id
  */
-function bbp_add_forum_id_to_group( $group_id = 0, $forum_id = 0 ) {
+function bboss_bbp_add_forum_id_to_group( $group_id = 0, $forum_id = 0 ) {
 
 	// Validate forum_id.
-	$forum_id = bbp_get_forum_id( $forum_id );
+	$forum_id = bboss_bbp_get_forum_id( $forum_id );
 
 	// Use current group if none is set.
 	if ( empty( $group_id ) ) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 	}
 
 	// Get current group IDs.
-	$forum_ids = bbp_get_group_forum_ids( $group_id );
+	$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 	// Maybe update the groups forums.
 	if ( ! in_array( $forum_id, $forum_ids ) ) {
 		$forum_ids[] = $forum_id;
 
-		return bbp_update_group_forum_ids( $group_id, $forum_ids );
+		return bboss_bbp_update_group_forum_ids( $group_id, $forum_ids );
 	}
 }
 
@@ -443,24 +443,24 @@ function bbp_add_forum_id_to_group( $group_id = 0, $forum_id = 0 ) {
  *
  * @param type $group_id
  */
-function bbp_remove_group_id_from_forum( $forum_id = 0, $group_id = 0 ) {
+function bboss_bbp_remove_group_id_from_forum( $forum_id = 0, $group_id = 0 ) {
 
 	// Validate forum_id.
-	$forum_id = bbp_get_forum_id( $forum_id );
+	$forum_id = bboss_bbp_get_forum_id( $forum_id );
 
 	// Use current group if none is set.
 	if ( empty( $group_id ) ) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 	}
 
 	// Get current group IDs.
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 
 	// Maybe update the groups forums.
 	if ( in_array( $group_id, $group_ids, true ) ) {
 		$group_ids = array_diff( array_values( $group_ids ), (array) $group_id );
-		bb_update_last_group_forum_associations( $group_id, $forum_id );
-		return bbp_update_forum_group_ids( $forum_id, $group_ids );
+		bboss_update_last_group_forum_associations( $group_id, $forum_id );
+		return bboss_bbp_update_forum_group_ids( $forum_id, $group_ids );
 	}
 }
 
@@ -471,24 +471,24 @@ function bbp_remove_group_id_from_forum( $forum_id = 0, $group_id = 0 ) {
  *
  * @param type $group_id
  */
-function bbp_remove_forum_id_from_group( $group_id = 0, $forum_id = 0 ) {
+function bboss_bbp_remove_forum_id_from_group( $group_id = 0, $forum_id = 0 ) {
 
 	// Validate forum_id.
-	$forum_id = bbp_get_forum_id( $forum_id );
+	$forum_id = bboss_bbp_get_forum_id( $forum_id );
 
 	// Use current group if none is set.
 	if ( empty( $group_id ) ) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 	}
 
 	// Get current group IDs.
-	$forum_ids = bbp_get_group_forum_ids( $group_id );
+	$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 	// Maybe update the groups forums.
 	if ( in_array( $forum_id, $forum_ids, true ) ) {
 		$forum_ids = array_diff( array_values( $forum_ids ), (array) $forum_id );
-		bb_update_last_group_forum_associations( $group_id, $forum_id );
-		return bbp_update_group_forum_ids( $group_id, $forum_ids );
+		bboss_update_last_group_forum_associations( $group_id, $forum_id );
+		return bboss_bbp_update_group_forum_ids( $group_id, $forum_ids );
 	}
 }
 
@@ -499,19 +499,19 @@ function bbp_remove_forum_id_from_group( $group_id = 0, $forum_id = 0 ) {
  *
  * @param type $group_id
  */
-function bbp_remove_group_id_from_all_forums( $group_id = 0 ) {
+function bboss_bbp_remove_group_id_from_all_forums( $group_id = 0 ) {
 
 	// Use current group if none is set.
 	if ( empty( $group_id ) ) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 	}
 
 	// Get current group IDs.
-	$forum_ids = bbp_get_group_forum_ids( $group_id );
+	$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 	// Loop through forums and remove this group from each one.
 	foreach ( (array) $forum_ids as $forum_id ) {
-		bbp_remove_group_id_from_forum( $group_id, $forum_id );
+		bboss_bbp_remove_group_id_from_forum( $group_id, $forum_id );
 	}
 }
 
@@ -522,15 +522,15 @@ function bbp_remove_group_id_from_all_forums( $group_id = 0 ) {
  *
  * @param type $forum_id
  */
-function bbp_remove_forum_id_from_all_groups( $forum_id = 0 ) {
+function bboss_bbp_remove_forum_id_from_all_groups( $forum_id = 0 ) {
 
 	// Validate.
-	$forum_id  = bbp_get_forum_id( $forum_id );
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$forum_id  = bboss_bbp_get_forum_id( $forum_id );
+	$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 
 	// Loop through groups and remove this forum from each one.
 	foreach ( (array) $group_ids as $group_id ) {
-		bbp_remove_forum_id_from_group( $forum_id, $group_id );
+		bboss_bbp_remove_forum_id_from_group( $forum_id, $group_id );
 	}
 }
 
@@ -542,17 +542,17 @@ function bbp_remove_forum_id_from_all_groups( $forum_id = 0 ) {
  * @param int $forum_id
  *
  * @return bool True if it is a group forum, false if not
- * @uses  bbp_get_forum_group_ids() To get the forum's group ids
+ * @uses  bboss_bbp_get_forum_group_ids() To get the forum's group ids
  * @uses  apply_filters() Calls 'bbp_forum_is_group_forum' with the forum id
- * @uses  bbp_get_forum_id() To get the forum id
+ * @uses  bboss_bbp_get_forum_id() To get the forum id
  */
-function bbp_is_forum_group_forum( $forum_id = 0 ) {
+function bboss_bbp_is_forum_group_forum( $forum_id = 0 ) {
 
 	// Validate.
-	$forum_id = bbp_get_forum_id( $forum_id );
+	$forum_id = bboss_bbp_get_forum_id( $forum_id );
 
 	// Check for group ID's.
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 
 	// Check if the forum has groups.
 	$retval = (bool) ! empty( $group_ids );
@@ -568,25 +568,25 @@ function bbp_is_forum_group_forum( $forum_id = 0 ) {
  * @since bbPress (r4632)
  *
  * @return bool If current user is an admin of the current group
- * @uses  bp_is_group()
- * @uses  bbpress()
+ * @uses  bboss_is_group()
+ * @uses  bboss_forums()
  * @uses  get_current_user_id()
- * @uses  bp_get_current_group_id()
- * @uses  groups_is_user_admin()
+ * @uses  bboss_get_current_group_id()
+ * @uses  bboss_groups_is_user_admin()
  * @uses  is_user_logged_in()
  */
-function bbp_group_is_admin() {
+function bboss_bbp_group_is_admin() {
 
 	// Bail if user is not logged in or not looking at a group.
-	if ( ! is_user_logged_in() || ! bp_is_group() ) {
+	if ( ! is_user_logged_in() || ! bboss_is_group() ) {
 		return false;
 	}
 
-	$bbp = bbpress();
+	$bbp = bboss_forums();
 
 	// Set the global if not set.
 	if ( ! isset( $bbp->current_user->is_group_admin ) ) {
-		$bbp->current_user->is_group_admin = groups_is_user_admin( get_current_user_id(), bp_get_current_group_id() );
+		$bbp->current_user->is_group_admin = bboss_groups_is_user_admin( get_current_user_id(), bboss_get_current_group_id() );
 	}
 
 	// Return the value.
@@ -599,25 +599,25 @@ function bbp_group_is_admin() {
  * @since bbPress (r4632)
  *
  * @return bool If current user is a moderator of the current group
- * @uses  bp_is_group()
- * @uses  bbpress()
+ * @uses  bboss_is_group()
+ * @uses  bboss_forums()
  * @uses  get_current_user_id()
- * @uses  bp_get_current_group_id()
- * @uses  groups_is_user_admin()
+ * @uses  bboss_get_current_group_id()
+ * @uses  bboss_groups_is_user_admin()
  * @uses  is_user_logged_in()
  */
-function bbp_group_is_mod() {
+function bboss_bbp_group_is_mod() {
 
 	// Bail if user is not logged in or not looking at a group.
-	if ( ! is_user_logged_in() || ! bp_is_group() ) {
+	if ( ! is_user_logged_in() || ! bboss_is_group() ) {
 		return false;
 	}
 
-	$bbp = bbpress();
+	$bbp = bboss_forums();
 
 	// Set the global if not set.
 	if ( ! isset( $bbp->current_user->is_group_mod ) ) {
-		$bbp->current_user->is_group_mod = groups_is_user_mod( get_current_user_id(), bp_get_current_group_id() );
+		$bbp->current_user->is_group_mod = bboss_groups_is_user_mod( get_current_user_id(), bboss_get_current_group_id() );
 	}
 
 	// Return the value.
@@ -630,25 +630,25 @@ function bbp_group_is_mod() {
  * @since bbPress (r4632)
  *
  * @return bool If current user is a member of the current group
- * @uses  bp_is_group()
- * @uses  bbpress()
+ * @uses  bboss_is_group()
+ * @uses  bboss_forums()
  * @uses  get_current_user_id()
- * @uses  bp_get_current_group_id()
- * @uses  groups_is_user_admin()
+ * @uses  bboss_get_current_group_id()
+ * @uses  bboss_groups_is_user_admin()
  * @uses  is_user_logged_in()
  */
-function bbp_group_is_member() {
+function bboss_bbp_group_is_member() {
 
 	// Bail if user is not logged in or not looking at a group.
-	if ( ! is_user_logged_in() || ! bp_is_group() ) {
+	if ( ! is_user_logged_in() || ! bboss_is_group() ) {
 		return false;
 	}
 
-	$bbp = bbpress();
+	$bbp = bboss_forums();
 
 	// Set the global if not set.
 	if ( ! isset( $bbp->current_user->is_group_member ) ) {
-		$bbp->current_user->is_group_member = groups_is_user_member( get_current_user_id(), bp_get_current_group_id() );
+		$bbp->current_user->is_group_member = bboss_groups_is_user_member( get_current_user_id(), bboss_get_current_group_id() );
 	}
 
 	// Return the value.
@@ -661,25 +661,25 @@ function bbp_group_is_member() {
  * @since bbPress (r4632)
  *
  * @return bool If current user is banned from the current group
- * @uses  bp_is_group()
- * @uses  bbpress()
+ * @uses  bboss_is_group()
+ * @uses  bboss_forums()
  * @uses  get_current_user_id()
- * @uses  bp_get_current_group_id()
- * @uses  groups_is_user_admin()
+ * @uses  bboss_get_current_group_id()
+ * @uses  bboss_groups_is_user_admin()
  * @uses  is_user_logged_in()
  */
-function bbp_group_is_banned() {
+function bboss_bbp_group_is_banned() {
 
 	// Bail if user is not logged in or not looking at a group.
-	if ( ! is_user_logged_in() || ! bp_is_group() ) {
+	if ( ! is_user_logged_in() || ! bboss_is_group() ) {
 		return false;
 	}
 
-	$bbp = bbpress();
+	$bbp = bboss_forums();
 
 	// Set the global if not set.
 	if ( ! isset( $bbp->current_user->is_group_banned ) ) {
-		$bbp->current_user->is_group_banned = groups_is_user_banned( get_current_user_id(), bp_get_current_group_id() );
+		$bbp->current_user->is_group_banned = bboss_groups_is_user_banned( get_current_user_id(), bboss_get_current_group_id() );
 	}
 
 	// Return the value.
@@ -692,25 +692,25 @@ function bbp_group_is_banned() {
  * @since bbPress (r4632)
  *
  * @return bool If current user the creator of the current group
- * @uses  bp_is_group()
- * @uses  bbpress()
+ * @uses  bboss_is_group()
+ * @uses  bboss_forums()
  * @uses  get_current_user_id()
- * @uses  bp_get_current_group_id()
- * @uses  groups_is_user_admin()
+ * @uses  bboss_get_current_group_id()
+ * @uses  bboss_groups_is_user_admin()
  * @uses  is_user_logged_in()
  */
-function bbp_group_is_creator() {
+function bboss_bbp_group_is_creator() {
 
 	// Bail if user is not logged in or not looking at a group.
-	if ( ! is_user_logged_in() || ! bp_is_group() ) {
+	if ( ! is_user_logged_in() || ! bboss_is_group() ) {
 		return false;
 	}
 
-	$bbp = bbpress();
+	$bbp = bboss_forums();
 
 	// Set the global if not set.
 	if ( ! isset( $bbp->current_user->is_group_creator ) ) {
-		$bbp->current_user->is_group_creator = groups_is_user_creator( get_current_user_id(), bp_get_current_group_id() );
+		$bbp->current_user->is_group_creator = bboss_groups_is_user_creator( get_current_user_id(), bboss_get_current_group_id() );
 	}
 
 	// Return the value.
@@ -726,10 +726,10 @@ function bbp_group_is_creator() {
  *
  * @return array
  */
-function bbp_forum_topics_reply_enable_tinymce_editor( $args = array() ) {
+function bboss_bbp_forum_topics_reply_enable_tinymce_editor( $args = array() ) {
 
 	// Filter for removing the visual/text tabs hide..
-	add_filter( 'wp_editor_settings', 'bbp_forum_topics_reply_tinymce_settings' );
+	add_filter( 'wp_editor_settings', 'bboss_bbp_forum_topics_reply_tinymce_settings' );
 
 	// Enable the tinyMce..
 	$args['tinymce'] = true;
@@ -740,7 +740,7 @@ function bbp_forum_topics_reply_enable_tinymce_editor( $args = array() ) {
 	return $args;
 }
 
-add_filter( 'bbp_after_get_the_content_parse_args', 'bbp_forum_topics_reply_enable_tinymce_editor' );
+add_filter( 'bbp_after_get_the_content_parse_args', 'bboss_bbp_forum_topics_reply_enable_tinymce_editor' );
 
 /**
  * Enable TinyMce Quicktags in Forum Topic and reply content.
@@ -751,7 +751,7 @@ add_filter( 'bbp_after_get_the_content_parse_args', 'bbp_forum_topics_reply_enab
  *
  * @return mixed
  */
-function bbp_forum_topics_reply_tinymce_settings( $settings ) {
+function bboss_bbp_forum_topics_reply_tinymce_settings( $settings ) {
 
 	// visual/text tabs hide..
 	$settings['quicktags'] = false;
@@ -764,13 +764,13 @@ function bbp_forum_topics_reply_tinymce_settings( $settings ) {
  *
  * @since BuddyBoss 1.1.5
  */
-function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
+function bboss_bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 
 	if ( $group_id ) {
-		$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
+		$forum_ids = array_values( bboss_bbp_get_group_forum_ids( $group_id ) );
 		if ( ! empty( $forum_ids ) ) {
 			// Get the group.
-			$group = groups_get_group( absint( $group_id ) );
+			$group = bboss_groups_get_group( absint( $group_id ) );
 
 			foreach ( $forum_ids as $forum_id ) {
 				if ( ! empty( $forum_id ) ) {
@@ -778,14 +778,14 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 					// Set the default forum status.
 					switch ( $group->status ) {
 						case 'hidden':
-							$status = bbp_get_hidden_status_id();
+							$status = bboss_bbp_get_hidden_status_id();
 							break;
 						case 'private':
-							$status = bbp_get_private_status_id();
+							$status = bboss_bbp_get_private_status_id();
 							break;
 						case 'public':
 						default:
-							$status = bbp_get_public_status_id();
+							$status = bboss_bbp_get_public_status_id();
 							break;
 					}
 
@@ -796,7 +796,7 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 						)
 					);
 
-					$child_forums = bb_get_all_nested_subforums( $forum_id );
+					$child_forums = bboss_get_all_nested_subforums( $forum_id );
 					if ( $child_forums ) {
 						foreach ( $child_forums as $child_forum_id ) {
 							if ( get_post_status( $child_forum_id ) !== $status ) {
@@ -814,13 +814,13 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 		}
 
 		// Update Forums' internal private and forum ID variables
-		bbp_repair_forum_visibility();
+		bboss_bbp_repair_forum_visibility();
 
 	}
 }
 
-add_action( 'groups_group_settings_edited', 'bbp_forum_update_forum_status_when_group_updates', 100 );
-add_action( 'bp_group_admin_after_edit_screen_save', 'bbp_forum_update_forum_status_when_group_updates', 10 );
+add_action( 'groups_group_settings_edited', 'bboss_bbp_forum_update_forum_status_when_group_updates', 100 );
+add_action( 'bp_group_admin_after_edit_screen_save', 'bboss_bbp_forum_update_forum_status_when_group_updates', 10 );
 
 /**
  * Get Sub Forum's group id,
@@ -833,7 +833,7 @@ add_action( 'bp_group_admin_after_edit_screen_save', 'bbp_forum_update_forum_sta
  *
  * @return bool|int|mixed
  */
-function bbp_forum_recursive_group_id( $forum_id ) {
+function bboss_bbp_forum_recursive_group_id( $forum_id ) {
 
 	if ( empty( $forum_id ) ) {
 		return false;
@@ -850,7 +850,7 @@ function bbp_forum_recursive_group_id( $forum_id ) {
 	// Or if we get to the top of the hierarchy, we'll bail out of the loop, never having found a forum.
 	// that is associated with a group..
 	while ( ! $found_group_forum && ! $reached_the_top ) {
-		$forum_group_ids = bbp_get_forum_group_ids( $forum_id );
+		$forum_group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 		if ( ! empty( $forum_group_ids ) ) {
 			// We've found the forum_id that corresponds to the group's forum.
 			$found_group_forum = true;
@@ -874,24 +874,24 @@ function bbp_forum_recursive_group_id( $forum_id ) {
 	return false;
 }
 
-add_action( 'wp_ajax_search_tags', 'bbp_forum_topic_reply_ajax_form_search_tags' );
+add_action( 'wp_ajax_search_tags', 'bboss_bbp_forum_topic_reply_ajax_form_search_tags' );
 
 /**
  * Search the tags that already added on forums previously and give the suggestions list.
  *
  * @since BuddyBoss 1.1.9
  */
-function bbp_forum_topic_reply_ajax_form_search_tags() {
+function bboss_bbp_forum_topic_reply_ajax_form_search_tags() {
 
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
 	// Bail if not a POST action..
-	if ( ! bp_is_get_request() ) {
+	if ( ! bboss_is_get_request() ) {
 		wp_send_json_error( $response );
 	}
 
@@ -960,7 +960,7 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
  *
  * @return array|false|WP_Error Array of term taxonomy IDs of affected terms. WP_Error or false on failure.
  */
-function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' ) {
+function bboss_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' ) {
 	if ( ! empty( $existing_terms ) ) {
 		$existing_terms = explode( ',', $existing_terms );
 		$existing_terms = array_map(
@@ -1021,42 +1021,124 @@ function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' )
  *
  * @return array The same array with specific strings for the Forum/Topic UI if needed.
  */
-function bb_nouveau_forum_localize_scripts( $params = array() ) {
+function bboss_nouveau_forum_localize_scripts( $params = array() ) {
 
-	if ( function_exists( 'bp_is_active' ) && ! bp_is_active( 'forums' ) ) {
+	if ( function_exists( 'bboss_is_active' ) && ! bboss_is_active( 'forums' ) ) {
 		return $params;
 	}
 
-	$user_id    = bp_loggedin_user_id();
-	$draft_data = get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+	$user_id = bboss_loggedin_user_id();
 
 	$params['forums'] = array(
 		'params'  => array(
 			'bb_current_user_id' => $user_id,
-			'link_preview'       => bbp_use_autoembed() ? true : false,
+			'link_preview'       => bboss_bbp_use_autoembed() ? true : false,
 		),
 		'nonces'  => array(
 			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),
 		),
 		'strings' => array(
-			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss' ),
+			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss-platform' ),
 		),
 	);
 
+	// Localize only whether server drafts exist - the aggregated draft row is
+	// no longer echoed into every forum page's HTML; the JS fetches
+	// it once through bb_get_topic_reply_drafts before initializing the forms.
+	// The `draft` key keeps its historical empty-map shape for third parties.
 	$params['forums']['draft'] = array();
-	if ( ! empty( $draft_data ) ) {
-		foreach ( $draft_data as $data ) {
 
-			if ( isset( $data['data_key'] ) ) {
-				$params['forums']['draft'][ $data['data_key'] ] = $data;
+	// Whether a RESTORABLE draft exists, not merely whether the row does.
+	// The row can hold entries with no text and no attachment, which
+	// bb_get_topic_reply_drafts() now filters out (Q12) - claiming
+	// has_draft for one would fire the lazy fetch on every forum page view
+	// and get an empty map back every time.
+	//
+	// Read through bp_get_user_meta() to match the writers, which all store
+	// through bp_update_user_meta() and so resolve the key through
+	// bp_get_user_meta_key(). The whole row is already in the user-meta cache
+	// this request primed, so this costs no extra query.
+	$params['forums']['has_draft'] = false;
+	$draft_row                     = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+	// The keys of those drafts, so a page fetches only when one of its own forms
+	// has a draft. `has_draft` is site-wide: on its own it sent the fetch from
+	// every forum page once the member had a draft anywhere.
+	$params['forums']['draft_keys']       = array();
+	$params['forums']['has_evicted_hold'] = false;
+
+	// An evicted forum draft whose hand-back never reached this browser is
+	// fetched and restored like a stored one (V06). It is fetched from any
+	// forum page, since that fetch is also what hands it back.
+	if ( get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ) ) {
+		// Drafts waiting in the overflow count too; the fetch hands them back.
+		$held_keys = array_merge( array_keys( bboss_draft_pending_evicted( $user_id ) ), bboss_draft_get_evicted_overflow_keys( $user_id ) );
+
+		foreach ( $held_keys as $held_key ) {
+			if ( 0 === strpos( (string) $held_key, 'bb_user_topic_reply_draft:' ) ) {
+				$params['forums']['has_draft']        = true;
+				$params['forums']['has_evicted_hold'] = true;
+				break;
 			}
 		}
 	}
 
+	if ( ! empty( $draft_row ) && is_array( $draft_row ) ) {
+		foreach ( $draft_row as $draft_entry ) {
+			if ( is_array( $draft_entry ) && ! empty( $draft_entry['data_key'] ) && bboss_draft_topic_reply_entry_has_payload( $draft_entry ) ) {
+				$params['forums']['has_draft']    = true;
+				$params['forums']['draft_keys'][] = (string) $draft_entry['data_key'];
+			}
+		}
+	}
+
+	// Same retention disclosure as the activity composer - a draft that
+	// vanishes after the retention window must never be a surprise.
+	$draft_retention_days = bboss_draft_retention_days();
+	$params['forums']['draft_retention_days']   = (int) $draft_retention_days;
+	$params['forums']['draft_conflict_message'] = bboss_draft_conflict_message();
+
+	$params['forums']['draft_retention_message'] = $draft_retention_days ? sprintf(
+		/* translators: %s: Number of days a draft is kept. */
+		_n( 'Drafts are kept for %s day.', 'Drafts are kept for %s days.', $draft_retention_days, 'buddyboss-platform' ),
+		number_format_i18n( $draft_retention_days )
+	) : '';
+
+	// Forum-composer copies of the activity composer's draft messages. They are
+	// localized separately because the activity params are not present on
+	// forum-only pages.
+	$params['forums']['paste_image_blocked_message'] = __( 'Pasting images isn\'t supported. Please use the photo button to attach images.', 'buddyboss-platform' );
+	$params['forums']['draft_evicted_message']       = __( 'You had too many saved drafts, so your oldest draft is now saved only in this browser.', 'buddyboss-platform' );
+
+	// The lazy fetch can fail on a flaky connection. When it does, the member
+	// sees an empty composer even though a draft exists, and anything they type
+	// would otherwise overwrite the draft they were never shown.
+	$params['forums']['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss-platform' );
+
+	// Shown on a form that waits for the draft read before it accepts input,
+	// so a member whose typing is ignored knows why and that it is brief.
+	$params['forums']['draft_loading_message'] = __( 'Loading your saved draft. You can start writing in a moment.', 'buddyboss-platform' );
+
+	// Shown when a draft SAVE is refused and the server sent no message of its
+	// own - a bare wp_send_json_error() carries none, which is what the nonce
+	// check and the authorization gate emit. Without it those rejections were
+	// indistinguishable from a successful save (H1).
+	$params['forums']['draft_save_failed_message'] = __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' );
+
+	// Shown when a DISCARD is refused (e.g. an expired nonce, or the forum made
+	// private mid-session). The save message would wrongly say the draft "could
+	// not be saved" when the member was trying to remove it.
+	$params['forums']['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss-platform' );
+
+	// The restore is suppressed when the member has already typed into the
+	// form, and that suppression used to be silent - the stored draft is
+	// intact but nothing on screen said so.
+	$params['forums']['draft_not_restored_message'] = __( 'You have a saved draft. It was not loaded because you had already started writing here.', 'buddyboss-platform' );
+
 	return $params;
 }
 
-add_filter( 'bp_core_get_js_strings', 'bb_nouveau_forum_localize_scripts', 10, 1 );
+add_filter( 'bp_core_get_js_strings', 'bboss_nouveau_forum_localize_scripts', 10, 1 );
 
 /**
  * Update the forum/topic subscription when topic and forum merge/split/update parent.
@@ -1066,20 +1148,20 @@ add_filter( 'bp_core_get_js_strings', 'bb_nouveau_forum_localize_scripts', 10, 1
  * @param int     $post_id Post ID.
  * @param WP_Post $post    Post object.
  */
-function bb_subscription_update_secondary_item( $post_id, $post ) {
+function bboss_subscription_update_secondary_item( $post_id, $post ) {
 	if ( empty( $post_id ) || empty( $post ) ) {
 		return;
 	}
 
 	// Check the post type.
-	if ( empty( $post->post_type ) || ! in_array( $post->post_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ), true ) ) {
+	if ( empty( $post->post_type ) || ! in_array( $post->post_type, array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type() ), true ) ) {
 		return;
 	}
 
 	$subscription_type = '';
-	if ( bbp_get_forum_post_type() === $post->post_type ) {
+	if ( bboss_bbp_get_forum_post_type() === $post->post_type ) {
 		$subscription_type = 'forum';
-	} elseif ( bbp_get_topic_post_type() === $post->post_type ) {
+	} elseif ( bboss_bbp_get_topic_post_type() === $post->post_type ) {
 		$subscription_type = 'topic';
 	}
 
@@ -1088,7 +1170,7 @@ function bb_subscription_update_secondary_item( $post_id, $post ) {
 	}
 
 	// Update the secondary item ID.
-	BB_Subscriptions::update_secondary_item_id(
+	BBoss_Subscriptions::update_secondary_item_id(
 		array(
 			'type'              => $subscription_type,
 			'item_id'           => $post->ID,
@@ -1097,7 +1179,7 @@ function bb_subscription_update_secondary_item( $post_id, $post ) {
 	);
 }
 
-add_action( 'edit_post', 'bb_subscription_update_secondary_item', 999, 2 );
+add_action( 'edit_post', 'bboss_subscription_update_secondary_item', 999, 2 );
 
 /**
  * Return true if a forum is a group forum.
@@ -1108,12 +1190,12 @@ add_action( 'edit_post', 'bb_subscription_update_secondary_item', 999, 2 );
  *
  * @return bool True if it is a group forum, false if not.
  */
-function bb_is_forum_group_forum( $forum_id = 0 ) {
+function bboss_is_forum_group_forum( $forum_id = 0 ) {
 
 	// Validate.
-	$forum_id = bbp_get_forum_id( $forum_id );
+	$forum_id = bboss_bbp_get_forum_id( $forum_id );
 
-	$retval = function_exists( 'bbp_is_group_forums_active' ) && function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_group_forums_active() && bbp_is_forum_group_forum( $forum_id );
+	$retval = function_exists( 'bboss_bbp_is_group_forums_active' ) && function_exists( 'bboss_bbp_is_forum_group_forum' ) && bboss_bbp_is_group_forums_active() && bboss_bbp_is_forum_group_forum( $forum_id );
 
 	return (bool) apply_filters( 'bb_is_forum_group_forum', $retval, $forum_id );
 }
@@ -1123,30 +1205,30 @@ function bb_is_forum_group_forum( $forum_id = 0 ) {
  *
  * @since BuddyBoss 2.3.60
  */
-function bb_forums_link_preview_parse_url() {
+function bboss_forums_link_preview_parse_url() {
 	// Get URL.
 	$url = isset( $_POST['url'] ) ? $_POST['url'] : ''; // phpcs:ignore
 
 	// Check if URL is validated.
 	if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
-		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss' ) ) );
+		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss-platform' ) ) );
 	}
 
 	// Get URL parsed data.
-	$parse_url_data = bp_core_parse_url( $url );
+	$parse_url_data = bboss_core_parse_url( $url );
 
 	// If empty data then send error.
 	if ( empty( $parse_url_data ) ) {
-		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss' ) ) );
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss-platform' ) ) );
 	}
 
 	// send json success.
 	wp_send_json( $parse_url_data );
 }
 
-add_action( 'wp_ajax_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
-if ( bbp_allow_anonymous() ) {
-	add_action( 'wp_ajax_nopriv_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+add_action( 'wp_ajax_bb_forums_parse_url', 'bboss_forums_link_preview_parse_url' );
+if ( bboss_bbp_allow_anonymous() ) {
+	add_action( 'wp_ajax_nopriv_bb_forums_parse_url', 'bboss_forums_link_preview_parse_url' );
 }
 
 /**
@@ -1157,20 +1239,20 @@ if ( bbp_allow_anonymous() ) {
  * @param int $group_id Group ID.
  * @param int $forum_id Forum ID.
  */
-function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 ) {
+function bboss_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 ) {
 	if ( empty( $forum_id ) ) {
 		return;
 	}
-	$forum_id = bbp_get_forum_id( $forum_id );
+	$forum_id = bboss_bbp_get_forum_id( $forum_id );
 
 	// Use current group if none is set.
 	if ( empty( $group_id ) ) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 	}
 
 	// Get the values to backup.
-	$group_ids = array_filter( bbp_get_forum_group_ids( $forum_id ) );
-	$forum_ids = array_filter( bbp_get_group_forum_ids( $group_id ) );
+	$group_ids = array_filter( bboss_bbp_get_forum_group_ids( $forum_id ) );
+	$forum_ids = array_filter( bboss_bbp_get_group_forum_ids( $group_id ) );
 
 	if (
 		in_array( $group_id, $group_ids, true ) &&
@@ -1178,7 +1260,7 @@ function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 )
 	) {
 		// Save the backups.
 		update_post_meta( $forum_id, '_last_bbp_group_ids', $group_ids );
-		groups_update_groupmeta( $group_id, 'last_forum_id', $forum_id );
+		bboss_groups_update_groupmeta( $group_id, 'last_forum_id', $forum_id );
 	}
 }
 
@@ -1189,7 +1271,7 @@ function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 )
  *
  * @param int $raw_db_version Raw database version.
  */
-function bb_forums_migration( $raw_db_version ) {
+function bboss_forums_migration( $raw_db_version ) {
 	global $wpdb, $bb_background_updater;
 
 	$is_already_run = get_transient( 'bb_forums_migration' );
@@ -1198,14 +1280,14 @@ function bb_forums_migration( $raw_db_version ) {
 		return;
 	}
 
-	if ( bp_is_active( 'groups' ) && $raw_db_version < 20674 ) { // Release version 2.4.50.
+	if ( bboss_is_active( 'groups' ) && $raw_db_version < 20674 ) { // Release version 2.4.50.
 
 		/**
 		 * Migrate orphan group's forum discussion notification subscriptions.
 		 *
 		 * @since BuddyBoss 2.4.50
 		 */
-		$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
+		$subscription_tbl = BBoss_Subscriptions::get_subscription_tbl();
 
 		// phpcs:ignore
 		$results = $wpdb->get_results(
@@ -1225,7 +1307,7 @@ function bb_forums_migration( $raw_db_version ) {
 							'type'     => 'migration',
 							'group'    => 'bb_forums_notification_subscriptions',
 							'priority' => 5,
-							'callback' => 'bb_update_groups_discussion_subscriptions_background_process',
+							'callback' => 'bboss_update_groups_discussion_subscriptions_background_process',
 							'args'     => array( $chunk ),
 						)
 					);
@@ -1237,7 +1319,7 @@ function bb_forums_migration( $raw_db_version ) {
 						'type'     => 'migration',
 						'group'    => 'bb_forums_notification_subscriptions',
 						'priority' => 5,
-						'callback' => 'bb_update_groups_discussion_subscriptions_background_process',
+						'callback' => 'bboss_update_groups_discussion_subscriptions_background_process',
 						'args'     => array( $results ),
 					)
 				);
@@ -1259,7 +1341,7 @@ function bb_forums_migration( $raw_db_version ) {
  *
  * @return void
  */
-function bb_update_groups_discussion_subscriptions_background_process( $subscriptions ) {
+function bboss_update_groups_discussion_subscriptions_background_process( $subscriptions ) {
 
 	if ( empty( $subscriptions ) ) {
 		return;
@@ -1268,17 +1350,17 @@ function bb_update_groups_discussion_subscriptions_background_process( $subscrip
 	// Remove orphan forum topics notification subscriptions if user is not a member of related private/hidden group.
 	foreach ( $subscriptions as $subscription ) {
 		$forum_id  = $subscription->secondary_item_id;
-		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
 
 		if (
 			! empty( $group_id ) &&
 			(
-				bbp_is_forum_private( $forum_id ) ||
-				bbp_is_forum_hidden( $forum_id )
+				bboss_bbp_is_forum_private( $forum_id ) ||
+				bboss_bbp_is_forum_hidden( $forum_id )
 			)
 		) {
-			$topics = BB_Subscriptions::get(
+			$topics = BBoss_Subscriptions::get(
 				array(
 					'type'              => 'topic',
 					'secondary_item_id' => $forum_id,
@@ -1290,8 +1372,8 @@ function bb_update_groups_discussion_subscriptions_background_process( $subscrip
 			}
 
 			foreach ( $topics['subscriptions'] as $topic ) {
-				if ( ! groups_is_user_member( $topic->user_id, $group_id ) ) {
-					bbp_remove_user_topic_subscription( $topic->user_id, $topic->item_id );
+				if ( ! bboss_groups_is_user_member( $topic->user_id, $group_id ) ) {
+					bboss_bbp_remove_user_topic_subscription( $topic->user_id, $topic->item_id );
 				}
 			}
 		}
@@ -1312,14 +1394,14 @@ function bb_update_groups_discussion_subscriptions_background_process( $subscrip
  *
  * @return bool
  */
-function bb_moderator_can_delete_topic_reply( $obj, $args = array() ) {
+function bboss_moderator_can_delete_topic_reply( $obj, $args = array() ) {
 	$allow_delete = true;
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
-			'author_id' => bbp_get_topic_author_id( $obj->ID ),
-			'forum_id'  => bbp_get_topic_forum_id( $obj->ID ),
+			'author_id' => bboss_bbp_get_topic_author_id( $obj->ID ),
+			'forum_id'  => bboss_bbp_get_topic_forum_id( $obj->ID ),
 		)
 	);
 
@@ -1328,19 +1410,19 @@ function bb_moderator_can_delete_topic_reply( $obj, $args = array() ) {
 	}
 
 	$author_id       = $r['author_id'];
-	$group_id        = bbp_get_forum_group_ids( $r['forum_id'] );
+	$group_id        = bboss_bbp_get_forum_group_ids( $r['forum_id'] );
 	$group_id        = ! empty( $group_id ) ? current( $group_id ) : 0;
 	$current_user_id = get_current_user_id();
 
 	// If group moderator then no delete link, if topic author is admin/group organizer/moderator.
 	if (
 		! empty( $group_id ) &&
-		groups_is_user_mod( $current_user_id, $group_id )
+		bboss_groups_is_user_mod( $current_user_id, $group_id )
 	) {
 		if (
 			(
-				groups_is_user_admin( $author_id, $group_id ) ||
-				groups_is_user_mod( $author_id, $group_id ) ||
+				bboss_groups_is_user_admin( $author_id, $group_id ) ||
+				bboss_groups_is_user_mod( $author_id, $group_id ) ||
 				user_can( $author_id, 'administrator' )
 			)
 			&& $author_id !== $current_user_id
@@ -1352,4 +1434,380 @@ function bb_moderator_can_delete_topic_reply( $obj, $args = array() ) {
 	}
 
 	return $allow_delete;
+}
+
+/**
+ * Strip inline data-URL images from a draft entry's content fields.
+ *
+ * Split out of {@see bboss_forums_sanitize_draft_entry()} so the cheap step can
+ * run before the per-draft cap and the expensive kses pass runs only on a
+ * payload the cap has already accepted (M4).
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @param array $draft_entry Draft entry with a `data` member.
+ * @return array Entry with data URLs removed from its content fields.
+ */
+function bboss_forums_strip_draft_data_urls( $draft_entry ) {
+	if ( ! is_array( $draft_entry ) || empty( $draft_entry['data'] ) || ! is_array( $draft_entry['data'] ) ) {
+		return $draft_entry;
+	}
+
+	/** This filter is documented in bp-forums/functions.php */
+	$content_keys = apply_filters( 'bb_draft_topic_reply_content_keys', array( 'bbp_topic_content', 'bbp_reply_content' ) );
+
+	foreach ( $content_keys as $content_key ) {
+		if ( isset( $draft_entry['data'][ $content_key ] ) && is_string( $draft_entry['data'][ $content_key ] ) ) {
+			$draft_entry['data'][ $content_key ] = bboss_draft_strip_data_urls( $draft_entry['data'][ $content_key ] );
+		}
+	}
+
+	return $draft_entry;
+}
+
+/**
+ * Sanitize one topic/reply draft entry before it is stored in usermeta.
+ *
+ * Strips inline data-URL images and applies the forum publish path's kses
+ * allowlist to the drafted content fields, then stamps the save time used
+ * by draft expiry and size-budget eviction. Extension data members are
+ * left untouched.
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @param array $draft_entry Draft entry with a `data` member.
+ * @return array Sanitized draft entry.
+ */
+function bboss_forums_sanitize_draft_entry( $draft_entry ) {
+	if ( ! is_array( $draft_entry ) ) {
+		return $draft_entry;
+	}
+
+	if ( ! empty( $draft_entry['data'] ) && is_array( $draft_entry['data'] ) ) {
+
+		/**
+		 * Filters which forum draft data members carry member-authored HTML content.
+		 *
+		 * @since BuddyBoss 3.7.1
+		 *
+		 * @param string[] $content_keys Draft data keys holding HTML content.
+		 */
+		$content_keys = apply_filters( 'bb_draft_topic_reply_content_keys', array( 'bbp_topic_content', 'bbp_reply_content' ) );
+
+		foreach ( $content_keys as $content_key ) {
+			if ( isset( $draft_entry['data'][ $content_key ] ) && is_string( $draft_entry['data'][ $content_key ] ) ) {
+				// Same allowed tags as the topic/reply publish path (bbp_filter_kses), unslashed variant.
+				// Data URLs are stripped by bb_forums_strip_draft_data_urls()
+				// before the cap; kept idempotent here so any other caller of
+				// this function still gets the full treatment.
+				$draft_entry['data'][ $content_key ] = bboss_bbp_kses_data( bboss_draft_strip_data_urls( $draft_entry['data'][ $content_key ] ) );
+			}
+		}
+
+		/**
+		 * Free-text forum draft fields sanitized as PLAIN text (bbp_topic_title),
+		 * mirroring the M17 activity-draft fix and the topic publish path. The
+		 * content keys above are HTML (kses); the title is a short single-line
+		 * value that reached storage byte-for-byte from client JSON before -
+		 * harmless while a draft is only read back to its owner, but inconsistent
+		 * with the rest of the draft sanitization and one .html()-vs-.val() mistake
+		 * in any consumer of this usermeta row away from a stored-XSS (M21).
+		 *
+		 * @since BuddyBoss 3.7.1
+		 *
+		 * @param string[] $text_keys Draft data keys holding plain text.
+		 */
+		$text_keys = apply_filters( 'bb_draft_topic_reply_text_keys', array( 'bbp_topic_title' ) );
+
+		foreach ( $text_keys as $text_key ) {
+			if ( isset( $draft_entry['data'][ $text_key ] ) && is_string( $draft_entry['data'][ $text_key ] ) ) {
+				$draft_entry['data'][ $text_key ] = sanitize_text_field( $draft_entry['data'][ $text_key ] );
+			}
+		}
+	}
+
+	$draft_entry['_draft_saved_at'] = time();
+
+	return $draft_entry;
+}
+
+/**
+ * Trim the aggregated forum draft row to a byte budget, oldest drafts first.
+ *
+ * The forum draft row holds ALL of a user's topic/reply drafts, so the row
+ * itself must respect the per-user draft budget. Inner drafts other than
+ * the protected (just-saved) one are removed oldest-first until the
+ * serialized row fits.
+ *
+ * PURE with respect to storage: this only rewrites the in-memory row and
+ * reports what it removed. Releasing attachment stamps and firing
+ * `bb_draft_evicted` belong to the caller, AFTER the row is actually
+ * written — a budget refusal downstream abandons the write, and an eviction
+ * that never happened must not unprotect attachments or notify listeners
+ * (H4).
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @param array  $draft_row   Aggregated draft row (inner key => draft entry).
+ * @param string $protect_key Inner key that must not be evicted.
+ * @param int    $user_id     Owning user ID.
+ * @param int    $max_bytes   Byte budget for the serialized row.
+ * @return array {
+ *     @type array    $row     Trimmed draft row.
+ *     @type string[] $evicted Evicted inner keys ("meta_key:inner_key").
+ *     @type array    $entries Removed entries, inner key => entry, for the
+ *                             caller's deferred unstamping.
+ * }
+ */
+function bboss_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_bytes ) {
+	$result = array(
+		'row'     => $draft_row,
+		'evicted' => array(),
+		'entries' => array(),
+	);
+
+	if ( empty( $draft_row ) || ! is_array( $draft_row ) ) {
+		return $result;
+	}
+
+	// Steady state first, and cheaply: a row that already fits needs no
+	// candidate list, no sort and no per-entry accounting. One serialization,
+	// which is what the old implementation also cost on this path - the
+	// optimisation below must not make the common case more expensive than the
+	// rare one (R1).
+	$row_bytes = strlen( maybe_serialize( $draft_row ) );
+
+	if ( $row_bytes <= $max_bytes ) {
+		return $result;
+	}
+
+	$candidates = array();
+
+	foreach ( $draft_row as $inner_key => $inner_draft ) {
+		if ( (string) $inner_key === (string) $protect_key ) {
+			continue;
+		}
+
+		$candidates[] = array(
+			'inner_key' => (string) $inner_key,
+			'saved_at'  => isset( $inner_draft['_draft_saved_at'] ) ? (int) $inner_draft['_draft_saved_at'] : 0,
+		);
+	}
+
+	usort(
+		$candidates,
+		function ( $a, $b ) {
+			if ( $a['saved_at'] === $b['saved_at'] ) {
+				return 0;
+			}
+
+			return ( $a['saved_at'] < $b['saved_at'] ) ? -1 : 1;
+		}
+	);
+
+	// Size accounting is incremental, and exact.
+	//
+	// The loop below used to ask "does the row fit yet?" with
+	// strlen( maybe_serialize( $result['row'] ) ) on EVERY iteration, so an
+	// over-budget row with N eviction candidates serialized O(N) copies of a
+	// row that is by definition close to the cap. Measured on a 200-entry /
+	// 10 MB row: 182 whole-row serialize() calls moving 954 MB - and this runs
+	// on the live autosave endpoint, not a cron (R1).
+	//
+	// serialize() writes an array as `a:{count}:{` + the concatenated
+	// key/value serializations + `}`, and elements serialize independently, so
+	// the row's exact width is the sum of per-entry costs measured once plus
+	// that envelope, and an eviction is a subtraction. Same shape as the
+	// sibling bb_draft_enforce_user_budget(), which has always precomputed
+	// per-entry `bytes` and subtracted.
+	//
+	// Exactness matters in both directions: drifting high evicts a draft the
+	// member did not need to lose, drifting low leaves the row over budget and
+	// the caller's own budget check then refuses the whole save. The
+	// authoritative re-measure after the loop is the backstop.
+	$entry_bytes = array();
+	$payload_sum = 0;
+
+	foreach ( $draft_row as $inner_key => $inner_draft ) {
+		// serialize() rather than maybe_serialize(): this must mirror how the
+		// element appears INSIDE the serialized row, and maybe_serialize()
+		// passes a string element through unchanged instead of writing it as
+		// s:len:"...";.
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- measuring serialized WIDTH only; the result is never stored, transmitted or unserialized.
+		$bytes = bboss_draft_serialized_key_bytes( $inner_key ) + strlen( serialize( $inner_draft ) );
+
+		$entry_bytes[ (string) $inner_key ] = $bytes;
+		$payload_sum                       += $bytes;
+	}
+
+	$row_count = count( $draft_row );
+
+	// Tie the derived width to the authoritative one measured above. If they
+	// ever disagree the derivation is wrong for this PHP build, so re-base the
+	// running total on the measured value and let the backstop finish the job.
+	$derived_bytes = strlen( 'a:' . $row_count . ':{' ) + 1 + $payload_sum;
+
+	if ( $derived_bytes !== $row_bytes ) {
+		$payload_sum = $row_bytes - ( strlen( 'a:' . $row_count . ':{' ) + 1 );
+	}
+
+	foreach ( $candidates as $candidate ) {
+		if ( $row_bytes <= $max_bytes ) {
+			break;
+		}
+
+		$inner_key = $candidate['inner_key'];
+
+		// Only the in-memory row is changed here. Releasing the attachment
+		// stamps and firing the public bb_draft_evicted action are deferred to
+		// the caller, because a later budget refusal abandons this write
+		// entirely - and an eviction that never reached storage must not leave
+		// its attachments unprotected or announce itself to listeners
+		// (H4).
+		$result['entries'][ $inner_key ] = $result['row'][ $inner_key ];
+
+		unset( $result['row'][ $inner_key ] );
+
+		$result['evicted'][] = 'bb_user_topic_reply_draft:' . $inner_key;
+
+		--$row_count;
+		$payload_sum -= isset( $entry_bytes[ $inner_key ] ) ? $entry_bytes[ $inner_key ] : 0;
+		$row_bytes    = strlen( 'a:' . $row_count . ':{' ) + 1 + $payload_sum;
+	}
+
+	// Authoritative backstop: measure the real row once and keep evicting only
+	// if the accounting above somehow left it over budget. With the formula
+	// exact this measures once and stops, so the O(N) behaviour does not come
+	// back - but accounting drift cannot silently turn an under-trim into a
+	// refused save. Drift is not hypothetical: legacy rows whose inner keys
+	// are []-appended INTEGERS priced each key 4 bytes high until
+	// bb_draft_serialized_key_bytes() learned the i:N; form, and 487 of 3,204
+	// swept budget/row combinations came back over budget with evictable
+	// candidates remaining (GH2).
+	//
+	// Seeded with the candidates the loop above has NOT already evicted.
+	// Reseeding from the full list made this backstop dead code: its first
+	// array_shift() returned an already-evicted candidate, the isset() check
+	// broke the loop immediately, and the row was handed back over budget -
+	// which the caller's budget check then turned into a false "too many
+	// drafts" refusal (GH2).
+	$remaining = array();
+
+	foreach ( $candidates as $candidate ) {
+		if ( isset( $result['row'][ $candidate['inner_key'] ] ) ) {
+			$remaining[] = $candidate;
+		}
+	}
+
+	$measured_size = strlen( maybe_serialize( $result['row'] ) );
+
+	while ( $measured_size > $max_bytes ) {
+		$candidate = array_shift( $remaining );
+
+		// List exhausted - nothing evictable remains (the protected entry is
+		// never a candidate), so the caller's budget check owns the outcome.
+		if ( null === $candidate ) {
+			break;
+		}
+
+		// Defensive only: entries cannot vanish mid-loop, but an already-gone
+		// key must be SKIPPED, never allowed to end the loop while later
+		// candidates are still evictable.
+		if ( ! isset( $result['row'][ $candidate['inner_key'] ] ) ) {
+			continue;
+		}
+
+		$result['entries'][ $candidate['inner_key'] ] = $result['row'][ $candidate['inner_key'] ];
+
+		unset( $result['row'][ $candidate['inner_key'] ] );
+
+		$result['evicted'][] = 'bb_user_topic_reply_draft:' . $candidate['inner_key'];
+
+		$measured_size = strlen( maybe_serialize( $result['row'] ) );
+	}
+
+	return $result;
+}
+
+/**
+ * Remove one published inner draft from the aggregated forum draft row.
+ *
+ * The topic/reply publish handlers used to read the whole aggregate row once,
+ * unset the just-published key, and write the rest back - with no fresh read.
+ * The save handler (bb_post_topic_reply_draft) deliberately drops the meta
+ * cache and re-reads before its own write, "Only the keys this request actually
+ * decided about are ours to write", because a second tab autosaving or
+ * discarding a DIFFERENT inner draft commits inside that window. The publish
+ * handlers had the same window but not the guard: a stale read wrote a whole-row
+ * value (or, since the emptied-row case became bboss_delete_user_meta(), a
+ * whole-row DELETE) over a sibling another request had just written, and
+ * keymasters/moderators skip the bboss_bbp_update_user_last_posted() cache bust that
+ * narrows it for ordinary members (M2).
+ *
+ * This gives the publish path the save handler's three steps: drop the cache,
+ * re-read, and remove only the one key - so a concurrent sibling survives.
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @param int    $user_id        Owning user ID.
+ * @param string $draft_data_key Inner draft key just published.
+ * @return void
+ */
+function bboss_forums_delete_published_draft_key( $user_id, $draft_data_key ) {
+	$user_id      = (int) $user_id;
+	$usermeta_key = 'bb_user_topic_reply_draft';
+
+	if ( $user_id <= 0 ) {
+		return;
+	}
+
+	// Re-read on a fresh cache so a sibling another request wrote inside the
+	// publish window is not overwritten with this request's stale copy (M2).
+	wp_cache_delete( $user_id, 'user_meta' );
+	$existing_draft = bboss_get_user_meta( $user_id, $usermeta_key, true );
+
+	if ( ! is_array( $existing_draft ) ) {
+		// A legacy-empty or corrupt non-array row carries no member content and
+		// keeps has_draft true forever; a genuinely absent row reads as '' and
+		// the delete is a harmless no-op.
+		if ( ! empty( $existing_draft ) ) {
+			bboss_delete_user_meta( $user_id, $usermeta_key );
+
+			// This request removed usermeta, so any size memo primed earlier is
+			// now stale. Every other draft mutator flushes after its write; this
+			// publish path is the only writer that used to skip it (M2 LOW).
+			bboss_draft_flush_user_meta_sizes( $user_id );
+		}
+
+		return;
+	}
+
+	if ( isset( $existing_draft[ $draft_data_key ] ) ) {
+		// Clear it only when the form was showing this version. A draft the
+		// form never loaded, or a newer one another tab saved, stays stored. A
+		// form that sends no base (an older cached script) clears as before.
+		if ( ! bboss_draft_base_matches( $existing_draft[ $draft_data_key ], bboss_draft_request_base() ) ) {
+			return;
+		}
+
+		unset( $existing_draft[ $draft_data_key ] );
+	}
+
+	// An emptied aggregate row is deleted, never written back as array() - a
+	// stored empty row keeps has_draft true (one wasted lazy-fetch AJAX per
+	// forum page load, forever) and no cleanup pass can remove it while ordinary
+	// publishes keep re-creating it.
+	if ( empty( $existing_draft ) ) {
+		bboss_delete_user_meta( $user_id, $usermeta_key );
+	} else {
+		// wp_slash(): the row came back UNSLASHED from bp_get_user_meta() and
+		// update_metadata() unslashes once more on write, so re-slash to store
+		// the member's OTHER drafts byte-for-byte (R2).
+		bboss_update_user_meta( $user_id, $usermeta_key, wp_slash( $existing_draft ) );
+	}
+
+	// Flush the per-user size memo after the write, in step with every other
+	// draft mutator - both the delete and the update above change the member's
+	// total usermeta bytes, so a memo primed earlier in the request goes stale.
+	bboss_draft_flush_user_meta_sizes( $user_id );
 }

@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Feature_Autoloader {
+class BBoss_Feature_Autoloader {
 
 	/**
 	 * Feature class mapping patterns.
@@ -90,7 +90,7 @@ class BB_Feature_Autoloader {
 		// If class matches a feature pattern, gate it.
 		if ( $matched_feature ) {
 			// Only allow autoloading if feature is active.
-			if ( ! bp_is_active( $matched_feature ) ) {
+			if ( ! bboss_is_active( $matched_feature ) ) {
 				// Feature is inactive - prevent class loading.
 				return false; // Don't load - feature is inactive.
 			}
@@ -120,8 +120,8 @@ class BB_Feature_Autoloader {
 				__METHOD__,
 				sprintf(
 					/* translators: %s: pattern */
-					__( 'Invalid regex pattern for feature class mapping: %s', 'buddyboss' ),
-					$pattern
+					esc_html__( 'Invalid regex pattern for feature class mapping: %s', 'buddyboss-platform' ),
+					esc_html( $pattern )
 				),
 				'3.0.0'
 			);
@@ -190,7 +190,7 @@ class BB_Feature_Autoloader {
 	 * @return void
 	 */
 	public static function bb_discover_features() {
-		$base_dir = buddypress()->plugin_dir . 'bb-features/';
+		$base_dir = bboss()->plugin_dir . 'bb-features/';
 
 		// Allow admins to manually clear the feature discovery cache via query parameter.
 		// Usage: Add ?bb_clear_features_cache=1 to any admin URL.
@@ -298,7 +298,7 @@ class BB_Feature_Autoloader {
 	 * @return string Transient key.
 	 */
 	private static function bb_get_discovery_cache_key() {
-		$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+		$version = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 		return 'bb_feature_config_paths_v_' . md5( $version );
 	}
 }

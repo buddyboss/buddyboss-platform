@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.0.3
  */
-class BP_Suspend_Notification extends BP_Suspend_Abstract {
+class BBoss_Suspend_Notification extends BBoss_Suspend_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Suspend_Notification extends BP_Suspend_Abstract {
 	public static $type = 'notification';
 
 	/**
-	 * BP_Suspend_Notification constructor.
+	 * BBoss_Suspend_Notification constructor.
 	 *
 	 * @since BuddyBoss 2.0.3
 	 */

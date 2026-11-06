@@ -15,16 +15,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.1.4
  */
-function bb_register_pusher_integration() {
+function bboss_register_pusher_integration() {
 
 	if (
-		( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, bb_pro_pusher_version(), '>=' ) ) ||
-		class_exists( 'BB_Pusher_Integration' )
+		( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, bboss_pro_pusher_version(), '>=' ) ) ||
+		class_exists( 'BBoss_Pusher_Integration' )
 	) {
 		return;
 	}
 
 	require_once dirname( __FILE__ ) . '/bb-pusher-integration.php';
-	buddypress()->integrations['pusher'] = new BB_Pusher_Integration();
+	bboss()->integrations['pusher'] = new BBoss_Pusher_Integration();
 }
-add_action( 'bp_setup_integrations', 'bb_register_pusher_integration', 20 );
+add_action( 'bp_setup_integrations', 'bboss_register_pusher_integration', 20 );

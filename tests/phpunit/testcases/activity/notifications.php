@@ -42,7 +42,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 	public function test_bp_activity_remove_screen_notifications_on_single_activity_permalink() {
 		$this->create_notifications();
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
@@ -50,9 +50,9 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		$this->assertEquals( array( $this->a1 ), wp_list_pluck( $notifications, 'item_id' ) );
 
 		// Go to the activity permalink page
-		$this->go_to( bp_core_get_user_domain( $this->u1 ) . 'activity/' . $this->a1 );
+		$this->go_to( bboss_core_get_user_domain( $this->u1 ) . 'activity/' . $this->a1 );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
@@ -67,7 +67,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 	public function test_bp_activity_remove_screen_notifications_on_single_activity_permalink_logged_out() {
 		$this->create_notifications();
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
@@ -78,9 +78,9 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		$this->set_current_user( 0 );
 
 		// Go to the activity permalink page
-		$this->go_to( bp_core_get_user_domain( $this->u1 ) . 'activity/' . $this->a1 );
+		$this->go_to( bboss_core_get_user_domain( $this->u1 ) . 'activity/' . $this->a1 );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
@@ -97,7 +97,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 	public function test_bp_activity_remove_screen_notifications_on_single_activity_permalink_wrong_user() {
 		$this->create_notifications();
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
@@ -108,9 +108,9 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		$this->set_current_user( $this->u2 );
 
 		// Go to the activity permalink page
-		$this->go_to( bp_core_get_user_domain( $this->u1 ) . 'activity/' . $this->a1 );
+		$this->go_to( bboss_core_get_user_domain( $this->u1 ) . 'activity/' . $this->a1 );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
@@ -154,7 +154,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 	public function test_bp_activity_remove_screen_notifications_on_mentions_logged_out() {
 		$this->create_notifications();
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
@@ -165,9 +165,9 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		$this->set_current_user( 0 );
 
 		// Go to the My Activity page
-		$this->go_to( bp_core_get_user_domain( $this->u1 ) . bp_get_activity_slug() . '/mentions/' );
+		$this->go_to( bboss_core_get_user_domain( $this->u1 ) . bboss_get_activity_slug() . '/mentions/' );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
@@ -185,7 +185,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 	public function test_bp_activity_remove_screen_notifications_on_mentions_wrong_user() {
 		$this->create_notifications();
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
@@ -196,9 +196,9 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		$this->set_current_user( $this->u2 );
 
 		// Go to the My Activity page
-		$this->go_to( bp_core_get_user_domain( $this->u1 ) . bp_get_activity_slug() . '/mentions/' );
+		$this->go_to( bboss_core_get_user_domain( $this->u1 ) . bboss_get_activity_slug() . '/mentions/' );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
@@ -216,18 +216,18 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 	public function test_bp_activity_at_mention_delete_notification() {
 		$this->create_notifications();
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'item_id' => $this->a1,
 		) );
 
 		// Double check it's there
 		$this->assertEquals( array( $this->a1 ), wp_list_pluck( $notifications, 'item_id' ) );
 
-		bp_activity_delete( array(
+		bboss_activity_delete( array(
 			'id' => $this->a1,
 		) );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'item_id' => $this->a1,
 		) );
 
@@ -242,40 +242,40 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 	public function test_bp_activity_remove_screen_notifications_on_new_mentions_cleared() {
 		$this->create_notifications();
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'item_id' => $this->a1,
 		) );
 
 		// Double check it's there
 		$this->assertEquals( array( $this->a1 ), wp_list_pluck( $notifications, 'item_id' ) );
-		$this->assertEquals( 1, bp_get_total_mention_count_for_user( $this->u1 ) );
+		$this->assertEquals( 1, bboss_get_total_mention_count_for_user( $this->u1 ) );
 
 		// Clear notifications for $this->u1
-		bp_activity_clear_new_mentions( $this->u1 );
+		bboss_activity_clear_new_mentions( $this->u1 );
 
-		$notifications = BP_Notifications_Notification::get( array(
+		$notifications = BBoss_Notifications_Notification::get( array(
 			'item_id' => $this->a1,
 		) );
 
 		$this->assertEmpty( $notifications, 'Notifications should be cleared when new mention metas are removed' );
-		$this->assertEmpty( bp_get_total_mention_count_for_user( $this->u1 ) );
+		$this->assertEmpty( bboss_get_total_mention_count_for_user( $this->u1 ) );
 	}
 
 	/**
 	 * Creates two notifications for $u1, one of which is for mentions
 	 */
 	protected function create_notifications() {
-		$u1_mentionname = bp_activity_get_user_mentionname( $this->u1 );
+		$u1_mentionname = bboss_activity_get_user_mentionname( $this->u1 );
 		$this->a1 = self::factory()->activity->create( array(
 			'user_id' => $this->u2,
-			'component' => buddypress()->activity->id,
+			'component' => bboss()->activity->id,
 			'type' => 'activity_update',
 			'content' => sprintf( 'Hello! @%s', $u1_mentionname ),
 		) );
-		$u2_mentionname = bp_activity_get_user_mentionname( $this->u2 );
+		$u2_mentionname = bboss_activity_get_user_mentionname( $this->u2 );
 		$this->a2 = self::factory()->activity->create( array(
 			'user_id' => $this->u1,
-			'component' => buddypress()->activity->id,
+			'component' => bboss()->activity->id,
 			'type' => 'activity_update',
 			'content' => sprintf( 'Hello! @%s', $u2_mentionname ),
 		) );
@@ -290,7 +290,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		// Current user is $this->u1, so $this->u2 posted the mention
 		$a = self::factory()->activity->create( array(
 			'user_id' => $this->u2,
-			'component' => buddypress()->activity->id,
+			'component' => bboss()->activity->id,
 			'type' => 'activity_update',
 			'content' => 'fake new_at_mention activity',
 		) );
@@ -299,16 +299,16 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		add_filter( 'bp_activity_multiple_at_mentions_notification', array( $this, 'format_notification_filter' ), 10, 1 );
 
 		$format_tests = array(
-			'array_single'    => bp_activity_format_notifications( 'new_at_mention', $a, $this->u2, 1, 'array' ),
-			'string_single'   => bp_activity_format_notifications( 'new_at_mention', $a, $this->u2, 1 ),
-			'array_multiple'  => bp_activity_format_notifications( 'new_at_mention', $a, $this->u2, 2, 'array' ),
-			'string_multiple' => bp_activity_format_notifications( 'new_at_mention', $a, $this->u2, 2 ),
+			'array_single'    => bboss_activity_format_notifications( 'new_at_mention', $a, $this->u2, 1, 'array' ),
+			'string_single'   => bboss_activity_format_notifications( 'new_at_mention', $a, $this->u2, 1 ),
+			'array_multiple'  => bboss_activity_format_notifications( 'new_at_mention', $a, $this->u2, 2, 'array' ),
+			'string_multiple' => bboss_activity_format_notifications( 'new_at_mention', $a, $this->u2, 2 ),
 		);
 
 		remove_filter( 'bp_activity_single_at_mentions_notification', array( $this, 'format_notification_filter' ), 10 );
 		remove_filter( 'bp_activity_multiple_at_mentions_notification', array( $this, 'format_notification_filter' ), 10 );
 
-		$single = sprintf( __( '%1$s mentioned you', 'buddyboss' ), bp_core_get_user_displayname( $this->u2 ) );
+		$single = sprintf( __( '%1$s mentioned you', 'buddyboss-platform' ), bboss_core_get_user_displayname( $this->u2 ) );
 		$multiple = 'You have 2 new mentions';
 
 		$this->assertContains( $single, $format_tests['string_single'] );
@@ -332,12 +332,12 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 	public function test_bp_activity_comment_add_notification() {
 		$a = self::factory()->activity->create( array(
 			'user_id' => $this->u1,
-			'component' => buddypress()->activity->id,
+			'component' => bboss()->activity->id,
 			'type' => 'activity_update',
 			'content' => 'Please comment this activity.',
 		) );
 
-		$c = bp_activity_new_comment( array(
+		$c = bboss_activity_new_comment( array(
 			'content'     => 'this is the comment',
 			'user_id'     => $this->u2,
 			'activity_id' => $a, // ID of the root activity item.
@@ -346,21 +346,21 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 
 		$u3 = self::factory()->user->create();
 
-		$r3 = bp_activity_new_comment( array(
+		$r3 = bboss_activity_new_comment( array(
 			'content'     => 'this is a reply to a comment',
 			'user_id'     => $u3,
 			'activity_id' => $a, // ID of the root activity item.
 			'parent_id'   => $c  // ID of a parent comment (optional).
 		) );
 
-		$u1_notifications = BP_Notifications_Notification::get( array(
+		$u1_notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) );
 
 		$expected_commenters = array( $this->u2, $u3 );
 		$this->assertEquals( $expected_commenters, wp_list_pluck( $u1_notifications, 'secondary_item_id' ) );
 
-		$u2_notifications = BP_Notifications_Notification::get( array(
+		$u2_notifications = BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u2,
 		) );
 
@@ -369,7 +369,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 
 		// Attempt to mark 'update_reply' notifications as read for user 1.
 		foreach ( $u1_notifications as $i => $n ) {
-			$n = bp_activity_format_notifications( $n->component_action, $n->item_id, $n->secondary_item_id, 1, 'array', $n->id );
+			$n = bboss_activity_format_notifications( $n->component_action, $n->item_id, $n->secondary_item_id, 1, 'array', $n->id );
 			if ( ! empty( $n['link'] ) ) {
 				// Remove redirecter for unit tests.
 				$n['link'] = str_replace( '/p/', '/', $n['link'] );
@@ -380,14 +380,14 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		}
 
 		// Assert that notifications for user 1 are cleared and empty.
-		$this->assertEmpty( BP_Notifications_Notification::get( array(
+		$this->assertEmpty( BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u1,
 		) ) );
 
 		// Attempt to mark 'comment_reply' notifications as read for user 2.
 		$this->set_current_user( $this->u2 );
 		foreach ( $u2_notifications as $i => $n ) {
-			$n = bp_activity_format_notifications( $n->component_action, $n->item_id, $n->secondary_item_id, 1, 'array', $n->id );
+			$n = bboss_activity_format_notifications( $n->component_action, $n->item_id, $n->secondary_item_id, 1, 'array', $n->id );
 			if ( ! empty( $n['link'] ) ) {
 				// Remove redirecter for unit tests.
 				$n['link'] = str_replace( '/p/', '/', $n['link'] );
@@ -398,7 +398,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		}
 
 		// Assert that notifications for user 2 are cleared and empty.
-		$this->assertEmpty( BP_Notifications_Notification::get( array(
+		$this->assertEmpty( BBoss_Notifications_Notification::get( array(
 			'user_id' => $this->u2,
 		) ) );
 	}
@@ -465,7 +465,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		$ac2 = get_comment_meta( $c2, 'bp_activity_comment_id', true );
 
 		// Check if notifications exists for user 1.
-		$n1 = BP_Notifications_Notification::get( array(
+		$n1 = BBoss_Notifications_Notification::get( array(
 			'component_name' => 'activity',
 			'user_id'        => $u1
 		) );
@@ -476,7 +476,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		);
 
 		// Check if notification exists for user 2.
-		$n2 = BP_Notifications_Notification::get( array(
+		$n2 = BBoss_Notifications_Notification::get( array(
 			'component_action' => 'comment_reply',
 			'item_id'          => $ac2,
 			'user_id'          => $u2

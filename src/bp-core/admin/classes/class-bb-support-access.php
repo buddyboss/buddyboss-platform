@@ -26,7 +26,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Support_Access.
+ * Class BBoss_Support_Access.
  *
  * Singleton that owns the entire support-access lifecycle: the front-end
  * token-login handler, the expiry cron, and the admin AJAX endpoints used by
@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.1.0
  */
-class BB_Support_Access {
+class BBoss_Support_Access {
 
 	/**
 	 * Option key for the support-access state.
@@ -101,7 +101,7 @@ class BB_Support_Access {
 	const LOG_LIMIT = 10;
 
 	/**
-	 * AJAX nonce action. Matches BB_Admin_Settings_Ajax so the existing React
+	 * AJAX nonce action. Matches BBoss_Admin_Settings_Ajax so the existing React
 	 * nonce continues to authenticate these endpoints without any JS change.
 	 *
 	 * @since BuddyBoss 3.1.0
@@ -158,7 +158,7 @@ class BB_Support_Access {
 	 *
 	 * @var string
 	 */
-	const SUPPORT_SYSTEM_API_BASE = 'https://oq8tjkh4kk.execute-api.us-east-2.amazonaws.com/v1';
+	const SUPPORT_SYSTEM_API_BASE = 'https://oq8tjkh4kk.execute-api.us-east-2.amazonaws.com/v1'; // phpcs:ignore PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- BuddyBoss support-access API endpoint (opt-in), not an asset.
 
 	/**
 	 * Outbound request timeout (seconds) for the support system proxy call. Kept
@@ -226,7 +226,7 @@ class BB_Support_Access {
 	 *
 	 * @since BuddyBoss 3.1.0
 	 *
-	 * @var BB_Support_Access|null
+	 * @var BBoss_Support_Access|null
 	 */
 	private static $instance = null;
 
@@ -235,7 +235,7 @@ class BB_Support_Access {
 	 *
 	 * @since BuddyBoss 3.1.0
 	 *
-	 * @return BB_Support_Access
+	 * @return BBoss_Support_Access
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -325,7 +325,7 @@ class BB_Support_Access {
 	}
 
 	/**
-	 * Exclude the support account from BP_User_Query result sets.
+	 * Exclude the support account from BBoss_User_Query result sets.
 	 *
 	 * Appends a `NOT IN` clause to the user-id query so the support
 	 * administrator is never disclosed through the member directory or the
@@ -336,7 +336,7 @@ class BB_Support_Access {
 	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param array         $sql   Array of SQL clauses for the user query.
-	 * @param BP_User_Query $query Current BP_User_Query instance (by reference).
+	 * @param BBoss_User_Query $query Current BBoss_User_Query instance (by reference).
 	 *
 	 * @return array Filtered SQL clauses.
 	 */
@@ -426,7 +426,7 @@ class BB_Support_Access {
 	/**
 	 * Run a read-modify-write callback under an advisory lock.
 	 *
-	 * The single `bb_support_access` option is updated by several flows
+	 * The single `BBoss_Support_Access` option is updated by several flows
 	 * (login auditing, ticket appends, enable/disable). Without a lock, two
 	 * concurrent requests can read the same snapshot and the second write
 	 * clobbers the first — typically a lost audit-log row. WordPress options
@@ -450,7 +450,7 @@ class BB_Support_Access {
 		// Holding the root blog context for the whole critical section also means
 		// the save() inside $callback is already on the root blog, so its own
 		// switch is skipped. On single site current === root, so this is a no-op.
-		$root_blog_id = bp_get_root_blog_id();
+		$root_blog_id = bboss_get_root_blog_id();
 		$switched     = false;
 		if ( get_current_blog_id() !== $root_blog_id ) {
 			switch_to_blog( $root_blog_id );
@@ -524,7 +524,7 @@ class BB_Support_Access {
 		// so switch into the root blog context and call update_option() directly.
 		// When already on the root blog the switch is skipped — always the case on
 		// single site, and also when invoked inside with_lock().
-		$root_blog_id = bp_get_root_blog_id();
+		$root_blog_id = bboss_get_root_blog_id();
 		$switched     = false;
 		if ( get_current_blog_id() !== $root_blog_id ) {
 			switch_to_blog( $root_blog_id );
@@ -597,7 +597,7 @@ class BB_Support_Access {
 			'login_log'       => array(),
 		);
 
-		$data = bp_get_option( self::OPTION, array() );
+		$data = bboss_get_option( self::OPTION, array() );
 		if ( ! is_array( $data ) ) {
 			$data = array();
 		}
@@ -898,7 +898,7 @@ class BB_Support_Access {
 		if ( get_user_by( 'email', self::USER_EMAIL ) || get_user_by( 'login', self::USER_LOGIN ) ) {
 			return new WP_Error(
 				'bb_support_user_conflict',
-				__( 'A user already exists with the BuddyBoss support email or login. Please rename or remove that account before enabling Support Access.', 'buddyboss' )
+				__( 'A user already exists with the BuddyBoss support email or login. Please rename or remove that account before enabling Support Access.', 'buddyboss-platform' )
 			);
 		}
 
@@ -909,9 +909,9 @@ class BB_Support_Access {
 				'user_login'   => self::USER_LOGIN,
 				'user_email'   => self::USER_EMAIL,
 				'user_pass'    => wp_generate_password( 64, true, true ),
-				'display_name' => __( 'BuddyBoss Support', 'buddyboss' ),
-				'first_name'   => __( 'BuddyBoss', 'buddyboss' ),
-				'last_name'    => __( 'Support', 'buddyboss' ),
+				'display_name' => __( 'BuddyBoss Support', 'buddyboss-platform' ),
+				'first_name'   => __( 'BuddyBoss', 'buddyboss-platform' ),
+				'last_name'    => __( 'Support', 'buddyboss-platform' ),
 				'role'         => 'administrator',
 			)
 		);
@@ -1201,7 +1201,7 @@ class BB_Support_Access {
 	public function extend( $days, $login_url = '' ) {
 		$days = absint( $days );
 		if ( ! in_array( $days, $this->allowed_days(), true ) ) {
-			return new WP_Error( 'bb_support_access_invalid_days', __( 'Invalid duration.', 'buddyboss' ) );
+			return new WP_Error( 'bb_support_access_invalid_days', __( 'Invalid duration.', 'buddyboss-platform' ) );
 		}
 
 		$data = $this->get_data();
@@ -1279,7 +1279,7 @@ class BB_Support_Access {
 		$sent   = 0;
 		$failed = 0;
 
-		$expiry_utc = $expires ? gmdate( 'Y-m-d H:i:s', (int) $expires ) . ' UTC' : __( 'n/a', 'buddyboss' );
+		$expiry_utc = $expires ? gmdate( 'Y-m-d H:i:s', (int) $expires ) . ' UTC' : __( 'n/a', 'buddyboss-platform' );
 
 		foreach ( (array) $tickets as $ticket ) {
 			$ticket = (int) $ticket;
@@ -1341,7 +1341,7 @@ class BB_Support_Access {
 		$support_user_id = $this->with_lock(
 			function () {
 				$data = $this->get_data();
-				bp_delete_option( self::OPTION );
+				bboss_delete_option( self::OPTION );
 
 				return (int) $data['support_user_id'];
 			}
@@ -1415,7 +1415,7 @@ class BB_Support_Access {
 			$login_url = $this->get_login_url( $data );
 		}
 
-		$expiry_utc = $data['expires'] ? gmdate( 'Y-m-d H:i:s', $data['expires'] ) . ' UTC' : __( 'n/a', 'buddyboss' );
+		$expiry_utc = $data['expires'] ? gmdate( 'Y-m-d H:i:s', $data['expires'] ) . ' UTC' : __( 'n/a', 'buddyboss-platform' );
 
 		$note = sprintf(
 			'<p><strong>BuddyBoss Support Access</strong> enabled for %1$s.</p><p>Expires: <strong>%2$s</strong></p>',
@@ -1573,7 +1573,7 @@ class BB_Support_Access {
 		if ( $conversation_id <= 0 ) {
 			return new WP_Error(
 				'invalid_conversation_id',
-				__( 'A valid ticket (conversation) ID is required.', 'buddyboss' )
+				__( 'A valid ticket (conversation) ID is required.', 'buddyboss-platform' )
 			);
 		}
 
@@ -1583,7 +1583,7 @@ class BB_Support_Access {
 		if ( ! $bypass_rate_limit && ! $this->notify_rate_ok( $conversation_id ) ) {
 			return new WP_Error(
 				'rate_limited',
-				__( 'A note for this ticket was just sent. Please wait a moment before trying again.', 'buddyboss' )
+				__( 'A note for this ticket was just sent. Please wait a moment before trying again.', 'buddyboss-platform' )
 			);
 		}
 
@@ -1601,7 +1601,7 @@ class BB_Support_Access {
 		// the cap signals tampering — refuse rather than transmit it.
 		if ( ! is_string( $body ) || strlen( $body ) > self::SUPPORT_SYSTEM_MAX_PAYLOAD ) {
 			$this->notify_rate_release( $conversation_id );
-			return new WP_Error( 'payload_error', __( 'Could not build the note request.', 'buddyboss' ) );
+			return new WP_Error( 'payload_error', __( 'Could not build the note request.', 'buddyboss-platform' ) );
 		}
 
 		/**
@@ -1647,7 +1647,7 @@ class BB_Support_Access {
 			$this->notify_rate_release( $conversation_id );
 			return new WP_Error(
 				'support_system_request_failed',
-				__( 'Could not reach the support system. Please try adding the ticket again.', 'buddyboss' )
+				__( 'Could not reach the support system. Please try adding the ticket again.', 'buddyboss-platform' )
 			);
 		}
 
@@ -1669,7 +1669,7 @@ class BB_Support_Access {
 				'conversation_not_found',
 				sprintf(
 					/* translators: %d: support system conversation/ticket ID. */
-					__( 'Ticket %d was not found in the support system.', 'buddyboss' ),
+					__( 'Ticket %d was not found in the support system.', 'buddyboss-platform' ),
 					$conversation_id
 				)
 			);
@@ -1681,7 +1681,7 @@ class BB_Support_Access {
 
 		return new WP_Error(
 			'support_system_api_error',
-			'' !== $message ? $message : __( 'The support system rejected the note. Please try again.', 'buddyboss' ),
+			'' !== $message ? $message : __( 'The support system rejected the note. Please try again.', 'buddyboss-platform' ),
 			array( 'status' => $code )
 		);
 	}
@@ -1868,7 +1868,7 @@ class BB_Support_Access {
 	 * @return void
 	 */
 	private function verify_request() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -1997,7 +1997,7 @@ class BB_Support_Access {
 		$response           = $this->build_response( $result['login_url'] );
 		$response['notice'] = array(
 			'status'  => 'success',
-			'message' => __( 'Support access duration updated.', 'buddyboss' ),
+			'message' => __( 'Support access duration updated.', 'buddyboss-platform' ),
 		);
 
 		// On a pure extension (existing grant), re-notify every attached ticket
@@ -2014,12 +2014,12 @@ class BB_Support_Access {
 			if ( $notify['sent'] > 0 && 0 === $notify['failed'] ) {
 				$response['notice'] = array(
 					'status'  => 'success',
-					'message' => __( 'Duration updated and support notified of the new expiry.', 'buddyboss' ),
+					'message' => __( 'Duration updated and support notified of the new expiry.', 'buddyboss-platform' ),
 				);
 			} elseif ( $notify['failed'] > 0 ) {
 				$response['notice'] = array(
 					'status'  => 'error',
-					'message' => __( 'Duration updated, but the support system could not be notified for some tickets.', 'buddyboss' ),
+					'message' => __( 'Duration updated, but the support system could not be notified for some tickets.', 'buddyboss-platform' ),
 				);
 			}
 		}
@@ -2043,7 +2043,7 @@ class BB_Support_Access {
 		// while enabled, but a direct AJAX call could otherwise dispatch a note
 		// for an expired-but-not-yet-cron-cleaned grant.
 		if ( ! $this->is_active() ) {
-			wp_send_json_error( array( 'message' => __( 'Support access is not currently active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Support access is not currently active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by verify_request().
@@ -2055,14 +2055,14 @@ class BB_Support_Access {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( '' === $ticket ) {
-			wp_send_json_error( array( 'message' => __( 'Ticket number is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Ticket number is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// The ticket number is a support system conversation ID — must be numeric.
 		// Validate up front so a bad value gives an instant, clear error rather
 		// than a confusing network round-trip.
 		if ( ! ctype_digit( $ticket ) || (int) $ticket <= 0 ) {
-			wp_send_json_error( array( 'message' => __( 'Ticket number must be a valid numeric ID.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Ticket number must be a valid numeric ID.', 'buddyboss-platform' ) ) );
 		}
 
 		// Only accept a login URL that points at THIS site and carries our query
@@ -2085,7 +2085,7 @@ class BB_Support_Access {
 		$response           = $this->build_response();
 		$response['notice'] = array(
 			'status'  => 'success',
-			'message' => __( 'Ticket added and note posted to support.', 'buddyboss' ),
+			'message' => __( 'Ticket added and note posted to support.', 'buddyboss-platform' ),
 		);
 
 		wp_send_json_success( $response );
@@ -2096,4 +2096,4 @@ class BB_Support_Access {
 // Constants are class constants (BB_Support_Access::OPTION, etc.) and are
 // intentionally immutable: there are no overridable define()s for these
 // security-sensitive values.
-BB_Support_Access::instance();
+BBoss_Support_Access::instance();

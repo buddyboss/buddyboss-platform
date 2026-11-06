@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  * Class for generating SQL clauses that filter a primary query according to
  * XProfile metadata keys and values.
  *
- * `BP_XProfile_Meta_Query` is a helper that allows primary query classes, such
+ * `BBoss_XProfile_Meta_Query` is a helper that allows primary query classes, such
  * as {@see WP_Query} and {@see WP_User_Query}, to filter their results by object
  * metadata, by generating `JOIN` and `WHERE` subclauses to be attached
  * to the primary SQL query string.
  *
  * @since BuddyPress 2.3.0
  */
-class BP_XProfile_Meta_Query extends WP_Meta_Query {
+class BBoss_XProfile_Meta_Query extends WP_Meta_Query {
 
 	/**
 	 * Determine whether a query clause is first-order.
@@ -279,8 +279,8 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 			switch ( $meta_compare ) {
 				case 'IN':
 				case 'NOT IN':
-					$meta_compare_string = '(' . substr( str_repeat( ',%s', count( $meta_value ) ), 1 ) . ')';
-					$where               = $wpdb->prepare( $meta_compare_string, $meta_value );
+					// One %s placeholder per value.
+					$where = $wpdb->prepare( '(' . implode( ',', array_fill( 0, count( $meta_value ), '%s' ) ) . ')', $meta_value );
 					break;
 
 				case 'BETWEEN':
@@ -332,8 +332,8 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 			switch ( $meta_compare ) {
 				case 'IN':
 				case 'NOT IN':
-					$meta_compare_string = '(' . substr( str_repeat( ',%s', count( $object_type ) ), 1 ) . ')';
-					$object_where        = $wpdb->prepare( $meta_compare_string, $object_type );
+					// One %s placeholder per object type.
+					$object_where = $wpdb->prepare( '(' . implode( ',', array_fill( 0, count( $object_type ), '%s' ) ) . ')', $object_type );
 					break;
 
 				case 'LIKE':

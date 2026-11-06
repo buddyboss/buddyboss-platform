@@ -10,7 +10,10 @@
  * @package BuddyBoss\Main
  */
 
-if ( ! class_exists( 'bbPress' ) ) :
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+if ( ! class_exists( 'BBoss_Forums' ) ) :
 	/**
 	 * Main bbPress Class
 	 *
@@ -19,7 +22,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 	 * @since bbPress (r2464)
 	 */
 
-	final class bbPress {
+	final class BBoss_Forums {
 
 		/** Magic *****************************************************************/
 
@@ -80,7 +83,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 * @uses bbPress::setup_globals() Setup the globals needed
 		 * @uses bbPress::includes() Include the required files
 		 * @uses bbPress::setup_actions() Setup the hooks and actions
-		 * @see bbpress()
+		 * @see bboss_forums()
 		 * @return The one true bbPress
 		 */
 		public static function instance() {
@@ -90,7 +93,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Only run these methods if they haven't been ran previously
 			if ( null === $instance ) {
-				$instance = new bbPress();
+				$instance = new BBoss_Forums();
 				$instance->setup_globals();
 				$instance->includes();
 				$instance->setup_actions();
@@ -107,7 +110,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 *
 		 * @since bbPress (r2464)
 		 * @see bbPress::instance()
-		 * @see bbpress();
+		 * @see bboss_forums();
 		 */
 		private function __construct() {
 			/* Do nothing here */ }
@@ -118,7 +121,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 * @since bbPress (r2464)
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '2.1' ); }
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '2.1' ); }
 
 		/**
 		 * A dummy magic method to prevent Forums from being unserialized
@@ -126,7 +129,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 * @since bbPress (r2464)
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '2.1' ); }
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '2.1' ); }
 
 		/**
 		 * Magic method for checking the existence of a certain custom field
@@ -194,9 +197,9 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Setup some base path and URL information
 			$this->file       = __FILE__;
-			$this->basename   = apply_filters( 'bbp_plugin_basename', plugin_basename( buddypress()->file ) );
-			$this->plugin_dir = apply_filters( 'bbp_plugin_dir_path', buddypress()->plugin_dir . 'bp-forums/' );
-			$this->plugin_url = apply_filters( 'bbp_plugin_dir_url', buddypress()->plugin_url . 'bp-forums/' );
+			$this->basename   = apply_filters( 'bbp_plugin_basename', plugin_basename( bboss()->file ) );
+			$this->plugin_dir = apply_filters( 'bbp_plugin_dir_path', bboss()->plugin_dir . 'bp-forums/' );
+			$this->plugin_url = apply_filters( 'bbp_plugin_dir_url', bboss()->plugin_url . 'bp-forums/' );
 
 			// Includes
 			$this->includes_dir = apply_filters( 'bbp_includes_dir', trailingslashit( $this->plugin_dir ) );
@@ -354,11 +357,11 @@ if ( ! class_exists( 'bbPress' ) ) :
 		private function setup_actions() {
 
 			// Add actions to plugin activation and deactivation hooks
-			add_action( 'activate_' . $this->basename, 'bbp_activation' );
-			add_action( 'deactivate_' . $this->basename, 'bbp_deactivation' );
+			add_action( 'activate_' . $this->basename, 'bboss_bbp_activation' );
+			add_action( 'deactivate_' . $this->basename, 'bboss_bbp_deactivation' );
 
 			// If Forums is being deactivated, do not add any actions
-			if ( bbp_is_deactivation( $this->basename ) ) {
+			if ( bboss_bbp_is_deactivation( $this->basename ) ) {
 				return;
 			}
 
@@ -401,20 +404,20 @@ if ( ! class_exists( 'bbPress' ) ) :
 		public function register_theme_packages() {
 
 			// Register the default theme compatibility package
-			bbp_register_theme_package(
+			bboss_bbp_register_theme_package(
 				array(
 					'id'      => 'default',
 					'name'    => 'Forums Default',
-					'version' => bbp_get_version(),
+					'version' => bboss_bbp_get_version(),
 					'dir'     => trailingslashit( $this->themes_dir . 'default' ),
 					'url'     => trailingslashit( $this->themes_url . 'default' ),
 				)
 			);
 
 			// Register the basic theme stack. This is really dope.
-			bbp_register_template_stack( 'get_stylesheet_directory', 10 );
-			bbp_register_template_stack( 'get_template_directory', 12 );
-			bbp_register_template_stack( 'bbp_get_theme_compat_dir', 14 );
+			bboss_bbp_register_template_stack( 'get_stylesheet_directory', 10 );
+			bboss_bbp_register_template_stack( 'get_template_directory', 12 );
+			bboss_bbp_register_template_stack( 'bboss_bbp_get_theme_compat_dir', 14 );
 		}
 
 		/**
@@ -430,7 +433,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 			}
 
 			// Setup the theme package to use for compatibility
-			bbp_setup_theme_compat( bbp_get_theme_package_id() );
+			bboss_bbp_setup_theme_compat( bboss_bbp_get_theme_package_id() );
 		}
 
 		/**
@@ -447,18 +450,18 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Register Forum content type
 			register_post_type(
-				bbp_get_forum_post_type(),
+				bboss_bbp_get_forum_post_type(),
 				apply_filters(
 					'bbp_register_forum_post_type',
 					array(
-						'labels'              => bbp_get_forum_post_type_labels(),
-						'rewrite'             => bbp_get_forum_post_type_rewrite(),
-						'supports'            => bbp_get_forum_post_type_supports(),
-						'description'         => __( 'Forums', 'buddyboss' ),
-						'capabilities'        => bbp_get_forum_caps(),
+						'labels'              => bboss_bbp_get_forum_post_type_labels(),
+						'rewrite'             => bboss_bbp_get_forum_post_type_rewrite(),
+						'supports'            => bboss_bbp_get_forum_post_type_supports(),
+						'description'         => __( 'Forums', 'buddyboss-platform' ),
+						'capabilities'        => bboss_bbp_get_forum_caps(),
 						'capability_type'     => array( 'forum', 'forums' ),
 						'menu_position'       => 555555,
-						'has_archive'         => bbp_get_root_slug(),
+						'has_archive'         => bboss_bbp_get_root_slug(),
 						'exclude_from_search' => true,
 						'show_in_nav_menus'   => true,
 						'public'              => true,
@@ -473,24 +476,24 @@ if ( ! class_exists( 'bbPress' ) ) :
 				)
 			);
 
-			add_post_type_support( bbp_get_forum_post_type(), 'thumbnail' );
+			add_post_type_support( bboss_bbp_get_forum_post_type(), 'thumbnail' );
 
 			/** Topics */
 
 			// Register Topic content type
 			register_post_type(
-				bbp_get_topic_post_type(),
+				bboss_bbp_get_topic_post_type(),
 				apply_filters(
 					'bbp_register_topic_post_type',
 					array(
-						'labels'              => bbp_get_topic_post_type_labels(),
-						'rewrite'             => bbp_get_topic_post_type_rewrite(),
-						'supports'            => bbp_get_topic_post_type_supports(),
-						'description'         => __( 'Forum Discussions', 'buddyboss' ),
-						'capabilities'        => bbp_get_topic_caps(),
+						'labels'              => bboss_bbp_get_topic_post_type_labels(),
+						'rewrite'             => bboss_bbp_get_topic_post_type_rewrite(),
+						'supports'            => bboss_bbp_get_topic_post_type_supports(),
+						'description'         => __( 'Forum Discussions', 'buddyboss-platform' ),
+						'capabilities'        => bboss_bbp_get_topic_caps(),
 						'capability_type'     => array( 'topic', 'topics' ),
 						'menu_position'       => 555555,
-						'has_archive'         => ( 'forums' === bbp_show_on_root() ) ? bbp_get_topic_archive_slug() : false,
+						'has_archive'         => ( 'forums' === bboss_bbp_show_on_root() ) ? bboss_bbp_get_topic_archive_slug() : false,
 						'exclude_from_search' => true,
 						'show_in_nav_menus'   => false,
 						'public'              => true,
@@ -509,15 +512,15 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Register reply content type
 			register_post_type(
-				bbp_get_reply_post_type(),
+				bboss_bbp_get_reply_post_type(),
 				apply_filters(
 					'bbp_register_reply_post_type',
 					array(
-						'labels'              => bbp_get_reply_post_type_labels(),
-						'rewrite'             => bbp_get_reply_post_type_rewrite(),
-						'supports'            => bbp_get_reply_post_type_supports(),
-						'description'         => __( 'Forum Replies', 'buddyboss' ),
-						'capabilities'        => bbp_get_reply_caps(),
+						'labels'              => bboss_bbp_get_reply_post_type_labels(),
+						'rewrite'             => bboss_bbp_get_reply_post_type_rewrite(),
+						'supports'            => bboss_bbp_get_reply_post_type_supports(),
+						'description'         => __( 'Forum Replies', 'buddyboss-platform' ),
+						'capabilities'        => bboss_bbp_get_reply_caps(),
 						'capability_type'     => array( 'reply', 'replies' ),
 						'menu_position'       => 555555,
 						'exclude_from_search' => true,
@@ -552,12 +555,13 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Closed @todo clean up translation
 			register_post_status(
-				bbp_get_closed_status_id(),
+				bboss_bbp_get_closed_status_id(),
 				apply_filters(
 					'bbp_register_closed_post_status',
 					array(
-						'label'             => __( 'Closed', 'buddyboss' ),
-						'label_count'       => _n_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'buddyboss' ),
+						'label'             => __( 'Closed', 'buddyboss-platform' ),
+						/* translators: %s: number of closed topics/replies. */
+						'label_count'       => _n_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'buddyboss-platform' ),
 						'public'            => true,
 						'show_in_admin_all' => true,
 						'source'            => 'bbpress',
@@ -567,12 +571,13 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Spam @todo clean up translation
 			register_post_status(
-				bbp_get_spam_status_id(),
+				bboss_bbp_get_spam_status_id(),
 				apply_filters(
 					'bbp_register_spam_post_status',
 					array(
-						'label'                     => __( 'Spam', 'buddyboss' ),
-						'label_count'               => _n_noop( 'Spam <span class="count">(%s)</span>', 'Spam <span class="count">(%s)</span>', 'buddyboss' ),
+						'label'                     => __( 'Spam', 'buddyboss-platform' ),
+						/* translators: %s: number of spam topics/replies. */
+						'label_count'               => _n_noop( 'Spam <span class="count">(%s)</span>', 'Spam <span class="count">(%s)</span>', 'buddyboss-platform' ),
 						'protected'                 => true,
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
@@ -584,12 +589,13 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Orphan
 			register_post_status(
-				bbp_get_orphan_status_id(),
+				bboss_bbp_get_orphan_status_id(),
 				apply_filters(
 					'bbp_register_orphan_post_status',
 					array(
-						'label'                     => __( 'Orphan', 'buddyboss' ),
-						'label_count'               => _n_noop( 'Orphan <span class="count">(%s)</span>', 'Orphans <span class="count">(%s)</span>', 'buddyboss' ),
+						'label'                     => __( 'Orphan', 'buddyboss-platform' ),
+						/* translators: %s: number of orphan replies. */
+						'label_count'               => _n_noop( 'Orphan <span class="count">(%s)</span>', 'Orphans <span class="count">(%s)</span>', 'buddyboss-platform' ),
 						'protected'                 => true,
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
@@ -601,12 +607,13 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Hidden
 			register_post_status(
-				bbp_get_hidden_status_id(),
+				bboss_bbp_get_hidden_status_id(),
 				apply_filters(
 					'bbp_register_hidden_post_status',
 					array(
-						'label'                     => __( 'Hidden', 'buddyboss' ),
-						'label_count'               => _n_noop( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', 'buddyboss' ),
+						'label'                     => __( 'Hidden', 'buddyboss-platform' ),
+						/* translators: %s: number of hidden topics/replies. */
+						'label_count'               => _n_noop( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', 'buddyboss-platform' ),
 						'private'                   => true,
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
@@ -650,21 +657,21 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Register the topic-tag taxonomy.
 			register_taxonomy(
-				bbp_get_topic_tag_tax_id(),
-				bbp_get_topic_post_type(),
+				bboss_bbp_get_topic_tag_tax_id(),
+				bboss_bbp_get_topic_post_type(),
 				apply_filters(
 					'bbp_register_topic_taxonomy',
 					array(
-						'labels'                => bbp_get_topic_tag_tax_labels(),
-						'rewrite'               => bbp_get_topic_tag_tax_rewrite(),
-						'capabilities'          => bbp_get_topic_tag_caps(),
+						'labels'                => bboss_bbp_get_topic_tag_tax_labels(),
+						'rewrite'               => bboss_bbp_get_topic_tag_tax_rewrite(),
+						'capabilities'          => bboss_bbp_get_topic_tag_caps(),
 						'update_count_callback' => '_update_post_term_count',
 						'query_var'             => true,
 						'show_tagcloud'         => true,
 						'hierarchical'          => false,
 						'show_in_nav_menus'     => false,
 						'public'                => true,
-						'show_ui'               => bbp_allow_topic_tags() && current_user_can( 'bbp_topic_tags_admin' ),
+						'show_ui'               => bboss_bbp_allow_topic_tags() && current_user_can( 'bbp_topic_tags_admin' ),
 						'show_in_menu'          => false,
 						'show_in_rest'          => true,
 						'source'                => 'bbpress',
@@ -677,14 +684,14 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 * Register the Forums views
 		 *
 		 * @since bbPress (r2789)
-		 * @uses bbp_register_view() To register the views
+		 * @uses bboss_bbp_register_view() To register the views
 		 */
 		public static function register_views() {
 
 			// Popular discussions
-			bbp_register_view(
+			bboss_bbp_register_view(
 				'popular',
-				__( 'Most popular discussions', 'buddyboss' ),
+				__( 'Most popular discussions', 'buddyboss-platform' ),
 				apply_filters(
 					'bbp_register_view_popular',
 					array(
@@ -698,9 +705,9 @@ if ( ! class_exists( 'bbPress' ) ) :
 			);
 
 			// Discussions with no replies
-			bbp_register_view(
+			bboss_bbp_register_view(
 				'no-replies',
-				__( 'Unanswered discussions', 'buddyboss' ),
+				__( 'Unanswered discussions', 'buddyboss-platform' ),
 				apply_filters(
 					'bbp_register_view_no_replies',
 					array(
@@ -720,10 +727,10 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 *
 		 * @since bbPress (r3031)
 		 *
-		 * @uses BBP_Shortcodes
+		 * @uses BBoss_BBP_Shortcodes
 		 */
 		public function register_shortcodes() {
-			$this->shortcodes = new BBP_Shortcodes();
+			$this->shortcodes = new BBoss_BBP_Shortcodes();
 		}
 
 		/**
@@ -750,8 +757,8 @@ if ( ! class_exists( 'bbPress' ) ) :
 		public function setup_engagements() {
 
 			// Setup the class name.
-			$strategy   = ucwords( bbp_engagements_strategy() );
-			$class_name = "BBP_User_Engagements_{$strategy}";
+			$strategy   = ucwords( bboss_bbp_engagements_strategy() );
+			$class_name = "BBoss_BBP_User_Engagements_{$strategy}";
 
 			// Setup the engagements interface.
 			$this->engagements = new $class_name();
@@ -766,14 +773,14 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 * @uses add_rewrite_tag() To add the rewrite tags
 		 */
 		public static function add_rewrite_tags() {
-			add_rewrite_tag( '%' . bbp_get_view_rewrite_id() . '%', '([^/]+)' ); // View Page tag
-			add_rewrite_tag( '%' . bbp_get_edit_rewrite_id() . '%', '([1]{1,})' ); // Edit Page tag
-			add_rewrite_tag( '%' . bbp_get_search_rewrite_id() . '%', '([^/]+)' ); // Search Results tag
-			add_rewrite_tag( '%' . bbp_get_user_rewrite_id() . '%', '([^/]+)' ); // User Profile tag
-			add_rewrite_tag( '%' . bbp_get_user_favorites_rewrite_id() . '%', '([1]{1,})' ); // User Favorites tag
-			add_rewrite_tag( '%' . bbp_get_user_subscriptions_rewrite_id() . '%', '([1]{1,})' ); // User Subscriptions tag
-			add_rewrite_tag( '%' . bbp_get_user_topics_rewrite_id() . '%', '([1]{1,})' ); // User Topics Tag
-			add_rewrite_tag( '%' . bbp_get_user_replies_rewrite_id() . '%', '([1]{1,})' ); // User Replies Tag
+			add_rewrite_tag( '%' . bboss_bbp_get_view_rewrite_id() . '%', '([^/]+)' ); // View Page tag
+			add_rewrite_tag( '%' . bboss_bbp_get_edit_rewrite_id() . '%', '([1]{1,})' ); // Edit Page tag
+			add_rewrite_tag( '%' . bboss_bbp_get_search_rewrite_id() . '%', '([^/]+)' ); // Search Results tag
+			add_rewrite_tag( '%' . bboss_bbp_get_user_rewrite_id() . '%', '([^/]+)' ); // User Profile tag
+			add_rewrite_tag( '%' . bboss_bbp_get_user_favorites_rewrite_id() . '%', '([1]{1,})' ); // User Favorites tag
+			add_rewrite_tag( '%' . bboss_bbp_get_user_subscriptions_rewrite_id() . '%', '([1]{1,})' ); // User Subscriptions tag
+			add_rewrite_tag( '%' . bboss_bbp_get_user_topics_rewrite_id() . '%', '([1]{1,})' ); // User Topics Tag
+			add_rewrite_tag( '%' . bboss_bbp_get_user_replies_rewrite_id() . '%', '([1]{1,})' ); // User Replies Tag
 		}
 
 		/**
@@ -794,33 +801,33 @@ if ( ! class_exists( 'bbPress' ) ) :
 			$priority = 'top';
 
 			// Single Slugs
-			$forum_slug = bbp_get_forum_slug();
-			$topic_slug = bbp_get_topic_slug();
-			$reply_slug = bbp_get_reply_slug();
-			$ttag_slug  = bbp_get_topic_tag_tax_slug();
+			$forum_slug = bboss_bbp_get_forum_slug();
+			$topic_slug = bboss_bbp_get_topic_slug();
+			$reply_slug = bboss_bbp_get_reply_slug();
+			$ttag_slug  = bboss_bbp_get_topic_tag_tax_slug();
 
 			// Archive Slugs
-			$view_slug          = bbp_get_view_slug();
-			$search_slug        = bbp_get_search_slug();
-			$topic_archive_slug = bbp_get_topic_archive_slug();
-			$reply_archive_slug = bbp_get_reply_archive_slug();
+			$view_slug          = bboss_bbp_get_view_slug();
+			$search_slug        = bboss_bbp_get_search_slug();
+			$topic_archive_slug = bboss_bbp_get_topic_archive_slug();
+			$reply_archive_slug = bboss_bbp_get_reply_archive_slug();
 
 			// Tertiary Slugs
 			$feed_slug  = 'feed';
-			$edit_slug  = bbp_get_edit_slug();
-			$paged_slug = bbp_get_paged_slug();
+			$edit_slug  = bboss_bbp_get_edit_slug();
+			$paged_slug = bboss_bbp_get_paged_slug();
 
 			// Unique rewrite ID's
 			$feed_id      = 'feed';
-			$edit_id      = bbp_get_edit_rewrite_id();
-			$view_id      = bbp_get_view_rewrite_id();
-			$paged_id     = bbp_get_paged_rewrite_id();
-			$search_id    = bbp_get_search_rewrite_id();
-			$user_id      = bbp_get_user_rewrite_id();
-			$user_favs_id = bbp_get_user_favorites_rewrite_id();
-			$user_subs_id = bbp_get_user_subscriptions_rewrite_id();
-			$user_tops_id = bbp_get_user_topics_rewrite_id();
-			$user_reps_id = bbp_get_user_replies_rewrite_id();
+			$edit_id      = bboss_bbp_get_edit_rewrite_id();
+			$view_id      = bboss_bbp_get_view_rewrite_id();
+			$paged_id     = bboss_bbp_get_paged_rewrite_id();
+			$search_id    = bboss_bbp_get_search_rewrite_id();
+			$user_id      = bboss_bbp_get_user_rewrite_id();
+			$user_favs_id = bboss_bbp_get_user_favorites_rewrite_id();
+			$user_subs_id = bboss_bbp_get_user_subscriptions_rewrite_id();
+			$user_tops_id = bboss_bbp_get_user_topics_rewrite_id();
+			$user_reps_id = bboss_bbp_get_user_replies_rewrite_id();
 
 			// Rewrite rule matches used repeatedly below
 			$root_rule  = '/([^/]+)/?$';
@@ -835,10 +842,10 @@ if ( ! class_exists( 'bbPress' ) ) :
 			/** Add */
 
 			// Edit Forum|Topic|Reply|Topic-tag
-			add_rewrite_rule( $forum_slug . $edit_rule, 'index.php?' . bbp_get_forum_post_type() . '=$matches[1]&' . $edit_id . '=1', $priority );
-			add_rewrite_rule( $topic_slug . $edit_rule, 'index.php?' . bbp_get_topic_post_type() . '=$matches[1]&' . $edit_id . '=1', $priority );
-			add_rewrite_rule( $reply_slug . $edit_rule, 'index.php?' . bbp_get_reply_post_type() . '=$matches[1]&' . $edit_id . '=1', $priority );
-			add_rewrite_rule( $ttag_slug . $edit_rule, 'index.php?' . bbp_get_topic_tag_tax_id() . '=$matches[1]&' . $edit_id . '=1', $priority );
+			add_rewrite_rule( $forum_slug . $edit_rule, 'index.php?' . bboss_bbp_get_forum_post_type() . '=$matches[1]&' . $edit_id . '=1', $priority );
+			add_rewrite_rule( $topic_slug . $edit_rule, 'index.php?' . bboss_bbp_get_topic_post_type() . '=$matches[1]&' . $edit_id . '=1', $priority );
+			add_rewrite_rule( $reply_slug . $edit_rule, 'index.php?' . bboss_bbp_get_reply_post_type() . '=$matches[1]&' . $edit_id . '=1', $priority );
+			add_rewrite_rule( $ttag_slug . $edit_rule, 'index.php?' . bboss_bbp_get_topic_tag_tax_id() . '=$matches[1]&' . $edit_id . '=1', $priority );
 
 			// Topic-View Pagination|Feed|View
 			add_rewrite_rule( $view_slug . $paged_rule, 'index.php?' . $view_id . '=$matches[1]&' . $paged_id . '=$matches[2]', $priority );
@@ -862,14 +869,14 @@ if ( ! class_exists( 'bbPress' ) ) :
 		public static function add_permastructs() {
 
 			// Get unique ID's
-			$user_id   = bbp_get_user_rewrite_id();
-			$view_id   = bbp_get_view_rewrite_id();
-			$search_id = bbp_get_search_rewrite_id();
+			$user_id   = bboss_bbp_get_user_rewrite_id();
+			$view_id   = bboss_bbp_get_view_rewrite_id();
+			$search_id = bboss_bbp_get_search_rewrite_id();
 
 			// Get root slugs
-			$user_slug   = bbp_get_user_slug();
-			$view_slug   = bbp_get_view_slug();
-			$search_slug = bbp_get_search_slug();
+			$user_slug   = bboss_bbp_get_user_slug();
+			$view_slug   = bboss_bbp_get_view_slug();
+			$search_slug = bboss_bbp_get_search_slug();
 
 			// User Permastruct
 			add_permastruct(
@@ -925,12 +932,12 @@ if ( ! class_exists( 'bbPress' ) ) :
 	 * Use this function like you would a global variable, except without needing
 	 * to declare the global.
 	 *
-	 * Example: <?php $bbp = bbpress(); ?>
+	 * Example: <?php $bbp = bboss_forums(); ?>
 	 *
 	 * @return The one true bbPress Instance
 	 */
-	function bbpress() {
-		return bbpress::instance();
+	function bboss_forums() {
+		return BBoss_Forums::instance();
 	}
 
 endif; // class_exists check

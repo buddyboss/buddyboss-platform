@@ -7,10 +7,10 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
-		$this->go_to( bp_core_get_user_domain( $u1 ) );
+		$this->go_to( bboss_core_get_user_domain( $u1 ) );
 
 		global $members_template;
-		bp_has_members( array(
+		bboss_has_members( array(
 			'include' => array( $u1, $u2 ),
 		) );
 
@@ -40,7 +40,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 		global $members_template;
 		$reset_members_template = $members_template;
 
-		bp_has_members( $template_args );
+		bboss_has_members( $template_args );
 
 		preg_match( '/&#038;members_search=(.*)\'/', $members_template->pag_links, $matches );
 
@@ -54,17 +54,17 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
-		friends_add_friend( $u1, $u2 );
+		bboss_friends_add_friend( $u1, $u2 );
 
 		$old_user = get_current_user_id();
 		$this->set_current_user( $u2 );
 
-		$this->go_to( bp_core_get_user_domain( $u2 ) . bp_get_friends_slug() . '/requests/' );
+		$this->go_to( bboss_core_get_user_domain( $u2 ) . bboss_get_friends_slug() . '/requests/' );
 		$this->restore_admins();
 
 		global $members_template;
-		bp_has_members( array(
-			'include' => bp_get_friendship_requests( $u2 ),
+		bboss_has_members( array(
+			'include' => bboss_get_friendship_requests( $u2 ),
 		) );
 
 		$requests = is_array( $members_template->members ) ? array_values( $members_template->members ) : array();
@@ -92,12 +92,12 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 		// real in BP
 		wp_cache_delete( 'bp_user_domain_' . $u2, 'bp' );
 
-		$this->go_to( bp_core_get_user_domain( $u2 ) . bp_get_friends_slug() . '/requests/' );
+		$this->go_to( bboss_core_get_user_domain( $u2 ) . bboss_get_friends_slug() . '/requests/' );
 		$this->restore_admins();
 
 		global $members_template;
-		bp_has_members( array(
-			'include' => bp_get_friendship_requests( $u2 ),
+		bboss_has_members( array(
+			'include' => bboss_get_friendship_requests( $u2 ),
 		) );
 
 		$requests = is_array( $members_template->members ) ? array_values( $members_template->members ) : array();
@@ -111,16 +111,16 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 	 * @group bp_has_members
 	 */
 	public function test_bp_has_members_should_pass_member_type_param_to_query() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
 		global $members_template;
 		$old_members_template = $members_template;
 
-		bp_has_members( array(
+		bboss_has_members( array(
 			'member_type' => 'bar',
 		) );
 
@@ -136,11 +136,11 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 	 * @ticket BP6286
 	 */
 	public function test_bp_has_members_should_infer_member_type_from_get_param() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
 		global $members_template;
 		$old_members_template = $members_template;
@@ -148,7 +148,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 		$old_get = $_GET;
 		$_GET['member_type'] = 'bar';
 
-		bp_has_members();
+		bboss_has_members();
 
 		$members = is_array( $members_template->members ) ? array_values( $members_template->members ) : array();
 		$member_ids = wp_list_pluck( $members, 'ID' );
@@ -162,13 +162,13 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 	 * @ticket BP6286
 	 */
 	public function test_bp_has_members_should_infer_member_type_from_get_param_comma_sep() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
-		bp_register_member_type( 'baz' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
+		bboss_register_member_type( 'baz' );
 		$users = self::factory()->user->create_many( 4 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
-		bp_set_member_type( $users[2], 'baz' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[2], 'baz' );
 
 		global $members_template;
 		$old_members_template = $members_template;
@@ -176,7 +176,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 		$old_get = $_GET;
 		$_GET['member_type'] = 'foo,bar';
 
-		bp_has_members();
+		bboss_has_members();
 
 		$members = is_array( $members_template->members ) ? array_values( $members_template->members ) : array();
 		$member_ids = wp_list_pluck( $members, 'ID' );
@@ -197,7 +197,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 		$members_template->member = new stdClass;
 		$members_template->member->last_activity = $time;
 
-		$this->assertEquals( bp_core_get_last_activity( $time, __( 'active %s', 'buddyboss' ) ), bp_get_member_last_active() );
+		$this->assertEquals( bboss_core_get_last_activity( $time, __( 'active %s', 'buddyboss-platform' ) ), bboss_get_member_last_active() );
 	}
 
 	/**
@@ -212,7 +212,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 		$members_template->member = new stdClass;
 		$members_template->member->last_activity = $time;
 
-		$this->assertEquals( bp_core_get_last_activity( $time, __( 'active %s', 'buddyboss' ) ), bp_get_member_last_active( array( 'active_format' => true, ) ) );
+		$this->assertEquals( bboss_core_get_last_activity( $time, __( 'active %s', 'buddyboss-platform' ) ), bboss_get_member_last_active( array( 'active_format' => true, ) ) );
 	}
 
 	/**
@@ -227,12 +227,12 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 		$members_template->member = new stdClass;
 		$members_template->member->last_activity = $time;
 
-		$this->assertEquals( bp_core_time_since( $time ), bp_get_member_last_active( array( 'active_format' => false, ) ) );
+		$this->assertEquals( bboss_core_time_since( $time ), bboss_get_member_last_active( array( 'active_format' => false, ) ) );
 	}
 
 	/**
 	 * @group pagination
-	 * @group BP_Core_Members_Template
+	 * @group BBoss_Core_Members_Template
 	 */
 	public function test_bp_groups_template_should_give_precedence_to_upage_URL_param() {
 		$request = $_REQUEST;
@@ -255,7 +255,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 			'search_terms'    => ''
 		);
 
-		$at = new BP_Core_Members_Template( $r );
+		$at = new BBoss_Core_Members_Template( $r );
 
 		$this->assertEquals( 5, $at->pag_page );
 
@@ -264,7 +264,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Core_Members_Template
+	 * @group BBoss_Core_Members_Template
 	 */
 	public function test_bp_members_template_should_reset_0_pag_page_URL_param_to_default_pag_page_value() {
 		$request = $_REQUEST;
@@ -287,7 +287,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 			'search_terms'    => ''
 		);
 
-		$at = new BP_Core_Members_Template( $r );
+		$at = new BBoss_Core_Members_Template( $r );
 
 		$this->assertEquals( 8, $at->pag_page );
 
@@ -296,7 +296,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Core_Members_Template
+	 * @group BBoss_Core_Members_Template
 	 */
 	public function test_bp_members_template_should_give_precedence_to_num_URL_param() {
 		$request = $_REQUEST;
@@ -319,7 +319,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 			'search_terms'    => ''
 		);
 
-		$at = new BP_Core_Members_Template( $r );
+		$at = new BBoss_Core_Members_Template( $r );
 
 		$this->assertEquals( 14, $at->pag_num );
 
@@ -328,7 +328,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Core_Members_Template
+	 * @group BBoss_Core_Members_Template
 	 */
 	public function test_bp_members_template_should_reset_0_pag_num_URL_param_to_default_pag_num_value() {
 		$request = $_REQUEST;
@@ -351,7 +351,7 @@ class BP_Tests_Members_Template extends BP_UnitTestCase {
 			'search_terms'    => ''
 		);
 
-		$at = new BP_Core_Members_Template( $r );
+		$at = new BBoss_Core_Members_Template( $r );
 
 		$this->assertEquals( 13, $at->pag_num );
 

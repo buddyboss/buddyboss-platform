@@ -2,7 +2,7 @@
 
 /**
  * @group core
- * @group BP_User_Query
+ * @group BBoss_User_Query
  */
 class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	/**
@@ -12,9 +12,9 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 		$u3 = self::factory()->user->create();
-		friends_add_friend( $u1, $u2, true );
+		bboss_friends_add_friend( $u1, $u2, true );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'user_id' => $u2,
 		) );
 
@@ -31,10 +31,10 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$u2 = self::factory()->user->create();
 		$u3 = self::factory()->user->create();
 		$u4 = self::factory()->user->create();
-		friends_add_friend( $u1, $u2, true );
-		friends_add_friend( $u1, $u3, true );
+		bboss_friends_add_friend( $u1, $u2, true );
+		bboss_friends_add_friend( $u1, $u3, true );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'user_id' => $u1,
 
 			// Represents an independent filter passed by a plugin
@@ -53,7 +53,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$u3 = self::factory()->user->create();
 		$u4 = self::factory()->user->create();
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'user_id' => $u1,
 
 			// Represents an independent filter passed by a plugin
@@ -70,7 +70,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @ticket BP7248
 	 */
 	public function test_include_array_contaning_only_0_should_result_in_no_results_query() {
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'include' => array( 0 ),
 		) );
 
@@ -81,7 +81,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @ticket BP7248
 	 */
 	public function test_include_array_contaning_0_but_also_real_IDs_should_not_result_in_no_results_query() {
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'include' => array( 0, 1 ),
 		) );
 
@@ -103,7 +103,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$this->set_current_user( $u1 );
 
 		// pass 'user_ids' to user query to trigger this bug
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'user_ids' => array( $u2, $u3 )
 		) );
 
@@ -120,12 +120,12 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$u3 = self::factory()->user->create();
 		$u4 = self::factory()->user->create();
 
-		bp_update_user_meta( $u1, bp_get_user_meta_key( 'total_friend_count' ), '5' );
-		bp_update_user_meta( $u2, bp_get_user_meta_key( 'total_friend_count' ), '90' );
-		bp_update_user_meta( $u3, bp_get_user_meta_key( 'total_friend_count' ), '101' );
-		bp_update_user_meta( $u4, bp_get_user_meta_key( 'total_friend_count' ), '3002' );
+		bboss_update_user_meta( $u1, bboss_get_user_meta_key( 'total_friend_count' ), '5' );
+		bboss_update_user_meta( $u2, bboss_get_user_meta_key( 'total_friend_count' ), '90' );
+		bboss_update_user_meta( $u3, bboss_get_user_meta_key( 'total_friend_count' ), '101' );
+		bboss_update_user_meta( $u4, bboss_get_user_meta_key( 'total_friend_count' ), '3002' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'type' => 'popular',
 		) );
 
@@ -151,7 +151,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 			'last_activity' => date( 'Y-m-d H:i:s', $now - 60*16 ),
 		) );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'type' => 'online',
 		) );
 
@@ -177,7 +177,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 
 		add_filter( 'bp_user_query_online_interval', function() { return 5; } );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'type' => 'online',
 		) );
 
@@ -190,8 +190,8 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	public function test_bp_user_query_search_with_apostrophe() {
 		// Apostrophe. Search_terms must escaped to mimic POST payload
 		$user_id = self::factory()->user->create();
-		xprofile_set_field_data( 1, $user_id, "Foo'Bar" );
-		$q = new BP_User_Query( array( 'search_terms' => "oo\'Ba", ) );
+		bboss_xprofile_set_field_data( 1, $user_id, "Foo'Bar" );
+		$q = new BBoss_User_Query( array( 'search_terms' => "oo\'Ba", ) );
 
 		$found_user_id = null;
 		if ( ! empty( $q->results ) ) {
@@ -206,8 +206,8 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 
 		// LIKE special character: %
 		$user_id = self::factory()->user->create();
-		xprofile_set_field_data( 1, $user_id, "Foo%Bar" );
-		$q = new BP_User_Query( array( 'search_terms' => "oo%Bar", ) );
+		bboss_xprofile_set_field_data( 1, $user_id, "Foo%Bar" );
+		$q = new BBoss_User_Query( array( 'search_terms' => "oo%Bar", ) );
 
 		$found_user_id = null;
 		if ( ! empty( $q->results ) ) {
@@ -223,8 +223,8 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 
 		// LIKE special character: _
 		$user_id = self::factory()->user->create();
-		xprofile_set_field_data( 1, $user_id, "Foo_Bar" );
-		$q = new BP_User_Query( array( 'search_terms' => "oo_Bar", ) );
+		bboss_xprofile_set_field_data( 1, $user_id, "Foo_Bar" );
+		$q = new BBoss_User_Query( array( 'search_terms' => "oo_Bar", ) );
 
 		$found_user_id = null;
 		if ( ! empty( $q->results ) ) {
@@ -239,8 +239,8 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 
 		// LIKE special character: &
 		$user_id = self::factory()->user->create();
-		xprofile_set_field_data( 1, $user_id, "a&mpersand" );
-		$q = new BP_User_Query( array( 'search_terms' => "a&m", ) );
+		bboss_xprofile_set_field_data( 1, $user_id, "a&mpersand" );
+		$q = new BBoss_User_Query( array( 'search_terms' => "a&m", ) );
 
 		$found_user_id = null;
 		if ( ! empty( $q->results ) ) {
@@ -259,8 +259,8 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create( array(
 			'user_login' => 'foo',
 		) );
-		xprofile_set_field_data( 1, $user_id, "Bar" );
-		$q = new BP_User_Query( array( 'search_terms' => 'foo', ) );
+		bboss_xprofile_set_field_data( 1, $user_id, "Bar" );
+		$q = new BBoss_User_Query( array( 'search_terms' => 'foo', ) );
 
 		$found_user_id = null;
 		if ( ! empty( $q->results ) ) {
@@ -275,20 +275,20 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create( array(
 			'user_login' => 'xfoo',
 		) );
-		xprofile_set_field_data( 1, $u1, "Bar" );
-		$q1 = new BP_User_Query( array( 'search_terms' => 'foo', 'search_wildcard' => 'left' ) );
+		bboss_xprofile_set_field_data( 1, $u1, "Bar" );
+		$q1 = new BBoss_User_Query( array( 'search_terms' => 'foo', 'search_wildcard' => 'left' ) );
 
 		$u2 = self::factory()->user->create( array(
 			'user_login' => 'foox',
 		) );
-		xprofile_set_field_data( 1, $u2, "Bar" );
-		$q2 = new BP_User_Query( array( 'search_terms' => 'foo', 'search_wildcard' => 'right' ) );
+		bboss_xprofile_set_field_data( 1, $u2, "Bar" );
+		$q2 = new BBoss_User_Query( array( 'search_terms' => 'foo', 'search_wildcard' => 'right' ) );
 
 		$u3 = self::factory()->user->create( array(
 			'user_login' => 'xfoox',
 		) );
-		xprofile_set_field_data( 1, $u3, "Bar" );
-		$q3 = new BP_User_Query( array( 'search_terms' => 'foo', 'search_wildcard' => 'both' ) );
+		bboss_xprofile_set_field_data( 1, $u3, "Bar" );
+		$q3 = new BBoss_User_Query( array( 'search_terms' => 'foo', 'search_wildcard' => 'both' ) );
 
 		$this->assertNotEmpty( $q1->results );
 		$q1 = array_pop( $q1->results );
@@ -316,7 +316,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$u2 = self::factory()->user->create();
 
 		$exclude = array_merge( array( $u1 ), $existing_users );
-		$q = new BP_User_Query( array( 'exclude' => $exclude, ) );
+		$q = new BBoss_User_Query( array( 'exclude' => $exclude, ) );
 
 		$found_user_ids = null;
 		if ( ! empty( $q->results ) ) {
@@ -336,23 +336,23 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		}
 
 		// Make sure xprofile is on
-		$xprofile_toggle = isset( buddypress()->active_components['xprofile'] );
-		buddypress()->active_components['xprofile'] = 1;
+		$xprofile_toggle = isset( bboss()->active_components['xprofile'] );
+		bboss()->active_components['xprofile'] = 1;
 		add_filter( 'bp_disable_profile_sync', '__return_false' );
 
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
 		global $wpdb;
-		bp_core_process_spammer_status( $u1, 'spam' );
+		bboss_core_process_spammer_status( $u1, 'spam' );
 
-		$q = new BP_User_Query( array( 'type' => 'alphabetical', ) );
+		$q = new BBoss_User_Query( array( 'type' => 'alphabetical', ) );
 
 		// Restore xprofile setting
 		if ( $xprofile_toggle ) {
-			buddypress()->active_components['xprofile'] = 1;
+			bboss()->active_components['xprofile'] = 1;
 		} else {
-			unset( buddypress()->active_components['xprofile'] );
+			unset( bboss()->active_components['xprofile'] );
 		}
 		remove_filter( 'bp_disable_profile_sync', '__return_false' );
 
@@ -375,19 +375,19 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$u2 = self::factory()->user->create();
 
 		// Make sure xprofile and profile sync are off
-		$xprofile_toggle = isset( buddypress()->active_components['xprofile'] );
-		buddypress()->active_components['xprofile'] = 0;
+		$xprofile_toggle = isset( bboss()->active_components['xprofile'] );
+		bboss()->active_components['xprofile'] = 0;
 		add_filter( 'bp_disable_profile_sync', '__return_false' );
 
-		bp_core_process_spammer_status( $u1, 'spam' );
+		bboss_core_process_spammer_status( $u1, 'spam' );
 
-		$q = new BP_User_Query( array( 'type' => 'alphabetical', ) );
+		$q = new BBoss_User_Query( array( 'type' => 'alphabetical', ) );
 
 		// Restore xprofile setting
 		if ( $xprofile_toggle ) {
-			buddypress()->active_components['xprofile'] = 1;
+			bboss()->active_components['xprofile'] = 1;
 		} else {
-			unset( buddypress()->active_components['xprofile'] );
+			unset( bboss()->active_components['xprofile'] );
 		}
 		remove_filter( 'bp_disable_profile_sync', '__return_false' );
 
@@ -409,9 +409,9 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
-		bp_update_user_meta( $u2, 'foo', 'bar' );
+		bboss_update_user_meta( $u2, 'foo', 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'meta_key'        => 'foo',
 			'meta_value'      => 'bar',
 		) );
@@ -431,7 +431,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'meta_key'        => 'foo',
 			'meta_value'      => 'bar',
 		) );
@@ -445,13 +445,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type_single_value() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type' => 'bar',
 		) );
 
@@ -463,13 +463,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type_array_with_single_value() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type' => array( 'bar' ),
 		) );
 
@@ -481,13 +481,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type_comma_separated_values() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type' => 'foo, bar',
 		) );
 
@@ -499,13 +499,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type_array_with_multiple_values() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type' => array( 'foo', 'bar' ),
 		) );
 
@@ -517,13 +517,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type_comma_separated_values_should_discard_non_existent_taxonomies() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type' => 'foo, baz',
 		) );
 
@@ -536,10 +536,10 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @ticket BP6334
 	 */
 	public function test_should_return_no_results_when_no_users_match_the_specified_member_type() {
-		bp_register_member_type( 'foo' );
+		bboss_register_member_type( 'foo' );
 		$users = self::factory()->user->create_many( 3 );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type' => 'foo, baz',
 		) );
 
@@ -550,13 +550,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type__in_single_value() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__in' => 'bar',
 		) );
 
@@ -568,13 +568,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type__in_array_with_single_value() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__in' => array( 'bar' ),
 		) );
 
@@ -586,13 +586,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type__in_comma_separated_values() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__in' => 'foo, bar',
 		) );
 
@@ -604,13 +604,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type__in_array_with_multiple_values() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__in' => array( 'foo', 'bar' ),
 		) );
 
@@ -622,13 +622,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type__in_comma_separated_values_should_discard_non_existent_taxonomies() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__in' => 'foo, baz',
 		) );
 
@@ -640,10 +640,10 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_should_return_no_results_when_no_users_match_the_specified_member_type__in() {
-		bp_register_member_type( 'foo' );
+		bboss_register_member_type( 'foo' );
 		$users = self::factory()->user->create_many( 3 );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__in' => 'foo, baz',
 		) );
 
@@ -654,13 +654,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type_should_take_precedence_over_member_type__in() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__in' => 'foo',
 			'member_type' => 'bar'
 		) );
@@ -673,13 +673,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type__not_in_returns_members_from_other_types_and_members_with_no_types() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__not_in' => 'foo',
 		) );
 
@@ -691,13 +691,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_should_return_no_results_when_all_users_match_the_specified_member_type__not_in() {
-		bp_register_member_type( 'foo' );
+		bboss_register_member_type( 'foo' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'foo' );
-		bp_set_member_type( $users[2], 'foo' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'foo' );
+		bboss_set_member_type( $users[2], 'foo' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__not_in' => 'foo',
 		) );
 
@@ -708,13 +708,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type__not_in_takes_precedence_over_member_type() {
-		bp_register_member_type( 'foo' );
+		bboss_register_member_type( 'foo' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'foo' );
-		bp_set_member_type( $users[2], 'foo' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'foo' );
+		bboss_set_member_type( $users[2], 'foo' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__not_in' => 'foo',
 			'member_type' => 'foo'
 		) );
@@ -726,13 +726,13 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type__not_in_takes_precedence_over_member_type__in() {
-		bp_register_member_type( 'foo' );
+		bboss_register_member_type( 'foo' );
 		$users = self::factory()->user->create_many( 3 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'foo' );
-		bp_set_member_type( $users[2], 'foo' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'foo' );
+		bboss_set_member_type( $users[2], 'foo' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'member_type__not_in' => 'foo',
 			'member_type__in' => 'foo'
 		) );
@@ -745,14 +745,14 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 	 * @group member_types
 	 */
 	public function test_member_type_should_be_prefetched_into_cache_during_user_query() {
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 		$users = self::factory()->user->create_many( 4 );
-		bp_set_member_type( $users[0], 'foo' );
-		bp_set_member_type( $users[1], 'bar' );
-		bp_set_member_type( $users[2], 'foo' );
+		bboss_set_member_type( $users[0], 'foo' );
+		bboss_set_member_type( $users[1], 'bar' );
+		bboss_set_member_type( $users[2], 'foo' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'include' => $users,
 		) );
 
@@ -777,7 +777,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		) );
 
 		// 'date_query' before test
-		$query = new BP_User_Query( array(
+		$query = new BBoss_User_Query( array(
 			'date_query' => array( array(
 				'before' => array(
 					'year'  => 2010,
@@ -805,7 +805,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		) );
 
 		// 'date_query' range test
-		$query = new BP_User_Query( array(
+		$query = new BBoss_User_Query( array(
 			'date_query' => array( array(
 				'after'  => 'January 2nd, 2001',
 				'before' => array(
@@ -835,7 +835,7 @@ class BP_Tests_BP_User_Query_TestCases extends BP_UnitTestCase {
 		) );
 
 		// 'date_query' after and relative test
-		$query = new BP_User_Query( array(
+		$query = new BBoss_User_Query( array(
 			'date_query' => array( array(
 				'after' => '1 day ago'
 			) )

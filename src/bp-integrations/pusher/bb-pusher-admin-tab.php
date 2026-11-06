@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.1.4
  */
-class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
+class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 
 	/**
 	 * Current section.
@@ -54,12 +54,12 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function register_admin_script() {
 
-		$active_tab = bp_core_get_admin_active_tab();
+		$active_tab = bboss_core_get_admin_active_tab();
 
 		if ( 'bb-pusher' === $active_tab ) {
 			$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 			$rtl_css = is_rtl() ? '-rtl' : '';
-			wp_enqueue_style( 'bb-pusher-admin', bb_pusher_integration_url( '/assets/css/bb-pusher-admin' . $rtl_css . $min . '.css' ), false, buddypress()->version );
+			wp_enqueue_style( 'bb-pusher-admin', bboss_pusher_integration_url( '/assets/css/bb-pusher-admin' . $rtl_css . $min . '.css' ), false, bboss()->version );
 		}
 
 		parent::register_admin_script();
@@ -114,7 +114,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function get_settings_sections() {
 
 		$status      = 'not-connected';
-		$status_text = __( 'Not Connected', 'buddyboss' );
+		$status_text = __( 'Not Connected', 'buddyboss-platform' );
 		$html        = '<div class="bb-pusher-status">' .
 			'<span class="status-line ' . esc_attr( $status ) . '">' . esc_html( $status_text ) . '</span>' .
 		'</div>';
@@ -122,7 +122,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$settings = array(
 			'bb_pusher_settings_section' => array(
 				'page'              => 'Pusher',
-				'title'             => __( 'Pusher', 'buddyboss' ) . $html,
+				'title'             => __( 'Pusher', 'buddyboss-platform' ) . $html,
 				'tutorial_callback' => array( $this, 'setting_callback_pusher_tutorial' ),
 			),
 		);
@@ -165,7 +165,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$fields['bb_pusher_settings_section'] = array(
 			'information' => array(
-				'title'             => esc_html__( 'Information', 'buddyboss' ),
+				'title'             => esc_html__( 'Information', 'buddyboss-platform' ),
 				'callback'          => array( $this, 'setting_callback_pusher_information' ),
 				'sanitize_callback' => 'string',
 				'args'              => array( 'class' => 'notes-hidden-header' ),
@@ -174,17 +174,17 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		if ( ! function_exists( 'bb_platform_pro' ) ) {
 			$fields['bb_pusher_settings_section']['infos'] = array(
-				'title'             => esc_html__( 'Notes', 'buddyboss' ),
+				'title'             => esc_html__( 'Notes', 'buddyboss-platform' ),
 				'callback'          => array( $this, 'setting_callback_pusher_bbp_pro_not_installed' ),
 				'sanitize_callback' => 'string',
 				'args'              => array( 'class' => 'notes-hidden-header' ),
 			);
 		} elseif (
 			function_exists( 'bb_platform_pro' ) &&
-			version_compare( bb_platform_pro()->version, bb_pro_pusher_version(), '<' )
+			version_compare( bb_platform_pro()->version, bboss_pro_pusher_version(), '<' )
 		) {
 			$fields['bb_pusher_settings_section']['infos'] = array(
-				'title'             => esc_html__( 'Notes', 'buddyboss' ),
+				'title'             => esc_html__( 'Notes', 'buddyboss-platform' ),
 				'callback'          => array( $this, 'setting_callback_pusher_bbp_pro_older_version_installed' ),
 				'sanitize_callback' => 'string',
 				'args'              => array( 'class' => 'notes-hidden-header' ),
@@ -205,7 +205,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			<a class="button" target="_blank" href="
 			<?php
 				echo esc_url(
-					bp_get_admin_url(
+					bboss_get_admin_url(
 						add_query_arg(
 							array(
 								'page'    => 'bp-help',
@@ -216,7 +216,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					)
 				);
 			?>
-			"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+			"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 		</p>
 		<?php
 	}
@@ -231,8 +231,8 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function setting_callback_pusher_information() {
 		printf(
 			/* translators: pusher channels link */
-			esc_html__( 'The BuddyBoss Platform has an integration with %s, a WebSocket service which can power realtime features on your BuddyBoss community such as live messaging.', 'buddyboss' ),
-			'<a href="https://pusher.com/channels" target="_blank">' . esc_html__( 'Pusher Channels', 'buddyboss' ) . '</a>'
+			esc_html__( 'The BuddyBoss Platform has an integration with %s, a WebSocket service which can power realtime features on your BuddyBoss community such as live messaging.', 'buddyboss-platform' ),
+			'<a href="https://pusher.com/channels" target="_blank">' . esc_html__( 'Pusher Channels', 'buddyboss-platform' ) . '</a>'
 		);
 	}
 
@@ -246,9 +246,9 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			sprintf(
 				wp_kses_post(
 					/* translators: BuddyBoss Pro purchase link */
-					__( 'Please install %1$s to use Pusher on your site.', 'buddyboss' )
+					__( 'Please install %1$s to use Pusher on your site.', 'buddyboss-platform' )
 				),
-				'<a href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '" target="_blank">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
+				'<a href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '" target="_blank">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' ) . '</a>'
 			) .
 		'</p>';
 	}
@@ -263,10 +263,10 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			sprintf(
 				wp_kses_post(
 					/* translators: BuddyBoss Pro purchase link */
-					__( 'Please update %1$s to version %2$s to use Pusher on your site.', 'buddyboss' )
+					__( 'Please update %1$s to version %2$s to use Pusher on your site.', 'buddyboss-platform' )
 				),
-				'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>',
-				esc_html( bb_pro_pusher_version() )
+				'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' ) . '</a>',
+				esc_html( bboss_pro_pusher_version() )
 			) .
 			'</p>';
 	}

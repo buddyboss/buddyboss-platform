@@ -9,9 +9,8 @@
  * @package BuddyBoss\Core
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	return;
-}
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( ! function_exists( 'is_plugin_active' ) ) {
 	require_once ABSPATH . '/wp-admin/includes/plugin.php';
@@ -30,8 +29,8 @@ if ( is_plugin_active( 'buddyboss-platform/bp-loader.php' ) ) {
 		 */
 		require_once $buddyboss_presence;
 
-		if ( class_exists( 'BB_Presence' ) ) {
-			$class_instance = BB_Presence::instance();
+		if ( class_exists( 'BBoss_Presence' ) ) {
+			$class_instance = BBoss_Presence::instance();
 			add_action( 'muplugins_loaded', array( $class_instance, 'bb_presence_mu_loader' ), 10 );
 		}
 	} elseif ( file_exists( $buddyboss_presence_dev ) ) {
@@ -40,8 +39,8 @@ if ( is_plugin_active( 'buddyboss-platform/bp-loader.php' ) ) {
 		 */
 		require_once $buddyboss_presence_dev;
 
-		if ( class_exists( 'BB_Presence' ) ) {
-			$class_instance = BB_Presence::instance();
+		if ( class_exists( 'BBoss_Presence' ) ) {
+			$class_instance = BBoss_Presence::instance();
 			add_action( 'muplugins_loaded', array( $class_instance, 'bb_presence_mu_loader' ), 10 );
 		}
 	}

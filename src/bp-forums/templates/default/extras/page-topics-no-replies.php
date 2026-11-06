@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 get_header(); ?>
 
 	<?php do_action( 'bbp_before_main_content' ); ?>
@@ -25,12 +28,12 @@ get_header(); ?>
 
 				<div id="bbpress-forums">
 
-					<?php bbp_breadcrumb(); ?>
+					<?php bboss_bbp_breadcrumb(); ?>
 
-					<?php bbp_set_query_name( 'bbp_no_replies' ); ?>
+					<?php bboss_bbp_set_query_name( 'bbp_no_replies' ); ?>
 
 					<?php
-					if ( bbp_has_topics(
+					if ( bboss_bbp_has_topics(
 						array(
 							'meta_key'      => '_bbp_reply_count',
 							'meta_value'    => '1',
@@ -42,19 +45,19 @@ get_header(); ?>
 					) ) :
 						?>
 
-						<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
+						<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
 
-						<?php bbp_get_template_part( 'loop', 'topics' ); ?>
+						<?php bboss_bbp_get_template_part( 'loop', 'topics' ); ?>
 
-						<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
+						<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
 
 					<?php else : ?>
 
-						<?php bbp_get_template_part( 'feedback', 'no-topics' ); ?>
+						<?php bboss_bbp_get_template_part( 'feedback', 'no-topics' ); ?>
 
 					<?php endif; ?>
 
-					<?php bbp_reset_query_name(); ?>
+					<?php bboss_bbp_reset_query_name(); ?>
 
 				</div>
 			</div>

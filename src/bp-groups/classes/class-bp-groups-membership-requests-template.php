@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-class BP_Groups_Membership_Requests_Template {
+class BBoss_Groups_Membership_Requests_Template {
 
 	/**
 	 * @since BuddyPress 1.0.0
@@ -90,7 +90,8 @@ class BP_Groups_Membership_Requests_Template {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-			_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			/* translators: 1: method name, 2: file path. */
+			_deprecated_argument( __METHOD__, '2.0.0', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'group_id',
@@ -98,10 +99,10 @@ class BP_Groups_Membership_Requests_Template {
 				2 => 'max',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'page'     => 1,
@@ -109,16 +110,16 @@ class BP_Groups_Membership_Requests_Template {
 				'page_arg' => 'mrpage',
 				'max'      => false,
 				'type'     => 'first_joined',
-				'group_id' => bp_get_current_group_id(),
+				'group_id' => bboss_get_current_group_id(),
 			),
 			'groups_membership_requests_template'
 		);
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 
-		$mquery = new BP_Group_Member_Query(
+		$mquery = new BBoss_Group_Member_Query(
 			array(
 				'group_id'     => $r['group_id'],
 				'type'         => $r['type'],

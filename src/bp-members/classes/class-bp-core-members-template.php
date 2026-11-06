@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-class BP_Core_Members_Template {
+class BBoss_Core_Members_Template {
 
 	/**
 	 * The loop iterator.
@@ -111,10 +111,10 @@ class BP_Core_Members_Template {
 	 * @since BuddyPress 1.5.0
 	 * @since BuddyBoss 2.3.90 Added $args as arguments.
 	 *
-	 * @see BP_User_Query for an in-depth description of parameters.
+	 * @see BBoss_User_Query for an in-depth description of parameters.
 	 *
 	 * @param array ...$args {
-	 *     Array of arguments. Supports all arguments of BP_User_Query. Additional
+	 *     Array of arguments. Supports all arguments of BBoss_User_Query. Additional
 	 *     arguments, or those with different defaults, are described below.
 	 *
 	 *     @type int    $page_number Page of results. Accepted for legacy reasons. Use 'page' instead.
@@ -124,7 +124,8 @@ class BP_Core_Members_Template {
 	public function __construct( ...$args ) {
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args[0] ) || count( $args ) > 1 ) {
-			_deprecated_argument( __METHOD__, '2.3.90', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			/* translators: 1: method name, 2: file path. */
+			_deprecated_argument( __METHOD__, '2.3.90', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0  => 'type',
@@ -144,7 +145,7 @@ class BP_Core_Members_Template {
 				14 => 'member_type__not_in',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $args );
 		} else {
 			$args = reset( $args );
 		}
@@ -173,20 +174,20 @@ class BP_Core_Members_Template {
 			'date_query'          => false,
 		);
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			$defaults
 		);
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page_number'] );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num',          $r['per_page']    );
+		$this->pag_page = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page_number'] );
+		$this->pag_num  = bboss_sanitize_pagination_arg( 'num',          $r['per_page']    );
 		$this->type     = $r['type'];
 
 		if ( ! empty( $_REQUEST['letter'] ) ) {
-			$this->members = BP_Core_User::get_users_by_letter( $_REQUEST['letter'], $this->pag_num, $this->pag_page, $r['populate_extras'], $r['exclude'] );
+			$this->members = BBoss_Core_User::get_users_by_letter( $_REQUEST['letter'], $this->pag_num, $this->pag_page, $r['populate_extras'], $r['exclude'] );
 		} else {
-			$this->members = bp_core_get_users(
+			$this->members = bboss_core_get_users(
 				array(
 					'type'                => $this->type,
 					'per_page'            => $this->pag_num,
@@ -231,7 +232,7 @@ class BP_Core_Members_Template {
 				$this->pag_arg => '%#%',
 			);
 
-			if ( defined( 'DOING_AJAX' ) && true === (bool) DOING_AJAX ) {
+			if ( defined( 'BBOSS_DOING_AJAX' ) && true === (bool) BBOSS_DOING_AJAX ) {
 				$base = remove_query_arg( 's', wp_get_referer() );
 			} else {
 				$base = '';
@@ -245,7 +246,7 @@ class BP_Core_Members_Template {
 			$add_args = array();
 
 			if ( ! empty( $r['search_terms'] ) ) {
-				$query_arg              = bp_core_get_component_search_query_arg( 'members' );
+				$query_arg              = bboss_core_get_component_search_query_arg( 'members' );
 				$add_args[ $query_arg ] = urlencode( $r['search_terms'] );
 			}
 
@@ -255,8 +256,8 @@ class BP_Core_Members_Template {
 					'format'    => '',
 					'total'     => ceil( (int) $this->total_member_count / (int) $this->pag_num ),
 					'current'   => (int) $this->pag_page,
-					'prev_text' => __( '&larr;', 'buddyboss' ),
-					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'prev_text' => __( '&larr;', 'buddyboss-platform' ),
+					'next_text' => __( '&rarr;', 'buddyboss-platform' ),
 					'mid_size'  => 1,
 					'add_args'  => $add_args,
 				)
@@ -269,7 +270,7 @@ class BP_Core_Members_Template {
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @see bp_has_members()
+	 * @see bboss_has_members()
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
@@ -310,13 +311,13 @@ class BP_Core_Members_Template {
 	/**
 	 * Whether there are members left in the loop to iterate over.
 	 *
-	 * This method is used by {@link bp_members()} as part of the while loop
+	 * This method is used by {@link bboss_members()} as part of the while loop
 	 * that controls iteration inside the members loop, eg:
-	 *     while ( bp_members() ) { ...
+	 *     while ( bboss_members() ) { ...
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @see bp_members()
+	 * @see bboss_members()
 	 *
 	 * @return bool True if there are more members to show, otherwise false.
 	 */
@@ -342,13 +343,13 @@ class BP_Core_Members_Template {
 	/**
 	 * Set up the current member inside the loop.
 	 *
-	 * Used by {@link bp_the_member()} to set up the current member data
+	 * Used by {@link bboss_the_member()} to set up the current member data
 	 * while looping, so that template tags used during that iteration make
 	 * reference to the current member.
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @see bp_the_member()
+	 * @see bboss_the_member()
 	 */
 	public function the_member() {
 

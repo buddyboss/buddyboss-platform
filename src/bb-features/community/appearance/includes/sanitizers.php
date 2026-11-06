@@ -4,7 +4,7 @@
  *
  * Stateless helpers shared by three entry points:
  *   1. Settings 2.0 admin save (`admin/callbacks.php :: bb_appearance_on_settings_saved`).
- *   2. Onboarding wizard save (`BB_ReadyLaunch_Onboarding::sanitize_final_settings`).
+ *   2. Onboarding wizard save (`BBoss_ReadyLaunch_Onboarding::sanitize_final_settings`).
  *   3. One-shot version-update migration (`bb_rl_migrate_settings` in `bp-core-update.php`).
  *
  * This file is loaded unconditionally from `bb-feature-config.php` — NOT inside
@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Sanitize the Site Layout dropdown value to a boolean.
  *
- * The `bb_rl_enabled` option is a boolean end-to-end so `bb_is_readylaunch_enabled()`
+ * The `bb_rl_enabled` option is a boolean end-to-end so `bboss_is_readylaunch_enabled()`
  * (which casts via `(bool)`) keeps working. String values ("1"/"0"/"true") all coerce
  * correctly via the (int) round-trip.
  *
@@ -37,7 +37,7 @@ defined( 'ABSPATH' ) || exit;
  * @param mixed $value Submitted value.
  * @return bool Sanitized boolean.
  */
-function bb_appearance_sanitize_layout( $value ) {
+function bboss_appearance_sanitize_layout( $value ) {
 	if ( is_bool( $value ) ) {
 		return $value;
 	}
@@ -61,7 +61,7 @@ function bb_appearance_sanitize_layout( $value ) {
  * @param mixed $value Submitted value.
  * @return string Sanitized mode ('light' on invalid input).
  */
-function bb_appearance_sanitize_theme_mode( $value ) {
+function bboss_appearance_sanitize_theme_mode( $value ) {
 	$allowed = array( 'light', 'dark', 'choice' );
 	return in_array( $value, $allowed, true ) ? $value : 'light';
 }
@@ -75,7 +75,7 @@ function bb_appearance_sanitize_theme_mode( $value ) {
  * @param string $default_value Default hex color if sanitization fails.
  * @return string Sanitized hex color.
  */
-function bb_appearance_sanitize_color( $value, $default_value = '#3E34FF' ) {
+function bboss_appearance_sanitize_color( $value, $default_value = '#3E34FF' ) {
 	$sanitized = sanitize_hex_color( $value );
 	return $sanitized ? $sanitized : $default_value;
 }
@@ -105,7 +105,7 @@ function bb_appearance_sanitize_color( $value, $default_value = '#3E34FF' ) {
  * @param mixed $value Submitted value.
  * @return array|int|null Sanitized media object, legacy integer ID, or null.
  */
-function bb_appearance_sanitize_media( $value ) {
+function bboss_appearance_sanitize_media( $value ) {
 	if ( is_array( $value ) && isset( $value['id'] ) ) {
 		$id = absint( $value['id'] );
 
@@ -167,14 +167,14 @@ function bb_appearance_sanitize_media( $value ) {
  *
  * Returns the canonical object-map shape consumed by ReadyLaunch templates
  * (e.g. the sidebar renderer at `right-sidebar.php` and the page-enabled
- * check in `BB_Readylaunch::bb_rl_is_page_enabled_for_integration()`).
+ * check in `BBoss_Readylaunch::bb_rl_is_page_enabled_for_integration()`).
  *
  * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Submitted value.
  * @return array{registration: bool, courses: bool, blog: bool} Sanitized map.
  */
-function bb_appearance_sanitize_enabled_pages( $value ) {
+function bboss_appearance_sanitize_enabled_pages( $value ) {
 	$map = array(
 		'registration' => false,
 		'courses'      => false,
@@ -215,7 +215,7 @@ function bb_appearance_sanitize_enabled_pages( $value ) {
  * @param mixed $value Submitted value.
  * @return array<string, bool> Sanitized map.
  */
-function bb_appearance_sanitize_sidebar_map( $value ) {
+function bboss_appearance_sanitize_sidebar_map( $value ) {
 	$map = array();
 
 	if ( ! is_array( $value ) ) {
@@ -254,7 +254,7 @@ function bb_appearance_sanitize_sidebar_map( $value ) {
  * @param mixed $value Submitted value.
  * @return array<string, array{enabled: bool, order: int, icon: string}> Sanitized map.
  */
-function bb_appearance_sanitize_side_menu( $value ) {
+function bboss_appearance_sanitize_side_menu( $value ) {
 	$map = array();
 
 	if ( ! is_array( $value ) ) {
@@ -301,7 +301,7 @@ function bb_appearance_sanitize_side_menu( $value ) {
  * @param mixed $value Submitted value.
  * @return array<int, array{id: string, title: string, url: string, isEditing: false}> Sanitized links.
  */
-function bb_appearance_sanitize_custom_links( $value ) {
+function bboss_appearance_sanitize_custom_links( $value ) {
 	$links = array();
 
 	if ( ! is_array( $value ) ) {
@@ -333,7 +333,7 @@ function bb_appearance_sanitize_custom_links( $value ) {
  * @param mixed $value Value to normalize.
  * @return array|mixed Associative map, or the original value if not an array.
  */
-function bb_appearance_normalize_list_to_map( $value ) {
+function bboss_appearance_normalize_list_to_map( $value ) {
 	if ( ! is_array( $value ) || empty( $value ) ) {
 		return is_array( $value ) ? $value : array();
 	}
@@ -367,7 +367,7 @@ function bb_appearance_normalize_list_to_map( $value ) {
  * @param mixed $value Stored value (either shape).
  * @return array Map-of-items shape.
  */
-function bb_appearance_normalize_side_menu_shape( $value ) {
+function bboss_appearance_normalize_side_menu_shape( $value ) {
 	if ( ! is_array( $value ) || empty( $value ) ) {
 		return is_array( $value ) ? $value : array();
 	}

@@ -22,9 +22,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return int The sanitized delay time in minutes.
  */
-function bb_messages_sanitize_delay_time( $value ) {
+function bboss_messages_sanitize_delay_time( $value ) {
 	$value       = absint( $value );
-	$delay_times = bb_notification_get_digest_cron_times();
+	$delay_times = bboss_notification_get_digest_cron_times();
 	$allowed     = wp_list_pluck( $delay_times, 'value' );
 
 	if ( ! in_array( $value, $allowed, true ) ) {
@@ -38,21 +38,21 @@ function bb_messages_sanitize_delay_time( $value ) {
  * Reschedule the digest email cron event after Settings 2.0 saves
  * the delay notification options.
  *
- * The legacy function bb_schedule_event_on_update_notification_settings()
+ * The legacy function bboss_schedule_event_on_update_notification_settings()
  * reads from $_POST which is not set in Settings 2.0 AJAX context.
  * This callback replicates the cron reschedule logic using the saved
  * option values from the database.
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss 3.6.2 Schedules the event directly; bp_core_schedule_cron() cannot schedule after `bp_init`.
- *                               Schedules only while delayed emails are in effect (bb_check_delay_email_notification()).
+ * @since BuddyBoss 3.6.2 Schedules the event directly; bboss_core_schedule_cron() cannot schedule after `bp_init`.
+ *                               Schedules only while delayed emails are in effect (bboss_check_delay_email_notification()).
  *                               Clears every scheduled occurrence before rescheduling.
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings (JSON decoded).
  * @param array  $saved      Keys and values saved to options.
  */
-function bb_messages_reschedule_cron_after_save( $feature_id, $settings, $saved ) {
+function bboss_messages_reschedule_cron_after_save( $feature_id, $settings, $saved ) {
 
 	// Only run for messages feature.
 	if ( 'messages' !== $feature_id ) {
@@ -65,7 +65,7 @@ function bb_messages_reschedule_cron_after_save( $feature_id, $settings, $saved 
 	}
 
 	// Skip when using legacy email preferences — the legacy handler manages cron.
-	if ( true === bb_enabled_legacy_email_preference() ) {
+	if ( true === bboss_enabled_legacy_email_preference() ) {
 		return;
 	}
 
@@ -79,9 +79,9 @@ function bb_messages_reschedule_cron_after_save( $feature_id, $settings, $saved 
 	// immediate message emails use to stand down (it is false, or undefined, when the
 	// Notifications component is off). Otherwise those emails still go out at once and the
 	// digest would send every message a second time.
-	if ( function_exists( 'bb_check_delay_email_notification' ) && bb_check_delay_email_notification() ) {
-		$new_time     = absint( bp_get_option( 'time_delay_email_notification', 15 ) );
-		$new_schedule = bb_get_delay_notification_time_by_minutes( $new_time );
+	if ( function_exists( 'bboss_check_delay_email_notification' ) && bboss_check_delay_email_notification() ) {
+		$new_time     = absint( bboss_get_option( 'time_delay_email_notification', 15 ) );
+		$new_schedule = bboss_get_delay_notification_time_by_minutes( $new_time );
 
 		// Schedule the event directly. bp_core_schedule_cron() only queues it for
 		// BP_Core_Cron::schedule(), which runs on `bp_init` — already past in this
@@ -94,4 +94,4 @@ function bb_messages_reschedule_cron_after_save( $feature_id, $settings, $saved 
 		}
 	}
 }
-add_action( 'bb_admin_save_feature_settings_after', 'bb_messages_reschedule_cron_after_save', 10, 3 );
+add_action( 'bb_admin_save_feature_settings_after', 'bboss_messages_reschedule_cron_after_save', 10, 3 );

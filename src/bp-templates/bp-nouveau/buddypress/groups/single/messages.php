@@ -8,22 +8,25 @@
  * @version 1.0.0
  */
 
-bp_get_template_part( 'groups/single/parts/messages-subnav' );
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+bboss_get_template_part( 'groups/single/parts/messages-subnav' );
 ?>
 	<div id="group-messages-container">
 		<?php
-		switch ( bp_get_group_current_messages_tab() ) :
+		switch ( bboss_get_group_current_messages_tab() ) :
 			case 'messages':
 			case 'public-message': // Group Message.
-				bp_get_template_part( 'groups/single/messages/public-message' );
+				bboss_get_template_part( 'groups/single/messages/public-message' );
 				break;
 			// Group Invitations.
 			case 'private-message':
-				bp_get_template_part( 'groups/single/messages/private-message' );
+				bboss_get_template_part( 'groups/single/messages/private-message' );
 				break;
 			// Any other.
 			default:
-				bp_get_template_part( 'groups/single/plugins' );
+				bboss_get_template_part( 'groups/single/plugins' );
 				break;
 		endswitch;
 		?>

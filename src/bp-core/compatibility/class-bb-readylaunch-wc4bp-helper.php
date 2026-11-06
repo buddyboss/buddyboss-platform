@@ -17,26 +17,26 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.1.0
  */
-class BB_Readylaunch_WC4BP_Helper {
+class BBoss_Readylaunch_WC4BP_Helper {
 
 	/**
 	 * The single instance of the class.
 	 *
 	 * @since BuddyBoss 3.1.0
-	 * @var BB_Readylaunch_WC4BP_Helper
+	 * @var BBoss_Readylaunch_WC4BP_Helper
 	 */
 	protected static $instance = null;
 
 	/**
-	 * Main BB_Readylaunch_WC4BP_Helper Instance.
+	 * Main BBoss_Readylaunch_WC4BP_Helper Instance.
 	 *
-	 * Ensures only one instance of BB_Readylaunch_WC4BP_Helper is loaded or can be loaded.
+	 * Ensures only one instance of BBoss_Readylaunch_WC4BP_Helper is loaded or can be loaded.
 	 *
 	 * @since BuddyBoss 3.1.0
 	 * @static
-	 * @return BB_Readylaunch_WC4BP_Helper - Main instance.
+	 * @return BBoss_Readylaunch_WC4BP_Helper - Main instance.
 	 */
-	public static function instance(): BB_Readylaunch_WC4BP_Helper {
+	public static function instance(): BBoss_Readylaunch_WC4BP_Helper {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 		}
@@ -56,7 +56,7 @@ class BB_Readylaunch_WC4BP_Helper {
 
 		// Also register immediately in case bp_loaded already fired.
 		// Only execute if BuddyPress is loaded and required functions are available.
-		if ( did_action( 'bp_loaded' ) && function_exists( 'bp_register_template_stack' ) ) {
+		if ( did_action( 'bp_loaded' ) && function_exists( 'bboss_register_template_stack' ) ) {
 			$this->bb_rl_wc4bp_register_template_stack();
 		}
 	}
@@ -68,13 +68,13 @@ class BB_Readylaunch_WC4BP_Helper {
 	 */
 	public function bb_rl_wc4bp_register_template_stack() {
 		// Only process if Readylaunch is enabled.
-		if ( ! bb_is_readylaunch_enabled() ) {
+		if ( ! bboss_is_readylaunch_enabled() ) {
 			return;
 		}
 
 		// Register Readylaunch WC4BP template directory at priority 15 (higher than WC4BP's 14).
 		// This ensures Readylaunch templates are checked before WC4BP's default templates.
-		bp_register_template_stack( array( $this, 'bb_rl_wc4bp_get_template_directory' ), 15 );
+		bboss_register_template_stack( array( $this, 'bb_rl_wc4bp_get_template_directory' ), 15 );
 	}
 
 	/**
@@ -90,7 +90,7 @@ class BB_Readylaunch_WC4BP_Helper {
 	 * @return string Template directory path.
 	 */
 	public static function bb_rl_wc4bp_get_template_directory() {
-		$plugin_dir = buddypress()->plugin_dir;
+		$plugin_dir = bboss()->plugin_dir;
 		$plugin_dir = rtrim( $plugin_dir, '/' ) . '/';
 
 		// Check if plugin_dir already includes 'src/'.

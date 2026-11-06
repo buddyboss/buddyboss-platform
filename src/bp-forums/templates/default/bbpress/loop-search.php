@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <?php do_action( 'bbp_template_before_search_results_loop' ); ?>
@@ -14,11 +17,11 @@
 
 	<li class="bbp-header">
 
-		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss' ); ?></div><!-- .bbp-reply-author -->
+		<div class="bbp-search-author"><?php esc_html_e( 'Author', 'buddyboss-platform' ); ?></div><!-- .bbp-reply-author -->
 
 		<div class="bbp-search-content">
 
-			<?php _e( 'Search Results', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Search Results', 'buddyboss-platform' ); ?>
 
 		</div><!-- .bbp-search-content -->
 
@@ -27,11 +30,11 @@
 	<li class="bbp-body">
 
 		<?php
-		while ( bbp_search_results() ) :
-			bbp_the_search_result();
+		while ( bboss_bbp_search_results() ) :
+			bboss_bbp_the_search_result();
 			?>
 
-			<?php bbp_get_template_part( 'loop', 'search-' . get_post_type() ); ?>
+			<?php bboss_bbp_get_template_part( 'loop', 'search-' . get_post_type() ); ?>
 
 		<?php endwhile; ?>
 
@@ -39,11 +42,11 @@
 
 	<li class="bbp-footer">
 
-		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss' ); ?></div>
+		<div class="bbp-search-author"><?php esc_html_e( 'Author', 'buddyboss-platform' ); ?></div>
 
 		<div class="bbp-search-content">
 
-			<?php _e( 'Search Results', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Search Results', 'buddyboss-platform' ); ?>
 
 		</div><!-- .bbp-search-content -->
 

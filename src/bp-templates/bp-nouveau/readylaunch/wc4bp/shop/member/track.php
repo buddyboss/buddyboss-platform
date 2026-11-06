@@ -5,7 +5,7 @@
  * This template is a Readylaunch-specific version of the WC4BP track template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch\WC4BP
+ * @subpackage BBoss_Nouveau\ReadyLaunch\WC4BP
  * @since BuddyBoss 3.1.0
  * @version 1.0.0
  */
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_track_body' ); ?>
 
-	<h3><?php esc_html_e( 'Track your order', 'buddyboss' ); ?></h3>
+	<h3><?php esc_html_e( 'Track your order', 'buddyboss-platform' ); ?></h3>
 
 	<?php do_action( 'wc4bp_after_track_heading' ); ?>
 

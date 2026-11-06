@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Reply_Actions_Endpoint class
+ * BP REST: BBoss_REST_Reply_Actions_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,26 +13,26 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
+class BBoss_REST_Reply_Actions_Endpoint extends BBoss_REST_Reply_Endpoint {
 
 	/**
-	 * BP_REST_Forums_Endpoint Instance.
+	 * BBoss_REST_Forums_Endpoint Instance.
 	 *
-	 * @var BP_REST_Forums_Endpoint
+	 * @var BBoss_REST_Forums_Endpoint
 	 */
 	protected $forum_endpoint;
 
 	/**
-	 * BP_REST_Topics_Endpoint Instance.
+	 * BBoss_REST_Topics_Endpoint Instance.
 	 *
-	 * @var BP_REST_Topics_Endpoint
+	 * @var BBoss_REST_Topics_Endpoint
 	 */
 	protected $topic_endpoint;
 
 	/**
-	 * Rest_BBP_Walker_Reply Instance.
+	 * BBoss_Rest_BBP_Walker_Reply Instance.
 	 *
-	 * @var Rest_BBP_Walker_Reply
+	 * @var BBoss_Rest_BBP_Walker_Reply
 	 */
 	protected $bbb_walker_reply;
 
@@ -42,11 +42,11 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace        = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace        = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base        = 'reply';
-		$this->forum_endpoint   = new BP_REST_Forums_Endpoint();
-		$this->topic_endpoint   = new BP_REST_Topics_Endpoint();
-		$this->bbb_walker_reply = new Rest_BBP_Walker_Reply();
+		$this->forum_endpoint   = new BBoss_REST_Forums_Endpoint();
+		$this->topic_endpoint   = new BBoss_REST_Topics_Endpoint();
+		$this->bbb_walker_reply = new BBoss_Rest_BBP_Walker_Reply();
 	}
 
 	/**
@@ -61,12 +61,12 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			array(
 				'args'   => array(
 					'id'     => array(
-						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'action' => array(
-						'description'       => __( 'Action name to perform on the reply.', 'buddyboss' ),
+						'description'       => __( 'Action name to perform on the reply.', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'required'          => true,
 						'enum'              => array(
@@ -77,7 +77,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'value'  => array(
-						'description'       => __( 'Value for the action on reply.', 'buddyboss' ),
+						'description'       => __( 'Value for the action on reply.', 'buddyboss-platform' ),
 						'type'              => 'boolean',
 						'sanitize_callback' => 'rest_sanitize_boolean',
 						'validate_callback' => 'rest_validate_request_arg',
@@ -98,12 +98,12 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			array(
 				'args'   => array(
 					'id'                      => array(
-						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'move_option'             => array(
-						'description'       => __( 'Options for Move the reply.', 'buddyboss' ),
+						'description'       => __( 'Options for Move the reply.', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'required'          => true,
 						'enum'              => array(
@@ -114,13 +114,13 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'destination_topic_id'    => array(
-						'description'       => __( 'Destination Topic ID.', 'buddyboss' ),
+						'description'       => __( 'Destination Topic ID.', 'buddyboss-platform' ),
 						'type'              => 'integer',
 						'sanitize_callback' => 'absint',
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'destination_topic_title' => array(
-						'description'       => __( 'New Topic Title.', 'buddyboss' ),
+						'description'       => __( 'New Topic Title.', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 						'validate_callback' => 'rest_validate_request_arg',
@@ -192,7 +192,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	public function action_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -238,7 +238,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( empty( $request['id'] ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_move_reply_reply_id',
-				__( 'A reply ID is required.', 'buddyboss' ),
+				__( 'A reply ID is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -247,13 +247,13 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			$move_reply_id = (int) $request['id'];
 		}
 
-		$move_reply = bbp_get_reply( $move_reply_id );
+		$move_reply = bboss_bbp_get_reply( $move_reply_id );
 
 		// Reply exists.
 		if ( empty( $move_reply ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_mover_reply_r_not_found',
-				__( 'The reply you want to move was not found.', 'buddyboss' ),
+				__( 'The reply you want to move was not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -262,13 +262,13 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 
 		/** Topic to Move From */
 		// Get the current topic a reply is in.
-		$source_topic = bbp_get_topic( $move_reply->post_parent );
+		$source_topic = bboss_bbp_get_topic( $move_reply->post_parent );
 
 		// No topic.
 		if ( empty( $source_topic ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_move_reply_source_not_found',
-				__( 'The topic you want to move from was not found.', 'buddyboss' ),
+				__( 'The topic you want to move from was not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -279,7 +279,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( ! current_user_can( 'edit_topic', $source_topic->ID ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_move_reply_source_permission',
-				__( 'You do not have permission to edit the source topic.', 'buddyboss' ),
+				__( 'You do not have permission to edit the source topic.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -295,7 +295,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( empty( $move_option ) || ! in_array( $move_option, array( 'existing', 'topic' ), true ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_move_reply_option',
-				__( 'You need to choose a valid move option.', 'buddyboss' ),
+				__( 'You need to choose a valid move option.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -313,7 +313,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					if ( empty( $request['destination_topic_id'] ) ) {
 						return new WP_Error(
 							'bp_rest_bbp_move_reply_destination_id',
-							__( 'A topic ID is required.', 'buddyboss' ),
+							__( 'A topic ID is required.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -323,13 +323,13 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					}
 
 					// Get the destination topic.
-					$destination_topic = bbp_get_topic( $destination_topic_id );
+					$destination_topic = bboss_bbp_get_topic( $destination_topic_id );
 
 					// No destination topic.
 					if ( empty( $destination_topic ) ) {
 						return new WP_Error(
 							'bp_rest_bbp_move_reply_destination_not_found',
-							__( 'The topic you want to move to was not found.', 'buddyboss' ),
+							__( 'The topic you want to move to was not found.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -340,7 +340,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					if ( ! current_user_can( 'edit_topic', $destination_topic->ID ) ) {
 						return new WP_Error(
 							'bp_rest_bbp_move_reply_destination_permission',
-							__( 'You do not have permission to edit the destination topic.', 'buddyboss' ),
+							__( 'You do not have permission to edit the destination topic.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -348,7 +348,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					}
 
 					// Bump the reply position.
-					$reply_position = bbp_get_topic_reply_count( $destination_topic->ID, true ) + 1;
+					$reply_position = bboss_bbp_get_topic_reply_count( $destination_topic->ID, true ) + 1;
 
 					// Update the reply.
 					wp_update_post(
@@ -363,8 +363,8 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					);
 
 					// Adjust reply meta values.
-					bbp_update_reply_topic_id( $move_reply->ID, $destination_topic->ID );
-					bbp_update_reply_forum_id( $move_reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
+					bboss_bbp_update_reply_topic_id( $move_reply->ID, $destination_topic->ID );
+					bboss_bbp_update_reply_forum_id( $move_reply->ID, bboss_bbp_get_topic_forum_id( $destination_topic->ID ) );
 
 					break;
 
@@ -389,15 +389,15 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 								'ID'          => $move_reply->ID,
 								'post_title'  => $destination_topic_title,
 								'post_name'   => false,
-								'post_type'   => bbp_get_topic_post_type(),
+								'post_type'   => bboss_bbp_get_topic_post_type(),
 								'post_parent' => $source_topic->post_parent,
 								'guid'        => '',
 							)
 						);
-						$destination_topic    = bbp_get_topic( $destination_topic_id );
+						$destination_topic    = bboss_bbp_get_topic( $destination_topic_id );
 
 						// Make sure the new topic knows its a topic.
-						bbp_update_topic_topic_id( $move_reply->ID );
+						bboss_bbp_update_topic_topic_id( $move_reply->ID );
 
 						// Shouldn't happen.
 						if (
@@ -407,7 +407,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 						) {
 							return new WP_Error(
 								'bp_rest_bbp_move_reply_destination_reply',
-								__( 'There was a problem converting the reply into the topic. Please try again.', 'buddyboss' ),
+								__( 'There was a problem converting the reply into the topic. Please try again.', 'buddyboss-platform' ),
 								array(
 									'status' => 400,
 								)
@@ -418,7 +418,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					} else {
 						return new WP_Error(
 							'bp_rest_bbp_move_reply_destination_permission',
-							__( 'You do not have permission to create new topics. The reply could not be converted into a topic.', 'buddyboss' ),
+							__( 'You do not have permission to create new topics. The reply could not be converted into a topic.', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)
@@ -455,12 +455,12 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		$freshness     = $move_reply->post_date;
 
 		// Get the reply to.
-		$parent = bbp_get_reply_to( $move_reply->ID );
+		$parent = bboss_bbp_get_reply_to( $move_reply->ID );
 
 		// Fix orphaned children.
 		$children = get_posts(
 			array(
-				'post_type'  => bbp_get_reply_post_type(),
+				'post_type'  => bboss_bbp_get_reply_post_type(),
 				'meta_key'   => '_bbp_reply_to', // phpcs:ignore
 				'meta_type'  => 'NUMERIC',
 				'meta_value' => $move_reply->ID, // phpcs:ignore
@@ -469,7 +469,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 
 		if ( ! empty( $children ) ) {
 			foreach ( $children as $child ) {
-				bbp_update_reply_to( $child->ID, $parent );
+				bboss_bbp_update_reply_to( $child->ID, $parent );
 			}
 		}
 
@@ -479,21 +479,21 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		// It is a new topic and we need to set some default metas to make.
 		// the topic display in bbp_has_topics() list.
 		if ( 'topic' === $move_option ) {
-			bbp_update_topic_last_reply_id( $destination_topic->ID, $last_reply_id );
-			bbp_update_topic_last_active_id( $destination_topic->ID, $last_reply_id );
-			bbp_update_topic_last_active_time( $destination_topic->ID, $freshness );
+			bboss_bbp_update_topic_last_reply_id( $destination_topic->ID, $last_reply_id );
+			bboss_bbp_update_topic_last_active_id( $destination_topic->ID, $last_reply_id );
+			bboss_bbp_update_topic_last_active_time( $destination_topic->ID, $freshness );
 
 			// Otherwise update the existing destination topic.
 		} else {
-			bbp_update_topic_last_reply_id( $destination_topic->ID );
-			bbp_update_topic_last_active_id( $destination_topic->ID );
-			bbp_update_topic_last_active_time( $destination_topic->ID );
+			bboss_bbp_update_topic_last_reply_id( $destination_topic->ID );
+			bboss_bbp_update_topic_last_active_id( $destination_topic->ID );
+			bboss_bbp_update_topic_last_active_time( $destination_topic->ID );
 		}
 
 		// Update source topic ID last active.
-		bbp_update_topic_last_reply_id( $source_topic->ID );
-		bbp_update_topic_last_active_id( $source_topic->ID );
-		bbp_update_topic_last_active_time( $source_topic->ID );
+		bboss_bbp_update_topic_last_reply_id( $source_topic->ID );
+		bboss_bbp_update_topic_last_active_id( $source_topic->ID );
+		bboss_bbp_update_topic_last_active_time( $source_topic->ID );
 
 		/** Successful Move */
 		// Update counts, etc...
@@ -517,7 +517,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	public function move_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -549,21 +549,21 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	protected function rest_update_reply_spam( $reply_id, $value ) {
 
 		$status   = true;
-		$is_spam  = bbp_is_reply_spam( $reply_id );
-		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		$is_spam  = bboss_bbp_is_reply_spam( $reply_id );
+		$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 
 		// Subscribed and unsubscribing.
 		if ( true === $is_spam && empty( $value ) ) {
-			$status = bbp_unspam_reply( $reply_id );
+			$status = bboss_bbp_unspam_reply( $reply_id );
 
 			// Not subscribed and subscribing.
 		} elseif ( false === $is_spam && ! empty( $value ) ) {
-			$status = bbp_spam_reply( $reply_id );
+			$status = bboss_bbp_spam_reply( $reply_id );
 		}
 
-		if ( false !== $status && ! is_wp_error( $status ) && function_exists( 'bbp_update_total_parent_reply' ) ) {
+		if ( false !== $status && ! is_wp_error( $status ) && function_exists( 'bboss_bbp_update_total_parent_reply' ) ) {
 			// Update total parent reply count when any parent trashed.
-			bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
+			bboss_bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
 		}
 
 		return $status;
@@ -583,7 +583,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( ! current_user_can( 'moderate', $reply_id ) ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'You do not have permission to do this.', 'buddyboss' ),
+				__( 'You do not have permission to do this.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -591,7 +591,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		}
 
 		$post_status = get_post_status( $reply_id );
-		$topic_id    = bbp_get_reply_topic_id( $reply_id );
+		$topic_id    = bboss_bbp_get_reply_topic_id( $reply_id );
 
 		if (
 			'trash' === $post_status
@@ -605,9 +605,9 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			$status = wp_trash_post( $reply_id );
 		}
 
-		if ( false !== $status && ! is_wp_error( $status ) && function_exists( 'bbp_update_total_parent_reply' ) ) {
+		if ( false !== $status && ! is_wp_error( $status ) && function_exists( 'bboss_bbp_update_total_parent_reply' ) ) {
 			// Update total parent reply count when any parent trashed.
-			bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
+			bboss_bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
 		}
 
 		return ( ! empty( $status ) && ! is_wp_error( $status ) ? true : $status );

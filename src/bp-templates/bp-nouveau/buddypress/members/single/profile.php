@@ -8,49 +8,52 @@
  * @version 1.0.0
  */
 
-bp_get_template_part( 'members/single/parts/item-subnav' );
-bp_nouveau_member_hook( 'before', 'profile_content' );
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+bboss_get_template_part( 'members/single/parts/item-subnav' );
+bboss_nouveau_member_hook( 'before', 'profile_content' );
 ?>
 
-<div class="profile <?php echo bp_current_action(); ?>">
+<div class="profile <?php echo esc_attr( bboss_current_action() ); ?>">
 	<?php
-	switch ( bp_current_action() ) :
+	switch ( bboss_current_action() ) :
 
 		// Edit.
 		case 'edit':
-			bp_get_template_part( 'members/single/profile/edit' );
+			bboss_get_template_part( 'members/single/profile/edit' );
 			break;
 
 		// Change Avatar.
 		case 'change-avatar':
-			bp_get_template_part( 'members/single/profile/change-avatar' );
+			bboss_get_template_part( 'members/single/profile/change-avatar' );
 			break;
 
 		// Change Cover Photo.
 		case 'change-cover-image':
-			bp_get_template_part( 'members/single/profile/change-cover-image' );
+			bboss_get_template_part( 'members/single/profile/change-cover-image' );
 			break;
 
 		// Compose.
 		case 'public':
 			// Display XProfile
-			if ( bp_is_active( 'xprofile' ) ) {
-				bp_get_template_part( 'members/single/profile/profile-loop' );
+			if ( bboss_is_active( 'xprofile' ) ) {
+				bboss_get_template_part( 'members/single/profile/profile-loop' );
 
 				// Display WordPress profile (fallback).
 			} else {
-				bp_get_template_part( 'members/single/profile/profile-wp' );
+				bboss_get_template_part( 'members/single/profile/profile-wp' );
 			}
 
 			break;
 
 		// Any other
 		default:
-			bp_get_template_part( 'members/single/plugins' );
+			bboss_get_template_part( 'members/single/plugins' );
 			break;
 	endswitch;
 	?>
 </div><!-- .profile -->
 
 <?php
-bp_nouveau_member_hook( 'after', 'profile_content' );
+bboss_nouveau_member_hook( 'after', 'profile_content' );

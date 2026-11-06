@@ -9,18 +9,18 @@ class BP_Tests_Core_Nav_BpCoreRemoveNavItem extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_should_remove_subnav_items() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$_bp_nav = $bp->bp_nav;
 		$_bp_options_nav = $bp->bp_options_nav;
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => 'foo',
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'Bar',
 			'slug' => 'bar',
 			'parent_slug' => 'foo',
@@ -32,7 +32,7 @@ class BP_Tests_Core_Nav_BpCoreRemoveNavItem extends BP_UnitTestCase {
 		$this->assertTrue( isset( $bp->bp_options_nav['foo'] ) );
 		$this->assertTrue( isset( $bp->bp_options_nav['foo']['bar'] ) );
 
-		bp_core_remove_nav_item( 'foo' );
+		bboss_core_remove_nav_item( 'foo' );
 
 		$this->assertFalse( isset( $bp->bp_options_nav['foo']['bar'] ) );
 
@@ -44,12 +44,12 @@ class BP_Tests_Core_Nav_BpCoreRemoveNavItem extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_should_remove_nav_item() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$_bp_nav = $bp->bp_nav;
 		$_bp_options_nav = $bp->bp_options_nav;
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => 'foo',
@@ -57,7 +57,7 @@ class BP_Tests_Core_Nav_BpCoreRemoveNavItem extends BP_UnitTestCase {
 
 		$this->assertTrue( isset( $bp->bp_nav['foo'] ) );
 
-		bp_core_remove_nav_item( 'foo' );
+		bboss_core_remove_nav_item( 'foo' );
 
 		$this->assertFalse( isset( $bp->bp_nav['foo'] ) );
 
@@ -69,22 +69,22 @@ class BP_Tests_Core_Nav_BpCoreRemoveNavItem extends BP_UnitTestCase {
 	 * @ticket BP7203
 	 */
 	public function test_remove_subnav_item_array_as_screen_function() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		add_filter( 'bp_is_active', array( $this, 'foo_is_active' ), 10, 2 );
 
 		$bp->foo = new stdClass;
-		$bp->foo->nav = new BP_Core_Nav( 0 );
+		$bp->foo->nav = new BBoss_Core_Nav( 0 );
 
 		$expected = array( 'foo', 'bar' );
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => $expected,
 		), 'foo' );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'Bar',
 			'slug' => 'bar',
 			'parent_slug' => 'foo',

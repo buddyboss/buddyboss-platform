@@ -30,7 +30,7 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 			'recipients' => array( $u1 ),
 		) );
 
-		$messages_template = new BP_Messages_Box_Template( array( 'user_id' => $u1 ) );
+		$messages_template = new BBoss_Messages_Box_Template( array( 'user_id' => $u1 ) );
 
 		$this->assertEquals( 1, $messages_template->thread_count );
 		$this->assertSame( array( $message_1->thread_id ), wp_list_pluck( $messages_template->threads, 'thread_id' ) );
@@ -39,7 +39,7 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 	/**
 	 * @group bp_has_message_threads
 	 *
-	 * @expectedDeprecated BP_Messages_Box_Template::__construct
+	 * @expectedDeprecated BBoss_Messages_Box_Template::__construct
 	 */
 	public function test_has_message_threads_old_args() {
 		$u1 = self::factory()->user->create();
@@ -63,7 +63,7 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 			'recipients' => array( $u1 ),
 		) );
 
-		$messages_template = new BP_Messages_Box_Template( $u1 );
+		$messages_template = new BBoss_Messages_Box_Template( $u1 );
 
 		$this->assertEquals( 1, $messages_template->thread_count );
 		$this->assertSame( array( $message_1->thread_id ), wp_list_pluck( $messages_template->threads, 'thread_id' ) );
@@ -139,21 +139,21 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 		$m6 = $message_6->id;
 
 		// add meta for some of the messages
-		bp_messages_update_meta( $m1, 'utensil',  'knive' );
-		bp_messages_update_meta( $m1, 'is_knive', 'yes' );
-		bp_messages_update_meta( $m1, "starred_by_user_{$u2}", true );
+		bboss_messages_update_meta( $m1, 'utensil',  'knive' );
+		bboss_messages_update_meta( $m1, 'is_knive', 'yes' );
+		bboss_messages_update_meta( $m1, "starred_by_user_{$u2}", true );
 
-		bp_messages_update_meta( $m2, 'utensil',  'spoon' );
-		bp_messages_update_meta( $m2, 'is_knive', 'no' );
-		bp_messages_update_meta( $m2, 'is_spoon', 'yes' );
+		bboss_messages_update_meta( $m2, 'utensil',  'spoon' );
+		bboss_messages_update_meta( $m2, 'is_knive', 'no' );
+		bboss_messages_update_meta( $m2, 'is_spoon', 'yes' );
 
-		bp_messages_update_meta( $m3, "starred_by_user_{$u2}", true );
+		bboss_messages_update_meta( $m3, "starred_by_user_{$u2}", true );
 
-		bp_messages_update_meta( $m6, "starred_by_user_{$u2}", true );
+		bboss_messages_update_meta( $m6, "starred_by_user_{$u2}", true );
 
 		// now, do the message thread loop query
 		global $messages_template;
-		bp_has_message_threads( array(
+		bboss_has_message_threads( array(
 			'user_id' => $u2,
 			'meta_query' => array(
 				array(
@@ -234,21 +234,21 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 		$m6 = $message_6->id;
 
 		// add meta for some of the messages
-		bp_messages_update_meta( $m1, 'utensil',  'knive' );
-		bp_messages_update_meta( $m1, 'is_knive', 'yes' );
-		bp_messages_update_meta( $m1, "starred_by_user_{$u2}", true );
+		bboss_messages_update_meta( $m1, 'utensil',  'knive' );
+		bboss_messages_update_meta( $m1, 'is_knive', 'yes' );
+		bboss_messages_update_meta( $m1, "starred_by_user_{$u2}", true );
 
-		bp_messages_update_meta( $m2, 'utensil',  'spoon' );
-		bp_messages_update_meta( $m2, 'is_knive', 'no' );
-		bp_messages_update_meta( $m2, 'is_spoon', 'yes' );
+		bboss_messages_update_meta( $m2, 'utensil',  'spoon' );
+		bboss_messages_update_meta( $m2, 'is_knive', 'no' );
+		bboss_messages_update_meta( $m2, 'is_spoon', 'yes' );
 
-		bp_messages_update_meta( $m3, "starred_by_user_{$u2}", true );
+		bboss_messages_update_meta( $m3, "starred_by_user_{$u2}", true );
 
-		bp_messages_update_meta( $m6, "starred_by_user_{$u2}", true );
+		bboss_messages_update_meta( $m6, "starred_by_user_{$u2}", true );
 
 		// now, do the message thread loop query
 		global $messages_template;
-		bp_has_message_threads( array(
+		bboss_has_message_threads( array(
 			'user_id' => $u2,
 			'meta_query' => array(
 				'relation' => 'AND',
@@ -285,7 +285,7 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 
 		// now, do the message thread query
 		global $messages_template;
-		bp_has_message_threads();
+		bboss_has_message_threads();
 
 		// assert!
 		$this->assertEquals( 0, $messages_template->thread_count );
@@ -296,13 +296,13 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Messages_Box_Template
+	 * @group BBoss_Messages_Box_Template
 	 */
 	public function test_bp_messages_template_should_give_precedence_to_mpage_URL_param() {
 		$request = $_REQUEST;
 		$_REQUEST['mpage'] = '5';
 
-		$at = new BP_Messages_Box_Template( array(
+		$at = new BBoss_Messages_Box_Template( array(
 			'page' => 8,
 		) );
 
@@ -313,13 +313,13 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Messages_Box_Template
+	 * @group BBoss_Messages_Box_Template
 	 */
 	public function test_bp_messages_template_should_reset_0_pag_page_URL_param_to_default_pag_page_value() {
 		$request = $_REQUEST;
 		$_REQUEST['mpage'] = '0';
 
-		$at = new BP_Messages_Box_Template( array(
+		$at = new BBoss_Messages_Box_Template( array(
 			'page' => 8,
 		) );
 
@@ -330,13 +330,13 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Messages_Box_Template
+	 * @group BBoss_Messages_Box_Template
 	 */
 	public function test_bp_messages_template_should_give_precedence_to_num_URL_param() {
 		$request = $_REQUEST;
 		$_REQUEST['num'] = '14';
 
-		$at = new BP_Messages_Box_Template( array(
+		$at = new BBoss_Messages_Box_Template( array(
 			'per_page' => 13,
 		) );
 
@@ -347,13 +347,13 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Messages_Box_Template
+	 * @group BBoss_Messages_Box_Template
 	 */
 	public function test_bp_messages_template_should_reset_0_pag_num_URL_param_to_default_pag_num_value() {
 		$request = $_REQUEST;
 		$_REQUEST['num'] = '0';
 
-		$at = new BP_Messages_Box_Template( array(
+		$at = new BBoss_Messages_Box_Template( array(
 			'per_page' => 13,
 		) );
 

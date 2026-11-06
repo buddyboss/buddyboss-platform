@@ -31,9 +31,9 @@ defined( 'ABSPATH' ) || exit;
  * @return int|bool ID of the newly created notification on success, false
  *                  on failure.
  */
-function bp_notifications_add_notification( $args = array() ) {
+function bboss_notifications_add_notification( $args = array() ) {
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'user_id'           => 0,
@@ -41,7 +41,7 @@ function bp_notifications_add_notification( $args = array() ) {
 			'secondary_item_id' => 0,
 			'component_name'    => '',
 			'component_action'  => '',
-			'date_notified'     => bp_core_current_time(),
+			'date_notified'     => bboss_core_current_time(),
 			'is_new'            => 1,
 			'allow_duplicate'   => false,
 		),
@@ -52,7 +52,7 @@ function bp_notifications_add_notification( $args = array() ) {
 	if ( ! $r['allow_duplicate'] ) {
 		// Date_notified, allow_duplicate don't count toward
 		// duplicate status.
-		$existing = BP_Notifications_Notification::get(
+		$existing = BBoss_Notifications_Notification::get(
 			array(
 				'user_id'           => $r['user_id'],
 				'item_id'           => $r['item_id'],
@@ -69,7 +69,7 @@ function bp_notifications_add_notification( $args = array() ) {
 	}
 
 	// Setup the new notification.
-	$notification                    = new BP_Notifications_Notification();
+	$notification                    = new BBoss_Notifications_Notification();
 	$notification->user_id           = $r['user_id'];
 	$notification->item_id           = $r['item_id'];
 	$notification->secondary_item_id = $r['secondary_item_id'];
@@ -88,10 +88,10 @@ function bp_notifications_add_notification( $args = array() ) {
  * @since BuddyPress 1.9.0
  *
  * @param int $id ID of the notification.
- * @return BP_Notifications_Notification Notification object for ID specified.
+ * @return BBoss_Notifications_Notification Notification object for ID specified.
  */
-function bp_notifications_get_notification( $id ) {
-	return new BP_Notifications_Notification( $id );
+function bboss_notifications_get_notification( $id ) {
+	return new BBoss_Notifications_Notification( $id );
 }
 
 /**
@@ -102,12 +102,12 @@ function bp_notifications_get_notification( $id ) {
  * @param int $id ID of the notification to delete.
  * @return false|int True on success, false on failure.
  */
-function bp_notifications_delete_notification( $id ) {
-	if ( ! bp_notifications_check_notification_access( bp_displayed_user_id(), $id ) ) {
+function bboss_notifications_delete_notification( $id ) {
+	if ( ! bboss_notifications_check_notification_access( bboss_displayed_user_id(), $id ) ) {
 		return false;
 	}
 
-	return BP_Notifications_Notification::delete( array( 'id' => $id ) );
+	return BBoss_Notifications_Notification::delete( array( 'id' => $id ) );
 }
 
 /**
@@ -121,12 +121,12 @@ function bp_notifications_delete_notification( $id ) {
  * @param int|bool $is_new 0 for read, 1 for unread.
  * @return false|int True on success, false on failure.
  */
-function bp_notifications_mark_notification( $id, $is_new = false ) {
-	if ( ! bp_notifications_check_notification_access( bp_displayed_user_id(), $id ) ) {
+function bboss_notifications_mark_notification( $id, $is_new = false ) {
+	if ( ! bboss_notifications_check_notification_access( bboss_displayed_user_id(), $id ) ) {
 		return false;
 	}
 
-	return BP_Notifications_Notification::update(
+	return BBoss_Notifications_Notification::update(
 		array( 'is_new' => $is_new ),
 		array( 'id' => $id )
 	);
@@ -140,17 +140,17 @@ function bp_notifications_mark_notification( $id, $is_new = false ) {
  * @param int $user_id ID of the user whose notifications are being fetched.
  * @return array $notifications Array of notifications for user.
  */
-function bp_notifications_get_all_notifications_for_user( $user_id = 0 ) {
+function bboss_notifications_get_all_notifications_for_user( $user_id = 0 ) {
 
 	// Default to displayed user if no ID is passed.
 	if ( empty( $user_id ) ) {
-		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+		$user_id = ( bboss_displayed_user_id() ) ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 	}
 
 	// Get notifications out of the cache, or query if necessary.
 	$notifications = wp_cache_get( 'all_for_user_' . $user_id, 'bp_notifications' );
 	if ( false === $notifications ) {
-		$notifications = BP_Notifications_Notification::get(
+		$notifications = BBoss_Notifications_Notification::get(
 			array(
 				'user_id' => $user_id,
 			)
@@ -173,7 +173,7 @@ function bp_notifications_get_all_notifications_for_user( $user_id = 0 ) {
  * Get a user's unread notifications, grouped by component and action.
  *
  * This function returns a list of notifications collapsed by component + action.
- * See BP_Notifications_Notification::get_grouped_notifications_for_user() for
+ * See BBoss_Notifications_Notification::get_grouped_notifications_for_user() for
  * more details.
  *
  * @since BuddyPress 3.0.0
@@ -181,14 +181,14 @@ function bp_notifications_get_all_notifications_for_user( $user_id = 0 ) {
  * @param int $user_id ID of the user whose notifications are being fetched.
  * @return array $notifications
  */
-function bp_notifications_get_grouped_notifications_for_user( $user_id = 0 ) {
+function bboss_notifications_get_grouped_notifications_for_user( $user_id = 0 ) {
 	if ( empty( $user_id ) ) {
-		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+		$user_id = ( bboss_displayed_user_id() ) ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 	}
 
 	$notifications = wp_cache_get( $user_id, 'bp_notifications_grouped_notifications' );
 	if ( false === $notifications ) {
-		$notifications = BP_Notifications_Notification::get_grouped_notifications_for_user( $user_id );
+		$notifications = BBoss_Notifications_Notification::get_grouped_notifications_for_user( $user_id );
 		wp_cache_set( $user_id, $notifications, 'bp_notifications_grouped_notifications' );
 	}
 
@@ -205,14 +205,14 @@ function bp_notifications_get_grouped_notifications_for_user( $user_id = 0 ) {
  *                        while 'object' returns a structured object for parsing.
  * @return mixed Object or array on success, false on failure.
  */
-function bp_notifications_get_notifications_for_user( $user_id, $format = 'string' ) {
-	$bp = buddypress();
+function bboss_notifications_get_notifications_for_user( $user_id, $format = 'string' ) {
+	$bp = bboss();
 
-	$notifications = bp_notifications_get_grouped_notifications_for_user( $user_id );
+	$notifications = bboss_notifications_get_grouped_notifications_for_user( $user_id );
 
 	// Calculate a renderable output for each notification type.
 	foreach ( $notifications as $notification_item ) {
-		$renderable = bb_notification_get_renderable_notifications( $notification_item, $format, 'web' );
+		$renderable = bboss_notification_get_renderable_notifications( $notification_item, $format, 'web' );
 	}
 
 	// If renderable is empty array, set to false.
@@ -247,8 +247,8 @@ function bp_notifications_get_notifications_for_user( $user_id, $format = 'strin
  * @param string $component_action Name of the associated action.
  * @return int|false True on success, false on failure.
  */
-function bp_notifications_delete_notifications_by_type( $user_id, $component_name, $component_action ) {
-	return BP_Notifications_Notification::delete(
+function bboss_notifications_delete_notifications_by_type( $user_id, $component_name, $component_action ) {
+	return BBoss_Notifications_Notification::delete(
 		array(
 			'user_id'          => $user_id,
 			'component_name'   => $component_name,
@@ -272,8 +272,8 @@ function bp_notifications_delete_notifications_by_type( $user_id, $component_nam
  * @param int|bool $secondary_item_id ID of the secondary associated item.
  * @return int|false True on success, false on failure.
  */
-function bp_notifications_delete_notifications_by_item_id( $user_id, $item_id, $component_name, $component_action, $secondary_item_id = false ) {
-	return BP_Notifications_Notification::delete(
+function bboss_notifications_delete_notifications_by_item_id( $user_id, $item_id, $component_name, $component_action, $secondary_item_id = false ) {
+	return BBoss_Notifications_Notification::delete(
 		array(
 			'user_id'           => $user_id,
 			'item_id'           => $item_id,
@@ -297,8 +297,8 @@ function bp_notifications_delete_notifications_by_item_id( $user_id, $item_id, $
  * @param int|bool    $secondary_item_id Optional. ID of the secondary associated item.
  * @return int|false True on success, false on failure.
  */
-function bp_notifications_delete_all_notifications_by_type( $item_id, $component_name, $component_action = false, $secondary_item_id = false ) {
-	return BP_Notifications_Notification::delete(
+function bboss_notifications_delete_all_notifications_by_type( $item_id, $component_name, $component_action = false, $secondary_item_id = false ) {
+	return BBoss_Notifications_Notification::delete(
 		array(
 			'item_id'           => $item_id,
 			'secondary_item_id' => $secondary_item_id,
@@ -324,8 +324,8 @@ function bp_notifications_delete_all_notifications_by_type( $item_id, $component
  * @param string $component_action Name of the associated action.
  * @return int|false True on success, false on failure.
  */
-function bp_notifications_delete_notifications_from_user( $user_id, $component_name, $component_action ) {
-	return BP_Notifications_Notification::delete(
+function bboss_notifications_delete_notifications_from_user( $user_id, $component_name, $component_action ) {
+	return BBoss_Notifications_Notification::delete(
 		array(
 			'item_id'          => $user_id,
 			'component_name'   => $component_name,
@@ -342,8 +342,8 @@ function bp_notifications_delete_notifications_from_user( $user_id, $component_n
  * @param int $user_id ID of the user who is about to be deleted.
  * @return int|false The number of rows deleted, or false on error.
  */
-function bp_notifications_delete_notifications_on_user_delete( $user_id ) {
-	return BP_Notifications_Notification::delete(
+function bboss_notifications_delete_notifications_on_user_delete( $user_id ) {
+	return BBoss_Notifications_Notification::delete(
 		array(
 			'user_id'           => $user_id,
 			'item_id'           => false,
@@ -353,8 +353,8 @@ function bp_notifications_delete_notifications_on_user_delete( $user_id ) {
 		)
 	);
 }
-add_action( 'wpmu_delete_user', 'bp_notifications_delete_notifications_on_user_delete' );
-add_action( 'delete_user', 'bp_notifications_delete_notifications_on_user_delete' );
+add_action( 'wpmu_delete_user', 'bboss_notifications_delete_notifications_on_user_delete' );
+add_action( 'delete_user', 'bboss_notifications_delete_notifications_on_user_delete' );
 
 /** Mark **********************************************************************/
 
@@ -372,8 +372,8 @@ add_action( 'delete_user', 'bp_notifications_delete_notifications_on_user_delete
  * @param int|bool $is_new           0 for read, 1 for unread.
  * @return int|false True on success, false on failure.
  */
-function bp_notifications_mark_notifications_by_type( $user_id, $component_name, $component_action, $is_new = false ) {
-	return BP_Notifications_Notification::update(
+function bboss_notifications_mark_notifications_by_type( $user_id, $component_name, $component_action, $is_new = false ) {
+	return BBoss_Notifications_Notification::update(
 		array(
 			'is_new' => $is_new,
 		),
@@ -401,8 +401,8 @@ function bp_notifications_mark_notifications_by_type( $user_id, $component_name,
  * @param int|bool $is_new            0 for read, 1 for unread.
  * @return int|false True on success, false on failure.
  */
-function bp_notifications_mark_notifications_by_item_id( $user_id, $item_id, $component_name, $component_action, $secondary_item_id = false, $is_new = false ) {
-	return BP_Notifications_Notification::update(
+function bboss_notifications_mark_notifications_by_item_id( $user_id, $item_id, $component_name, $component_action, $secondary_item_id = false, $is_new = false ) {
+	return BBoss_Notifications_Notification::update(
 		array(
 			'is_new' => $is_new,
 		),
@@ -430,8 +430,8 @@ function bp_notifications_mark_notifications_by_item_id( $user_id, $item_id, $co
  * @param int|bool    $is_new            0 for read, 1 for unread.
  * @return int|false True on success, false on failure.
  */
-function bp_notifications_mark_all_notifications_by_type( $item_id, $component_name, $component_action = false, $secondary_item_id = false, $is_new = false ) {
-	return BP_Notifications_Notification::update(
+function bboss_notifications_mark_all_notifications_by_type( $item_id, $component_name, $component_action = false, $secondary_item_id = false, $is_new = false ) {
+	return BBoss_Notifications_Notification::update(
 		array(
 			'is_new' => $is_new,
 		),
@@ -461,8 +461,8 @@ function bp_notifications_mark_all_notifications_by_type( $item_id, $component_n
  * @param int|bool $is_new           0 for read, 1 for unread.
  * @return int|false True on success, false on failure.
  */
-function bp_notifications_mark_notifications_from_user( $user_id, $component_name, $component_action, $is_new = false ) {
-	return BP_Notifications_Notification::update(
+function bboss_notifications_mark_notifications_from_user( $user_id, $component_name, $component_action, $is_new = false ) {
+	return BBoss_Notifications_Notification::update(
 		array(
 			'is_new' => $is_new,
 		),
@@ -487,8 +487,8 @@ function bp_notifications_mark_notifications_from_user( $user_id, $component_nam
  * @param int $notification_id ID of the notification being checked.
  * @return bool True if the notification belongs to the user, otherwise false.
  */
-function bp_notifications_check_notification_access( $user_id, $notification_id ) {
-	return (bool) BP_Notifications_Notification::check_access( $user_id, $notification_id );
+function bboss_notifications_check_notification_access( $user_id, $notification_id ) {
+	return (bool) BBoss_Notifications_Notification::check_access( $user_id, $notification_id );
 }
 
 /**
@@ -500,14 +500,14 @@ function bp_notifications_check_notification_access( $user_id, $notification_id 
  *                     counted.
  * @return int Unread notification count.
  */
-function bp_notifications_get_unread_notification_count( $user_id = 0 ) {
+function bboss_notifications_get_unread_notification_count( $user_id = 0 ) {
 	if ( empty( $user_id ) ) {
-		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+		$user_id = ( bboss_displayed_user_id() ) ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 	}
 
 	$count = wp_cache_get( $user_id, 'bp_notifications_unread_count' );
 	if ( false === $count ) {
-		$count = BP_Notifications_Notification::get_total_count(
+		$count = BBoss_Notifications_Notification::get_total_count(
 			array(
 				'user_id' => $user_id,
 				'is_new'  => true,
@@ -538,10 +538,10 @@ function bp_notifications_get_unread_notification_count( $user_id = 0 ) {
  *
  * @return array $component_names Array of registered components.
  */
-function bp_notifications_get_registered_components() {
+function bboss_notifications_get_registered_components() {
 
 	// Load BuddyPress.
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Setup return value.
 	$component_names = array();
@@ -579,7 +579,7 @@ function bp_notifications_get_registered_components() {
  *
  * @since BuddyPress 1.9.0
  */
-function bp_notifications_screen_settings() {}
+function bboss_notifications_screen_settings() {}
 
 /** Meta **********************************************************************/
 
@@ -602,11 +602,11 @@ function bp_notifications_screen_settings() {}
  *                                notification item. Default: false.
  * @return bool                   True on success, false on failure.
  */
-function bp_notifications_delete_meta( $notification_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
+function bboss_notifications_delete_meta( $notification_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
 
 	// Legacy - if no meta_key is passed, delete all for the item.
 	if ( empty( $meta_key ) ) {
-		$all_meta = bp_notifications_get_meta( $notification_id );
+		$all_meta = bboss_notifications_get_meta( $notification_id );
 		$keys     = ! empty( $all_meta )
 			? array_keys( $all_meta )
 			: array();
@@ -619,11 +619,11 @@ function bp_notifications_delete_meta( $notification_id, $meta_key = '', $meta_v
 
 	$retval = true;
 
-	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	add_filter( 'query', 'bboss_filter_metaid_column_name' );
 	foreach ( $keys as $key ) {
 		$retval = delete_metadata( 'notification', $notification_id, $key, $meta_value, $delete_all );
 	}
-	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+	remove_filter( 'query', 'bboss_filter_metaid_column_name' );
 
 	return $retval;
 }
@@ -642,10 +642,10 @@ function bp_notifications_delete_meta( $notification_id, $meta_key = '', $meta_v
  *                                specified. Default: true.
  * @return mixed                  The meta value(s) being requested.
  */
-function bp_notifications_get_meta( $notification_id = 0, $meta_key = '', $single = true ) {
-	add_filter( 'query', 'bp_filter_metaid_column_name' );
+function bboss_notifications_get_meta( $notification_id = 0, $meta_key = '', $single = true ) {
+	add_filter( 'query', 'bboss_filter_metaid_column_name' );
 	$retval = get_metadata( 'notification', $notification_id, $meta_key, $single );
-	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+	remove_filter( 'query', 'bboss_filter_metaid_column_name' );
 
 	/**
 	 * Filters the metadata for a specified notification item.
@@ -677,10 +677,10 @@ function bp_notifications_get_meta( $notification_id = 0, $meta_key = '', $singl
  *                                 successful creation of new metadata,  returns
  *                                 the integer ID of the new metadata row.
  */
-function bp_notifications_update_meta( $notification_id, $meta_key, $meta_value, $prev_value = '' ) {
-	add_filter( 'query', 'bp_filter_metaid_column_name' );
+function bboss_notifications_update_meta( $notification_id, $meta_key, $meta_value, $prev_value = '' ) {
+	add_filter( 'query', 'bboss_filter_metaid_column_name' );
 	$retval = update_metadata( 'notification', $notification_id, $meta_key, $meta_value, $prev_value );
-	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+	remove_filter( 'query', 'bboss_filter_metaid_column_name' );
 
 	return $retval;
 }
@@ -698,10 +698,10 @@ function bp_notifications_update_meta( $notification_id, $meta_key, $meta_value,
  *                                the key, no change will be made. Default: false.
  * @return int|bool               The meta ID on successful update, false on failure.
  */
-function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $unique = false ) {
-	add_filter( 'query', 'bp_filter_metaid_column_name' );
+function bboss_notifications_add_meta( $notification_id, $meta_key, $meta_value, $unique = false ) {
+	add_filter( 'query', 'bboss_filter_metaid_column_name' );
 	$retval = add_metadata( 'notification', $notification_id, $meta_key, $meta_value, $unique );
-	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+	remove_filter( 'query', 'bboss_filter_metaid_column_name' );
 
 	return $retval;
 }
@@ -713,25 +713,25 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
  *
  * @return void
  */
-function bb_heartbeat_on_screen_notifications( $response = array(), $data = array() ) {
-	$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
+function bboss_heartbeat_on_screen_notifications( $response = array(), $data = array() ) {
+	$is_on_screen_notification_enable = bboss_get_option( '_bp_on_screen_notifications_enable', 0 );
 
 	if ( empty( $is_on_screen_notification_enable ) ) {
 		return $response;
 	}
 
-	if ( bp_loggedin_user_id() && bp_is_active( 'notifications' ) ) {
+	if ( bboss_loggedin_user_id() && bboss_is_active( 'notifications' ) ) {
 		ob_start();
-		bp_get_template_part( 'notifications/on-screen' );
+		bboss_get_template_part( 'notifications/on-screen' );
 		$response['on_screen_notifications'] = ob_get_clean();
-		$response['total_notifications']     = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+		$response['total_notifications']     = bboss_notifications_get_unread_notification_count( bboss_loggedin_user_id() );
 	}
 
 	return $response;
 }
 // Heartbeat receive for on-screen notification.
-add_filter( 'heartbeat_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
-add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
+add_filter( 'heartbeat_received', 'bboss_heartbeat_on_screen_notifications', 11, 2 );
+add_filter( 'heartbeat_nopriv_received', 'bboss_heartbeat_on_screen_notifications', 11, 2 );
 
 /**
  * Function to verify that notifications background process enabled.
@@ -740,8 +740,8 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications',
  *
  * @return bool
  */
-function bb_notifications_background_enabled() {
-	return class_exists( 'BB_Background_Updater' ) && apply_filters( 'bb_notifications_background_enabled', true );
+function bboss_notifications_background_enabled() {
+	return class_exists( 'BBoss_BB_Background_Updater' ) && apply_filters( 'bb_notifications_background_enabled', true );
 }
 
 /**
@@ -759,7 +759,7 @@ function bb_notifications_background_enabled() {
  * @param int    $sender_id         Sender user id.
  * @param int    $group_id          Group id.
  */
-function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true, $sender_id = 0, $group_id = 0 ) {
+function bboss_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true, $sender_id = 0, $group_id = 0 ) {
 	if (
 		empty( $user_ids ) ||
 		empty( $item_id ) ||
@@ -771,7 +771,7 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 	}
 
 	if ( empty( $date_notified ) ) {
-		$date_notified = bp_core_current_time();
+		$date_notified = bboss_core_current_time();
 	}
 
 	foreach ( $user_ids as $user_id ) {
@@ -783,8 +783,8 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 		// Check the sender is blocked by/blocked/suspended recipient or not.
 		if (
 			! empty( $sender_id ) &&
-			function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-			bb_moderation_allowed_specific_notification(
+			function_exists( 'bboss_moderation_allowed_specific_notification' ) &&
+			bboss_moderation_allowed_specific_notification(
 				array(
 					'type'              => $component_name,
 					'group_id'          => $group_id,
@@ -795,7 +795,7 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 			continue;
 		}
 
-		bp_notifications_add_notification(
+		bboss_notifications_add_notification(
 			array(
 				'user_id'           => $user_id,
 				'item_id'           => $item_id,
@@ -815,14 +815,14 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
  *
  * @since BuddyBoss 1.9.0
  */
-function bb_notifications_handle_cron_health_check() {
+function bboss_notifications_handle_cron_health_check() {
 	global $bb_notifications_background_updater;
 	if ( $bb_notifications_background_updater->is_updating() ) {
 		$bb_notifications_background_updater->handle_cron_healthcheck();
 	}
 }
 
-add_action( 'bb_init_notifications_background_updater', 'bb_notifications_handle_cron_health_check' );
+add_action( 'bb_init_notifications_background_updater', 'bboss_notifications_handle_cron_health_check' );
 
 /**
  * Add only notifications which are user selected.
@@ -834,13 +834,13 @@ add_action( 'bb_init_notifications_background_updater', 'bb_notifications_handle
  *
  * @return mixed|string
  */
-function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
+function bboss_notifications_on_screen_notifications_add( $querystring, $object ) {
 
 	if ( 'notifications' !== $object ) {
 		return $querystring;
 	}
 
-	$querystring            = bp_parse_args( $querystring );
+	$querystring            = bboss_parse_args( $querystring );
 	$querystring['is_new']  = 1;
 	$querystring['user_id'] = get_current_user_id();
 
@@ -856,14 +856,14 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 	// ),
 	// );
 
-	if ( bb_enabled_legacy_email_preference() ) {
+	if ( bboss_enabled_legacy_email_preference() ) {
 		return http_build_query( $querystring );
 	}
 
-	$excluded_user_component_actions = bb_disabled_notification_actions_by_user( get_current_user_id() );
+	$excluded_user_component_actions = bboss_disabled_notification_actions_by_user( get_current_user_id() );
 
 	if ( ! empty( $excluded_user_component_actions ) ) {
-		$excluded_action                = bb_notification_excluded_component_actions();
+		$excluded_action                = bboss_notification_excluded_component_actions();
 		$querystring['excluded_action'] = array_unique( array_merge( $excluded_action, $excluded_user_component_actions ) );
 	}
 
@@ -880,16 +880,16 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
  *
  * @return array
  */
-function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' ) {
-	if ( empty( $user_id ) || bb_enabled_legacy_email_preference() ) {
+function bboss_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' ) {
+	if ( empty( $user_id ) || bboss_enabled_legacy_email_preference() ) {
 		return array();
 	}
 
 	// All preferences registered.
-	$preferences = bb_register_notification_preferences();
+	$preferences = bboss_register_notification_preferences();
 
 	// Saved notification from backend default settings.
-	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$enabled_all_notification = bboss_get_option( 'bb_enabled_notification', array() );
 
 	// Enabled default notification from preferences.
 	$all_notifications = array();
@@ -954,7 +954,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 		}
 	}
 
-	$notifications          = bp_parse_args( $settings_by_admin, $all_notifications );
+	$notifications          = bboss_parse_args( $settings_by_admin, $all_notifications );
 	$excluded_actions       = array();
 	$notifications_type_key = 'enable_notification';
 	if ( in_array( $type, array( 'web', 'app' ), true ) ) {
@@ -974,7 +974,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 			(
 				'no' === $notifications[ $key ] ||
 				// Add in excluded action if the settings are disabled from frontend top bar Enable a Notification option.
-				'no' === bp_get_user_meta( $user_id, $notifications_type_key, true )
+				'no' === bboss_get_user_meta( $user_id, $notifications_type_key, true )
 			)
 		) {
 			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
@@ -1000,17 +1000,17 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
  *
  * @return array Return the component name.
  */
-function bb_notification_exclude_group_message_notification( $component_names ) {
+function bboss_notification_exclude_group_message_notification( $component_names ) {
 
-	if ( ! bp_is_active( 'messages' ) ) {
+	if ( ! bboss_is_active( 'messages' ) ) {
 		return $component_names;
 	}
 
-	$hide_message_notification = bb_hide_messages_from_notification_enabled();
+	$hide_message_notification = bboss_hide_messages_from_notification_enabled();
 
 	if (
-		function_exists( 'bb_enabled_legacy_email_preference' ) &&
-		! bb_enabled_legacy_email_preference() &&
+		function_exists( 'bboss_enabled_legacy_email_preference' ) &&
+		! bboss_enabled_legacy_email_preference() &&
 		true === $hide_message_notification &&
 		in_array( 'messages', $component_names, true )
 	) {
@@ -1021,7 +1021,7 @@ function bb_notification_exclude_group_message_notification( $component_names ) 
 
 }
 // Hide messages notifications from the notifications list.
-add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
+add_filter( 'bp_notifications_get_registered_components', 'bboss_notification_exclude_group_message_notification', 999, 1 );
 
 /**
  * Check the notification is legacy or modern.
@@ -1032,7 +1032,7 @@ add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclu
  *
  * @return bool True if the notification is legacy otherwise false.
  */
-function bb_notifications_is_legacy_notification( $notification_id = 0 ) {
+function bboss_notifications_is_legacy_notification( $notification_id = 0 ) {
 
 	/**
 	 * Filters the notification is legacy or modern.
@@ -1042,7 +1042,7 @@ function bb_notifications_is_legacy_notification( $notification_id = 0 ) {
 	 * @param bool $is_legacy_notification The notification is legacy or modern.
 	 * @param int  $notification_id        Notification ID.
 	 */
-	return (bool) apply_filters( 'bb_notifications_is_legacy_notification', (bool) ! bp_notifications_get_meta( $notification_id, 'is_modern', true ), $notification_id );
+	return (bool) apply_filters( 'bb_notifications_is_legacy_notification', (bool) ! bboss_notifications_get_meta( $notification_id, 'is_modern', true ), $notification_id );
 }
 
 /**
@@ -1052,8 +1052,8 @@ function bb_notifications_is_legacy_notification( $notification_id = 0 ) {
  *
  * @return void
  */
-function bb_notification_avatar() {
-	$notification     = buddypress()->notifications->query_loop->notification;
+function bboss_notification_avatar() {
+	$notification     = bboss()->notifications->query_loop->notification;
 	$component        = $notification->component_name;
 	$component_action = $notification->component_action;
 
@@ -1103,7 +1103,7 @@ function bb_notification_avatar() {
 	// groups component. A stale group-related notification can outlive a
 	// groups deactivation — fall through to the default-avatar branch in
 	// that case rather than fatalling on the missing class.
-	if ( isset( $object ) && 'group' === $object && ! bp_is_active( 'groups' ) ) {
+	if ( isset( $object ) && 'group' === $object && ! bboss_is_active( 'groups' ) ) {
 		$object  = 'notification';
 		$item_id = 0;
 	}
@@ -1111,20 +1111,20 @@ function bb_notification_avatar() {
 	if ( isset( $item_id, $object ) ) {
 
 		if ( 'notification' === $object ) {
-			bb_get_default_notification_avatar( 'thumb', $notification );
+			bboss_get_default_notification_avatar( 'thumb', $notification );
 			// Get the small icon for the notification which will print beside the avatar.
-			echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) );
+			echo wp_kses_post( bboss_notification_small_icon( $component_action, true, $notification ) );
 		} else {
 			if ( 'group' === $object ) {
-				$group = new BP_Groups_Group( $item_id );
-				$link  = bp_get_group_permalink( $group );
+				$group = new BBoss_Groups_Group( $item_id );
+				$link  = bboss_get_group_permalink( $group );
 			} else {
 				$user = new WP_User( $item_id );
-				$link = bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
+				$link = bboss_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
 			}
 
-			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
-			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+			$moderation_class = isset( $user ) && function_exists( 'bboss_moderation_is_user_suspended' ) && bboss_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
+			$moderation_class = isset( $user ) && function_exists( 'bboss_moderation_is_user_blocked' ) && bboss_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			$data_hp          = '';
 			if ( ! empty( $item_id ) ) {
 				if ( 'user' === $object ) {
@@ -1134,22 +1134,22 @@ function bb_notification_avatar() {
 				}
 			}
 			?>
-			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" <?php echo $data_hp; ?>>
+			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" <?php echo $data_hp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $data_hp is a pre-built attribute string with esc_attr'd value or empty. ?>>
 				<?php
-				echo bp_core_fetch_avatar(
+				echo wp_kses_post( bboss_core_fetch_avatar(
 					array(
 						'item_id' => $item_id,
 						'object'  => $object,
 					)
-				);
+				) );
 
 				// Get the small icon for the notification which will print beside the avatar.
-				$notification_icon = bb_notification_small_icon( $component_action, true, $notification );
+				$notification_icon = bboss_notification_small_icon( $component_action, true, $notification );
 				if ( ! empty( $notification_icon ) ) {
 					echo wp_kses_post( $notification_icon );
 				}
 				?>
-				<?php ( isset( $user ) ? bb_user_presence_html( $user->ID ) : '' ); ?>
+				<?php ( isset( $user ) ? bboss_user_presence_html( $user->ID ) : '' ); ?>
 			</a>
 			<?php
 		}
@@ -1165,9 +1165,9 @@ function bb_notification_avatar() {
  *
  * @return false|mixed|string|void
  */
-function bb_notification_avatar_url( $notification = '' ) {
+function bboss_notification_avatar_url( $notification = '' ) {
 	if ( empty( $notification ) ) {
-		$notification = buddypress()->notifications->query_loop->notification;
+		$notification = bboss()->notifications->query_loop->notification;
 	}
 
 	$component        = $notification->component_name;
@@ -1217,12 +1217,12 @@ function bb_notification_avatar_url( $notification = '' ) {
 
 	if ( isset( $item_id, $object ) ) {
 
-		add_filter( 'bp_core_gravatar_url_args', 'bb_notification_avatar_url_args' );
+		add_filter( 'bp_core_gravatar_url_args', 'bboss_notification_avatar_url_args' );
 
 		if ( 'notification' === $object ) {
-			$image_url = bb_get_notification_avatar_url( 'thumb' );
+			$image_url = bboss_get_notification_avatar_url( 'thumb' );
 		} else {
-			$image_url = bp_core_fetch_avatar(
+			$image_url = bboss_core_fetch_avatar(
 				array(
 					'item_id' => $item_id,
 					'object'  => $object,
@@ -1231,7 +1231,7 @@ function bb_notification_avatar_url( $notification = '' ) {
 			);
 		}
 
-		remove_filter( 'bp_core_gravatar_url_args', 'bb_notification_avatar_url_args' );
+		remove_filter( 'bp_core_gravatar_url_args', 'bboss_notification_avatar_url_args' );
 	}
 
 	return apply_filters( 'bb_notification_avatar_url', str_replace( '&#038;', '&', $image_url ), $notification );
@@ -1247,19 +1247,19 @@ function bb_notification_avatar_url( $notification = '' ) {
  *
  * @return void
  */
-function bb_get_default_notification_avatar( $size = 'full', $notification = '' ) {
+function bboss_get_default_notification_avatar( $size = 'full', $notification = '' ) {
 	if ( ! in_array( $size, array( 'thumb', 'full' ), true ) ) {
 		$size = 'full';
 	}
 
-	$image_url = bb_get_notification_avatar_url( $size );
+	$image_url = bboss_get_notification_avatar_url( $size );
 
 	printf(
 		'<img src="%1$s" class="avatar photo %2$s" width="%3$s" height="%3$s" alt="%4$s">',
 		esc_url( $image_url ),
 		esc_attr( ( 'thumb' === $size ? 'avatar-150' : 'avatar-300 ' ) ),
 		esc_attr( ( 'thumb' === $size ? '150' : '300 ' ) ),
-		esc_attr__( 'Notification Icon', 'buddyboss' )
+		esc_attr__( 'Notification Icon', 'buddyboss-platform' )
 	);
 }
 
@@ -1272,7 +1272,7 @@ function bb_get_default_notification_avatar( $size = 'full', $notification = '' 
  *
  * @return mixed|void
  */
-function bb_get_notification_avatar_url( $size = 'full' ) {
+function bboss_get_notification_avatar_url( $size = 'full' ) {
 
 	$bb_avatar_filename = 'notification.png';
 	if ( 'full' !== $size ) {
@@ -1287,7 +1287,7 @@ function bb_get_notification_avatar_url( $size = 'full' ) {
 	 * @param string $value Default BuddyBoss notification avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
 	 */
-	return apply_filters( 'bb_get_buddyboss_avatar_avatar_url', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $bb_avatar_filename ), $size );
+	return apply_filters( 'bb_get_buddyboss_avatar_avatar_url', esc_url( bboss()->plugin_url . 'bp-core/images/' . $bb_avatar_filename ), $size );
 }
 
 /**
@@ -1301,9 +1301,9 @@ function bb_get_notification_avatar_url( $size = 'full' ) {
  *
  * @return mixed|string|void
  */
-function bb_notification_small_icon( $component_action, $html = true, $notification = false ) {
+function bboss_notification_small_icon( $component_action, $html = true, $notification = false ) {
 
-	$all_registered_notifications = bb_register_notifications();
+	$all_registered_notifications = bboss_register_notifications();
 
 	if ( empty( $component_action ) || empty( $all_registered_notifications ) ) {
 		return;
@@ -1312,7 +1312,7 @@ function bb_notification_small_icon( $component_action, $html = true, $notificat
 	$icons = array_column( $all_registered_notifications, 'icon_class', 'component_action' );
 
 	if ( isset( $icons[ $component_action ] ) && ! empty( $icons[ $component_action ] ) ) {
-		$icon_class = bb_get_notification_conditional_icon( $notification );
+		$icon_class = bboss_get_notification_conditional_icon( $notification );
 		if ( empty( $icon_class ) ) {
 			$icon_class = $icons[ $component_action ];
 		}
@@ -1336,7 +1336,7 @@ function bb_notification_small_icon( $component_action, $html = true, $notificat
  *
  * @return string $icon_class Icon class.
  */
-function bb_get_notification_conditional_icon( $notification ) {
+function bboss_get_notification_conditional_icon( $notification ) {
 
 	$icon_class = '';
 
@@ -1346,7 +1346,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 
 	switch ( $notification->component_action ) {
 		case 'bb_new_mention':
-			$notification_type = bp_notifications_get_meta( $notification->id, 'type', true );
+			$notification_type = bboss_notifications_get_meta( $notification->id, 'type', true );
 			if ( ! empty( $notification->component_name ) && 'core' === $notification->component_name ) {
 				$icon_class = 'bb-icon-f bb-icon-comment-square-dots';
 			} elseif ( 'activity_comment' === $notification_type ) {
@@ -1367,27 +1367,27 @@ function bb_get_notification_conditional_icon( $notification ) {
 			// by the messages component. A stale messages notification can
 			// outlive a messages deactivation — return a neutral icon
 			// instead of fatalling on the missing class/function.
-			if ( ! bp_is_active( 'messages' ) ) {
+			if ( ! bboss_is_active( 'messages' ) ) {
 				$icon_class = 'bb-icon-f bb-icon-comment-square';
 				break;
 			}
 			$item_id = $notification->item_id;
 			// Get message thread ID.
-			$message      = new BP_Messages_Message( $item_id );
-			$media_ids    = bp_messages_get_meta( $item_id, 'bp_media_ids', true );
-			$document_ids = bp_messages_get_meta( $item_id, 'bp_document_ids', true );
-			$video_ids    = bp_messages_get_meta( $item_id, 'bp_video_ids', true );
-			$gif_data     = bp_messages_get_meta( $item_id, '_gif_data', true );
+			$message      = new BBoss_Messages_Message( $item_id );
+			$media_ids    = bboss_messages_get_meta( $item_id, 'bp_media_ids', true );
+			$document_ids = bboss_messages_get_meta( $item_id, 'bp_document_ids', true );
+			$video_ids    = bboss_messages_get_meta( $item_id, 'bp_video_ids', true );
+			$gif_data     = bboss_messages_get_meta( $item_id, '_gif_data', true );
 			$excerpt      = wp_strip_all_tags( $message->message );
 
 			if ( '&nbsp;' === $excerpt ) {
 				$excerpt = '';
 			} else {
-				$excerpt = '"' . bp_create_excerpt(
+				$excerpt = '"' . bboss_create_excerpt(
 					$excerpt,
 					50,
 					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
+						'ending' => __( '&hellip;', 'buddyboss-platform' ),
 					)
 				) . '"';
 
@@ -1415,13 +1415,13 @@ function bb_get_notification_conditional_icon( $notification ) {
 			// `BP_Activity_Activity` is loaded by the activity component
 			// and is NOT in the always-on autoload list. Stale activity-
 			// related notifications can outlive an activity deactivation.
-			if ( ! bp_is_active( 'activity' ) ) {
+			if ( ! bboss_is_active( 'activity' ) ) {
 				$icon_class = 'bb-icon-f bb-icon-activity';
 				break;
 			}
 			$item_id        = $notification->item_id;
-			$activity       = new BP_Activity_Activity( $item_id );
-			$activity_metas = bb_activity_get_metadata( $item_id );
+			$activity       = new BBoss_Activity_Activity( $item_id );
+			$activity_metas = bboss_activity_get_metadata( $item_id );
 			$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
 			$document_ids   = $activity_metas['bp_document_ids'][0] ?? '';
 			$video_ids      = $activity_metas['bp_video_ids'][0] ?? '';
@@ -1432,11 +1432,11 @@ function bb_get_notification_conditional_icon( $notification ) {
 			if ( '&nbsp;' === $excerpt ) {
 				$excerpt = '';
 			} else {
-				$excerpt = '"' . bp_create_excerpt(
+				$excerpt = '"' . bboss_create_excerpt(
 					$excerpt,
 					50,
 					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
+						'ending' => __( '&hellip;', 'buddyboss-platform' ),
 					)
 				) . '"';
 
@@ -1476,7 +1476,7 @@ function bb_get_notification_conditional_icon( $notification ) {
  *
  * @return mixed
  */
-function bb_notification_avatar_url_args( $args ) {
+function bboss_notification_avatar_url_args( $args ) {
 	unset( $args['s'], $args['r'] );
 	return $args;
 }
@@ -1492,9 +1492,9 @@ function bb_notification_avatar_url_args( $args ) {
  *
  * @return mixed|void
  */
-function bb_notification_get_renderable_notifications( $notification_item, $format = 'string', $screen = 'web' ) {
+function bboss_notification_get_renderable_notifications( $notification_item, $format = 'string', $screen = 'web' ) {
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	if ( empty( $notification_item ) || ! is_object( $notification_item ) ) {
 		return;
@@ -1542,7 +1542,7 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 			// callback functions.
 			if ( is_string( $content ) ) {
 				$notification_object->content = $content;
-				$notification_object->href    = bp_loggedin_user_domain();
+				$notification_object->href    = bboss_loggedin_user_domain();
 			} else {
 				$notification_object->content = ( isset( $content ) && isset( $content['text'] ) ? $content['text'] : '' );
 				$notification_object->href    = ( isset( $content ) && isset( $content['link'] ) ? $content['link'] : '' );
@@ -1598,9 +1598,9 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 
 			/**
 			 * Filters the notification content for notifications created by plugins.
-			 * If your plugin extends the {@link BP_Component} class, you should use the
+			 * If your plugin extends the {@link BBoss_Component} class, you should use the
 			 * 'notification_callback' parameter in your extended
-			 * {@link BP_Component::setup_globals()} method instead.
+			 * {@link BBoss_Component::setup_globals()} method instead.
 			 *
 			 * @since BuddyPress 1.9.0
 			 * @since BuddyPress 2.6.0 Added $component_action_name, $component_name, $id as parameters.
@@ -1628,7 +1628,7 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
 			// callback functions.
 			if ( is_string( $content ) ) {
 				$notification_object->content = $content;
-				$notification_object->href    = bp_loggedin_user_domain();
+				$notification_object->href    = bboss_loggedin_user_domain();
 			} else {
 				$notification_object->content = $content['text'];
 				$notification_object->href    = $content['link'];
@@ -1667,8 +1667,8 @@ function bb_notification_get_renderable_notifications( $notification_item, $form
  *
  * @return bool
  */
-function bb_hide_messages_from_notification_enabled() {
-	return (bool) apply_filters( 'bb_hide_messages_from_notification_enabled', bp_get_option( 'hide_message_notification', 1 ) );
+function bboss_hide_messages_from_notification_enabled() {
+	return (bool) apply_filters( 'bb_hide_messages_from_notification_enabled', bboss_get_option( 'hide_message_notification', 1 ) );
 }
 
 /**
@@ -1678,8 +1678,8 @@ function bb_hide_messages_from_notification_enabled() {
  *
  * @return bool
  */
-function bb_delay_email_notifications_enabled() {
-	return (bool) apply_filters( 'bb_delay_email_notifications_enabled', bp_get_option( 'delay_email_notification', 1 ) );
+function bboss_delay_email_notifications_enabled() {
+	return (bool) apply_filters( 'bb_delay_email_notifications_enabled', bboss_get_option( 'delay_email_notification', 1 ) );
 }
 
 /**
@@ -1689,8 +1689,8 @@ function bb_delay_email_notifications_enabled() {
  *
  * @return bool
  */
-function bb_check_delay_email_notification() {
-	return (bool) ( false === bb_enabled_legacy_email_preference() && bb_delay_email_notifications_enabled() );
+function bboss_check_delay_email_notification() {
+	return (bool) ( false === bboss_enabled_legacy_email_preference() && bboss_delay_email_notifications_enabled() );
 }
 
 /**
@@ -1703,17 +1703,17 @@ function bb_check_delay_email_notification() {
  *
  * @return bool
  */
-function bb_can_send_push_notification( $user_id, $args = array() ) {
+function bboss_can_send_push_notification( $user_id, $args = array() ) {
 	// Parse args.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'skip_active_user' => false,
 		)
 	);
 
-	$presence_time = (int) apply_filters( 'bb_push_notification_presence_time', bb_presence_interval() + bb_presence_time_span() );
-	$user_presence = bb_is_online_user( $user_id, $presence_time );
+	$presence_time = (int) apply_filters( 'bb_push_notification_presence_time', bboss_presence_interval() + bboss_presence_time_span() );
+	$user_presence = bboss_is_online_user( $user_id, $presence_time );
 
 	if ( true === $user_presence && true === $r['skip_active_user'] ) {
 		return false;
@@ -1727,16 +1727,16 @@ function bb_can_send_push_notification( $user_id, $args = array() ) {
  *
  * @since BuddyBoss 2.2.3
  *
- * @param BP_Notifications_Notification $notification Notification object.
+ * @param BBoss_Notifications_Notification $notification Notification object.
  */
-function bb_notification_after_save_meta( $notification ) {
+function bboss_notification_after_save_meta( $notification ) {
 	if (
 		! empty( $notification->id ) &&
 		! empty( $notification->component_action )
 	) {
 		$usernames = array();
 		if (
-			bp_is_active( 'activity' ) &&
+			bboss_is_active( 'activity' ) &&
 			in_array(
 				$notification->component_action,
 				array(
@@ -1747,15 +1747,15 @@ function bb_notification_after_save_meta( $notification ) {
 				true
 			)
 		) {
-			$activity = new BP_Activity_Activity( $notification->item_id );
+			$activity = new BBoss_Activity_Activity( $notification->item_id );
 
-			if ( ! empty( $activity ) && empty( $activity->content ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
+			if ( ! empty( $activity ) && empty( $activity->content ) && function_exists( 'bboss_blogs_activity_comment_content_with_read_more' ) ) {
 				add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_false' );
-				$activity->content = bp_blogs_activity_comment_content_with_read_more( '', $activity );
+				$activity->content = bboss_blogs_activity_comment_content_with_read_more( '', $activity );
 				add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_true' );
 			}
 
-			$usernames = ! empty( $activity ) && ! empty( $activity->content ) && bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
+			$usernames = ! empty( $activity ) && ! empty( $activity->content ) && bboss_activity_do_mentions() ? bboss_activity_find_mentions( $activity->content ) : array();
 		} elseif (
 			'core' === $notification->component_name &&
 			in_array(
@@ -1767,9 +1767,9 @@ function bb_notification_after_save_meta( $notification ) {
 			)
 		) {
 			$comment   = get_comment( $notification->item_id );
-			$usernames = ! empty( $comment ) && ! empty( $comment->comment_content ) ? bp_find_mentions_by_at_sign( array(), $comment->comment_content ) : array();
+			$usernames = ! empty( $comment ) && ! empty( $comment->comment_content ) ? bboss_find_mentions_by_at_sign( array(), $comment->comment_content ) : array();
 		} elseif (
-			bp_is_active( 'forums' ) &&
+			bboss_is_active( 'forums' ) &&
 			in_array(
 				$notification->component_action,
 				array(
@@ -1786,15 +1786,15 @@ function bb_notification_after_save_meta( $notification ) {
 				'bb_groups_subscribed_discussion' === $notification->component_action ||
 				'bb_forums_subscribed_discussion' === $notification->component_action
 			) {
-				$content = bbp_kses_data( bbp_get_topic_content( $notification->item_id ) );
+				$content = bboss_bbp_kses_data( bboss_bbp_get_topic_content( $notification->item_id ) );
 			}
 			if (
 				'bb_forums_subscribed_reply' === $notification->component_action ||
 				'bbp_new_reply' === $notification->component_action
 			) {
-				$content = bbp_kses_data( bbp_get_reply_content( $notification->item_id ) );
+				$content = bboss_bbp_kses_data( bboss_bbp_get_reply_content( $notification->item_id ) );
 			}
-			$usernames = ! empty( $content ) ? bp_find_mentions_by_at_sign( array(), $content ) : array();
+			$usernames = ! empty( $content ) ? bboss_find_mentions_by_at_sign( array(), $content ) : array();
 		}
 
 		if ( ! empty( $usernames ) ) {
@@ -1802,12 +1802,12 @@ function bb_notification_after_save_meta( $notification ) {
 			$mention_web = false;
 			$mention_app = false;
 			if ( isset( $usernames[ $user_id ] ) ) {
-				$mention_web = bb_web_notification_enabled() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'web' );
-				$mention_app = bb_app_notification_enabled() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention', 'app' );
+				$mention_web = bboss_web_notification_enabled() && true === bboss_is_notification_enabled( $user_id, 'bb_new_mention', 'web' );
+				$mention_app = bboss_app_notification_enabled() && true === bboss_is_notification_enabled( $user_id, 'bb_new_mention', 'app' );
 			}
 
-			bp_notifications_update_meta( $notification->id, 'not_send_app', $mention_app );
-			bp_notifications_update_meta( $notification->id, 'not_send_web', $mention_web );
+			bboss_notifications_update_meta( $notification->id, 'not_send_app', $mention_app );
+			bboss_notifications_update_meta( $notification->id, 'not_send_web', $mention_web );
 		}
 	}
 }
@@ -1828,7 +1828,7 @@ function bb_notification_after_save_meta( $notification ) {
  *
  * @return array|mixed
  */
-function bb_notification_manage_app_push_notification( $content, $component_name, $component_action, $item_id, $secondary_item_id, $notification_id, $format = 'object', $screen = 'web' ) {
+function bboss_notification_manage_app_push_notification( $content, $component_name, $component_action, $item_id, $secondary_item_id, $notification_id, $format = 'object', $screen = 'web' ) {
 	if (
 		'app_push' !== $screen ||
 		empty( $notification_id ) ||
@@ -1849,14 +1849,14 @@ function bb_notification_manage_app_push_notification( $content, $component_name
 		return $content;
 	}
 
-	if ( true === (bool) bp_notifications_get_meta( $notification_id, 'not_send_app', true ) ) {
+	if ( true === (bool) bboss_notifications_get_meta( $notification_id, 'not_send_app', true ) ) {
 		return array();
 	}
 
 	return $content;
 }
 
-add_filter( 'bbapp_get_notification_output', 'bb_notification_manage_app_push_notification', 999, 8 );
+add_filter( 'bbapp_get_notification_output', 'bboss_notification_manage_app_push_notification', 999, 8 );
 
 /**
  * Added where condition to exclude not send onscreen notification.
@@ -1869,7 +1869,7 @@ add_filter( 'bbapp_get_notification_output', 'bb_notification_manage_app_push_no
  *
  * @return string
  */
-function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias, $r ) {
+function bboss_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias, $r ) {
 	global $bp;
 	$where_sql .= " AND {$tbl_alias}.id NOT IN ( SELECT DISTINCT notification_id from {$bp->notifications->table_name_meta} WHERE meta_key = 'not_send_web' and meta_value = 1 )";
 
@@ -1886,7 +1886,7 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  *
  * @return bool
  */
-function bb_notification_is_read_only( $notification ) {
+function bboss_notification_is_read_only( $notification ) {
 	static $cache = array();
 	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
 	$allowed_component_action = array(
@@ -1909,29 +1909,29 @@ function bb_notification_is_read_only( $notification ) {
 		(
 				! in_array( $notification->component_action, $allowed_component_action, true ) &&
 				! empty( $notification->secondary_item_id ) &&
-				bp_is_user_inactive( $notification->secondary_item_id )
+				bboss_is_user_inactive( $notification->secondary_item_id )
 		) ||
 		(
 				in_array( $notification->component_action, $allowed_component_action, true ) &&
 				! empty( $notification->item_id ) &&
-				bp_is_user_inactive( $notification->item_id )
+				bboss_is_user_inactive( $notification->item_id )
 		) ||
 		(
-			bp_is_active( 'moderation' ) &&
+			bboss_is_active( 'moderation' ) &&
 			(
 				(
 					! in_array( $notification->component_action, $allowed_component_action, true ) &&
 					! empty( $notification->secondary_item_id ) &&
-					bb_moderation_moderated_user_ids( $notification->secondary_item_id )
+					bboss_moderation_moderated_user_ids( $notification->secondary_item_id )
 				) ||
 				(
 					in_array( $notification->component_action, $allowed_component_action, true ) &&
 					! empty( $notification->item_id ) &&
-					bb_moderation_moderated_user_ids( $notification->item_id )
+					bboss_moderation_moderated_user_ids( $notification->item_id )
 				) ||
 				(
 					! empty( $notification->user_id ) &&
-					bb_moderation_moderated_user_ids( $notification->user_id )
+					bboss_moderation_moderated_user_ids( $notification->user_id )
 				)
 			)
 		)
@@ -1956,9 +1956,9 @@ function bb_notification_is_read_only( $notification ) {
  *
  * @return string|string[]|null
  */
-function bb_notification_get_renderable_notifications_callback( $renderable, $notification, $format, $screen ) {
+function bboss_notification_get_renderable_notifications_callback( $renderable, $notification, $format, $screen ) {
 
-	if ( true === bb_notification_is_read_only( $notification ) ) {
+	if ( true === bboss_notification_is_read_only( $notification ) ) {
 		if ( 'string' === $format ) {
 			$renderable = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $renderable );
 		} elseif ( 'object' === $format || 'array' === $format ) {
@@ -1972,7 +1972,7 @@ function bb_notification_get_renderable_notifications_callback( $renderable, $no
 
 	return $renderable;
 }
-add_filter( 'bb_notification_get_renderable_notifications', 'bb_notification_get_renderable_notifications_callback', 99, 4 );
+add_filter( 'bb_notification_get_renderable_notifications', 'bboss_notification_get_renderable_notifications_callback', 99, 4 );
 
 /**
  * Function will remove link from notification description.
@@ -1984,39 +1984,39 @@ add_filter( 'bb_notification_get_renderable_notifications', 'bb_notification_get
  *
  * @return string|string[]|null
  */
-function bb_get_the_notification_description_callback( $description, $notification ) {
+function bboss_get_the_notification_description_callback( $description, $notification ) {
 
-	if ( true === bb_notification_is_read_only( $notification ) ) {
+	if ( true === bboss_notification_is_read_only( $notification ) ) {
 		$description = preg_replace( '#<a.*?>([^>]*)</a>#i', '$1', $description );
 	}
 
 	return $description;
 
 }
-add_filter( 'bp_get_the_notification_description', 'bb_get_the_notification_description_callback', 99, 2 );
+add_filter( 'bp_get_the_notification_description', 'bboss_get_the_notification_description_callback', 99, 2 );
 
 /**
  * Function will forcely read notification which triggered by blocked/blocked by/suspended member.
  *
  * @since BuddyBoss 2.2.7
  */
-function bb_notification_read_for_moderated_members() {
-	$current_user_id = bp_loggedin_user_id();
+function bboss_notification_read_for_moderated_members() {
+	$current_user_id = bboss_loggedin_user_id();
 
 	if ( ! $current_user_id ) {
 		return;
 	}
 
-	$read_notification_migration = bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true );
+	$read_notification_migration = bboss_get_user_meta( $current_user_id, 'bb_read_notification_migration', true );
 
-	if ( ! bp_is_active( 'moderation' ) || $read_notification_migration ) {
+	if ( ! bboss_is_active( 'moderation' ) || $read_notification_migration ) {
 		return;
 	}
 
 	global $bp, $wpdb;
 
 	// Get the moderated user IDs using the relevant function, if available.
-	$all_users_sql = function_exists( 'bb_moderation_moderated_user_ids_sql' ) ? bb_moderation_moderated_user_ids_sql() : '';
+	$all_users_sql = function_exists( 'bboss_moderation_moderated_user_ids_sql' ) ? bboss_moderation_moderated_user_ids_sql() : '';
 
 	// Start building the query with JOINs instead of nested SELECT.
 	$update_query  = "
@@ -2053,10 +2053,10 @@ function bb_notification_read_for_moderated_members() {
 	}
 
 	// Mark the notification migration as completed for the current user.
-	bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
+	bboss_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
 }
 
-add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
+add_action( 'bp_init', 'bboss_notification_read_for_moderated_members', 9 );
 
 /**
  * Function to allow specific notification for forum/activity/message on notification screen.
@@ -2068,7 +2068,7 @@ add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
  *
  * @return bool
  */
-function bb_notification_linkable_specific_notification( $retval, $notification ) {
+function bboss_notification_linkable_specific_notification( $retval, $notification ) {
 	if (
 		(
 			'forums' !== $notification->component_name ||
@@ -2095,56 +2095,56 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 	$group_id  = 0;
 	$author_id = 0;
 
-	if ( bp_is_active( 'forums' ) ) {
+	if ( bboss_is_active( 'forums' ) ) {
 		$forum_id = 0;
 		if ( 'bb_forums_subscribed_reply' === $notification->component_action ) {
-			$forum_id  = bbp_get_reply_forum_id( $notification->item_id );
-			$topic_id  = bbp_get_reply_topic_id( $notification->item_id );
-			$author_id = bbp_get_topic_author_id( $topic_id );
+			$forum_id  = bboss_bbp_get_reply_forum_id( $notification->item_id );
+			$topic_id  = bboss_bbp_get_reply_topic_id( $notification->item_id );
+			$author_id = bboss_bbp_get_topic_author_id( $topic_id );
 		} elseif (
 			'bb_forums_subscribed_discussion' === $notification->component_action ||
 			'bb_groups_subscribed_discussion' === $notification->component_action
 		) {
-			$forum_id = bbp_get_topic_forum_id( $notification->item_id );
+			$forum_id = bboss_bbp_get_topic_forum_id( $notification->item_id );
 		}
-		$group_id = bbp_get_forum_group_ids( $forum_id );
+		$group_id = bboss_bbp_get_forum_group_ids( $forum_id );
 		$group_id = ! empty( $group_id ) ? current( $group_id ) : 0;
 	}
 
-	if ( bp_is_active( 'activity' ) && 'bb_activity_comment' === $notification->component_action ) {
-		$current_activity = new BP_Activity_Activity( $notification->item_id );
+	if ( bboss_is_active( 'activity' ) && 'bb_activity_comment' === $notification->component_action ) {
+		$current_activity = new BBoss_Activity_Activity( $notification->item_id );
 		if ( ! empty( $current_activity->id ) ) {
-			$original_activity = new BP_Activity_Activity( $current_activity->item_id );
+			$original_activity = new BBoss_Activity_Activity( $current_activity->item_id );
 			$group_id          = 'groups' === $original_activity->component ? $original_activity->item_id : '';
 		}
 	}
 
-	if ( bp_is_active( 'messages' ) && 'bb_groups_new_message' === $notification->component_action ) {
-		$group_id = bp_messages_get_meta( $notification->item_id, 'group_id', true );
+	if ( bboss_is_active( 'messages' ) && 'bb_groups_new_message' === $notification->component_action ) {
+		$group_id = bboss_messages_get_meta( $notification->item_id, 'group_id', true );
 	}
 
-	if ( bp_is_active( 'groups' ) && 'bb_groups_new_request' === $notification->component_action ) {
+	if ( bboss_is_active( 'groups' ) && 'bb_groups_new_request' === $notification->component_action ) {
 		$group_id = $notification->item_id;
 	}
 	if (
-		bp_is_active( 'moderation' ) &&
+		bboss_is_active( 'moderation' ) &&
 		(
 			// Will check for recipient user.
-			bb_moderation_is_user_blocked_by( $notification->secondary_item_id ) ||
+			bboss_moderation_is_user_blocked_by( $notification->secondary_item_id ) ||
 			(
 				// Will check for loggedin user.
 				empty( $group_id ) &&
 				! empty( $author_id ) &&
-				bp_moderation_is_user_blocked( $notification->secondary_item_id ) &&
+				bboss_moderation_is_user_blocked( $notification->secondary_item_id ) &&
 				(int) $notification->user_id === (int) $author_id
 			)
 		) ||
 		(
 			! empty( $group_id ) &&
-			bp_is_active( 'groups' ) &&
+			bboss_is_active( 'groups' ) &&
 			(
-				groups_is_user_admin( $notification->user_id, $group_id ) ||
-				groups_is_user_mod( $notification->user_id, $group_id )
+				bboss_groups_is_user_admin( $notification->user_id, $group_id ) ||
+				bboss_groups_is_user_mod( $notification->user_id, $group_id )
 			)
 		)
 	) {
@@ -2153,7 +2153,7 @@ function bb_notification_linkable_specific_notification( $retval, $notification 
 
 	return $retval;
 }
-add_filter( 'bb_notification_is_read_only', 'bb_notification_linkable_specific_notification', 10, 2 );
+add_filter( 'bb_notification_is_read_only', 'bboss_notification_linkable_specific_notification', 10, 2 );
 
 /**
  * Function to exclude the notification actions.
@@ -2163,7 +2163,7 @@ add_filter( 'bb_notification_is_read_only', 'bb_notification_linkable_specific_n
  *
  * @return array
  */
-function bb_notification_excluded_component_actions() {
+function bboss_notification_excluded_component_actions() {
 	$actions = array();
 
 	// Group subscriptions ship with BuddyBoss Add-ons. Without it nothing formats their notifications.
@@ -2171,11 +2171,11 @@ function bb_notification_excluded_component_actions() {
 	// is off, and existing notifications should still show then.
 	$has_group_subscriptions = function_exists( 'bb_format_groups_subscription_notification' );
 
-	if ( ! bp_is_active( 'activity' ) || ! $has_group_subscriptions ) {
+	if ( ! bboss_is_active( 'activity' ) || ! $has_group_subscriptions ) {
 		$actions[] = 'bb_groups_subscribed_activity';
 	}
 
-	if ( ! bp_is_active( 'forums' ) || ! $has_group_subscriptions ) {
+	if ( ! bboss_is_active( 'forums' ) || ! $has_group_subscriptions ) {
 		$actions[] = 'bb_groups_subscribed_discussion';
 	}
 
@@ -2191,28 +2191,28 @@ function bb_notification_excluded_component_actions() {
  * @param int   $commenter_id Commenter ID.
  * @param array $commentdata  Comment data.
  */
-function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
+function bboss_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
 
 	// Specify the Notification type.
 	$component_action = 'bb_posts_new_comment_reply';
 	$parent_comment   = get_comment( $commentdata['comment_parent'] );
 
-	add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
-	bp_notifications_add_notification(
+	add_filter( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
+	bboss_notifications_add_notification(
 		array(
 			'user_id'           => (int) $parent_comment->user_id,
 			'item_id'           => $comment_id,
 			'secondary_item_id' => $commenter_id,
 			'component_name'    => 'core',
 			'component_action'  => $component_action,
-			'date_notified'     => bp_core_current_time(),
+			'date_notified'     => bboss_core_current_time(),
 			'is_new'            => 1,
 		)
 	);
-	remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+	remove_filter( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
 
 }
-add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );
+add_action( 'bb_post_new_comment_reply_notification', 'bboss_post_new_comment_reply_add_notification', 10, 3 );
 
 
 /**
@@ -2235,7 +2235,7 @@ add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply
  * @param int[] $notification_ids Array of notification IDs whose metadata should be deleted.
  * @return void
  */
-function bb_notifications_delete_meta_for_ids( $notification_ids ) {
+function bboss_notifications_delete_meta_for_ids( $notification_ids ) {
 	global $wpdb;
 
 	$notification_ids = wp_parse_id_list( $notification_ids );
@@ -2244,7 +2244,7 @@ function bb_notifications_delete_meta_for_ids( $notification_ids ) {
 		return;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	if ( empty( $bp->notifications->table_name_meta ) ) {
 		return;
@@ -2286,14 +2286,14 @@ function bb_notifications_delete_meta_for_ids( $notification_ids ) {
  *
  * @return void
  */
-function bb_notifications_remove_orphaned_meta_on_cron() {
+function bboss_notifications_remove_orphaned_meta_on_cron() {
 	global $wpdb;
 
-	if ( ! bp_is_active( 'notifications' ) ) {
+	if ( ! bboss_is_active( 'notifications' ) ) {
 		return;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	if ( empty( $bp->notifications->table_name_meta ) || empty( $bp->core->table_name_notifications ) ) {
 		return;
@@ -2330,4 +2330,4 @@ function bb_notifications_remove_orphaned_meta_on_cron() {
 		)
 	);
 }
-add_action( 'bb_bg_log_clear', 'bb_notifications_remove_orphaned_meta_on_cron' );
+add_action( 'bb_bg_log_clear', 'bboss_notifications_remove_orphaned_meta_on_cron' );

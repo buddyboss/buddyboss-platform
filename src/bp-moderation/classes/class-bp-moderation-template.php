@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.5.6
  */
 #[\AllowDynamicProperties]
-class BP_Moderation_Template {
+class BBoss_Moderation_Template {
 
 	/**
 	 * The loop iterator.
@@ -110,13 +110,13 @@ class BP_Moderation_Template {
 	 *
 	 * Constructor method.
 	 * The arguments passed to this class constructor are of the same
-	 * format as {@link BP_Moderation::get()}.
+	 * format as {@link BBoss_Moderation::get()}.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args     {
 	 *                        Array of arguments. Supports all arguments from
-	 *                        BP_Moderation::get(), as well as 'page_arg' and
+	 *                        BBoss_Moderation::get(), as well as 'page_arg' and
 	 *                        'include'. Default values for 'per_page'
 	 *                        differ from the originating function, and are described below.
 	 *
@@ -131,7 +131,7 @@ class BP_Moderation_Template {
 	 *                                         filter-related parameters. Default: false.
 	 * @type int|bool   $per_page Default: 20.
 	 * }
-	 * @see   BP_Moderation::get() for a description of the argument
+	 * @see   BBoss_Moderation::get() for a description of the argument
 	 *        structure, as well as default values.
 	 */
 	public function __construct( $args ) {
@@ -159,12 +159,12 @@ class BP_Moderation_Template {
 			'count_total'       => true,           // Whether or not to use count_total.
 		);
 
-		$r              = bp_parse_args( $args, $defaults );
+		$r              = bboss_parse_args( $args, $defaults );
 		$this->pag_arg  = isset( $r['page_arg'] ) ? sanitize_key( $r['page_arg'] ) : false;
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 
-		$this->moderations = bp_moderation_get(
+		$this->moderations = bboss_moderation_get(
 			array(
 				'max'               => $r['max'],
 				'user_id'           => $r['user_id'],
@@ -217,8 +217,8 @@ class BP_Moderation_Template {
 					'format'    => '',
 					'total'     => ceil( (int) $this->total_moderation_count / (int) $this->pag_num ),
 					'current'   => (int) $this->pag_page,
-					'prev_text' => __( '&larr;', 'buddyboss' ),
-					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'prev_text' => __( '&larr;', 'buddyboss-platform' ),
+					'next_text' => __( '&rarr;', 'buddyboss-platform' ),
 					'mid_size'  => 1,
 					'add_args'  => array(),
 				)
@@ -231,7 +231,7 @@ class BP_Moderation_Template {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 * @return bool True if there are items in the loop, otherwise false.
-	 * @see   bp_has_moderation()
+	 * @see   bboss_has_moderation()
 	 */
 	public function has_moderation() {
 		if ( $this->moderation_count ) {
@@ -243,14 +243,14 @@ class BP_Moderation_Template {
 
 	/**
 	 * Whether there are moderation items left in the loop to iterate over.
-	 * This method is used by {@link bp_moderation()} as part of the while loop
+	 * This method is used by {@link bboss_moderation()} as part of the while loop
 	 * that controls iteration inside the moderation loop, eg:
-	 *     while ( bp_moderation() ) { ...
+	 *     while ( bboss_moderation() ) { ...
 	 *
 	 * @since BuddyBoss 1.5.6
 	 * @return bool True if there are more moderation items to show,
 	 *              otherwise false.
-	 * @see   bp_moderation()
+	 * @see   bboss_moderation()
 	 */
 	public function user_moderations() {
 		if ( ( $this->current_moderation + 1 ) < $this->moderation_count ) {
@@ -287,12 +287,12 @@ class BP_Moderation_Template {
 
 	/**
 	 * Set up the current moderation item inside the loop.
-	 * Used by {@link bp_the_moderation()} to set up the current moderation item
+	 * Used by {@link bboss_the_moderation()} to set up the current moderation item
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current moderation item.
 	 *
 	 * @since BuddyBoss 1.5.6
-	 * @see   bp_the_moderation()
+	 * @see   bboss_the_moderation()
 	 */
 	public function the_moderation() {
 

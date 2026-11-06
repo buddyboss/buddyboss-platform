@@ -6,14 +6,17 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load the Activity directory.
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_screen_index() {
-	if ( bp_is_activity_directory() ) {
-		bp_update_is_directory( true, 'activity' );
+function bboss_activity_screen_index() {
+	if ( bboss_is_activity_directory() ) {
+		bboss_update_is_directory( true, 'activity' );
 
 		/**
 		 * Fires right before the loading of the Activity directory screen template file.
@@ -29,7 +32,7 @@ function bp_activity_screen_index() {
 		 *
 		 * @param string $template Path to the activity template to load.
 		 */
-		bp_core_load_template( apply_filters( 'bp_activity_screen_index', 'activity/index' ) );
+		bboss_core_load_template( apply_filters( 'bp_activity_screen_index', 'activity/index' ) );
 	}
 }
-add_action( 'bp_screens', 'bp_activity_screen_index' );
+add_action( 'bp_screens', 'bboss_activity_screen_index' );

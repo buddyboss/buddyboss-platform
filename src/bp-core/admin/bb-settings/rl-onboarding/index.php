@@ -15,6 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/class-bb-readylaunch-onboarding.php';
 
 // Initialize the ReadyLaunch onboarding wizard.
-if ( class_exists( 'BB_ReadyLaunch_Onboarding' ) ) {
-	return BB_ReadyLaunch_Onboarding::instance();
+if ( class_exists( 'BBoss_ReadyLaunch_Onboarding' ) ) {
+	return BBoss_ReadyLaunch_Onboarding::instance();
 }

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.6.50
  */
-class BB_XProfile_Visibility {
+class BBoss_XProfile_Visibility {
 
 	/**
 	 * XProfile Visibility ID.
@@ -82,7 +82,7 @@ class BB_XProfile_Visibility {
 	 *
 	 * A class property rather than a method-local static so prime_user_data_exists_cache() can
 	 * fill it for a whole batch: the getter is called once per member by
-	 * bp_xprofile_get_fields_by_visibility_levels(), which member search reaches once per matched
+	 * bboss_xprofile_get_fields_by_visibility_levels(), which member search reaches once per matched
 	 * row, and its query is uncached.
 	 *
 	 * @since BuddyBoss 3.5.0
@@ -101,7 +101,7 @@ class BB_XProfile_Visibility {
 	private static $table_exists_cache = null;
 
 	/**
-	 * BB_XProfile_Visibility constructor.
+	 * BBoss_XProfile_Visibility constructor.
 	 *
 	 * @since BuddyBoss 2.6.50
 	 *
@@ -125,7 +125,7 @@ class BB_XProfile_Visibility {
 	public function populate( $field_id, $user_id ) {
 		global $wpdb;
 
-		$table_name = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
+		$table_name = bboss_core_get_table_prefix() . 'bb_xprofile_visibility';
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$profile_visibility = $wpdb->get_row(
@@ -164,7 +164,7 @@ class BB_XProfile_Visibility {
 	public function exists() {
 		global $wpdb;
 
-		$table  = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
+		$table  = bboss_core_get_table_prefix() . 'bb_xprofile_visibility';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$retval = $wpdb->get_row(
 			$wpdb->prepare(
@@ -181,7 +181,7 @@ class BB_XProfile_Visibility {
 		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param bool                   $retval Whether data already exists.
-		 * @param BB_XProfile_Visibility $this   Instance of the current BB_XProfile_Visibility class.
+		 * @param BBoss_XProfile_Visibility $this   Instance of the current BBoss_XProfile_Visibility class.
 		 */
 		return apply_filters_ref_array( 'xprofile_visibility_exists', array( (bool) $retval, $this ) );
 	}
@@ -251,11 +251,11 @@ class BB_XProfile_Visibility {
 	 * @return string
 	 */
 	public static function get_visibility_table_name() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		return ! empty( $bp->profile->table_name_visibility )
 			? $bp->profile->table_name_visibility
-			: bp_core_get_table_prefix() . 'bb_xprofile_visibility';
+			: bboss_core_get_table_prefix() . 'bb_xprofile_visibility';
 	}
 
 	/**
@@ -302,7 +302,7 @@ class BB_XProfile_Visibility {
 	 * Prime the per-request user_data_exists() memo for a batch of users in a single query.
 	 *
 	 * The single-user getter issues one uncached query per user, and
-	 * bp_xprofile_get_fields_by_visibility_levels() calls it once per member whose visibility is
+	 * bboss_xprofile_get_fields_by_visibility_levels() calls it once per member whose visibility is
 	 * resolved. Member search resolves one member per matched row, so on a term that matches a
 	 * large part of the member table that probe alone is one query per match.
 	 *
@@ -386,7 +386,7 @@ class BB_XProfile_Visibility {
 	 */
 	public function is_valid_field() {
 		global $wpdb;
-		$table = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+		$table = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
 
 		$cache_key = 'bp_xprofile_is_valid_field_' . $this->field_id;
 		$retval    = wp_cache_get( $cache_key, 'bp_xprofile' );
@@ -409,7 +409,7 @@ class BB_XProfile_Visibility {
 		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param bool                   $retval Whether data is valid.
-		 * @param BB_XProfile_Visibility $this   Instance of the current BB_XProfile_Visibility class.
+		 * @param BBoss_XProfile_Visibility $this   Instance of the current BBoss_XProfile_Visibility class.
 		 */
 		return apply_filters_ref_array( 'xprofile_visibility_is_valid_field', array( (bool) $retval, $this ) );
 	}
@@ -424,7 +424,7 @@ class BB_XProfile_Visibility {
 	public function save() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		/**
 		 * Filters the data's user ID before saving to the database.
@@ -454,7 +454,7 @@ class BB_XProfile_Visibility {
 		 * @param string                 $field_value The field value.
 		 * @param int                    $data_id     The field data ID.
 		 * @param bool                   $reserialize Whether to reserialize arrays before returning. Defaults to true.
-		 * @param BB_XProfile_Visibility $this        Current instance of the profile data being saved.
+		 * @param BBoss_XProfile_Visibility $this        Current instance of the profile data being saved.
 		 */
 		$this->value = apply_filters( 'xprofile_visibility_value_before_save', $this->value, $this->id, true, $this );
 
@@ -466,7 +466,7 @@ class BB_XProfile_Visibility {
 		 * @param int $last_updated The last updated timestamp.
 		 * @param int $data_id      The field data ID.
 		 */
-		$this->last_updated = apply_filters( 'xprofile_visibility_last_updated_before_save', bp_core_current_time(), $this->id );
+		$this->last_updated = apply_filters( 'xprofile_visibility_last_updated_before_save', bboss_core_current_time(), $this->id );
 
 		/**
 		 * Fires before the current profile data instance gets saved.
@@ -475,7 +475,7 @@ class BB_XProfile_Visibility {
 		 *
 		 * @since BuddyBoss 2.6.50
 		 *
-		 * @param BB_XProfile_Visibility $this Current instance of the profile data being saved.
+		 * @param BBoss_XProfile_Visibility $this Current instance of the profile data being saved.
 		 */
 		do_action_ref_array( 'xprofile_visibility_before_save', array( $this ) );
 
@@ -515,7 +515,7 @@ class BB_XProfile_Visibility {
 			 *
 			 * @since BuddyBoss 2.6.50
 			 *
-			 * @param BB_XProfile_Visibility $this Current instance of the profile data being saved.
+			 * @param BBoss_XProfile_Visibility $this Current instance of the profile data being saved.
 			 */
 			do_action_ref_array( 'xprofile_visibility_after_save', array( $this ) );
 
@@ -537,7 +537,7 @@ class BB_XProfile_Visibility {
 	public function delete() {
 		global $wpdb;
 
-		$bp         = buddypress();
+		$bp         = bboss();
 		$table_name = $bp->profile->table_name_visibility;
 
 		/**
@@ -545,7 +545,7 @@ class BB_XProfile_Visibility {
 		 *
 		 * @since BuddyBoss 2.6.50
 		 *
-		 * @param BB_XProfile_Visibility $this Current instance of the profile data being deleted.
+		 * @param BBoss_XProfile_Visibility $this Current instance of the profile data being deleted.
 		 */
 		do_action_ref_array( 'xprofile_visibility_before_delete', array( $this ) );
 
@@ -567,7 +567,7 @@ class BB_XProfile_Visibility {
 		 *
 		 * @since BuddyBoss 2.6.50
 		 *
-		 * @param BB_XProfile_Visibility $this Current instance of the profile data being deleted.
+		 * @param BBoss_XProfile_Visibility $this Current instance of the profile data being deleted.
 		 */
 		do_action_ref_array( 'xprofile_visibility_after_delete', array( $this ) );
 
@@ -586,7 +586,7 @@ class BB_XProfile_Visibility {
 	public static function delete_for_field( $field_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$deleted = $wpdb->query(
 			$wpdb->prepare(
@@ -617,7 +617,7 @@ class BB_XProfile_Visibility {
 	public static function delete_data_for_user( $user_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$field_ids = $wpdb->get_col(
@@ -633,7 +633,7 @@ class BB_XProfile_Visibility {
 		}
 
 		foreach ( $field_ids as $field_id ) {
-			xprofile_delete_field_data( $field_id, $user_id );
+			bboss_xprofile_delete_field_data( $field_id, $user_id );
 		}
 
 		self::flush_field_ids_cache( (int) $user_id );
@@ -654,7 +654,7 @@ class BB_XProfile_Visibility {
 	public static function delete_specific_data_for_user( $field_id, $user_id ) {
 		global $wpdb;
 
-		$bp      = buddypress();
+		$bp      = bboss();
 		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_visibility} WHERE field_id = %d AND user_id = %d", $field_id, $user_id ) );
 		if ( empty( $deleted ) || is_wp_error( $deleted ) ) {
 			return false;
@@ -678,7 +678,7 @@ class BB_XProfile_Visibility {
 	public static function get_user_field_ids_by_visibility_levels( $user_id, $levels = array() ) {
 		global $wpdb;
 
-		$bp     = buddypress();
+		$bp     = bboss();
 		$fields = array();
 
 		if ( empty( $user_id ) || empty( $levels ) ) {

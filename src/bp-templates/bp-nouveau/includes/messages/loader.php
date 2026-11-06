@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Messages {
+class BBoss_Nouveau_Messages {
 	/**
 	 * Constructor
 	 *
@@ -53,7 +53,7 @@ class BP_Nouveau_Messages {
 		// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'messages_' ) ) {
+				if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'messages_' ) ) {
 					require $this->dir . 'ajax.php';
 				}
 			} );
@@ -67,20 +67,20 @@ class BP_Nouveau_Messages {
 	 */
 	protected function setup_actions() {
 		// Notices
-		add_action( 'widgets_init', 'bp_nouveau_unregister_notices_widget' );
-		add_action( 'bp_init', 'bp_nouveau_push_sitewide_notices', 99 );
+		add_action( 'widgets_init', 'bboss_nouveau_unregister_notices_widget' );
+		add_action( 'bp_init', 'bboss_nouveau_push_sitewide_notices', 99 );
 
 		// Messages
-		add_action( 'bp_messages_setup_nav', 'bp_nouveau_messages_adjust_nav' );
+		add_action( 'bp_messages_setup_nav', 'bboss_nouveau_messages_adjust_nav' );
 
 		// Remove deprecated scripts
-		remove_action( 'bp_enqueue_scripts', 'messages_add_autocomplete_js' );
+		remove_action( 'bp_enqueue_scripts', 'bboss_messages_add_autocomplete_js' );
 
 		// Enqueue the scripts for the new UI
-		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_messages_enqueue_scripts' );
+		add_action( 'bp_nouveau_enqueue_scripts', 'bboss_nouveau_messages_enqueue_scripts' );
 
 		// Register the Messages Notifications filters
-		add_action( 'bp_nouveau_notifications_init_filters', 'bp_nouveau_messages_notification_filters' );
+		add_action( 'bp_nouveau_notifications_init_filters', 'bboss_nouveau_messages_notification_filters' );
 	}
 
 	/**
@@ -90,20 +90,20 @@ class BP_Nouveau_Messages {
 	 */
 	protected function setup_filters() {
 		// Enqueue specific styles
-		add_filter( 'bp_nouveau_enqueue_styles', 'bp_nouveau_messages_enqueue_styles', 10, 1 );
+		add_filter( 'bp_nouveau_enqueue_styles', 'bboss_nouveau_messages_enqueue_styles', 10, 1 );
 
 		// Register messages scripts
-		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_messages_register_scripts', 10, 1 );
+		add_filter( 'bp_nouveau_register_scripts', 'bboss_nouveau_messages_register_scripts', 10, 1 );
 
 		// Localize Scripts
-		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_messages_localize_scripts', 10, 1 );
+		add_filter( 'bp_core_get_js_strings', 'bboss_nouveau_messages_localize_scripts', 10, 1 );
 
 		// Notices
-		add_filter( 'bp_messages_single_new_message_notification', 'bp_nouveau_format_notice_notification_for_user', 10, 1 );
-		add_filter( 'bp_notifications_get_all_notifications_for_user', 'bp_nouveau_add_notice_notification_for_user', 10, 2 );
+		add_filter( 'bp_messages_single_new_message_notification', 'bboss_nouveau_format_notice_notification_for_user', 10, 1 );
+		add_filter( 'bp_notifications_get_all_notifications_for_user', 'bboss_nouveau_add_notice_notification_for_user', 10, 2 );
 
 		// Messages
-		add_filter( 'bp_messages_admin_nav', 'bp_nouveau_messages_adjust_admin_nav', 10, 1 );
+		add_filter( 'bp_messages_admin_nav', 'bboss_nouveau_messages_adjust_admin_nav', 10, 1 );
 	}
 }
 
@@ -112,11 +112,11 @@ class BP_Nouveau_Messages {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_messages( $bp_nouveau = null ) {
+function bboss_nouveau_messages( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->messages = new BP_Nouveau_Messages();
+	$bp_nouveau->messages = new BBoss_Nouveau_Messages();
 }
-add_action( 'bp_nouveau_includes', 'bp_nouveau_messages', 10, 1 );
+add_action( 'bp_nouveau_includes', 'bboss_nouveau_messages', 10, 1 );

@@ -8,19 +8,22 @@
  * @version 1.0.0
  */
 
-if ( bp_core_can_edit_settings() ) {
-	bp_get_template_part( 'members/single/parts/item-subnav' );
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+if ( bboss_core_can_edit_settings() ) {
+	bboss_get_template_part( 'members/single/parts/item-subnav' );
 }
 
-switch ( bp_current_action() ) :
+switch ( bboss_current_action() ) :
 	case 'notifications':
-		if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
-			bp_get_template_part( 'members/single/settings/subscriptions' );
-		} elseif ( bp_action_variables() ) {
+		if ( bboss_action_variables() && 'subscriptions' === bboss_action_variable( 0 ) ) {
+			bboss_get_template_part( 'members/single/settings/subscriptions' );
+		} elseif ( bboss_action_variables() ) {
 			/**
 			 * Fires to render a custom notifications settings sub-tab
 			 * (e.g. a plugin-registered tab such as "Blog Subscriptions").
-			 * The screen handler (`bp_settings_screen_notification()`) 404s any
+			 * The screen handler (`bboss_settings_screen_notification()`) 404s any
 			 * sub-action without a registered handler, so this only fires for
 			 * recognised sub-tabs. Handlers echo their content.
 			 *
@@ -28,36 +31,36 @@ switch ( bp_current_action() ) :
 			 *
 			 * @param string $action_variable The sub-tab slug.
 			 */
-			do_action( 'bb_member_settings_notifications_custom_tab', bp_action_variable( 0 ) );
+			do_action( 'bb_member_settings_notifications_custom_tab', bboss_action_variable( 0 ) );
 		} else {
-			bp_get_template_part( 'members/single/settings/notifications' );
+			bboss_get_template_part( 'members/single/settings/notifications' );
 		}
 		break;
 	case 'capabilities':
-		bp_get_template_part( 'members/single/settings/capabilities' );
+		bboss_get_template_part( 'members/single/settings/capabilities' );
 		break;
 	case 'delete-account':
-		bp_get_template_part( 'members/single/settings/delete-account' );
+		bboss_get_template_part( 'members/single/settings/delete-account' );
 		break;
 	case 'security':
-		bp_get_template_part( 'members/single/settings/security' );
+		bboss_get_template_part( 'members/single/settings/security' );
 		break;
 	case 'general':
-		bp_get_template_part( 'members/single/settings/general' );
+		bboss_get_template_part( 'members/single/settings/general' );
 		break;
 	case 'profile':
-		bp_get_template_part( 'members/single/settings/profile' );
+		bboss_get_template_part( 'members/single/settings/profile' );
 		break;
 	case 'invites':
-		bp_get_template_part( 'members/single/settings/group-invites' );
+		bboss_get_template_part( 'members/single/settings/group-invites' );
 		break;
 	case 'export':
-		bp_get_template_part( 'members/single/settings/export-data' );
+		bboss_get_template_part( 'members/single/settings/export-data' );
 		break;
 	case 'blocked-members':
-		bp_get_template_part( 'members/single/settings/moderation' );
+		bboss_get_template_part( 'members/single/settings/moderation' );
 		break;
 	default:
-		bp_get_template_part( 'members/single/plugins' );
+		bboss_get_template_part( 'members/single/plugins' );
 		break;
 endswitch;

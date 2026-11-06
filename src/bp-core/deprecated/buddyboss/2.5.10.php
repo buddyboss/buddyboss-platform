@@ -5,6 +5,9 @@
  * @deprecated BuddyBoss 2.5.20
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Get like count for activity
  *
@@ -15,14 +18,14 @@
  *
  * @return int|string
  */
-function bp_activity_get_favorite_users_string( $activity_id ) {
+function bboss_activity_get_favorite_users_string( $activity_id ) {
 	_deprecated_function( __FUNCTION__, '2.5.10', 'bb_activity_reaction_names_and_count' );
 
-	if ( ! bp_is_activity_like_active() ) {
+	if ( ! bboss_is_activity_like_active() ) {
 		return 0;
 	}
 
-	return bb_activity_reaction_names_and_count( $activity_id, 'activity' );
+	return bboss_activity_reaction_names_and_count( $activity_id, 'activity' );
 
 }
 
@@ -36,12 +39,12 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
  *
  * @return string
  */
-function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
+function bboss_activity_get_favorite_users_tooltip_string( $activity_id ) {
 	_deprecated_function( __FUNCTION__, '2.5.10', 'bb_activity_reaction_names_and_count' );
 
-	if ( ! bp_is_activity_like_active() ) {
+	if ( ! bboss_is_activity_like_active() ) {
 		return false;
 	}
 
-	return bb_activity_reaction_names_and_count( $activity_id );
+	return bboss_activity_reaction_names_and_count( $activity_id );
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Groups_Types_Endpoint class
+ * BP REST: BBoss_REST_Groups_Types_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -23,8 +23,8 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->groups->id . '/types';
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->groups->id . '/types';
 	}
 
 	/**
@@ -65,7 +65,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 */
 	public function get_items( $request ) {
-		$registered_types = bp_groups_get_group_types( array(), 'objects' );
+		$registered_types = bboss_groups_get_group_types( array(), 'objects' );
 
 		$retval = array();
 		if ( ! empty( $registered_types ) ) {
@@ -103,20 +103,20 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
 
-		if ( function_exists( 'bp_disable_group_type_creation' ) && false === bp_disable_group_type_creation() ) {
+		if ( function_exists( 'bboss_disable_group_type_creation' ) && false === bboss_disable_group_type_creation() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Group Type is disabled from setting.', 'buddyboss' ),
+				__( 'Sorry, Group Type is disabled from setting.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -161,7 +161,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		// Get the edit schema.
 		$schema  = $this->get_item_schema();
 		$schema  = $schema['properties'];
-		$post_id = function_exists( 'bp_group_get_group_type_id' ) ? bp_group_get_group_type_id( $data['name'] ) : 0;
+		$post_id = function_exists( 'bboss_group_get_group_type_id' ) ? bboss_group_get_group_type_id( $data['name'] ) : 0;
 
 		// Define default visibility property.
 		if ( isset( $schema['enable_filter'] ) ) {
@@ -201,7 +201,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( isset( $schema['member_type_group_invites'] ) ) {
-			$member_types              = bp_get_member_types( array(), 'names' );
+			$member_types              = bboss_get_member_types( array(), 'names' );
 			$raw_invites               = ! empty( $post_id ) ? get_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', true ) : '';
 			$get_selected_member_types = is_array( $raw_invites ) ? $raw_invites : array();
 			$member_types_invite       = array();
@@ -217,7 +217,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( isset( $schema['member_type_join'] ) ) {
-			$member_types              = bp_get_member_types( array(), 'names' );
+			$member_types              = bboss_get_member_types( array(), 'names' );
 			$raw_join                  = ! empty( $post_id ) ? get_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', true ) : '';
 			$get_selected_member_types = is_array( $raw_join ) ? $raw_join : array();
 			$member_types_join         = array();
@@ -245,7 +245,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		}
 
 		// Group type's label background and text color.
-		$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $data['name'] ) : '';
+		$label_color_data = function_exists( 'bboss_get_group_type_label_colors' ) ? bboss_get_group_type_label_colors( $data['name'] ) : '';
 		if ( ! empty( $label_color_data ) && isset( $schema['label_colors'] ) ) {
 			$data['label_colors'] = $label_color_data;
 		}
@@ -280,7 +280,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'labels'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Labels to use in various parts of the interface.', 'buddyboss' ),
+					'description' => __( 'Labels to use in various parts of the interface.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'arg_options' => array(
 						'sanitize_callback' => null,
@@ -288,13 +288,13 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'name'          => array(
-							'description' => __( 'Default name. Should typically be plural.', 'buddyboss' ),
+							'description' => __( 'Default name. Should typically be plural.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
 						),
 						'singular_name' => array(
-							'description' => __( 'Singular name.', 'buddyboss' ),
+							'description' => __( 'Singular name.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -302,43 +302,43 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 					),
 				),
 				'name'                  => array(
-					'description' => __( 'Slug of the group type.', 'buddyboss' ),
+					'description' => __( 'Slug of the group type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'description'           => array(
-					'description' => __( 'Description of the group type.', 'buddyboss' ),
+					'description' => __( 'Description of the group type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'directory_slug'        => array(
-					'description' => __( 'Directory slug of the group type.', 'buddyboss' ),
+					'description' => __( 'Directory slug of the group type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'has_directory'         => array(
-					'description' => __( 'Whether the group type should have its own type-specific directory.', 'buddyboss' ),
+					'description' => __( 'Whether the group type should have its own type-specific directory.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'show_in_create_screen' => array(
-					'description' => __( 'Whether this group type is allowed to be selected on the group creation page.', 'buddyboss' ),
+					'description' => __( 'Whether this group type is allowed to be selected on the group creation page.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'show_in_list'          => array(
-					'description' => __( 'Whether this group type should be shown in lists.', 'buddyboss' ),
+					'description' => __( 'Whether this group type should be shown in lists.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'create_screen_checked' => array(
-					'description' => __( 'Whether we should have our group type checkbox checked by default on group create.', 'buddyboss' ),
+					'description' => __( 'Whether we should have our group type checkbox checked by default on group create.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
@@ -349,49 +349,49 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		$post_types = get_post_types();
 		if ( ! empty( $post_types ) && in_array( 'bp-group-type', $post_types, true ) ) {
 			$schema['properties']['enable_filter'] = array(
-				'description' => __( 'Display this group type in "Types" filter in Groups Directory.', 'buddyboss' ),
+				'description' => __( 'Display this group type in "Types" filter in Groups Directory.', 'buddyboss-platform' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['enable_remove'] = array(
-				'description' => __( 'Hide all groups of this type from Groups Directory.', 'buddyboss' ),
+				'description' => __( 'Hide all groups of this type from Groups Directory.', 'buddyboss-platform' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['restrict-invites-user-same-group-type'] = array(
-				'description' => __( 'If a member is already in a group of this type, they cannot be sent an invite to join another group of this type.', 'buddyboss' ),
+				'description' => __( 'If a member is already in a group of this type, they cannot be sent an invite to join another group of this type.', 'buddyboss-platform' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['member_type_group_invites'] = array(
-				'description' => __( 'Only members of the selected profile types may be sent requests to join this group.', 'buddyboss' ),
+				'description' => __( 'Only members of the selected profile types may be sent requests to join this group.', 'buddyboss-platform' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['member_type_join'] = array(
-				'description' => __( 'Members of the selected Profile Types below can join Private groups of the Group Type without approval.', 'buddyboss' ),
+				'description' => __( 'Members of the selected Profile Types below can join Private groups of the Group Type without approval.', 'buddyboss-platform' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['group_type_role_labels'] = array(
-				'description' => __( 'Rename the group member roles for groups of this type.', 'buddyboss' ),
+				'description' => __( 'Rename the group member roles for groups of this type.', 'buddyboss-platform' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['label_colors'] = array(
-				'description' => __( 'Label\'s text and background colors for group types.' , 'buddyboss' ),
+				'description' => __( 'Label\'s text and background colors for group types.' , 'buddyboss-platform' ),
 				'type'        => 'array',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,

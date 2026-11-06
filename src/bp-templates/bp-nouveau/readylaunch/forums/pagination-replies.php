@@ -3,7 +3,7 @@
  * Pagination for pages of replies (when viewing a topic)
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -17,13 +17,13 @@ defined( 'ABSPATH' ) || exit;
 <div class="bp-pagination bb-rl-forums-pagination">
 	<div class="bp-pagination-count">
 
-		<?php bbp_topic_pagination_count(); ?>
+		<?php bboss_bbp_topic_pagination_count(); ?>
 
 	</div>
 
 	<div class="bp-pagination-links">
 
-		<?php bbp_topic_pagination_links(); ?>
+		<?php bboss_bbp_topic_pagination_links(); ?>
 
 	</div>
 </div>

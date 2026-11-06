@@ -3,7 +3,7 @@
  * Archive Forum Content Template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
 
 	<?php
 	// Remove subscription link if forum assigned to the group.
-	if ( ! function_exists( 'bb_is_forum_group_forum' ) || ! bb_is_forum_group_forum( bbp_get_forum_id() ) ) {
-		bbp_forum_subscription_link();
+	if ( ! function_exists( 'bboss_is_forum_group_forum' ) || ! bboss_is_forum_group_forum( bboss_bbp_get_forum_id() ) ) {
+		bboss_bbp_forum_subscription_link();
 	}
 	?>
 
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 			}
 
 			$forums_args = array(
-				'post_type'   => bbp_get_forum_post_type(),
+				'post_type'   => bboss_bbp_get_forum_post_type(),
 				'post_status' => $post_status,
 				'numberposts' => -1,
 				'fields'      => 'ids',
@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 			$forums       = get_posts( $forums_args );
 			$total_forums = ! empty( $forums ) ? count( $forums ) : 0;
 			?>
-			<h2><?php esc_html_e( 'Forums', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo esc_html( $total_forums ); ?></span></h2>
+			<h2><?php esc_html_e( 'Forums', 'buddyboss-platform' ); ?> <span class="bb-rl-heading-count"><?php echo esc_html( $total_forums ); ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
@@ -63,23 +63,23 @@ defined( 'ABSPATH' ) || exit;
 					<div class="select-wrap">
 						<select id="bb-rl-forum-scope-options" data-bp-forum-scope-filter="forums" data-dropdown-align="true" data-select2-id="bb-rl-forum-scope-options" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
 							<?php
-							$forum_page = bbp_get_page_by_path( bbp_get_root_slug() );
+							$forum_page = bboss_bbp_get_page_by_path( bboss_bbp_get_root_slug() );
 							if ( ! empty( $forum_page ) ) {
 								$forum_url   = get_permalink( $forum_page->ID );
 								$forum_title = $forum_page->post_title;
 							} else {
-								$forum_url   = get_post_type_archive_link( bbp_get_forum_post_type() );
-								$forum_title = esc_html__( 'Forums', 'buddyboss' );
+								$forum_url   = get_post_type_archive_link( bboss_bbp_get_forum_post_type() );
+								$forum_title = esc_html__( 'Forums', 'buddyboss-platform' );
 							}
 							if ( ! empty( $forum_url ) && ! empty( $forum_title ) ) {
 								echo '<option value="' . esc_url( $forum_url ) . '">' . esc_html( $forum_title ) . '</option>';
 							}
 
 							// Add a default option for Discussions.
-							$discussion_url = get_post_type_archive_link( bbp_get_topic_post_type() );
+							$discussion_url = get_post_type_archive_link( bboss_bbp_get_topic_post_type() );
 							?>
 
-							<option value="<?php echo esc_url( $discussion_url ); ?>"><?php esc_html_e( 'Discussions', 'buddyboss' ); ?></option>
+							<option value="<?php echo esc_url( $discussion_url ); ?>"><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?></option>
 						</select>
 					</div>
 				</div>
@@ -91,15 +91,15 @@ defined( 'ABSPATH' ) || exit;
 
 		<?php do_action( 'bbp_template_before_forums_index' ); ?>
 
-		<?php if ( bbp_has_forums() ) : ?>
+		<?php if ( bboss_bbp_has_forums() ) : ?>
 
-			<?php bbp_get_template_part( 'loop', 'forums' ); ?>
+			<?php bboss_bbp_get_template_part( 'loop', 'forums' ); ?>
 
-			<?php bbp_get_template_part( 'pagination', 'forums' ); ?>
+			<?php bboss_bbp_get_template_part( 'pagination', 'forums' ); ?>
 
 		<?php else : ?>
 
-			<?php bbp_get_template_part( 'feedback', 'no-forums' ); ?>
+			<?php bboss_bbp_get_template_part( 'feedback', 'no-forums' ); ?>
 
 			<?php endif; ?>
 		<?php do_action( 'bbp_template_after_forums_index' ); ?>

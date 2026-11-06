@@ -9,14 +9,14 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
+if ( ! class_exists( 'BBoss_Admin_Setting_Fields' ) ) :
 
 	/**
 	 * Load BuddyBoss plugin admin area.
 	 *
 	 * @since BuddyBoss 1.9.1
 	 */
-	class BB_Admin_Setting_Fields {
+	class BBoss_Admin_Setting_Fields {
 
 		/**
 		 * Contain field attributes to render in the admin setting page.
@@ -55,7 +55,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 
 			$args = apply_filters( 'bb_admin_setting_field_' . sanitize_title( $args['id'] ), $args );
 
-			$this->field = bp_parse_args(
+			$this->field = bboss_parse_args(
 				$args,
 				array(
 					'type'        => '',
@@ -147,7 +147,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		 */
 		private function field_not_supported() {
 			?>
-			<p><?php esc_html_e( 'This field type does not support.', 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'This field type does not support.', 'buddyboss-platform' ); ?></p>
 			<?php
 		}
 

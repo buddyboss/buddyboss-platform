@@ -1,7 +1,7 @@
 <?php
 /**
  * @group xprofile
- * @group BP_XProfile_Field
+ * @group BBoss_XProfile_Field
  */
 class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 
@@ -14,11 +14,11 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $group,
 		) );
 
-		$f = new BP_XProfile_Field( $field );
+		$f = new BBoss_XProfile_Field( $field );
 		$f->can_delete = 0;
 		$f->save();
 
-		$f2 = new BP_XProfile_Field( $field );
+		$f2 = new BBoss_XProfile_Field( $field );
 		$this->assertEquals( '0', $f2->can_delete );
 	}
 
@@ -48,7 +48,7 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 			'name' => 'BuddyPress'
 		) );
 
-		$this->assertEquals( $f2, xprofile_get_field_id_from_name( 'BuddyPress' ) );
+		$this->assertEquals( $f2, bboss_xprofile_get_field_id_from_name( 'BuddyPress' ) );
 
 		// cleanup!
 		unset( $_POST['checkbox_option'] );
@@ -65,7 +65,7 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 		$_POST['fieldtype'] = 'textbox';
 
 		// Validate the mocked POST radio button options
-		$result = BP_XProfile_Field::admin_validate();
+		$result = BBoss_XProfile_Field::admin_validate();
 
 		// Assert valid
 		$this->assertEquals( $result, true );
@@ -94,7 +94,7 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 		);
 
 		// Validate the mocked POST radio button options
-		$result = BP_XProfile_Field::admin_validate();
+		$result = BBoss_XProfile_Field::admin_validate();
 
 		// Assert valid
 		$this->assertEquals( $result, true );
@@ -112,7 +112,7 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 	 * @ticket BP6545
 	 */
 	public function test_newly_created_field_should_have_field_id_property_set() {
-		$field = new BP_XProfile_Field();
+		$field = new BBoss_XProfile_Field();
 		$field->group_id = 1;
 		$field->name = 'Foo';
 
@@ -132,11 +132,11 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $group,
 		) );
 
-		bp_xprofile_update_meta( $field, 'field', 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_meta( $field, 'field', 'default_visibility', 'loggedin' );
 
 		// Initial setup takes just one query.
 		$num_queries = $wpdb->num_queries;
-		$field_obj = new BP_XProfile_Field( $field );
+		$field_obj = new BBoss_XProfile_Field( $field );
 		$num_queries++;
 
 		$this->assertSame( $num_queries, $wpdb->num_queries );
@@ -159,11 +159,11 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $group,
 		) );
 
-		bp_xprofile_update_meta( $field, 'field', 'allow_custom_visibility', 'disabled' );
+		bboss_xprofile_update_meta( $field, 'field', 'allow_custom_visibility', 'disabled' );
 
 		// Initial setup takes just one query.
 		$num_queries = $wpdb->num_queries;
-		$field_obj = new BP_XProfile_Field( $field );
+		$field_obj = new BBoss_XProfile_Field( $field );
 		$num_queries++;
 
 		$this->assertSame( $num_queries, $wpdb->num_queries );
@@ -179,7 +179,7 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 	 * @ticket BP7073
 	 */
 	public function test_bad_field_id_should_not_be_cached() {
-		BP_XProfile_Field::get_instance( 12345 );
+		BBoss_XProfile_Field::get_instance( 12345 );
 
 		$this->assertFalse( wp_cache_get( 12345, 'bp_xprofile_fields' ) );
 	}
@@ -194,14 +194,14 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 		) );
 
 		// Prime cache.
-		$fetched_field = xprofile_get_field( $field );
+		$fetched_field = bboss_xprofile_get_field( $field );
 		$new_field_order = 12345;
 
 		// Update field position.
-		BP_XProfile_Field::update_position( $field, $new_field_order, $group );
+		BBoss_XProfile_Field::update_position( $field, $new_field_order, $group );
 
 		// Cache call should miss; fresh data should be fetched.
-		$updated_fetched_field = xprofile_get_field( $field );
+		$updated_fetched_field = bboss_xprofile_get_field( $field );
 		$this->assertEquals( $new_field_order, $updated_fetched_field->field_order );
 	}
 
@@ -219,7 +219,7 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 		$old_user = get_current_user_id();
 		$this->set_current_user( $user );
 
-		$value = bp_get_profile_field_data( array( 'user_id' => $user, 'field' => $field ) );
+		$value = bboss_get_profile_field_data( array( 'user_id' => $user, 'field' => $field ) );
 		$this->assertEmpty( $value );
 
 		$this->set_current_user( $old_user );
@@ -234,10 +234,10 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $group
 		) );
 
-		$field_obj = new BP_XProfile_Field( $field );
+		$field_obj = new BBoss_XProfile_Field( $field );
 		$field_obj->delete();
 
-		$value = bp_xprofile_get_meta( $field, 'field', 'default_visibility' );
+		$value = bboss_xprofile_get_meta( $field, 'field', 'default_visibility' );
 		$this->assertEmpty( $value );
 	}
 
@@ -250,12 +250,12 @@ class BP_Tests_BP_XProfile_Field_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $group
 		) );
 
-		bp_xprofile_update_meta( $field, 'field', 'custom', 'metadata' );
+		bboss_xprofile_update_meta( $field, 'field', 'custom', 'metadata' );
 
-		$field_obj = new BP_XProfile_Field( $field );
+		$field_obj = new BBoss_XProfile_Field( $field );
 		$field_obj->delete();
 
-		$value = bp_xprofile_get_meta( $field, 'field', 'custom' );
+		$value = bboss_xprofile_get_meta( $field, 'field', 'custom' );
 		$this->assertEmpty( $value );
 	}
 }

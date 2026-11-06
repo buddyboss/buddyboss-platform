@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Messages_Actions_Endpoint class
+ * BP REST: BBoss_REST_Messages_Actions_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 
 	/**
-	 * Reuse some parts of the BP_REST_Messages_Endpoint class.
+	 * Reuse some parts of the BBoss_REST_Messages_Endpoint class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_Messages_Endpoint
+	 * @var BBoss_REST_Messages_Endpoint
 	 */
 	protected $message_endpoint;
 
@@ -30,9 +30,9 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace         = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base         = buddypress()->messages->id;
-		$this->message_endpoint = new BP_REST_Messages_Endpoint();
+		$this->namespace         = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base         = bboss()->messages->id;
+		$this->message_endpoint = new BBoss_REST_Messages_Endpoint();
 	}
 
 	/**
@@ -47,12 +47,12 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id'     => array(
-						'description' => __( 'ID of the Messages Thread.', 'buddyboss' ),
+						'description' => __( 'ID of the Messages Thread.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'action' => array(
-						'description'       => __( 'Action name to perform on the message thread.', 'buddyboss' ),
+						'description'       => __( 'Action name to perform on the message thread.', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'required'          => true,
 						'enum'              => array(
@@ -64,7 +64,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'value'  => array(
-						'description'       => __( 'Value for the action on message thread.', 'buddyboss' ),
+						'description'       => __( 'Value for the action on message thread.', 'buddyboss-platform' ),
 						'type'              => 'boolean',
 						'sanitize_callback' => 'rest_sanitize_boolean',
 						'validate_callback' => 'rest_validate_request_arg',
@@ -125,22 +125,22 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 
 		// Check if the thread is a group thread and join with group members to the query.
 		$join_group_members = false;
-		if ( bp_is_active( 'groups' ) && function_exists( 'bb_messages_is_group_thread' ) && function_exists( 'bb_recipients_recipient_get_join_sql_with_group_members' ) ) {
-			$is_group_message_thread = bb_messages_is_group_thread( $thread_id );
-			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
-			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		if ( bboss_is_active( 'groups' ) && function_exists( 'bboss_messages_is_group_thread' ) && function_exists( 'bboss_recipients_recipient_get_join_sql_with_group_members' ) ) {
+			$is_group_message_thread = bboss_messages_is_group_thread( $thread_id );
+			$first_message           = BBoss_Messages_Thread::get_first_message( $thread_id );
+			$group_id                = (int) bboss_messages_get_meta( $first_message->id, 'group_id', true );
 
 			if ( $is_group_message_thread && $group_id ) {
-				add_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
+				add_filter( 'bp_recipients_recipient_get_join_sql', 'bboss_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
 				$join_group_members = true;
 			}
 		}
 
-		$thread = new BP_Messages_Thread( $thread_id );
+		$thread = new BBoss_Messages_Thread( $thread_id );
 
 		if ( $join_group_members ) {
 			// Detach the join right after the thread is built so it cannot leak into later queries of this request.
-			remove_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10 );
+			remove_filter( 'bp_recipients_recipient_get_join_sql', 'bboss_recipients_recipient_get_join_sql_with_group_members', 10 );
 		}
 
 		$retval = $this->prepare_response_for_collection(
@@ -152,7 +152,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a thread is fetched via the REST API.
 		 *
-		 * @param BP_Messages_Thread $thread  Thread object.
+		 * @param BBoss_Messages_Thread $thread  Thread object.
 		 * @param WP_REST_Response   $retval  The response data.
 		 * @param WP_REST_Request    $request The request sent to the API.
 		 *
@@ -174,7 +174,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 	public function action_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to perform action on messages.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to perform action on messages.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -186,14 +186,14 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			$retval = true;
 		}
 
-		if ( true === $retval && bp_current_user_can( 'bp_moderate' ) ) {
+		if ( true === $retval && bboss_current_user_can( 'bp_moderate' ) ) {
 			$retval = true;
 		} else {
-			$id = messages_check_thread_access( $thread->thread_id );
+			$id = bboss_messages_check_thread_access( $thread->thread_id );
 			if ( true === $retval && is_null( $id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to see this thread.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to see this thread.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -206,10 +206,10 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 		}
 
 		// The response carries the whole thread, so the "Group Messages" disabled rule of get_item applies here too.
-		if ( true === $retval && function_exists( 'bb_messages_is_disabled_group_thread' ) && bb_messages_is_disabled_group_thread( $thread->thread_id ) ) {
+		if ( true === $retval && function_exists( 'bboss_messages_is_disabled_group_thread' ) && bboss_messages_is_disabled_group_thread( $thread->thread_id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Group messages have been disabled by a site administrator.', 'buddyboss' ),
+				__( 'Group messages have been disabled by a site administrator.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -241,12 +241,12 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		return messages_delete_thread( $thread_id );
+		return bboss_messages_delete_thread( $thread_id );
 	}
 
 	/**
 	 * Hide unhide message thread based on the logged in user.
-	 * - from bp_nouveau_ajax_hide_thread();
+	 * - from bboss_nouveau_ajax_hide_thread();
 	 *
 	 * @param integer $thread_id ID of the Messages Thread.
 	 * @param boolen  $value     Action value.
@@ -258,7 +258,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $value ) ) {
 			// phpcs:ignore
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, (int) $thread_id, bp_loggedin_user_id() ) );
+			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, (int) $thread_id, bboss_loggedin_user_id() ) );
 
 			/**
 			 * Fires when messages thread was marked as read.
@@ -266,11 +266,11 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			 * @param int $thread_id The message thread ID.
 			 * @param int $user_id   Logged in user ID.
 			 */
-			do_action( 'bb_messages_thread_unarchived', $thread_id, bp_loggedin_user_id() );
+			do_action( 'bb_messages_thread_unarchived', $thread_id, bboss_loggedin_user_id() );
 			return true;
 		} elseif ( ! empty( $value ) ) {
 			// phpcs:ignore
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bp_loggedin_user_id() ) );
+			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bboss_loggedin_user_id() ) );
 
 			/**
 			 * Fires when messages thread was marked as read.
@@ -278,7 +278,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			 * @param int $thread_id The message thread ID.
 			 * @param int $user_id   Logged in user ID.
 			 */
-			do_action( 'bb_messages_thread_archived', $thread_id, bp_loggedin_user_id() );
+			do_action( 'bb_messages_thread_archived', $thread_id, bboss_loggedin_user_id() );
 			return true;
 		}
 
@@ -287,7 +287,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Read/Unread message thread based on the logged in user.
-	 * - from bp_nouveau_ajax_readunread_thread_messages();
+	 * - from bboss_nouveau_ajax_readunread_thread_messages();
 	 *
 	 * @param integer $thread_id ID of the Messages Thread.
 	 * @param boolen  $value     Action value.
@@ -296,10 +296,10 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 	 */
 	protected function rest_unread_thread( $thread_id, $value ) {
 		if ( empty( $value ) ) {
-			messages_mark_thread_read( $thread_id );
+			bboss_messages_mark_thread_read( $thread_id );
 			return true;
 		} elseif ( ! empty( $value ) ) {
-			messages_mark_thread_unread( $thread_id );
+			bboss_messages_mark_thread_unread( $thread_id );
 		}
 
 		return false;

@@ -54,13 +54,13 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_REST_Help_Content_Endpoint
+ * Class BBoss_REST_Help_Content_Endpoint
  *
  * Read-only proxy for buddyboss.com Knowledge Base endpoints.
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Help_Content_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Default upstream base URL.
@@ -93,7 +93,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 *
 	 * Both legacy per-id transients (`bb_help_content_<id>`) and new
 	 * per-URL md5 transients (`bb_help_content_<md5>`) share this prefix
-	 * so the existing `bb_clear_help_content_transients()` flush sweeps
+	 * so the existing `bboss_clear_help_content_transients()` flush sweeps
 	 * both layouts in one query.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -127,8 +127,8 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
-		if ( function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' ) ) {
-			$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		if ( function_exists( 'bboss_rest_namespace' ) && function_exists( 'bboss_rest_version' ) ) {
+			$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		} else {
 			$this->namespace = 'bb/v1';
 		}
@@ -159,7 +159,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 					'args'                => array(
 						'url' => array(
-							'description'       => __( 'Path-only URL fragment under buddyboss.com (e.g. /wp-json/wp/v2/ht-kb/123).', 'buddyboss' ),
+							'description'       => __( 'Path-only URL fragment under buddyboss.com (e.g. /wp-json/wp/v2/ht-kb/123).', 'buddyboss-platform' ),
 							'type'              => 'string',
 							'required'          => true,
 							'sanitize_callback' => 'wp_unslash',
@@ -177,7 +177,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * The Help slider and Documentation modal are rendered only in the
 	 * WP-admin Settings 2.0 React app, so we gate on `manage_options` —
 	 * the same capability that already protects every Settings 2.0 AJAX
-	 * endpoint (see BB_Admin_Settings_Ajax::bb_verify_request).
+	 * endpoint (see BBoss_Admin_Settings_Ajax::bb_verify_request).
 	 *
 	 * Note on auth: REST requests are considered authenticated only when
 	 * the WP-Admin cookie is presented AND the `X-WP-Nonce: wp_rest`
@@ -212,7 +212,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 		if ( ! current_user_can( $capability ) ) {
 			return new WP_Error(
 				'bb_rest_help_content_forbidden',
-				__( 'Sorry, you are not allowed to access help content.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to access help content.', 'buddyboss-platform' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -376,7 +376,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	protected function path_rejected_error() {
 		return new WP_Error(
 			'bb_rest_help_content_url_not_allowed',
-			__( 'The requested help content URL is not allowed.', 'buddyboss' ),
+			__( 'The requested help content URL is not allowed.', 'buddyboss-platform' ),
 			array( 'status' => 400 )
 		);
 	}
@@ -402,7 +402,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 			'timeout'     => 8,
 			'redirection' => 3,
 			// Identify ourselves so buddyboss.com can debug bad requests.
-			'user-agent'  => 'BuddyBoss-Platform-Help-Proxy/' . ( defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0' ) . '; ' . home_url(),
+			'user-agent'  => 'BuddyBoss-Platform-Help-Proxy/' . ( defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0' ) . '; ' . home_url(),
 			'headers'     => array(
 				'Accept' => 'application/json',
 			),
@@ -424,7 +424,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 			return new WP_Error(
 				'bb_rest_help_content_upstream_error',
 				/* translators: %s: error message from wp_remote_get */
-				sprintf( __( 'Failed to load help content: %s', 'buddyboss' ), $response->get_error_message() ),
+				sprintf( __( 'Failed to load help content: %s', 'buddyboss-platform' ), $response->get_error_message() ),
 				array( 'status' => 502 )
 			);
 		}
@@ -433,7 +433,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 		if ( 404 === $status ) {
 			return new WP_Error(
 				'bb_rest_help_content_not_found',
-				__( 'Help content not found.', 'buddyboss' ),
+				__( 'Help content not found.', 'buddyboss-platform' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -441,7 +441,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 			return new WP_Error(
 				'bb_rest_help_content_upstream_status',
 				/* translators: %d: HTTP status code returned by upstream */
-				sprintf( __( 'Help content service returned an unexpected status (%d).', 'buddyboss' ), $status ),
+				sprintf( __( 'Help content service returned an unexpected status (%d).', 'buddyboss-platform' ), $status ),
 				array( 'status' => 502 )
 			);
 		}
@@ -490,19 +490,19 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'body'    => array(
-					'description' => __( 'Upstream response body, JSON-decoded when possible.', 'buddyboss' ),
+					'description' => __( 'Upstream response body, JSON-decoded when possible.', 'buddyboss-platform' ),
 					'type'        => array( 'object', 'array', 'string' ),
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
 				'headers' => array(
-					'description' => __( 'Selected pagination headers from the upstream response.', 'buddyboss' ),
+					'description' => __( 'Selected pagination headers from the upstream response.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
 				'status'  => array(
-					'description' => __( 'Upstream HTTP status code.', 'buddyboss' ),
+					'description' => __( 'Upstream HTTP status code.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'view' ),
 					'readonly'    => true,

@@ -3,7 +3,7 @@
  * Single View Content Template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -17,20 +17,20 @@ defined( 'ABSPATH' ) || exit;
 
 	<div class="bb-rl-container-inner">
 
-	<?php bbp_set_query_name( bbp_get_view_rewrite_id() ); ?>
+	<?php bboss_bbp_set_query_name( bboss_bbp_get_view_rewrite_id() ); ?>
 
-	<?php if ( bbp_view_query() ) : ?>
+	<?php if ( bboss_bbp_view_query() ) : ?>
 
-		<?php bbp_get_template_part( 'loop', 'topics' ); ?>
+		<?php bboss_bbp_get_template_part( 'loop', 'topics' ); ?>
 
-		<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
+		<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
 
 	<?php else : ?>
 
-		<?php bbp_get_template_part( 'feedback', 'no-topics' ); ?>
+		<?php bboss_bbp_get_template_part( 'feedback', 'no-topics' ); ?>
 
 	<?php endif; ?>
 
-	<?php bbp_reset_query_name(); ?>
+	<?php bboss_bbp_reset_query_name(); ?>
 	</div>
 </div>

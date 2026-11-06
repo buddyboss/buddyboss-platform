@@ -21,17 +21,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_members_register_member_connection_panel_fields() {
+function bboss_members_register_member_connection_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Connection Settings
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'members',
 		'member_connection',
 		'connection_settings',
 		array(
-			'title'       => __( 'Connection Settings', 'buddyboss' ),
+			'title'       => __( 'Connection Settings', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636000',
@@ -39,16 +39,16 @@ function bb_members_register_member_connection_panel_fields() {
 	);
 
 	// FIELD: Enable Member Connections (syncs friends component).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'member_connection',
 		'connection_settings',
 		array(
 			'name'              => 'bb_enable_member_connections',
-			'label'             => __( 'Member Connections', 'buddyboss' ),
+			'label'             => __( 'Member Connections', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow your members to connect with each other', 'buddyboss' ),
-			'default'           => absint( bp_is_active( 'friends' ) ),
+			'description'       => __( 'Allow your members to connect with each other', 'buddyboss-platform' ),
+			'default'           => absint( bboss_is_active( 'friends' ) ),
 			'sanitize_callback' => 'absint',
 			'order'             => 5,
 		)
@@ -57,20 +57,20 @@ function bb_members_register_member_connection_panel_fields() {
 	// FIELD: Messaging (require connection to message).
 	// Always registered so it appears in search index; visibility controlled
 	// by conditionals — React hides it when Messages component is off.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'member_connection',
 		'connection_settings',
 		array(
 			'name'              => 'bp-force-friendship-to-message',
-			'label'             => __( 'Messaging', 'buddyboss' ),
+			'label'             => __( 'Messaging', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Require members to be connected before they can message each other', 'buddyboss' ),
-			'help_text'         => __( 'This setting does not apply to administrators.', 'buddyboss' ),
-			'default'           => bp_is_active( 'messages' ) ? absint( bp_get_option( 'bp-force-friendship-to-message', 0 ) ) : 0,
+			'description'       => __( 'Require members to be connected before they can message each other', 'buddyboss-platform' ),
+			'help_text'         => __( 'This setting does not apply to administrators.', 'buddyboss-platform' ),
+			'default'           => bboss_is_active( 'messages' ) ? absint( bboss_get_option( 'bp-force-friendship-to-message', 0 ) ) : 0,
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
-			'disabled'          => ! bp_is_active( 'messages' ),
+			'disabled'          => ! bboss_is_active( 'messages' ),
 			'conditional'       => array(
 				'field' => 'bb_enable_member_connections',
 				'value' => true,
@@ -81,19 +81,19 @@ function bb_members_register_member_connection_panel_fields() {
 	// FIELD: Auto Follow (auto-follow on connection).
 	// Always registered so it appears in search index; disabled when
 	// Activity component or Follow feature is off.
-	$auto_follow_available = bp_is_active( 'activity' ) && bp_is_activity_follow_active();
+	$auto_follow_available = bboss_is_active( 'activity' ) && bboss_is_activity_follow_active();
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'member_connection',
 		'connection_settings',
 		array(
 			'name'              => 'bb_enable_friends_auto_follow',
-			'label'             => __( 'Auto Follow', 'buddyboss' ),
+			'label'             => __( 'Auto Follow', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Automatically have members follow a member they connect with', 'buddyboss' ),
-			'help_text'         => __( 'Requires member connections to be enabled.', 'buddyboss' ),
-			'default'           => $auto_follow_available ? absint( bp_get_option( 'bb_enable_friends_auto_follow', 0 ) ) : 0,
+			'description'       => __( 'Automatically have members follow a member they connect with', 'buddyboss-platform' ),
+			'help_text'         => __( 'Requires member connections to be enabled.', 'buddyboss-platform' ),
+			'default'           => $auto_follow_available ? absint( bboss_get_option( 'bb_enable_friends_auto_follow', 0 ) ) : 0,
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
 			'disabled'          => ! $auto_follow_available,

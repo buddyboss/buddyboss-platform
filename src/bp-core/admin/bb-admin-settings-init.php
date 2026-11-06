@@ -17,30 +17,30 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_init() {
+function bboss_admin_settings_init() {
 
-	if ( ! class_exists( 'BB_Feature_Autoloader' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-feature-autoloader.php';
+	if ( ! class_exists( 'BBoss_Feature_Autoloader' ) ) {
+		require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-feature-autoloader.php';
 	}
 
-	if ( ! class_exists( 'BB_Feature_Registry' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-feature-registry.php';
+	if ( ! class_exists( 'BBoss_Feature_Registry' ) ) {
+		require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-feature-registry.php';
 	}
 
-	if ( ! class_exists( 'BB_Feature_Loader' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-feature-loader.php';
+	if ( ! class_exists( 'BBoss_Feature_Loader' ) ) {
+		require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-feature-loader.php';
 	}
 
-	BB_Feature_Autoloader::bb_register();
+	BBoss_Feature_Autoloader::bb_register();
 
-	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-features.php' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-features.php';
+	if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-features.php' ) ) {
+		require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-features.php';
 	}
 
-	BB_Feature_Autoloader::bb_discover_features();
+	BBoss_Feature_Autoloader::bb_discover_features();
 
-	bb_feature_registry();
-	bb_feature_loader();
+	bboss_feature_registry();
+	bboss_feature_loader();
 
 	// Support Access (BB_Support_Access singleton). Loaded unconditionally
 	// (outside the admin-only block below) because its token-login handler runs
@@ -49,8 +49,8 @@ function bb_admin_settings_init() {
 	// self-boots via BB_Support_Access::instance() at the bottom of its file,
 	// registering the front-end `init` login, the expiry cron, and the admin
 	// AJAX handlers.
-	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php';
+	if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php' ) ) {
+		require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php';
 	}
 
 	// Admin/AJAX-only: AJAX handlers, meta field registry, settings page, feature settings
@@ -58,101 +58,101 @@ function bb_admin_settings_init() {
 	// frontend only needs the Feature Registry + Loader for conditional component loading.
 	if ( is_admin() || wp_doing_ajax() ) {
 		// Admin Meta Field Registry (component-based).
-		if ( ! class_exists( 'BB_Admin_Meta_Field_Registry' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-meta-field-registry.php';
+		if ( ! class_exists( 'BBoss_Admin_Meta_Field_Registry' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-meta-field-registry.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php';
 		}
 
-		if ( bp_is_active( 'activity' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php';
+		if ( bboss_is_active( 'activity' ) && file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php';
 		}
 
-		if ( bp_is_active( 'groups' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
+		if ( bboss_is_active( 'groups' ) && file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
 		}
 
 		// Email Templates AJAX handlers (emails feature is required — always active).
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php';
 		}
 
 		// Email Invites AJAX handlers (only when invites component is active).
-		if ( bp_is_active( 'invites' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-invites-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-invites-ajax.php';
+		if ( bboss_is_active( 'invites' ) && file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-invites-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-invites-ajax.php';
 		}
 
 		// Forums AJAX handlers (only when forums component is active).
-		if ( bp_is_active( 'forums' ) ) {
-			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-forums-ajax.php' ) ) {
-				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-forums-ajax.php';
+		if ( bboss_is_active( 'forums' ) ) {
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-forums-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-forums-ajax.php';
 			}
-			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topics-ajax.php' ) ) {
-				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topics-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topics-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topics-ajax.php';
 			}
-			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php' ) ) {
-				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php';
 			}
-			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-replies-ajax.php' ) ) {
-				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-replies-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-replies-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-replies-ajax.php';
 			}
 		}
 
 		// Integrations marketplace — plugin activate/deactivate AJAX handlers.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php';
 		}
 
 		// Profile AJAX handlers (only when xprofile component is active).
-		if ( bp_is_active( 'xprofile' ) ) {
-			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php' ) ) {
-				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php';
+		if ( bboss_is_active( 'xprofile' ) ) {
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php';
 			}
-			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php' ) ) {
-				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php';
 			}
 
 			// Also ensure profile search module is loaded — it may not be when the
 			// toggle is OFF because bp_core_load_profile_search() returns early.
-			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-search-ajax.php' ) ) {
-				$bps_start = buddypress()->plugin_dir . 'bp-core/profile-search/bps-start.php';
-				if ( ! function_exists( 'bp_profile_search_main_form' ) && file_exists( $bps_start ) ) {
-					if ( ! defined( 'BPS_VERSION' ) ) {
-						define( 'BPS_VERSION', BP_PLATFORM_VERSION );
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-search-ajax.php' ) ) {
+				$bps_start = bboss()->plugin_dir . 'bp-core/profile-search/bps-start.php';
+				if ( ! function_exists( 'bboss_profile_search_main_form' ) && file_exists( $bps_start ) ) {
+					if ( ! defined( 'BBOSS_BPS_VERSION' ) ) {
+						define( 'BBOSS_BPS_VERSION', BBOSS_PLATFORM_VERSION );
 					}
 					require_once $bps_start;
 				}
-				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-search-ajax.php';
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-search-ajax.php';
 			}
 		}
 
-		if ( bp_is_active( 'moderation' ) ) {
-			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php' ) ) {
-				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php';
+		if ( bboss_is_active( 'moderation' ) ) {
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php';
 			}
-			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php' ) ) {
-				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php';
 			}
-			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php' ) ) {
-				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php';
 			}
 		}
 
 		// Admin settings page (menu registration, render function).
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
 		}
 
 		// Integrations marketplace page (render function for the bb-integrations submenu).
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php';
 		}
 
 		// Shared admin-common layer asset registration.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php';
 		}
 
 		// Admin-only cover image upload + user crop AJAX handlers
@@ -162,95 +162,83 @@ function bb_admin_settings_init() {
 		// group cover before the server fits it to feature dimensions. The
 		// existing single-step `bp_cover_image_upload` action is left
 		// untouched — frontend cover uploads keep their current behaviour.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-cover-crop-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-cover-crop-ajax.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-cover-crop-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-cover-crop-ajax.php';
 		}
 
 		// Feature settings registration (panels, sections, fields).
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-forums.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-forums.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-forums.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-forums.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-media.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-media.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-media.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-media.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-messages.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-messages.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-messages.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-messages.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-invites.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-invites.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-invites.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-invites.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-emails.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-emails.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-emails.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-emails.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-search.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-search.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-search.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-search.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-members.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-members.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-members.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-members.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-account.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-account.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-account.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-account.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-notifications.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-notifications.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-notifications.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-notifications.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-registration.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-registration.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-registration.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-registration.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-advanced.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-advanced.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-advanced.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-advanced.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-tools.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-tools.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-tools.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-tools.php';
 		}
 
 		// Icon registry.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php';
 		}
 
-		bb_icon_registry();
+		bboss_icon_registry();
 
-		// Placeholder features provider for unregistered add-ons/integrations.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-placeholder-features.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-placeholder-features.php';
-		}
-
-		// "Register your email and get Memberships & Courses" banner for
-		// free, unlicensed installs on the Settings page.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-register-banner.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-register-banner.php';
-		}
-
-		// Field & section upgrade modal catalog (Settings 2.0 marketing copy
-		// for `pro_only` fields and `pro_notice` sections). Hosted on S3 like
-		// the placeholder features catalog and shares its cache-flush plumbing
-		// via the `bb_feature_caches_flushed` action.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-field-upgrades.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-field-upgrades.php';
+		// Add-on upsell field helpers: which fields belong to the features that
+		// moved into BuddyBoss Addons, and whether their provider is loaded.
+		// Gates those fields on display and save, with or without the catalog below.
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-addon-upsell-fields.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-addon-upsell-fields.php';
 		}
 
 		// Platform 3.0 addon-compatibility admin notice. Loads
@@ -258,15 +246,15 @@ function bb_admin_settings_init() {
 		// admin screen the user is on — version mismatches break
 		// Settings 2.0 specifically but the symptom can manifest on
 		// any admin page through extension hooks.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php';
 		}
 
 		// Moved media features notice. Videos, Documents and Animated GIFs moved
 		// to the BuddyBoss Add-ons plugin; sites that still hold that content
 		// are told how to bring it back.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-moved-media-features-notice.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-moved-media-features-notice.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-moved-media-features-notice.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-moved-media-features-notice.php';
 		}
 
 		// LearnDash addon promotion IPN. Registers an in-product notification
@@ -274,13 +262,13 @@ function bb_admin_settings_init() {
 		// pre-3.0 bundled LearnDash integration and haven't installed the
 		// standalone `buddyboss-learndash` addon yet. Self-dismisses when
 		// the addon is detected on a subsequent admin page load.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-learndash-addon-ipn.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-learndash-addon-ipn.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-learndash-addon-ipn.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-learndash-addon-ipn.php';
 		}
 	}
 }
 
-add_action( 'bp_loaded', 'bb_admin_settings_init', 4 );
+add_action( 'bp_loaded', 'bboss_admin_settings_init', 4 );
 
 /**
  * Register the Help Content REST proxy on `rest_api_init`.
@@ -293,25 +281,25 @@ add_action( 'bp_loaded', 'bb_admin_settings_init', 4 );
  * `permission_callback` then enforces `manage_options` so non-admin
  * callers get 401 / 403.
  *
- * Lives outside `bb_admin_settings_init()` because that function is
+ * Lives outside `bboss_admin_settings_init()` because that function is
  * gated on `is_admin() || wp_doing_ajax()` — both false during a REST
  * request. The route would never register otherwise, even though the
  * file exists and the class is correct.
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_register_help_content_rest_route() {
-	$controller_file = buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-rest-help-content-endpoint.php';
+function bboss_register_help_content_rest_route() {
+	$controller_file = bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-rest-help-content-endpoint.php';
 	if ( ! file_exists( $controller_file ) ) {
 		return;
 	}
 	require_once $controller_file;
-	if ( ! class_exists( 'BB_REST_Help_Content_Endpoint' ) ) {
+	if ( ! class_exists( 'BBoss_REST_Help_Content_Endpoint' ) ) {
 		return;
 	}
-	( new BB_REST_Help_Content_Endpoint() )->register_routes();
+	( new BBoss_REST_Help_Content_Endpoint() )->register_routes();
 }
-add_action( 'rest_api_init', 'bb_register_help_content_rest_route' );
+add_action( 'rest_api_init', 'bboss_register_help_content_rest_route' );
 
 /**
  * Register the Integrations marketplace REST proxy route.
@@ -325,48 +313,48 @@ add_action( 'rest_api_init', 'bb_register_help_content_rest_route' );
  *
  * @return void
  */
-function bb_register_integrations_rest_route() {
-	$controller_file = buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-rest-integrations-endpoint.php';
+function bboss_register_integrations_rest_route() {
+	$controller_file = bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-rest-integrations-endpoint.php';
 	if ( ! file_exists( $controller_file ) ) {
 		return;
 	}
 	require_once $controller_file;
-	if ( ! class_exists( 'BB_REST_Integrations_Endpoint' ) ) {
+	if ( ! class_exists( 'BBoss_REST_Integrations_Endpoint' ) ) {
 		return;
 	}
-	( new BB_REST_Integrations_Endpoint() )->register_routes();
+	( new BBoss_REST_Integrations_Endpoint() )->register_routes();
 }
-add_action( 'rest_api_init', 'bb_register_integrations_rest_route' );
+add_action( 'rest_api_init', 'bboss_register_integrations_rest_route' );
 
 /**
  * Initialize the Integration Bridge early.
  *
  * Must run at priority 2 (before bp_setup_integrations at priority 3)
  * so the bb_integration_is_activated filter is registered before
- * BP_Integration::is_activated() is called during integration setup.
+ * BBoss_Integration::is_activated() is called during integration setup.
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_integration_bridge_early_init() {
-	if ( ! class_exists( 'BB_Integration_Bridge' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-integration-bridge.php';
+function bboss_integration_bridge_early_init() {
+	if ( ! class_exists( 'BBoss_Integration_Bridge' ) ) {
+		require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-integration-bridge.php';
 	}
 
 	// Initialize the bridge singleton (registers hooks).
-	bb_integration_bridge();
+	bboss_integration_bridge();
 
 	/**
 	 * Fires after the Integration Bridge is initialized.
 	 *
 	 * Plugins can use this to register managed integrations via
-	 * bb_integration_bridge()->register_managed_integration().
+	 * bboss_integration_bridge()->register_managed_integration().
 	 *
 	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_integration_bridge_init' );
 }
 
-add_action( 'bp_loaded', 'bb_integration_bridge_early_init', 2 );
+add_action( 'bp_loaded', 'bboss_integration_bridge_early_init', 2 );
 
 /**
  * Flush every Settings 2.0 cache layer in response to a plugin-lifecycle event.
@@ -393,15 +381,15 @@ add_action( 'bp_loaded', 'bb_integration_bridge_early_init', 2 );
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_flush_feature_caches_on_plugin_change() {
+function bboss_flush_feature_caches_on_plugin_change() {
 	// 1. Feature discovery paths (filesystem scan cache).
-	if ( class_exists( 'BB_Feature_Autoloader' ) ) {
-		BB_Feature_Autoloader::bb_clear_feature_discovery_cache();
+	if ( class_exists( 'BBoss_Feature_Autoloader' ) ) {
+		BBoss_Feature_Autoloader::bb_clear_feature_discovery_cache();
 	}
 
 	// 2. Feature registry (sorted caches, per-feature transients, active-state flag).
-	if ( function_exists( 'bb_feature_registry' ) ) {
-		bb_feature_registry()->bb_clear_feature_caches();
+	if ( function_exists( 'bboss_feature_registry' ) ) {
+		bboss_feature_registry()->bb_clear_feature_caches();
 	}
 
 	// 3. Settings search index — cleared by bb_clear_feature_caches() above,
@@ -411,15 +399,15 @@ function bb_flush_feature_caches_on_plugin_change() {
 
 	// 4. Placeholder features catalog — plugin_status fields depend on
 	// is_plugin_active() results which just changed.
-	if ( function_exists( 'bb_placeholder_features_transient_key' ) ) {
-		delete_transient( bb_placeholder_features_transient_key() );
+	if ( function_exists( 'bboss_placeholder_features_transient_key' ) ) {
+		delete_transient( bboss_placeholder_features_transient_key() );
 	}
 	// Always delete the legacy unversioned key too, for clean upgrades.
 	delete_transient( 'bb_placeholder_features_data' );
 
 	// Schedule a background refresh so the next admin AJAX call returns data.
-	if ( function_exists( 'bb_schedule_placeholder_features_refresh' ) ) {
-		bb_schedule_placeholder_features_refresh();
+	if ( function_exists( 'bboss_schedule_placeholder_features_refresh' ) ) {
+		bboss_schedule_placeholder_features_refresh();
 	}
 
 	/**
@@ -436,10 +424,10 @@ function bb_flush_feature_caches_on_plugin_change() {
 // reshape the set of features and placeholder states. Each hook runs a full
 // flush — the cost is one `delete_transient` per cache layer plus a light
 // in-memory reset, cheap relative to a plugin install.
-add_action( 'activated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
-add_action( 'deactivated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
-add_action( 'upgrader_process_complete', 'bb_flush_feature_caches_on_plugin_change' );
-add_action( 'deleted_plugin', 'bb_flush_feature_caches_on_plugin_change' );
+add_action( 'activated_plugin', 'bboss_flush_feature_caches_on_plugin_change' );
+add_action( 'deactivated_plugin', 'bboss_flush_feature_caches_on_plugin_change' );
+add_action( 'upgrader_process_complete', 'bboss_flush_feature_caches_on_plugin_change' );
+add_action( 'deleted_plugin', 'bboss_flush_feature_caches_on_plugin_change' );
 
 /**
  * Purge the S3 JSON catalogs (field upgrades and placeholder features) after a
@@ -451,7 +439,7 @@ add_action( 'deleted_plugin', 'bb_flush_feature_caches_on_plugin_change' );
  * @param array       $options  Update details: `type`, and `plugins`/`plugin` or `themes`/`theme`.
  * @return void
  */
-function bb_purge_json_catalogs_on_upgrade( $upgrader, $options ) {
+function bboss_purge_json_catalogs_on_upgrade( $upgrader, $options ) {
 	$items = array();
 	foreach ( array( 'plugins', 'plugin', 'themes', 'theme' ) as $key ) {
 		if ( ! empty( $options[ $key ] ) ) {
@@ -472,27 +460,27 @@ function bb_purge_json_catalogs_on_upgrade( $upgrader, $options ) {
 		return;
 	}
 
-	if ( function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
-		bb_flush_field_upgrades_cache_full();
+	if ( function_exists( 'bboss_flush_field_upgrades_cache_full' ) ) {
+		bboss_flush_field_upgrades_cache_full();
 	}
 
-	if ( function_exists( 'bb_placeholder_features_transient_key' ) ) {
-		delete_transient( bb_placeholder_features_transient_key() );
+	if ( function_exists( 'bboss_placeholder_features_transient_key' ) ) {
+		delete_transient( bboss_placeholder_features_transient_key() );
 		delete_option( 'bb_placeholder_features_data_stale' );
 	}
 }
-add_action( 'upgrader_process_complete', 'bb_purge_json_catalogs_on_upgrade', 10, 2 );
+add_action( 'upgrader_process_complete', 'bboss_purge_json_catalogs_on_upgrade', 10, 2 );
 
 // Network-admin (multisite) plugin lifecycle hooks.
-add_action( 'network_admin_activated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
-add_action( 'network_admin_deactivated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
+add_action( 'network_admin_activated_plugin', 'bboss_flush_feature_caches_on_plugin_change' );
+add_action( 'network_admin_deactivated_plugin', 'bboss_flush_feature_caches_on_plugin_change' );
 
 // Also flush when a user flips the "active_plugins" option directly — covers
 // WP-CLI `wp plugin activate/deactivate` which bypasses activated_plugin on
 // some paths, and programmatic `update_option( 'active_plugins', ... )` calls.
-add_action( 'update_option_active_plugins', 'bb_flush_feature_caches_on_plugin_change' );
-add_action( 'add_option_active_plugins', 'bb_flush_feature_caches_on_plugin_change' );
-add_action( 'update_site_option_active_sitewide_plugins', 'bb_flush_feature_caches_on_plugin_change' );
+add_action( 'update_option_active_plugins', 'bboss_flush_feature_caches_on_plugin_change' );
+add_action( 'add_option_active_plugins', 'bboss_flush_feature_caches_on_plugin_change' );
+add_action( 'update_site_option_active_sitewide_plugins', 'bboss_flush_feature_caches_on_plugin_change' );
 
 /**
  * Reverse-sync legacy Components page saves to bb-active-features.
@@ -506,7 +494,7 @@ add_action( 'update_site_option_active_sitewide_plugins', 'bb_flush_feature_cach
  * @param mixed $old_value Previous option value.
  * @param mixed $new_value Updated option value.
  */
-function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
+function bboss_reverse_sync_components_to_features( $old_value, $new_value ) {
 	// Prevent infinite recursion: skip if we're inside a feature toggle from Settings 2.0.
 	static $syncing = false;
 	if ( $syncing ) {
@@ -518,15 +506,15 @@ function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
 	// it loads at `bp_loaded` priority 4. A component write earlier in the
 	// boot (e.g. the availability scrub at `bp_loaded` priority 1) defers
 	// the sync until the registry exists instead of fataling.
-	if ( ! function_exists( 'bb_feature_registry' ) ) {
+	if ( ! function_exists( 'bboss_feature_registry' ) ) {
 		return;
 	}
-	if ( ! class_exists( 'BB_Feature_Registry' ) ) {
+	if ( ! class_exists( 'BBoss_Feature_Registry' ) ) {
 		if ( doing_action( 'bp_loaded' ) || ! did_action( 'bp_loaded' ) ) {
 			add_action(
 				'bp_loaded',
 				function () use ( $old_value, $new_value ) {
-					bb_reverse_sync_components_to_features( $old_value, $new_value );
+					bboss_reverse_sync_components_to_features( $old_value, $new_value );
 				},
 				6
 			);
@@ -535,9 +523,9 @@ function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
 	}
 
 	$syncing  = true;
-	$registry = bb_feature_registry();
+	$registry = bboss_feature_registry();
 
-	$active_features  = bp_get_option( 'bb-active-features', array() );
+	$active_features  = bboss_get_option( 'bb-active-features', array() );
 	$features_changed = false;
 	$new_components   = is_array( $new_value ) ? $new_value : array();
 
@@ -585,20 +573,20 @@ function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
 	}
 
 	if ( $features_changed ) {
-		bp_update_option( 'bb-active-features', $active_features );
+		bboss_update_option( 'bb-active-features', $active_features );
 		$registry->bb_clear_feature_caches();
 	}
 
 	$syncing = false;
 }
-add_action( 'update_option_bp-active-components', 'bb_reverse_sync_components_to_features', 10, 2 );
+add_action( 'update_option_bp-active-components', 'bboss_reverse_sync_components_to_features', 10, 2 );
 
 // Also hook into add_option for first-time creation of bp-active-components (fresh install).
 // add_option_{$option} passes ( $option_name, $value ) not ( $old_value, $new_value ).
 add_action(
 	'add_option_bp-active-components',
 	function ( $option_name, $value ) {
-		bb_reverse_sync_components_to_features( array(), $value );
+		bboss_reverse_sync_components_to_features( array(), $value );
 	},
 	10,
 	2
@@ -618,7 +606,7 @@ add_action(
  *
  * @return array Sanitized array, or empty array if input is invalid.
  */
-function bb_sanitize_access_control_fallback( $value ) {
+function bboss_sanitize_access_control_fallback( $value ) {
 
 	// Handle JSON-encoded string from frontend.
 	if ( is_string( $value ) ) {

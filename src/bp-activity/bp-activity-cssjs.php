@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.1.0
  */
-function bp_activity_mentions_script() {
-	if ( ! bp_activity_maybe_load_mentions_scripts() ) {
+function bboss_activity_mentions_script() {
+	if ( ! bboss_activity_maybe_load_mentions_scripts() ) {
 		return;
 	}
 
@@ -29,20 +29,20 @@ function bp_activity_mentions_script() {
 		}
 	}
 
-	$min = bp_core_get_minified_asset_suffix();
+	$min = bboss_core_get_minified_asset_suffix();
 
-	wp_enqueue_script( 'bp-mentions', buddypress()->plugin_url . "bp-core/js/mentions{$min}.js", array( 'jquery', 'jquery-atwho' ), bp_get_version(), true );
-	wp_enqueue_style( 'bp-mentions-css', buddypress()->plugin_url . "bp-core/css/mentions{$min}.css", array(), bp_get_version() );
+	wp_enqueue_script( 'bp-mentions', bboss()->plugin_url . "bp-core/js/mentions{$min}.js", array( 'jquery', 'jquery-atwho' ), bboss_get_version(), true );
+	wp_enqueue_style( 'bp-mentions-css', bboss()->plugin_url . "bp-core/css/mentions{$min}.css", array(), bboss_get_version() );
 
 	wp_style_add_data( 'bp-mentions-css', 'rtl', true );
 	if ( $min ) {
 		wp_style_add_data( 'bp-mentions-css', 'suffix', $min );
 	}
 
-	wp_localize_script( 'bp-mentions', 'BP_Mentions_Options', bp_at_mention_default_options() );
+	wp_localize_script( 'bp-mentions', 'BP_Mentions_Options', bboss_at_mention_default_options() );
 
 	// If the script has been enqueued, let's attach our mentions TinyMCE init callback.
-	add_filter( 'tiny_mce_before_init', 'bp_add_mentions_on_tinymce_init', 10, 2 );
+	add_filter( 'tiny_mce_before_init', 'bboss_add_mentions_on_tinymce_init', 10, 2 );
 
 	/**
 	 * Fires at the end of the Activity Mentions script.
@@ -54,8 +54,8 @@ function bp_activity_mentions_script() {
 	 */
 	do_action( 'bp_activity_mentions_prime_results' );
 }
-add_action( 'bp_enqueue_scripts', 'bp_activity_mentions_script' );
-add_action( 'bp_admin_enqueue_scripts', 'bp_activity_mentions_script' );
+add_action( 'bp_enqueue_scripts', 'bboss_activity_mentions_script' );
+add_action( 'bp_admin_enqueue_scripts', 'bboss_activity_mentions_script' );
 
 /**
  * Bind the mentions listener to a wp_editor instance when TinyMCE initializes.
@@ -66,7 +66,7 @@ add_action( 'bp_admin_enqueue_scripts', 'bp_activity_mentions_script' );
  * @param string $editor_id Unique editor identifier, e.g. 'content'.
  * @return array  $mceInit   An array with TinyMCE config.
  */
-function bp_add_mentions_on_tinymce_init( $settings, $editor_id ) {
+function bboss_add_mentions_on_tinymce_init( $settings, $editor_id ) {
 	// We only apply the mentions init to the visual post editor in the WP dashboard.
 	if ( 'content' === $editor_id ) {
 		$settings['init_instance_callback'] = 'window.bp.mentions.tinyMCEinit';

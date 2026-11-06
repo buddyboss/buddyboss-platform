@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Suspend_Folder extends BP_Suspend_Abstract {
+class BBoss_Suspend_Folder extends BBoss_Suspend_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	public static $type = 'document_folder';
 
 	/**
-	 * BP_Suspend_Folder constructor.
+	 * BBoss_Suspend_Folder constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -90,7 +90,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $folder_ids ) ) {
 			foreach ( $folder_ids as $k => $folder_id ) {
-				if ( BP_Core_Suspend::check_suspended_content( $folder_id, self::$type, true ) ) {
+				if ( BBoss_Core_Suspend::check_suspended_content( $folder_id, self::$type, true ) ) {
 					unset( $folder_ids[ $k ] );
 				}
 			}
@@ -195,7 +195,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		if ( ! empty( array_filter( $where ) ) ) {
 			$exclude_group_sql = '';
 			// Allow group medias from blocked/suspended users.
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				$exclude_group_sql = ' OR ( f.privacy = "grouponly" AND ( ' . $this->alias . '.hide_sitewide = 0 OR ' . $this->alias . '.hide_sitewide IS NULL ) AND ( ' . $this->alias . '.hide_parent = 0 OR ' . $this->alias . '.hide_parent IS NULL ) )';
 			}
 
@@ -221,7 +221,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $folder_id,
@@ -243,7 +243,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::add_suspend( $suspend_args );
+		BBoss_Core_Suspend::add_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $folder_id;
 
@@ -281,7 +281,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $folder_id,
@@ -299,7 +299,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 			isset( $suspend_args['type'] ) &&
 			$suspend_args['type'] !== self::$type
 		) {
-			$folder_author_id = BP_Moderation_Folder::get_content_owner_id( $folder_id );
+			$folder_author_id = BBoss_Moderation_Folder::get_content_owner_id( $folder_id );
 			if ( isset( $suspend_args['blocked_user'] ) && $folder_author_id === $suspend_args['blocked_user'] ) {
 				unset( $suspend_args['blocked_user'] );
 			}
@@ -315,7 +315,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::remove_suspend( $suspend_args );
+		BBoss_Core_Suspend::remove_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $folder_id;
 
@@ -363,14 +363,14 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$sub_items     = bp_moderation_get_sub_items( $document_folder->id, BP_Moderation_Folder::$moderation_type );
+		$sub_items     = bboss_moderation_get_sub_items( $document_folder->id, BBoss_Moderation_Folder::$moderation_type );
 		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $document_folder->id;
-		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Folder::$moderation_type;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BBoss_Moderation_Folder::$moderation_type;
 
-		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+		$suspended_record = BBoss_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
 
 		if ( empty( $suspended_record ) ) {
-			$suspended_record = BP_Core_Suspend::get_recode( $document_folder->user_id, BP_Moderation_Members::$moderation_type );
+			$suspended_record = BBoss_Core_Suspend::get_recode( $document_folder->user_id, BBoss_Moderation_Members::$moderation_type );
 		}
 
 		if ( empty( $suspended_record ) ) {
@@ -394,7 +394,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		}
 
 		foreach ( $folders as $folder ) {
-			BP_Core_Suspend::delete_suspend( $folder->id, $this->item_type );
+			BBoss_Core_Suspend::delete_suspend( $folder->id, $this->item_type );
 		}
 	}
 }

@@ -28,8 +28,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<string,string> Action names keyed by `install`, `activate`, `deactivate`.
  */
-function bb_admin_settings_get_addon_ajax_actions() {
-	$plugin_id = defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : 'buddyboss-platform';
+function bboss_admin_settings_get_addon_ajax_actions() {
+	$plugin_id = defined( 'BBOSS_PLATFORM_EDITION' ) ? BBOSS_PLATFORM_EDITION : 'buddyboss-platform';
 
 	if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
 		$plugin_id = ( new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector() )->getDynamicPluginId();
@@ -48,10 +48,10 @@ function bb_admin_settings_get_addon_ajax_actions() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_page() {
+function bboss_admin_settings_page() {
 	// Get build directory.
-	$build_dir = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/settings/build';
-	$build_url = buddypress()->plugin_url . 'bp-core/admin/bb-settings/settings/build';
+	$build_dir = bboss()->plugin_dir . 'bp-core/admin/bb-settings/settings/build';
+	$build_url = bboss()->plugin_url . 'bp-core/admin/bb-settings/settings/build';
 
 	// Load asset file.
 	$asset_file = $build_dir . '/index.asset.php';
@@ -63,7 +63,7 @@ function bb_admin_settings_page() {
 					<?php
 					esc_html_e(
 						'BuddyBoss Admin Settings assets not found. Please run: npm run build:admin:settings',
-						'buddyboss'
+						'buddyboss-platform'
 					);
 					?>
 				</p>
@@ -79,17 +79,17 @@ function bb_admin_settings_page() {
 	wp_enqueue_style( 'wp-components' );
 
 	// Enqueue BuddyBoss icons CSS.
-	$min             = bp_core_get_minified_asset_suffix();
-	$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : bp_get_version();
+	$min             = bboss_core_get_minified_asset_suffix();
+	$bb_icon_version = function_exists( 'bboss_icon_font_map_data' ) ? bboss_icon_font_map_data( 'version' ) : bboss_get_version();
 	wp_enqueue_style(
 		'bb-icons',
-		buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css",
+		bboss()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css",
 		array(),
 		$bb_icon_version
 	);
 	wp_enqueue_style(
 		'bb-icons-rl-css',
-		buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
+		bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
 		array(),
 		$bb_icon_version
 	);
@@ -108,7 +108,7 @@ function bb_admin_settings_page() {
 	$has_rich_text   = false;
 	$has_media_field = false;
 
-	if ( function_exists( 'bb_feature_registry' ) ) {
+	if ( function_exists( 'bboss_feature_registry' ) ) {
 		static $bb_settings_field_type_flags = null;
 
 		if ( null === $bb_settings_field_type_flags ) {
@@ -117,9 +117,9 @@ function bb_admin_settings_page() {
 				'media_field' => false,
 			);
 			$media_types                  = array( 'media_picker', 'image_upload', 'image_radio' );
-			$all_features                 = bb_feature_registry()->bb_get_features();
+			$all_features                 = bboss_feature_registry()->bb_get_features();
 			foreach ( $all_features as $fid => $f ) {
-				$all_fields = bb_feature_registry()->bb_get_all_fields( $fid );
+				$all_fields = bboss_feature_registry()->bb_get_all_fields( $fid );
 				foreach ( $all_fields as $field ) {
 					$type = $field['type'] ?? '';
 					if ( 'richtext' === $type ) {
@@ -142,10 +142,10 @@ function bb_admin_settings_page() {
 
 	// Check Meta Field Registry (Activity/Groups edit modals use richtext fields).
 	// Separate scan because meta fields are a different registry.
-	if ( ! $has_rich_text && function_exists( 'bb_admin_meta_field_registry' ) ) {
+	if ( ! $has_rich_text && function_exists( 'bboss_admin_meta_field_registry' ) ) {
 		$meta_components = array( 'activity', 'groups', 'forums', 'discussions', 'replies', 'emails' );
 		foreach ( $meta_components as $component ) {
-			$meta_fields = bb_admin_meta_field_registry()->get_fields( $component );
+			$meta_fields = bboss_admin_meta_field_registry()->get_fields( $component );
 			foreach ( $meta_fields as $field ) {
 				if ( ! empty( $field['type'] ) && 'richtext' === $field['type'] ) {
 					$has_rich_text = true;
@@ -167,8 +167,8 @@ function bb_admin_settings_page() {
 	// non-image meta fields without an image picker, this becomes a harmless
 	// false positive (wp.media enqueued unnecessarily). If that happens, switch
 	// to a dedicated flag or check the field types here.
-	if ( ! $has_media_field && function_exists( 'bb_admin_meta_field_registry' ) ) {
-		if ( ! empty( bb_admin_meta_field_registry()->get_fields( 'forums' ) ) ) {
+	if ( ! $has_media_field && function_exists( 'bboss_admin_meta_field_registry' ) ) {
+		if ( ! empty( bboss_admin_meta_field_registry()->get_fields( 'forums' ) ) ) {
 			$has_media_field = true;
 		}
 	}
@@ -204,7 +204,7 @@ function bb_admin_settings_page() {
 	foreach ( $css_candidates as $css_rel ) {
 		$css_file = $build_dir . $css_rel;
 		if ( file_exists( $css_file ) ) {
-			$css_url = str_replace( buddypress()->plugin_dir, buddypress()->plugin_url, $css_file );
+			$css_url = str_replace( bboss()->plugin_dir, bboss()->plugin_url, $css_file );
 			wp_register_style(
 				'bb-admin-settings',
 				$css_url,
@@ -234,7 +234,7 @@ function bb_admin_settings_page() {
 	}
 
 	// Localize script with admin data.
-	$groups_per_page_option = bp_core_do_network_admin() ? 'buddyboss_page_bp_groups_network_per_page' : 'buddyboss_page_bp_groups_per_page';
+	$groups_per_page_option = bboss_core_do_network_admin() ? 'buddyboss_page_bp_groups_network_per_page' : 'buddyboss_page_bp_groups_per_page';
 	$groups_per_page        = absint( get_user_option( $groups_per_page_option, get_current_user_id() ) );
 	if ( 0 === $groups_per_page ) {
 		$groups_per_page = 20;
@@ -245,23 +245,9 @@ function bb_admin_settings_page() {
 	// will render. The React Header reads this via bbAdminData.ipnRootId to
 	// locate and relocate the live IPN node.
 	$ipn_root_id = '';
-	if (
-		class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
-		class_exists( '\BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View' )
-	) {
-		try {
-			$container   = \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance()->get_container();
-			$ipn_view    = $container->get( \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View::class );
-			$ipn_root_id = $ipn_view->getRootElementId();
-		} catch ( Throwable $e ) {
-			// IPN service not loaded for some reason — leave $ipn_root_id empty,
-			// JS will fall back to a structural [id$="_ipn_root"] selector.
-			unset( $e );
-		}
-	}
 
 	$localize_data = array(
-		'apiUrl'                    => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
+		'apiUrl'                    => rest_url( bboss_rest_namespace() . '/' . bboss_rest_version() . '/' ),
 		'nonce'                     => wp_create_nonce( 'wp_rest' ),
 		'ajaxUrl'                   => esc_url( admin_url( 'admin-ajax.php' ) ),
 		// Base WP admin URL — needed for React-side deep links into legacy
@@ -274,16 +260,16 @@ function bb_admin_settings_page() {
 		// GroundLevel 9.x scopes the add-on AJAX actions to the (dynamic) plugin ID,
 		// e.g. `bb-platform-free_addon_install`. Resolve them server-side so the React
 		// settings screen never hardcodes an action name.
-		'addonActions'              => bb_admin_settings_get_addon_ajax_actions(),
-		'logoUrl'                   => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
-		'isReadyLaunch'             => function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled(),
+		'addonActions'              => bboss_admin_settings_get_addon_ajax_actions(),
+		'logoUrl'                   => bboss()->plugin_url . 'bp-core/images/admin/BBLogo.png',
+		'isReadyLaunch'             => function_exists( 'bboss_is_readylaunch_enabled' ) && bboss_is_readylaunch_enabled(),
 		// Mirrors the legacy ReadyLaunchSettings.js gate at line 1252 —
 		// once the wizard has been completed, the Setup Wizard button on
 		// the welcome banner hides. Returning admins keep tweaking via
 		// the form fields directly; the layout flip + Theme banner
 		// "Use ReadyLaunch" button cover the re-entry paths the wizard
 		// itself used to.
-		'isRlOnboardingCompleted'   => (bool) bp_get_option( 'bb_rl_onboarding_completed', false ),
+		'isRlOnboardingCompleted'   => (bool) bboss_get_option( 'bb_rl_onboarding_completed', false ),
 		// BuddyBoss Theme state for the Appearance welcome banner CTA logic.
 		// `get_template()` over `get_stylesheet()` so child themes of
 		// buddyboss-theme count as active. `canSwitchThemes` lets the
@@ -297,7 +283,7 @@ function bb_admin_settings_page() {
 		// which only routes when buddyboss-theme is active. Localized
 		// unconditionally because the React side already gates the button
 		// on `isBuddyBossThemeActive`.
-		'themeOptionsUrl'           => esc_url( bp_get_admin_url( add_query_arg( array( 'page' => 'buddyboss_theme_options' ), 'admin.php' ) ) ),
+		'themeOptionsUrl'           => esc_url( bboss_get_admin_url( add_query_arg( array( 'page' => 'buddyboss_theme_options' ), 'admin.php' ) ) ),
 		'currentUser'               => array(
 			'id'   => get_current_user_id(),
 			'name' => wp_get_current_user()->display_name,
@@ -311,13 +297,13 @@ function bb_admin_settings_page() {
 	);
 
 	// Component active status for conditional UI in React.
-	$localize_data['isSearchActive']                     = bp_is_active( 'search' );
-	$localize_data['showMessagingWithoutConnectionFlag'] = bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && (bool) bp_get_option( 'bp-force-friendship-to-message', false );
-	$localize_data['isGroupCreationAllowed']             = bp_is_active( 'groups' ) && ! bp_restrict_group_creation();
-	$localize_data['isGroupTypeCreationEnabled']         = bp_is_active( 'groups' ) && bp_disable_group_type_creation();
-	$localize_data['isGroupAutoJoinEnabled']             = bp_is_active( 'groups' ) && bp_disable_group_type_creation() && bp_enable_group_auto_join();
-	$localize_data['isEmailInviteEnabled']               = bp_is_active( 'invites' ) && function_exists( 'bp_disable_invite_member_type' ) && bp_disable_invite_member_type();
-	$localize_data['isProfileTypesEnabled']              = bp_is_active( 'xprofile' ) && function_exists( 'bp_member_type_enable_disable' ) && bp_member_type_enable_disable();
+	$localize_data['isSearchActive']                     = bboss_is_active( 'search' );
+	$localize_data['showMessagingWithoutConnectionFlag'] = bboss_is_active( 'messages' ) && bboss_is_active( 'friends' ) && (bool) bboss_get_option( 'bp-force-friendship-to-message', false );
+	$localize_data['isGroupCreationAllowed']             = bboss_is_active( 'groups' ) && ! bboss_restrict_group_creation();
+	$localize_data['isGroupTypeCreationEnabled']         = bboss_is_active( 'groups' ) && bboss_disable_group_type_creation();
+	$localize_data['isGroupAutoJoinEnabled']             = bboss_is_active( 'groups' ) && bboss_disable_group_type_creation() && bboss_enable_group_auto_join();
+	$localize_data['isEmailInviteEnabled']               = bboss_is_active( 'invites' ) && function_exists( 'bboss_disable_invite_member_type' ) && bboss_disable_invite_member_type();
+	$localize_data['isProfileTypesEnabled']              = bboss_is_active( 'xprofile' ) && function_exists( 'bboss_member_type_enable_disable' ) && bboss_member_type_enable_disable();
 
 	// License/tier state for the Help tab upsell promos.
 	//
@@ -330,8 +316,7 @@ function bb_admin_settings_page() {
 	//
 	// Help tab logic (HelpScreen.js): no active license -> show the "Pro"
 	// promo; active license without Scale -> show the "Scale" promo.
-	$bb_license_connector  = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
-	$bb_has_active_license = $bb_license_connector->getLicenseActivationStatus();
+	$bb_has_active_license = false;
 	$bb_has_plus_tier      = false;
 	if ( $bb_has_active_license && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
 		$bb_has_plus_tier = null !== \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-gamification' );
@@ -346,9 +331,22 @@ function bb_admin_settings_page() {
 	$localize_data['hasActiveLicense'] = $bb_has_active_license;
 	$localize_data['hasPlusTier']      = $bb_has_plus_tier;
 
+	// Pricing links for the React upsells: the upgrade modal and section badge
+	// fallback (`default`), the Appearance "Buy Theme" button (`buyTheme`) and the
+	// Help tab promos (`help*`). Builds without pricing links (the wordpress.org
+	// edition) send an empty list, and each component then hides its link.
+	$bb_pricing_urls = array();
+	$localize_data['pricingUrls'] = $bb_pricing_urls;
+
+	// Help tab promo images, hosted on the BuddyBoss marketing bucket. Builds
+	// without remote marketing assets (the wordpress.org edition) send an empty
+	// list, and the Help promos then render without an image.
+	$bb_help_promo_images = array();
+	$localize_data['helpPromoImages'] = $bb_help_promo_images;
+
 	// Upload nonces for image upload fields (avatar/cover).
 	// Only expose when the user has capability to manage group settings.
-	if ( bp_current_user_can( 'bp_moderate' ) ) {
+	if ( bboss_current_user_can( 'bp_moderate' ) ) {
 		$localize_data['uploadNonces'] = array(
 			'uploader'          => wp_create_nonce( 'bp-uploader' ),
 			'avatarCropstore'   => wp_create_nonce( 'bp_avatar_cropstore' ),
@@ -364,13 +362,13 @@ function bb_admin_settings_page() {
 	}
 
 	// Reported Content: pass content types for the filter dropdown.
-	if ( bp_is_active( 'moderation' ) ) {
-		$content_types = bp_moderation_content_types();
+	if ( bboss_is_active( 'moderation' ) ) {
+		$content_types = bboss_moderation_content_types();
 
 		// Exclude member types (shown in separate Flagged Members panel).
-		unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
-		if ( isset( $content_types[ BP_Moderation_Members::$moderation_type_report ] ) ) {
-			unset( $content_types[ BP_Moderation_Members::$moderation_type_report ] );
+		unset( $content_types[ BBoss_Moderation_Members::$moderation_type ] );
+		if ( isset( $content_types[ BBoss_Moderation_Members::$moderation_type_report ] ) ) {
+			unset( $content_types[ BBoss_Moderation_Members::$moderation_type_report ] );
 		}
 
 		$localize_data['reportedContentTypes'] = $content_types;
@@ -400,13 +398,13 @@ function bb_admin_settings_page() {
 	// Theme vs ReadyLaunch layout choice, so admins may revisit it after
 	// completion to switch). Without this payload the click handler falls
 	// back to a full-page redirect, which still works but is slower.
-	if ( class_exists( 'BB_ReadyLaunch_Onboarding' ) ) {
-		$localize_data['rlOnboardingBootstrap'] = BB_ReadyLaunch_Onboarding::instance()->get_bootstrap_data();
+	if ( class_exists( 'BBoss_ReadyLaunch_Onboarding' ) ) {
+		$localize_data['rlOnboardingBootstrap'] = BBoss_ReadyLaunch_Onboarding::instance()->get_bootstrap_data();
 	}
 
 	// Only expose debug data when WP_DEBUG is enabled.
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-		$registry               = bb_feature_registry();
+		$registry               = bboss_feature_registry();
 		$all_features           = $registry->bb_get_features( array( 'status' => 'all' ) );
 		$localize_data['debug'] = array(
 			'featureCount' => count( $all_features ),
@@ -581,7 +579,7 @@ function bb_admin_settings_page() {
 	 * @since BuddyPress 1.6.0
 	 * @deprecated BuddyBoss 3.0.0 Use standard WordPress enqueue hooks instead.
 	 */
-	if ( bp_is_active( 'activity' ) ) {
+	if ( bboss_is_active( 'activity' ) ) {
 		do_action_deprecated(
 			'bp_activity_admin_enqueue_scripts',
 			array(),
@@ -605,12 +603,6 @@ function bb_admin_settings_page() {
 		?>
 		<hr class="wp-header-end">
 		<?php
-		// Free-install "Register your email" banner — rendered outside the
-		// React mount so React never manages (or clobbers) it. Renders
-		// nothing on properly licensed sites (see bb_admin_register_banner_mode()).
-		if ( function_exists( 'bb_admin_render_register_banner' ) ) {
-			bb_admin_render_register_banner();
-		}
 		?>
 		<div id="bb-admin-settings"></div>
 		<?php
@@ -633,7 +625,7 @@ function bb_admin_settings_page() {
 		?>
 		<noscript>
 			<p style="padding: 20px; font-size: 14px;">
-				<?php esc_html_e( 'JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser.', 'buddyboss' ); ?>
+				<?php esc_html_e( 'JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser.', 'buddyboss-platform' ); ?>
 			</p>
 		</noscript>
 	</div>

@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Remove activity from likes.
  *
@@ -14,13 +17,13 @@
  * @return bool False on failure.
  * @todo is this still used?
  */
-function bp_activity_action_remove_favorite() {
-	if ( ! is_user_logged_in() || ! bp_is_activity_component() || ! bp_is_current_action( 'unfavorite' ) ) {
+function bboss_activity_action_remove_favorite() {
+	if ( ! is_user_logged_in() || ! bboss_is_activity_component() || ! bboss_is_current_action( 'unfavorite' ) ) {
 		return false;
 	}
 
-	if ( empty( $activity_id ) && bp_action_variable( 0 ) ) {
-		$activity_id = (int) bp_action_variable( 0 );
+	if ( empty( $activity_id ) && bboss_action_variable( 0 ) ) {
+		$activity_id = (int) bboss_action_variable( 0 );
 	}
 
 	// Not viewing a specific activity item.
@@ -32,7 +35,7 @@ function bp_activity_action_remove_favorite() {
 	check_admin_referer( 'unmark_favorite' );
 
 	// Load up the activity item.
-	$activity = new BP_Activity_Activity( $activity_id );
+	$activity = new BBoss_Activity_Activity( $activity_id );
 
 	if ( empty( $activity->id ) ) {
 		return false;
@@ -40,15 +43,15 @@ function bp_activity_action_remove_favorite() {
 
 	if ( 'activity_comment' === $activity->type ) {
 		$type     = 'activity_comment';
-		$message  = __( 'Post comment unsaved.', 'buddyboss' );
+		$message  = __( 'Post comment unsaved.', 'buddyboss-platform' );
 		$redirect = wp_get_referer() . '#acomment-display-' . $activity_id;
 	} else {
 		$type     = 'activity';
-		$message  = __( 'Post unsaved.', 'buddyboss' );
+		$message  = __( 'Post unsaved.', 'buddyboss-platform' );
 		$redirect = wp_get_referer() . '#activity-' . $activity_id;
 	}
 
-	$un_reacted = bp_activity_remove_user_favorite(
+	$un_reacted = bboss_activity_remove_user_favorite(
 		$activity_id,
 		0,
 		array(
@@ -58,11 +61,11 @@ function bp_activity_action_remove_favorite() {
 	);
 
 	if ( is_wp_error( $un_reacted ) ) {
-		bp_core_add_message( $un_reacted->get_error_message(), 'error' );
+		bboss_core_add_message( $un_reacted->get_error_message(), 'error' );
 	} else {
-		bp_core_add_message( $message );
+		bboss_core_add_message( $message );
 	}
 
-	bp_core_redirect( $redirect );
+	bboss_core_redirect( $redirect );
 }
-add_action( 'bp_actions', 'bp_activity_action_remove_favorite' );
+add_action( 'bp_actions', 'bboss_activity_action_remove_favorite' );

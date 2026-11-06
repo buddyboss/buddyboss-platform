@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Attachments_Group_Cover_Endpoint class
+ * BP REST: BBoss_REST_Attachments_Group_Cover_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -15,25 +15,25 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 
-	use BP_REST_Attachments;
+	use BBoss_REST_Attachments;
 
 	/**
-	 * BP_Attachment_Cover_Image Instance.
+	 * BBoss_Attachment_Cover_Image Instance.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_Attachment_Cover_Image
+	 * @var BBoss_Attachment_Cover_Image
 	 */
 	protected $attachment_instance;
 
 	/**
-	 * Reuse some parts of the BP_REST_Groups_Endpoint class.
+	 * Reuse some parts of the BBoss_REST_Groups_Endpoint class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_Groups_Endpoint
+	 * @var BBoss_REST_Groups_Endpoint
 	 */
 	protected $groups_endpoint;
 
@@ -42,7 +42,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_Groups_Group
+	 * @var BBoss_Groups_Group
 	 */
 	protected $group;
 
@@ -61,10 +61,10 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace           = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base           = buddypress()->groups->id;
-		$this->groups_endpoint     = new BP_REST_Groups_Endpoint();
-		$this->attachment_instance = new BP_Attachment_Cover_Image();
+		$this->namespace           = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base           = bboss()->groups->id;
+		$this->groups_endpoint     = new BBoss_REST_Groups_Endpoint();
+		$this->attachment_instance = new BBoss_Attachment_Cover_Image();
 	}
 
 	/**
@@ -79,7 +79,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'group_id' => array(
-						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -120,12 +120,12 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} group_id A unique numeric ID for the Group.
 	 */
 	public function get_item( $request ) {
-		$cover_url = bp_get_group_cover_url( $this->group );
+		$cover_url = bboss_get_group_cover_url( $this->group );
 
 		if ( empty( $cover_url ) ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_cover_no_image',
-				__( 'Sorry, there was a problem fetching this group cover.', 'buddyboss' ),
+				__( 'Sorry, there was a problem fetching this group cover.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -163,10 +163,10 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -178,7 +178,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! $this->group ) {
 			$retval = new WP_Error(
 				'bp_rest_group_invalid_id',
-				__( 'Invalid group id.', 'buddyboss' ),
+				__( 'Invalid group id.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -222,7 +222,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( empty( $files ) ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_cover_no_image_file',
-				__( 'Sorry, you need an image file to upload.', 'buddyboss' ),
+				__( 'Sorry, you need an image file to upload.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -266,10 +266,10 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = $this->delete_item_permissions_check( $request );
 
-		if ( true === $retval && bp_disable_group_cover_image_uploads() ) {
+		if ( true === $retval && bboss_disable_group_cover_image_uploads() ) {
 			$retval = new WP_Error(
 				'bp_rest_attachments_group_cover_disabled',
-				__( 'Sorry, group cover upload is disabled.', 'buddyboss' ),
+				__( 'Sorry, group cover upload is disabled.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -306,8 +306,8 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	public function delete_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 
-		$cover_url = bp_get_group_cover_url( $this->group );
-		$deleted   = bp_attachments_delete_file(
+		$cover_url = bboss_get_group_cover_url( $this->group );
+		$deleted   = bboss_attachments_delete_file(
 			array(
 				'item_id'    => (int) $this->group->id,
 				'object_dir' => $this->get_cover_object_component(),
@@ -318,7 +318,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( ! $deleted ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_cover_delete_failed',
-				__( 'Sorry, there was a problem deleting this group cover.', 'buddyboss' ),
+				__( 'Sorry, there was a problem deleting this group cover.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -344,7 +344,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a group cover is deleted via the REST API.
 		 *
-		 * @param BP_Groups_Group $group The group object.
+		 * @param BBoss_Groups_Group $group The group object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
@@ -377,17 +377,17 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
 
-		if ( true === $retval && ! empty( $args ) && ! bp_attachments_current_user_can( 'edit_cover_image', $args ) ) {
+		if ( true === $retval && ! empty( $args ) && ! bboss_attachments_current_user_can( 'edit_cover_image', $args ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -453,14 +453,14 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'image'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Full size of the image file.', 'buddyboss' ),
+					'description' => __( 'Full size of the image file.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'readonly'    => true,
 				),
 				'warning' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Warning while uploading the cover photo.', 'buddyboss' ),
+					'description' => __( 'Warning while uploading the cover photo.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),

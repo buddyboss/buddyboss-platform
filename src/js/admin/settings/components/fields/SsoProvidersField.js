@@ -158,7 +158,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 
 		// Show "Saving changes..." toast immediately.
 		window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-			detail: { status: 'saving', message: __( 'Saving changes...', 'buddyboss' ) },
+			detail: { status: 'saving', message: __( 'Saving changes...', 'buddyboss-platform' ) },
 		} ) );
 
 		var ssoVars = window.bbSSOAdminVars || {};
@@ -180,7 +180,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 					clearTimeout( toastTimerRef.current );
 					toastTimerRef.current = setTimeout( function () {
 						window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-							detail: { status: 'success', message: __( 'Settings saved.', 'buddyboss' ) },
+							detail: { status: 'success', message: __( 'Settings saved.', 'buddyboss-platform' ) },
 						} ) );
 					}, 500 );
 
@@ -217,7 +217,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 						} );
 					} );
 					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-						detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss' ) },
+						detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss-platform' ) },
 					} ) );
 				}
 			} )
@@ -235,7 +235,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 					} );
 				} );
 				window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-					detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss' ) },
+					detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss-platform' ) },
 				} ) );
 			} )
 			.finally( function () {
@@ -327,7 +327,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 
 		// Show "Saving changes..." toast immediately.
 		window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-			detail: { status: 'saving', message: __( 'Saving changes...', 'buddyboss' ) },
+			detail: { status: 'saving', message: __( 'Saving changes...', 'buddyboss-platform' ) },
 		} ) );
 
 		fetch( window.bbAdminData.ajaxUrl, {
@@ -338,16 +338,16 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 		} ).then( function ( result ) {
 			if ( result.success ) {
 				window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-					detail: { status: 'success', message: __( 'Settings saved.', 'buddyboss' ) },
+					detail: { status: 'success', message: __( 'Settings saved.', 'buddyboss-platform' ) },
 				} ) );
 			} else {
 				window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-					detail: { status: 'error', message: result.data && result.data.message ? result.data.message : __( 'Failed to save order.', 'buddyboss' ) },
+					detail: { status: 'error', message: result.data && result.data.message ? result.data.message : __( 'Failed to save order.', 'buddyboss-platform' ) },
 				} ) );
 			}
 		} ).catch( function () {
 			window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-				detail: { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) },
+				detail: { status: 'error', message: __( 'Failed to save order.', 'buddyboss-platform' ) },
 			} ) );
 		} );
 	}, [ providers ] );
@@ -428,7 +428,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 									} }
 									className="bb-admin-sso-providers__card-menu"
 									disabled={ disabled }
-									aria-label={ provider.label + ' ' + __( 'options', 'buddyboss' ) }
+									aria-label={ provider.label + ' ' + __( 'options', 'buddyboss-platform' ) }
 									onClick={ function () {
 										setOpenMenu( isMenuOpen ? null : provider.id );
 									} }
@@ -454,7 +454,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 												} }
 											>
 												<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
-												{ __( 'Edit', 'buddyboss' ) }
+												{ __( 'Edit', 'buddyboss-platform' ) }
 											</button>
 										</div>
 									</Popover>

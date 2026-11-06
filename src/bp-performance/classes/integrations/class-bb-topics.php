@@ -371,7 +371,7 @@ class BB_Topics extends Integration_Abstract {
 	/**
 	 * When discussion has been subscribed.
 	 *
-	 * @param BB_Subscriptions $subscription Subscription object.
+	 * @param BBoss_Subscriptions $subscription Subscription object.
 	 */
 	public function event_bb_subscriptions_after_save( $subscription ) {
 		if (
@@ -389,7 +389,7 @@ class BB_Topics extends Integration_Abstract {
 	 * @param int $subscription_id  Subscription id.
 	 */
 	public function event_bb_subscriptions_before_delete_subscription( $subscription_id ) {
-		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		$subscription = bboss_subscriptions_get_subscription( $subscription_id );
 		if (
 			! empty( $subscription->type ) &&
 			! empty( $subscription->item_id ) &&
@@ -428,7 +428,7 @@ class BB_Topics extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bp_suspend_forum_reply_suspended( $reply_id ) {
-		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 		$this->purge_item_cache_by_item_id( $topic_id );
 	}
 
@@ -438,14 +438,14 @@ class BB_Topics extends Integration_Abstract {
 	 * @param int $reply_id Reply ID.
 	 */
 	public function event_bp_suspend_forum_reply_unsuspended( $reply_id ) {
-		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 		$this->purge_item_cache_by_item_id( $topic_id );
 	}
 
 	/**
 	 * Update cache for topics when member blocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bp_moderation_after_save( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -463,7 +463,7 @@ class BB_Topics extends Integration_Abstract {
 	/**
 	 * Update cache for topics when member unblocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bb_moderation_after_delete( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -619,7 +619,7 @@ class BB_Topics extends Integration_Abstract {
 
 		$args['include_items'] = ( is_array( $topic_ids ) ? $topic_ids : array( $topic_ids ) );
 
-		$all_subscription = bb_get_subscriptions(
+		$all_subscription = bboss_get_subscriptions(
 			$args,
 			true
 		);

@@ -17,22 +17,22 @@ defined( 'ABSPATH' ) || exit;
  * @param int   $user_id  ID of the user whose settings are being updated.
  * @param array $settings Settings array.
  */
-function bp_settings_update_notification_settings( $user_id, $settings ) {
+function bboss_settings_update_notification_settings( $user_id, $settings ) {
 	$user_id = (int) $user_id;
 
-	$settings = bp_settings_sanitize_notification_settings( $settings );
+	$settings = bboss_settings_sanitize_notification_settings( $settings );
 	foreach ( $settings as $setting_key => $setting_value ) {
 
-		if ( bb_enabled_legacy_email_preference() ) {
+		if ( bboss_enabled_legacy_email_preference() ) {
 			if ( 'notification_membership_request_completed' === $setting_key && 'yes' === $setting_value ) {
-				bp_update_user_meta( $user_id, 'bb_groups_request_accepted', 'yes' );
-				bp_update_user_meta( $user_id, 'bb_groups_request_rejected', 'yes' );
+				bboss_update_user_meta( $user_id, 'bb_groups_request_accepted', 'yes' );
+				bboss_update_user_meta( $user_id, 'bb_groups_request_rejected', 'yes' );
 			} elseif ( 'notification_membership_request_completed' === $setting_key && 'no' === $setting_value ) {
-				bp_update_user_meta( $user_id, 'bb_groups_request_accepted', 'no' );
-				bp_update_user_meta( $user_id, 'bb_groups_request_rejected', 'no' );
+				bboss_update_user_meta( $user_id, 'bb_groups_request_accepted', 'no' );
+				bboss_update_user_meta( $user_id, 'bb_groups_request_rejected', 'no' );
 			} else {
-				$all_keys = bb_get_prefences_key( 'legacy', $setting_key );
-				bp_update_user_meta( $user_id, $all_keys, $setting_value );
+				$all_keys = bboss_get_prefences_key( 'legacy', $setting_key );
+				bboss_update_user_meta( $user_id, $all_keys, $setting_value );
 			}
 		} else {
 
@@ -43,17 +43,17 @@ function bp_settings_update_notification_settings( $user_id, $settings ) {
 				) &&
 				'yes' === $setting_value
 			) {
-				bp_update_user_meta( $user_id, 'notification_membership_request_completed', 'yes' );
+				bboss_update_user_meta( $user_id, 'notification_membership_request_completed', 'yes' );
 			} elseif (
 				'bb_groups_request_rejected' === $setting_key &&
 				'yes' === $setting_value
 			) {
-				bp_update_user_meta( $user_id, 'notification_membership_request_completed', 'yes' );
+				bboss_update_user_meta( $user_id, 'notification_membership_request_completed', 'yes' );
 			} elseif (
 				'bb_groups_request_accepted' === $setting_key &&
 				'yes' === $setting_value
 			) {
-				bp_update_user_meta( $user_id, 'notification_membership_request_completed', 'yes' );
+				bboss_update_user_meta( $user_id, 'notification_membership_request_completed', 'yes' );
 			} elseif (
 				(
 					'bb_groups_request_accepted' === $setting_key ||
@@ -64,14 +64,14 @@ function bp_settings_update_notification_settings( $user_id, $settings ) {
 				isset( $settings['bb_groups_request_rejected'] ) &&
 				'no' === $settings['bb_groups_request_rejected']
 			) {
-				bp_update_user_meta( $user_id, 'notification_membership_request_completed', 'no' );
+				bboss_update_user_meta( $user_id, 'notification_membership_request_completed', 'no' );
 			} else {
-				$all_keys = bb_get_prefences_key( 'modern', $setting_key );
-				bp_update_user_meta( $user_id, $all_keys, $setting_value );
+				$all_keys = bboss_get_prefences_key( 'modern', $setting_key );
+				bboss_update_user_meta( $user_id, $all_keys, $setting_value );
 			}
 		}
 
-		bp_update_user_meta( $user_id, $setting_key, $setting_value );
+		bboss_update_user_meta( $user_id, $setting_key, $setting_value );
 	}
 }
 
@@ -83,7 +83,7 @@ function bp_settings_update_notification_settings( $user_id, $settings ) {
  * @param array $settings Array of settings.
  * @return array Sanitized settings.
  */
-function bp_settings_sanitize_notification_settings( $settings = array() ) {
+function bboss_settings_sanitize_notification_settings( $settings = array() ) {
 	$sanitized_settings = array();
 
 	if ( empty( $settings ) ) {
@@ -91,7 +91,7 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 	}
 
 	// Get registered notification keys.
-	$registered_notification_settings = bp_settings_get_registered_notification_keys();
+	$registered_notification_settings = bboss_settings_get_registered_notification_keys();
 
 	/*
 	 * We sanitize values for core notification keys.
@@ -138,7 +138,7 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
  *
  * @return array
  */
-function bp_settings_get_registered_notification_keys() {
+function bboss_settings_get_registered_notification_keys() {
 
 	ob_start();
 	/**
@@ -165,7 +165,7 @@ function bp_settings_get_registered_notification_keys() {
  * sub-tabs under Settings > Notifications.
  *
  * A capability marker for the `bb_settings_notification_subnav_template`
- * filter (in `bp_settings_screen_notification()`) and the
+ * filter (in `bboss_settings_screen_notification()`) and the
  * `bb_member_settings_notifications_custom_tab` action (in the member settings
  * template routers). Plugins that register a custom notifications sub-tab
  * should gate their sub-nav registration on `function_exists()` of this
@@ -176,6 +176,6 @@ function bp_settings_get_registered_notification_keys() {
  *
  * @return bool
  */
-function bb_settings_supports_notification_subnav() {
+function bboss_settings_supports_notification_subnav() {
 	return true;
 }

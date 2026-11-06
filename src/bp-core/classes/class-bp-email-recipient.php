@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.5.0
  */
-class BP_Email_Recipient {
+class BBoss_Email_Recipient {
 
 	/**
 	 * Recipient's email address.
@@ -118,11 +118,11 @@ class BP_Email_Recipient {
 			} else {
 				$sender_id = $this->user_object->ID;
 			}
-			$wp_name = wp_specialchars_decode( bp_core_get_user_displayname( $this->user_object->ID, $sender_id ), ENT_QUOTES );
+			$wp_name = wp_specialchars_decode( bboss_core_get_user_displayname( $this->user_object->ID, $sender_id ), ENT_QUOTES );
 
 			$this->address = $this->user_object->user_email;
 			$this->name    = sanitize_text_field( $wp_name );
-			$this->avatar  = bp_core_fetch_avatar(
+			$this->avatar  = bboss_core_fetch_avatar(
 				array(
 					'item_id' => $this->user_object->ID,
 					'html'    => false,
@@ -136,7 +136,7 @@ class BP_Email_Recipient {
 		}
 
 		if ( ! $this->avatar ) {
-			$this->avatar = bp_core_fetch_avatar(
+			$this->avatar = bboss_core_fetch_avatar(
 				array(
 					'object'  => 'user',
 					'item_id' => $this->user_object ? $this->user_object->ID : '',
@@ -146,14 +146,14 @@ class BP_Email_Recipient {
 		}
 
 		/**
-		 * Fires inside __construct() method for BP_Email_Recipient class.
+		 * Fires inside __construct() method for BBoss_Email_Recipient class.
 		 *
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string|array|int|WP_User $email_or_user Either an email address, user ID, WP_User object,
 		 *                                                or an array containing any combination of the above.
 		 * @param string $name If $email_or_user is a string, this is the recipient's name.
-		 * @param BP_Email_Recipient $this Current instance of the email type class.
+		 * @param BBoss_Email_Recipient $this Current instance of the email type class.
 		 */
 		do_action( 'bp_email_recipient', $email_or_user, $name, $this );
 	}
@@ -173,7 +173,7 @@ class BP_Email_Recipient {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $address Recipient's address.
-		 * @param BP_Email $recipient $this Current instance of the email recipient class.
+		 * @param BBoss_Email $recipient $this Current instance of the email recipient class.
 		 */
 		return apply_filters( 'bp_email_recipient_get_address', $this->address, $this );
 	}
@@ -193,7 +193,7 @@ class BP_Email_Recipient {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $name Recipient's name.
-		 * @param BP_Email $recipient $this Current instance of the email recipient class.
+		 * @param BBoss_Email $recipient $this Current instance of the email recipient class.
 		 */
 		return apply_filters( 'bp_email_recipient_get_name', $this->name, $this );
 	}
@@ -213,7 +213,7 @@ class BP_Email_Recipient {
 		 * @since BuddyBoss 1.0.0
 		 *
 		 * @param string $name Recipient's avatar.
-		 * @param BP_Email $recipient $this Current instance of the email recipient class.
+		 * @param BBoss_Email $recipient $this Current instance of the email recipient class.
 		 */
 		return apply_filters( 'bp_email_recipient_get_avatar', $this->avatar, $this );
 	}
@@ -242,7 +242,7 @@ class BP_Email_Recipient {
 		 * @param WP_User $name WP_User object for this recipient, or null if not set.
 		 * @param string $transform Optional. How the return value was transformed.
 		 *                          Accepts 'raw' (default) or 'search-email'.
-		 * @param BP_Email $recipient $this Current instance of the email recipient class.
+		 * @param BBoss_Email $recipient $this Current instance of the email recipient class.
 		 */
 		return apply_filters( 'bp_email_recipient_get_user', $this->user_object, $transform, $this );
 	}

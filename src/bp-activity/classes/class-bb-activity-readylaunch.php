@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.9.00
  */
-class BB_Activity_Readylaunch {
+class BBoss_Activity_Readylaunch {
 
 	/**
 	 * The single instance of the class.
@@ -51,7 +51,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_rl_activity_content_with_changed_avatar' ), 9999, 2 );
 
 		// Remove post content.
-		remove_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );
+		remove_action( 'bp_before_directory_activity', 'bboss_activity_directory_page_content' );
 
 		add_filter( 'bp_nouveau_media_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 		add_filter( 'bp_nouveau_document_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
@@ -75,7 +75,7 @@ class BB_Activity_Readylaunch {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @return Controller|BB_Activity_Readylaunch|null
+	 * @return Controller|BBoss_Activity_Readylaunch|null
 	 */
 	public static function instance() {
 
@@ -111,19 +111,19 @@ class BB_Activity_Readylaunch {
 			$reaction_count_class = 'comment-reactions_count';
 		}
 
-		$most_reactions = function_exists( 'bb_get_activity_most_reactions' ) ? bb_get_activity_most_reactions( $activity_id, $item_type ) : array();
+		$most_reactions = function_exists( 'bboss_get_activity_most_reactions' ) ? bboss_get_activity_most_reactions( $activity_id, $item_type ) : array();
 		if ( ! empty( $most_reactions ) ) {
 			$output .= '<div class="activity-state-reactions">';
 
 			foreach ( $most_reactions as $reaction ) {
-				$icon    = function_exists( 'bb_activity_prepare_emotion_icon' ) ? bb_activity_prepare_emotion_icon( $reaction['id'] ) : '';
+				$icon    = function_exists( 'bboss_activity_prepare_emotion_icon' ) ? bboss_activity_prepare_emotion_icon( $reaction['id'] ) : '';
 				$output .= sprintf(
 					'<div class="reactions_item">%s</div>',
 					$icon
 				);
 			}
 
-			$reaction_obj   = bb_load_reaction();
+			$reaction_obj   = bboss_load_reaction();
 			$reaction_count = $reaction_obj ? $reaction_obj->bb_get_user_reactions_count(
 				array(
 					'item_id'   => $activity_id,
@@ -132,8 +132,8 @@ class BB_Activity_Readylaunch {
 			) : 0;
 			if ( ! empty( $reaction_count ) ) {
 				$reaction_text = 1 === $reaction_count ?
-					esc_html__( 'reaction', 'buddyboss' ) :
-					esc_html__( 'reactions', 'buddyboss' );
+					esc_html__( 'reaction', 'buddyboss-platform' ) :
+					esc_html__( 'reactions', 'buddyboss-platform' );
 
 				$output .= sprintf(
 					'<div class="%1$s">%2$s %3$s</div>',
@@ -170,20 +170,20 @@ class BB_Activity_Readylaunch {
 	 */
 	public function bb_rl_get_activity_comment_buttons( $buttons, $activity_comment_id ) {
 		if ( isset( $buttons['activity_comment_favorite'] ) ) {
-			if ( ! bb_get_activity_comment_is_favorite() ) {
-				$button_settings                                   = bb_get_reaction_button_settings();
+			if ( ! bboss_get_activity_comment_is_favorite() ) {
+				$button_settings                                   = bboss_get_reaction_button_settings();
 				$buttons['activity_comment_favorite']['link_text'] = sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>
 				<i class="bb-icon-%2$s"></i>
 				<span class="like-count">%1$s</span>',
-					! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : __( 'Like', 'buddyboss' ),
+					! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : __( 'Like', 'buddyboss-platform' ),
 					esc_attr( $button_settings['icon'] )
 				);
 			} else {
 				// Get user reaction data and prepare the link.
-				$reaction_data = bb_activity_get_user_reaction_by_item( $activity_comment_id, 'activity_comment' );
+				$reaction_data = bboss_activity_get_user_reaction_by_item( $activity_comment_id, 'activity_comment' );
 				if ( ! empty( $reaction_data ) ) {
-					$prepared_icon                                     = bb_activity_get_reaction_button( $reaction_data['id'], true );
+					$prepared_icon                                     = bboss_activity_get_reaction_button( $reaction_data['id'], true );
 					$buttons['activity_comment_favorite']['link_text'] = sprintf(
 						'<span class="bp-screen-reader-text">%1$s</span>
 							%2$s
@@ -214,7 +214,7 @@ class BB_Activity_Readylaunch {
 			return $button_html;
 		}
 
-		$prepared_icon = bb_activity_get_reaction_button( $args['reaction_id'], $args['has_reacted'] );
+		$prepared_icon = bboss_activity_get_reaction_button( $args['reaction_id'], $args['has_reacted'] );
 
 		// Return your custom HTML structure.
 		return sprintf(
@@ -236,21 +236,22 @@ class BB_Activity_Readylaunch {
 	 * Load more comments for the activity.
 	 *
 	 * @since BuddyBoss 2.9.00
+	 * @since BuddyBoss 3.7.1 The activity and the parent comment must be readable, in their group and thread.
 	 */
 	public function bb_rl_activity_loadmore_comments() {
-		if ( ! bp_is_post_request() ) {
+		if ( ! bboss_is_post_request() ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid request.', 'buddyboss' ),
+					'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 				)
 			);
 		}
 
 		// Nonce check!
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) { // phpcs:ignore
+		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid request.', 'buddyboss' ),
+					'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -258,7 +259,7 @@ class BB_Activity_Readylaunch {
 		if ( empty( $_POST['activity_id'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Activity id cannot be empty.', 'buddyboss' ),
+					'message' => __( 'Activity id cannot be empty.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -266,7 +267,7 @@ class BB_Activity_Readylaunch {
 		if ( empty( $_POST['parent_comment_id'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Parent comment id cannot be empty.', 'buddyboss' ),
+					'message' => __( 'Parent comment id cannot be empty.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -275,7 +276,7 @@ class BB_Activity_Readylaunch {
 		$activity_id       = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
 		$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
 
-		$privacy_check = bb_validate_activity_privacy(
+		$privacy_check = bboss_validate_activity_privacy(
 			array(
 				'activity_id'     => $activity_id,
 				'validate_action' => 'view_activity',
@@ -286,29 +287,42 @@ class BB_Activity_Readylaunch {
 		if ( is_wp_error( $privacy_check ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
+					'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss-platform' ),
 				)
 			);
 		}
 
 		$activities_template = new stdClass();
-		$parent_commment     = new BP_Activity_Activity( $parent_comment_id );
+		$parent_commment     = new BBoss_Activity_Activity( $parent_comment_id );
 		if ( empty( $parent_commment ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid request.', 'buddyboss' ),
+					'message' => __( 'Invalid request.', 'buddyboss-platform' ),
+				)
+			);
+		}
+
+		// Guests can call this, so the activity and the comment whose replies are loaded must
+		// both be readable, in their group and thread.
+		if (
+			! bboss_activity_user_can_view( $activity_id ) ||
+			! bboss_activity_user_can_view( $parent_commment )
+		) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss-platform' ),
 				)
 			);
 		}
 
 		$last_comment_id = ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0;
 		$offset          = ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
-		$comments        = BP_Activity_Activity::append_comments(
+		$comments        = BBoss_Activity_Activity::append_comments(
 			array( $parent_commment ),
 			'ham_only', // Filter spam comments - include orphaned comments (replies to spam).
 			true,
 			array(
-				'limit'                  => bb_get_activity_comment_loading(),
+				'limit'                  => bboss_get_activity_comment_loading(),
 				'offset'                 => $offset,
 				'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( wp_unslash( $_POST['last_comment_timestamp'] ) ) : '',
 				'last_comment_id'        => $last_comment_id,
@@ -319,7 +333,7 @@ class BB_Activity_Readylaunch {
 		if ( empty( $comments[0] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'No more items to load.', 'buddyboss' ),
+					'message' => __( 'No more items to load.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -330,7 +344,7 @@ class BB_Activity_Readylaunch {
 
 		$args = array(
 			'limit_comments'     => true,
-			'comment_load_limit' => bb_get_activity_comment_loading(),
+			'comment_load_limit' => bboss_get_activity_comment_loading(),
 			'parent_comment_id'  => $parent_comment_id,
 			'main_activity_id'   => $activity_id,
 			'is_ajax_load_more'  => false,
@@ -339,11 +353,11 @@ class BB_Activity_Readylaunch {
 		// Check if parent is the main activity.
 		if ( isset( $activities_template->activity ) ) {
 			// No current comment.
-			bp_activity_recurse_comments( $activities_template->activity, $args );
+			bboss_activity_recurse_comments( $activities_template->activity, $args );
 		} else {
 			wp_send_json_error(
 				array(
-					'message' => __( 'No more items to load.', 'buddyboss' ),
+					'message' => __( 'No more items to load.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -354,7 +368,7 @@ class BB_Activity_Readylaunch {
 
 		if ( is_user_logged_in() && empty( $offset ) ) {
 			ob_start();
-			bp_get_template_part( 'activity/comment-form' );
+			bboss_get_template_part( 'activity/comment-form' );
 			$result['comment_form'] = ob_get_clean();
 		}
 		wp_send_json_success( $result );
@@ -366,10 +380,10 @@ class BB_Activity_Readylaunch {
 	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_activity_state() {
-		$activity_id    = bp_get_activity_id();
+		$activity_id    = bboss_get_activity_id();
 		$comment_count  = $this->bb_rl_get_activity_comment_count( $activity_id );
-		$reactions      = bb_active_reactions();
-		$reaction_obj   = bb_load_reaction();
+		$reactions      = bboss_active_reactions();
+		$reaction_obj   = bboss_load_reaction();
 		$reaction_count = $reaction_obj ? $reaction_obj->bb_get_user_reactions_count(
 			array(
 				'item_id'     => $activity_id,
@@ -380,13 +394,13 @@ class BB_Activity_Readylaunch {
 		?>
 		<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 			<?php
-			if ( bb_is_reaction_activity_posts_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
-				echo bb_get_activity_post_user_reactions_html( $activity_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			if ( bboss_is_reaction_activity_posts_enabled() && function_exists( 'bboss_get_activity_post_user_reactions_html' ) ) {
+				echo bboss_get_activity_post_user_reactions_html( $activity_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 			?>
 
 			<?php
-			if ( bp_activity_can_comment() ) {
+			if ( bboss_activity_can_comment() ) {
 				$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
 				if ( $comment_count > 0 ) {
 					$activity_state_comment_class['has-comments'] = 'has-comments';
@@ -398,10 +412,10 @@ class BB_Activity_Readylaunch {
 					<?php
 					if ( $comment_count > 1 || 0 === $comment_count ) {
 						/* translators: %d: activity comment count */
-						echo esc_html( sprintf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count ) );
+						echo esc_html( sprintf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss-platform' ), $comment_count ) );
 					} else {
 						/* translators: %d: activity comment count */
-						echo esc_html( sprintf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count ) );
+						echo esc_html( sprintf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss-platform' ), $comment_count ) );
 					}
 					?>
 				</span>
@@ -423,6 +437,11 @@ class BB_Activity_Readylaunch {
 	 * @return array
 	 */
 	public function bb_rl_activity_sync_from_modal_args( $args ) {
+		// The legacy entry template renders comments inline, so keep them for legacy UIs.
+		if ( BBoss_Readylaunch::bb_rl_is_legacy_template_ajax() ) {
+			return $args;
+		}
+
 		$args['display_comments'] = false;
 
 		return $args;
@@ -459,14 +478,14 @@ class BB_Activity_Readylaunch {
 		}
 		$reply_strings = array(
 			/* Translators: %d: reply count */
-			'replyLabel'         => __( '%d Reply', 'buddyboss' ),
+			'replyLabel'         => __( '%d Reply', 'buddyboss-platform' ),
 			/* Translators: %d: reply count */
-			'repliesLabel'       => __( '%d Replies', 'buddyboss' ),
+			'repliesLabel'       => __( '%d Replies', 'buddyboss-platform' ),
 			'video_default_url'  => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
-			'replyButtonText'    => __( 'Reply', 'buddyboss' ),
-			'commentButtonText'  => __( 'Comment', 'buddyboss' ),
-			'replyPlaceholder'   => __( 'Write a reply...', 'buddyboss' ),
-			'commentPlaceholder' => __( 'Write a comment...', 'buddyboss' ),
+			'replyButtonText'    => __( 'Reply', 'buddyboss-platform' ),
+			'commentButtonText'  => __( 'Comment', 'buddyboss-platform' ),
+			'replyPlaceholder'   => __( 'Write a reply...', 'buddyboss-platform' ),
+			'commentPlaceholder' => __( 'Write a comment...', 'buddyboss-platform' ),
 		);
 
 		$params['activity']['strings'] = array_merge( $params['activity']['strings'], $reply_strings );
@@ -519,16 +538,16 @@ class BB_Activity_Readylaunch {
 			return $reaction_data;
 		}
 		foreach ( $reaction_data['reactions'] as $key => $user_data ) {
-			if ( bp_is_active( 'follow' ) ) {
-				$followers = bp_get_follower_ids( array( 'user_id' => $user_data['user_id'] ) );
-			} elseif ( function_exists( 'bp_get_followers' ) ) {
-				$followers = bp_get_followers( array( 'user_id' => $user_data['user_id'] ) );
+			if ( bboss_is_active( 'follow' ) ) {
+				$followers = bboss_get_follower_ids( array( 'user_id' => $user_data['user_id'] ) );
+			} elseif ( function_exists( 'bboss_get_followers' ) ) {
+				$followers = bboss_get_followers( array( 'user_id' => $user_data['user_id'] ) );
 			}
 			$followers_count = 0;
 			if ( ! empty( $followers ) ) {
 				$followers_count = sprintf(
 					/* translators: %d: follower count */
-					_n( '%d follower', '%d followers', count( $followers ), 'buddyboss' ),
+					_n( '%d follower', '%d followers', count( $followers ), 'buddyboss-platform' ),
 					count( $followers )
 				);
 			}
@@ -560,7 +579,7 @@ class BB_Activity_Readylaunch {
 	 */
 	public function bb_rl_modify_submit_button( $button ) {
 		if ( isset( $button['activity-new-comment'] ) ) {
-			$button['activity-new-comment']['attributes']['value'] = esc_html__( 'Comment', 'buddyboss' );
+			$button['activity-new-comment']['attributes']['value'] = esc_html__( 'Comment', 'buddyboss-platform' );
 		}
 		return $button;
 	}
@@ -577,7 +596,7 @@ class BB_Activity_Readylaunch {
 	 */
 	public function bb_rl_activity_content_with_changed_avatar( $content, $activity ) {
 		if ( 'profile' === $activity->component && 'new_avatar' === $activity->type ) {
-			$full_avatar = bp_core_fetch_avatar(
+			$full_avatar = bboss_core_fetch_avatar(
 				array(
 					'item_id' => $activity->user_id,
 					'object'  => 'user',
@@ -629,7 +648,7 @@ class BB_Activity_Readylaunch {
 			return $activity_action;
 		}
 
-		$user_link_with_html = bp_core_get_userlink( $activity->user_id );
+		$user_link_with_html = bboss_core_get_userlink( $activity->user_id );
 
 		if (
 			in_array( $activity->component, array( 'groups', 'bbpress' ), true ) &&
@@ -637,13 +656,13 @@ class BB_Activity_Readylaunch {
 		) {
 			if ( 'bbp_topic_create' === $activity->type ) {
 				/* Translators: %s: user link */
-				$activity_action = sprintf( __( '%s started the discussion', 'buddyboss' ), $user_link_with_html );
+				$activity_action = sprintf( __( '%s started the discussion', 'buddyboss-platform' ), $user_link_with_html );
 			} elseif ( 'bbp_reply_create' === $activity->type ) {
 				/* Translators: %s: user link */
-				$activity_action = sprintf( __( '%s replied to the discussion', 'buddyboss' ), $user_link_with_html );
+				$activity_action = sprintf( __( '%s replied to the discussion', 'buddyboss-platform' ), $user_link_with_html );
 			}
 			$activity_action = '<p>' . $activity_action . '</p>';
-		} elseif ( 'groups' === $activity->component && bp_is_active( 'groups' ) ) {
+		} elseif ( 'groups' === $activity->component && bboss_is_active( 'groups' ) ) {
 			if (
 				'joined_group' === $activity->type ||
 				'group_details_updated' === $activity->type ||
@@ -653,18 +672,18 @@ class BB_Activity_Readylaunch {
 			) {
 				$group = ! empty( $args['group'] ) ? $args['group'] : null;
 				if ( empty( $group ) ) {
-					$group = groups_get_group( $activity->item_id );
+					$group = bboss_groups_get_group( $activity->item_id );
 				}
 
-				$group_link       = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
-				$secondary_avatar = bp_get_activity_secondary_avatar();
+				$group_link       = '<a href="' . esc_url( bboss_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+				$secondary_avatar = bboss_get_activity_secondary_avatar();
 
 				// Remove the group link and secondary avatar.
 				$activity_action = str_replace( $group_link, '', $activity_action );
 				$activity_action = str_replace( $secondary_avatar, '', $activity_action );
 
 				// Remove any remaining group links that might have different attributes.
-				$group_url       = preg_quote( esc_url( bp_get_group_permalink( $group ) ), '/' );
+				$group_url       = preg_quote( esc_url( bboss_get_group_permalink( $group ) ), '/' );
 				$activity_action = preg_replace( '/<a\s+href="' . $group_url . '"[^>]*>.*?<\/a>/i', '', $activity_action );
 
 				if (
@@ -678,24 +697,24 @@ class BB_Activity_Readylaunch {
 						$activity_action
 					);
 				} elseif ( 'group_details_updated' === $activity->type ) {
-					$user_link = bp_core_get_userlink( $activity->user_id );
+					$user_link = bboss_core_get_userlink( $activity->user_id );
 					/* Translators: %s: user link */
-					$activity_action = sprintf( __( '%s updated group details', 'buddyboss' ), $user_link );
+					$activity_action = sprintf( __( '%s updated group details', 'buddyboss-platform' ), $user_link );
 					$activity_action = '<p>' . $activity_action . '</p>';
 				}
 			} elseif ( 'activity_update' === $activity->type ) {
 				$activity_action = '<p>' . $user_link_with_html . '</p>';
 			}
 		} elseif ( 'activity' === $activity->component && 'activity_update' === $activity->type ) {
-			$user_link = bp_core_get_userlink( $activity->user_id );
-			$usernames = bp_activity_find_mentions( $activity->content );
-			if ( bp_activity_do_mentions() && ! empty( $usernames ) ) {
-				$mentioned_users        = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
+			$user_link = bboss_core_get_userlink( $activity->user_id );
+			$usernames = bboss_activity_find_mentions( $activity->content );
+			if ( bboss_activity_do_mentions() && ! empty( $usernames ) ) {
+				$mentioned_users        = array_filter( array_map( 'bboss_get_user_by_nickname', $usernames ) );
 				$mentioned_users_link   = array();
 				$mentioned_users_avatar = array();
 				foreach ( $mentioned_users as $mentioned_user ) {
-					$mentioned_users_link[]   = bp_core_get_userlink( $mentioned_user->ID );
-					$mentioned_users_avatar[] = bp_core_fetch_avatar(
+					$mentioned_users_link[]   = bboss_core_get_userlink( $mentioned_user->ID );
+					$mentioned_users_avatar[] = bboss_core_fetch_avatar(
 						array(
 							'item_id' => $mentioned_user->ID,
 							'type'    => 'thumb',
@@ -708,11 +727,11 @@ class BB_Activity_Readylaunch {
 
 				$activity_action = sprintf(
 					/* translators: %1$s: user link, %2$s: mentioned users avatar, %3$s: mentioned users link, %4$s: mentioned users link and, %5$s: last mentioned user link */
-					__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s%5$s', 'buddyboss' ),
+					__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s%5$s', 'buddyboss-platform' ),
 					$user_link,
 					$mentioned_users_avatar ? implode( ', ', $mentioned_users_avatar ) : '',
 					$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
-					$mentioned_users_link ? __( ' and ', 'buddyboss' ) : '',
+					$mentioned_users_link ? __( ' and ', 'buddyboss-platform' ) : '',
 					$last_user_link
 				);
 
@@ -721,10 +740,10 @@ class BB_Activity_Readylaunch {
 				$activity_action = '<p>' . $user_link_with_html . '</p>';
 			}
 		} elseif ( 'friends' === $activity->component && 'friendship_created' === $activity->type ) {
-			$friend_link     = bp_core_get_userlink( $activity->secondary_item_id );
+			$friend_link     = bboss_core_get_userlink( $activity->secondary_item_id );
 			$activity_action = sprintf(
 				/* translators: %1$s: user link, %2$s: friend link */
-				__( '%1$s & %2$s are now connected', 'buddyboss' ),
+				__( '%1$s & %2$s are now connected', 'buddyboss-platform' ),
 				$user_link_with_html,
 				$friend_link
 			);
@@ -758,7 +777,7 @@ class BB_Activity_Readylaunch {
 			}
 
 			ob_start();
-			bp_get_template_part( 'activity/comment-form' );
+			bboss_get_template_part( 'activity/comment-form' );
 			$response_data['comment_form'] = ob_get_clean();
 		}
 
@@ -773,11 +792,11 @@ class BB_Activity_Readylaunch {
 				false !== strpos( $description, 'id="add-activity-description"' ) &&
 				! empty( $response_data['type'] )
 			) {
-				$add_description_text = esc_attr__( 'Add a description', 'buddyboss' );
+				$add_description_text = esc_attr__( 'Add a description', 'buddyboss-platform' );
 
 				$type_image_text = sprintf(
 					/* translators: %s: media type */
-					esc_attr__( 'Type %s description', 'buddyboss' ),
+					esc_attr__( 'Type %s description', 'buddyboss-platform' ),
 					esc_attr( $response_data['type'] )
 				);
 
@@ -792,8 +811,8 @@ class BB_Activity_Readylaunch {
 
 			// Check for submit button element.
 			if ( false !== strpos( $description, 'id="bp-activity-description-new-submit"' ) ) {
-				$done_editing_text = esc_attr__( 'Done Editing', 'buddyboss' );
-				$done_text         = esc_attr__( 'Done', 'buddyboss' );
+				$done_editing_text = esc_attr__( 'Done Editing', 'buddyboss-platform' );
+				$done_text         = esc_attr__( 'Done', 'buddyboss-platform' );
 
 				$search_replacements[] = 'value="' . $done_editing_text . '"';
 				$replace_values[]      = 'value="' . $done_text . '"';
@@ -820,7 +839,7 @@ class BB_Activity_Readylaunch {
 	 */
 	public function bb_rl_modify_activity_widget_query( $args ) {
 		// Check if relevant feed is enabled and scope exists.
-		if ( ! bp_is_relevant_feed_enabled() || ! isset( $args['scope'] ) || empty( $args['scope'] ) ) {
+		if ( ! bboss_is_relevant_feed_enabled() || ! isset( $args['scope'] ) || empty( $args['scope'] ) ) {
 			return $args;
 		}
 
@@ -861,7 +880,7 @@ class BB_Activity_Readylaunch {
 		}
 
 		if ( false !== strpos( $button['link_href'], 'stop-following' ) ) {
-			$unfollow_text          = __( 'Unfollow', 'buddyboss' );
+			$unfollow_text          = __( 'Unfollow', 'buddyboss-platform' );
 			$button['data-balloon'] = $unfollow_text;
 			if ( empty( $button['is_tooltips'] ) ) {
 				$button['link_class']               .= ' bb-rl-primary-hover-action';
@@ -888,18 +907,18 @@ class BB_Activity_Readylaunch {
 
 		$replace_text = array();
 		if ( ! empty( $buttons['activity_document_download'] ) ) {
-			$replace_text['activity_document_download'] = esc_html__( 'Download document', 'buddyboss' );
+			$replace_text['activity_document_download'] = esc_html__( 'Download document', 'buddyboss-platform' );
 		}
 		if ( ! empty( $buttons['activity_media_download'] ) ) {
-			$replace_text['activity_media_download'] = esc_html__( 'Download photo', 'buddyboss' );
+			$replace_text['activity_media_download'] = esc_html__( 'Download photo', 'buddyboss-platform' );
 		}
 		if ( ! empty( $buttons['activity_video_download'] ) ) {
-			$replace_text['activity_video_download'] = esc_html__( 'Download video', 'buddyboss' );
+			$replace_text['activity_video_download'] = esc_html__( 'Download video', 'buddyboss-platform' );
 		}
 
 		if ( ! empty( $replace_text ) ) {
 			foreach ( $replace_text as $button_key => $replacement_text ) {
-				$buttons[ $button_key ]['link_text'] = str_replace( esc_html__( 'Download', 'buddyboss' ), $replacement_text, $buttons[ $button_key ]['link_text'] );
+				$buttons[ $button_key ]['link_text'] = str_replace( esc_html__( 'Download', 'buddyboss-platform' ), $replacement_text, $buttons[ $button_key ]['link_text'] );
 			}
 		}
 
@@ -924,8 +943,8 @@ class BB_Activity_Readylaunch {
 
 			if ( 'scheduled' === $status && 'activity_schedule' === $template ) {
 				add_filter( 'bp_ajax_querystring', array( $this, 'bb_rl_get_activity_schedule_count_query' ), 20 );
-				bp_has_activities( bp_ajax_querystring( 'activity' ) );
-				$result['count'] = bp_core_number_format( $GLOBALS['activities_template']->activity_count );
+				bboss_has_activities( bboss_ajax_querystring( 'activity' ) );
+				$result['count'] = bboss_core_number_format( $GLOBALS['activities_template']->activity_count );
 				remove_filter( 'bp_ajax_querystring', array( $this, 'bb_rl_get_activity_schedule_count_query' ), 20 );
 			}
 		}
@@ -943,12 +962,12 @@ class BB_Activity_Readylaunch {
 	 * @return string The modified querystring.
 	 */
 	public function bb_rl_get_activity_schedule_count_query( $querystring ) {
-		$querystring = bp_parse_args( $querystring );
+		$querystring = bboss_parse_args( $querystring );
 
 		$querystring['status'] = 'scheduled';
 
-		$querystring['user_id'] = bp_loggedin_user_id();
-		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$querystring['user_id'] = bboss_loggedin_user_id();
+		if ( bboss_is_active( 'groups' ) && bboss_is_group() ) {
 			$querystring['object'] = 'groups';
 		} else {
 			$querystring['object'] = 'activity';
@@ -976,7 +995,7 @@ class BB_Activity_Readylaunch {
 			return $closed_notice;
 		}
 
-		$custom_notice = esc_html__( 'Comments are closed for this post', 'buddyboss' );
+		$custom_notice = esc_html__( 'Comments are closed for this post', 'buddyboss-platform' );
 
 		// Handle array format for AJAX response.
 		if ( is_array( $closed_notice ) && isset( $closed_notice['feedback'] ) ) {

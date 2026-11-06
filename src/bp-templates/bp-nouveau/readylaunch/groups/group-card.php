@@ -6,7 +6,7 @@
  * and group information including avatar, title, meta, and action buttons.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.8.20
  * @version 1.0.0
  */
@@ -55,7 +55,7 @@ defined( 'ABSPATH' ) || exit;
 					<div class="bb-rl-card-action bb-rl-card-action-join bb-rl-card-action-primary"></div>
 				<?php endif; ?>
 				<div class="bb-rl-card-action bb-rl-card-action-outline">
-					<a href="" class="card-button card-button-group"><?php esc_html_e( 'View Group', 'buddyboss' ); ?></a>
+					<a href="" class="card-button card-button-group"><?php esc_html_e( 'View Group', 'buddyboss-platform' ); ?></a>
 				</div>
 			</div>
 		</div>

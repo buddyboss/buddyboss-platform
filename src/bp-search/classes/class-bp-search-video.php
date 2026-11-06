@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_Video' ) ) :
+if ( ! class_exists( 'BBoss_Search_Video' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search video class
 	 */
-	class Bp_Search_Video extends Bp_Search_Type {
+	class BBoss_Search_Video extends BBoss_Search_Type {
 
 		/**
 		 * Search item type name
@@ -29,7 +29,7 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 		 *
 		 * @since BuddyBoss 1.7.0
 		 *
-		 * @return object Bp_Search_Video
+		 * @return object BBoss_Search_Video
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication.
@@ -37,7 +37,7 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 
 			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
-				$instance = new Bp_Search_Video();
+				$instance = new BBoss_Search_Video();
 			}
 
 			// Always return the instance.
@@ -68,10 +68,10 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 			global $wpdb, $bp;
 
 			$user_groups = array();
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 
 				// Fetch public groups.
-				$public_groups = groups_get_groups(
+				$public_groups = bboss_groups_get_groups(
 					array(
 						'fields'   => 'ids',
 						'status'   => 'public',
@@ -86,7 +86,7 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 
 				$user_groups = array();
 				if ( is_user_logged_in() ) {
-					$groups = groups_get_user_groups( bp_loggedin_user_id() );
+					$groups = bboss_groups_get_user_groups( bboss_loggedin_user_id() );
 					if ( ! empty( $groups['groups'] ) ) {
 						$user_groups = $groups['groups'];
 					} else {
@@ -98,14 +98,14 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 			}
 
 			$friends = array();
-			if ( bp_is_active( 'friends' ) && is_user_logged_in() ) {
+			if ( bboss_is_active( 'friends' ) && is_user_logged_in() ) {
 
 				// Determine friends of user.
-				$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
+				$friends = bboss_friends_get_friend_user_ids( bboss_loggedin_user_id() );
 				if ( empty( $friends ) ) {
 					$friends = array( 0 );
 				}
-				array_push( $friends, bp_loggedin_user_id() );
+				array_push( $friends, bboss_loggedin_user_id() );
 			}
 
 			$sql['select'] = 'SELECT';
@@ -144,8 +144,8 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 					(
 							( m.type = 'video' AND m.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( m.type = 'video' AND m.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND m.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
-							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( m.type = 'video' AND m.user_id IN ( '" . implode( "','", $friends ) . "' ) AND m.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
-							( is_user_logged_in() ? " OR ( m.type = 'video' AND m.user_id = '" . bp_loggedin_user_id() . "' AND m.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							( bboss_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( m.type = 'video' AND m.user_id IN ( '" . implode( "','", $friends ) . "' ) AND m.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( is_user_logged_in() ? " OR ( m.type = 'video' AND m.user_id = '" . bboss_loggedin_user_id() . "' AND m.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 					')
 				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%',
@@ -215,7 +215,7 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 						'id'    => bp_get_video_id(),
 						'type'  => $this->type,
 						'title' => bp_get_video_title(),
-						'html'  => bp_search_buffer_template_part( 'loop/videos', $template_type, false ),
+						'html'  => bboss_search_buffer_template_part( 'loop/videos', $template_type, false ),
 					);
 
 					$this->search_results['items'][ bp_get_video_id() ] = $result;

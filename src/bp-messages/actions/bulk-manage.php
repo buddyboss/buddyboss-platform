@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle bulk management (mark as read/unread, delete) of message threads.
  *
@@ -14,21 +17,21 @@
  * @return bool Returns false on failure. Otherwise redirects back to the
  *              message box URL.
  */
-function bp_messages_action_bulk_manage() {
+function bboss_messages_action_bulk_manage() {
 
-	if ( ! bp_is_messages_component() || bp_is_current_action( 'notices' ) || ! bp_is_action_variable( 'bulk-manage', 0 ) ) {
+	if ( ! bboss_is_messages_component() || bboss_is_current_action( 'notices' ) || ! bboss_is_action_variable( 'bulk-manage', 0 ) ) {
 		return false;
 	}
 
-	$action   = ! empty( $_POST['messages_bulk_action'] ) ? $_POST['messages_bulk_action'] : '';
-	$nonce    = ! empty( $_POST['messages_bulk_nonce'] ) ? $_POST['messages_bulk_nonce'] : '';
+	$action   = ! empty( $_POST['messages_bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['messages_bulk_action'] ) ) : '';
+	$nonce    = ! empty( $_POST['messages_bulk_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['messages_bulk_nonce'] ) ) : '';
 	$messages = ! empty( $_POST['message_ids'] ) ? $_POST['message_ids'] : '';
 
 	$messages = wp_parse_id_list( $messages );
 
 	// Bail if no action or no IDs.
 	if ( ( ! in_array( $action, array( 'delete', 'read', 'unread' ) ) ) || empty( $messages ) || empty( $nonce ) ) {
-		bp_core_redirect( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() . '/' );
+		bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() . '/' );
 	}
 
 	// Check the nonce.
@@ -38,9 +41,9 @@ function bp_messages_action_bulk_manage() {
 
 	// Make sure the user has access to all notifications before managing them.
 	foreach ( $messages as $message ) {
-		if ( ! messages_check_thread_access( $message ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-			bp_core_add_message( __( 'There was a problem managing your messages.', 'buddyboss' ), 'error' );
-			bp_core_redirect( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() . '/' );
+		if ( ! bboss_messages_check_thread_access( $message ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
+			bboss_core_add_message( __( 'There was a problem managing your messages.', 'buddyboss-platform' ), 'error' );
+			bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() . '/' );
 		}
 	}
 
@@ -48,27 +51,27 @@ function bp_messages_action_bulk_manage() {
 	switch ( $action ) {
 		case 'delete':
 			foreach ( $messages as $message ) {
-				messages_delete_thread( $message );
+				bboss_messages_delete_thread( $message );
 			}
-			bp_core_add_message( __( 'Messages deleted.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Messages deleted.', 'buddyboss-platform' ) );
 			break;
 
 		case 'read':
 			foreach ( $messages as $message ) {
-				messages_mark_thread_read( $message );
+				bboss_messages_mark_thread_read( $message );
 			}
-			bp_core_add_message( __( 'Messages marked as read', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Messages marked as read', 'buddyboss-platform' ) );
 			break;
 
 		case 'unread':
 			foreach ( $messages as $message ) {
-				messages_mark_thread_unread( $message );
+				bboss_messages_mark_thread_unread( $message );
 			}
-			bp_core_add_message( __( 'Messages marked as unread.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Messages marked as unread.', 'buddyboss-platform' ) );
 			break;
 	}
 
 	// Redirect back to message box.
-	bp_core_redirect( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() . '/' );
+	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() . '/' );
 }
-add_action( 'bp_actions', 'bp_messages_action_bulk_manage' );
+add_action( 'bp_actions', 'bboss_messages_action_bulk_manage' );

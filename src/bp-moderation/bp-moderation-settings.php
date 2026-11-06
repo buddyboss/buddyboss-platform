@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @uses  esc_attr()
  * @uses  apply_filters()
  */
-function bp_moderation_get_setting( $option, $default = '' ) {
+function bboss_moderation_get_setting( $option, $default = '' ) {
 
 	// Get the option and sanitize it.
 	$value = get_option( $option, $default );
@@ -46,6 +46,6 @@ function bp_moderation_get_setting( $option, $default = '' ) {
  * @param string $option  Option name.
  * @param string $default Default value.
  */
-function bp_moderation_setting( $option, $default = '' ) {
-	echo esc_attr( bp_moderation_get_setting( $option, $default ) );
+function bboss_moderation_setting( $option, $default = '' ) {
+	echo esc_attr( bboss_moderation_get_setting( $option, $default ) );
 }

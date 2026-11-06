@@ -19,26 +19,26 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_notifications_register_types_panel_fields() {
+function bboss_notifications_register_types_panel_fields() {
 
 	// Only show notification types when using modern notification system.
-	if ( function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference() ) {
+	if ( function_exists( 'bboss_enabled_legacy_email_preference' ) && bboss_enabled_legacy_email_preference() ) {
 
 		// -------------------------------------------------------------------------
 		// SECTION: Legacy Notice
 		// -------------------------------------------------------------------------
-		bb_register_feature_section(
+		bboss_register_feature_section(
 			'notifications',
 			'notification_types',
 			'notification_types_legacy',
 			array(
-				'title'    => __( 'Notification Types', 'buddyboss' ),
+				'title'    => __( 'Notification Types', 'buddyboss-platform' ),
 				'order'    => 10,
 				'help_url' => '636146',
 			)
 		);
 
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'notifications',
 			'notification_types',
 			'notification_types_legacy',
@@ -46,7 +46,7 @@ function bb_notifications_register_types_panel_fields() {
 				'name'              => '_bb_notification_types_legacy_notice',
 				'label'             => '',
 				'type'              => 'notice',
-				'description'       => __( 'Notification Types are not supported when using the legacy notifications system.', 'buddyboss' ),
+				'description'       => __( 'Notification Types are not supported when using the legacy notifications system.', 'buddyboss-platform' ),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 10,
 			)
@@ -58,13 +58,13 @@ function bb_notifications_register_types_panel_fields() {
 	// -------------------------------------------------------------------------
 	// SECTION: Notification Types
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'notifications',
 		'notification_types',
 		'notification_types',
 		array(
-			'title'       => __( 'Notification Types', 'buddyboss' ),
-			'description' => __( 'Choose which notifications are sent for site actions. Disabled notifications won\'t be generated. Members can manage them in Notification Preferences (email, web, app).', 'buddyboss' ),
+			'title'       => __( 'Notification Types', 'buddyboss-platform' ),
+			'description' => __( 'Choose which notifications are sent for site actions. Disabled notifications won\'t be generated. Members can manage them in Notification Preferences (email, web, app).', 'buddyboss-platform' ),
 			'order'       => 10,
 			'help_url'    => '636146',
 		)
@@ -75,9 +75,9 @@ function bb_notifications_register_types_panel_fields() {
 	// (BB_Admin_Settings_Ajax::bb_build_notification_groups) because
 	// bb_register_notification_preferences() depends on component hooks
 	// that haven't fired yet at bb_register_features time.
-	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$enabled_notification = bboss_get_option( 'bb_enabled_notification', array() );
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'notifications',
 		'notification_types',
 		'notification_types',
@@ -86,14 +86,14 @@ function bb_notifications_register_types_panel_fields() {
 			'label'             => '',
 			'type'              => 'notification_types',
 			'default'           => $enabled_notification,
-			'sanitize_callback' => 'bb_notifications_sanitize_types',
+			'sanitize_callback' => 'bboss_notifications_sanitize_types',
 			'full_width'        => true,
 			'order'             => 10,
 		)
 	);
 
 	// FIELD: Developer Tutorial Notice (inside the same section, below notification types).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'notifications',
 		'notification_types',
 		'notification_types',
@@ -104,8 +104,8 @@ function bb_notifications_register_types_panel_fields() {
 			'notice_type'       => 'plain',
 			'description'       => sprintf(
 				/* translators: %s: Tutorial link. */
-				__( 'You can register your own notification types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' ),
-				'<a href="' . esc_url( 'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/' ) . '" target="_blank" rel="noopener noreferrer">' . __( 'this tutorial', 'buddyboss' ) . '</a>'
+				__( 'You can register your own notification types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss-platform' ),
+				'<a href="' . esc_url( 'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/' ) . '" target="_blank" rel="noopener noreferrer">' . __( 'this tutorial', 'buddyboss-platform' ) . '</a>'
 			),
 			'sanitize_callback' => '__return_empty_string',
 			'full_width'        => true,

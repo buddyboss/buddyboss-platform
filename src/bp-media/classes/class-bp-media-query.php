@@ -12,16 +12,16 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class for generating the WHERE SQL clause for advanced media fetching.
  *
- * This is notably used in {@link BP_Media::get()} with the
+ * This is notably used in {@link BBoss_Media::get()} with the
  * 'filter_query' parameter.
  *
  * @since BuddyBoss 1.1.9
  */
-class BP_Media_Query extends BP_Recursive_Query {
+class BBoss_Media_Query extends BBoss_Recursive_Query {
 	/**
 	 * Array of media queries.
 	 *
-	 * See {@see BP_Media_Query::__construct()} for information on query arguments.
+	 * See {@see BBoss_Media_Query::__construct()} for information on query arguments.
 	 *
 	 * @since BuddyBoss 1.1.9
 	 * @var array
@@ -96,7 +96,7 @@ class BP_Media_Query extends BP_Recursive_Query {
 	 * @since BuddyBoss 1.1.9
 	 *
 	 * @param string $alias An existing table alias that is compatible with the current query clause.
-	 *                      Default: 'a'. BP_Media::get() uses 'a', so we default to that.
+	 *                      Default: 'a'. BBoss_Media::get() uses 'a', so we default to that.
 	 * @return string SQL fragment to append to the main WHERE clause.
 	 */
 	public function get_sql( $alias = 'm' ) {
@@ -193,7 +193,7 @@ class BP_Media_Query extends BP_Recursive_Query {
 					// IN uses different syntax.
 					case 'IN':
 					case 'NOT IN':
-						$in_sql = BP_Media::get_in_operator_sql( "{$alias}{$column}", $value );
+						$in_sql = BBoss_Media::get_in_operator_sql( "{$alias}{$column}", $value );
 
 						// 'NOT IN' operator is as easy as a string replace!
 						if ( 'NOT IN' === $compare ) {
@@ -211,7 +211,7 @@ class BP_Media_Query extends BP_Recursive_Query {
 
 					case 'LIKE':
 					case 'NOT LIKE':
-						$value = '%' . bp_esc_like( $value ) . '%';
+						$value = '%' . bboss_esc_like( $value ) . '%';
 						$where = $wpdb->prepare( '%s', $value );
 						break;
 
@@ -253,7 +253,7 @@ class BP_Media_Query extends BP_Recursive_Query {
 	 * Validates a column name parameter.
 	 *
 	 * Column names are checked against a whitelist of known tables.
-	 * See {@link BP_Media_Query::db_tables}.
+	 * See {@link BBoss_Media_Query::db_tables}.
 	 *
 	 * @since BuddyBoss 1.1.9
 	 *

@@ -16,34 +16,34 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_members_register_profile_name_panel_fields() {
+function bboss_members_register_profile_name_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Profile Name
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'members',
 		'profile_name',
 		'profile_name',
 		array(
-			'title'       => __( 'Profile Name', 'buddyboss' ),
+			'title'       => __( 'Profile Name', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 		)
 	);
 
 	// FIELD: Display Name Format.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
 		array(
 			'name'              => 'bp-display-name-format',
-			'label'             => __( 'Display Name Format', 'buddyboss' ),
+			'label'             => __( 'Display Name Format', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'description'       => sprintf(
 				/* translators: %s: Repair Community link. */
-				__( 'After the format has been updated, remember to run <a href="%s">Repair Community</a> tools to update all the users.', 'buddyboss' ),
+				__( 'After the format has been updated, remember to run <a href="%s">Repair Community</a> tools to update all the users.', 'buddyboss-platform' ),
 				esc_url(
 					add_query_arg(
 						array(
@@ -56,19 +56,19 @@ function bb_members_register_profile_name_panel_fields() {
 					)
 				)
 			),
-			'default'           => bp_core_display_name_format(),
-			'sanitize_callback' => 'bb_members_sanitize_display_name_format',
+			'default'           => bboss_core_display_name_format(),
+			'sanitize_callback' => 'bboss_members_sanitize_display_name_format',
 			'options'           => array(
 				array(
-					'label' => __( 'First Name', 'buddyboss' ),
+					'label' => __( 'First Name', 'buddyboss-platform' ),
 					'value' => 'first_name',
 				),
 				array(
-					'label' => __( 'First Name & Last Name', 'buddyboss' ),
+					'label' => __( 'First Name & Last Name', 'buddyboss-platform' ),
 					'value' => 'first_last_name',
 				),
 				array(
-					'label' => __( 'Nickname', 'buddyboss' ),
+					'label' => __( 'Nickname', 'buddyboss-platform' ),
 					'value' => 'nickname',
 				),
 			),
@@ -81,15 +81,15 @@ function bb_members_register_profile_name_panel_fields() {
 	// Legacy: bp_admin_setting_display_name_first_name() — checkbox with css class 'first-name-options'.
 
 	// FIELD: First Name (disabled, always on).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
 		array(
 			'name'              => 'bp-display-name-fn-first-name',
-			'label'             => __( 'Display Name Fields', 'buddyboss' ),
+			'label'             => __( 'Display Name Fields', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'First Name', 'buddyboss' ),
+			'description'       => __( 'First Name', 'buddyboss-platform' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
@@ -104,7 +104,7 @@ function bb_members_register_profile_name_panel_fields() {
 
 	// FIELD: Last Name (editable toggle).
 	// Legacy DB: bp-hide-last-name = 1 means field is visible (confusing name, but 1 = show).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
@@ -112,8 +112,8 @@ function bb_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-hide-last-name',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Last Name', 'buddyboss' ),
-			'default'           => absint( bp_hide_last_name() ),
+			'description'       => __( 'Last Name', 'buddyboss-platform' ),
+			'default'           => absint( bboss_hide_last_name() ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
@@ -125,7 +125,7 @@ function bb_members_register_profile_name_panel_fields() {
 	);
 
 	// FIELD: Nickname (disabled, always on).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
@@ -133,11 +133,11 @@ function bb_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-display-name-fn-nickname',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Nickname', 'buddyboss' ),
+			'description'       => __( 'Nickname', 'buddyboss-platform' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
-			'help_text'         => __( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss' ),
+			'help_text'         => __( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss-platform' ),
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'first_name',
@@ -152,15 +152,15 @@ function bb_members_register_profile_name_panel_fields() {
 	// Legacy: bp_admin_setting_display_name_first_last_name() — all checkboxes disabled.
 
 	// FIELD: First Name (disabled, always on).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
 		array(
 			'name'              => 'bp-display-name-fln-first-name',
-			'label'             => __( 'Display Name Fields', 'buddyboss' ),
+			'label'             => __( 'Display Name Fields', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'First Name', 'buddyboss' ),
+			'description'       => __( 'First Name', 'buddyboss-platform' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
@@ -174,7 +174,7 @@ function bb_members_register_profile_name_panel_fields() {
 	);
 
 	// FIELD: Last Name (disabled, always on).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
@@ -182,7 +182,7 @@ function bb_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-display-name-fln-last-name',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Last Name', 'buddyboss' ),
+			'description'       => __( 'Last Name', 'buddyboss-platform' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
@@ -196,7 +196,7 @@ function bb_members_register_profile_name_panel_fields() {
 	);
 
 	// FIELD: Nickname (disabled, always on).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
@@ -204,11 +204,11 @@ function bb_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-display-name-fln-nickname',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Nickname', 'buddyboss' ),
+			'description'       => __( 'Nickname', 'buddyboss-platform' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
-			'help_text'         => __( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss' ),
+			'help_text'         => __( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss-platform' ),
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'first_last_name',
@@ -224,16 +224,16 @@ function bb_members_register_profile_name_panel_fields() {
 
 	// FIELD: First Name (editable toggle).
 	// Legacy DB: bp-hide-nickname-first-name = 1 means field is visible (confusing name, but 1 = show).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
 		array(
 			'name'              => 'bp-hide-nickname-first-name',
-			'label'             => __( 'Display Name Fields', 'buddyboss' ),
+			'label'             => __( 'Display Name Fields', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'First Name', 'buddyboss' ),
-			'default'           => absint( bp_hide_nickname_first_name() ),
+			'description'       => __( 'First Name', 'buddyboss-platform' ),
+			'default'           => absint( bboss_hide_nickname_first_name() ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
@@ -246,7 +246,7 @@ function bb_members_register_profile_name_panel_fields() {
 
 	// FIELD: Last Name (editable toggle).
 	// Legacy DB: bp-hide-nickname-last-name = 1 means field is visible (confusing name, but 1 = show).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
@@ -254,8 +254,8 @@ function bb_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-hide-nickname-last-name',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Last Name', 'buddyboss' ),
-			'default'           => absint( bp_hide_nickname_last_name() ),
+			'description'       => __( 'Last Name', 'buddyboss-platform' ),
+			'default'           => absint( bboss_hide_nickname_last_name() ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
@@ -267,7 +267,7 @@ function bb_members_register_profile_name_panel_fields() {
 	);
 
 	// FIELD: Nickname (disabled, always on).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
@@ -275,11 +275,11 @@ function bb_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-display-name-nn-nickname',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Nickname', 'buddyboss' ),
+			'description'       => __( 'Nickname', 'buddyboss-platform' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
-			'help_text'         => __( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss' ),
+			'help_text'         => __( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss-platform' ),
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'nickname',
@@ -299,12 +299,12 @@ function bb_members_register_profile_name_panel_fields() {
 	// -------------------------------------------------------------------------
 	// SECTION: Profile Link
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'members',
 		'profile_name',
 		'profile_link',
 		array(
-			'title'       => __( 'Profile Link', 'buddyboss' ),
+			'title'       => __( 'Profile Link', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '635988',
@@ -312,24 +312,24 @@ function bb_members_register_profile_name_panel_fields() {
 	);
 
 	// FIELD: Link Format.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_link',
 		array(
 			'name'              => 'bb_profile_slug_format',
-			'label'             => __( 'Link Format', 'buddyboss' ),
+			'label'             => __( 'Link Format', 'buddyboss-platform' ),
 			'type'              => 'radio',
-			'description'       => __( 'Select the format for members\' profile links (e.g., /members/username). Both formats work, so switching won\'t break existing links.', 'buddyboss' ),
-			'default'           => bb_get_profile_slug_format(),
-			'sanitize_callback' => 'bb_members_sanitize_slug_format',
+			'description'       => __( 'Select the format for members\' profile links (e.g., /members/username). Both formats work, so switching won\'t break existing links.', 'buddyboss-platform' ),
+			'default'           => bboss_get_profile_slug_format(),
+			'sanitize_callback' => 'bboss_members_sanitize_slug_format',
 			'options'           => array(
 				array(
-					'label' => __( 'Username', 'buddyboss' ),
+					'label' => __( 'Username', 'buddyboss-platform' ),
 					'value' => 'username',
 				),
 				array(
-					'label' => __( 'Unique Identifier', 'buddyboss' ),
+					'label' => __( 'Unique Identifier', 'buddyboss-platform' ),
 					'value' => 'unique_identifier',
 				),
 			),
@@ -348,12 +348,12 @@ function bb_members_register_profile_name_panel_fields() {
 	// SECTION: User Settings
 	// =========================================================================
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'members',
 		'profile_name',
 		'user_settings',
 		array(
-			'title' => __( 'User Settings', 'buddyboss' ),
+			'title' => __( 'User Settings', 'buddyboss-platform' ),
 			'order' => 30,
 			'help_url'   => '635990',
 		)
@@ -362,16 +362,16 @@ function bb_members_register_profile_name_panel_fields() {
 	// FIELD: Account Deletion.
 	// `invert_value`: Legacy DB stores 1 = disabled. Toggle shows "Allow", so invert for display.
 	// Raw DB value preserved for backward compatibility with `bp_disable_account_deletion()`.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_name',
 		'user_settings',
 		array(
 			'name'              => 'bp-disable-account-deletion',
-			'label'             => __( 'Account Deletion', 'buddyboss' ),
+			'label'             => __( 'Account Deletion', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to delete their profiles', 'buddyboss' ),
-			'default'           => bp_disable_account_deletion( false ),
+			'description'       => __( 'Allow members to delete their profiles', 'buddyboss-platform' ),
+			'default'           => bboss_disable_account_deletion( false ),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
 			'order'             => 10,

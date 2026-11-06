@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BP_Messages_Thread::is_thread_recipient() reads one recipient row instead of the full list (PROD-9747).
+ * BBoss_Messages_Thread::is_thread_recipient() reads one recipient row instead of the full list (PROD-9747).
  *
  * @group messages
  * @group is_thread_recipient
@@ -37,9 +37,9 @@ class BP_Tests_Messages_Is_Thread_Recipient extends BP_UnitTestCase {
 	protected function mark_deleted( $thread_id, $user_id ) {
 		global $wpdb;
 
-		$wpdb->update( buddypress()->messages->table_name_recipients, array( 'is_deleted' => 1 ), array( 'thread_id' => $thread_id, 'user_id' => $user_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->update( bboss()->messages->table_name_recipients, array( 'is_deleted' => 1 ), array( 'thread_id' => $thread_id, 'user_id' => $user_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
-		bp_core_reset_incrementor( 'bp_messages' );
+		bboss_core_reset_incrementor( 'bp_messages' );
 	}
 
 	/**
@@ -53,24 +53,24 @@ class BP_Tests_Messages_Is_Thread_Recipient extends BP_UnitTestCase {
 
 		$thread_id = $this->create_thread( $u1, array( $u2, $u3 ) );
 
-		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id, $u1 ) );
-		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
-		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id, $u3 ) );
-		$this->assertFalse( BP_Messages_Thread::is_thread_recipient( $thread_id, $outsider ) );
-		$this->assertFalse( BP_Messages_Thread::is_thread_recipient( 0, $u1 ) );
-		$this->assertFalse( BP_Messages_Thread::is_thread_recipient( $thread_id + 1000, $u1 ) );
+		$this->assertTrue( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u1 ) );
+		$this->assertTrue( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
+		$this->assertTrue( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u3 ) );
+		$this->assertFalse( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $outsider ) );
+		$this->assertFalse( BBoss_Messages_Thread::is_thread_recipient( 0, $u1 ) );
+		$this->assertFalse( BBoss_Messages_Thread::is_thread_recipient( $thread_id + 1000, $u1 ) );
 
 		$this->mark_deleted( $thread_id, $u3 );
-		$this->assertFalse( BP_Messages_Thread::is_thread_recipient( $thread_id, $u3 ), 'A deleted recipient row is not active.' );
-		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
+		$this->assertFalse( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u3 ), 'A deleted recipient row is not active.' );
+		$this->assertTrue( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
 
 		// The logged-in user is the default; no user at all keeps release's "true".
 		self::set_current_user( $u2 );
-		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id ) );
+		$this->assertTrue( BBoss_Messages_Thread::is_thread_recipient( $thread_id ) );
 		self::set_current_user( $outsider );
-		$this->assertFalse( BP_Messages_Thread::is_thread_recipient( $thread_id ) );
+		$this->assertFalse( BBoss_Messages_Thread::is_thread_recipient( $thread_id ) );
 		self::set_current_user( 0 );
-		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id ) );
+		$this->assertTrue( BBoss_Messages_Thread::is_thread_recipient( $thread_id ) );
 	}
 
 	/**
@@ -84,7 +84,7 @@ class BP_Tests_Messages_Is_Thread_Recipient extends BP_UnitTestCase {
 
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 
-		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
+		$this->assertTrue( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
 		$this->assertFalse( wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' ), 'The full recipient list was not read.' );
 	}
 
@@ -103,12 +103,12 @@ class BP_Tests_Messages_Is_Thread_Recipient extends BP_UnitTestCase {
 		};
 		add_filter( 'bp_messages_thread_get_recipients', $drop_u2 );
 
-		$this->assertFalse( BP_Messages_Thread::is_thread_recipient( $thread_id, $u2 ), 'The filter removed the member.' );
-		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id, $u1 ) );
+		$this->assertFalse( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u2 ), 'The filter removed the member.' );
+		$this->assertTrue( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u1 ) );
 
 		remove_filter( 'bp_messages_thread_get_recipients', $drop_u2 );
 
-		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
+		$this->assertTrue( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
 	}
 
 	/**
@@ -121,7 +121,7 @@ class BP_Tests_Messages_Is_Thread_Recipient extends BP_UnitTestCase {
 		$thread_id = $this->create_thread( $u1, array( $u2 ) );
 
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
-		bp_core_reset_incrementor( 'bp_messages' );
+		bboss_core_reset_incrementor( 'bp_messages' );
 
 		$queries   = array();
 		$log_query = function ( $sql ) use ( &$queries ) {
@@ -129,16 +129,16 @@ class BP_Tests_Messages_Is_Thread_Recipient extends BP_UnitTestCase {
 			return $sql;
 		};
 		add_filter( 'bp_recipients_recipient_get_paged_sql', $log_query );
-		add_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
+		add_filter( 'bp_recipients_recipient_get_join_sql', 'bboss_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
 
-		$joined = BP_Messages_Thread::is_thread_recipient( $thread_id, $u2 );
+		$joined = BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u2 );
 
-		remove_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10 );
+		remove_filter( 'bp_recipients_recipient_get_join_sql', 'bboss_recipients_recipient_get_join_sql_with_group_members', 10 );
 		remove_filter( 'bp_recipients_recipient_get_paged_sql', $log_query );
 
 		$this->assertFalse( $joined, 'Release answer: no group membership row means no match under the join.' );
 		$this->assertNotEmpty( $queries );
 		$this->assertStringNotContainsString( 'r.user_id =', implode( ' ', $queries ), 'The full-list (release) query ran, not the one-row lookup.' );
-		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
+		$this->assertTrue( BBoss_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
 	}
 }

@@ -3,7 +3,7 @@
  * Standalone Knowledge Base modal — asset resolver + enqueue helper.
  *
  * Lets any BuddyBoss admin surface (Membership, Courses, …) mount the shared
- * KB modal. Consumers call bb_kb_enqueue_standalone() on their admin screens
+ * KB modal. Consumers call bboss_kb_enqueue_standalone() on their admin screens
  * and open it via window.bbKb.open({ rootCategory }). Per-product scope is
  * NOT stored here — it travels through open().
  *
@@ -20,12 +20,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array { url, path, version, deps }
  */
-function bb_kb_standalone_asset() {
-	$build_path = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/kb-standalone/build/index.js';
-	$asset_php  = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/kb-standalone/build/index.asset.php';
+function bboss_kb_standalone_asset() {
+	$build_path = bboss()->plugin_dir . 'bp-core/admin/bb-settings/kb-standalone/build/index.js';
+	$asset_php  = bboss()->plugin_dir . 'bp-core/admin/bb-settings/kb-standalone/build/index.asset.php';
 
 	$deps    = array( 'wp-element', 'bb-admin-common' );
-	$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+	$version = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 	if ( file_exists( $asset_php ) ) {
 		$asset   = include $asset_php;
 		$deps    = isset( $asset['dependencies'] ) ? $asset['dependencies'] : $deps;
@@ -33,7 +33,7 @@ function bb_kb_standalone_asset() {
 	}
 
 	return array(
-		'url'     => buddypress()->plugin_url . 'bp-core/admin/bb-settings/kb-standalone/build/index.js',
+		'url'     => bboss()->plugin_url . 'bp-core/admin/bb-settings/kb-standalone/build/index.js',
 		'path'    => $build_path,
 		'version' => $version,
 		'deps'    => $deps,
@@ -49,7 +49,7 @@ function bb_kb_standalone_asset() {
  * @param array $args Optional { logo_url }.
  * @return void
  */
-function bb_kb_enqueue_standalone( $args = array() ) {
+function bboss_kb_enqueue_standalone( $args = array() ) {
 	// Frontend guard + AJAX guard.
 	if ( ! is_admin() || wp_doing_ajax() ) {
 		return;
@@ -59,7 +59,7 @@ function bb_kb_enqueue_standalone( $args = array() ) {
 		return;
 	}
 
-	$asset = bb_kb_standalone_asset();
+	$asset = bboss_kb_standalone_asset();
 
 	// Shared @bb/admin-common layer must be registered first (it is the external).
 	// Normally bb_register_admin_common_assets() registers this handle at priority
@@ -67,7 +67,7 @@ function bb_kb_enqueue_standalone( $args = array() ) {
 	// dependency list from the common build manifest rather than under-declaring
 	// it — a partial dep list would crash the modal on missing wp.i18n/wp.hooks.
 	if ( ! wp_script_is( 'bb-admin-common', 'registered' ) && ! wp_script_is( 'bb-admin-common', 'enqueued' ) ) {
-		$common_asset_php = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/common/build/index.asset.php';
+		$common_asset_php = bboss()->plugin_dir . 'bp-core/admin/bb-settings/common/build/index.asset.php';
 		$common_deps      = array( 'react', 'wp-element', 'wp-hooks', 'wp-html-entities', 'wp-i18n' );
 		// Version from the common bundle's own manifest — the kb-standalone
 		// bundle hash would not change when only the common bundle does,
@@ -84,7 +84,7 @@ function bb_kb_enqueue_standalone( $args = array() ) {
 		}
 		wp_register_script(
 			'bb-admin-common',
-			buddypress()->plugin_url . 'bp-core/admin/bb-settings/common/build/index.js',
+			bboss()->plugin_url . 'bp-core/admin/bb-settings/common/build/index.js',
 			$common_deps,
 			$common_version,
 			true
@@ -99,10 +99,10 @@ function bb_kb_enqueue_standalone( $args = array() ) {
 	// only uses the 'suffix' data to compute the -rtl variant, so 'replace'
 	// swaps "{$suffix}.css" → "-rtl{$suffix}.css", matching the build output
 	// (common-rtl.css / common-rtl.min.css).
-	$min = bp_core_get_minified_asset_suffix();
+	$min = bboss_core_get_minified_asset_suffix();
 	wp_register_style(
 		'bb-kb-standalone',
-		buddypress()->plugin_url . "bp-core/admin/bb-settings/common/build/styles/common{$min}.css",
+		bboss()->plugin_url . "bp-core/admin/bb-settings/common/build/styles/common{$min}.css",
 		array(),
 		$asset['version']
 	);
@@ -119,12 +119,12 @@ function bb_kb_enqueue_standalone( $args = array() ) {
 
 	// Translations so the modal strings render in the site locale.
 	if ( function_exists( 'wp_set_script_translations' ) ) {
-		wp_set_script_translations( 'bb-kb-standalone', 'buddyboss' );
+		wp_set_script_translations( 'bb-kb-standalone', 'buddyboss-platform' );
 	}
 
 	// Site-level config — identical for every consumer (H3: namespace-correct).
-	$namespace = function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' )
-		? bp_rest_namespace() . '/' . bp_rest_version()
+	$namespace = function_exists( 'bboss_rest_namespace' ) && function_exists( 'bboss_rest_version' )
+		? bboss_rest_namespace() . '/' . bboss_rest_version()
 		: 'bb/v1';
 	$logo_url  = isset( $args['logo_url'] ) ? $args['logo_url'] : '';
 

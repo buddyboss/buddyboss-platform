@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Group_Messages_Endpoint class
+ * BP REST: BBoss_REST_Group_Messages_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 	/**
-	 * Reuse some parts of the BP_REST_Messages_Endpoint class.
+	 * Reuse some parts of the BBoss_REST_Messages_Endpoint class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_Messages_Endpoint
+	 * @var BBoss_REST_Messages_Endpoint
 	 */
 	protected $message_endpoint;
 
@@ -30,9 +30,9 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace        = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base        = buddypress()->messages->id;
-		$this->message_endpoint = new BP_REST_Messages_Endpoint();
+		$this->namespace        = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base        = bboss()->messages->id;
+		$this->message_endpoint = new BBoss_REST_Messages_Endpoint();
 	}
 
 	/**
@@ -58,7 +58,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Init a Messages Thread or add a reply to an existing Thread.
-	 * -- from bp_nouveau_ajax_groups_send_message();
+	 * -- from bboss_nouveau_ajax_groups_send_message();
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -99,31 +99,31 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		if ( 'all' === $message_users ) {
 
 			// Fetch all the group members.
-			$members = BP_Groups_Member::get_group_member_ids( (int) $group );
+			$members = BBoss_Groups_Member::get_group_member_ids( (int) $group );
 
 			// Exclude logged-in user ids from the members list.
-			if ( in_array( bp_loggedin_user_id(), $members, true ) ) {
-				$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
+			if ( in_array( bboss_loggedin_user_id(), $members, true ) ) {
+				$members = array_values( array_diff( $members, array( bboss_loggedin_user_id() ) ) );
 			}
 
 			if ( 'private' === $message_type ) {
 
 				// Check Membership Access.
 				foreach ( $members as $k => $member ) {
-					$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+					$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bboss_loggedin_user_id() );
 					if ( ! $can_send_group_message ) {
 						unset( $members[ $k ] );
 					}
 				}
 
 				// Check if force friendship is enabled and check recipients.
-				if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-					if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+				if ( bboss_force_friendship_to_message() && bboss_is_active( 'friends' ) ) {
+					if ( ! bboss_messages_allowed_messaging_without_connection( bboss_loggedin_user_id() ) ) {
 						foreach ( $members as $f => $member ) {
 							if (
 								! (
-									bb_messages_allowed_messaging_without_connection( $member ) ||
-									friends_check_friendship( bp_loggedin_user_id(), $member )
+									bboss_messages_allowed_messaging_without_connection( $member ) ||
+									bboss_friends_check_friendship( bboss_loggedin_user_id(), $member )
 								)
 							) {
 								unset( $members[ $f ] );
@@ -147,22 +147,22 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 			foreach ( $members as $member ) {
 
-				$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+				$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bboss_loggedin_user_id() );
 				if ( ! $can_send_group_message ) {
-					$not_access_list[] = bp_core_get_user_displayname( $member );
+					$not_access_list[] = bboss_core_get_user_displayname( $member );
 				}
 			}
 
-			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-				if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+			if ( bboss_force_friendship_to_message() && bboss_is_active( 'friends' ) ) {
+				if ( ! bboss_messages_allowed_messaging_without_connection( bboss_loggedin_user_id() ) ) {
 					foreach ( $members as $f => $member ) {
 						if (
 							! (
-								bb_messages_allowed_messaging_without_connection( $member ) ||
-								friends_check_friendship( bp_loggedin_user_id(), $member )
+								bboss_messages_allowed_messaging_without_connection( $member ) ||
+								bboss_friends_check_friendship( bboss_loggedin_user_id(), $member )
 							)
 						) {
-							$not_friends[] = bp_core_get_user_displayname( $member );
+							$not_friends[] = bboss_core_get_user_displayname( $member );
 						}
 					}
 				}
@@ -173,7 +173,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					'bp_rest_invalid_group_members_message',
 					sprintf(
 						'%1$s %2$s',
-						( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss' ),
+						( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss-platform' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss-platform' ),
 						implode( ', ', $not_access_list )
 					),
 					array(
@@ -187,7 +187,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					'bp_rest_invalid_group_members_message',
 					sprintf(
 						'%1$s %2$s',
-						( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message: ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message: ', 'buddyboss' ),
+						( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message: ', 'buddyboss-platform' ) : __( 'You need to be connected with this member in order to send a message: ', 'buddyboss-platform' ),
 						implode( ', ', $not_friends )
 					),
 					array(
@@ -200,7 +200,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		if ( empty( $group ) ) {
 			return new WP_Error(
 				'bp_rest_no_group_selected',
-				__( 'Sorry, Group id is missing.', 'buddyboss' ),
+				__( 'Sorry, Group id is missing.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -210,7 +210,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		if ( empty( $members ) ) {
 			return new WP_Error(
 				'bp_rest_no_members_selected',
-				__( 'Sorry, you have not selected any members.', 'buddyboss' ),
+				__( 'Sorry, you have not selected any members.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -231,19 +231,19 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_messages_empty_message',
-				__( 'Sorry, Your message cannot be empty.', 'buddyboss' ),
+				__( 'Sorry, Your message cannot be empty.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
 			);
 		}
 
-		if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
-			$can_send_media = bb_user_has_access_upload_media( $group, bp_loggedin_user_id(), 0, 0, 'message' );
+		if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bboss_user_has_access_upload_media' ) ) {
+			$can_send_media = bboss_user_has_access_upload_media( $group, bboss_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bp_message_media',
-					__( 'You don\'t have access to send the media.', 'buddyboss' ),
+					__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -251,12 +251,12 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
-			$can_send_document = bb_user_has_access_upload_document( $group, bp_loggedin_user_id(), 0, 0, 'message' );
+		if ( ! empty( $request['bp_documents'] ) && function_exists( 'bboss_user_has_access_upload_document' ) ) {
+			$can_send_document = bboss_user_has_access_upload_document( $group, bboss_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
-					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -264,12 +264,12 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
-			$can_send_video = bb_user_has_access_upload_video( $group, bp_loggedin_user_id(), 0, 0, 'message' );
+		if ( ! empty( $request['bp_videos'] ) && function_exists( 'bboss_user_has_access_upload_video' ) ) {
+			$can_send_video = bboss_user_has_access_upload_video( $group, bboss_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
-					__( 'You don\'t have access to send the video.', 'buddyboss' ),
+					__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -277,12 +277,12 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bb_user_has_access_upload_gif( $group, bp_loggedin_user_id(), 0, 0, 'message' );
+		if ( ! empty( $request['media_gif'] ) && function_exists( 'bboss_user_has_access_upload_gif' ) ) {
+			$can_send_gif = bboss_user_has_access_upload_gif( $group, bboss_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
-					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+					__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -367,19 +367,19 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
 				$_POST['message_meta_users_list'] = $message_users_ids;
 
-				$group_thread                 = groups_get_groupmeta( (int) $group, 'group_message_thread' );
+				$group_thread                 = bboss_groups_get_groupmeta( (int) $group, 'group_message_thread' );
 				$is_deleted                   = false;
 				$group_thread_id              = '';
 				$_POST['message_thread_type'] = '';
 
-				if ( '' !== $group_thread && messages_is_valid_thread( $group_thread ) ) {
+				if ( '' !== $group_thread && bboss_messages_is_valid_thread( $group_thread ) ) {
 
-					$first_thread_message = BP_Messages_Thread::get_first_message( $group_thread );
+					$first_thread_message = BBoss_Messages_Thread::get_first_message( $group_thread );
 
 					if ( ! empty( $first_thread_message ) ) {
-						$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
-						$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
-						$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
+						$users      = bboss_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+						$type       = bboss_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+						$group_from = bboss_messages_get_meta( $first_thread_message->id, 'message_from', true );
 
 						if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
 							$_POST['message_thread_type'] = 'new';
@@ -387,7 +387,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					}
 
 					if ( empty( $_POST['message_thread_type'] ) ) {
-						$total_threads = BP_Messages_Thread::get(
+						$total_threads = BBoss_Messages_Thread::get(
 							array(
 								'include_threads' => array( $group_thread ),
 								'per_page'        => 1,
@@ -437,21 +437,21 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					);
 
 					// Check if there is already previously group thread created.
-					if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+					if ( bboss_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
 
 						$thread_id = 0;
 
-						while ( bp_message_threads() ) {
-							bp_message_thread();
-							$thread_id = bp_get_message_thread_id();
+						while ( bboss_message_threads() ) {
+							bboss_message_thread();
+							$thread_id = bboss_get_message_thread_id();
 
 							// Check the first message meta to check for all users and open type when missed entries found into DB.
-							$first_thread_message = BP_Messages_Thread::get_first_message( $thread_id );
+							$first_thread_message = BBoss_Messages_Thread::get_first_message( $thread_id );
 
 							if ( ! empty( $first_thread_message ) ) {
-								$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
-								$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
-								$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
+								$users      = bboss_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+								$type       = bboss_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+								$group_from = bboss_messages_get_meta( $first_thread_message->id, 'message_from', true );
 
 								if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
 									$thread_id = 0;
@@ -487,7 +487,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				 * Create Message based on the `message_thread_type` and `group_thread_id`.
 				 */
 				if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
-					$send = bp_groups_messages_new_message(
+					$send = bboss_groups_messages_new_message(
 						array(
 							'recipients'    => $members,
 							'subject'       => wp_trim_words( $message, messages_get_default_subject_length() ),
@@ -498,20 +498,20 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					);
 
 					if ( ! is_wp_error( $send ) && ! empty( $send ) ) {
-						groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
+						bboss_groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
 					}
 
 					return $this->bp_rest_groups_messages_validate_message( $send, $request );
 				} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $group_thread_id ) ) {
 
-					groups_update_groupmeta( (int) $group, 'group_message_thread', $group_thread_id );
+					bboss_groups_update_groupmeta( (int) $group, 'group_message_thread', $group_thread_id );
 
-					$new_reply = bp_groups_messages_new_message(
+					$new_reply = bboss_groups_messages_new_message(
 						array(
 							'thread_id'    => $group_thread_id,
 							'subject'      => wp_trim_words( $message, messages_get_default_subject_length() ),
 							'content'      => $message,
-							'date_sent'    => bp_core_current_time(),
+							'date_sent'    => bboss_core_current_time(),
 							'mark_visible' => true,
 							'error_type'   => 'wp_error',
 						)
@@ -534,24 +534,24 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				$_POST['message_thread_type'] = '';
 
 				// Check if there is already previously individual group thread created.
-				if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+				if ( bboss_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
 
 					$thread_id = 0;
 
-					while ( bp_message_threads() ) {
-						bp_message_thread();
-						$thread_id = bp_get_message_thread_id();
+					while ( bboss_message_threads() ) {
+						bboss_message_thread();
+						$thread_id = bboss_get_message_thread_id();
 
 						if ( $thread_id ) {
 
 							// get the thread recipients.
-							$thread                     = new BP_Messages_Thread( $thread_id );
+							$thread                     = new BBoss_Messages_Thread( $thread_id );
 							$thread_recipients          = $thread->get_recipients();
 							$previous_thread_recipients = array();
 
 							// Store thread recipients to $previous_ids array.
 							foreach ( $thread_recipients as $thread_recipient ) {
-								if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+								if ( bboss_loggedin_user_id() !== $thread_recipient->user_id ) {
 									$previous_thread_recipients[] = $thread_recipient->user_id;
 								}
 							}
@@ -567,7 +567,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 							// check both previous and current recipients are same.
 							$is_recipient_match = ( is_array( $previous_thread_recipients ) && is_array( $members_recipients ) && count( $previous_thread_recipients ) === count( $members_recipients ) && array_diff( $previous_thread_recipients, $members_recipients ) === array_diff( $members_recipients, $previous_thread_recipients ) );
 
-							$group_thread = (int) groups_get_groupmeta( (int) $group, 'group_message_thread' );
+							$group_thread = (int) bboss_groups_get_groupmeta( (int) $group, 'group_message_thread' );
 
 							// If recipients are matched.
 							if ( $is_recipient_match && (int) $thread_id !== $group_thread ) {
@@ -578,16 +578,16 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 					if ( $thread_id ) {
 						// get the thread recipients.
-						$thread                     = new BP_Messages_Thread( $thread_id );
+						$thread                     = new BBoss_Messages_Thread( $thread_id );
 						$thread_recipients          = $thread->get_recipients();
 						$previous_thread_recipients = array();
 
-						$last_message = BP_Messages_Thread::get_last_message( $thread_id );
-						$message_type = bp_messages_get_meta( $last_message->id, 'group_message_users', true );
+						$last_message = BBoss_Messages_Thread::get_last_message( $thread_id );
+						$message_type = bboss_messages_get_meta( $last_message->id, 'group_message_users', true );
 
 						// Store thread recipients to $previous_ids array.
 						foreach ( $thread_recipients as $thread_recipient ) {
-							if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+							if ( bboss_loggedin_user_id() !== $thread_recipient->user_id ) {
 								$previous_thread_recipients[] = $thread_recipient->user_id;
 							}
 						}
@@ -603,7 +603,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 						// check both previous and current recipients are same.
 						$is_recipient_match = ( is_array( $previous_thread_recipients ) && is_array( $members_recipients ) && count( $previous_thread_recipients ) === count( $members_recipients ) && array_diff( $previous_thread_recipients, $members_recipients ) === array_diff( $members_recipients, $previous_thread_recipients ) );
 
-						$group_thread = (int) groups_get_groupmeta( (int) $group, 'group_message_thread' );
+						$group_thread = (int) bboss_groups_get_groupmeta( (int) $group, 'group_message_thread' );
 
 						// If recipients are matched.
 						if ( $is_recipient_match && (int) $thread_id !== $group_thread ) {
@@ -614,22 +614,22 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 							// Else recipients not matched.
 						} else {
-							$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
+							$previous_threads = BBoss_Messages_Message::get_existing_threads( $members, bboss_loggedin_user_id() );
 							$existing_thread  = 0;
 							if ( $previous_threads ) {
 								foreach ( $previous_threads as $thread ) {
 
-									$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, bp_loggedin_user_id() );
+									$is_active_recipient = BBoss_Messages_Thread::is_thread_recipient( $thread->thread_id, bboss_loggedin_user_id() );
 
 									if ( $is_active_recipient ) {
 										// get the thread recipients.
-										$thread                     = new BP_Messages_Thread( $thread->thread_id );
+										$thread                     = new BBoss_Messages_Thread( $thread->thread_id );
 										$thread_recipients          = $thread->get_recipients();
 										$previous_thread_recipients = array();
 
 										// Store thread recipients to $previous_ids array.
 										foreach ( $thread_recipients as $thread_recipient ) {
-											if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+											if ( bboss_loggedin_user_id() !== $thread_recipient->user_id ) {
 												$previous_thread_recipients[] = $thread_recipient->user_id;
 											}
 										}
@@ -650,7 +650,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 										$add_existing = true;
 										foreach ( $message_ids as $id ) {
 											// group_message_users not open.
-											$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
+											$message_users = bboss_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 											if ( 'all' === $message_users ) {
 												$add_existing = false;
 												break;
@@ -680,21 +680,21 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 						}
 						// Else no thread found.
 					} else {
-						$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
+						$previous_threads = BBoss_Messages_Message::get_existing_threads( $members, bboss_loggedin_user_id() );
 						$existing_thread  = 0;
 						if ( $previous_threads ) {
 							foreach ( $previous_threads as $thread ) {
-								$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, bp_loggedin_user_id() );
+								$is_active_recipient = BBoss_Messages_Thread::is_thread_recipient( $thread->thread_id, bboss_loggedin_user_id() );
 								if ( $is_active_recipient ) {
 
 									// get the thread recipients.
-									$thread                     = new BP_Messages_Thread( $thread->thread_id );
+									$thread                     = new BBoss_Messages_Thread( $thread->thread_id );
 									$thread_recipients          = $thread->get_recipients();
 									$previous_thread_recipients = array();
 
 									// Store thread recipients to $previous_ids array.
 									foreach ( $thread_recipients as $thread_recipient ) {
-										if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+										if ( bboss_loggedin_user_id() !== $thread_recipient->user_id ) {
 											$previous_thread_recipients[] = $thread_recipient->user_id;
 										}
 									}
@@ -716,7 +716,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 									$add_existing = true;
 									foreach ( $message_ids as $id ) {
 										// group_message_users not open.
-										$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
+										$message_users = bboss_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 										if ( 'all' === $message_users ) {
 											$add_existing = false;
 											break;
@@ -747,23 +747,23 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 					// Else no previous thread found.
 				} else {
-					$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
+					$previous_threads = BBoss_Messages_Message::get_existing_threads( $members, bboss_loggedin_user_id() );
 					$existing_thread  = 0;
 
 					if ( $previous_threads ) {
 						foreach ( $previous_threads as $thread ) {
 
-							$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, bp_loggedin_user_id() );
+							$is_active_recipient = BBoss_Messages_Thread::is_thread_recipient( $thread->thread_id, bboss_loggedin_user_id() );
 
 							if ( $is_active_recipient ) {
 								// get the thread recipients.
-								$thread                     = new BP_Messages_Thread( $thread->thread_id );
+								$thread                     = new BBoss_Messages_Thread( $thread->thread_id );
 								$thread_recipients          = $thread->get_recipients();
 								$previous_thread_recipients = array();
 
 								// Store thread recipients to $previous_ids array.
 								foreach ( $thread_recipients as $thread_recipient ) {
-									if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
+									if ( bboss_loggedin_user_id() !== $thread_recipient->user_id ) {
 										$previous_thread_recipients[] = $thread_recipient->user_id;
 									}
 								}
@@ -784,7 +784,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 								$add_existing = true;
 								foreach ( $message_ids as $id ) {
 									// group_message_users not open.
-									$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
+									$message_users = bboss_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 									if ( 'all' === $message_users ) {
 										$add_existing = false;
 										break;
@@ -817,7 +817,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				 * Create Message based on the `message_thread_type` and `individual_thread_id`.
 				 */
 				if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
-					$send = bp_groups_messages_new_message(
+					$send = bboss_groups_messages_new_message(
 						array(
 							'recipients'    => $members,
 							'subject'       => wp_trim_words( $message, messages_get_default_subject_length() ),
@@ -829,12 +829,12 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 					return $this->bp_rest_groups_messages_validate_message( $send, $request, 'individual' );
 				} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $individual_thread_id ) ) {
-					$new_reply = bp_groups_messages_new_message(
+					$new_reply = bboss_groups_messages_new_message(
 						array(
 							'thread_id'    => $individual_thread_id,
 							'subject'      => wp_trim_words( $message, messages_get_default_subject_length() ),
 							'content'      => $message,
-							'date_sent'    => bp_core_current_time(),
+							'date_sent'    => bboss_core_current_time(),
 							'mark_visible' => true,
 							'error_type'   => 'wp_error',
 						)
@@ -851,10 +851,10 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			$all_members = $members;
 
 			if ( ! empty( $members ) ) {
-				$min_count = function_exists( 'bb_get_email_queue_min_count' ) ? bb_get_email_queue_min_count() : 10;
+				$min_count = function_exists( 'bboss_get_email_queue_min_count' ) ? bboss_get_email_queue_min_count() : 10;
 				if (
 					( count( $members ) > $min_count ) &&
-					( $bb_background_updater instanceof BB_Background_Updater )
+					( $bb_background_updater instanceof BBoss_BB_Background_Updater )
 				) {
 					$chunk_members = array_chunk( $members, $min_count );
 					if ( ! empty( $chunk_members ) ) {
@@ -865,8 +865,8 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 									'group'    => 'group_private_message',
 									'data_id'  => $group,
 									'priority' => 5,
-									'callback' => 'bb_send_group_message_background',
-									'args'     => array( $_POST, $members, bp_loggedin_user_id(), $message, true ),
+									'callback' => 'bboss_send_group_message_background',
+									'args'     => array( $_POST, $members, bboss_loggedin_user_id(), $message, true ),
 								),
 							);
 							$bb_background_updater->save();
@@ -876,7 +876,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 					$message = true;
 				} else {
-					$message = bb_send_group_message_background( $_POST, $members, bp_loggedin_user_id(), $message, false );
+					$message = bboss_send_group_message_background( $_POST, $members, bboss_loggedin_user_id(), $message, false );
 				}
 			}
 
@@ -895,11 +895,11 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			if ( 'all' !== $message_users ) {
 				$retval['message'] = sprintf(
 				/* translators: Message member count. */
-					__( 'Your message was sent privately to %s members of this group.', 'buddyboss' ),
+					__( 'Your message was sent privately to %s members of this group.', 'buddyboss-platform' ),
 					count( $all_members )
 				);
 			} else {
-				$retval['message'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss' );
+				$retval['message'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss-platform' );
 			}
 
 			if ( ! empty( $error ) ) {
@@ -911,7 +911,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			/**
 			 * Fires after a thread is fetched via the REST API.
 			 *
-			 * @param BP_Messages_Box_Template $messages_box Fetched thread.
+			 * @param BBoss_Messages_Box_Template $messages_box Fetched thread.
 			 * @param WP_REST_Response         $response     The response data.
 			 * @param WP_REST_Request          $request      The request sent to the API.
 			 *
@@ -935,13 +935,13 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create a group message.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to create a group message.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
 		);
 
-		if ( is_user_logged_in() && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+		if ( is_user_logged_in() && function_exists( 'bboss_disable_group_messages' ) && true === bboss_disable_group_messages() ) {
 			$retval = true;
 		}
 
@@ -970,12 +970,12 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'message' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Information for the user.', 'buddyboss' ),
+					'description' => __( 'Information for the user.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'data'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Message thread', 'buddyboss' ),
+					'description' => __( 'Message thread', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'object',
 					'properties'  => array(),
@@ -1007,7 +1007,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		unset( $params['page'], $params['per_page'], $params['search'] );
 
 		$params['group_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'required'          => true,
 			'sanitize_callback' => 'absint',
@@ -1015,14 +1015,14 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['message'] = array(
-			'description'       => __( 'Content of the Message to add to the Thread.', 'buddyboss' ),
+			'description'       => __( 'Content of the Message to add to the Thread.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'required'          => false,
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['users'] = array(
-			'description'       => __( 'Group thread users individual or all.', 'buddyboss' ),
+			'description'       => __( 'Group thread users individual or all.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'required'          => true,
 			'enum'              => array( 'all', 'individual' ),
@@ -1030,15 +1030,15 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['users_list'] = array(
-			'description'       => __( 'Limit result to messages created by a specific user.', 'buddyboss' ),
+			'description'       => __( 'Limit result to messages created by a specific user.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
-			'sanitize_callback' => 'bp_rest_sanitize_string_list',
+			'sanitize_callback' => 'bboss_rest_sanitize_string_list',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['type'] = array(
-			'description'       => __( 'Type of message, Group thread or private reply.', 'buddyboss' ),
+			'description'       => __( 'Type of message, Group thread or private reply.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'required'          => true,
 			'enum'              => array( 'open', 'private' ),
@@ -1056,7 +1056,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Create New Group Message.
-	 * -- from bp_groups_messages_new_message();
+	 * -- from bboss_groups_messages_new_message();
 	 *
 	 * @param array|string $args         {
 	 *                                   Array of arguments.
@@ -1082,18 +1082,18 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 */
 	public function bp_rest_groups_messages_new_message( $args = '' ) {
 		$send = '';
-		remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-		add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
+		remove_action( 'messages_message_sent', 'bboss_messages_notification_new_message', 10 );
+		add_action( 'messages_message_sent', 'bboss_group_messages_notification_new_message', 10 );
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
-				'sender_id'     => bp_loggedin_user_id(),
+				'sender_id'     => bboss_loggedin_user_id(),
 				'thread_id'     => false,   // False for a new message, thread id for a reply to a thread.
 				'recipients'    => array(), // Can be an array of usernames, user_ids or mixed.
 				'subject'       => false,
 				'content'       => false,
-				'date_sent'     => bp_core_current_time(),
+				'date_sent'     => bboss_core_current_time(),
 				'append_thread' => false,
 				'is_hidden'     => false,
 				'mark_visible'  => false,
@@ -1104,17 +1104,17 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		// Attempt to send the message.
-		$send = messages_new_message( $r );
+		$send = bboss_messages_new_message( $r );
 
-		remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+		remove_action( 'messages_message_sent', 'bboss_group_messages_notification_new_message', 10 );
+		add_action( 'messages_message_sent', 'bboss_messages_notification_new_message', 10 );
 
 		return $send;
 	}
 
 	/**
 	 * Check group message has been successfully sent or not.
-	 * - bp_groups_messages_validate_message();
+	 * - bboss_groups_messages_validate_message();
 	 *
 	 * @param mixed           $send    int|bool|WP_Error.
 	 * @param WP_REST_Request $request Rest request.
@@ -1132,9 +1132,9 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				)
 			);
 		} elseif ( ! empty( $send ) ) {
-			BP_Messages_Thread::$noCache = true;
+			BBoss_Messages_Thread::$noCache = true;
 
-			$thread     = new BP_Messages_Thread( (int) $send );
+			$thread     = new BBoss_Messages_Thread( (int) $send );
 			$recipients = $thread->get_recipients();
 
 			$recipients_count = ( count( $recipients ) > 1 ? count( $recipients ) - ( isset( $request['user_id'] ) && ! empty( $request['user_id'] ) ? 1 : 0 ) : 0 );
@@ -1142,11 +1142,11 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			if ( 'individual' === $type ) {
 				$retval['message'] = sprintf(
 				/* translators: Message member count. */
-					__( 'Your message was sent to %s members of this group.', 'buddyboss' ),
+					__( 'Your message was sent to %s members of this group.', 'buddyboss-platform' ),
 					$recipients_count
 				);
 			} else {
-				$retval['message'] = __( 'Your message was sent to all members of this group.', 'buddyboss' );
+				$retval['message'] = __( 'Your message was sent to all members of this group.', 'buddyboss-platform' );
 			}
 
 			$last_message = wp_list_filter( $thread->messages, array( 'id' => $thread->last_message_id ) );
@@ -1169,7 +1169,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			/**
 			 * Fires after a thread is fetched via the REST API.
 			 *
-			 * @param BP_Messages_Box_Template $messages_box Fetched thread.
+			 * @param BBoss_Messages_Box_Template $messages_box Fetched thread.
 			 * @param WP_REST_Response         $response     The response data.
 			 * @param WP_REST_Request          $request      The request sent to the API.
 			 *

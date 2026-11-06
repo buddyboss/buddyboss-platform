@@ -4,7 +4,7 @@
  *
  * Registers the free-tier "Blogs" feature (feature id `blogging`) with the
  * BuddyBoss Settings 2.0 feature registry. Auto-discovered by
- * BB_Feature_Autoloader via bb-features/community/blogging/bb-feature-config.php.
+ * BBoss_Feature_Autoloader via bb-features/community/blogging/bb-feature-config.php.
  *
  * NOTE: The feature id is `blogging`, NOT `blogs` — the `blogs` namespace is
  * owned by the BuddyPress multisite Sites component (bp-blogs).
@@ -15,11 +15,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-bb_register_feature(
+bboss_register_feature(
 	'blogging',
 	array(
-		'label'              => __( 'Blogs', 'buddyboss' ),
-		'description'        => __( 'Manage your blog settings, such as author blocks, Bookmarking and member subscriptions.', 'buddyboss' ),
+		'label'              => __( 'Blogs', 'buddyboss-platform' ),
+		'description'        => __( 'Manage your blog settings, such as author blocks, Bookmarking and member subscriptions.', 'buddyboss-platform' ),
 		'icon'               => array(
 			'type'  => 'font',
 			'class' => 'bb-icons-rl bb-icons-rl-book-open',
@@ -33,7 +33,7 @@ bb_register_feature(
 			require_once __DIR__ . '/loader.php';
 		},
 		'is_active_callback' => function () {
-			$active_features = bp_get_option( 'bb-active-features', array() );
+			$active_features = bboss_get_option( 'bb-active-features', array() );
 
 			return ! empty( $active_features['blogging'] );
 		},
@@ -53,7 +53,7 @@ bb_register_feature(
  *
  * @return void
  */
-function bb_blog_seed_default_options( $feature_id ) {
+function bboss_blog_seed_default_options( $feature_id ) {
 	if ( 'blogging' !== $feature_id ) {
 		return;
 	}
@@ -61,8 +61,8 @@ function bb_blog_seed_default_options( $feature_id ) {
 	// Single-source the platform keys + defaults from the shared helper. The
 	// helper lives in admin/callbacks.php, which is not loaded in every context
 	// this action can fire in, so fall back to the canonical list when absent.
-	$platforms = function_exists( 'bb_blog_social_link_platforms' )
-		? bb_blog_social_link_platforms()
+	$platforms = function_exists( 'bboss_blog_social_link_platforms' )
+		? bboss_blog_social_link_platforms()
 		: array(
 			'facebook' => 1,
 			'linkedin' => 1,
@@ -77,12 +77,12 @@ function bb_blog_seed_default_options( $feature_id ) {
 	}
 
 	foreach ( $defaults as $option_name => $default_value ) {
-		if ( '__bb_blog_missing__' === bp_get_option( $option_name, '__bb_blog_missing__' ) ) {
-			bp_update_option( $option_name, $default_value );
+		if ( '__bb_blog_missing__' === bboss_get_option( $option_name, '__bb_blog_missing__' ) ) {
+			bboss_update_option( $option_name, $default_value );
 		}
 	}
 }
-add_action( 'bb_feature_activated', 'bb_blog_seed_default_options' );
+add_action( 'bb_feature_activated', 'bboss_blog_seed_default_options' );
 
 // Admin settings registration (admin, AJAX, REST and WP-CLI contexts).
 if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {

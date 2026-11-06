@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Media_Template {
+class BBoss_Media_Template {
 
 	/**
 	 * The loop iterator.
@@ -110,16 +110,16 @@ class BP_Media_Template {
 	 * Constructor method.
 	 *
 	 * The arguments passed to this class constructor are of the same
-	 * format as {@link BP_Media::get()}.
+	 * format as {@link BBoss_Media::get()}.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see BP_Media::get() for a description of the argument
+	 * @see BBoss_Media::get() for a description of the argument
 	 *      structure, as well as default values.
 	 *
 	 * @param array $args {
 	 *     Array of arguments. Supports all arguments from
-	 *     BP_Media::get(), as well as 'page_arg' and
+	 *     BBoss_Media::get(), as well as 'page_arg' and
 	 *     'include'. Default values for 'per_page'
 	 *     differ from the originating function, and are described below.
 	 *     @type string      $page_arg         The string used as a query parameter in
@@ -155,18 +155,18 @@ class BP_Media_Template {
 			'privacy'          => false,
 			'video'            => false,
 			'moderation_query' => true,
-			'status'           => bb_media_get_published_status(),
+			'status'           => bboss_media_get_published_status(),
 		);
-		$r        = bp_parse_args( $args, $defaults );
+		$r        = bboss_parse_args( $args, $defaults );
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 
 		// Fetch specific media items based on ID's.
 		if ( ! empty( $include ) ) {
-			$this->medias = bp_media_get_specific(
+			$this->medias = bboss_media_get_specific(
 				array(
 					'media_ids'        => explode( ',', $include ),
 					'max'              => $max,
@@ -185,7 +185,7 @@ class BP_Media_Template {
 
 			// Fetch all activity items.
 		} else {
-			$this->medias = bp_media_get(
+			$this->medias = bboss_media_get(
 				array(
 					'max'          => $max,
 					'count_total'  => $count_total,
@@ -242,8 +242,8 @@ class BP_Media_Template {
 					'format'    => '',
 					'total'     => ceil( (int) $this->total_media_count / (int) $this->pag_num ),
 					'current'   => (int) $this->pag_page,
-					'prev_text' => __( '&larr;', 'buddyboss' ),
-					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'prev_text' => __( '&larr;', 'buddyboss-platform' ),
+					'next_text' => __( '&rarr;', 'buddyboss-platform' ),
 					'mid_size'  => 1,
 					'add_args'  => array(),
 				)
@@ -256,7 +256,7 @@ class BP_Media_Template {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see bp_has_media()
+	 * @see bboss_has_media()
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
@@ -297,13 +297,13 @@ class BP_Media_Template {
 	/**
 	 * Whether there are media items left in the loop to iterate over.
 	 *
-	 * This method is used by {@link bp_media()} as part of the while loop
+	 * This method is used by {@link bboss_media()} as part of the while loop
 	 * that controls iteration inside the media loop, eg:
-	 *     while ( bp_media() ) { ...
+	 *     while ( bboss_media() ) { ...
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see bp_media()
+	 * @see bboss_media()
 	 *
 	 * @return bool True if there are more media items to show,
 	 *              otherwise false.
@@ -332,13 +332,13 @@ class BP_Media_Template {
 	/**
 	 * Set up the current media item inside the loop.
 	 *
-	 * Used by {@link bp_the_media()} to set up the current media item
+	 * Used by {@link bboss_the_media()} to set up the current media item
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current media item.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see bp_the_media()
+	 * @see bboss_the_media()
 	 */
 	public function the_media() {
 

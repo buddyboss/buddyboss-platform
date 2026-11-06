@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  */
-class BP_Blogs_Theme_Compat {
+class BBoss_Blogs_Theme_Compat {
 
 	/**
 	 * Set up theme compatibility for the Blogs component.
@@ -36,18 +36,18 @@ class BP_Blogs_Theme_Compat {
 	public function is_blogs() {
 
 		// Bail if not looking at a group.
-		if ( ! bp_is_blogs_component() ) {
+		if ( ! bboss_is_blogs_component() ) {
 			return;
 		}
 
 		// Bail if looking at a users sites.
-		if ( bp_is_user() ) {
+		if ( bboss_is_user() ) {
 			return;
 		}
 
 		// Blog Directory.
-		if ( is_multisite() && ! bp_current_action() ) {
-			bp_update_is_directory( true, 'blogs' );
+		if ( is_multisite() && ! bboss_current_action() ) {
+			bboss_update_is_directory( true, 'blogs' );
 
 			/**
 			 * Fires if in the blog directory and BuddyPress needs Blog theme compatibility,
@@ -62,7 +62,7 @@ class BP_Blogs_Theme_Compat {
 			add_filter( 'bp_replace_the_content', array( $this, 'directory_content' ) );
 
 			// Create blog.
-		} elseif ( is_user_logged_in() && bp_blog_signup_enabled() ) {
+		} elseif ( is_user_logged_in() && bboss_blog_signup_enabled() ) {
 			add_filter( 'bp_get_buddypress_template', array( $this, 'create_template_hierarchy' ) );
 			add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'create_dummy_post' ) );
 			add_filter( 'bp_replace_the_content', array( $this, 'create_content' ) );
@@ -79,7 +79,7 @@ class BP_Blogs_Theme_Compat {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 * @param string $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function directory_template_hierarchy( $templates ) {
@@ -112,11 +112,11 @@ class BP_Blogs_Theme_Compat {
 	 */
 	public function directory_dummy_post() {
 
-		$blog_page_id = bp_core_get_directory_page_id( 'blog' );
-		bp_theme_compat_reset_post(
+		$blog_page_id = bboss_core_get_directory_page_id( 'blog' );
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $blog_page_id ) ? $blog_page_id : 0,
-				'post_title'     => __( 'Sites', 'buddyboss' ),
+				'post_title'     => __( 'Sites', 'buddyboss-platform' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',
@@ -134,7 +134,7 @@ class BP_Blogs_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_content() {
-		return bp_buffer_template_part( 'blogs/index', null, false );
+		return bboss_buffer_template_part( 'blogs/index', null, false );
 	}
 
 	/** Create ****************************************************************/
@@ -147,7 +147,7 @@ class BP_Blogs_Theme_Compat {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 * @param string $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function create_template_hierarchy( $templates ) {
@@ -181,14 +181,14 @@ class BP_Blogs_Theme_Compat {
 	public function create_dummy_post() {
 
 		// Title based on ability to create blogs.
-		if ( is_user_logged_in() && bp_blog_signup_enabled() ) {
-			$title = __( 'Create a Site', 'buddyboss' );
+		if ( is_user_logged_in() && bboss_blog_signup_enabled() ) {
+			$title = __( 'Create a Site', 'buddyboss-platform' );
 		} else {
-			$title = __( 'Sites', 'buddyboss' );
+			$title = __( 'Sites', 'buddyboss-platform' );
 		}
 
-		$blog_page_id = bp_core_get_directory_page_id( 'blog' );
-		bp_theme_compat_reset_post(
+		$blog_page_id = bboss_core_get_directory_page_id( 'blog' );
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $blog_page_id ) ? $blog_page_id : 0,
 				'post_title'     => $title,
@@ -209,6 +209,6 @@ class BP_Blogs_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function create_content() {
-		return bp_buffer_template_part( 'blogs/create', null, false );
+		return bboss_buffer_template_part( 'blogs/create', null, false );
 	}
 }

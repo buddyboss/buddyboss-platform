@@ -17,8 +17,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array Sanitized platform => 0|1 map limited to known platforms.
  */
-function bb_blog_sanitize_social_links( $value ) {
-	$allowed = array_keys( bb_blog_social_link_platforms() );
+function bboss_blog_sanitize_social_links( $value ) {
+	$allowed = array_keys( bboss_blog_social_link_platforms() );
 	$clean   = array();
 
 	if ( ! is_array( $value ) ) {
@@ -51,7 +51,7 @@ function bb_blog_sanitize_social_links( $value ) {
  *
  * @return bool
  */
-function bb_blog_page_settings_is_available() {
+function bboss_blog_page_settings_is_available() {
 	/*
 	 * Detect the theme by slug, NOT by `function_exists( 'buddyboss_theme_get_option' )`.
 	 * This runs from `bb_register_features` (bp_loaded -> plugins_loaded), and
@@ -61,7 +61,7 @@ function bb_blog_page_settings_is_available() {
 	 * Theme is active. `get_template()` is option-backed and safe this early;
 	 * it returns the parent slug, so BuddyBoss Theme child themes match too.
 	 */
-	$available = 'buddyboss-theme' === get_template() || bb_is_readylaunch_enabled();
+	$available = 'buddyboss-theme' === get_template() || bboss_is_readylaunch_enabled();
 
 	/**
 	 * Filter whether the Blog Page Settings are available.
@@ -81,7 +81,7 @@ function bb_blog_page_settings_is_available() {
  *
  * @return int[] Platform key => default 0|1.
  */
-function bb_blog_social_link_platforms() {
+function bboss_blog_social_link_platforms() {
 	return array(
 		'facebook' => 1,
 		'linkedin' => 1,
@@ -101,7 +101,7 @@ function bb_blog_social_link_platforms() {
  *
  * @return string[] Platform option name => theme Redux option key.
  */
-function bb_blog_theme_sync_map() {
+function bboss_blog_theme_sync_map() {
 	return array(
 		'bb_blog_related_posts' => 'blog_related_switch',
 		'bb_blog_author_bio'    => 'blog_author_box',
@@ -120,7 +120,7 @@ function bb_blog_theme_sync_map() {
  *
  * @return bool Current guard state.
  */
-function bb_blog_theme_sync_in_progress( $set = null ) {
+function bboss_blog_theme_sync_in_progress( $set = null ) {
 	static $in_progress = false;
 
 	if ( null !== $set ) {
@@ -144,12 +144,12 @@ function bb_blog_theme_sync_in_progress( $set = null ) {
  *
  * @return void
  */
-function bb_blog_sync_platform_option_to_theme( $option, $value ) {
-	if ( bb_blog_theme_sync_in_progress() || ! function_exists( 'buddyboss_theme_get_option' ) ) {
+function bboss_blog_sync_platform_option_to_theme( $option, $value ) {
+	if ( bboss_blog_theme_sync_in_progress() || ! function_exists( 'buddyboss_theme_get_option' ) ) {
 		return;
 	}
 
-	$map       = bb_blog_theme_sync_map();
+	$map       = bboss_blog_theme_sync_map();
 	$is_social = 0 === strpos( $option, 'bb_blog_social_link_' );
 
 	if ( ! isset( $map[ $option ] ) && ! $is_social ) {
@@ -166,8 +166,8 @@ function bb_blog_sync_platform_option_to_theme( $option, $value ) {
 		$theme_key = 'blog_share_box';
 		$enabled   = false;
 
-		foreach ( bb_blog_social_link_platforms() as $platform => $default ) {
-			if ( (bool) bp_get_option( 'bb_blog_social_link_' . $platform, $default ) ) {
+		foreach ( bboss_blog_social_link_platforms() as $platform => $default ) {
+			if ( (bool) bboss_get_option( 'bb_blog_social_link_' . $platform, $default ) ) {
 				$enabled = true;
 				break;
 			}
@@ -185,9 +185,9 @@ function bb_blog_sync_platform_option_to_theme( $option, $value ) {
 
 	$theme_options[ $theme_key ] = $enabled ? '1' : '0';
 
-	bb_blog_theme_sync_in_progress( true );
+	bboss_blog_theme_sync_in_progress( true );
 	update_option( 'buddyboss_theme_options', $theme_options );
-	bb_blog_theme_sync_in_progress( false );
+	bboss_blog_theme_sync_in_progress( false );
 }
 
 /**
@@ -201,8 +201,8 @@ function bb_blog_sync_platform_option_to_theme( $option, $value ) {
  *
  * @return void
  */
-function bb_blog_sync_platform_option_updated( $option, $old_value, $value ) {
-	bb_blog_sync_platform_option_to_theme( $option, $value );
+function bboss_blog_sync_platform_option_updated( $option, $old_value, $value ) {
+	bboss_blog_sync_platform_option_to_theme( $option, $value );
 }
 
 /**
@@ -217,8 +217,8 @@ function bb_blog_sync_platform_option_updated( $option, $old_value, $value ) {
  *
  * @return void
  */
-function bb_blog_sync_platform_option_added( $option, $value ) {
-	bb_blog_sync_platform_option_to_theme( $option, $value );
+function bboss_blog_sync_platform_option_added( $option, $value ) {
+	bboss_blog_sync_platform_option_to_theme( $option, $value );
 }
 
 /**
@@ -236,16 +236,16 @@ function bb_blog_sync_platform_option_added( $option, $value ) {
  *
  * @return void
  */
-function bb_blog_sync_theme_options_to_platform( $old_value, $value ) {
-	if ( bb_blog_theme_sync_in_progress() || ! is_array( $value ) ) {
+function bboss_blog_sync_theme_options_to_platform( $old_value, $value ) {
+	if ( bboss_blog_theme_sync_in_progress() || ! is_array( $value ) ) {
 		return;
 	}
 
 	$old_value = is_array( $old_value ) ? $old_value : array();
 
-	bb_blog_theme_sync_in_progress( true );
+	bboss_blog_theme_sync_in_progress( true );
 
-	foreach ( bb_blog_theme_sync_map() as $platform_option => $theme_key ) {
+	foreach ( bboss_blog_theme_sync_map() as $platform_option => $theme_key ) {
 		$new = isset( $value[ $theme_key ] ) ? (bool) $value[ $theme_key ] : null;
 		$old = isset( $old_value[ $theme_key ] ) ? (bool) $old_value[ $theme_key ] : null;
 
@@ -253,24 +253,24 @@ function bb_blog_sync_theme_options_to_platform( $old_value, $value ) {
 			continue;
 		}
 
-		bp_update_option( $platform_option, $new ? 1 : 0 );
+		bboss_update_option( $platform_option, $new ? 1 : 0 );
 	}
 
 	$new_share = isset( $value['blog_share_box'] ) ? (bool) $value['blog_share_box'] : null;
 	$old_share = isset( $old_value['blog_share_box'] ) ? (bool) $old_value['blog_share_box'] : null;
 
 	if ( null !== $new_share && $new_share !== $old_share ) {
-		$platforms = bb_blog_social_link_platforms();
+		$platforms = bboss_blog_social_link_platforms();
 
 		if ( ! $new_share ) {
 			foreach ( $platforms as $platform => $default ) {
-				bp_update_option( 'bb_blog_social_link_' . $platform, 0 );
+				bboss_update_option( 'bb_blog_social_link_' . $platform, 0 );
 			}
 		} else {
 			$any_enabled = false;
 
 			foreach ( $platforms as $platform => $default ) {
-				if ( (bool) bp_get_option( 'bb_blog_social_link_' . $platform, $default ) ) {
+				if ( (bool) bboss_get_option( 'bb_blog_social_link_' . $platform, $default ) ) {
 					$any_enabled = true;
 					break;
 				}
@@ -278,13 +278,13 @@ function bb_blog_sync_theme_options_to_platform( $old_value, $value ) {
 
 			if ( ! $any_enabled ) {
 				foreach ( $platforms as $platform => $default ) {
-					bp_update_option( 'bb_blog_social_link_' . $platform, $default );
+					bboss_update_option( 'bb_blog_social_link_' . $platform, $default );
 				}
 			}
 		}
 	}
 
-	bb_blog_theme_sync_in_progress( false );
+	bboss_blog_theme_sync_in_progress( false );
 }
 
 /*
@@ -299,8 +299,8 @@ function bb_blog_sync_theme_options_to_platform( $old_value, $value ) {
  * option (e.g. Related Posts) in the Theme Customizer would still write the
  * `bb_blog_*` options after Blogs has been deactivated in Settings 2.0.
  */
-if ( function_exists( 'bb_feature_registry' ) && bb_feature_registry()->bb_is_feature_active( 'blogging' ) ) {
-	add_action( 'updated_option', 'bb_blog_sync_platform_option_updated', 10, 3 );
-	add_action( 'added_option', 'bb_blog_sync_platform_option_added', 10, 2 );
-	add_action( 'update_option_buddyboss_theme_options', 'bb_blog_sync_theme_options_to_platform', 10, 2 );
+if ( function_exists( 'bboss_feature_registry' ) && bboss_feature_registry()->bb_is_feature_active( 'blogging' ) ) {
+	add_action( 'updated_option', 'bboss_blog_sync_platform_option_updated', 10, 3 );
+	add_action( 'added_option', 'bboss_blog_sync_platform_option_added', 10, 2 );
+	add_action( 'update_option_buddyboss_theme_options', 'bboss_blog_sync_theme_options_to_platform', 10, 2 );
 }

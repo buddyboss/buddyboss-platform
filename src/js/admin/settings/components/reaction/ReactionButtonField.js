@@ -28,7 +28,7 @@ export function ReactionButtonField( { field, value, onChange } ) {
 	// Get button settings (icon and text).
 	const buttonValue = value || {};
 	const buttonIcon = buttonValue.icon || field.icon || 'thumbs-up';
-	const buttonText = buttonValue.text || field.text || __( 'Like', 'buddyboss' );
+	const buttonText = buttonValue.text || field.text || __( 'Like', 'buddyboss-platform' );
 
 	/**
 	 * Handle edit reaction button click - opens the icon picker modal.
@@ -76,7 +76,7 @@ export function ReactionButtonField( { field, value, onChange } ) {
 							type="text"
 							maxLength="12"
 							value={ buttonText }
-							placeholder={ __( 'Like', 'buddyboss' ) }
+							placeholder={ __( 'Like', 'buddyboss-platform' ) }
 							className="bb-reaction-button-card__text-input"
 							disabled={ isProLocked }
 							readOnly={ isProLocked }
@@ -84,7 +84,7 @@ export function ReactionButtonField( { field, value, onChange } ) {
 						/>
 						<DropdownMenu
 							icon={ <i className="bb-icons-rl-dots-three"></i> }
-							label={ __( 'More options', 'buddyboss' ) }
+							label={ __( 'More options', 'buddyboss-platform' ) }
 							className="bb-reaction-button-card__menu-btn"
 						>
 							{ ( { onClose } ) => (
@@ -97,7 +97,7 @@ export function ReactionButtonField( { field, value, onChange } ) {
 											handleEditReactionButton();
 										} }
 									>
-										{ __( 'Edit', 'buddyboss' ) }
+										{ __( 'Edit', 'buddyboss-platform' ) }
 									</MenuItem>
 								</MenuGroup>
 							) }

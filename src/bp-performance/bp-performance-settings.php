@@ -17,12 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since BuddyBoss 1.5.7
  * @return array
  */
-function bp_performance_get_settings_sections() {
+function bboss_performance_get_settings_sections() {
 
 	$settings = array(
 		'bp_performance_settings' => array(
 			'page'  => 'performance',
-			'title' => __( 'API Caching', 'buddyboss' ),
+			'title' => __( 'API Caching', 'buddyboss-platform' ),
 		),
 	);
 
@@ -35,7 +35,7 @@ function bp_performance_get_settings_sections() {
  * @since BuddyBoss 1.5.7
  * @return array
  */
-function bp_performance_get_settings_fields() {
+function bboss_performance_get_settings_fields() {
 
 	$fields = array();
 
@@ -52,14 +52,14 @@ function bp_performance_get_settings_fields() {
  *
  * @return mixed False if section is invalid, array of fields otherwise.
  */
-function bp_performance_get_settings_fields_for_section( $section_id = '' ) {
+function bboss_performance_get_settings_fields_for_section( $section_id = '' ) {
 
 	// Bail if section is empty.
 	if ( empty( $section_id ) ) {
 		return false;
 	}
 
-	$fields = bp_performance_get_settings_fields();
+	$fields = bboss_performance_get_settings_fields();
 	$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
 
 	return (array) apply_filters( 'bp_performance_get_settings_fields_for_section', $retval, $section_id );

@@ -7,11 +7,15 @@
  * @since BuddyBoss 2.2.6
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
-<nav class="subnav_tab" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Notification administration menu', 'buddyboss' ); ?>">
+<nav class="subnav_tab" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Notification administration menu', 'buddyboss-platform' ); ?>">
 	<?php
-	if ( bp_nouveau_has_nav(
+	if ( bboss_nouveau_has_nav(
 		array(
 			'type'   => 'secondary',
 			'object' => 'account_notifications',
@@ -20,14 +24,14 @@
 		?>
 		<ul class="subnav">
 			<?php
-			while ( bp_nouveau_nav_items() ) :
-				bp_nouveau_nav_item();
+			while ( bboss_nouveau_nav_items() ) :
+				bboss_nouveau_nav_item();
 
-				$bp_nouveau = bp_nouveau();
+				$bp_nouveau = bboss_nouveau();
 				$nav_item   = $bp_nouveau->current_nav_item;
 
 				$nav_class       = array( 'bp-' . $bp_nouveau->displayed_nav . '-sub-tab' );
-				$current_sub_tab = bp_action_variables() ? bp_action_variable( 0 ) : '';
+				$current_sub_tab = bboss_action_variables() ? bboss_action_variable( 0 ) : '';
 				if (
 					( 'notifications' === $nav_item->slug && '' === $current_sub_tab ) ||
 					( 'notifications' !== $nav_item->slug && $nav_item->slug === $current_sub_tab )
@@ -35,13 +39,13 @@
 					$nav_class = array_merge( $nav_class, array( 'current', 'selected' ) );
 				}
 				?>
-				<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php echo esc_attr( join( ' ', $nav_class ) ); ?>">
-					<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>">
+				<li id="<?php bboss_nouveau_nav_id(); ?>" class="<?php echo esc_attr( join( ' ', $nav_class ) ); ?>">
+					<a href="<?php bboss_nouveau_nav_link(); ?>" id="<?php bboss_nouveau_nav_link_id(); ?>">
 						<?php
-						bp_nouveau_nav_link_text();
-						if ( bp_nouveau_nav_has_count() ) :
+						bboss_nouveau_nav_link_text();
+						if ( bboss_nouveau_nav_has_count() ) :
 							?>
-							<span class="count"><?php bp_nouveau_nav_count(); ?></span>
+							<span class="count"><?php bboss_nouveau_nav_count(); ?></span>
 						<?php endif; ?>
 					</a>
 				</li>

@@ -6,7 +6,7 @@
  * for advanced search features across the platform.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <button class="bb-rl-button bb-rl-button--secondaryOutline bb-rl-header-search">
 	<i class="bb-icons-rl-magnifying-glass"></i>
-	<span class="bb-rl-header-search__label"><?php esc_html_e( 'Search community', 'buddyboss' ); ?></span>
+	<span class="bb-rl-header-search__label"><?php esc_html_e( 'Search community', 'buddyboss-platform' ); ?></span>
 </button>
 <div id="bb-rl-network-search-modal" class="bb-rl-network-search-modal bb-rl-search-modal bp-hide">
 	<transition name="modal">
@@ -24,18 +24,18 @@ defined( 'ABSPATH' ) || exit;
 			<div class="bb-rl-modal-wrapper">
 				<div class="bp-search-form-wrapper header-search-wrap">
 					<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="search-form">
-						<label for="search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
+						<label for="search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></label>
 						<div class="bb-rl-network-search-bar">
-							<input id="search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community', 'buddyboss' ); ?>">
+							<input id="search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community', 'buddyboss-platform' ); ?>">
 							<input type="hidden" name="bp_search" value="1">
 							<button type="submit" id="search-submit" class="nouveau-search-submit">
 								<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
-								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></span>
 							</button>
-							<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss' ); ?></a>
+							<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss-platform' ); ?></a>
 							<div class="bb-rl-network-search-filter bb-rl-filter bb-rl-filter-rounded">
 								<?php
-								$searchable_items = BP_Search::instance()->get_available_search();
+								$searchable_items = BBoss_Search::instance()->get_available_search();
 								if ( ! empty( $searchable_items ) ) {
 									echo '<select class="bb-rl-search-filter-select" name="subset" data-bb-caret="caret-arrow" data-bb-border="rounded" data-dropdown-align="true">';
 									foreach ( $searchable_items as $key => $label ) {

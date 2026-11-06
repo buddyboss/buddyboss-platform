@@ -6,14 +6,17 @@
  * @since BuddyBoss 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load the Media directory.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_screen_index() {
-	if ( bp_is_media_directory() ) {
-		bp_update_is_directory( true, 'media' );
+function bboss_media_screen_index() {
+	if ( bboss_is_media_directory() ) {
+		bboss_update_is_directory( true, 'media' );
 
 		/**
 		 * Fires right before the loading of the Media directory screen template file.
@@ -29,7 +32,7 @@ function bp_media_screen_index() {
 		 *
 		 * @param string $template Path to the media template to load.
 		 */
-		bp_core_load_template( apply_filters( 'bp_media_screen_index', 'media/index' ) );
+		bboss_core_load_template( apply_filters( 'bp_media_screen_index', 'media/index' ) );
 	}
 }
-add_action( 'bp_screens', 'bp_media_screen_index' );
+add_action( 'bp_screens', 'bboss_media_screen_index' );

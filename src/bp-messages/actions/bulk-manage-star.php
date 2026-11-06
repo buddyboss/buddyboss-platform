@@ -6,12 +6,15 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Bulk manage handler to set the star status for multiple messages.
  *
  * @since BuddyPress 2.3.0
  */
-function bp_messages_star_bulk_manage_handler() {
+function bboss_messages_star_bulk_manage_handler() {
 	if ( empty( $_POST['messages_bulk_nonce'] ) ) {
 		return;
 	}
@@ -22,7 +25,7 @@ function bp_messages_star_bulk_manage_handler() {
 	}
 
 	// Check capability.
-	if ( ! is_user_logged_in() || ! bp_core_can_edit_settings() ) {
+	if ( ! is_user_logged_in() || ! bboss_core_can_edit_settings() ) {
 		return;
 	}
 
@@ -42,10 +45,10 @@ function bp_messages_star_bulk_manage_handler() {
 
 			// If we're starring a thread, we only star the first message in the thread.
 			foreach ( $threads as $thread ) {
-				$thread = new BP_Messages_thread( $thread );
+				$thread = new BBoss_Messages_Thread( $thread );
 				$mids   = wp_list_pluck( $thread->messages, 'id' );
 
-				bp_messages_star_set_action(
+				bboss_messages_star_set_action(
 					array(
 						'action'     => 'star',
 						'message_id' => $mids[0],
@@ -53,14 +56,15 @@ function bp_messages_star_bulk_manage_handler() {
 				);
 			}
 
-			bp_core_add_message( sprintf( _n( '%s message was successfully starred', '%s messages were successfully starred', $count, 'buddyboss' ), $count ) );
+			/* translators: %s: number of messages starred. */
+			bboss_core_add_message( sprintf( _n( '%s message was successfully starred', '%s messages were successfully starred', $count, 'buddyboss-platform' ), $count ) );
 			break;
 
 		case 'unstar':
 			$count = count( $threads );
 
 			foreach ( $threads as $thread ) {
-				bp_messages_star_set_action(
+				bboss_messages_star_set_action(
 					array(
 						'action'    => 'unstar',
 						'thread_id' => $thread,
@@ -69,12 +73,13 @@ function bp_messages_star_bulk_manage_handler() {
 				);
 			}
 
-			bp_core_add_message( sprintf( _n( '%s message was successfully unstarred', '%s messages were successfully unstarred', $count, 'buddyboss' ), $count ) );
+			/* translators: %s: number of messages unstarred. */
+			bboss_core_add_message( sprintf( _n( '%s message was successfully unstarred', '%s messages were successfully unstarred', $count, 'buddyboss-platform' ), $count ) );
 			break;
 	}
 
 	// Redirect back to message box.
-	bp_core_redirect( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() . '/' );
+	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() . '/' );
 	die();
 }
-add_action( 'bp_actions', 'bp_messages_star_bulk_manage_handler', 5 );
+add_action( 'bp_actions', 'bboss_messages_star_bulk_manage_handler', 5 );

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
 
-bb_legacy_register_cpt_meta_bridge(
+bboss_legacy_register_cpt_meta_bridge(
 	array(
 		'component'    => 'replies',
 		'post_type'    => 'reply',

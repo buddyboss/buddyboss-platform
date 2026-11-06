@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.1.9
  */
-function bp_helper_plugins_loaded_callback() {
+function bboss_helper_plugins_loaded_callback() {
 
 	global $bp_plugins;
 
@@ -26,11 +26,11 @@ function bp_helper_plugins_loaded_callback() {
 			 */
 			remove_action( 'admin_init', 'wdm_activation_dependency_check' );
 
-		if ( empty( bp_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
+		if ( empty( bboss_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
 			deactivate_plugins( 'learndash-bbpress/learndash-bbpress.php' );
 
-			add_action( 'admin_notices', 'bp_core_learndash_bbpress_notices' );
-			add_action( 'network_admin_notices', 'bp_core_learndash_bbpress_notices' );
+			add_action( 'admin_notices', 'bboss_core_learndash_bbpress_notices' );
+			add_action( 'network_admin_notices', 'bboss_core_learndash_bbpress_notices' );
 		}
 	}
 
@@ -40,7 +40,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Rank Math SEO
 	 */
 	if ( class_exists( 'RankMath' ) && interface_exists( 'RankMath\Paper\IPaper' ) && ! is_admin() ) {
-		require buddypress()->compatibility_dir . '/bp-rankmath-plugin-helpers.php';
+		require bboss()->compatibility_dir . '/bp-rankmath-plugin-helpers.php';
 	}
 
 	/**
@@ -49,7 +49,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Elementor
 	 */
 	if ( class_exists( '\Elementor\Plugin' ) ) {
-		require buddypress()->compatibility_dir . '/bp-elementor-plugin-helpers.php';
+		require bboss()->compatibility_dir . '/bp-elementor-plugin-helpers.php';
 	}
 
 	/**
@@ -58,7 +58,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Co-Authors Plus
 	 */
 	if ( class_exists( 'CoAuthors_Plus' ) ) {
-		add_filter( 'bp_search_settings_post_type_taxonomies', 'bp_core_remove_authors_taxonomy_for_co_authors_plus', 100, 2 );
+		add_filter( 'bp_search_settings_post_type_taxonomies', 'bboss_core_remove_authors_taxonomy_for_co_authors_plus', 100, 2 );
 	}
 
 	/**
@@ -70,12 +70,12 @@ function bp_helper_plugins_loaded_callback() {
 		/**
 		 * This action is use when admin bar is Enable
 		 */
-		add_action( 'bp_setup_admin_bar', 'bp_core_add_admin_menu_for_memberpress_buddypress', 100 );
+		add_action( 'bp_setup_admin_bar', 'bboss_core_add_admin_menu_for_memberpress_buddypress', 100 );
 
 		/**
 		 * This action to update the first and last name usermeta
 		 */
-		add_action( 'user_register', 'bp_core_updated_flname_memberpress_buddypress', 0 );
+		add_action( 'user_register', 'bboss_core_updated_flname_memberpress_buddypress', 0 );
 	}
 
 	/**
@@ -84,7 +84,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support WPML Multilingual CMS
 	 */
 	if ( class_exists( 'SitePress' ) && class_exists( 'WPML_Fix_Links_In_Display_As_Translated_Content' ) ) {
-		require buddypress()->compatibility_dir . '/class-bb-wpml-helpers.php';
+		require bboss()->compatibility_dir . '/class-bb-wpml-helpers.php';
 	}
 
 	/**
@@ -108,7 +108,7 @@ function bp_helper_plugins_loaded_callback() {
 		 *
 		 * @return array|mixed
 		 */
-		function bp_core_instructor_role_post_exclude( $exclude_posts ) {
+		function bboss_core_instructor_role_post_exclude( $exclude_posts ) {
 
 			if ( is_array( $exclude_posts ) ) {
 				$exclude_posts[] = 'bp-group-type';
@@ -118,7 +118,7 @@ function bp_helper_plugins_loaded_callback() {
 			return $exclude_posts;
 		}
 
-		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
+		add_filter( 'wdmir_exclude_post_types', 'bboss_core_instructor_role_post_exclude', 10, 1 );
 	}
 
 	if ( class_exists( 'GeoDirectory' ) ) {
@@ -130,17 +130,17 @@ function bp_helper_plugins_loaded_callback() {
 		 *
 		 * @return void
 		 */
-		function bp_exclude_geodirectory_scripts() {
-			$bp_current_component = bp_current_component();
+		function bboss_exclude_geodirectory_scripts() {
+			$bp_current_component = bboss_current_component();
 
 			// deregister geodirectory select2 script and styles from all component pages
 			if ( $bp_current_component && ! in_array( $bp_current_component, array( 'listings', 'favorites', 'reviews' ), true ) ) {
-				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
-				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
+				add_action( 'wp_enqueue_scripts', 'bboss_deregister_geodirectory_script_select2' );
+				add_action( 'wp_print_styles', 'bboss_deregister_geodirectory_styles' );
 			}
 		}
 
-		add_action( 'bp_init', 'bp_exclude_geodirectory_scripts' );
+		add_action( 'bp_init', 'bboss_exclude_geodirectory_scripts' );
 
 		/**
 		 * Deregister and dequeue select2 script from all component pages.
@@ -149,7 +149,7 @@ function bp_helper_plugins_loaded_callback() {
 		 *
 		 * @return void
 		 */
-		function bp_deregister_geodirectory_script_select2() {
+		function bboss_deregister_geodirectory_script_select2() {
 			wp_dequeue_script( 'select2' );
 			wp_deregister_script( 'select2' );
 			wp_dequeue_script( 'bootstrap-js-bundle' );
@@ -163,7 +163,7 @@ function bp_helper_plugins_loaded_callback() {
 		 *
 		 * @return void
 		 */
-		function bp_deregister_geodirectory_styles() {
+		function bboss_deregister_geodirectory_styles() {
 			wp_dequeue_style( 'ayecode-ui' );
 			wp_deregister_style( 'ayecode-ui' );
 		}
@@ -175,7 +175,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Woocommerce
 	 */
 	if ( class_exists( 'WooCommerce' ) ) {
-		require buddypress()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
+		require bboss()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
 	}
 
 	/**
@@ -184,28 +184,28 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support The Events Calendar.
 	 */
 	if ( class_exists( 'Tribe__Events__Main' ) ) {
-		require buddypress()->compatibility_dir . '/class-bb-the-events-calendar-helpers.php';
+		require bboss()->compatibility_dir . '/class-bb-the-events-calendar-helpers.php';
 	}
 
 	/**
 	 * Include Query Monitor compatibility.
 	 */
 	if ( class_exists( 'QueryMonitor' ) ) {
-		require buddypress()->compatibility_dir . '/class-bb-qm-helpers.php';
+		require bboss()->compatibility_dir . '/class-bb-qm-helpers.php';
 	}
 
 	/**
 	 * Include filters when tutor-pro plugin is activated.
 	 */
 	if ( function_exists( 'tutor_pro' ) ) {
-		require buddypress()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
+		require bboss()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
 	}
 
 	/**
 	 * Include filters to support network search when Paid Membership Pro plugin is activated.
 	 */
 	if ( defined( 'PMPRO_VERSION' ) ) {
-		require buddypress()->compatibility_dir . '/class-bb-pmpro-helpers.php';
+		require bboss()->compatibility_dir . '/class-bb-pmpro-helpers.php';
 	}
 
 	/**
@@ -254,16 +254,16 @@ function bp_helper_plugins_loaded_callback() {
 		add_filter( 'ir_filter_remove_private_protected_from_titles', function ( $is_prepend, $prepend, $post ) {
 			$post_types = array();
 
-			if ( function_exists( 'bbp_get_forum_post_type' ) ) {
-				$post_types[] = bbp_get_forum_post_type();
+			if ( function_exists( 'bboss_bbp_get_forum_post_type' ) ) {
+				$post_types[] = bboss_bbp_get_forum_post_type();
 			}
 
-			if ( function_exists( 'bbp_get_topic_post_type' ) ) {
-				$post_types[] = bbp_get_topic_post_type();
+			if ( function_exists( 'bboss_bbp_get_topic_post_type' ) ) {
+				$post_types[] = bboss_bbp_get_topic_post_type();
 			}
 
-			if ( function_exists( 'bbp_get_reply_post_type' ) ) {
-				$post_types[] = bbp_get_reply_post_type();
+			if ( function_exists( 'bboss_bbp_get_reply_post_type' ) ) {
+				$post_types[] = bboss_bbp_get_reply_post_type();
 			}
 
 			if ( ! empty( $post_types ) && in_array( $post->post_type, $post_types, true ) ) {
@@ -281,7 +281,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * @since BuddyBoss 2.6.10
 	 */
 	if ( in_array( 'cdn-enabler/cdn-enabler.php', $bp_plugins ) && class_exists( 'CDN_Enabler_Engine' ) ) {
-		require buddypress()->compatibility_dir . '/class-bb-cdn-helpers.php';
+		require bboss()->compatibility_dir . '/class-bb-cdn-helpers.php';
 	}
 
 	/**
@@ -301,7 +301,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Tutor plugin is activated.
 	 */
 	if ( function_exists( 'tutor' ) ) {
-		require buddypress()->compatibility_dir . '/class-bb-tutor-helpers.php';
+		require bboss()->compatibility_dir . '/class-bb-tutor-helpers.php';
 	}
 
 	/**
@@ -323,11 +323,11 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * @since BuddyBoss 3.5.0
 	 */
-	require buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
-	BB_SEO_Helpers::instance();
+	require bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+	BBoss_SEO_Helpers::instance();
 
 	if ( class_exists( 'LifterLMS' ) ) {
-		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
+		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bboss_readylaunch_middle_content_llms_courses', 20, 1 );
 	}
 
 	/**
@@ -340,32 +340,32 @@ function bp_helper_plugins_loaded_callback() {
 	 * @since BuddyBoss 3.6.2
 	 */
 	if ( class_exists( 'wordfence' ) ) {
-		add_filter( 'request', 'bb_core_wordfence_rest_author_scan_compatibility', 5 );
+		add_filter( 'request', 'bboss_core_wordfence_rest_author_scan_compatibility', 5 );
 	}
 }
 
-add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
+add_action( 'init', 'bboss_helper_plugins_loaded_callback', 0 );
 
 /**
  * Helper functions for the offload media compatibility.
  */
-function bb_wp_offload_media_compatibility_helper() {
+function bboss_wp_offload_media_compatibility_helper() {
 
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		require buddypress()->compatibility_dir . '/bp-wp-offload-media-helpers.php';
+		require bboss()->compatibility_dir . '/bp-wp-offload-media-helpers.php';
 	}
 
 }
-add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 10 );
+add_action( 'init', 'bboss_wp_offload_media_compatibility_helper', 10 );
 
 /**
  * Fix the media, video & document display compatibility issue.
  *
  * @since BuddyBoss 1.7.9
  */
-function bb_seo_press_compatibility_helper() {
+function bboss_seo_press_compatibility_helper() {
 
-	if ( (bool) bp_get_option( 'seopress_activated' ) ) {
+	if ( (bool) bboss_get_option( 'seopress_activated' ) ) {
 		if (
 			(
 				! empty( get_query_var( 'bb-media-preview' ) ) ||
@@ -386,7 +386,7 @@ function bb_seo_press_compatibility_helper() {
 
 }
 
-add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
+add_action( 'wp', 'bboss_seo_press_compatibility_helper', 9999 );
 
 /**
  * Allow activity page content restriction via MemberPress
@@ -395,14 +395,14 @@ add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
  *
  * @return void
  */
-function bb_core_allow_activity_page_content_restriction_memberpress() {
+function bboss_core_allow_activity_page_content_restriction_memberpress() {
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_component() && function_exists('is_bbpress') && is_bbpress() ) {
+	if ( bboss_is_active( 'activity' ) && bboss_is_activity_component() && function_exists('bboss_is_bbpress') && bboss_is_bbpress() ) {
 		remove_filter( 'mepr-pre-run-rule-content', 'MeprBbPressIntegration::dont_block_the_content', 11, 3 );
 	}
 
 }
-add_action( 'bp_init', 'bb_core_allow_activity_page_content_restriction_memberpress' );
+add_action( 'bp_init', 'bboss_core_allow_activity_page_content_restriction_memberpress' );
 
 /**
  * Add User meta as first and last name is update by BuddyBoss Platform itself
@@ -411,8 +411,8 @@ add_action( 'bp_init', 'bb_core_allow_activity_page_content_restriction_memberpr
  *
  * @param int $user_id Register member user id.
  */
-function bp_core_updated_flname_memberpress_buddypress( $user_id ) {
-	$user_id = empty( $user_id ) ? bp_loggedin_user_id() : $user_id;
+function bboss_core_updated_flname_memberpress_buddypress( $user_id ) {
+	$user_id = empty( $user_id ) ? bboss_loggedin_user_id() : $user_id;
 	update_user_meta( $user_id, 'bp_flname_sync', 1 );
 }
 
@@ -423,16 +423,16 @@ function bp_core_updated_flname_memberpress_buddypress( $user_id ) {
  *
  * @param $menus
  */
-function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
+function bboss_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 	// Define the WordPress global.
 	global $wp_admin_bar, $bp;
 
-	if ( ! bp_use_wp_admin_bar() || defined( 'DOING_AJAX' ) ) {
+	if ( ! bboss_use_wp_admin_bar() || defined( 'BBOSS_DOING_AJAX' ) ) {
 		return;
 	}
 
 	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' );
-	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss' ) );
+	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss-platform' ) );
 	$position  = apply_filters( 'mepr-bp-info-main-nav-position', 25 );
 
 	$wp_admin_bar->add_menu(
@@ -450,7 +450,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 		array(
 			'parent' => $main_slug,
 			'id'     => 'mp-info',
-			'title'  => _x( 'Info', 'ui', 'buddyboss' ),
+			'title'  => _x( 'Info', 'ui', 'buddyboss-platform' ),
 			'href'   => $bp->loggedin_user->domain . $main_slug . '/',
 		)
 	);
@@ -460,7 +460,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 		array(
 			'parent' => $main_slug,
 			'id'     => 'mp-subscriptions',
-			'title'  => _x( 'Subscriptions', 'ui', 'buddyboss' ),
+			'title'  => _x( 'Subscriptions', 'ui', 'buddyboss-platform' ),
 			'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/',
 		)
 	);
@@ -470,7 +470,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 		array(
 			'parent' => $main_slug,
 			'id'     => 'mp-payments',
-			'title'  => _x( 'Payments', 'ui', 'buddyboss' ),
+			'title'  => _x( 'Payments', 'ui', 'buddyboss-platform' ),
 			'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-payments/',
 		)
 	);
@@ -482,17 +482,17 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
  *
  * @since BuddyBoss 1.0.9
  */
-function bp_core_update_group_fields_id_in_db() {
+function bboss_core_update_group_fields_id_in_db() {
 
 	if ( is_multisite() ) {
 		global $wpdb;
-		$bp_prefix = bp_core_get_table_prefix();
+		$bp_prefix = bboss_core_get_table_prefix();
 
 		$table_name = $bp_prefix . 'bp_xprofile_fields';
 
-		if ( empty( bp_xprofile_firstname_field_id( 0, false ) ) ) {
+		if ( empty( bboss_xprofile_firstname_field_id( 0, false ) ) ) {
 			// first name fields update
-			$firstname = bp_get_option( 'bp-xprofile-firstname-field-name' );
+			$firstname = bboss_get_option( 'bp-xprofile-firstname-field-name' );
 			$results   = $wpdb->get_results( "SELECT id FROM {$table_name} WHERE name = '{$firstname}' AND can_delete = 0" );
 			$count     = 0;
 			if ( ! empty( $results ) ) {
@@ -508,9 +508,9 @@ function bp_core_update_group_fields_id_in_db() {
 			}
 		}
 
-		if ( empty( bp_xprofile_lastname_field_id( 0, false ) ) ) {
+		if ( empty( bboss_xprofile_lastname_field_id( 0, false ) ) ) {
 			// last name fields update
-			$lastname = bp_get_option( 'bp-xprofile-lastname-field-name' );
+			$lastname = bboss_get_option( 'bp-xprofile-lastname-field-name' );
 			$results  = $wpdb->get_results( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE name = '{$lastname}' AND can_delete = 0" );
 			$count    = 0;
 			if ( ! empty( $results ) ) {
@@ -526,9 +526,9 @@ function bp_core_update_group_fields_id_in_db() {
 			}
 		}
 
-		if ( empty( bp_xprofile_nickname_field_id( true, false ) ) ) {
+		if ( empty( bboss_xprofile_nickname_field_id( true, false ) ) ) {
 			// nick name fields update
-			$nickname = bp_get_option( 'bp-xprofile-nickname-field-name' );
+			$nickname = bboss_get_option( 'bp-xprofile-nickname-field-name' );
 			$results  = $wpdb->get_results( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE name = '{$nickname}' AND can_delete = 0" );
 			$count    = 0;
 			if ( ! empty( $results ) ) {
@@ -547,7 +547,7 @@ function bp_core_update_group_fields_id_in_db() {
 		update_site_option( 'bp-xprofile-field-ids-updated', 1 );
 	}
 }
-add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db', 100 );
+add_action( 'xprofile_admin_group_action', 'bboss_core_update_group_fields_id_in_db', 100 );
 
 /**
  * Remove the Author Taxonomies as that is added by Co-Authors Plus which is not used full.
@@ -561,9 +561,9 @@ add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db
  *
  * @return array Return the names or objects of the taxonomies which are registered for the requested object or object type
  */
-function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post_type ) {
+function bboss_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post_type ) {
 
-	delete_blog_option( bp_get_root_blog_id(), "bp_search_{$post_type}_tax_author" );
+	delete_blog_option( bboss_get_root_blog_id(), "bp_search_{$post_type}_tax_author" );
 	return array_diff( $taxonomies, array( 'author' ) );
 }
 
@@ -574,7 +574,7 @@ function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post
  *
  * @since BuddyBoss 1.1.9
  */
-function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
+function bboss_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
 
 	// check for BuddyPress plugin.
 	if ( 'buddypress' === $section_slug ) {
@@ -584,11 +584,11 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 	// check for bbPress plugin.
 	if ( 'bbpress' === $section_slug ) {
 		$section_notice = '';
-		if ( empty( bp_is_active( 'forums' ) ) ) {
+		if ( empty( bboss_is_active( 'forums' ) ) ) {
 			$section_notice = sprintf(
 				'<a href="%s">%s</a>',
-				bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
-				__( 'Activate Forum Discussions Component', 'buddyboss' )
+				bboss_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
+				__( 'Activate Forum Discussions Component', 'buddyboss-platform' )
 			);
 		}
 	}
@@ -596,7 +596,7 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 	return $section_notice;
 
 }
-add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
+add_filter( 'gglcptch_section_notice', 'bboss_core_add_support_for_google_captcha_pro', 100, 2 );
 
 /**
  * Update the BuddyBoss Platform Fields when user register from MemberPress Registration form
@@ -605,13 +605,13 @@ add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_p
  *
  * @since BuddyBoss 1.1.9
  */
-function bb_core_add_support_mepr_signup_map_user_fields( $txn ) {
+function bboss_core_add_support_mepr_signup_map_user_fields( $txn ) {
 	if ( ! empty( $txn->user_id ) ) {
-		bp_core_map_user_registration( $txn->user_id, true );
+		bboss_core_map_user_registration( $txn->user_id, true );
 	}
 }
 
-add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 100 );
+add_action( 'mepr-signup', 'bboss_core_add_support_mepr_signup_map_user_fields', 100 );
 
 /**
  * Include plugin when plugin is activated
@@ -620,18 +620,19 @@ add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 10
  *
  * @since BuddyBoss 1.1.9
  */
-function bp_core_learndash_bbpress_notices() {
+function bboss_core_learndash_bbpress_notices() {
 	global $bp_plugins;
 
-	if ( empty( bp_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
-		$links = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
+	if ( empty( bboss_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
+		$links = bboss_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
 
-		$text     = sprintf( '<a href="%s">%s</a>', $links, __( 'Forum Discussions', 'buddyboss' ) );
-		$activate = sprintf( '<a href="%s">%s</a>', $links, __( 'activate', 'buddyboss' ) );
+		$text     = sprintf( '<a href="%s">%s</a>', esc_url( $links ), esc_html__( 'Forum Discussions', 'buddyboss-platform' ) );
+		$activate = sprintf( '<a href="%s">%s</a>', esc_url( $links ), esc_html__( 'activate', 'buddyboss-platform' ) );
 		?>
 		<div id="message" class="error notice">
-			<p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
-			<p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %1$s component is deactivated. Please activate LearnDash LMS plugin & %2$s component.', 'buddyboss' ), $text, $text, $activate ); ?></p>
+			<p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss-platform' ); ?></strong></p>
+			<?php /* translators: 1: Forum Discussions component link, 2: activate component link. */ ?>
+			<p><?php echo wp_kses_post( sprintf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %1$s component is deactivated. Please activate LearnDash LMS plugin & %2$s component.', 'buddyboss-platform' ), $text, $text, $activate ) ); ?></p>
 		</div>
 		<?php
 	}
@@ -646,13 +647,13 @@ function bp_core_learndash_bbpress_notices() {
  *
  * @return mixed
  */
-function bp_core_fix_notices_woocommerce_admin_status( $tabs ) {
+function bboss_core_fix_notices_woocommerce_admin_status( $tabs ) {
 	if ( isset( $_GET['page'] ) && 'wc-status' == $_GET['page'] ) {
-		bp_core_unset_bbpress_buddypress_active();
+		bboss_core_unset_bbpress_buddypress_active();
 	}
 	return $tabs;
 }
-add_filter( 'woocommerce_admin_status_tabs', 'bp_core_fix_notices_woocommerce_admin_status' );
+add_filter( 'woocommerce_admin_status_tabs', 'bboss_core_fix_notices_woocommerce_admin_status' );
 
 /**
  * Fix forums subscription tab in user's profile.
@@ -662,18 +663,18 @@ add_filter( 'woocommerce_admin_status_tabs', 'bp_core_fix_notices_woocommerce_ad
  * @return bool
  * @since BuddyBoss 1.3.3
  */
-function bp_core_fix_forums_subscriptions_tab( $passed ) {
-	$bp_current_component = bp_current_component();
-	$bp_current_action    = bp_current_action();
+function bboss_core_fix_forums_subscriptions_tab( $passed ) {
+	$bp_current_component = bboss_current_component();
+	$bp_current_action    = bboss_current_action();
 
-	if ( 'forums' === $bp_current_component && $bp_current_action === bbp_get_user_subscriptions_slug() ) {
+	if ( 'forums' === $bp_current_component && $bp_current_action === bboss_bbp_get_user_subscriptions_slug() ) {
 		$passed = false;
 	}
 
 	return $passed;
 }
 
-add_filter( 'woocommerce_account_endpoint_page_not_found', 'bp_core_fix_forums_subscriptions_tab' );
+add_filter( 'woocommerce_account_endpoint_page_not_found', 'bboss_core_fix_forums_subscriptions_tab' );
 
 /**
  * Fix Memberpress Privacy for BuddyPress pages.
@@ -684,31 +685,31 @@ add_filter( 'woocommerce_account_endpoint_page_not_found', 'bp_core_fix_forums_s
  *
  * @return mixed
  */
-function bp_core_memberpress_the_content( $content ) {
+function bboss_core_memberpress_the_content( $content ) {
 	if ( class_exists( 'MeprBaseModel' ) ) {
 		global $post;
-		$page_ids = bp_core_get_directory_page_ids();
+		$page_ids = bboss_core_get_directory_page_ids();
 
 		if (
-			bp_is_groups_component()
+			bboss_is_groups_component()
 			&& ! empty( $page_ids['groups'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['groups'] );
 		} elseif (
-			bp_is_media_component()
+			bboss_is_media_component()
 			&& ! empty( $page_ids['media'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['media'] );
 		} elseif (
-			bp_is_members_component()
+			bboss_is_members_component()
 			&& ! empty( $page_ids['members'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['members'] );
 		} elseif (
-			bp_is_activity_component()
+			bboss_is_activity_component()
 			&& ! empty( $page_ids['activity'] )
 			&& empty( $post->ID )
 		) {
@@ -718,32 +719,32 @@ function bp_core_memberpress_the_content( $content ) {
 
 	return $content;
 }
-add_filter( 'the_content', 'bp_core_memberpress_the_content', 999 );
+add_filter( 'the_content', 'bboss_core_memberpress_the_content', 999 );
 
 /**
  * Fix Medium Editor version conflict with user blog plugin
  *
  * @since BuddyBoss 1.3.4
  */
-function bp_remove_user_blog_disable_medium_editor_js() {
-	if ( bp_is_activity_directory() || bp_is_user_activity() || bp_is_group_activity() ) {
+function bboss_remove_user_blog_disable_medium_editor_js() {
+	if ( bboss_is_activity_directory() || bboss_is_user_activity() || bboss_is_group_activity() ) {
 		wp_dequeue_script( 'buddyboss-bower-medium-editor' );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'bp_remove_user_blog_disable_medium_editor_js', 100 );
+add_action( 'wp_enqueue_scripts', 'bboss_remove_user_blog_disable_medium_editor_js', 100 );
 
 /**
  * Removed WC filter to the settings page when its active.
  *
  * @since BuddyBoss 1.3.3
  */
-function bp_settings_remove_wc_lostpassword_url() {
+function bboss_settings_remove_wc_lostpassword_url() {
 	if ( class_exists( 'woocommerce' ) ) {
 		remove_filter( 'lostpassword_url', 'wc_lostpassword_url', 10, 1 );
 	}
 }
-add_action( 'bp_before_member_settings_template', 'bp_settings_remove_wc_lostpassword_url' );
-add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
+add_action( 'bp_before_member_settings_template', 'bboss_settings_remove_wc_lostpassword_url' );
+add_action( 'login_form_login', 'bboss_settings_remove_wc_lostpassword_url' );
 
 /**
  * Get the forum page id from settings.
@@ -752,9 +753,9 @@ add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
  *
  * @return int|bool.
  */
-function bp_get_forum_page_id() {
+function bboss_get_forum_page_id() {
 	// Get the page id from the options.
-	$id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+	$id = (int) bboss_get_option( '_bbp_root_slug_custom_slug' );
 
 	// Check the status of current set value.
 	$status = get_post_status( $id );
@@ -773,9 +774,9 @@ function bp_get_forum_page_id() {
  *
  * @return string.
  */
-function bp_wpseo_title( $title, $presentation ) {
+function bboss_wpseo_title( $title, $presentation ) {
 	// Get forum page id
-	$page_id = bp_get_forum_page_id();
+	$page_id = bboss_get_forum_page_id();
 
 	if ( empty( $page_id ) || ! class_exists( 'WPSEO_Replace_Vars' ) ) {
 		return $title;
@@ -802,9 +803,9 @@ function bp_wpseo_title( $title, $presentation ) {
  *
  * @return string.
  */
-function bp_wpseo_meta_description( $meta_description, $presentation ) {
+function bboss_wpseo_meta_description( $meta_description, $presentation ) {
 	// Get forum page id
-	$page_id = bp_get_forum_page_id();
+	$page_id = bboss_get_forum_page_id();
 
 	if ( empty( $page_id ) || ! class_exists( 'WPSEO_Replace_Vars' ) ) {
 		return $meta_description;
@@ -828,37 +829,37 @@ function bp_wpseo_meta_description( $meta_description, $presentation ) {
  *
  * @return void.
  */
-function set_yoast_meta_tags() {
+function bboss_set_yoast_meta_tags() {
 	// Prevent execution when forum is disabled.
-	if ( ! bp_is_active( 'forums' ) ) {
+	if ( ! bboss_is_active( 'forums' ) ) {
 		return;
 	}
 
 	// Is current post type is forum.
-	if ( bbp_get_forum_post_type() == get_post_type() ) {
+	if ( bboss_bbp_get_forum_post_type() == get_post_type() ) {
 		// Filter default SEO title for yoast.
-		add_filter( 'wpseo_title', 'bp_wpseo_title', 10, 2 );
+		add_filter( 'wpseo_title', 'bboss_wpseo_title', 10, 2 );
 
 		// Filter default SEO description for yoast.
-		add_filter( 'wpseo_metadesc', 'bp_wpseo_meta_description', 10, 2 );
+		add_filter( 'wpseo_metadesc', 'bboss_wpseo_meta_description', 10, 2 );
 	}
 }
 
 // Trigger before template load.
-add_action( 'bp_template_redirect', 'set_yoast_meta_tags' );
+add_action( 'bp_template_redirect', 'bboss_set_yoast_meta_tags' );
 
 /**
  * Load rest compatibility.
  *
  * @since BuddyBoss 1.6.0
  */
-function bb_rest_compatibility_loader() {
+function bboss_rest_compatibility_loader() {
 	// BuddyPress Groups Tabs creator pro plugin support.
 	if ( class_exists( 'BPGTC_Group_Tabs_Pro' ) ) {
 		require_once dirname( __FILE__ ) . '/bp-rest-groups-tabs-creator-pro.php';
 	}
 }
-add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
+add_action( 'bp_rest_api_init', 'bboss_rest_compatibility_loader', 5 );
 
 // The LearnDash-aware `group_leader` role sync used to live here as three
 // functions hooked into `delete_post`, `untrash_post`, and `profile_update`
@@ -889,7 +890,7 @@ add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
  *
  * @since BuddyBoss 1.7.2
  */
-function bb_wp_stateless_do_symlink( $can, $id, $attachment_id, $size ) {
+function bboss_wp_stateless_do_symlink( $can, $id, $attachment_id, $size ) {
 	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
 		$can = false;
 	}
@@ -897,10 +898,10 @@ function bb_wp_stateless_do_symlink( $can, $id, $attachment_id, $size ) {
 	return $can;
 }
 
-add_filter( 'bb_media_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
-add_filter( 'bb_document_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
-add_filter( 'bb_video_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
-add_filter( 'bb_video_create_thumb_symlinks', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_media_do_symlink', 'bboss_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_document_do_symlink', 'bboss_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_do_symlink', 'bboss_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_create_thumb_symlinks', 'bboss_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
 
 /**
  * Return the WP Stateless media plugin attachment url.
@@ -913,7 +914,7 @@ add_filter( 'bb_video_create_thumb_symlinks', 'bb_wp_stateless_do_symlink', PHP_
  *
  * @since BuddyBoss 1.7.2
  */
-function bp_video_wp_stateless_get_video_url( $attachment_url, $video_id, $attachment_id ) {
+function bboss_video_wp_stateless_get_video_url( $attachment_url, $video_id, $attachment_id ) {
 
 	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
 		$attachment_url = wp_get_attachment_url( $attachment_id );
@@ -922,7 +923,7 @@ function bp_video_wp_stateless_get_video_url( $attachment_url, $video_id, $attac
 	return $attachment_url;
 }
 
-add_filter( 'bb_video_get_symlink', 'bp_video_wp_stateless_get_video_url', PHP_INT_MAX, 3 );
+add_filter( 'bb_video_get_symlink', 'bboss_video_wp_stateless_get_video_url', PHP_INT_MAX, 3 );
 
 /**
  * Return the WP Stateless media plugin attachment url.
@@ -936,7 +937,7 @@ add_filter( 'bb_video_get_symlink', 'bp_video_wp_stateless_get_video_url', PHP_I
  *
  * @since BuddyBoss 1.7.2
  */
-function bp_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
+function bboss_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
 	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
 		$get_metadata = wp_get_attachment_metadata( $attachment_id );
 		if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
@@ -949,7 +950,7 @@ function bp_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video_id
 	return $attachment_url;
 }
 
-add_filter( 'bb_video_get_thumb_url', 'bp_video_wp_stateless_get_thumb_preview_url', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_get_thumb_url', 'bboss_video_wp_stateless_get_thumb_preview_url', PHP_INT_MAX, 4 );
 
 /**
  * Return the WP Stateless media plugin attachment url.
@@ -963,16 +964,16 @@ add_filter( 'bb_video_get_thumb_url', 'bp_video_wp_stateless_get_thumb_preview_u
  *
  * @since BuddyBoss 1.7.2
  */
-function bp_media_wp_stateless_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
+function bboss_media_wp_stateless_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
 	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
-		$media          = new BP_Media( $media_id );
+		$media          = new BBoss_Media( $media_id );
 		$attachment_url = wp_get_attachment_url( $media->attachment_id );
 	}
 
 	return $attachment_url;
 }
 
-add_filter( 'bp_media_get_preview_image_url', 'bp_media_wp_stateless_get_preview_url', PHP_INT_MAX, 4 );
+add_filter( 'bp_media_get_preview_image_url', 'bboss_media_wp_stateless_get_preview_url', PHP_INT_MAX, 4 );
 
 /**
  * Return the WP Stateless media plugin attachment url.
@@ -987,7 +988,7 @@ add_filter( 'bp_media_get_preview_image_url', 'bp_media_wp_stateless_get_preview
  *
  * @since BuddyBoss 1.7.2
  */
-function bp_document_wp_stateless_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
+function bboss_document_wp_stateless_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
 
 	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
 
@@ -1019,7 +1020,7 @@ function bp_document_wp_stateless_get_preview_url( $attachment_url, $document_id
 	return $attachment_url;
 }
 
-add_filter( 'bp_document_get_preview_url', 'bp_document_wp_stateless_get_preview_url', PHP_INT_MAX, 5 );
+add_filter( 'bp_document_get_preview_url', 'bboss_document_wp_stateless_get_preview_url', PHP_INT_MAX, 5 );
 
 /**
  * Fix Elementor conflict for forum parent field.
@@ -1030,7 +1031,7 @@ add_filter( 'bp_document_get_preview_url', 'bp_document_wp_stateless_get_preview
  *
  * @since 1.7.6
  */
-function bbp_remove_page_attributes_metabox_for_forum() {
+function bboss_bbp_remove_page_attributes_metabox_for_forum() {
 
 	// Check if elementor is exists.
 	if ( class_exists( '\Elementor\Plugin' ) ) {
@@ -1040,7 +1041,7 @@ function bbp_remove_page_attributes_metabox_for_forum() {
 
 }
 
-add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
+add_action( 'admin_menu' , 'bboss_bbp_remove_page_attributes_metabox_for_forum' );
 
 /**
  * Function will remove template_redirect action when we view individual saved template
@@ -1048,30 +1049,30 @@ add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
  *
  * @since BuddyBoss 2.1.0
  */
-function bb_elementor_library_template() {
+function bboss_elementor_library_template() {
 	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
 		return;
 	}
 
 	if ( isset( $_GET['elementor_library'] ) ) {
-		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
+		remove_action( 'template_redirect', 'bboss_template_redirect', 10 );
 	}
 }
-add_action( 'bp_loaded', 'bb_elementor_library_template' );
+add_action( 'bp_loaded', 'bboss_elementor_library_template' );
 
 /**
  * Helper functions for the gravity forms compatibility.
  *
  * @since BuddyBoss 2.2.1
  */
-function bb_wp_gravity_forms_compatibility_helper() {
+function bboss_wp_gravity_forms_compatibility_helper() {
 
 	if ( class_exists( 'GFForms' ) ) {
-		require buddypress()->compatibility_dir . '/bp-wp-gravity-forms-helpers.php';
+		require bboss()->compatibility_dir . '/bp-wp-gravity-forms-helpers.php';
 	}
 
 }
-add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
+add_action( 'init', 'bboss_wp_gravity_forms_compatibility_helper', 999 );
 
 /**
  * Enqueue the BuddyBoss Platform styles for the MemberPress Classroom.
@@ -1082,7 +1083,7 @@ add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
  *
  * @return array
  */
-function mpcs_add_buddyboss_style( $allow_handle ) {
+function bboss_mpcs_add_buddyboss_style( $allow_handle ) {
 	if ( class_exists( 'memberpress\courses\controllers\Classroom' ) ) {
 		$allow_handle[] = 'bp-nouveau';
 	}
@@ -1091,14 +1092,14 @@ function mpcs_add_buddyboss_style( $allow_handle ) {
 
 }
 
-add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
+add_filter( 'mpcs_classroom_style_handles', 'bboss_mpcs_add_buddyboss_style' );
 
 /**
  * Helper function to check if Elementor Maintenance Mode is enabled.
  *
  * @return bool
  */
-function bb_is_elementor_maintenance_mode_enabled() {
+function bboss_is_elementor_maintenance_mode_enabled() {
 	if ( ! defined( 'ELEMENTOR_VERSION' ) || ! class_exists( '\Elementor\Plugin' ) ) {
 		return false;
 	}
@@ -1161,15 +1162,15 @@ function bb_is_elementor_maintenance_mode_enabled() {
  *
  * @return array $args User enrolled courses with course details.
  */
-function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
+function bboss_readylaunch_middle_content_llms_courses( $args = array() ) {
 
 	$course_data['integration'] = 'lifterlms';
 
 	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 		if ( $user_id ) {
 			// Get enrolled courses for the logged-in user.
-			$student = llms_get_student( bp_loggedin_user_id() );
+			$student = llms_get_student( bboss_loggedin_user_id() );
 			if ( ! $student ) {
 				return $args;
 			}
@@ -1222,13 +1223,13 @@ function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
  *
  * @since BuddyBoss 2.15.0
  */
-function bb_om_compatibility_helper() {
+function bboss_om_compatibility_helper() {
 
 	if ( defined( 'BB_OFFLOAD_MEDIA_VERSION' ) ) {
-		require buddypress()->compatibility_dir . '/class-bb-om-helpers.php';
+		require bboss()->compatibility_dir . '/class-bb-om-helpers.php';
 	}
 }
-add_action( 'init', 'bb_om_compatibility_helper', 10 );
+add_action( 'init', 'bboss_om_compatibility_helper', 10 );
 
 /**
  * Keep BuddyBoss REST API requests working when Wordfence's
@@ -1251,7 +1252,7 @@ add_action( 'init', 'bb_om_compatibility_helper', 10 );
  *
  * @return array The query variables without `author` for BuddyBoss REST requests.
  */
-function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
+function bboss_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
 	// `rest_route` arrives as an array for `?rest_route[]=…`; core's rest_api_loaded() ignores those too.
 	if ( empty( $query_vars['rest_route'] ) || ! is_string( $query_vars['rest_route'] ) || empty( $query_vars['author'] ) ) {
 		return $query_vars;
@@ -1265,7 +1266,7 @@ function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
 	 * @param array $namespaces REST namespaces whose requests keep working
 	 *                          with an `author` parameter.
 	 */
-	$namespaces = apply_filters( 'bb_rest_author_scan_compat_namespaces', array( bp_rest_namespace(), 'buddyboss-app' ) );
+	$namespaces = apply_filters( 'bb_rest_author_scan_compat_namespaces', array( bboss_rest_namespace(), 'buddyboss-app' ) );
 
 	$rest_route = ltrim( $query_vars['rest_route'], '/' );
 
@@ -1285,14 +1286,14 @@ function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
  * Theme builds before PROD-9995 build `BP_Document` objects from activity
  * meta in the Elementor Activity widget without checking that the Documents
  * component is loaded. Documents now ship in BuddyBoss Add-ons, so on a site
- * without it those builds fatal. {@see bb_theme_document_activity_meta_compat()}
+ * without it those builds fatal. {@see bboss_theme_document_activity_meta_compat()}
  * keeps them working until the theme is updated.
  *
  * @since BuddyBoss 3.7.0
  *
  * @return string Minimum BuddyBoss Theme version.
  */
-function bb_platform_3_theme_required_version() {
+function bboss_platform_3_theme_required_version() {
 	return '2.23.0';
 }
 
@@ -1303,7 +1304,7 @@ function bb_platform_3_theme_required_version() {
  *
  * @return string Theme version, or an empty string when BuddyBoss Theme is not in use.
  */
-function bb_get_active_buddyboss_theme_version() {
+function bboss_get_active_buddyboss_theme_version() {
 	$theme = wp_get_theme();
 
 	if ( 'buddyboss-theme' !== $theme->get_template() ) {
@@ -1322,7 +1323,7 @@ function bb_get_active_buddyboss_theme_version() {
  *
  * @return string[] Meta keys.
  */
-function bb_theme_document_activity_meta_keys() {
+function bboss_theme_document_activity_meta_keys() {
 	return array( 'bp_document_ids', 'bp_document_folder_activity', 'bp_document_id' );
 }
 
@@ -1330,7 +1331,7 @@ function bb_theme_document_activity_meta_keys() {
  * Hide document activity meta from BuddyBoss Theme builds that cannot handle a missing Documents component.
  *
  * Handles single-key reads; full reads are filtered by
- * bb_theme_document_activity_cached_meta_compat(). Applies only when an older
+ * bboss_theme_document_activity_cached_meta_compat(). Applies only when an older
  * BuddyBoss Theme is active and `BP_Document` is not loaded. Nothing else can use these keys then: the code that reads them ships
  * in BuddyBoss Add-ons. The stored meta is untouched, so documents reappear
  * once Add-ons is active again.
@@ -1344,14 +1345,14 @@ function bb_theme_document_activity_meta_keys() {
  *
  * @return mixed
  */
-function bb_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single ) {
+function bboss_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single ) {
 	/*
 	 * Full reads are left alone: bb_activity_get_metadata() caches what it reads
 	 * in `activity_meta`, and a stripped array kept in a persistent object cache
 	 * would hide the documents after Add-ons is back. That path is filtered on
 	 * return by bb_theme_document_activity_cached_meta_compat() instead.
 	 */
-	if ( null !== $value || '' === $meta_key || class_exists( 'BP_Document' ) || ! in_array( $meta_key, bb_theme_document_activity_meta_keys(), true ) ) {
+	if ( null !== $value || '' === $meta_key || class_exists( 'BP_Document' ) || ! in_array( $meta_key, bboss_theme_document_activity_meta_keys(), true ) ) {
 		return $value;
 	}
 
@@ -1365,16 +1366,16 @@ function bb_theme_document_activity_meta_compat( $value, $object_id, $meta_key, 
  *
  * @return void
  */
-function bb_register_theme_document_meta_compat() {
-	$theme_version = bb_get_active_buddyboss_theme_version();
+function bboss_register_theme_document_meta_compat() {
+	$theme_version = bboss_get_active_buddyboss_theme_version();
 
 	if (
 		'' !== $theme_version &&
-		version_compare( $theme_version, bb_platform_3_theme_required_version(), '<' ) &&
+		version_compare( $theme_version, bboss_platform_3_theme_required_version(), '<' ) &&
 		! class_exists( 'BP_Document' )
 	) {
-		add_filter( 'get_activity_metadata', 'bb_theme_document_activity_meta_compat', 10, 4 );
-		add_filter( 'bb_activity_get_metadata', 'bb_theme_document_activity_cached_meta_compat', 10, 2 );
+		add_filter( 'get_activity_metadata', 'bboss_theme_document_activity_meta_compat', 10, 4 );
+		add_filter( 'bb_activity_get_metadata', 'bboss_theme_document_activity_cached_meta_compat', 10, 2 );
 
 		/*
 		 * The Elementor Activity widget of these builds also treats every activity
@@ -1402,9 +1403,9 @@ function bb_register_theme_document_meta_compat() {
  * Hide document activity meta from older BuddyBoss Theme builds on full reads.
  *
  * The theme's Elementor Activity widget reads all meta through
- * bb_activity_get_metadata(). That function caches what it reads in
+ * bboss_activity_get_metadata(). That function caches what it reads in
  * `activity_meta`, and returns the cache entry directly once the activity loop
- * has primed it (bp_update_meta_cache()). Filtering its return value, cold or
+ * has primed it (bboss_update_meta_cache()). Filtering its return value, cold or
  * cached, hides the keys without ever caching a stripped copy, which a
  * persistent object cache would keep after Add-ons is back.
  *
@@ -1415,20 +1416,20 @@ function bb_register_theme_document_meta_compat() {
  *
  * @return array|mixed
  */
-function bb_theme_document_activity_cached_meta_compat( $meta_data, $activity_id ) {
+function bboss_theme_document_activity_cached_meta_compat( $meta_data, $activity_id ) {
 	if ( ! is_array( $meta_data ) || class_exists( 'BP_Document' ) ) {
 		return $meta_data;
 	}
 
-	return array_diff_key( $meta_data, array_flip( bb_theme_document_activity_meta_keys() ) );
+	return array_diff_key( $meta_data, array_flip( bboss_theme_document_activity_meta_keys() ) );
 }
-add_action( 'after_setup_theme', 'bb_register_theme_document_meta_compat', 1 );
+add_action( 'after_setup_theme', 'bboss_register_theme_document_meta_compat', 1 );
 
 /**
  * Define a no-op group subscription sender when nothing else provides one.
  *
  * BuddyBoss Platform Pro 3.3.4 and older call
- * `bb_subscription_send_subscribe_group_notifications()` without a
+ * `bboss_subscription_send_subscribe_group_notifications()` without a
  * `function_exists()` check when a scheduled group post is published. The
  * function moved to BuddyBoss Add-ons, which defines it only when its Group
  * Subscription module loads (`bp_include`, priority 20). Without this fallback,
@@ -1443,8 +1444,8 @@ add_action( 'after_setup_theme', 'bb_register_theme_document_meta_compat', 1 );
  *
  * @since BuddyBoss 3.7.0
  */
-function bb_maybe_define_group_subscription_send_fallback() {
-	if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+function bboss_maybe_define_group_subscription_send_fallback() {
+	if ( function_exists( 'bboss_subscription_send_subscribe_group_notifications' ) ) {
 		return;
 	}
 
@@ -1463,7 +1464,7 @@ function bb_maybe_define_group_subscription_send_fallback() {
 	 * @param int    $group_id    ID of the group being posted to.
 	 * @param int    $activity_id ID of the activity item being updated.
 	 */
-	function bb_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	function bboss_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 }
-add_action( 'bp_loaded', 'bb_maybe_define_group_subscription_send_fallback', 99 );
+add_action( 'bp_loaded', 'bboss_maybe_define_group_subscription_send_fallback', 99 );

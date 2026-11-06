@@ -8,16 +8,19 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // Added this condition for theme backward compatibility.
-if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
-	bp_get_template_part( 'members/single/settings/subscriptions' );
+if ( bboss_action_variables() && 'subscriptions' === bboss_action_variable( 0 ) ) {
+	bboss_get_template_part( 'members/single/settings/subscriptions' );
 	return;
-} elseif ( bp_action_variables() ) {
+} elseif ( bboss_action_variables() ) {
 	/**
 	 * Fires to render a custom notifications settings sub-tab (e.g. a
 	 * plugin-registered tab such as "Blog Subscriptions") when a theme routes
 	 * the notifications action through this template (as buddyboss-theme does).
-	 * The screen handler (`bp_settings_screen_notification()`) 404s any
+	 * The screen handler (`bboss_settings_screen_notification()`) 404s any
 	 * sub-action without a registered handler, so this only fires for
 	 * recognised sub-tabs. Handlers echo their content.
 	 *
@@ -25,16 +28,16 @@ if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
 	 *
 	 * @param string $action_variable The sub-tab slug.
 	 */
-	do_action( 'bb_member_settings_notifications_custom_tab', bp_action_variable( 0 ) );
+	do_action( 'bb_member_settings_notifications_custom_tab', bboss_action_variable( 0 ) );
 	return;
 }
 
-bp_nouveau_member_hook( 'before', 'settings_template' );
+bboss_nouveau_member_hook( 'before', 'settings_template' );
 
-$is_web_enabled = bb_web_notification_enabled();
-$is_app_enabled = bb_app_notification_enabled();
+$is_web_enabled = bboss_web_notification_enabled();
+$is_app_enabled = bboss_app_notification_enabled();
 
-$data  = bb_core_notification_preferences_data();
+$data  = bboss_core_notification_preferences_data();
 $class = '';
 if ( $is_web_enabled && $is_app_enabled ) {
 	$class = 'bb-notification-column-3';
@@ -45,64 +48,64 @@ if ( $is_web_enabled && $is_app_enabled ) {
 
 <h2 class="screen-heading email-settings-screen"><?php echo wp_kses_post( $data['screen_title'] ); ?></h2>
 
-<?php bp_get_template_part( 'members/single/parts/notification-subnav' ); ?>
+<?php bboss_get_template_part( 'members/single/parts/notification-subnav' ); ?>
 
 <p class="bp-help-text email-notifications-info">
 	<?php echo wp_kses_post( $data['screen_description'] ); ?>
 </p>
 
-<form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form <?php echo esc_attr( $class ); ?>" id="settings-form">
+<form action="<?php echo esc_url( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form <?php echo esc_attr( $class ); ?>" id="settings-form">
 	<?php
-	if ( false === bb_enabled_legacy_email_preference() && ( $is_web_enabled || $is_app_enabled ) ) {
+	if ( false === bboss_enabled_legacy_email_preference() && ( $is_web_enabled || $is_app_enabled ) ) {
 		?>
 		<div class="notification_info">
 
 			<div class="notification_type email_notification">
-				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Email', 'buddyboss' ); ?>">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Email', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon bb-icon-mail"></i>
 				</span>
 
 				<div class="notification_type_info">
-					<h3><?php esc_attr_e( 'Email', 'buddyboss' ); ?></h3>
-					<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss' ); ?></p>
+					<h3><?php esc_attr_e( 'Email', 'buddyboss-platform' ); ?></h3>
+					<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss-platform' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
 
 			<?php if ( $is_web_enabled ) { ?>
 			<div class="notification_type web_notification">
-				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Web', 'buddyboss' ); ?>">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Web', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon bb-icon-monitor"></i>
 				</span>
 
 				<div class="notification_type_info">
-					<h3><?php esc_attr_e( 'Web', 'buddyboss' ); ?></h3>
-					<p><?php esc_attr_e( 'A notification in the corner of your screen', 'buddyboss' ); ?></p>
+					<h3><?php esc_attr_e( 'Web', 'buddyboss-platform' ); ?></h3>
+					<p><?php esc_attr_e( 'A notification in the corner of your screen', 'buddyboss-platform' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
 			<?php } ?>
 
 			<?php if ( $is_app_enabled ) { ?>
 			<div class="notification_type app_notification">
-				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'App', 'buddyboss' ); ?>">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'App', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon bb-icon-smartphone"></i>
 				</span>
 
 				<div class="notification_type_info">
-					<h3><?php esc_attr_e( 'App', 'buddyboss' ); ?></h3>
-					<p><?php esc_attr_e( 'A notification pushed to your mobile device', 'buddyboss' ); ?></p>
+					<h3><?php esc_attr_e( 'App', 'buddyboss-platform' ); ?></h3>
+					<p><?php esc_attr_e( 'A notification pushed to your mobile device', 'buddyboss-platform' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
 			<?php } ?>
 
-			<p class="notification_learn_more"><a href="#"><?php esc_html_e( 'Learn more', 'buddyboss' ); ?><span class="bb-icon-chevron-down"></span></a></p>
+			<p class="notification_learn_more"><a href="#"><?php esc_html_e( 'Learn more', 'buddyboss-platform' ); ?><span class="bb-icon-chevron-down"></span></a></p>
 
 		</div><!-- .notification_info -->
 		<?php
 	}
 
-	bp_nouveau_member_email_notice_settings();
-	bp_nouveau_submit_button( 'member-notifications-settings' );
+	bboss_nouveau_member_email_notice_settings();
+	bboss_nouveau_submit_button( 'member-notifications-settings' );
 	?>
 </form>
 <?php
-bp_nouveau_member_hook( 'after', 'settings_template' );
+bboss_nouveau_member_hook( 'after', 'settings_template' );

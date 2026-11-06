@@ -17,24 +17,24 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function xprofile_register_activity_actions() {
+function bboss_xprofile_register_activity_actions() {
 
 	// Register the activity feed actions for this component.
-	bp_activity_set_action(
+	bboss_activity_set_action(
 		// Older avatar activity items use 'profile' for component. See r4273.
 		'profile',
 		'new_avatar',
-		__( 'Member changed profile photo', 'buddyboss' ),
-		'bp_xprofile_format_activity_action_new_avatar',
-		__( 'Updated Profile Photos', 'buddyboss' )
+		__( 'Member changed profile photo', 'buddyboss-platform' ),
+		'bboss_xprofile_format_activity_action_new_avatar',
+		__( 'Updated Profile Photos', 'buddyboss-platform' )
 	);
 
-	bp_activity_set_action(
-		buddypress()->profile->id,
+	bboss_activity_set_action(
+		bboss()->profile->id,
 		'updated_profile',
-		__( 'Updated Profile', 'buddyboss' ),
-		'bp_xprofile_format_activity_action_updated_profile',
-		__( 'Profile Updates', 'buddyboss' ),
+		__( 'Updated Profile', 'buddyboss-platform' ),
+		'bboss_xprofile_format_activity_action_updated_profile',
+		__( 'Profile Updates', 'buddyboss-platform' ),
 		array( 'activity' )
 	);
 
@@ -45,7 +45,7 @@ function xprofile_register_activity_actions() {
 	 */
 	do_action( 'xprofile_register_activity_actions' );
 }
-add_action( 'bp_register_activity_actions', 'xprofile_register_activity_actions' );
+add_action( 'bp_register_activity_actions', 'bboss_xprofile_register_activity_actions' );
 
 /**
  * Format 'new_avatar' activity actions.
@@ -56,9 +56,10 @@ add_action( 'bp_register_activity_actions', 'xprofile_register_activity_actions'
  * @param object $activity Activity object.
  * @return string
  */
-function bp_xprofile_format_activity_action_new_avatar( $action, $activity ) {
-	$userlink = bp_core_get_userlink( $activity->user_id );
-	$action   = sprintf( __( '%1$s changed %2$s profile photo', 'buddyboss' ), $userlink, bp_get_user_gender_pronoun_type( $activity->user_id ) );
+function bboss_xprofile_format_activity_action_new_avatar( $action, $activity ) {
+	$userlink = bboss_core_get_userlink( $activity->user_id );
+	/* translators: 1: user link, 2: gender pronoun (e.g. his/her/their). */
+	$action   = sprintf( __( '%1$s changed %2$s profile photo', 'buddyboss-platform' ), $userlink, bboss_get_user_gender_pronoun_type( $activity->user_id ) );
 
 	// Legacy filter - pass $user_id instead of $activity.
 	if ( has_filter( 'bp_xprofile_new_avatar_action' ) ) {
@@ -85,14 +86,15 @@ function bp_xprofile_format_activity_action_new_avatar( $action, $activity ) {
  * @param object $activity Activity object.
  * @return string
  */
-function bp_xprofile_format_activity_action_updated_profile( $action, $activity ) {
+function bboss_xprofile_format_activity_action_updated_profile( $action, $activity ) {
 
 	// Note for translators: The natural phrasing in English, "Joe updated
 	// his profile", requires that we know Joe's gender, which we don't. If
 	// your language doesn't have this restriction, feel free to use a more
 	// natural translation.
-	$profile_link = trailingslashit( bp_core_get_user_domain( $activity->user_id ) . bp_get_profile_slug() );
-	$action       = sprintf( __( '%1$s updated %2$s profile', 'buddyboss' ), '<a href="' . $profile_link . '" data-bb-hp-profile="' . esc_attr( $activity->user_id ) . '">' . bp_core_get_user_displayname( $activity->user_id ) . '</a>', bp_get_user_gender_pronoun_type( $activity->user_id ) );
+	$profile_link = trailingslashit( bboss_core_get_user_domain( $activity->user_id ) . bboss_get_profile_slug() );
+	/* translators: 1: user profile link, 2: gender pronoun (e.g. his/her/their). */
+	$action       = sprintf( __( '%1$s updated %2$s profile', 'buddyboss-platform' ), '<a href="' . $profile_link . '" data-bb-hp-profile="' . esc_attr( $activity->user_id ) . '">' . bboss_core_get_user_displayname( $activity->user_id ) . '</a>', bboss_get_user_gender_pronoun_type( $activity->user_id ) );
 
 	/**
 	 * Filters the formatted 'updated_profile' activity feed action.
@@ -111,34 +113,34 @@ function bp_xprofile_format_activity_action_updated_profile( $action, $activity 
  *
  * @since BuddyPress 1.0.0
  *
- * @param array|string $args String containing all variables used after bp_parse_args() call.
+ * @param array|string $args String containing all variables used after bboss_parse_args() call.
  * @return WP_Error|bool|int
  */
-function xprofile_record_activity( $args = '' ) {
+function bboss_xprofile_record_activity( $args = '' ) {
 
 	// Bail if activity component is not active.
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return false;
 	}
 
 	// Parse the arguments.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
-			'user_id'           => bp_loggedin_user_id(),
+			'user_id'           => bboss_loggedin_user_id(),
 			'action'            => '',
 			'content'           => '',
 			'primary_link'      => '',
-			'component'         => buddypress()->profile->id,
+			'component'         => bboss()->profile->id,
 			'type'              => false,
 			'item_id'           => false,
 			'secondary_item_id' => false,
-			'recorded_time'     => bp_core_current_time(),
+			'recorded_time'     => bboss_core_current_time(),
 			'hide_sitewide'     => false,
 		)
 	);
 
-	return bp_activity_add( $r );
+	return bboss_activity_add( $r );
 }
 
 /**
@@ -147,27 +149,27 @@ function xprofile_record_activity( $args = '' ) {
  *
  * @since BuddyPress 1.0.0
  *
- * @param array|string $args Containing all variables used after bp_parse_args() call.
+ * @param array|string $args Containing all variables used after bboss_parse_args() call.
  * @return bool
  */
-function xprofile_delete_activity( $args = '' ) {
+function bboss_xprofile_delete_activity( $args = '' ) {
 
 	// Bail if activity component is not active.
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return false;
 	}
 
 	// Parse the arguments.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
-			'component' => buddypress()->profile->id,
+			'component' => bboss()->profile->id,
 		),
 		'xprofile_delete_activity'
 	);
 
 	// Delete the activity item.
-	bp_activity_delete_by_item_id( $r );
+	bboss_activity_delete_by_item_id( $r );
 }
 
 /**
@@ -179,10 +181,10 @@ function xprofile_delete_activity( $args = '' ) {
  * @param string $value Value.
  * @return bool True if success, false on failure.
  */
-function xprofile_register_activity_action( $key, $value ) {
+function bboss_xprofile_register_activity_action( $key, $value ) {
 
 	// Bail if activity component is not active.
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return false;
 	}
 
@@ -195,7 +197,7 @@ function xprofile_register_activity_action( $key, $value ) {
 	 * @param string $key   Key used for the registered action.
 	 * @param string $value Value used for the registered action.
 	 */
-	return apply_filters( 'xprofile_register_activity_action', bp_activity_set_action( buddypress()->profile->id, $key, $value ), $key, $value );
+	return apply_filters( 'xprofile_register_activity_action', bboss_activity_set_action( bboss()->profile->id, $key, $value ), $key, $value );
 }
 
 /**
@@ -207,11 +209,11 @@ function xprofile_register_activity_action( $key, $value ) {
  * @param int $user_id The user id the avatar was set for.
  * @return bool
  */
-function bp_xprofile_new_avatar_activity( $user_id = 0 ) {
+function bboss_xprofile_new_avatar_activity( $user_id = 0 ) {
 	$item_type = ( isset( $_POST['item_type'] ) && ! empty( $_POST['item_type'] ) ) ? sanitize_text_field( $_POST['item_type'] ) : null;
 
 	// Bail if activity component is not active.
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return false;
 	}
 
@@ -220,7 +222,7 @@ function bp_xprofile_new_avatar_activity( $user_id = 0 ) {
 	}
 
 	if ( empty( $user_id ) ) {
-		$user_id = bp_displayed_user_id();
+		$user_id = bboss_displayed_user_id();
 	}
 
 	/**
@@ -233,7 +235,7 @@ function bp_xprofile_new_avatar_activity( $user_id = 0 ) {
 	$user_id = apply_filters( 'bp_xprofile_new_avatar_user_id', $user_id );
 
 	// Add the activity.
-	bp_activity_add(
+	bboss_activity_add(
 		array(
 			'user_id'   => $user_id,
 			'component' => 'profile',
@@ -241,7 +243,7 @@ function bp_xprofile_new_avatar_activity( $user_id = 0 ) {
 		)
 	);
 }
-add_action( 'xprofile_avatar_uploaded', 'bp_xprofile_new_avatar_activity' );
+add_action( 'xprofile_avatar_uploaded', 'bboss_xprofile_new_avatar_activity' );
 
 /**
  * Add an activity item when a user has updated his profile.
@@ -255,7 +257,7 @@ add_action( 'xprofile_avatar_uploaded', 'bp_xprofile_new_avatar_activity' );
  * @param array $new_values Post-save xprofile field values and visibility levels.
  * @return bool True on success, false on failure.
  */
-function bp_xprofile_updated_profile_activity( $user_id, $field_ids = array(), $errors = false, $old_values = array(), $new_values = array() ) {
+function bboss_xprofile_updated_profile_activity( $user_id, $field_ids = array(), $errors = false, $old_values = array(), $new_values = array() ) {
 
 	// If there were errors, don't post.
 	if ( ! empty( $errors ) ) {
@@ -263,7 +265,7 @@ function bp_xprofile_updated_profile_activity( $user_id, $field_ids = array(), $
 	}
 
 	// Bail if activity component is not active.
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return false;
 	}
 
@@ -294,12 +296,12 @@ function bp_xprofile_updated_profile_activity( $user_id, $field_ids = array(), $
 	}
 
 	// Throttle to one activity of this type per 2 hours.
-	$existing = bp_activity_get(
+	$existing = bboss_activity_get(
 		array(
 			'max'    => 1,
 			'filter' => array(
 				'user_id' => $user_id,
-				'object'  => buddypress()->profile->id,
+				'object'  => bboss()->profile->id,
 				'action'  => 'updated_profile',
 			),
 		)
@@ -317,7 +319,7 @@ function bp_xprofile_updated_profile_activity( $user_id, $field_ids = array(), $
 		 */
 		$throttle_period = apply_filters( 'bp_xprofile_updated_profile_activity_throttle_time', HOUR_IN_SECONDS * 2 );
 		$then            = strtotime( $existing['activities'][0]->date_recorded );
-		$now             = bp_core_current_time( true, 'timestamp' );
+		$now             = bboss_core_current_time( true, 'timestamp' );
 
 		// Bail if throttled.
 		if ( ( $now - $then ) < $throttle_period ) {
@@ -325,15 +327,15 @@ function bp_xprofile_updated_profile_activity( $user_id, $field_ids = array(), $
 		}
 	}
 
-	return (bool) xprofile_record_activity(
+	return (bool) bboss_xprofile_record_activity(
 		array(
 			'user_id'      => $user_id,
-			'component'    => buddypress()->profile->id,
+			'component'    => bboss()->profile->id,
 			'type'         => 'updated_profile',
 		)
 	);
 }
-add_action( 'xprofile_updated_profile', 'bp_xprofile_updated_profile_activity', 10, 5 );
+add_action( 'xprofile_updated_profile', 'bboss_xprofile_updated_profile_activity', 10, 5 );
 
 /**
  * Add filters for xprofile activity types to Show dropdowns.
@@ -341,10 +343,10 @@ add_action( 'xprofile_updated_profile', 'bp_xprofile_updated_profile_activity', 
  * @since BuddyPress 2.0.0
  * @todo Mark as deprecated
  */
-function xprofile_activity_filter_options() {
+function bboss_xprofile_activity_filter_options() {
 	?>
 
-	<option value="updated_profile"><?php _e( 'Profile Updates', 'buddyboss' ); ?></option>
+	<option value="updated_profile"><?php esc_html_e( 'Profile Updates', 'buddyboss-platform' ); ?></option>
 
 	<?php
 }

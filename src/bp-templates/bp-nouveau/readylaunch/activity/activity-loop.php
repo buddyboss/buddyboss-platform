@@ -6,7 +6,7 @@
  * It renders activities in a list format with load more functionality.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,14 +14,14 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_before_loop();
+bboss_nouveau_before_loop();
 
-$args = bp_ajax_querystring( 'activity' );
-if ( ! bp_is_single_activity() ) {
+$args = bboss_ajax_querystring( 'activity' );
+if ( ! bboss_is_single_activity() ) {
 	$args .= '&display_comments=false';
 }
 
-if ( bp_has_activities( $args ) ) :
+if ( bboss_has_activities( $args ) ) :
 
 	// Check if this is the first page (used for AJAX pagination, nonce verification handled by BuddyPress core).
 	$is_first_page = empty( $_POST['page'] ) || 1 === (int) $_POST['page']; // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -31,16 +31,16 @@ if ( bp_has_activities( $args ) ) :
 		<?php
 	endif;
 
-	while ( bp_activities() ) :
-		bp_the_activity();
-		bp_get_template_part( 'activity/entry' );
+	while ( bboss_activities() ) :
+		bboss_the_activity();
+		bboss_get_template_part( 'activity/entry' );
 	endwhile;
 
-	if ( bp_activity_has_more_items() ) :
+	if ( bboss_activity_has_more_items() ) :
 		?>
 		<li class="bb-rl-load-more">
-			<a class="bb-rl-button bb-rl-button--brandFill" href="<?php bp_activity_load_more_link(); ?>">
-				<?php esc_html_e( 'Load More', 'buddyboss' ); ?>
+			<a class="bb-rl-button bb-rl-button--brandFill" href="<?php bboss_activity_load_more_link(); ?>">
+				<?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?>
 			</a>
 		</li>
 		<?php
@@ -55,7 +55,7 @@ if ( bp_has_activities( $args ) ) :
 	endif;
 
 else :
-	bp_nouveau_user_feedback( 'activity-loop-none' );
+	bboss_nouveau_user_feedback( 'activity-loop-none' );
 endif;
 
-bp_nouveau_after_loop();
+bboss_nouveau_after_loop();

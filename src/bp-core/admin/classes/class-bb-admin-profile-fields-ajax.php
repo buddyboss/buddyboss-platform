@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Profile_Fields_Ajax
+ * Class BBoss_Admin_Profile_Fields_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Profile_Fields_Ajax {
+class BBoss_Admin_Profile_Fields_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -32,7 +32,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * BB icon font class strings for each xprofile social provider.
 	 *
 	 * Maps the provider's `value` slug (returned by
-	 * bp_xprofile_social_network_provider()) to a full CSS class string
+	 * bboss_xprofile_social_network_provider()) to a full CSS class string
 	 * — the base weight class (`bb-icon-l` = lined) plus the brand
 	 * modifier. CustomSelectControl uses the value verbatim when it
 	 * contains a space, so each entry is two classes.
@@ -75,7 +75,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @return void
 	 */
 	private function bb_verify_request() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -114,11 +114,11 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function get_field_groups() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
-		$groups = bp_xprofile_get_groups(
+		$groups = bboss_xprofile_get_groups(
 			array(
 				'fetch_fields'                   => true,
 				'fetch_field_data'               => false,
@@ -139,19 +139,19 @@ class BB_Admin_Profile_Fields_Ajax {
 			}
 		}
 		if ( ! empty( $all_field_ids ) ) {
-			bp_xprofile_update_meta_cache( $all_field_ids );
+			bboss_xprofile_update_meta_cache( $all_field_ids );
 		}
 
 		foreach ( $groups as $group ) {
-			$is_repeater = 'on' === bp_xprofile_get_meta( $group->id, 'group', 'is_repeater_enabled' );
+			$is_repeater = 'on' === bboss_xprofile_get_meta( $group->id, 'group', 'is_repeater_enabled' );
 
 			$fields = array();
 			if ( ! empty( $group->fields ) ) {
 				foreach ( $group->fields as $field ) {
 					// Skip cloned repeater fields whose source template field still exists.
-					if ( bp_xprofile_get_meta( $field->id, 'field', '_is_repeater_clone', true ) ) {
-						$cloned_from  = bp_xprofile_get_meta( $field->id, 'field', '_cloned_from', true );
-						$source_field = $cloned_from ? BP_XProfile_Field::get_instance( (int) $cloned_from ) : false;
+					if ( bboss_xprofile_get_meta( $field->id, 'field', '_is_repeater_clone', true ) ) {
+						$cloned_from  = bboss_xprofile_get_meta( $field->id, 'field', '_cloned_from', true );
+						$source_field = $cloned_from ? BBoss_XProfile_Field::get_instance( (int) $cloned_from ) : false;
 						if ( $source_field && ! empty( $source_field->id ) ) {
 							continue;
 						}
@@ -179,13 +179,13 @@ class BB_Admin_Profile_Fields_Ajax {
 		);
 
 		// Include member types if enabled.
-		if ( function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() ) {
+		if ( function_exists( 'bboss_member_type_enable_disable' ) && true === bboss_member_type_enable_disable() ) {
 			$response['member_types'] = $this->bb_get_member_types();
 		}
 
 		// Include social network providers for the Social Networks field type.
-		if ( function_exists( 'bp_xprofile_social_network_provider' ) ) {
-			$providers                    = bp_xprofile_social_network_provider();
+		if ( function_exists( 'bboss_xprofile_social_network_provider' ) ) {
+			$providers                    = bboss_xprofile_social_network_provider();
 			$response['social_providers'] = array_map(
 				array( $this, 'bb_format_social_provider' ),
 				$providers
@@ -205,8 +205,8 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function create_field_group() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -216,10 +216,10 @@ class BB_Admin_Profile_Fields_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field set name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field set name is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$group_id = xprofile_insert_field_group(
+		$group_id = bboss_xprofile_insert_field_group(
 			array(
 				'name'        => $name,
 				'description' => $description,
@@ -227,12 +227,12 @@ class BB_Admin_Profile_Fields_Ajax {
 		);
 
 		if ( ! $group_id ) {
-			wp_send_json_error( array( 'message' => __( 'There was an error creating the field set. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'There was an error creating the field set. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		// Save repeater meta.
 		if ( 'on' === $group_is_repeater ) {
-			bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' );
+			bboss_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' );
 		}
 
 		/**
@@ -240,16 +240,16 @@ class BB_Admin_Profile_Fields_Ajax {
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
-		 * @param BP_XProfile_Group $group Field group object.
+		 * @param BBoss_XProfile_Group $group Field group object.
 		 */
-		$group = xprofile_get_field_group( $group_id );
+		$group = bboss_xprofile_get_field_group( $group_id );
 		if ( $group ) {
 			do_action( 'xprofile_groups_saved_group', $group );
 		}
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Field set created successfully.', 'buddyboss' ),
+				'message'  => __( 'Field set created successfully.', 'buddyboss-platform' ),
 				'group_id' => $group_id,
 			)
 		);
@@ -265,8 +265,8 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function update_field_group() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -277,12 +277,12 @@ class BB_Admin_Profile_Fields_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$group = xprofile_get_field_group( $group_id );
+		$group = bboss_xprofile_get_field_group( $group_id );
 		if ( ! $group ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss-platform' ) ) );
 		}
 
 		// The Bio field is shared with the member's WordPress "Biographical Info",
@@ -290,13 +290,13 @@ class BB_Admin_Profile_Fields_Ajax {
 		// is refused, so a set that already repeats can still be renamed or edited.
 		if (
 			'on' === $group_is_repeater &&
-			'on' !== bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true ) &&
-			bb_xprofile_group_has_bio_field( $group_id )
+			'on' !== bboss_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true ) &&
+			bboss_xprofile_group_has_bio_field( $group_id )
 		) {
-			wp_send_json_error( array( 'message' => __( 'This field set contains a "Bio" profile field, which shares its value with the member\'s WordPress profile, so the repeater set cannot be enabled. Remove the Bio field first.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'This field set contains a "Bio" profile field, which shares its value with the member\'s WordPress profile, so the repeater set cannot be enabled. Remove the Bio field first.', 'buddyboss-platform' ) ) );
 		}
 
-		$result = xprofile_insert_field_group(
+		$result = bboss_xprofile_insert_field_group(
 			array(
 				'field_group_id' => $group_id,
 				'name'           => ! empty( $name ) ? $name : $group->name,
@@ -305,32 +305,32 @@ class BB_Admin_Profile_Fields_Ajax {
 		);
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'There was an error updating the field set. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'There was an error updating the field set. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		// Update base group name option for group_id=1, matching legacy bp-xprofile-admin.php:431.
 		if ( 1 === $group_id ) {
-			bp_update_option( 'bp-xprofile-base-group-name', ! empty( $name ) ? $name : $group->name );
+			bboss_update_option( 'bp-xprofile-base-group-name', ! empty( $name ) ? $name : $group->name );
 		}
 
 		// Update repeater meta.
-		bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' === $group_is_repeater ? 'on' : '' );
+		bboss_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' === $group_is_repeater ? 'on' : '' );
 
 		/**
 		 * Fires after a field group is saved via Settings 2.0.
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
-		 * @param BP_XProfile_Group $group Field group object.
+		 * @param BBoss_XProfile_Group $group Field group object.
 		 */
-		$group = xprofile_get_field_group( $group_id );
+		$group = bboss_xprofile_get_field_group( $group_id );
 		if ( $group ) {
 			do_action( 'xprofile_groups_saved_group', $group );
 		}
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Field set updated successfully.', 'buddyboss' ),
+				'message'  => __( 'Field set updated successfully.', 'buddyboss-platform' ),
 				'group_id' => $group_id,
 			)
 		);
@@ -346,31 +346,31 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function delete_field_group() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$group = xprofile_get_field_group( $group_id );
+		$group = bboss_xprofile_get_field_group( $group_id );
 		if ( ! $group ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! $group->can_delete ) {
-			wp_send_json_error( array( 'message' => __( 'This field set cannot be deleted.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'This field set cannot be deleted.', 'buddyboss-platform' ) ) );
 		}
 
 		// Delete fires xprofile_group_before_delete and xprofile_group_after_delete internally.
-		$result = xprofile_delete_field_group( $group_id );
+		$result = bboss_xprofile_delete_field_group( $group_id );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'There was an error deleting the field set. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'There was an error deleting the field set. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -378,12 +378,12 @@ class BB_Admin_Profile_Fields_Ajax {
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
-		 * @param BP_XProfile_Group $group Deleted field group object.
+		 * @param BBoss_XProfile_Group $group Deleted field group object.
 		 */
 		do_action( 'xprofile_groups_deleted_group', $group );
 
 		wp_send_json_success(
-			array( 'message' => __( 'Field set deleted successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Field set deleted successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -397,8 +397,8 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function save_profile_field() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -411,21 +411,21 @@ class BB_Admin_Profile_Fields_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field name is required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $type ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field type is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field type is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate field type against registered types.
-		$allowed_types = array_keys( bp_xprofile_get_field_types() );
+		$allowed_types = array_keys( bboss_xprofile_get_field_types() );
 		if ( ! in_array( $type, $allowed_types, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field type.', 'buddyboss-platform' ) ) );
 		}
 
 		// Handle options for multi-option field types before insert.
@@ -443,7 +443,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		if ( ! empty( $field_id ) ) {
 			$args['field_id'] = $field_id;
 
-			$existing_field = xprofile_get_field( $field_id );
+			$existing_field = bboss_xprofile_get_field( $field_id );
 			if ( $existing_field ) {
 				$existing_group_id = (int) $existing_field->group_id;
 
@@ -457,7 +457,7 @@ class BB_Admin_Profile_Fields_Ajax {
 					// is defense-in-depth against direct AJAX clients.
 					if ( ! $this->bb_can_move_field_to_group( $field_id, $existing_group_id, $group_id ) ) {
 						wp_send_json_error(
-							array( 'message' => __( 'This field cannot be moved to that field set.', 'buddyboss' ) )
+							array( 'message' => __( 'This field cannot be moved to that field set.', 'buddyboss-platform' ) )
 						);
 					}
 
@@ -478,27 +478,27 @@ class BB_Admin_Profile_Fields_Ajax {
 			$args['field_order'] = $this->bb_get_next_field_order( $group_id );
 		}
 
-		$saved_id = xprofile_insert_field( $args );
+		$saved_id = bboss_xprofile_insert_field( $args );
 
 		if ( empty( $saved_id ) ) {
 			// The Bio field is shared with the member's WordPress "Biographical Info",
 			// so a set that repeats its fields cannot hold one — adding or saving.
-			if ( 'biography' === $type && bb_xprofile_is_repeater_group( $group_id ) ) {
-				wp_send_json_error( array( 'message' => __( 'The "Bio" profile field cannot be used in a repeater field set, because it shares its value with the member\'s WordPress profile. Move it to a field set that does not repeat.', 'buddyboss' ) ) );
+			if ( 'biography' === $type && bboss_xprofile_is_repeater_group( $group_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'The "Bio" profile field cannot be used in a repeater field set, because it shares its value with the member\'s WordPress profile. Move it to a field set that does not repeat.', 'buddyboss-platform' ) ) );
 			}
 
 			// Singleton validation error messages.
 			if ( 'membertypes' === $type ) {
-				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss-platform' ) ) );
 			} elseif ( 'gender' === $type ) {
-				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss-platform' ) ) );
 			} elseif ( 'socialnetworks' === $type ) {
-				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss-platform' ) ) );
 			} elseif ( 'biography' === $type ) {
-				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Bio" profile field.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Bio" profile field.', 'buddyboss-platform' ) ) );
 			}
 
-			wp_send_json_error( array( 'message' => __( 'There was an error saving the field. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'There was an error saving the field. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		// Save field metadata.
@@ -508,7 +508,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$this->bb_save_field_member_types( $saved_id );
 
 		// Save field type specific settings.
-		$field = xprofile_get_field( $saved_id, null, false );
+		$field = bboss_xprofile_get_field( $saved_id, null, false );
 		if ( $field && $field->type_obj->do_settings_section() ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified above, sanitized via map_deep below.
 			$settings = isset( $_POST['field_settings'] ) ? wp_unslash( $_POST['field_settings'] ) : array();
@@ -522,13 +522,13 @@ class BB_Admin_Profile_Fields_Ajax {
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
-		 * @param BP_XProfile_Field $field Saved field object.
+		 * @param BBoss_XProfile_Field $field Saved field object.
 		 */
 		do_action( 'xprofile_fields_saved_field', $field );
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Field saved successfully.', 'buddyboss' ),
+				'message'  => __( 'Field saved successfully.', 'buddyboss-platform' ),
 				'field_id' => $saved_id,
 			)
 		);
@@ -544,33 +544,33 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function delete_profile_field() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$field_id = isset( $_POST['field_id'] ) ? absint( wp_unslash( $_POST['field_id'] ) ) : 0;
 
 		if ( empty( $field_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$field = xprofile_get_field( $field_id, null, false );
+		$field = bboss_xprofile_get_field( $field_id, null, false );
 		if ( ! $field ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! $field->can_delete ) {
-			wp_send_json_error( array( 'message' => __( 'This field cannot be deleted.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'This field cannot be deleted.', 'buddyboss-platform' ) ) );
 		}
 
 		// Delete field and its user data, matching legacy xprofile_admin_delete_field() behavior.
 		// xprofile_delete_field() defaults to $delete_data=false, so call ->delete(true) directly.
-		$field_obj = new BP_XProfile_Field( $field_id );
+		$field_obj = new BBoss_XProfile_Field( $field_id );
 		$result    = $field_obj->delete( true );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'There was an error deleting the field. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'There was an error deleting the field. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -578,12 +578,12 @@ class BB_Admin_Profile_Fields_Ajax {
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
-		 * @param BP_XProfile_Field $field Deleted field object.
+		 * @param BBoss_XProfile_Field $field Deleted field object.
 		 */
 		do_action( 'xprofile_fields_deleted_field', $field );
 
 		wp_send_json_success(
-			array( 'message' => __( 'Field deleted successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Field deleted successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -599,8 +599,8 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -613,7 +613,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		// Reorder groups.
 		if ( ! empty( $group_order ) && is_array( $group_order ) ) {
 			foreach ( $group_order as $position => $group_id ) {
-				xprofile_update_field_group_position( absint( $group_id ), absint( $position ) );
+				bboss_xprofile_update_field_group_position( absint( $group_id ), absint( $position ) );
 			}
 		}
 
@@ -631,7 +631,7 @@ class BB_Admin_Profile_Fields_Ajax {
 
 			$field_group_map = array();
 			if ( ! empty( $all_submitted_ids ) ) {
-				$bp           = buddypress();
+				$bp           = bboss();
 				$placeholders = implode( ',', array_fill( 0, count( $all_submitted_ids ), '%d' ) );
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are safe integers.
 				$rows = $wpdb->get_results(
@@ -668,13 +668,13 @@ class BB_Admin_Profile_Fields_Ajax {
 						continue;
 					}
 
-					xprofile_update_field_position( $sanitized_field_id, absint( $position ), $sanitized_group_id );
+					bboss_xprofile_update_field_position( $sanitized_field_id, absint( $position ), $sanitized_group_id );
 				}
 			}
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Order updated successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Order updated successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -683,15 +683,15 @@ class BB_Admin_Profile_Fields_Ajax {
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param BP_XProfile_Field $field Field object.
+	 * @param BBoss_XProfile_Field $field Field object.
 	 * @return array Formatted field data.
 	 */
 	private function bb_format_field( $field ) {
-		$default_visibility      = bp_xprofile_get_meta( $field->id, 'field', 'default_visibility' );
-		$allow_custom_visibility = bp_xprofile_get_meta( $field->id, 'field', 'allow_custom_visibility' );
-		$alternate_name          = bp_xprofile_get_meta( $field->id, 'field', 'alternate_name' );
-		$signup_position         = bp_xprofile_get_meta( $field->id, 'field', 'signup_position' );
-		$placeholder_text        = bp_xprofile_get_meta( $field->id, 'field', '_placeholder_text' );
+		$default_visibility      = bboss_xprofile_get_meta( $field->id, 'field', 'default_visibility' );
+		$allow_custom_visibility = bboss_xprofile_get_meta( $field->id, 'field', 'allow_custom_visibility' );
+		$alternate_name          = bboss_xprofile_get_meta( $field->id, 'field', 'alternate_name' );
+		$signup_position         = bboss_xprofile_get_meta( $field->id, 'field', 'signup_position' );
+		$placeholder_text        = bboss_xprofile_get_meta( $field->id, 'field', '_placeholder_text' );
 
 		// Get field options for multi-option types. `socialnetworks` is
 		// kept in this list for the same reason it lives in the matching
@@ -727,7 +727,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		// so we return an empty array (Figma: badge only shown for restricted fields).
 		$member_types     = array();
 		$member_type_mode = 'all';
-		$raw_type_meta    = bp_xprofile_get_meta( $field->id, 'field', 'member_type', false );
+		$raw_type_meta    = bboss_xprofile_get_meta( $field->id, 'field', 'member_type', false );
 		$has_saved_types  = is_array( $raw_type_meta ) && ! empty( $raw_type_meta ) && ! in_array( '_none', $raw_type_meta, true );
 
 		if ( is_array( $raw_type_meta ) && in_array( '_none', $raw_type_meta, true ) ) {
@@ -758,7 +758,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$field_settings = array();
 		if ( $field->type_obj && $field->type_obj->do_settings_section() ) {
 			if ( 'datebox' === $field->type ) {
-				$field_settings = BP_XProfile_Field_Type_Datebox::get_field_settings( $field->id );
+				$field_settings = BBoss_XProfile_Field_Type_Datebox::get_field_settings( $field->id );
 			} elseif ( 'telephone' === $field->type ) {
 				$field_settings = $field->type_obj->get_field_settings( $field );
 			}
@@ -796,7 +796,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Determine whether a field is a platform "default"/synced field.
 	 *
-	 * Based on legacy `BP_XProfile_Field::is_default_field()` (see
+	 * Based on legacy `BBoss_XProfile_Field::is_default_field()` (see
 	 * `class-bp-xprofile-field.php` ~line 1832), but intentionally a superset:
 	 * the synced set is always the Nickname field, plus First name when the
 	 * display-name format needs it, plus Last name when the format is
@@ -811,13 +811,13 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @return bool True when the field is a platform default field.
 	 */
 	private function bb_is_default_field( $field_id ) {
-		$synced_field_ids = array( (int) bp_xprofile_nickname_field_id() );
-		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
+		$synced_field_ids = array( (int) bboss_xprofile_nickname_field_id() );
+		$dn_format        = function_exists( 'bboss_core_display_name_format' ) ? bboss_core_display_name_format() : '';
 		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
-			$synced_field_ids[] = (int) bp_xprofile_firstname_field_id();
+			$synced_field_ids[] = (int) bboss_xprofile_firstname_field_id();
 		}
 		if ( 'first_last_name' === $dn_format ) {
-			$synced_field_ids[] = (int) bp_xprofile_lastname_field_id();
+			$synced_field_ids[] = (int) bboss_xprofile_lastname_field_id();
 		}
 
 		return in_array( (int) $field_id, $synced_field_ids, true );
@@ -826,7 +826,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Determine whether a field's Type, Requirement and Visibility settings are locked.
 	 *
-	 * Mirrors legacy `BP_XProfile_Field::is_default_field()` exactly — the set the
+	 * Mirrors legacy `BBoss_XProfile_Field::is_default_field()` exactly — the set the
 	 * legacy editor used to hide the Type, Requirement and Visibility metaboxes:
 	 * the Nickname field always, plus First name when the display-name format is
 	 * `first_name` or `first_last_name`. Unlike `bb_is_default_field()` (a superset
@@ -842,10 +842,10 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @return bool True when the field's settings sections are locked in the editor.
 	 */
 	private function bb_is_settings_locked_field( $field_id ) {
-		$locked_field_ids = array( (int) bp_xprofile_nickname_field_id() );
-		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
+		$locked_field_ids = array( (int) bboss_xprofile_nickname_field_id() );
+		$dn_format        = function_exists( 'bboss_core_display_name_format' ) ? bboss_core_display_name_format() : '';
 		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
-			$locked_field_ids[] = (int) bp_xprofile_firstname_field_id();
+			$locked_field_ids[] = (int) bboss_xprofile_firstname_field_id();
 		}
 
 		return in_array( (int) $field_id, $locked_field_ids, true );
@@ -854,20 +854,20 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Determine whether the Profile Types selector is hidden for a field.
 	 *
-	 * Mirrors legacy `BP_XProfile_Field::member_type_metabox()`: hidden for the
+	 * Mirrors legacy `BBoss_XProfile_Field::member_type_metabox()`: hidden for the
 	 * primary field (ID 1), fields that cannot be deleted, and the Profile Type
 	 * field itself. Every other field — including Last name — may be restricted
 	 * to specific profile types, matching the legacy editor. See PROD-10439.
 	 *
 	 * @since BuddyBoss 3.5.0
 	 *
-	 * @param BP_XProfile_Field $field Field object.
+	 * @param BBoss_XProfile_Field $field Field object.
 	 * @return bool True when the Profile Types selector should not be offered.
 	 */
 	private function bb_hide_member_types_for_field( $field ) {
 		return 1 === (int) $field->id
 			|| empty( $field->can_delete )
-			|| (int) bp_get_xprofile_member_type_field_id() === (int) $field->id;
+			|| (int) bboss_get_xprofile_member_type_field_id() === (int) $field->id;
 	}
 
 	/**
@@ -886,7 +886,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @return bool True when the move is allowed.
 	 */
 	private function bb_can_move_field_to_group( $field_id, $from_group_id, $to_group_id ) {
-		$field = BP_XProfile_Field::get_instance( (int) $field_id );
+		$field = BBoss_XProfile_Field::get_instance( (int) $field_id );
 		if ( ! $field || empty( $field->id ) ) {
 			return false;
 		}
@@ -899,8 +899,8 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		// Block moves into or out of a repeater field set.
 		if (
-			'on' === bp_xprofile_get_meta( (int) $from_group_id, 'group', 'is_repeater_enabled' ) ||
-			'on' === bp_xprofile_get_meta( (int) $to_group_id, 'group', 'is_repeater_enabled' )
+			'on' === bboss_xprofile_get_meta( (int) $from_group_id, 'group', 'is_repeater_enabled' ) ||
+			'on' === bboss_xprofile_get_meta( (int) $to_group_id, 'group', 'is_repeater_enabled' )
 		) {
 			return false;
 		}
@@ -922,7 +922,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 */
 	private function bb_get_next_field_order( $group_id ) {
 		global $wpdb;
-		$bp       = buddypress();
+		$bp       = bboss();
 		$group_id = (int) $group_id;
 
 		// Cloned fields should not be considered when determining the max order of fields in given group.
@@ -964,7 +964,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @return array Grouped field types.
 	 */
 	private function bb_get_field_types() {
-		$all_types = bp_xprofile_get_field_types();
+		$all_types = bboss_xprofile_get_field_types();
 
 		$multi_fields  = array();
 		$single_fields = array();
@@ -1002,20 +1002,20 @@ class BB_Admin_Profile_Fields_Ajax {
 	 */
 	private function bb_get_field_type_label( $type_key ) {
 		$labels = array(
-			'textbox'        => __( 'Single Line Input', 'buddyboss' ),
-			'textarea'       => __( 'Paragraph Input', 'buddyboss' ),
-			'biography'      => __( 'Bio', 'buddyboss' ),
-			'selectbox'      => __( 'Dropdown', 'buddyboss' ),
-			'multiselectbox' => __( 'Multi Select', 'buddyboss' ),
-			'checkbox'       => __( 'Checkboxes', 'buddyboss' ),
-			'radio'          => __( 'Radio Buttons', 'buddyboss' ),
-			'datebox'        => __( 'Date', 'buddyboss' ),
-			'number'         => __( 'Number', 'buddyboss' ),
-			'telephone'      => __( 'Phone', 'buddyboss' ),
-			'url'            => __( 'Website', 'buddyboss' ),
-			'gender'         => __( 'Gender', 'buddyboss' ),
-			'socialnetworks' => __( 'Social Networks', 'buddyboss' ),
-			'membertypes'    => __( 'Profile Type', 'buddyboss' ),
+			'textbox'        => __( 'Single Line Input', 'buddyboss-platform' ),
+			'textarea'       => __( 'Paragraph Input', 'buddyboss-platform' ),
+			'biography'      => __( 'Bio', 'buddyboss-platform' ),
+			'selectbox'      => __( 'Dropdown', 'buddyboss-platform' ),
+			'multiselectbox' => __( 'Multi Select', 'buddyboss-platform' ),
+			'checkbox'       => __( 'Checkboxes', 'buddyboss-platform' ),
+			'radio'          => __( 'Radio Buttons', 'buddyboss-platform' ),
+			'datebox'        => __( 'Date', 'buddyboss-platform' ),
+			'number'         => __( 'Number', 'buddyboss-platform' ),
+			'telephone'      => __( 'Phone', 'buddyboss-platform' ),
+			'url'            => __( 'Website', 'buddyboss-platform' ),
+			'gender'         => __( 'Gender', 'buddyboss-platform' ),
+			'socialnetworks' => __( 'Social Networks', 'buddyboss-platform' ),
+			'membertypes'    => __( 'Profile Type', 'buddyboss-platform' ),
 		);
 
 		if ( isset( $labels[ $type_key ] ) ) {
@@ -1023,7 +1023,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		// Fallback: Try to get label from the field type class.
-		$type_obj = bp_xprofile_create_field_type( $type_key );
+		$type_obj = bboss_xprofile_create_field_type( $type_key );
 		if ( method_exists( $type_obj, 'get_name' ) ) {
 			return $type_obj->get_name();
 		}
@@ -1045,20 +1045,20 @@ class BB_Admin_Profile_Fields_Ajax {
 	 */
 	private function bb_get_field_type_description( $type_key ) {
 		$descriptions = array(
-			'textbox'        => __( 'Displays a single-line text field where users can enter short text.', 'buddyboss' ),
-			'textarea'       => __( 'Displays a multi-line text field where users can enter longer text.', 'buddyboss' ),
-			'biography'      => __( 'Displays a multi-line text field for the member\'s bio, shared with the "Biographical Info" field on their WordPress profile.', 'buddyboss' ),
-			'selectbox'      => __( 'Displays a dropdown list where users can select one option from multiple predefined choices.', 'buddyboss' ),
-			'multiselectbox' => __( 'Displays a list where users can select multiple options.', 'buddyboss' ),
-			'checkbox'       => __( 'Displays multiple options where users can select one or more choices.', 'buddyboss' ),
-			'radio'          => __( 'Displays multiple options where users can select one choice.', 'buddyboss' ),
-			'datebox'        => __( 'Displays a date picker for selecting a specific date.', 'buddyboss' ),
-			'number'         => __( 'Displays a field for entering a numeric value.', 'buddyboss' ),
-			'telephone'      => __( 'Displays a field for entering a phone number.', 'buddyboss' ),
-			'url'            => __( 'Displays a field for entering a website address (URL).', 'buddyboss' ),
-			'gender'         => __( 'Allows users to select their gender from the options: Male, Female, or Other.', 'buddyboss' ),
-			'socialnetworks' => __( 'Select one or more social networks to display as icons in the user\'s profile.', 'buddyboss' ),
-			'membertypes'    => __( 'Allows users to select their profile type.', 'buddyboss' ),
+			'textbox'        => __( 'Displays a single-line text field where users can enter short text.', 'buddyboss-platform' ),
+			'textarea'       => __( 'Displays a multi-line text field where users can enter longer text.', 'buddyboss-platform' ),
+			'biography'      => __( 'Displays a multi-line text field for the member\'s bio, shared with the "Biographical Info" field on their WordPress profile.', 'buddyboss-platform' ),
+			'selectbox'      => __( 'Displays a dropdown list where users can select one option from multiple predefined choices.', 'buddyboss-platform' ),
+			'multiselectbox' => __( 'Displays a list where users can select multiple options.', 'buddyboss-platform' ),
+			'checkbox'       => __( 'Displays multiple options where users can select one or more choices.', 'buddyboss-platform' ),
+			'radio'          => __( 'Displays multiple options where users can select one choice.', 'buddyboss-platform' ),
+			'datebox'        => __( 'Displays a date picker for selecting a specific date.', 'buddyboss-platform' ),
+			'number'         => __( 'Displays a field for entering a numeric value.', 'buddyboss-platform' ),
+			'telephone'      => __( 'Displays a field for entering a phone number.', 'buddyboss-platform' ),
+			'url'            => __( 'Displays a field for entering a website address (URL).', 'buddyboss-platform' ),
+			'gender'         => __( 'Allows users to select their gender from the options: Male, Female, or Other.', 'buddyboss-platform' ),
+			'socialnetworks' => __( 'Select one or more social networks to display as icons in the user\'s profile.', 'buddyboss-platform' ),
+			'membertypes'    => __( 'Allows users to select their profile type.', 'buddyboss-platform' ),
 		);
 
 		$description = isset( $descriptions[ $type_key ] ) ? $descriptions[ $type_key ] : '';
@@ -1087,7 +1087,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param object $provider Provider object from
-	 *                         bp_xprofile_social_network_provider().
+	 *                         bboss_xprofile_social_network_provider().
 	 * @return array Provider data ready to send to React.
 	 */
 	private function bb_format_social_provider( $provider ) {
@@ -1101,7 +1101,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		 * The value is a full CSS class string (base weight + brand
 		 * modifier) consumed verbatim by CustomSelectControl. Pass an
 		 * empty string to fall back to the legacy inline SVG provided by
-		 * bp_xprofile_social_network_provider().
+		 * bboss_xprofile_social_network_provider().
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
@@ -1132,7 +1132,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @return array Visibility levels with id and label.
 	 */
 	private function bb_get_visibility_levels() {
-		$levels    = bp_xprofile_get_visibility_levels();
+		$levels    = bboss_xprofile_get_visibility_levels();
 		$formatted = array();
 
 		foreach ( $levels as $level ) {
@@ -1153,7 +1153,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @return array Member types with id and name.
 	 */
 	private function bb_get_member_types() {
-		$member_type_ids = bp_get_active_member_types();
+		$member_type_ids = bboss_get_active_member_types();
 		$member_types    = array();
 
 		if ( empty( $member_type_ids ) ) {
@@ -1187,7 +1187,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Handle field options for multi-option field types.
 	 *
-	 * Sets up POST data so that BP_XProfile_Field::save() picks up the options.
+	 * Sets up POST data so that BBoss_XProfile_Field::save() picks up the options.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -1270,39 +1270,39 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		// Validate visibility against allowed levels.
 		if ( ! empty( $visibility ) ) {
-			$allowed_levels = wp_list_pluck( bp_xprofile_get_visibility_levels(), 'id' );
+			$allowed_levels = wp_list_pluck( bboss_xprofile_get_visibility_levels(), 'id' );
 			if ( in_array( $visibility, $allowed_levels, true ) ) {
-				bp_xprofile_update_field_meta( $field_id, 'default_visibility', $visibility );
+				bboss_xprofile_update_field_meta( $field_id, 'default_visibility', $visibility );
 			}
 		}
 
 		// Allow custom visibility.
 		if ( in_array( $allow_custom_visibility, array( 'allowed', 'disabled' ), true ) ) {
-			bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', $allow_custom_visibility );
+			bboss_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', $allow_custom_visibility );
 		}
 
 		// Alternate name.
-		bp_xprofile_update_field_meta( $field_id, 'alternate_name', $alternate_name );
+		bboss_xprofile_update_field_meta( $field_id, 'alternate_name', $alternate_name );
 
 		// Signup position.
 		if ( ! empty( $signup_position ) ) {
-			bp_xprofile_update_field_meta( $field_id, 'signup_position', $signup_position );
+			bboss_xprofile_update_field_meta( $field_id, 'signup_position', $signup_position );
 		} else {
-			bp_xprofile_delete_meta( $field_id, 'field', 'signup_position' );
+			bboss_xprofile_delete_meta( $field_id, 'field', 'signup_position' );
 		}
 
 		// Placeholder text (new in Settings 2.0).
 		if ( ! empty( $placeholder_text ) ) {
-			bp_xprofile_update_field_meta( $field_id, '_placeholder_text', $placeholder_text );
+			bboss_xprofile_update_field_meta( $field_id, '_placeholder_text', $placeholder_text );
 		} else {
-			bp_xprofile_delete_meta( $field_id, 'field', '_placeholder_text' );
+			bboss_xprofile_delete_meta( $field_id, 'field', '_placeholder_text' );
 		}
 
 		// Gender option order (matching legacy bp-xprofile-admin.php:611-612).
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$gender_option_order = isset( $_POST['gender_option_order'] ) ? sanitize_text_field( wp_unslash( $_POST['gender_option_order'] ) ) : '';
 		if ( ! empty( $gender_option_order ) ) {
-			bp_xprofile_update_field_meta( $field_id, 'gender-option-order', $gender_option_order );
+			bboss_xprofile_update_field_meta( $field_id, 'gender-option-order', $gender_option_order );
 		}
 	}
 
@@ -1319,7 +1319,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		// Fetch the field once for both branches.
-		$field = xprofile_get_field( $field_id, null, false );
+		$field = bboss_xprofile_get_field( $field_id, null, false );
 		if ( ! $field || ! method_exists( $field, 'set_member_types' ) ) {
 			return;
 		}
@@ -1356,7 +1356,7 @@ class BB_Admin_Profile_Fields_Ajax {
 			// its own meta cache, so the next `get_member_types()` call reads
 			// the empty result fresh — no need (and not permitted, since the
 			// property is protected) to poke `$field->member_types`.
-			bp_xprofile_delete_meta( $field->id, 'field', 'member_type' );
+			bboss_xprofile_delete_meta( $field->id, 'field', 'member_type' );
 
 			// Mirror the action `set_member_types()` fires at
 			// `class-bp-xprofile-field.php:788` so listeners that piggy-back on
@@ -1371,4 +1371,4 @@ class BB_Admin_Profile_Fields_Ajax {
 }
 
 // Initialize.
-new BB_Admin_Profile_Fields_Ajax();
+new BBoss_Admin_Profile_Fields_Ajax();

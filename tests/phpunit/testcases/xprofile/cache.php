@@ -15,19 +15,19 @@ class BP_Tests_XProfile_Cache extends BP_UnitTestCase {
 			'field_group_id' => $g,
 		) );
 
-		$d = new BP_XProfile_ProfileData( $f, $u );
+		$d = new BBoss_XProfile_ProfileData( $f, $u );
 		$d->user_id = $u;
 		$d->field_id = $f;
 		$d->value = 'foo';
-		$d->last_updated = bp_core_current_time();
+		$d->last_updated = bboss_core_current_time();
 		$d->save();
 
-		bp_xprofile_add_meta( $g, 'group', 'group_foo', 'group_bar' );
-		bp_xprofile_add_meta( $f, 'field', 'field_foo', 'field_bar' );
-		bp_xprofile_add_meta( $d->id, 'data', 'data_foo', 'data_bar' );
+		bboss_xprofile_add_meta( $g, 'group', 'group_foo', 'group_bar' );
+		bboss_xprofile_add_meta( $f, 'field', 'field_foo', 'field_bar' );
+		bboss_xprofile_add_meta( $d->id, 'data', 'data_foo', 'data_bar' );
 
 		// prime cache
-		bp_xprofile_update_meta_cache( array(
+		bboss_xprofile_update_meta_cache( array(
 			'group' => array( $g ),
 			'field' => array( $f ),
 			'data' => array( $d->id ),
@@ -69,19 +69,19 @@ class BP_Tests_XProfile_Cache extends BP_UnitTestCase {
 			'field_group_id' => $g,
 		) );
 
-		$d = new BP_XProfile_ProfileData( $f, $u );
+		$d = new BBoss_XProfile_ProfileData( $f, $u );
 		$d->user_id = $u;
 		$d->field_id = $f;
 		$d->value = 'foo';
-		$d->last_updated = bp_core_current_time();
+		$d->last_updated = bboss_core_current_time();
 		$d->save();
 
-		bp_xprofile_add_meta( $g, 'group', 'group_foo', 'group_bar' );
-		bp_xprofile_add_meta( $f, 'field', 'field_foo', 'field_bar' );
-		bp_xprofile_add_meta( $d->id, 'data', 'data_foo', 'data_bar' );
+		bboss_xprofile_add_meta( $g, 'group', 'group_foo', 'group_bar' );
+		bboss_xprofile_add_meta( $f, 'field', 'field_foo', 'field_bar' );
+		bboss_xprofile_add_meta( $d->id, 'data', 'data_foo', 'data_bar' );
 
 		// prime cache
-		bp_has_profile( array(
+		bboss_has_profile( array(
 			'user_id' => $u,
 			'profile_group_id' => $g,
 		) );
@@ -122,19 +122,19 @@ class BP_Tests_XProfile_Cache extends BP_UnitTestCase {
 			'field_group_id' => $g,
 		) );
 
-		$d = new BP_XProfile_ProfileData( $f, $u );
+		$d = new BBoss_XProfile_ProfileData( $f, $u );
 		$d->user_id = $u;
 		$d->field_id = $f;
 		$d->value = 'foo';
-		$d->last_updated = bp_core_current_time();
+		$d->last_updated = bboss_core_current_time();
 		$d->save();
 
-		bp_xprofile_add_meta( $g, 'group', 'group_foo', 'group_bar' );
-		bp_xprofile_add_meta( $f, 'field', 'field_foo', 'field_bar' );
-		bp_xprofile_add_meta( $d->id, 'data', 'data_foo', 'data_bar' );
+		bboss_xprofile_add_meta( $g, 'group', 'group_foo', 'group_bar' );
+		bboss_xprofile_add_meta( $f, 'field', 'field_foo', 'field_bar' );
+		bboss_xprofile_add_meta( $d->id, 'data', 'data_foo', 'data_bar' );
 
 		// prime cache
-		bp_has_profile( array(
+		bboss_has_profile( array(
 			'user_id' => $u,
 			'profile_group_id' => $g,
 			'update_meta_cache' => false,
@@ -155,13 +155,13 @@ class BP_Tests_XProfile_Cache extends BP_UnitTestCase {
 			'name' => 'Foo',
 		) );
 
-		$field = xprofile_get_field( $f );
+		$field = bboss_xprofile_get_field( $f );
 		$this->assertSame( 'Foo', $field->name );
 
 		$field->name = 'Bar';
 		$this->assertNotEmpty( $field->save() );
 
-		$field_2 = xprofile_get_field( $f );
+		$field_2 = bboss_xprofile_get_field( $f );
 		$this->assertSame( 'Bar', $field_2->name );
 	}
 
@@ -178,11 +178,11 @@ class BP_Tests_XProfile_Cache extends BP_UnitTestCase {
 		) );
 
 		// Prime cache.
-		BP_XProfile_Field::get_id_from_name( 'Foo' );
+		BBoss_XProfile_Field::get_id_from_name( 'Foo' );
 
 		$num_queries = $wpdb->num_queries;
 
-		$this->assertSame( $f, BP_XProfile_Field::get_id_from_name( 'Foo' ) );
+		$this->assertSame( $f, BBoss_XProfile_Field::get_id_from_name( 'Foo' ) );
 		$this->assertSame( $num_queries, $wpdb->num_queries );
 	}
 
@@ -201,20 +201,20 @@ class BP_Tests_XProfile_Cache extends BP_UnitTestCase {
 		) );
 
 		// Prime cache.
-		xprofile_get_field_id_from_name( 'Foo' );
-		xprofile_get_field_id_from_name( 'Bar' );
+		bboss_xprofile_get_field_id_from_name( 'Foo' );
+		bboss_xprofile_get_field_id_from_name( 'Bar' );
 
 		// Free up the name 'Bar'.
-		$field2 = xprofile_get_field( $f2 );
+		$field2 = bboss_xprofile_get_field( $f2 );
 		$field2->name = 'Quz';
 		$field2->save();
 
 		// Take the name 'Bar'.
-		$field1 = xprofile_get_field( $f1 );
+		$field1 = bboss_xprofile_get_field( $f1 );
 		$field1->name = 'Bar';
 		$field1->save();
 
-		$this->assertSame( $f1, BP_XProfile_Field::get_id_from_name( 'Bar' ) );
+		$this->assertSame( $f1, BBoss_XProfile_Field::get_id_from_name( 'Bar' ) );
 	}
 
 	/**
@@ -228,10 +228,10 @@ class BP_Tests_XProfile_Cache extends BP_UnitTestCase {
 		) );
 
 		// Prime cache.
-		xprofile_get_field_id_from_name( 'Foo' );
+		bboss_xprofile_get_field_id_from_name( 'Foo' );
 
-		xprofile_delete_field( $f );
+		bboss_xprofile_delete_field( $f );
 
-		$this->assertNull( BP_XProfile_Field::get_id_from_name( 'Bar' ) );
+		$this->assertNull( BBoss_XProfile_Field::get_id_from_name( 'Bar' ) );
 	}
 }

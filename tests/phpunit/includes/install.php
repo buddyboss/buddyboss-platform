@@ -31,8 +31,8 @@ function _load_buddypress() {
 }
 tests_add_filter( 'muplugins_loaded', '_load_buddypress' );
 
-define( 'BP_PLUGIN_DIR', dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/src/' );
-define( 'BP_ROOT_BLOG', 1 );
+define( 'BBOSS_PLUGIN_DIR', dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/src/' );
+define( 'BBOSS_ROOT_BLOG', 1 );
 
 // Always load admin bar
 tests_add_filter( 'show_admin_bar', '__return_true' );
@@ -66,4 +66,4 @@ function _bp_mock_mailer( $class ) {
 tests_add_filter( 'bp_send_email_delivery_class', '_bp_mock_mailer' );
 
 // Install BuddyPress
-bp_version_updater();
+bboss_version_updater();

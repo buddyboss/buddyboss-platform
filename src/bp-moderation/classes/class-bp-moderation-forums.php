@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Forums extends BP_Moderation_Abstract {
+class BBoss_Moderation_Forums extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -24,13 +24,13 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	public static $moderation_type = 'forum';
 
 	/**
-	 * BP_Moderation_Forums constructor.
+	 * BBoss_Moderation_Forums constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			return;
 		}
 
@@ -54,7 +54,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		add_filter( 'bbp_get_forum', array( $this, 'restrict_single_item' ), 10, 2 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
-		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		if ( ! bboss_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 
@@ -113,7 +113,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Standalone Forums', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Standalone Forums', 'buddyboss-platform' );
 
 		return $content_types;
 	}
@@ -134,7 +134,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
 		// Remove has blocked/ is blocked members forum from widget.
 		$exclude_where = false;
-		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_forum_widget_settings_parse_args' ) ) {
+		if ( function_exists( 'bboss_did_filter' ) && bboss_did_filter( 'bbp_after_forum_widget_settings_parse_args' ) ) {
 			$exclude_where = true;
 		}
 
@@ -146,7 +146,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
 		if ( true === $exclude_where ) {
 			// Remove is blocked members forum from widget.
-			$where['moderation_widget_forums'] = '( ' . $wpdb->posts . '.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+			$where['moderation_widget_forums'] = '( ' . $wpdb->posts . '.post_author NOT IN ( ' . bboss_moderation_get_blocked_by_sql() . ' ) )';
 		}
 
 		return $where;
@@ -192,7 +192,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	public function update_button_args( $args, $item_id ) {
 
 		// Remove report button if forum is group forums.
-		if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( $item_id ) ) {
+		if ( function_exists( 'bboss_bbp_is_forum_group_forum' ) && bboss_bbp_is_forum_group_forum( $item_id ) ) {
 			return array();
 		}
 
@@ -214,7 +214,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 			return $retval;
 		}
 
-		$forum = bbp_get_forum( (int) $item_id );
+		$forum = bboss_bbp_get_forum( (int) $item_id );
 
 		if ( empty( $forum ) || empty( $forum->ID ) ) {
 			return false;
@@ -234,7 +234,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_button_text( $button_text, $item_id ) {
-		return esc_html__( 'Report Forum', 'buddyboss' );
+		return esc_html__( 'Report Forum', 'buddyboss-platform' );
 	}
 
 	/**
@@ -248,7 +248,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_content_type( $content_type, $item_id ) {
-		return esc_html__( 'Forum', 'buddyboss' );
+		return esc_html__( 'Forum', 'buddyboss-platform' );
 	}
 
 	/**
@@ -279,7 +279,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return bool
 	 */
 	protected function is_content_hidden( $item_id ) {
-		if ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) {
+		if ( $this->is_reporting_enabled() && BBoss_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) {
 			return true;
 		}
 		return false;

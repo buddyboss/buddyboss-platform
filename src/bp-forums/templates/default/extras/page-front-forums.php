@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 get_header(); ?>
 
 	<?php do_action( 'bbp_before_main_content' ); ?>
@@ -23,7 +26,7 @@ get_header(); ?>
 
 				<?php the_content(); ?>
 
-				<?php bbp_get_template_part( 'content', 'archive-forum' ); ?>
+				<?php bboss_bbp_get_template_part( 'content', 'archive-forum' ); ?>
 
 			</div>
 		</div><!-- #forum-front -->

@@ -55,7 +55,7 @@ defined( 'ABSPATH' ) || exit;
  *     }
  * }
  */
-class BP_Button {
+class BBoss_Button {
 
 	/** Button properties *****************************************************/
 
@@ -269,11 +269,11 @@ class BP_Button {
 	 *
 	 * @since BuddyPress 1.2.6
 	 *
-	 * @param array|string $args See {@BP_Button}.
+	 * @param array|string $args See {@BBoss_Button}.
 	 */
 	public function __construct( $args = '' ) {
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			get_class_vars( __CLASS__ ),
 			'bb_parse_button_args'
@@ -344,7 +344,7 @@ class BP_Button {
 		$this->block_self        = (bool) $r['block_self'];
 
 		// $id and $component are required and component must be active.
-		if ( empty( $r['id'] ) || empty( $r['component'] ) || ! bp_is_active( $this->component ) ) {
+		if ( empty( $r['id'] ) || empty( $r['component'] ) || ! bboss_is_active( $this->component ) ) {
 			return false;
 		}
 
@@ -361,13 +361,13 @@ class BP_Button {
 			 * This condition takes precedence, because members loops can be found on user
 			 * profiles.
 			 */
-			if ( bp_get_member_user_id() ) {
-				if ( is_user_logged_in() && bp_loggedin_user_id() == bp_get_member_user_id() ) {
+			if ( bboss_get_member_user_id() ) {
+				if ( is_user_logged_in() && bboss_loggedin_user_id() == bboss_get_member_user_id() ) {
 					return false;
 				}
 
 				// No button if viewing your own profile (and not in a members loop).
-			} elseif ( bp_is_my_profile() ) {
+			} elseif ( bboss_is_my_profile() ) {
 				return false;
 			}
 		}
@@ -394,7 +394,7 @@ class BP_Button {
 			$this->parent_attr    = $r['parent_attr'];
 
 			// Render parent element attributes.
-			$parent_elem = new BP_Core_HTML_Element(
+			$parent_elem = new BBoss_Core_HTML_Element(
 				array(
 					'element' => $r['parent_element'],
 					'attr'    => $r['parent_attr'],
@@ -414,7 +414,7 @@ class BP_Button {
 		// Button properties.
 		$button = '';
 		if ( ! empty( $r['button_element'] ) ) {
-			$button = new BP_Core_HTML_Element(
+			$button = new BBoss_Core_HTML_Element(
 				array(
 					'element'    => $r['button_element'],
 					'attr'       => $r['button_attr'],
@@ -437,7 +437,7 @@ class BP_Button {
 		 * @since BuddyPress 2.7.0 Added $r as a parameter.
 		 *
 		 * @param string    $contents HTML being used for the button.
-		 * @param BP_Button $this     Current BP_Button instance.
+		 * @param BBoss_Button $this     Current BBoss_Button instance.
 		 * @param string    $before   HTML appended before the actual button.
 		 * @param string    $after    HTML appended after the actual button.
 		 * @param array     $r        Parsed button arguments.
@@ -451,7 +451,7 @@ class BP_Button {
 	 *
 	 * @since BuddyPress 2.7.0.
 	 *
-	 * @param  array $r See {@link BP_Button} class for full documentation.
+	 * @param  array $r See {@link BBoss_Button} class for full documentation.
 	 * @return array
 	 */
 	protected function backward_compatibility_args( $r = array() ) {

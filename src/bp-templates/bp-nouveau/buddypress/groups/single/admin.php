@@ -7,11 +7,15 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-manage-group-container">
-	<?php bp_get_template_part( 'groups/single/parts/admin-subnav' ); ?>
+	<?php bboss_get_template_part( 'groups/single/parts/admin-subnav' ); ?>
 
-	<form action="<?php bp_group_admin_form_action(); ?>" name="group-settings-form" id="group-settings-form" class="standard-form search-form-has-reset" method="post" enctype="multipart/form-data">
-		<?php bp_nouveau_group_manage_screen(); ?>
+	<form action="<?php bboss_group_admin_form_action(); ?>" name="group-settings-form" id="group-settings-form" class="standard-form search-form-has-reset" method="post" enctype="multipart/form-data">
+		<?php bboss_nouveau_group_manage_screen(); ?>
 	</form><!-- #group-settings-form -->
 </div>

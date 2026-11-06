@@ -67,11 +67,11 @@ function FeatureDisabled({ featureId, featureLabel, onNavigate }) {
 				</svg>
 			</div>
 			<h2 className="bb-admin-feature-disabled__title">
-				{__('Feature Not Enabled', 'buddyboss')}
+				{__('Feature Not Enabled', 'buddyboss-platform')}
 			</h2>
 			<p className="bb-admin-feature-disabled__description">
 				{sprintf(
-					__('The %s feature is currently disabled. Enable it to access these settings.', 'buddyboss'),
+					__('The %s feature is currently disabled. Enable it to access these settings.', 'buddyboss-platform'),
 					featureLabel || featureId
 				)}
 			</p>
@@ -80,7 +80,7 @@ function FeatureDisabled({ featureId, featureLabel, onNavigate }) {
 					variant="primary"
 					onClick={() => onNavigate('/settings')}
 				>
-					{__('Go to Features', 'buddyboss')}
+					{__('Go to Features', 'buddyboss-platform')}
 				</Button>
 			</div>
 		</div>
@@ -289,8 +289,8 @@ export function Router({ currentRoute, onNavigate }) {
 				const activityId = routeParts[1];
 				return (
 					<div className="bb-admin-activity-edit">
-						<h1>{__('Edit Activity', 'buddyboss')}</h1>
-						<p>{__('Activity edit screen - ID:', 'buddyboss')} {activityId}</p>
+						<h1>{__('Edit Activity', 'buddyboss-platform')}</h1>
+						<p>{__('Activity edit screen - ID:', 'buddyboss-platform')} {activityId}</p>
 					</div>
 				);
 			}
@@ -349,8 +349,8 @@ export function Router({ currentRoute, onNavigate }) {
 		default:
 			return (
 				<div className="bb-admin-not-found">
-					<h2>{__('Page not found', 'buddyboss')}</h2>
-					<p>{__('The requested page could not be found.', 'buddyboss')}</p>
+					<h2>{__('Page not found', 'buddyboss-platform')}</h2>
+					<p>{__('The requested page could not be found.', 'buddyboss-platform')}</p>
 				</div>
 			);
 	}

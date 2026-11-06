@@ -9,15 +9,15 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_user_nav() {
-		$bp_nav = buddypress()->bp_nav;
+		$bp_nav = bboss()->bp_nav;
 
 		$u = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u );
 
-		$this->go_to( bp_core_get_user_domain( $u ) );
+		$this->go_to( bboss_core_get_user_domain( $u ) );
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name'                    => 'Foo',
 			'slug'                    => 'foo',
 			'position'                => 25,
@@ -28,7 +28,7 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 		$expected = array(
 			'name'                    => 'Foo',
 			'slug'                    => 'foo',
-			'link'                    => trailingslashit( bp_core_get_user_domain( $u ) . 'foo' ),
+			'link'                    => trailingslashit( bboss_core_get_user_domain( $u ) . 'foo' ),
 			'css_id'                  => 'foo',
 			'show_for_displayed_user' => true,
 			'position'                => 25,
@@ -37,11 +37,11 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 		);
 
 		foreach ( $expected as $k => $v ) {
-			$this->assertEquals( $v, buddypress()->bp_nav['foo'][ $k ] );
+			$this->assertEquals( $v, bboss()->bp_nav['foo'][ $k ] );
 		}
 
 		// Clean up
-		buddypress()->bp_nav = $bp_nav;
+		bboss()->bp_nav = $bp_nav;
 		$this->set_current_user( $old_current_user );
 	}
 
@@ -49,21 +49,21 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_group_nav() {
-		$bp_nav = buddypress()->bp_nav;
+		$bp_nav = bboss()->bp_nav;
 
 		$u = self::factory()->user->create();
 		$g = self::factory()->group->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u );
 
-		$group = groups_get_group( $g );
+		$group = bboss_groups_get_group( $g );
 
-		$this->go_to( bp_get_group_permalink( $group ) );
+		$this->go_to( bboss_get_group_permalink( $group ) );
 
-		$this->assertTrue( buddypress()->bp_nav[ $group->slug ]['position'] === -1 );
+		$this->assertTrue( bboss()->bp_nav[ $group->slug ]['position'] === -1 );
 
 		// Clean up
-		buddypress()->bp_nav = $bp_nav;
+		bboss()->bp_nav = $bp_nav;
 		$this->set_current_user( $old_current_user );
 	}
 
@@ -72,7 +72,7 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 			'slug' => 'foo',
 		);
 
-		$this->assertFalse( bp_core_new_nav_item( $args ) );
+		$this->assertFalse( bboss_core_new_nav_item( $args ) );
 	}
 
 	public function test_should_return_false_if_slug_is_not_provided() {
@@ -80,19 +80,19 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 			'name' => 'foo',
 		);
 
-		$this->assertFalse( bp_core_new_nav_item( $args ) );
+		$this->assertFalse( bboss_core_new_nav_item( $args ) );
 	}
 
 	public function test_should_return_false_if_site_admin_only_and_current_user_cannot_bp_moderate() {
 		// Should already be set to a 0 user.
-		$this->assertFalse( bp_current_user_can( 'bp_moderate' ) );
+		$this->assertFalse( bboss_current_user_can( 'bp_moderate' ) );
 		$args = array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'site_admin_only' => true,
 		);
 
-		$this->assertFalse( bp_core_new_nav_item( $args ) );
+		$this->assertFalse( bboss_core_new_nav_item( $args ) );
 	}
 
 	/**
@@ -103,9 +103,9 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 			'name' => 'Foo',
 			'slug' => 'foo',
 		);
-		bp_core_new_nav_item( $args );
+		bboss_core_new_nav_item( $args );
 
-		$this->assertSame( 'foo', buddypress()->bp_nav['foo']['css_id'] );
+		$this->assertSame( 'foo', bboss()->bp_nav['foo']['css_id'] );
 	}
 
 	/**
@@ -117,9 +117,9 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 			'slug' => 'foo',
 			'item_css_id' => 'bar',
 		);
-		bp_core_new_nav_item( $args );
+		bboss_core_new_nav_item( $args );
 
-		$this->assertSame( 'bar', buddypress()->bp_nav['foo']['css_id'] );
+		$this->assertSame( 'bar', bboss()->bp_nav['foo']['css_id'] );
 	}
 
 	public function test_show_for_displayed_user_false_should_force_function_to_return_false_when_bp_user_has_access_is_also_false() {
@@ -130,7 +130,7 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 		);
 
 		add_filter( 'bp_user_has_access', '__return_false' );
-		$retval = bp_core_new_nav_item( $args );
+		$retval = bboss_core_new_nav_item( $args );
 		remove_filter( 'bp_user_has_access', '__return_false' );
 
 		$this->assertFalse( $retval );
@@ -140,32 +140,32 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_existence_of_access_protected_user_nav() {
-		$bp_nav = buddypress()->bp_nav;
+		$bp_nav = bboss()->bp_nav;
 
 		$u = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u2 );
 
-		$this->go_to( bp_core_get_user_domain( $u ) );
+		$this->go_to( bboss_core_get_user_domain( $u ) );
 
 		$expected = array(
 			'name'                    => 'Account',
 			'slug'                    => 'settings',
-			'link'                    => trailingslashit( bp_loggedin_user_domain() . 'settings' ),
+			'link'                    => trailingslashit( bboss_loggedin_user_domain() . 'settings' ),
 			'css_id'                  => 'settings',
 			'show_for_displayed_user' => false,
 			'position'                => 21,
-			'screen_function'         => 'bp_settings_screen_general',
+			'screen_function'         => 'bboss_settings_screen_general',
 			'default_subnav_slug'     => 'general'
 		);
 
 		foreach ( $expected as $k => $v ) {
-			$this->assertEquals( $v, buddypress()->bp_nav['settings'][ $k ] );
+			$this->assertEquals( $v, bboss()->bp_nav['settings'][ $k ] );
 		}
 
 		// Clean up
-		buddypress()->bp_nav = $bp_nav;
+		bboss()->bp_nav = $bp_nav;
 		$this->set_current_user( $old_current_user );
 	}
 
@@ -175,16 +175,16 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 	public function test_creation_of_access_protected_user_nav() {
 		// The nav item must be added to bp_nav, even if the current user
 		// can't visit that nav item.
-		$bp_nav = buddypress()->bp_nav;
+		$bp_nav = bboss()->bp_nav;
 
 		$u = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u2 );
 
-		$this->go_to( bp_core_get_user_domain( $u ) );
+		$this->go_to( bboss_core_get_user_domain( $u ) );
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name'                    => 'Woof',
 			'slug'                    => 'woof',
 			'show_for_displayed_user' => false,
@@ -196,7 +196,7 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 		$expected = array(
 			'name'                    => 'Woof',
 			'slug'                    => 'woof',
-			'link'                    => trailingslashit( bp_loggedin_user_domain() . 'woof' ),
+			'link'                    => trailingslashit( bboss_loggedin_user_domain() . 'woof' ),
 			'css_id'                  => 'woof',
 			'show_for_displayed_user' => false,
 			'position'                => 35,
@@ -205,11 +205,11 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 		);
 
 		foreach ( $expected as $k => $v ) {
-			$this->assertEquals( $v, buddypress()->bp_nav['woof'][ $k ] );
+			$this->assertEquals( $v, bboss()->bp_nav['woof'][ $k ] );
 		}
 
 		// Clean up
-		buddypress()->bp_nav = $bp_nav;
+		bboss()->bp_nav = $bp_nav;
 		$this->set_current_user( $old_current_user );
 	}
 }

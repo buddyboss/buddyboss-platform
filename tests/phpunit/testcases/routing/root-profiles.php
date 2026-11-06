@@ -29,17 +29,17 @@ class BP_Tests_Routing_Members_Root_Profiles extends BP_UnitTestCase {
 	}
 
 	public function test_members_directory() {
-		$this->go_to( home_url( bp_get_members_root_slug() ) );
-		$this->assertEquals( bp_get_members_root_slug(), bp_current_component() );
+		$this->go_to( home_url( bboss_get_members_root_slug() ) );
+		$this->assertEquals( bboss_get_members_root_slug(), bboss_current_component() );
 	}
 
 	public function test_member_permalink() {
 		$domain = home_url( $this->u->user_nicename );
 		$this->go_to( $domain );
 
-		$this->assertTrue( bp_is_user() );
-		$this->assertTrue( bp_is_my_profile() );
-		$this->assertEquals( $this->u->ID, bp_displayed_user_id() );
+		$this->assertTrue( bboss_is_user() );
+		$this->assertTrue( bboss_is_my_profile() );
+		$this->assertEquals( $this->u->ID, bboss_displayed_user_id() );
 	}
 
 	/**
@@ -60,19 +60,19 @@ class BP_Tests_Routing_Members_Root_Profiles extends BP_UnitTestCase {
 		$domain = home_url( $this->u->user_nicename );
 		$this->go_to( $domain );
 
-		$this->assertTrue( bp_is_user() );
-		$this->assertTrue( bp_is_my_profile() );
-		$this->assertEquals( $this->u->ID, bp_displayed_user_id() );
+		$this->assertTrue( bboss_is_user() );
+		$this->assertTrue( bboss_is_my_profile() );
+		$this->assertEquals( $this->u->ID, bboss_displayed_user_id() );
 	}
 
 	public function test_member_activity_page() {
-		$url = home_url( $this->u->user_nicename ) . '/' . bp_get_activity_slug();
+		$url = home_url( $this->u->user_nicename ) . '/' . bboss_get_activity_slug();
 		$this->go_to( $url );
 
-		$this->assertTrue( bp_is_user() );
-		$this->assertTrue( bp_is_my_profile() );
-		$this->assertEquals( $this->u->ID, bp_displayed_user_id() );
+		$this->assertTrue( bboss_is_user() );
+		$this->assertTrue( bboss_is_my_profile() );
+		$this->assertEquals( $this->u->ID, bboss_displayed_user_id() );
 
-		$this->assertTrue( bp_is_activity_component() );
+		$this->assertTrue( bboss_is_activity_component() );
 	}
 }

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.7.0
  */
-class BP_Core_Cron {
+class BBoss_Core_Cron {
 
 	/**
 	 * Crons.
@@ -29,9 +29,9 @@ class BP_Core_Cron {
 	 * @since BuddyBoss 1.7.0
 	 *
 	 * @static object $instance
-	 * @see bp_core_cron()
+	 * @see bboss_core_cron()
 	 *
-	 * @return BP_Core_Cron|null The one true BP_Core_Cron.
+	 * @return BBoss_Core_Cron|null The one true BBoss_Core_Cron.
 	 */
 	public static function instance() {
 
@@ -40,7 +40,7 @@ class BP_Core_Cron {
 
 		// Only run these methods if they haven't been run previously.
 		if ( null === $instance ) {
-			$instance = new BP_Core_Cron();
+			$instance = new BBoss_Core_Cron();
 			$instance->setup_actions();
 		}
 
@@ -65,23 +65,36 @@ class BP_Core_Cron {
 	 *
 	 * @param string $hook       Action hook to execute when the event is run.
 	 * @param string $callback   Function to execute when the hook is run.
-	 * @param string $recurrence How often the event should subsequently recur. See bp_core_cron_schedules() for accepted values.
+	 * @param string $recurrence How often the event should subsequently recur. See bboss_core_cron_schedules() for accepted values.
 	 *
 	 * @return bool True if cron is scheduled, otherwise false.
 	 * @since BuddyBoss 1.7.0
 	 */
 	public function add( $hook, $callback, $recurrence ) {
 		// Check if recurrence is good to go for bb or not.
-		if ( ! in_array( $recurrence, array_keys( bp_core_cron_schedules() ), true ) ) {
+		if ( ! in_array( $recurrence, array_keys( bboss_core_cron_schedules() ), true ) ) {
 			return false;
 		}
 
-		$this->crons[] = array(
+		$cron = array(
 			'hook'       => 'bb_' . $hook . '_hook',
 			'recurrence' => $recurrence,
 		);
 
+		$this->crons[] = $cron;
+
 		add_action( 'bb_' . $hook . '_hook', $callback );
+
+		/*
+		 * schedule() runs once per request, on bp_init. A cron added once bp_init
+		 * has started would otherwise never be scheduled: one added after boot
+		 * (e.g. from an AJAX/REST save handler), and one added by a bp_init
+		 * callback at priority 10, which runs before schedule() is attached when
+		 * that callback is what creates this class. So schedule it now.
+		 */
+		if ( did_action( 'bp_init' ) ) {
+			$this->schedule_single( $cron );
+		}
 
 		return true;
 	}
@@ -93,10 +106,24 @@ class BP_Core_Cron {
 	 */
 	public function schedule() {
 		foreach ( $this->crons as $cron ) {
-			// Schedule if not scheduled already.
-			if ( ! wp_next_scheduled( $cron['hook'] ) && apply_filters( 'bp_core_cron_schedule_' . $cron['hook'], true ) ) {
-				wp_schedule_event( time(), $cron['recurrence'], $cron['hook'] );
-			}
+			$this->schedule_single( $cron );
+		}
+	}
+
+	/**
+	 * Schedule a single cron event if it isn't already scheduled.
+	 *
+	 * @since BuddyBoss 3.7.1
+	 *
+	 * @param array $cron Cron array with 'hook' and 'recurrence' keys.
+	 */
+	protected function schedule_single( $cron ) {
+		// Schedule if not scheduled already.
+		if (
+			! wp_next_scheduled( $cron['hook'] )
+			&& apply_filters( 'bp_core_cron_schedule_' . $cron['hook'], true )
+		) {
+			wp_schedule_event( time(), $cron['recurrence'], $cron['hook'] );
 		}
 	}
 }

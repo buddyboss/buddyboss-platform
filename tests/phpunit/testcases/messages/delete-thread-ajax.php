@@ -21,11 +21,11 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! function_exists( 'bp_nouveau_ajax_delete_thread' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-templates/bp-nouveau/includes/messages/ajax.php';
+		if ( ! function_exists( 'bboss_nouveau_ajax_delete_thread' ) ) {
+			require_once bboss()->plugin_dir . 'bp-templates/bp-nouveau/includes/messages/ajax.php';
 		}
 
-		if ( ! class_exists( 'BP_Core_Members_Switching' ) || ! defined( 'BP_MEMBER_SWITCHING_OLDUSER_COOKIE' ) ) {
+		if ( ! class_exists( 'BBoss_Core_Members_Switching' ) || ! defined( 'BBOSS_MEMBER_SWITCHING_OLDUSER_COOKIE' ) ) {
 			$this->markTestSkipped( 'Members switching is not loaded.' );
 		}
 
@@ -80,7 +80,7 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 
 		ob_start();
 		try {
-			bp_nouveau_ajax_delete_thread();
+			bboss_nouveau_ajax_delete_thread();
 		} catch ( WPAjaxDieContinueException $e ) {
 			unset( $e );
 		}
@@ -109,11 +109,11 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 	protected function set_switching_cookies( $old_user_id, $with_auth = true ) {
 		$expiration = time() + HOUR_IN_SECONDS;
 
-		$this->set_cookie( BP_MEMBER_SWITCHING_OLDUSER_COOKIE, wp_generate_auth_cookie( $old_user_id, $expiration, 'logged_in' ) );
+		$this->set_cookie( BBOSS_MEMBER_SWITCHING_OLDUSER_COOKIE, wp_generate_auth_cookie( $old_user_id, $expiration, 'logged_in' ) );
 
 		if ( $with_auth ) {
-			$secure = BP_Core_Members_Switching::secure_auth_cookie();
-			$name   = $secure ? BP_MEMBER_SWITCHING_SECURE_COOKIE : BP_MEMBER_SWITCHING_COOKIE;
+			$secure = BBoss_Core_Members_Switching::secure_auth_cookie();
+			$name   = $secure ? BBOSS_MEMBER_SWITCHING_SECURE_COOKIE : BBOSS_MEMBER_SWITCHING_COOKIE;
 			$scheme = $secure ? 'secure_auth' : 'auth';
 
 			$this->set_cookie( $name, wp_json_encode( array( wp_generate_auth_cookie( $old_user_id, $expiration, $scheme ) ) ) );
@@ -150,7 +150,7 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 	protected function thread_exists( $thread_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return (bool) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ) );
@@ -181,7 +181,7 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 		$this->set_switching_cookies( $u1 );
 
 		// The forged cookie is a valid logged_in cookie, which the old gate accepted.
-		$this->assertInstanceOf( 'WP_User', BP_Core_Members_Switching::get_old_user() );
+		$this->assertInstanceOf( 'WP_User', BBoss_Core_Members_Switching::get_old_user() );
 
 		$response = $this->call_delete_thread( $thread_id );
 
@@ -300,7 +300,7 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 		}
 
 		$oldest_id = $message_ids[0];
-		bp_messages_update_meta( $oldest_id, 'bb_test_attachment_ids', '123' );
+		bboss_messages_update_meta( $oldest_id, 'bb_test_attachment_ids', '123' );
 
 		// Start from a cold meta cache, as on a site without a persistent object cache.
 		foreach ( $message_ids as $message_id ) {
@@ -310,7 +310,7 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 		$seen     = array();
 		$listener = function ( $deleted_thread_id, $deleted_message_ids ) use ( &$seen, $oldest_id ) {
 			$seen['ids']  = array_map( 'intval', (array) $deleted_message_ids );
-			$seen['meta'] = bp_messages_get_meta( $oldest_id, 'bb_test_attachment_ids', true );
+			$seen['meta'] = bboss_messages_get_meta( $oldest_id, 'bb_test_attachment_ids', true );
 		};
 		add_action( 'bp_messages_thread_after_delete', $listener, 1, 2 );
 
@@ -326,7 +326,7 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 
 		// The meta rows themselves are gone.
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$this->assertSame( 0, (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->messages->table_name_meta} WHERE message_id = %d", $oldest_id ) ) );
 	}
@@ -399,8 +399,8 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 
 		$meta_keys = wp_list_pluck( $types, 2 );
 		foreach ( $meta_keys as $type => $meta_key ) {
-			bp_messages_update_meta( $message_one->id, $meta_key, $items[ $type ]['shared'] . ',' . $items[ $type ]['own'] );
-			bp_messages_update_meta( $message_two->id, $meta_key, (string) $items[ $type ]['shared'] );
+			bboss_messages_update_meta( $message_one->id, $meta_key, $items[ $type ]['shared'] . ',' . $items[ $type ]['own'] );
+			bboss_messages_update_meta( $message_two->id, $meta_key, (string) $items[ $type ]['shared'] );
 		}
 
 		$exists = function ( $type, $id ) use ( $types ) {
@@ -442,17 +442,17 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 		}
 
 		self::set_current_user( $u1 );
-		$this->assertFalse( bb_messages_user_can_delete_conversation() );
+		$this->assertFalse( bboss_messages_user_can_delete_conversation() );
 
 		// Switched in by a user who cannot moderate (e.g. a role with edit_users only).
 		$this->set_switching_cookies( $u2 );
-		$this->assertFalse( bb_messages_user_can_delete_conversation() );
+		$this->assertFalse( bboss_messages_user_can_delete_conversation() );
 
 		// Switched in by an admin.
 		$this->set_switching_cookies( $admin );
-		$this->assertTrue( bb_messages_user_can_delete_conversation() );
+		$this->assertTrue( bboss_messages_user_can_delete_conversation() );
 
 		self::set_current_user( $admin );
-		$this->assertTrue( bb_messages_user_can_delete_conversation() );
+		$this->assertTrue( bboss_messages_user_can_delete_conversation() );
 	}
 }

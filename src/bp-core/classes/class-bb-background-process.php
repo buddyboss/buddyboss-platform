@@ -9,21 +9,21 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Background_Process' ) ) {
+if ( ! class_exists( 'BBoss_BB_Background_Process' ) ) {
 
 	if ( ! class_exists( 'WP_Async_Request' ) ) {
-		include_once buddypress()->plugin_dir . 'bp-core/libraries/wp-async-request.php';
+		include_once bboss()->plugin_dir . 'bp-core/libraries/wp-async-request.php';
 	}
 
 	/**
-	 * BB_Background_Process class.
+	 * BBoss_BB_Background_Process class.
 	 *
 	 * @since BuddyBoss 2.5.20
 	 *
 	 * @abstract
 	 * @extends WP_Async_Request
 	 */
-	abstract class BB_Background_Process extends WP_Async_Request {
+	abstract class BBoss_BB_Background_Process extends WP_Async_Request {
 
 		/**
 		 * Prefix.
@@ -157,7 +157,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			$sql             = array();
 			$wpdb            = $GLOBALS['wpdb'];
 			$charset_collate = $wpdb->get_charset_collate();
-			$bp_prefix       = bp_core_get_table_prefix();
+			$bp_prefix       = bboss_core_get_table_prefix();
 
 			$table_name = $bp_prefix . 'bb_background_job_queue';
 
@@ -242,10 +242,10 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			}
 
 			if ( 1 === $interval ) {
-				$display = __( 'Every Minute', 'buddyboss' );
+				$display = __( 'Every Minute', 'buddyboss-platform' );
 			} else {
 				/* translators: %d: Number of minutes */
-				$display = sprintf( __( 'Every %d Minutes', 'buddyboss' ), $interval );
+				$display = sprintf( __( 'Every %d Minutes', 'buddyboss-platform' ), $interval );
 			}
 
 			// Adds an "Every NNN Minute(s)" schedule to the existing cron schedules.
@@ -577,7 +577,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 					'args'              => array(),
 					'priority'          => 10,
 					'blog_id'           => get_current_blog_id(),
-					'date_created'      => bp_core_current_time(),
+					'date_created'      => bboss_core_current_time(),
 				)
 			);
 
@@ -607,7 +607,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 					'args'              => array(),
 					'priority'          => 10,
 					'blog_id'           => get_current_blog_id(),
-					'date_created'      => bp_core_current_time(),
+					'date_created'      => bboss_core_current_time(),
 				)
 			);
 
@@ -932,7 +932,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 */
 		protected function completed() {
 			// phpcs:ignore
-			bb_error_log( 'Data update completed' );
+			bboss_error_log( 'Data update completed' );
 			do_action( $this->identifier . '_completed' );
 		}
 
@@ -1138,7 +1138,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 *
 		 * @since BuddyBoss 2.5.20
 		 *
-		 * @return BB_Background_Process
+		 * @return BBoss_BB_Background_Process
 		 */
 		public function delete_all_batches() {
 			global $wpdb;
@@ -1199,7 +1199,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		public function fetch_job_records( $args = array() ) {
 			global $wpdb;
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'blog_id'               => get_current_blog_id(),

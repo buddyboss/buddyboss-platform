@@ -13,13 +13,13 @@ defined( 'ABSPATH' ) || exit;
  * Get the default site options and their values.
  *
  * Default values should not be set by calls to `get_option()` or `get_site_option()` due to
- * these causing load order problems with `bp_core_clear_root_options_cache()`; see #BP7227.
+ * these causing load order problems with `bboss_core_clear_root_options_cache()`; see #BP7227.
  *
  * @since BuddyPress 1.6.0
  *
  * @return array Filtered option names and values.
  */
-function bp_get_default_options() {
+function bboss_get_default_options() {
 
 	// Default options.
 	$options = array(
@@ -209,14 +209,14 @@ function bp_get_default_options() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_add_options() {
+function bboss_add_options() {
 
 	// Get the default options and values.
-	$options = bp_get_default_options();
+	$options = bboss_get_default_options();
 
 	// Add default options.
 	foreach ( $options as $key => $value ) {
-		bp_add_option( $key, $value );
+		bboss_add_option( $key, $value );
 	}
 
 	/**
@@ -239,10 +239,10 @@ function bp_add_options() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_delete_options() {
+function bboss_delete_options() {
 
 	// Get the default options and values.
-	$options = bp_get_default_options();
+	$options = bboss_get_default_options();
 
 	// Add default options.
 	foreach ( array_keys( $options ) as $key ) {
@@ -264,14 +264,14 @@ function bp_delete_options() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_setup_option_filters() {
+function bboss_setup_option_filters() {
 
 	// Get the default options and values.
-	$options = bp_get_default_options();
+	$options = bboss_get_default_options();
 
 	// Add filters to each BuddyPress option.
 	foreach ( array_keys( $options ) as $key ) {
-		add_filter( 'pre_option_' . $key, 'bp_pre_get_option' );
+		add_filter( 'pre_option_' . $key, 'bboss_pre_get_option' );
 	}
 
 	/**
@@ -292,8 +292,8 @@ function bp_setup_option_filters() {
  * @param bool $value Optional. Default value false.
  * @return mixed False if not overloaded, mixed if set.
  */
-function bp_pre_get_option( $value = false ) {
-	$bp = buddypress();
+function bboss_pre_get_option( $value = false ) {
+	$bp = bboss();
 
 	// Remove the filter prefix.
 	$option = str_replace( 'pre_option_', '', current_filter() );
@@ -322,8 +322,8 @@ function bp_pre_get_option( $value = false ) {
  *                            isn't set. See {@link get_blog_option()}.
  * @return mixed The value for the option.
  */
-function bp_get_option( $option_name, $default = '' ) {
-	$value = get_blog_option( bp_get_root_blog_id(), $option_name, $default );
+function bboss_get_option( $option_name, $default = '' ) {
+	$value = get_blog_option( bboss_get_root_blog_id(), $option_name, $default );
 
 	/**
 	 * Filters the option value for the requested option.
@@ -347,8 +347,8 @@ function bp_get_option( $option_name, $default = '' ) {
  * @param mixed  $value       The value to be set.
  * @return bool True on success, false on failure.
  */
-function bp_add_option( $option_name, $value ) {
-	return add_blog_option( bp_get_root_blog_id(), $option_name, $value );
+function bboss_add_option( $option_name, $value ) {
+	return add_blog_option( bboss_get_root_blog_id(), $option_name, $value );
 }
 
 /**
@@ -364,8 +364,8 @@ function bp_add_option( $option_name, $value ) {
  * @param mixed  $value       The value to be set.
  * @return bool True on success, false on failure.
  */
-function bp_update_option( $option_name, $value ) {
-	return update_blog_option( bp_get_root_blog_id(), $option_name, $value );
+function bboss_update_option( $option_name, $value ) {
+	return update_blog_option( bboss_get_root_blog_id(), $option_name, $value );
 }
 
 /**
@@ -380,8 +380,8 @@ function bp_update_option( $option_name, $value ) {
  * @param string $option_name The option key to be deleted.
  * @return bool True on success, false on failure.
  */
-function bp_delete_option( $option_name ) {
-	return delete_blog_option( bp_get_root_blog_id(), $option_name );
+function bboss_delete_option( $option_name ) {
+	return delete_blog_option( bboss_get_root_blog_id(), $option_name );
 }
 
 /**
@@ -398,18 +398,18 @@ function bp_delete_option( $option_name ) {
  * @param array $keys Array of site options.
  * @return bool
  */
-function bp_core_activate_site_options( $keys = array() ) {
+function bboss_core_activate_site_options( $keys = array() ) {
 
 	if ( ! empty( $keys ) && is_array( $keys ) ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$errors = false;
 
 		foreach ( $keys as $key => $default ) {
 			if ( empty( $bp->site_options[ $key ] ) ) {
-				$bp->site_options[ $key ] = bp_get_option( $key, $default );
+				$bp->site_options[ $key ] = bboss_get_option( $key, $default );
 
-				if ( ! bp_update_option( $key, $bp->site_options[ $key ] ) ) {
+				if ( ! bboss_update_option( $key, $bp->site_options[ $key ] ) ) {
 					$errors = true;
 				}
 			}
@@ -436,11 +436,11 @@ function bp_core_activate_site_options( $keys = array() ) {
  *
  * @return array $root_blog_options_meta List of options.
  */
-function bp_core_get_root_options() {
+function bboss_core_get_root_options() {
 	global $wpdb;
 
 	// Get all the BuddyPress settings, and a few useful WP ones too.
-	$root_blog_options                   = bp_get_default_options();
+	$root_blog_options                   = bboss_get_default_options();
 	$root_blog_options['registration']   = '0';
 	$root_blog_options['avatar_default'] = 'mysteryman';
 	$root_blog_option_keys               = array_keys( $root_blog_options );
@@ -452,10 +452,9 @@ function bp_core_get_root_options() {
 	$root_blog_options_meta = wp_cache_get( 'root_blog_options', 'bp' );
 
 	if ( false === $root_blog_options_meta ) {
-		$blog_options_keys      = "'" . join( "', '", (array) $root_blog_option_keys ) . "'";
-		$blog_options_table     = bp_is_multiblog_mode() ? $wpdb->options : $wpdb->get_blog_prefix( bp_get_root_blog_id() ) . 'options';
-		$blog_options_query     = "SELECT option_name AS name, option_value AS value FROM {$blog_options_table} WHERE option_name IN ( {$blog_options_keys} )";
-		$root_blog_options_meta = $wpdb->get_results( $blog_options_query );
+		$blog_options_table     = bboss_is_multiblog_mode() ? $wpdb->options : $wpdb->get_blog_prefix( bboss_get_root_blog_id() ) . 'options';
+		$blog_options_query     = $wpdb->prepare( "SELECT option_name AS name, option_value AS value FROM {$blog_options_table} WHERE option_name IN ( " . implode( ', ', array_fill( 0, count( $root_blog_option_keys ), '%s' ) ) . ' )', $root_blog_option_keys ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- options table from $wpdb; one %s per option name.
+		$root_blog_options_meta = $wpdb->get_results( $blog_options_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $blog_options_query is $wpdb->prepare()'d above.
 
 		// On Multisite installations, some options must always be fetched from sitemeta.
 		if ( is_multisite() ) {
@@ -479,9 +478,8 @@ function bp_core_get_root_options() {
 
 			$current_site           = get_current_site();
 			$network_option_keys    = array_keys( $network_options );
-			$sitemeta_options_keys  = "'" . join( "', '", (array) $network_option_keys ) . "'";
-			$sitemeta_options_query = $wpdb->prepare( "SELECT meta_key AS name, meta_value AS value FROM {$wpdb->sitemeta} WHERE meta_key IN ( {$sitemeta_options_keys} ) AND site_id = %d", $current_site->id );
-			$network_options_meta   = $wpdb->get_results( $sitemeta_options_query );
+			$sitemeta_options_query = $wpdb->prepare( "SELECT meta_key AS name, meta_value AS value FROM {$wpdb->sitemeta} WHERE meta_key IN ( " . implode( ', ', array_fill( 0, count( $network_option_keys ), '%s' ) ) . ' ) AND site_id = %d', array_merge( $network_option_keys, array( $current_site->id ) ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- one %s per meta key, then the site id.
+			$network_options_meta   = $wpdb->get_results( $sitemeta_options_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sitemeta_options_query is $wpdb->prepare()'d above.
 
 			// Sitemeta comes second in the merge, so that network 'registration' value wins.
 			$root_blog_options_meta = array_merge( $root_blog_options_meta, $network_options_meta );
@@ -515,19 +513,19 @@ function bp_core_get_root_options() {
  * Get a root option.
  *
  * "Root options" are those that apply across an entire installation, and are fetched only a single
- * time during a pageload and stored in `buddypress()->site_options` to prevent future lookups.
- * See {@see bp_core_get_root_options()}.
+ * time during a pageload and stored in `bboss()->site_options` to prevent future lookups.
+ * See {@see bboss_core_get_root_options()}.
  *
  * @since BuddyPress 2.3.0
  *
  * @param string $option Name of the option key.
  * @return mixed Value, if found.
  */
-function bp_core_get_root_option( $option ) {
-	$bp = buddypress();
+function bboss_core_get_root_option( $option ) {
+	$bp = bboss();
 
 	if ( ! isset( $bp->site_options ) ) {
-		$bp->site_options = bp_core_get_root_options();
+		$bp->site_options = bboss_core_get_root_options();
 	}
 
 	$value = '';
@@ -549,7 +547,7 @@ function bp_core_get_root_option( $option ) {
  *                      Default: true.
  * @return bool True if profile sync is enabled, otherwise false.
  */
-function bp_disable_profile_sync( $default = false ) {
+function bboss_disable_profile_sync( $default = false ) {
 
 	/**
 	 * Filters whether or not profile syncing is disabled.
@@ -570,7 +568,7 @@ function bp_disable_profile_sync( $default = false ) {
  *                      Default: true.
  * @return bool True if profile search is enabled, otherwise false.
  */
-function bp_disable_advanced_profile_search( $default = false ) {
+function bboss_disable_advanced_profile_search( $default = false ) {
 
 	/**
 	 * Filters whether or not profile search is disabled.
@@ -579,7 +577,7 @@ function bp_disable_advanced_profile_search( $default = false ) {
 	 *
 	 * @param bool $value Whether or not profile search is disabled.
 	 */
-	return (bool) apply_filters( 'bp_disable_advanced_profile_search', ! (bool) bp_get_option( 'bp-enable-profile-search', $default ) );
+	return (bool) apply_filters( 'bp_disable_advanced_profile_search', ! (bool) bboss_get_option( 'bp-enable-profile-search', $default ) );
 }
 
 /**
@@ -592,7 +590,7 @@ function bp_disable_advanced_profile_search( $default = false ) {
  * @return bool True if the admin bar should be hidden for logged-out users,
  *              otherwise false.
  */
-function bp_hide_loggedout_adminbar( $default = true ) {
+function bboss_hide_loggedout_adminbar( $default = true ) {
 
 	/**
 	 * Filters whether or not the toolbar is hidden for logged out users.
@@ -601,7 +599,7 @@ function bp_hide_loggedout_adminbar( $default = true ) {
 	 *
 	 * @param bool $value Whether or not the toolbar is hidden.
 	 */
-	return (bool) apply_filters( 'bp_hide_loggedout_adminbar', (bool) bp_get_option( 'hide-loggedout-adminbar', $default ) );
+	return (bool) apply_filters( 'bp_hide_loggedout_adminbar', (bool) bboss_get_option( 'hide-loggedout-adminbar', $default ) );
 }
 
 /**
@@ -613,7 +611,7 @@ function bp_hide_loggedout_adminbar( $default = true ) {
  *                      Default: true.
  * @return bool True if avatar uploads are disabled, otherwise false.
  */
-function bp_disable_avatar_uploads( $default = true ) {
+function bboss_disable_avatar_uploads( $default = true ) {
 
 	/**
 	 * Filters whether or not members are able to upload their own avatars.
@@ -622,7 +620,7 @@ function bp_disable_avatar_uploads( $default = true ) {
 	 *
 	 * @param bool $value Whether or not members are able to upload their own avatars.
 	 */
-	return (bool) apply_filters( 'bp_disable_avatar_uploads', (bool) bp_get_option( 'bp-disable-avatar-uploads', $default ) );
+	return (bool) apply_filters( 'bp_disable_avatar_uploads', (bool) bboss_get_option( 'bp-disable-avatar-uploads', $default ) );
 }
 
 /**
@@ -634,7 +632,7 @@ function bp_disable_avatar_uploads( $default = true ) {
  *                      Default: false.
  * @return bool True if cover photo uploads are disabled, otherwise false.
  */
-function bp_disable_cover_image_uploads( $default = false ) {
+function bboss_disable_cover_image_uploads( $default = false ) {
 
 	/**
 	 * Filters whether or not members are able to upload their own cover photos.
@@ -643,7 +641,7 @@ function bp_disable_cover_image_uploads( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to upload their own cover photos.
 	 */
-	return (bool) apply_filters( 'bp_disable_cover_image_uploads', (bool) bp_get_option( 'bp-disable-cover-image-uploads', $default ) );
+	return (bool) apply_filters( 'bp_disable_cover_image_uploads', (bool) bboss_get_option( 'bp-disable-cover-image-uploads', $default ) );
 }
 
 /**
@@ -655,15 +653,15 @@ function bp_disable_cover_image_uploads( $default = false ) {
  * @since BuddyPress 2.3.0
  *
  * @param bool|null $default Optional. Fallback value if not found in the database.
- *                           Defaults to the value of `bp_disable_avatar_uploads()`.
+ *                           Defaults to the value of `bboss_disable_avatar_uploads()`.
  * @return bool True if group avatar uploads are disabled, otherwise false.
  */
-function bp_disable_group_avatar_uploads( $default = null ) {
-	$disabled = bp_get_option( 'bp-disable-group-avatar-uploads', '' );
+function bboss_disable_group_avatar_uploads( $default = null ) {
+	$disabled = bboss_get_option( 'bp-disable-group-avatar-uploads', '' );
 
 	if ( '' === $disabled ) {
 		if ( is_null( $default ) ) {
-			$disabled = bp_disable_avatar_uploads();
+			$disabled = bboss_disable_avatar_uploads();
 		} else {
 			$disabled = $default;
 		}
@@ -689,7 +687,7 @@ function bp_disable_group_avatar_uploads( $default = null ) {
  *                      Default: false.
  * @return bool True if group cover photo uploads are disabled, otherwise false.
  */
-function bp_disable_group_cover_image_uploads( $default = false ) {
+function bboss_disable_group_cover_image_uploads( $default = false ) {
 
 	/**
 	 * Filters whether or not members are able to upload group cover photos.
@@ -698,7 +696,7 @@ function bp_disable_group_cover_image_uploads( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to upload thier groups cover photos.
 	 */
-	return (bool) apply_filters( 'bp_disable_group_cover_image_uploads', (bool) bp_get_option( 'bp-disable-group-cover-image-uploads', $default ) );
+	return (bool) apply_filters( 'bp_disable_group_cover_image_uploads', (bool) bboss_get_option( 'bp-disable-group-cover-image-uploads', $default ) );
 }
 
 /**
@@ -710,7 +708,7 @@ function bp_disable_group_cover_image_uploads( $default = false ) {
  *                      Default: false.
  * @return bool True if group types are disabled, otherwise false.
  */
-function bp_disable_group_type_creation( $default = false ) {
+function bboss_disable_group_type_creation( $default = false ) {
 
 	/**
 	 * Filters whether or not members are able to create group types.
@@ -719,7 +717,7 @@ function bp_disable_group_type_creation( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to create groups types.
 	 */
-	return (bool) apply_filters( 'bp_disable_group_type_creation', (bool) bp_get_option( 'bp-disable-group-type-creation', $default ) );
+	return (bool) apply_filters( 'bp_disable_group_type_creation', (bool) bboss_get_option( 'bp-disable-group-type-creation', $default ) );
 }
 
 /**
@@ -731,7 +729,7 @@ function bp_disable_group_type_creation( $default = false ) {
  *                      Default: false.
  * @return bool True if group hierarchies are enabled, otherwise false.
  */
-function bp_enable_group_hierarchies( $default = false ) {
+function bboss_enable_group_hierarchies( $default = false ) {
 
 	/**
 	 * Filters whether or not groups are able to have a parent and sub groups.
@@ -740,7 +738,7 @@ function bp_enable_group_hierarchies( $default = false ) {
 	 *
 	 * @param bool $value whether or not groups are able to have a parent and sub groups.
 	 */
-	return (bool) apply_filters( 'bp_enable_group_hierarchies', (bool) bp_get_option( 'bp-enable-group-hierarchies', $default ) );
+	return (bool) apply_filters( 'bp_enable_group_hierarchies', (bool) bboss_get_option( 'bp-enable-group-hierarchies', $default ) );
 }
 
 /**
@@ -752,7 +750,7 @@ function bp_enable_group_hierarchies( $default = false ) {
  *                      Default: false.
  * @return bool True if group hide subgroups from the main Groups Directory, otherwise false.
  */
-function bp_enable_group_hide_subgroups( $default = false ) {
+function bboss_enable_group_hide_subgroups( $default = false ) {
 
 	/**
 	 * Filters whether or not group hide subgroups from the main Groups Directory
@@ -761,7 +759,7 @@ function bp_enable_group_hide_subgroups( $default = false ) {
 	 *
 	 * @param bool $value whether or not group hide subgroups from the main Groups Directory.
 	 */
-	return (bool) apply_filters( 'bp_enable_group_hide_subgroups', (bool) bp_get_option( 'bp-enable-group-hide-subgroups', $default ) );
+	return (bool) apply_filters( 'bp_enable_group_hide_subgroups', (bool) bboss_get_option( 'bp-enable-group-hide-subgroups', $default ) );
 }
 
 /**
@@ -773,7 +771,7 @@ function bp_enable_group_hide_subgroups( $default = false ) {
  *                      Default: false.
  * @return bool True if group restrict invites to members who already in specific parent group are enabled, otherwise false.
  */
-function bp_enable_group_restrict_invites( $default = false ) {
+function bboss_enable_group_restrict_invites( $default = false ) {
 
 	/**
 	 * Filters whether group restrict invites to members who already in specific parent group?
@@ -782,7 +780,7 @@ function bp_enable_group_restrict_invites( $default = false ) {
 	 *
 	 * @param bool $value whether or not group restrict invites to members who already in specific parent group?
 	 */
-	return (bool) apply_filters( 'bp_enable_group_restrict_invites', (bool) bp_get_option( 'bp-enable-group-restrict-invites', $default ) );
+	return (bool) apply_filters( 'bp_enable_group_restrict_invites', (bool) bboss_get_option( 'bp-enable-group-restrict-invites', $default ) );
 }
 
 /**
@@ -794,7 +792,7 @@ function bp_enable_group_restrict_invites( $default = false ) {
  *                      Default: false.
  * @return bool True if Auto Group Membership Approval is enabled, otherwise false.
  */
-function bp_enable_group_auto_join( $default = false ) {
+function bboss_enable_group_auto_join( $default = false ) {
 
 	/**
 	 * Filters whether or not groups auto approve membership.
@@ -803,7 +801,7 @@ function bp_enable_group_auto_join( $default = false ) {
 	 *
 	 * @param bool $value whether or not groups auto approve membership.
 	 */
-	return (bool) apply_filters( 'bp_enable_group_auto_join', (bool) bp_get_option( 'bp-enable-group-auto-join', $default ) );
+	return (bool) apply_filters( 'bp_enable_group_auto_join', (bool) bboss_get_option( 'bp-enable-group-auto-join', $default ) );
 }
 
 /**
@@ -816,7 +814,7 @@ function bp_enable_group_auto_join( $default = false ) {
  * @return bool True if users are able to delete their own accounts, otherwise
  *              false.
  */
-function bp_disable_account_deletion( $default = false ) {
+function bboss_disable_account_deletion( $default = false ) {
 
 	/**
 	 * Filters whether or not members are able to delete their own accounts.
@@ -825,7 +823,7 @@ function bp_disable_account_deletion( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to delete their own accounts.
 	 */
-	return apply_filters( 'bp_disable_account_deletion', (bool) bp_get_option( 'bp-disable-account-deletion', $default ) );
+	return apply_filters( 'bp_disable_account_deletion', (bool) bboss_get_option( 'bp-disable-account-deletion', $default ) );
 }
 
 /**
@@ -838,13 +836,13 @@ function bp_disable_account_deletion( $default = false ) {
  * @return bool True if private network for site is enabled, otherwise
  *              false.
  */
-function bp_enable_private_network( $default = false ) {
+function bboss_enable_private_network( $default = false ) {
 	global $bp;
 
 	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bp-enable-private-network'] ) ) {
 		$val = (bool) $bp->site_options['bp-enable-private-network'];
 	} else {
-		$val = (bool) bp_get_option( 'bp-enable-private-network', $default );
+		$val = (bool) bboss_get_option( 'bp-enable-private-network', $default );
 	}
 
 	/**
@@ -869,7 +867,7 @@ function bp_enable_private_network( $default = false ) {
  * @return bool True if activity comments are disabled for blog and forum
  *              items, otherwise false.
  */
-function bp_disable_blogforum_comments( $default = false ) {
+function bboss_disable_blogforum_comments( $default = false ) {
 	global $activities_template;
 
 	// When here is not activity.
@@ -897,7 +895,7 @@ function bp_disable_blogforum_comments( $default = false ) {
 	}
 
 	// Filters whether or not blog and forum and custom post type activity feed comments are enable.
-	$disable = (bool) bb_is_post_type_feed_comment_enable( $post->post_type, $default ) ? false : true;
+	$disable = (bool) bboss_is_post_type_feed_comment_enable( $post->post_type, $default ) ? false : true;
 
 	/**
 	 * Filters whether or not blog and forum activity feed comments are disabled.
@@ -920,10 +918,10 @@ function bp_disable_blogforum_comments( $default = false ) {
  * @return bool True if activity comments are enable for blog and forum
  *              items, otherwise false.
  */
-function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
-	$option_name  = bb_post_type_feed_comment_option_name( $post_type );
-	$option_value = (bool) bp_get_option( $option_name, $default );
-	$is_enabled   = bb_activity_is_enabled_cpt_global_comment( $post_type );
+function bboss_is_post_type_feed_comment_enable( $post_type, $default = false ) {
+	$option_name  = bboss_post_type_feed_comment_option_name( $post_type );
+	$option_value = (bool) bboss_get_option( $option_name, $default );
+	$is_enabled   = bboss_activity_is_enabled_cpt_global_comment( $post_type );
 	/**
 	 * Filters whether or not custom post type feed comments are enable.
 	 *
@@ -945,7 +943,7 @@ function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
  *                      Default: true.
  * @return bool True if group creation is restricted, otherwise false.
  */
-function bp_restrict_group_creation( $default = true ) {
+function bboss_restrict_group_creation( $default = true ) {
 
 	/**
 	 * Filters whether or not group creation is turned off.
@@ -954,7 +952,7 @@ function bp_restrict_group_creation( $default = true ) {
 	 *
 	 * @param bool $value Whether or not group creation is turned off.
 	 */
-	return (bool) apply_filters( 'bp_restrict_group_creation', (bool) bp_get_option( 'bp_restrict_group_creation', $default ) );
+	return (bool) apply_filters( 'bp_restrict_group_creation', (bool) bboss_get_option( 'bp_restrict_group_creation', $default ) );
 }
 
 /**
@@ -966,7 +964,7 @@ function bp_restrict_group_creation( $default = true ) {
  *                      Default: true.
  * @return bool True if the BuddyBar should be forced on, otherwise false.
  */
-function bp_force_buddybar( $default = true ) {
+function bboss_force_buddybar( $default = true ) {
 
 	/**
 	 * Filters whether or not BuddyBar should be forced in place of WP Admin Bar.
@@ -975,7 +973,7 @@ function bp_force_buddybar( $default = true ) {
 	 *
 	 * @param bool $value Whether or not BuddyBar should be forced in place of WP Admin Bar.
 	 */
-	return (bool) apply_filters( 'bp_force_buddybar', (bool) bp_get_option( '_bp_force_buddybar', $default ) );
+	return (bool) apply_filters( 'bp_force_buddybar', (bool) bboss_get_option( '_bp_force_buddybar', $default ) );
 }
 
 /**
@@ -987,7 +985,7 @@ function bp_force_buddybar( $default = true ) {
  *                      Default: true.
  * @return bool True if Akismet is enabled, otherwise false.
  */
-function bp_is_akismet_active( $default = true ) {
+function bboss_is_akismet_active( $default = true ) {
 
 	/**
 	 * Filters whether or not Akismet is enabled.
@@ -996,7 +994,7 @@ function bp_is_akismet_active( $default = true ) {
 	 *
 	 * @param bool $value Whether or not Akismet is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_akismet_active', (bool) bp_get_option( '_bp_enable_akismet', $default ) );
+	return (bool) apply_filters( 'bp_is_akismet_active', (bool) bboss_get_option( '_bp_enable_akismet', $default ) );
 }
 
 /**
@@ -1008,7 +1006,7 @@ function bp_is_akismet_active( $default = true ) {
  *                      Default: true.
  * @return bool True if Autoload is enabled, otherwise false.
  */
-function bp_is_activity_autoload_active( $default = true ) {
+function bboss_is_activity_autoload_active( $default = true ) {
 
 	$default_val = true === $default ? 'infinite' : 'load_more';
 
@@ -1019,7 +1017,7 @@ function bp_is_activity_autoload_active( $default = true ) {
 	 *
 	 * @param bool $value true if Autoload is enabled, otherwise false.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_autoload_active', ( 'infinite' === bp_get_option( 'bb_activity_load_type', $default_val ) ) );
+	return (bool) apply_filters( 'bp_is_activity_autoload_active', ( 'infinite' === bboss_get_option( 'bb_activity_load_type', $default_val ) ) );
 }
 
 /**
@@ -1031,7 +1029,7 @@ function bp_is_activity_autoload_active( $default = true ) {
  *                      Default: false.
  * @return bool True if Edit is enabled, otherwise false.
  */
-function bp_is_activity_edit_enabled( $default = false ) {
+function bboss_is_activity_edit_enabled( $default = false ) {
 
 	/**
 	 * Filters whether or not Activity edit is enabled.
@@ -1040,7 +1038,7 @@ function bp_is_activity_edit_enabled( $default = false ) {
 	 *
 	 * @param bool $value Whether or not Activity edit is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_edit_enabled', (bool) bp_get_option( '_bp_enable_activity_edit', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_edit_enabled', (bool) bboss_get_option( '_bp_enable_activity_edit', $default ) );
 }
 
 /**
@@ -1052,7 +1050,7 @@ function bp_is_activity_edit_enabled( $default = false ) {
  *                      Default: false.
  * @return bool True if Edit is enabled, otherwise false.
  */
-function bp_is_relevant_feed_enabled( $default = false ) {
+function bboss_is_relevant_feed_enabled( $default = false ) {
 
 	/**
 	 * Filters whether or not relevant feed is enabled.
@@ -1062,7 +1060,7 @@ function bp_is_relevant_feed_enabled( $default = false ) {
 	 * @param bool $value Whether or not relevant feed is enabled.
 	 */
 
-	return (bool) apply_filters( 'bp_is_relevant_feed_enabled', (bool) bp_get_option( '_bp_enable_relevant_feed', $default ) );
+	return (bool) apply_filters( 'bp_is_relevant_feed_enabled', (bool) bboss_get_option( '_bp_enable_relevant_feed', $default ) );
 }
 
 /**
@@ -1073,30 +1071,30 @@ function bp_is_relevant_feed_enabled( $default = false ) {
  * @return mixed|void
  * @since BuddyBoss 1.5.0
  */
-function bp_activity_edit_times( $time = null ) {
+function bboss_activity_edit_times( $time = null ) {
 
 	$times = apply_filters(
 		'bp_activity_edit_times',
 		array(
 			'thirty_days' => array(
 				'value' => ( 60 * 60 * 24 * 30 ),
-				'label' => __( '30 Days', 'buddyboss' ),
+				'label' => __( '30 Days', 'buddyboss-platform' ),
 			),
 			'seven_days'  => array(
 				'value' => ( 60 * 60 * 24 * 7 ),
-				'label' => __( '7 Days', 'buddyboss' ),
+				'label' => __( '7 Days', 'buddyboss-platform' ),
 			),
 			'one_day'     => array(
 				'value' => ( 60 * 60 * 24 ),
-				'label' => __( '1 Day', 'buddyboss' ),
+				'label' => __( '1 Day', 'buddyboss-platform' ),
 			),
 			'one_hour'    => array(
 				'value' => ( 60 * 60 ),
-				'label' => __( '1 Hour', 'buddyboss' ),
+				'label' => __( '1 Hour', 'buddyboss-platform' ),
 			),
 			'ten_minutes' => array(
 				'value' => ( 60 * 10 ),
-				'label' => __( '10 Minutes', 'buddyboss' ),
+				'label' => __( '10 Minutes', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -1111,7 +1109,7 @@ function bp_activity_edit_times( $time = null ) {
 /**
  * Durations the activity/comment edit settings accept.
  *
- * `-1` means "forever"; the rest come from bp_activity_edit_times(). This lives here rather
+ * `-1` means "forever"; the rest come from bboss_activity_edit_times(). This lives here rather
  * than in the admin settings callbacks because the edit duration is read on the front end,
  * where the admin files are not loaded.
  *
@@ -1120,11 +1118,11 @@ function bp_activity_edit_times( $time = null ) {
  *
  * @return array Allowed integer values.
  */
-function bb_activity_get_allowed_edit_times() {
+function bboss_activity_get_allowed_edit_times() {
 	// Deliberately not memoised: bp_activity_edit_times() is filterable and the first read can
 	// happen before every filter is registered (field registration runs on bb_register_features).
 	$allowed = array( -1 );
-	foreach ( bp_activity_edit_times() as $time ) {
+	foreach ( bboss_activity_edit_times() as $time ) {
 		$allowed[] = intval( $time['value'] );
 	}
 
@@ -1138,10 +1136,10 @@ function bb_activity_get_allowed_edit_times() {
  * "no match" state: given a value matching no <option>, the browser silently selects the
  * first one. So a stored value outside the allowed set does not read as unset, it reads as
  * whichever option happens to be first — and `(int) ''` is 0, which
- * bp_activity_user_can_edit() treats as a zero-second window, i.e. editing switched off.
+ * bboss_activity_user_can_edit() treats as a zero-second window, i.e. editing switched off.
  *
  * The write path already coerces out-of-range values to the default via
- * bb_activity_sanitize_edit_time(); this applies the same rule on read, so installs whose
+ * bboss_activity_sanitize_edit_time(); this applies the same rule on read, so installs whose
  * stored value is already invalid (migrations, partial saves, direct database edits) behave
  * as documented instead of silently disabling the feature.
  *
@@ -1151,10 +1149,10 @@ function bb_activity_get_allowed_edit_times() {
  * @param mixed $default Value to fall back to. Must itself be an allowed duration, otherwise 600
  *                       (10 minutes) is used. Default 600.
  *
- * @return int A duration from bb_activity_get_allowed_edit_times().
+ * @return int A duration from bboss_activity_get_allowed_edit_times().
  */
-function bb_activity_normalize_edit_time( $value, $default = 600 ) {
-	$allowed = bb_activity_get_allowed_edit_times();
+function bboss_activity_normalize_edit_time( $value, $default = 600 ) {
+	$allowed = bboss_activity_get_allowed_edit_times();
 
 	if ( is_numeric( $value ) && in_array( intval( $value ), $allowed, true ) ) {
 		return intval( $value );
@@ -1184,7 +1182,7 @@ function bb_activity_normalize_edit_time( $value, $default = 600 ) {
  *
  * @return int A depth between 1 and 4. Anything else resolves to 3.
  */
-function bb_activity_normalize_comment_threading_depth( $value ) {
+function bboss_activity_normalize_comment_threading_depth( $value ) {
 	$value = absint( $value );
 
 	if ( $value < 1 || $value > 4 ) {
@@ -1197,8 +1195,8 @@ function bb_activity_normalize_comment_threading_depth( $value ) {
 /**
  * Get BuddyBoss Activity Time option.
  *
- * The stored value is normalised with bb_activity_normalize_edit_time(): anything outside
- * bb_activity_get_allowed_edit_times(), including an empty row, resolves to 600 (10 minutes).
+ * The stored value is normalised with bboss_activity_normalize_edit_time(): anything outside
+ * bboss_activity_get_allowed_edit_times(), including an empty row, resolves to 600 (10 minutes).
  *
  * @since BuddyBoss 1.5.0
  * @since BuddyBoss 3.5.1 The return value is normalised to an allowed duration.
@@ -1207,8 +1205,8 @@ function bb_activity_normalize_comment_threading_depth( $value ) {
  *
  * @return int Edit duration in seconds, or -1 for no limit.
  */
-function bp_get_activity_edit_time( $default = false ) {
-	$edit_time = bb_activity_normalize_edit_time( bp_get_option( '_bp_activity_edit_time', $default ) );
+function bboss_get_activity_edit_time( $default = false ) {
+	$edit_time = bboss_activity_normalize_edit_time( bboss_get_option( '_bp_activity_edit_time', $default ) );
 
 	return apply_filters( 'bp_get_activity_edit_time', $edit_time );
 }
@@ -1222,14 +1220,14 @@ function bp_get_activity_edit_time( $default = false ) {
  *                      Default: false.
  * @return bool True if Tabs are enabled, otherwise false.
  */
-function bp_is_activity_tabs_active( $default = false ) {
+function bboss_is_activity_tabs_active( $default = false ) {
 
 	/* Update for the backward compatibility since setting is removed. */
 	// Retrieve the saved options.
-	$filters = bb_get_enabled_activity_filter_options();
+	$filters = bboss_get_enabled_activity_filter_options();
 
 	// Common function to get only allowed ones.
-	$filters = bb_filter_activity_filter_scope_keys( $filters );
+	$filters = bboss_filter_activity_filter_scope_keys( $filters );
 
 	// Get only enabled options.
 	$filters = array_filter(
@@ -1264,7 +1262,7 @@ function bp_is_activity_tabs_active( $default = false ) {
  *                      Default: true.
  * @return bool True if Heartbeat refresh is enabled, otherwise false.
  */
-function bp_is_activity_heartbeat_active( $default = true ) {
+function bboss_is_activity_heartbeat_active( $default = true ) {
 
 	/**
 	 * Filters whether or not Activity Heartbeat refresh is enabled.
@@ -1273,7 +1271,7 @@ function bp_is_activity_heartbeat_active( $default = true ) {
 	 *
 	 * @param bool $value Whether or not Activity Heartbeat refresh is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_heartbeat_active', (bool) bp_get_option( '_bp_enable_heartbeat_refresh', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_heartbeat_active', (bool) bboss_get_option( '_bp_enable_heartbeat_refresh', $default ) );
 }
 
 /**
@@ -1285,7 +1283,7 @@ function bp_is_activity_heartbeat_active( $default = true ) {
  *                      Default: true.
  * @return bool True if Follow is enabled, otherwise false.
  */
-function bp_is_activity_follow_active( $default = false ) {
+function bboss_is_activity_follow_active( $default = false ) {
 
 	/**
 	 * Filters whether or not Activity Follow is enabled.
@@ -1294,7 +1292,7 @@ function bp_is_activity_follow_active( $default = false ) {
 	 *
 	 * @param bool $value Whether or not Activity Follow is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_follow_active', (bool) bp_get_option( '_bp_enable_activity_follow', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_follow_active', (bool) bboss_get_option( '_bp_enable_activity_follow', $default ) );
 }
 
 /**
@@ -1306,10 +1304,10 @@ function bp_is_activity_follow_active( $default = false ) {
  *                      Default: true.
  * @return bool True if Like is enabled, otherwise false.
  */
-function bp_is_activity_like_active( $default = true ) {
+function bboss_is_activity_like_active( $default = true ) {
 
 	$is_activity_post_like_active = false;
-	if ( bb_is_reaction_activity_posts_enabled( $default ) ) {
+	if ( bboss_is_reaction_activity_posts_enabled( $default ) ) {
 		$is_activity_post_like_active = true;
 	}
 
@@ -1333,7 +1331,7 @@ function bp_is_activity_like_active( $default = true ) {
  *                      Default: true.
  * @return bool True if Link Preview is enabled, otherwise false.
  */
-function bp_is_activity_link_preview_active( $default = false ) {
+function bboss_is_activity_link_preview_active( $default = false ) {
 
 	/**
 	 * Filters whether or not Activity Link Preview is enabled.
@@ -1342,7 +1340,7 @@ function bp_is_activity_link_preview_active( $default = false ) {
 	 *
 	 * @param bool $value Whether or not Activity Link Preview is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_link_preview_active', (bool) bp_get_option( '_bp_enable_activity_link_preview', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_link_preview_active', (bool) bboss_get_option( '_bp_enable_activity_link_preview', $default ) );
 }
 
 /**
@@ -1354,7 +1352,7 @@ function bp_is_activity_link_preview_active( $default = false ) {
  *                        Default: 'nouveau'.
  * @return string ID of the theme package.
  */
-function bp_get_theme_package_id( $default = 'nouveau' ) {
+function bboss_get_theme_package_id( $default = 'nouveau' ) {
 
 	/**
 	 * Filters the current theme package ID.
@@ -1375,10 +1373,10 @@ function bp_get_theme_package_id( $default = 'nouveau' ) {
  *                      Default: false.
  * @return bool True if friendship is forced to message, otherwise false.
  */
-function bp_force_friendship_to_message( $default = false ) {
+function bboss_force_friendship_to_message( $default = false ) {
 
-	$value = (bool) bp_get_option( 'bp-force-friendship-to-message', $default );
-	if ( ( ! is_admin() && bp_current_user_can( 'bp_moderate' ) ) || ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && bp_current_user_can( 'bp_moderate' ) ) ) {
+	$value = (bool) bboss_get_option( 'bp-force-friendship-to-message', $default );
+	if ( ( ! is_admin() && bboss_current_user_can( 'bp_moderate' ) ) || ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && bboss_current_user_can( 'bp_moderate' ) ) ) {
 		$value = false;
 	}
 
@@ -1402,7 +1400,7 @@ function bp_force_friendship_to_message( $default = false ) {
  *
  * @return bool True if Auto Follow is enabled, otherwise false.
  */
-function bb_is_friends_auto_follow_active( $default = false ) {
+function bboss_is_friends_auto_follow_active( $default = false ) {
 
 	/**
 	 * Filter whether the activity auto follow enabled or not.
@@ -1411,7 +1409,7 @@ function bb_is_friends_auto_follow_active( $default = false ) {
 	 *
 	 * @param bool $value Whether the activity auto follow enabled or not.
 	 */
-	return (bool) apply_filters( 'bb_is_friends_auto_follow_active', bp_is_active( 'activity' ) && bp_get_option( 'bb_enable_friends_auto_follow', $default ) );
+	return (bool) apply_filters( 'bb_is_friends_auto_follow_active', bboss_is_active( 'activity' ) && bboss_get_option( 'bb_enable_friends_auto_follow', $default ) );
 }
 
 /**
@@ -1423,7 +1421,7 @@ function bb_is_friends_auto_follow_active( $default = false ) {
  *                      Default: false.
  * @return bool True if member type enabled, otherwise false.
  */
-function bp_member_type_enable_disable( $default = false ) {
+function bboss_member_type_enable_disable( $default = false ) {
 
 	/**
 	 * Filters whether member type is enabled or not.
@@ -1432,7 +1430,7 @@ function bp_member_type_enable_disable( $default = false ) {
 	 *
 	 * @param bool $value Whether member type is enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_member_type_enable_disable', (bool) bp_get_option( 'bp-member-type-enable-disable', $default ) );
+	return (bool) apply_filters( 'bp_member_type_enable_disable', (bool) bboss_get_option( 'bp-member-type-enable-disable', $default ) );
 }
 
 /**
@@ -1444,7 +1442,7 @@ function bp_member_type_enable_disable( $default = false ) {
  *                      Default: false.
  * @return bool True if display member type on profile is enabled, otherwise false.
  */
-function bp_member_type_display_on_profile( $default = false ) {
+function bboss_member_type_display_on_profile( $default = false ) {
 
 	/**
 	 * Filters whether display member type on profile is enabled or not.
@@ -1453,7 +1451,7 @@ function bp_member_type_display_on_profile( $default = false ) {
 	 *
 	 * @param bool $value Whether display member type on profile is enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_member_type_display_on_profile', (bool) bp_get_option( 'bp-member-type-display-on-profile', $default ) );
+	return (bool) apply_filters( 'bp_member_type_display_on_profile', (bool) bboss_get_option( 'bp-member-type-display-on-profile', $default ) );
 }
 
 /**
@@ -1465,7 +1463,7 @@ function bp_member_type_display_on_profile( $default = false ) {
  *                      Default: false.
  * @return bool True if email subject customize enabled, otherwise false.
  */
-function bp_disable_invite_member_email_subject( $default = false ) {
+function bboss_disable_invite_member_email_subject( $default = false ) {
 
 	/**
 	 * Filters whether email subject customize is enabled or not.
@@ -1474,7 +1472,7 @@ function bp_disable_invite_member_email_subject( $default = false ) {
 	 *
 	 * @param bool $value Whether email subject customize is enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_disable_invite_member_email_subject', (bool) bp_get_option( 'bp-disable-invite-member-email-subject', $default ) );
+	return (bool) apply_filters( 'bp_disable_invite_member_email_subject', (bool) bboss_get_option( 'bp-disable-invite-member-email-subject', $default ) );
 }
 
 /**
@@ -1486,7 +1484,7 @@ function bp_disable_invite_member_email_subject( $default = false ) {
  *                      Default: false.
  * @return bool True if email content customize enabled, otherwise false.
  */
-function bp_disable_invite_member_email_content( $default = true ) {
+function bboss_disable_invite_member_email_content( $default = true ) {
 
 	/**
 	 * Filters whether email content customize is enabled or not.
@@ -1495,7 +1493,7 @@ function bp_disable_invite_member_email_content( $default = true ) {
 	 *
 	 * @param bool $value Whether email content customize is enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_disable_invite_member_email_content', (bool) bp_get_option( 'bp-disable-invite-member-email-content', $default ) );
+	return (bool) apply_filters( 'bp_disable_invite_member_email_content', (bool) bboss_get_option( 'bp-disable-invite-member-email-content', $default ) );
 }
 
 /**
@@ -1507,7 +1505,7 @@ function bp_disable_invite_member_email_content( $default = true ) {
  *                      Default: false.
  * @return bool True if allow users to sign up the profile types to personal inviting enabled, otherwise false.
  */
-function bp_disable_invite_member_type( $default = false ) {
+function bboss_disable_invite_member_type( $default = false ) {
 
 	/**
 	 * Filters whether allow users to sign up the profile types to personal inviting is enabled or not.
@@ -1516,7 +1514,7 @@ function bp_disable_invite_member_type( $default = false ) {
 	 *
 	 * @param bool $value Whether allow users to sign up the profile types to personal inviting is enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_disable_invite_member_type', (bool) bp_get_option( 'bp-disable-invite-member-type', $default ) );
+	return (bool) apply_filters( 'bp_disable_invite_member_type', (bool) bboss_get_option( 'bp-disable-invite-member-type', $default ) );
 }
 
 /**
@@ -1530,7 +1528,7 @@ function bp_disable_invite_member_type( $default = false ) {
  *
  * @return bool Is post type feed enabled or not
  */
-function bp_is_post_type_feed_enable( $post_type, $default = false ) {
+function bboss_is_post_type_feed_enable( $post_type, $default = false ) {
 
 	/**
 	 * Filters whether post type feed enabled or not.
@@ -1545,7 +1543,7 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 	 * @param bool   $default   Optional. Fallback value if not found in the database.
 	 *                          Default: false.
 	 */
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ), $post_type, $default );
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bboss_get_option( bboss_post_type_feed_option_name( $post_type ), $default ), $post_type, $default );
 }
 
 /**
@@ -1558,7 +1556,7 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
  *
  * @return bool Is post type feed enabled or not
  */
-function bp_is_custom_post_type_feed_enable( $default = false ) {
+function bboss_is_custom_post_type_feed_enable( $default = false ) {
 
 	/**
 	 * Filters whether custom post type feed enabled or not.
@@ -1567,7 +1565,7 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
 	 *
 	 * @param bool $value Whether custom post type feed enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_is_custom_post_type_feed_enable', (bool) bp_get_option( 'bp-enable-custom-post-type-feed', $default ) );
+	return (bool) apply_filters( 'bp_is_custom_post_type_feed_enable', (bool) bboss_get_option( 'bp-enable-custom-post-type-feed', $default ) );
 }
 
 /**
@@ -1581,7 +1579,7 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
  *
  * @return bool Is post type feed enabled or not
  */
-function bp_platform_is_feed_enable( $activity_type, $default = true ) {
+function bboss_platform_is_feed_enable( $activity_type, $default = true ) {
 
 	/**
 	 * Filters whether specified $activity_type should be enabled or no.
@@ -1590,7 +1588,7 @@ function bp_platform_is_feed_enable( $activity_type, $default = true ) {
 	 *
 	 * @param bool $value Whether or not the feed enable or not.
 	 */
-	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) bp_get_option( $activity_type, $default ) );
+	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) bboss_get_option( $activity_type, $default ) );
 }
 
 /**
@@ -1603,7 +1601,7 @@ function bp_platform_is_feed_enable( $activity_type, $default = true ) {
  * @return bool True if the registration enable,
  *              otherwise false.
  */
-function bp_enable_site_registration( $default = false ) {
+function bboss_enable_site_registration( $default = false ) {
 
 	/**
 	 * Filters whether or not the registration enable.
@@ -1612,7 +1610,7 @@ function bp_enable_site_registration( $default = false ) {
 	 *
 	 * @param bool $value Whether or not the registration enable.
 	 */
-	return (bool) apply_filters( 'bp_enable_site_registration', (bool) bp_get_option( 'bp-enable-site-registration', $default ) );
+	return (bool) apply_filters( 'bp_enable_site_registration', (bool) bboss_get_option( 'bp-enable-site-registration', $default ) );
 }
 
 /**
@@ -1625,7 +1623,7 @@ function bp_enable_site_registration( $default = false ) {
  * @return string member type if member type set,
  *              otherwise blank.
  */
-function bp_member_type_default_on_registration( $default = '' ) {
+function bboss_member_type_default_on_registration( $default = '' ) {
 
 	/**
 	 * Filters whether default profile type set on registration.
@@ -1634,7 +1632,7 @@ function bp_member_type_default_on_registration( $default = '' ) {
 	 *
 	 * @param string $value Whether default profile type set on registration.
 	 */
-	return apply_filters( 'bp_member_type_default_on_registration', bp_get_option( 'bp-member-type-default-on-registration', $default ) );
+	return apply_filters( 'bp_member_type_default_on_registration', bboss_get_option( 'bp-member-type-default-on-registration', $default ) );
 }
 
 /**
@@ -1648,7 +1646,7 @@ function bp_member_type_default_on_registration( $default = '' ) {
  *
  * @return bool Is member type send invites enabled or not
  */
-function bp_enable_send_invite_member_type( $member_type, $default = false ) {
+function bboss_enable_send_invite_member_type( $member_type, $default = false ) {
 
 	/**
 	 * Filters whether specified $member_type should be allowed to send invites.
@@ -1657,7 +1655,7 @@ function bp_enable_send_invite_member_type( $member_type, $default = false ) {
 	 *
 	 * @param bool $value whether or not allow member type invitations.
 	 */
-	return (bool) apply_filters( 'bp_enable_send_invite_member_type', (bool) bp_get_option( $member_type, $default ) );
+	return (bool) apply_filters( 'bp_enable_send_invite_member_type', (bool) bboss_get_option( $member_type, $default ) );
 }
 
 /**
@@ -1669,7 +1667,7 @@ function bp_enable_send_invite_member_type( $member_type, $default = false ) {
  *                      Default: Empty string.
  * @return string Private network's public content.
  */
-function bp_enable_private_network_public_content( $default = '' ) {
+function bboss_enable_private_network_public_content( $default = '' ) {
 
 	/**
 	 * Filters private network's public content.
@@ -1678,7 +1676,7 @@ function bp_enable_private_network_public_content( $default = '' ) {
 	 *
 	 * @param bool $value Private network's public content.
 	 */
-	return apply_filters( 'bp_enable_private_network_public_content', bp_get_option( 'bp-enable-private-network-public-content', '' ) );
+	return apply_filters( 'bp_enable_private_network_public_content', bboss_get_option( 'bp-enable-private-network-public-content', '' ) );
 }
 
 /**
@@ -1691,7 +1689,7 @@ function bp_enable_private_network_public_content( $default = '' ) {
  * @return bool True if the admin bar should be hidden for logged in users,
  *              otherwise false.
  */
-function bp_show_login_adminbar( $default = true ) {
+function bboss_show_login_adminbar( $default = true ) {
 
 	/**
 	 * Filters whether or not the toolbar is hidden for logged in users (non-admins).
@@ -1700,7 +1698,7 @@ function bp_show_login_adminbar( $default = true ) {
 	 *
 	 * @param bool $value Whether or not the toolbar is hidden.
 	 */
-	return (bool) apply_filters( 'bp_show_login_adminbar', (bool) bp_get_option( 'show-login-adminbar', $default ) );
+	return (bool) apply_filters( 'bp_show_login_adminbar', (bool) bboss_get_option( 'show-login-adminbar', $default ) );
 }
 
 /**
@@ -1713,7 +1711,7 @@ function bp_show_login_adminbar( $default = true ) {
  * @return bool True if the admin bar should be hidden for admin users,
  *              otherwise false.
  */
-function bp_show_admin_adminbar( $default = true ) {
+function bboss_show_admin_adminbar( $default = true ) {
 
 	/**
 	 * Filters whether or not the toolbar is hidden for admin users.
@@ -1722,7 +1720,7 @@ function bp_show_admin_adminbar( $default = true ) {
 	 *
 	 * @param bool $value Whether or not the toolbar is hidden.
 	 */
-	return (bool) apply_filters( 'bp_show_admin_adminbar', (bool) bp_get_option( 'show-admin-adminbar', $default ) );
+	return (bool) apply_filters( 'bp_show_admin_adminbar', (bool) bboss_get_option( 'show-admin-adminbar', $default ) );
 }
 
 /**
@@ -1734,7 +1732,7 @@ function bp_show_admin_adminbar( $default = true ) {
  *                      Default: false.
  * @return bool True if members able to use gravatars, otherwise false.
  */
-function bp_enable_profile_gravatar( $default = false ) {
+function bboss_enable_profile_gravatar( $default = false ) {
 
 	/**
 	 * Filters whether or not members are able to use gravatars.
@@ -1743,7 +1741,7 @@ function bp_enable_profile_gravatar( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to use gravatars.
 	 */
-	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) ) );
+	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bboss_get_option( 'bp-enable-profile-gravatar', $default ) ) );
 }
 
 /**
@@ -1755,7 +1753,7 @@ function bp_enable_profile_gravatar( $default = false ) {
  *                      Default: true.
  * @return bool True if avatar uploads are disabled, otherwise false.
  */
-function bp_hide_last_name( $default = true ) {
+function bboss_hide_last_name( $default = true ) {
 
 	/**
 	 * Filters whether or not members are able to hide last name field.
@@ -1764,7 +1762,7 @@ function bp_hide_last_name( $default = true ) {
 	 *
 	 * @param bool $value Whether or not members are able to hide last name field.
 	 */
-	return (bool) apply_filters( 'bp_hide_last_name', (bool) bp_get_option( 'bp-hide-last-name', $default ) );
+	return (bool) apply_filters( 'bp_hide_last_name', (bool) bboss_get_option( 'bp-hide-last-name', $default ) );
 }
 
 /**
@@ -1775,7 +1773,7 @@ function bp_hide_last_name( $default = true ) {
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
  */
-function bp_hide_nickname_first_name( $default = true ) {
+function bboss_hide_nickname_first_name( $default = true ) {
 
 	/**
 	 * Filters whether or not members are able to hide first name field if in display format nick name selected.
@@ -1784,7 +1782,7 @@ function bp_hide_nickname_first_name( $default = true ) {
 	 *
 	 * @param bool $value Whether or not members are able to hide first name field if in display format nick name selected.
 	 */
-	return (bool) apply_filters( 'bp_hide_nickname_first_name', (bool) bp_get_option( 'bp-hide-nickname-first-name', $default ) );
+	return (bool) apply_filters( 'bp_hide_nickname_first_name', (bool) bboss_get_option( 'bp-hide-nickname-first-name', $default ) );
 }
 
 /**
@@ -1796,7 +1794,7 @@ function bp_hide_nickname_first_name( $default = true ) {
  *                      Default: true.
  * @return bool True if Whether or not members are able to hide last name field if in display format nick name selected.
  */
-function bp_hide_nickname_last_name( $default = true ) {
+function bboss_hide_nickname_last_name( $default = true ) {
 
 	/**
 	 * Filters whether or not members are able to hide last name field if in display format nick name selected.
@@ -1805,7 +1803,7 @@ function bp_hide_nickname_last_name( $default = true ) {
 	 *
 	 * @param bool $value Whether or not members are able to hide last name field if in display format nick name selected.
 	 */
-	return (bool) apply_filters( 'bp_hide_nickname_last_name', (bool) bp_get_option( 'bp-hide-nickname-last-name', $default ) );
+	return (bool) apply_filters( 'bp_hide_nickname_last_name', (bool) bboss_get_option( 'bp-hide-nickname-last-name', $default ) );
 }
 
 /**
@@ -1817,7 +1815,7 @@ function bp_hide_nickname_last_name( $default = true ) {
  *                      Default: true.
  * @return bool True if Whether or not display email confirmation field in registrations.
  */
-function bp_register_confirm_email( $default = false ) {
+function bboss_register_confirm_email( $default = false ) {
 
 	/**
 	 * Filters whether or not display email confirmation field in registrations.
@@ -1826,7 +1824,7 @@ function bp_register_confirm_email( $default = false ) {
 	 *
 	 * @param bool $value whether or not display email confirmation field in registrations.
 	 */
-	return (bool) apply_filters( 'bp_register_confirm_email', (bool) bp_get_option( 'register-confirm-email', $default ) );
+	return (bool) apply_filters( 'bp_register_confirm_email', (bool) bboss_get_option( 'register-confirm-email', $default ) );
 }
 
 /**
@@ -1838,7 +1836,7 @@ function bp_register_confirm_email( $default = false ) {
  *                      Default: false.
  * @return bool True if Whether or not display legal agreement field in registrations.
  */
-function bb_register_legal_agreement( $default = false ) {
+function bboss_register_legal_agreement( $default = false ) {
 
 	/**
 	 * Filters whether or not display legal agreement field in registrations.
@@ -1847,7 +1845,7 @@ function bb_register_legal_agreement( $default = false ) {
 	 *
 	 * @param bool $value whether or not display legal agreement field in registrations.
 	 */
-	return (bool) apply_filters( 'bb_register_legal_agreement', (bool) bp_get_option( 'register-legal-agreement', $default ) );
+	return (bool) apply_filters( 'bb_register_legal_agreement', (bool) bboss_get_option( 'register-legal-agreement', $default ) );
 }
 
 /**
@@ -1859,7 +1857,7 @@ function bb_register_legal_agreement( $default = false ) {
  *                      Default: true.
  * @return bool True if Whether or not display password confirmation field in registrations.
  */
-function bp_register_confirm_password( $default = false ) {
+function bboss_register_confirm_password( $default = false ) {
 
 	/**
 	 * Filters whether or not display password confirmation field in registrations.
@@ -1868,7 +1866,7 @@ function bp_register_confirm_password( $default = false ) {
 	 *
 	 * @param bool $value whether or not display password confirmation field in registrations.
 	 */
-	return (bool) apply_filters( 'bp_register_confirm_password', (bool) bp_get_option( 'register-confirm-password', $default ) );
+	return (bool) apply_filters( 'bp_register_confirm_password', (bool) bboss_get_option( 'register-confirm-password', $default ) );
 }
 
 /**
@@ -1881,7 +1879,7 @@ function bp_register_confirm_password( $default = false ) {
  *
  * @return string Profile layout format.
  */
-function bp_profile_layout_default_format( $default = 'grid' ) {
+function bboss_profile_layout_default_format( $default = 'grid' ) {
 
 	/**
 	 * Filters profile layout format.
@@ -1890,7 +1888,7 @@ function bp_profile_layout_default_format( $default = 'grid' ) {
 	 *
 	 * @param bool $value Profile layout format.
 	 */
-	return apply_filters( 'bp_profile_layout_default_format', bp_get_option( 'bp-profile-layout-default-format', $default ) );
+	return apply_filters( 'bp_profile_layout_default_format', bboss_get_option( 'bp-profile-layout-default-format', $default ) );
 }
 
 /**
@@ -1903,7 +1901,7 @@ function bp_profile_layout_default_format( $default = 'grid' ) {
  *
  * @return string Group layout format.
  */
-function bp_group_layout_default_format( $default = 'grid' ) {
+function bboss_group_layout_default_format( $default = 'grid' ) {
 
 	/**
 	 * Filters group layout format.
@@ -1912,7 +1910,7 @@ function bp_group_layout_default_format( $default = 'grid' ) {
 	 *
 	 * @param bool $value Group layout format.
 	 */
-	return apply_filters( 'bp_group_layout_default_format', bp_get_option( 'bp-group-layout-default-format', $default ) );
+	return apply_filters( 'bp_group_layout_default_format', bboss_get_option( 'bp-group-layout-default-format', $default ) );
 }
 
 /**
@@ -1924,7 +1922,7 @@ function bp_group_layout_default_format( $default = 'grid' ) {
  *                      Default: false.
  * @return bool True if Whether or not allow custom registrations.
  */
-function bp_allow_custom_registration( $default = false ) {
+function bboss_allow_custom_registration( $default = false ) {
 
 	/**
 	 * Filters whether or not allow custom registrations.
@@ -1933,7 +1931,7 @@ function bp_allow_custom_registration( $default = false ) {
 	 *
 	 * @param bool $value whether or not allow custom registrations.
 	 */
-	return (bool) apply_filters( 'bp_allow_custom_registration', (bool) bp_get_option( 'allow-custom-registration', $default ) );
+	return (bool) apply_filters( 'bp_allow_custom_registration', (bool) bboss_get_option( 'allow-custom-registration', $default ) );
 }
 
 /**
@@ -1946,7 +1944,7 @@ function bp_allow_custom_registration( $default = false ) {
  *
  * @return string URL of register page.
  */
-function bp_custom_register_page_url( $default = '' ) {
+function bboss_custom_register_page_url( $default = '' ) {
 
 	/**
 	 * Filters custom registration page URL.
@@ -1955,7 +1953,7 @@ function bp_custom_register_page_url( $default = '' ) {
 	 *
 	 * @param string $value custom registration page URL.
 	 */
-	return apply_filters( 'bp_custom_register_page_url', bp_get_option( 'register-page-url', $default ) );
+	return apply_filters( 'bp_custom_register_page_url', bboss_get_option( 'register-page-url', $default ) );
 }
 
 /**
@@ -1967,7 +1965,7 @@ function bp_custom_register_page_url( $default = '' ) {
  *                      Default: false.
  * @return bool True if group message are disabled, otherwise false.
  */
-function bp_disable_group_messages( $default = false ) {
+function bboss_disable_group_messages( $default = false ) {
 
 	/**
 	 * Filters whether or not group organizer and moderator allowed to send group message.
@@ -1976,7 +1974,7 @@ function bp_disable_group_messages( $default = false ) {
 	 *
 	 * @param bool $value whether or not group organizer and moderator allowed to send group message.
 	 */
-	return (bool) apply_filters( 'bp_disable_group_messages', (bool) bp_get_option( 'bp-disable-group-messages', $default ) );
+	return (bool) apply_filters( 'bp_disable_group_messages', (bool) bboss_get_option( 'bp-disable-group-messages', $default ) );
 }
 
 /**
@@ -1988,7 +1986,7 @@ function bp_disable_group_messages( $default = false ) {
  *                      Default: first_name.
  * @return string display name format.
  */
-function bp_core_display_name_format( $default = 'first_name' ) {
+function bboss_core_display_name_format( $default = 'first_name' ) {
 
 	/**
 	 * Filters default display name format.
@@ -1997,7 +1995,7 @@ function bp_core_display_name_format( $default = 'first_name' ) {
 	 *
 	 * @param string $value Default display name format.
 	 */
-	return apply_filters( 'bp_core_display_name_format', bp_get_option( 'bp-display-name-format', $default ) );
+	return apply_filters( 'bp_core_display_name_format', bboss_get_option( 'bp-display-name-format', $default ) );
 }
 
 /**
@@ -2008,11 +2006,11 @@ function bp_core_display_name_format( $default = 'first_name' ) {
  *
  * @return bool True if  private REST APIs is enabled, otherwise false.
  */
-function bp_rest_enable_private_network() {
+function bboss_rest_enable_private_network() {
 
 	$retval = false;
 	if (
-		true === (bool) bp_enable_private_rest_apis() &&
+		true === (bool) bboss_enable_private_rest_apis() &&
 		(
 			(
 				function_exists( 'bbapp_is_private_app_enabled' ) // buddyboss-app is active.
@@ -2026,7 +2024,7 @@ function bp_rest_enable_private_network() {
 
 	if ( true === $retval ) {
 		$current_rest_url = $GLOBALS['wp']->query_vars['rest_route'];
-		if ( ! empty( $current_rest_url ) && bb_is_allowed_endpoint( $current_rest_url ) ) {
+		if ( ! empty( $current_rest_url ) && bboss_is_allowed_endpoint( $current_rest_url ) ) {
 			$retval = false;
 		}
 	}
@@ -2051,7 +2049,7 @@ function bp_rest_enable_private_network() {
  * @return bool True if the symlink is enabled in Media, Document & Video enable,
  *              otherwise false.
  */
-function bb_enable_symlinks( $default = false ) {
+function bboss_enable_symlinks( $default = false ) {
 
 	/**
 	 * Filters whether or not the symlink is enabled in Media, Document & Video.
@@ -2060,7 +2058,7 @@ function bb_enable_symlinks( $default = false ) {
 	 *
 	 * @param bool $value Whether or not the symlink is enabled in Media, Document & Video enable.
 	 */
-	return (bool) apply_filters( 'bb_enable_symlinks', (bool) bp_get_option( 'bp_media_symlink_support', $default ) );
+	return (bool) apply_filters( 'bb_enable_symlinks', (bool) bboss_get_option( 'bp_media_symlink_support', $default ) );
 }
 
 /**
@@ -2073,7 +2071,7 @@ function bb_enable_symlinks( $default = false ) {
  *
  * @return string.
  */
-function bb_post_type_feed_option_name( $post_type ) {
+function bboss_post_type_feed_option_name( $post_type ) {
 	return 'bp-feed-custom-post-type-' . $post_type;
 }
 
@@ -2087,7 +2085,7 @@ function bb_post_type_feed_option_name( $post_type ) {
  *
  * @return string.
  */
-function bb_post_type_feed_comment_option_name( $post_type ) {
+function bboss_post_type_feed_comment_option_name( $post_type ) {
 	return 'bp-feed-custom-post-type-' . $post_type . '-comments';
 }
 
@@ -2098,12 +2096,12 @@ function bb_post_type_feed_comment_option_name( $post_type ) {
  *
  * @return array.
  */
-function bb_feed_post_types() {
+function bboss_feed_post_types() {
 	// Get all active custom post type.
 	$post_types = get_post_types( array( 'public' => true ) );
 
 	// Use array_diff to exclude specific post types.
-	return array_diff( $post_types, bb_feed_excluded_post_types() );
+	return array_diff( $post_types, bboss_feed_excluded_post_types() );
 }
 
 /**
@@ -2113,8 +2111,8 @@ function bb_feed_post_types() {
  *
  * @return array.
  */
-function bb_feed_not_allowed_comment_post_types() {
-	$post_types = bb_feed_post_types();
+function bboss_feed_not_allowed_comment_post_types() {
+	$post_types = bboss_feed_post_types();
 
 	$bp_exclude_cpt = array();
 	foreach ( $post_types as $post_type ) {
@@ -2144,13 +2142,13 @@ function bb_feed_not_allowed_comment_post_types() {
  * @return bool True if private network for site is enabled, otherwise
  *              false.
  */
-function bp_enable_private_rest_apis( $default = false ) {
+function bboss_enable_private_rest_apis( $default = false ) {
 	global $bp;
 
 	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rest-apis'] ) ) {
 		$val = (bool) $bp->site_options['bb-enable-private-rest-apis'];
 	} else {
-		$val = (bool) bp_get_option( 'bb-enable-private-rest-apis', $default );
+		$val = (bool) bboss_get_option( 'bb-enable-private-rest-apis', $default );
 	}
 
 	/**
@@ -2173,7 +2171,7 @@ function bp_enable_private_rest_apis( $default = false ) {
  *
  * @return string Private REST APIs public content.
  */
-function bb_enable_private_rest_apis_public_content( $default = '' ) {
+function bboss_enable_private_rest_apis_public_content( $default = '' ) {
 
 	/**
 	 * Filters Private REST APIs public content.
@@ -2182,7 +2180,7 @@ function bb_enable_private_rest_apis_public_content( $default = '' ) {
 	 *
 	 * @param bool $value Private REST APIs public content.
 	 */
-	return apply_filters( 'bb_enable_private_rest_apis_public_content', bp_get_option( 'bb-enable-private-rest-apis-public-content', '' ) );
+	return apply_filters( 'bb_enable_private_rest_apis_public_content', bboss_get_option( 'bb-enable-private-rest-apis-public-content', '' ) );
 }
 
 /**
@@ -2196,13 +2194,13 @@ function bb_enable_private_rest_apis_public_content( $default = '' ) {
  * @return bool True if private network for site is enabled, otherwise
  *              false.
  */
-function bp_enable_private_rss_feeds( $default = false ) {
+function bboss_enable_private_rss_feeds( $default = false ) {
 	global $bp;
 
 	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rss-feeds'] ) ) {
 		$val = (bool) $bp->site_options['bb-enable-private-rss-feeds'];
 	} else {
-		$val = (bool) bp_get_option( 'bb-enable-private-rss-feeds', $default );
+		$val = (bool) bboss_get_option( 'bb-enable-private-rss-feeds', $default );
 	}
 
 	/**
@@ -2225,7 +2223,7 @@ function bp_enable_private_rss_feeds( $default = false ) {
  *
  * @return string Private RSS Feeds public content.
  */
-function bb_enable_private_rss_feeds_public_content( $default = '' ) {
+function bboss_enable_private_rss_feeds_public_content( $default = '' ) {
 
 	/**
 	 * Filters Private REST APIs public content.
@@ -2234,7 +2232,7 @@ function bb_enable_private_rss_feeds_public_content( $default = '' ) {
 	 *
 	 * @param bool $value Private REST APIs public content.
 	 */
-	return apply_filters( 'bb_enable_private_rss_feeds_public_content', bp_get_option( 'bb-enable-private-rss-feeds-public-content', '' ) );
+	return apply_filters( 'bb_enable_private_rss_feeds_public_content', bboss_get_option( 'bb-enable-private-rss-feeds-public-content', '' ) );
 }
 
 
@@ -2248,7 +2246,7 @@ function bb_enable_private_rss_feeds_public_content( $default = '' ) {
  *                          Default: 'BuddyBoss'.
  * @return string Return the default profile avatar type.
  */
-function bb_get_profile_avatar_type( $default = 'BuddyBoss' ) {
+function bboss_get_profile_avatar_type( $default = 'BuddyBoss' ) {
 
 	/**
 	 * Filters profile avatar type.
@@ -2257,7 +2255,7 @@ function bb_get_profile_avatar_type( $default = 'BuddyBoss' ) {
 	 *
 	 * @param string $value Profile avatar type.
 	 */
-	return apply_filters( 'bb_get_profile_avatar_type', bp_get_option( 'bp-profile-avatar-type', $default ) );
+	return apply_filters( 'bb_get_profile_avatar_type', bboss_get_option( 'bp-profile-avatar-type', $default ) );
 }
 
 /**
@@ -2269,7 +2267,7 @@ function bb_get_profile_avatar_type( $default = 'BuddyBoss' ) {
  *                          Default: 'buddyboss'.
  * @return string Return the default profile avatar type.
  */
-function bb_get_default_profile_avatar_type( $default = 'buddyboss' ) {
+function bboss_get_default_profile_avatar_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default profile avatar type.
@@ -2278,7 +2276,7 @@ function bb_get_default_profile_avatar_type( $default = 'buddyboss' ) {
 	 *
 	 * @param string $value Default profile avatar type.
 	 */
-	return apply_filters( 'bb_get_default_profile_avatar_type', bp_get_option( 'bp-default-profile-avatar-type', $default ) );
+	return apply_filters( 'bb_get_default_profile_avatar_type', bboss_get_option( 'bp-default-profile-avatar-type', $default ) );
 }
 
 /**
@@ -2291,11 +2289,11 @@ function bb_get_default_profile_avatar_type( $default = 'buddyboss' ) {
  * @param string $size    This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
  * @return string Return default custom upload avatar URL.
  */
-function bb_get_default_custom_upload_profile_avatar( $default = '', $size = 'full' ) {
-	$custom_avatar_url = bp_get_option( 'bp-default-custom-profile-avatar', $default );
+function bboss_get_default_custom_upload_profile_avatar( $default = '', $size = 'full' ) {
+	$custom_avatar_url = bboss_get_option( 'bp-default-custom-profile-avatar', $default );
 
 	if ( ! empty( $custom_avatar_url ) && 'full' !== $size ) {
-		$custom_avatar_url = bb_get_default_custom_avatar();
+		$custom_avatar_url = bboss_get_default_custom_avatar();
 	}
 
 	/**
@@ -2319,7 +2317,7 @@ function bb_get_default_custom_upload_profile_avatar( $default = '', $size = 'fu
  *                          Default: 'buddyboss'.
  * @return string Return the default profile cover type.
  */
-function bb_get_default_profile_cover_type( $default = 'buddyboss' ) {
+function bboss_get_default_profile_cover_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default profile cover type.
@@ -2328,7 +2326,7 @@ function bb_get_default_profile_cover_type( $default = 'buddyboss' ) {
 	 *
 	 * @param string $value Default profile cover type.
 	 */
-	return apply_filters( 'bb_get_default_profile_cover_type', bp_get_option( 'bp-default-profile-cover-type', $default ) );
+	return apply_filters( 'bb_get_default_profile_cover_type', bboss_get_option( 'bp-default-profile-cover-type', $default ) );
 }
 
 /**
@@ -2338,7 +2336,7 @@ function bb_get_default_profile_cover_type( $default = 'buddyboss' ) {
  *
  * @return string Return default custom upload profile cover URL.
  */
-function bb_get_default_custom_upload_profile_cover() {
+function bboss_get_default_custom_upload_profile_cover() {
 	/**
 	 * Filters to change default custom upload cover image.
 	 *
@@ -2346,7 +2344,7 @@ function bb_get_default_custom_upload_profile_cover() {
 	 *
 	 * @param string $value Default custom upload profile cover URL.
 	 */
-	return apply_filters( 'bb_get_default_custom_upload_profile_cover', bp_get_option( 'bp-default-custom-profile-cover' ) );
+	return apply_filters( 'bb_get_default_custom_upload_profile_cover', bboss_get_option( 'bp-default-custom-profile-cover' ) );
 }
 
 /** Group Avatar ************************************************************/
@@ -2359,7 +2357,7 @@ function bb_get_default_custom_upload_profile_cover() {
  *                          Default: 'buddyboss'.
  * @return string Return the default group avatar type.
  */
-function bb_get_default_group_avatar_type( $default = 'buddyboss' ) {
+function bboss_get_default_group_avatar_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default group avatar type.
@@ -2368,7 +2366,7 @@ function bb_get_default_group_avatar_type( $default = 'buddyboss' ) {
 	 *
 	 * @param string $value Default group avatar type.
 	 */
-	return apply_filters( 'bb_get_default_group_avatar_type', bp_get_option( 'bp-default-group-avatar-type', $default ) );
+	return apply_filters( 'bb_get_default_group_avatar_type', bboss_get_option( 'bp-default-group-avatar-type', $default ) );
 }
 
 /**
@@ -2381,11 +2379,11 @@ function bb_get_default_group_avatar_type( $default = 'buddyboss' ) {
  * @param string $size    This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
  * @return string Return default custom upload avatar URL.
  */
-function bb_get_default_custom_upload_group_avatar( $default = '', $size = 'full' ) {
-	$custom_group_avatar_url = bp_get_option( 'bp-default-custom-group-avatar', $default );
+function bboss_get_default_custom_upload_group_avatar( $default = '', $size = 'full' ) {
+	$custom_group_avatar_url = bboss_get_option( 'bp-default-custom-group-avatar', $default );
 
 	if ( ! empty( $custom_group_avatar_url ) && 'full' !== $size ) {
-		$custom_group_avatar_url = bb_get_default_custom_avatar( 'group' );
+		$custom_group_avatar_url = bboss_get_default_custom_avatar( 'group' );
 	}
 
 	/**
@@ -2409,7 +2407,7 @@ function bb_get_default_custom_upload_group_avatar( $default = '', $size = 'full
  *                          Default: 'buddyboss'.
  * @return string Return the default group cover type.
  */
-function bb_get_default_group_cover_type( $default = 'buddyboss' ) {
+function bboss_get_default_group_cover_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default group cover type.
@@ -2418,7 +2416,7 @@ function bb_get_default_group_cover_type( $default = 'buddyboss' ) {
 	 *
 	 * @param string $value Default group cover type.
 	 */
-	return apply_filters( 'bb_get_default_group_cover_type', bp_get_option( 'bp-default-group-cover-type', $default ) );
+	return apply_filters( 'bb_get_default_group_cover_type', bboss_get_option( 'bp-default-group-cover-type', $default ) );
 }
 
 /**
@@ -2430,7 +2428,7 @@ function bb_get_default_group_cover_type( $default = 'buddyboss' ) {
  *                             Default: null.
  * @return string Return default custom upload group cover URL.
  */
-function bb_get_default_custom_upload_group_cover() {
+function bboss_get_default_custom_upload_group_cover() {
 	/**
 	 * Filters default custom upload cover image URL.
 	 *
@@ -2438,7 +2436,7 @@ function bb_get_default_custom_upload_group_cover() {
 	 *
 	 * @param string $value Default custom upload group cover URL.
 	 */
-	return apply_filters( 'bb_get_default_custom_upload_group_cover', bp_get_option( 'bp-default-custom-group-cover' ) );
+	return apply_filters( 'bb_get_default_custom_upload_group_cover', bboss_get_option( 'bp-default-custom-group-cover' ) );
 }
 
 /**
@@ -2450,7 +2448,7 @@ function bb_get_default_custom_upload_group_cover() {
  *                      Default: username.
  * @return string profile slug format.
  */
-function bb_get_profile_slug_format( $default = 'username' ) {
+function bboss_get_profile_slug_format( $default = 'username' ) {
 
 	/**
 	 * Filters default profile slug format.
@@ -2459,7 +2457,7 @@ function bb_get_profile_slug_format( $default = 'username' ) {
 	 *
 	 * @param string $value Default profile slug format.
 	 */
-	return apply_filters( 'bb_get_profile_slug_format', bp_get_option( 'bb_profile_slug_format', $default ) );
+	return apply_filters( 'bb_get_profile_slug_format', bboss_get_option( 'bb_profile_slug_format', $default ) );
 }
 
 /**
@@ -2471,7 +2469,7 @@ function bb_get_profile_slug_format( $default = 'username' ) {
  *                        Default: Empty string.
  * @return array Domain restrictions setting value.
  */
-function bb_domain_restrictions_setting( $default = array() ) {
+function bboss_domain_restrictions_setting( $default = array() ) {
 
 	/**
 	 * Filters domain restriction settings.
@@ -2480,7 +2478,7 @@ function bb_domain_restrictions_setting( $default = array() ) {
 	 *
 	 * @param array $value Domain restrictions setting value.
 	 */
-	return apply_filters( 'bb_domain_restrictions_setting', bp_get_option( 'bb-domain-restrictions', $default ) );
+	return apply_filters( 'bb_domain_restrictions_setting', bboss_get_option( 'bb-domain-restrictions', $default ) );
 }
 
 /**
@@ -2492,7 +2490,7 @@ function bb_domain_restrictions_setting( $default = array() ) {
  *                        Default: Empty string.
  * @return array Email restrictions setting value.
  */
-function bb_email_restrictions_setting( $default = array() ) {
+function bboss_email_restrictions_setting( $default = array() ) {
 
 	/**
 	 * Filters email restriction settings.
@@ -2501,7 +2499,7 @@ function bb_email_restrictions_setting( $default = array() ) {
 	 *
 	 * @param array $value Email restrictions setting value.
 	 */
-	return apply_filters( 'bb_email_restrictions_setting', bp_get_option( 'bb-email-restrictions', $default ) );
+	return apply_filters( 'bb_email_restrictions_setting', bboss_get_option( 'bb-email-restrictions', $default ) );
 }
 
 /**
@@ -2513,7 +2511,7 @@ function bb_email_restrictions_setting( $default = array() ) {
  *                      Default: false.
  * @return bool True if Edit is enabled, otherwise false.
  */
-function bb_is_activity_comment_edit_enabled( $default = false ) {
+function bboss_is_activity_comment_edit_enabled( $default = false ) {
 
 	/**
 	 * Filters whether Activity comment edit is enabled.
@@ -2522,14 +2520,14 @@ function bb_is_activity_comment_edit_enabled( $default = false ) {
 	 *
 	 * @param bool $value Whether Activity comment edit is enabled.
 	 */
-	return (bool) apply_filters( 'bb_is_activity_comment_edit_enabled', (bool) bp_get_option( '_bb_enable_activity_comment_edit', $default ) );
+	return (bool) apply_filters( 'bb_is_activity_comment_edit_enabled', (bool) bboss_get_option( '_bb_enable_activity_comment_edit', $default ) );
 }
 
 /**
  * Get BuddyBoss activity comment Time option.
  *
- * The stored value is normalised with bb_activity_normalize_edit_time(): anything outside
- * bb_activity_get_allowed_edit_times(), including an empty row, resolves to 600 (10 minutes).
+ * The stored value is normalised with bboss_activity_normalize_edit_time(): anything outside
+ * bboss_activity_get_allowed_edit_times(), including an empty row, resolves to 600 (10 minutes).
  *
  * @since BuddyBoss 2.4.40
  * @since BuddyBoss 3.5.1 The return value is normalised to an allowed duration.
@@ -2538,8 +2536,8 @@ function bb_is_activity_comment_edit_enabled( $default = false ) {
  *
  * @return int Edit duration in seconds, or -1 for no limit.
  */
-function bb_get_activity_comment_edit_time( $default = false ) {
-	$edit_time = bb_activity_normalize_edit_time( bp_get_option( '_bb_activity_comment_edit_time', $default ) );
+function bboss_get_activity_comment_edit_time( $default = false ) {
+	$edit_time = bboss_activity_normalize_edit_time( bboss_get_option( '_bb_activity_comment_edit_time', $default ) );
 
 	return apply_filters( 'bb_get_activity_comment_edit_time', $edit_time );
 }
@@ -2551,7 +2549,7 @@ function bb_get_activity_comment_edit_time( $default = false ) {
  *
  * @return array.
  */
-function bb_feed_excluded_post_types() {
+function bboss_feed_excluded_post_types() {
 
 	/**
 	 * Function to exclude Custom post types for activity settings.
@@ -2571,9 +2569,9 @@ function bb_feed_excluded_post_types() {
  *
  * @return bool True    If activity pinned posts are enabled, otherwise false.
  */
-function bb_is_active_activity_pinned_posts( $default = false ) {
+function bboss_is_active_activity_pinned_posts( $default = false ) {
 
-	$enabled = (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default );
+	$enabled = (bool) bboss_get_option( '_bb_enable_activity_pinned_posts', $default );
 
 	if ( $enabled ) {
 		/*
@@ -2604,10 +2602,10 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 		 * call, before the module loads at bp_include:20.
 		 */
 		$provider_available =
-			bb_addons_provides_module( 'pinned-posts' )
+			bboss_addons_provides_module( 'pinned-posts' )
 			|| (
-				function_exists( 'bb_activity_pin_unpin_post' )
-				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' )
+				function_exists( 'bboss_activity_pin_unpin_post' )
+				&& ! function_exists( 'bboss_activity_pin_unpin_post_is_stub' )
 			);
 
 		if ( ! $provider_available ) {
@@ -2635,7 +2633,7 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
  *
  * @return string Login redirection setting value.
  */
-function bb_login_redirection( $default = '' ) {
+function bboss_login_redirection( $default = '' ) {
 
 	/**
 	 * Filters login redirection settings.
@@ -2644,7 +2642,7 @@ function bb_login_redirection( $default = '' ) {
 	 *
 	 * @param string $value Login redirection setting value.
 	 */
-	return apply_filters( 'bb_login_redirection', bp_get_option( 'bb-login-redirection', $default ) );
+	return apply_filters( 'bb_login_redirection', bboss_get_option( 'bb-login-redirection', $default ) );
 }
 
 /**
@@ -2657,7 +2655,7 @@ function bb_login_redirection( $default = '' ) {
  *
  * @return string Logout redirection setting value.
  */
-function bb_logout_redirection( $default = '' ) {
+function bboss_logout_redirection( $default = '' ) {
 
 	/**
 	 * Filters logout redirection settings.
@@ -2666,7 +2664,7 @@ function bb_logout_redirection( $default = '' ) {
 	 *
 	 * @param string $value Logout redirection setting value.
 	 */
-	return apply_filters( 'bb_logout_redirection', bp_get_option( 'bb-logout-redirection', $default ) );
+	return apply_filters( 'bb_logout_redirection', bboss_get_option( 'bb-logout-redirection', $default ) );
 }
 
 /**
@@ -2679,7 +2677,7 @@ function bb_logout_redirection( $default = '' ) {
  *
  * @return string Login redirection setting value.
  */
-function bb_custom_login_redirection( $default = '' ) {
+function bboss_custom_login_redirection( $default = '' ) {
 
 	/**
 	 * Filters custom login page URL.
@@ -2688,7 +2686,7 @@ function bb_custom_login_redirection( $default = '' ) {
 	 *
 	 * @param string $value Custom login page URL.
 	 */
-	return apply_filters( 'bb_custom_login_redirection', bp_get_option( 'bb-custom-login-redirection', $default ) );
+	return apply_filters( 'bb_custom_login_redirection', bboss_get_option( 'bb-custom-login-redirection', $default ) );
 }
 
 /**
@@ -2701,7 +2699,7 @@ function bb_custom_login_redirection( $default = '' ) {
  *
  * @return string Logout redirection setting value.
  */
-function bb_custom_logout_redirection( $default = '' ) {
+function bboss_custom_logout_redirection( $default = '' ) {
 
 	/**
 	 * Filters custom logout page URL.
@@ -2710,7 +2708,7 @@ function bb_custom_logout_redirection( $default = '' ) {
 	 *
 	 * @param string $value Custom logout page URL.
 	 */
-	return apply_filters( 'bb_custom_logout_redirection', bp_get_option( 'bb-custom-logout-redirection', $default ) );
+	return apply_filters( 'bb_custom_logout_redirection', bboss_get_option( 'bb-custom-logout-redirection', $default ) );
 }
 
 /**
@@ -2720,16 +2718,16 @@ function bb_custom_logout_redirection( $default = '' ) {
  *
  * @return array[]
  */
-function bb_get_all_reactions() {
+function bboss_get_all_reactions() {
 	return array(
 		'activity'         => array(
-			'label'     => esc_html__( 'Activity posts', 'buddyboss' ),
-			'disabled'  => ! bp_is_active( 'activity' ),
+			'label'     => esc_html__( 'Activity posts', 'buddyboss-platform' ),
+			'disabled'  => ! bboss_is_active( 'activity' ),
 			'component' => 'activity',
 		),
 		'activity_comment' => array(
-			'label'     => esc_html__( 'Activity comments', 'buddyboss' ),
-			'disabled'  => ! bp_is_active( 'activity' ),
+			'label'     => esc_html__( 'Activity comments', 'buddyboss-platform' ),
+			'disabled'  => ! bboss_is_active( 'activity' ),
 			'component' => 'activity',
 		),
 	);
@@ -2744,19 +2742,19 @@ function bb_get_all_reactions() {
  *
  * @return array|bool
  */
-function bb_all_enabled_reactions( $key = '' ) {
-	$get_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+function bboss_all_enabled_reactions( $key = '' ) {
+	$get_reactions = (array) bboss_get_option( 'bb_all_reactions', array() );
 	if ( empty( $key ) ) {
 		return $get_reactions;
 	}
 
-	$all_reactions = bb_get_all_reactions();
+	$all_reactions = bboss_get_all_reactions();
 
 	return (bool) (
 		isset( $get_reactions[ $key ] ) &&
 		$all_reactions[ $key ] &&
 		! empty( $all_reactions[ $key ]['component'] ) &&
-		bp_is_active( $all_reactions[ $key ]['component'] ) &&
+		bboss_is_active( $all_reactions[ $key ]['component'] ) &&
 		$get_reactions[ $key ]
 	);
 }
@@ -2770,13 +2768,13 @@ function bb_all_enabled_reactions( $key = '' ) {
  *                      Default: true.
  * @return bool True if reaction for activity posts is enabled, otherwise false.
  */
-function bb_is_reaction_activity_posts_enabled( $default = true ) {
+function bboss_is_reaction_activity_posts_enabled( $default = true ) {
 	// First check if reactions feature is enabled via Settings 2.0 toggle.
-	if ( ! bb_is_reactions_feature_enabled() ) {
+	if ( ! bboss_is_reactions_feature_enabled() ) {
 		return false;
 	}
 
-	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions( 'activity' ) );
+	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bboss_all_enabled_reactions( 'activity' ) );
 }
 
 /**
@@ -2788,13 +2786,13 @@ function bb_is_reaction_activity_posts_enabled( $default = true ) {
  *                      Default: True.
  * @return bool True if reaction for activity comments is enabled, otherwise false.
  */
-function bb_is_reaction_activity_comments_enabled( $default = true ) {
+function bboss_is_reaction_activity_comments_enabled( $default = true ) {
 	// First check if reactions feature is enabled via Settings 2.0 toggle.
-	if ( ! bb_is_reactions_feature_enabled() ) {
+	if ( ! bboss_is_reactions_feature_enabled() ) {
 		return false;
 	}
 
-	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bb_all_enabled_reactions( 'activity_comment' ) );
+	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bboss_all_enabled_reactions( 'activity_comment' ) );
 }
 
 /**
@@ -2807,9 +2805,9 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
  *
  * @return string The reaction mode, either 'likes' or 'emotions'.
  */
-function bb_get_reaction_mode( $default = 'likes' ) {
+function bboss_get_reaction_mode( $default = 'likes' ) {
 
-	$mode = bp_get_option( 'bb_reaction_mode', $default );
+	$mode = bboss_get_option( 'bb_reaction_mode', $default );
 
 	if ( 'emotions' === $mode ) {
 		// "Emotions" requires the Pro emotion layer, provided by either BuddyBoss
@@ -2833,7 +2831,7 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 		// licensed site would report emotions "available" with nothing behind it.
 		$emotion_layer_available =
 			class_exists( 'BB_Reactions' )
-			|| bb_addons_provides_module( 'reactions' )
+			|| bboss_addons_provides_module( 'reactions' )
 			|| (
 				function_exists( 'bp_register_reaction' )
 				&& function_exists( 'bbp_pro_is_license_valid' )
@@ -2855,13 +2853,13 @@ function bb_get_reaction_mode( $default = 'likes' ) {
  *
  * @return bool
  */
-function bb_is_reaction_emotions_enabled() {
+function bboss_is_reaction_emotions_enabled() {
 	// First check if reactions feature is enabled via Settings 2.0 toggle.
-	if ( ! bb_is_reactions_feature_enabled() ) {
+	if ( ! bboss_is_reactions_feature_enabled() ) {
 		return false;
 	}
 
-	return (bool) apply_filters( 'bb_is_reaction_emotions_enabled', (bool) ( bb_get_reaction_mode() === 'emotions' ) );
+	return (bool) apply_filters( 'bb_is_reaction_emotions_enabled', (bool) ( bboss_get_reaction_mode() === 'emotions' ) );
 }
 
 /**
@@ -2873,8 +2871,8 @@ function bb_is_reaction_emotions_enabled() {
  *
  * @return array|mixed
  */
-function bb_reaction_button_options( $key = '' ) {
-	$button_settings = (array) bp_get_option( 'bb_reactions_button', array() );
+function bboss_reaction_button_options( $key = '' ) {
+	$button_settings = (array) bboss_get_option( 'bb_reactions_button', array() );
 	if ( empty( $key ) ) {
 		return $button_settings;
 	}
@@ -2889,13 +2887,13 @@ function bb_reaction_button_options( $key = '' ) {
  *
  * @return array
  */
-function bb_active_reactions() {
-	$reaction = bb_load_reaction();
+function bboss_active_reactions() {
+	$reaction = bboss_load_reaction();
 	if ( ! $reaction ) {
 		return array();
 	}
 
-	if ( bb_is_reaction_emotions_enabled() ) {
+	if ( bboss_is_reaction_emotions_enabled() ) {
 		$all_emotions = $reaction->bb_get_reactions( 'emotions' );
 	} else {
 		$all_emotions = $reaction->bb_get_reactions();
@@ -2913,8 +2911,8 @@ function bb_active_reactions() {
  *
  * @return int
  */
-function bb_get_ajax_request_page_load( $default = 2 ) {
-	return (int) apply_filters( 'bb_get_ajax_request_page_load', bp_get_option( 'bb_ajax_request_page_load', $default ) );
+function bboss_get_ajax_request_page_load( $default = 2 ) {
+	return (int) apply_filters( 'bb_get_ajax_request_page_load', bboss_get_option( 'bb_ajax_request_page_load', $default ) );
 }
 
 /**
@@ -2926,8 +2924,8 @@ function bb_get_ajax_request_page_load( $default = 2 ) {
  *
  * @return int
  */
-function bb_get_load_activity_per_request( $default = 10 ) {
-	return (int) apply_filters( 'bb_get_load_activity_per_request', bp_get_option( 'bb_load_activity_per_request', $default ) );
+function bboss_get_load_activity_per_request( $default = 10 ) {
+	return (int) apply_filters( 'bb_get_load_activity_per_request', bboss_get_option( 'bb_load_activity_per_request', $default ) );
 }
 
 /**
@@ -2937,8 +2935,8 @@ function bb_get_load_activity_per_request( $default = 10 ) {
  *
  * @return bool
  */
-function bb_is_send_ajax_request() {
-	return (bool) ( 2 === bb_get_ajax_request_page_load() );
+function bboss_is_send_ajax_request() {
+	return (bool) ( 2 === bboss_get_ajax_request_page_load() );
 }
 
 /**
@@ -2950,7 +2948,7 @@ function bb_is_send_ajax_request() {
  *
  * @return bool true if counts should be displayed, false otherwise.
  */
-function bb_enable_content_counts( $default = false ) {
+function bboss_enable_content_counts( $default = false ) {
 
 	/**
 	 * Filter to modify the behavior of the group counts feature.
@@ -2960,7 +2958,7 @@ function bb_enable_content_counts( $default = false ) {
 	 * @param bool $show_counts Whether to show group counts. Default is the value retrieved from the settings.
 	 * @param int  $default     The default value if the setting is not configured. Default false.
 	 */
-	return (bool) apply_filters( 'bb_enable_content_counts', (bool) bp_get_option( 'bb-enable-content-counts', $default ) );
+	return (bool) apply_filters( 'bb_enable_content_counts', (bool) bboss_get_option( 'bb-enable-content-counts', $default ) );
 }
 
 /**
@@ -2975,55 +2973,55 @@ function bb_enable_content_counts( $default = false ) {
  *
  * @return array Array of all activity filters option labels.
  */
-function bb_get_activity_filter_options_labels( $context = 'default' ) {
+function bboss_get_activity_filter_options_labels( $context = 'default' ) {
 	$filters = array(
 		'all'        => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'All Updates', 'buddyboss' ),
+			'default'      => __( 'All Updates', 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'all updates', 'buddyboss' ),
+			'show_context' => __( 'all updates', 'buddyboss-platform' ),
 		),
 		'just-me'    => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'Created by Me', 'buddyboss' ),
+			'default'      => __( 'Created by Me', 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'created by me', 'buddyboss' ),
+			'show_context' => __( 'created by me', 'buddyboss-platform' ),
 		),
 		'favorites'  => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( "I've Reacted To", 'buddyboss' ),
+			'default'      => __( "I've Reacted To", 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( "I've reacted to", 'buddyboss' ),
+			'show_context' => __( "I've reacted to", 'buddyboss-platform' ),
 		),
 		'groups'     => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'From My Groups', 'buddyboss' ),
+			'default'      => __( 'From My Groups', 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'from my groups', 'buddyboss' ),
+			'show_context' => __( 'from my groups', 'buddyboss-platform' ),
 		),
 		'friends'    => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'From My Connections', 'buddyboss' ),
+			'default'      => __( 'From My Connections', 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'from my connections', 'buddyboss' ),
+			'show_context' => __( 'from my connections', 'buddyboss-platform' ),
 		),
 		'mentions'   => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( "I'm Mentioned In", 'buddyboss' ),
+			'default'      => __( "I'm Mentioned In", 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( "I'm mentioned in", 'buddyboss' ),
+			'show_context' => __( "I'm mentioned in", 'buddyboss-platform' ),
 		),
 		'following'  => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( "I'm Following", 'buddyboss' ),
+			'default'      => __( "I'm Following", 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( "I'm following", 'buddyboss' ),
+			'show_context' => __( "I'm following", 'buddyboss-platform' ),
 		),
 		'unanswered' => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'Unanswered', 'buddyboss' ),
+			'default'      => __( 'Unanswered', 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'unanswered', 'buddyboss' ),
+			'show_context' => __( 'unanswered', 'buddyboss-platform' ),
 		),
 	);
 
@@ -3039,7 +3037,7 @@ function bb_get_activity_filter_options_labels( $context = 'default' ) {
 	);
 
 	// Common function to get only allowed ones.
-	$labels = bb_filter_activity_filter_scope_keys( $labels );
+	$labels = bboss_filter_activity_filter_scope_keys( $labels );
 
 	/**
 	 * Filters the activity filter options labels.
@@ -3064,7 +3062,7 @@ function bb_get_activity_filter_options_labels( $context = 'default' ) {
  *
  * @return array Array of enabled activity filters options.
  */
-function bb_get_enabled_activity_filter_options( $args = array() ) {
+function bboss_get_enabled_activity_filter_options( $args = array() ) {
 
 	// Set default options if not provided.
 	$default = array(
@@ -3080,7 +3078,7 @@ function bb_get_enabled_activity_filter_options( $args = array() ) {
 
 	$args    = array_intersect_key( $args, $default );
 	$args    = wp_parse_args( $args, $default );
-	$options = bp_get_option( 'bb_activity_filter_options', $args );
+	$options = bboss_get_option( 'bb_activity_filter_options', $args );
 
 	// Always ensure 'all' is enabled.
 	if ( empty( $options['all'] ) ) {
@@ -3102,43 +3100,43 @@ function bb_get_enabled_activity_filter_options( $args = array() ) {
  *
  * @return array Array of all activity timeline filters option labels.
  */
-function bb_get_activity_timeline_filter_options_labels( $context = 'default' ) {
+function bboss_get_activity_timeline_filter_options_labels( $context = 'default' ) {
 	$filters = array(
 		'just-me'   => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Personal Posts', 'buddyboss' ),
+			'default'      => __( 'Personal Posts', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'personal posts', 'buddyboss' ),
+			'show_context' => __( 'personal posts', 'buddyboss-platform' ),
 		),
 		'favorites' => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Reacted To', 'buddyboss' ),
+			'default'      => __( 'Reacted To', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'reacted to', 'buddyboss' ),
+			'show_context' => __( 'reacted to', 'buddyboss-platform' ),
 		),
 		'groups'    => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'From Groups', 'buddyboss' ),
+			'default'      => __( 'From Groups', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'from groups', 'buddyboss' ),
+			'show_context' => __( 'from groups', 'buddyboss-platform' ),
 		),
 		'friends'   => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'From Connections', 'buddyboss' ),
+			'default'      => __( 'From Connections', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'from connections', 'buddyboss' ),
+			'show_context' => __( 'from connections', 'buddyboss-platform' ),
 		),
 		'mentions'  => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Mentioned In', 'buddyboss' ),
+			'default'      => __( 'Mentioned In', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'mentioned in', 'buddyboss' ),
+			'show_context' => __( 'mentioned in', 'buddyboss-platform' ),
 		),
 		'following' => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Following', 'buddyboss' ),
+			'default'      => __( 'Following', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'following', 'buddyboss' ),
+			'show_context' => __( 'following', 'buddyboss-platform' ),
 		),
 	);
 
@@ -3154,7 +3152,7 @@ function bb_get_activity_timeline_filter_options_labels( $context = 'default' ) 
 	);
 
 	// Common function to get only allowed ones.
-	$labels = bb_filter_activity_filter_scope_keys( $labels );
+	$labels = bboss_filter_activity_filter_scope_keys( $labels );
 
 	/**
 	 * Filters the activity timeline filter options labels.
@@ -3179,7 +3177,7 @@ function bb_get_activity_timeline_filter_options_labels( $context = 'default' ) 
  *
  * @return array Array of enabled activity timeline filters options.
  */
-function bb_get_enabled_activity_timeline_filter_options( $args = array() ) {
+function bboss_get_enabled_activity_timeline_filter_options( $args = array() ) {
 
 	// Set default options if not provided.
 	$default = array(
@@ -3193,7 +3191,7 @@ function bb_get_enabled_activity_timeline_filter_options( $args = array() ) {
 
 	$args    = array_intersect_key( $args, $default );
 	$args    = wp_parse_args( $args, $default );
-	$options = bp_get_option( 'bb_activity_timeline_filter_options', $args );
+	$options = bboss_get_option( 'bb_activity_timeline_filter_options', $args );
 
 	// Always ensure 'just-me' is enabled.
 	if ( empty( $options['just-me'] ) ) {
@@ -3215,19 +3213,19 @@ function bb_get_enabled_activity_timeline_filter_options( $args = array() ) {
  *
  * @return array Array of all activity sorting options labels.
  */
-function bb_get_activity_sorting_options_labels( $context = 'default' ) {
+function bboss_get_activity_sorting_options_labels( $context = 'default' ) {
 	$sorting_options = array(
 		'date_recorded' => array(
 			/* translators: Sorting option label shown in dropdown menus */
-			'default'    => __( 'New Posts', 'buddyboss' ),
+			'default'    => __( 'New Posts', 'buddyboss-platform' ),
 			/* translators: Sorting option label shown after "by" text - use lowercase if grammatically appropriate in your language */
-			'by_context' => __( 'new posts', 'buddyboss' ),
+			'by_context' => __( 'new posts', 'buddyboss-platform' ),
 		),
 		'date_updated'  => array(
 			/* translators: Sorting option label shown in dropdown menus */
-			'default'    => __( 'Recent Activity', 'buddyboss' ),
+			'default'    => __( 'Recent Activity', 'buddyboss-platform' ),
 			/* translators: Sorting option label shown after "by" text - use lowercase if grammatically appropriate in your language */
-			'by_context' => __( 'recent activity', 'buddyboss' ),
+			'by_context' => __( 'recent activity', 'buddyboss-platform' ),
 		),
 	);
 
@@ -3265,7 +3263,7 @@ function bb_get_activity_sorting_options_labels( $context = 'default' ) {
  *
  * @return array Array of enabled activity sorting options.
  */
-function bb_get_enabled_activity_sorting_options( $args = array() ) {
+function bboss_get_enabled_activity_sorting_options( $args = array() ) {
 
 	// Set default options if not provided.
 	$default = array(
@@ -3275,7 +3273,7 @@ function bb_get_enabled_activity_sorting_options( $args = array() ) {
 
 	$args    = array_intersect_key( $args, $default );
 	$args    = wp_parse_args( $args, $default );
-	$options = bp_get_option( 'bb_activity_sorting_options', $args );
+	$options = bboss_get_option( 'bb_activity_sorting_options', $args );
 	$options = array_map( 'intval', $options );
 
 	// Always ensure 'date_recorded' is enabled.
@@ -3295,7 +3293,7 @@ function bb_get_enabled_activity_sorting_options( $args = array() ) {
  *
  * @return bool True if activity search enabled.
  */
-function bb_is_activity_search_enabled( $default = true ) {
+function bboss_is_activity_search_enabled( $default = true ) {
 
 	/**
 	 * Filters whether activity search is enabled.
@@ -3304,7 +3302,7 @@ function bb_is_activity_search_enabled( $default = true ) {
 	 *
 	 * @param bool $value Is activity search enabled.
 	 */
-	return (bool) apply_filters( 'bb_is_activity_search_enabled', (bool) bp_get_option( 'bb_enable_activity_search', $default ) );
+	return (bool) apply_filters( 'bb_is_activity_search_enabled', (bool) bboss_get_option( 'bb_enable_activity_search', $default ) );
 }
 
 /**
@@ -3316,7 +3314,7 @@ function bb_is_activity_search_enabled( $default = true ) {
  *
  * @return bool True if reactions feature is enabled, false otherwise.
  */
-function bb_is_reactions_feature_enabled( $reset = false ) {
+function bboss_is_reactions_feature_enabled( $reset = false ) {
 	static $is_enabled = null;
 
 	if ( $reset ) {
@@ -3328,14 +3326,14 @@ function bb_is_reactions_feature_enabled( $reset = false ) {
 	}
 
 	// Check if the feature registry exists (Settings 2.0).
-	if ( ! function_exists( 'bb_feature_registry' ) ) {
+	if ( ! function_exists( 'bboss_feature_registry' ) ) {
 		// Fallback: if no feature registry, assume enabled for backward compatibility.
 		$is_enabled = true;
 		return $is_enabled;
 	}
 
 	// Check the bb-active-features option directly for reactions.
-	$active_features = bp_get_option( 'bb-active-features', array() );
+	$active_features = bboss_get_option( 'bb-active-features', array() );
 
 	// Backward compatibility: if 'reactions' key not set (e.g. site not yet saved from Settings 2.0),
 	// treat as enabled so existing sites keep reactions. Must match is_active_callback in
@@ -3356,10 +3354,10 @@ function bb_is_reactions_feature_enabled( $reset = false ) {
  *
  * @param string $feature_id The feature ID that was toggled.
  */
-function bb_reset_reactions_feature_cache( $feature_id ) {
+function bboss_reset_reactions_feature_cache( $feature_id ) {
 	if ( 'reactions' === $feature_id ) {
-		bb_is_reactions_feature_enabled( true );
+		bboss_is_reactions_feature_enabled( true );
 	}
 }
-add_action( 'bb_feature_activated', 'bb_reset_reactions_feature_cache' );
-add_action( 'bb_feature_deactivated', 'bb_reset_reactions_feature_cache' );
+add_action( 'bb_feature_activated', 'bboss_reset_reactions_feature_cache' );
+add_action( 'bb_feature_deactivated', 'bboss_reset_reactions_feature_cache' );

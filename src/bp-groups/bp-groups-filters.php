@@ -33,12 +33,12 @@ add_filter( 'bp_get_group_description_excerpt', 'make_clickable', 9 );
 
 add_filter( 'bp_get_group_name', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_group_permalink', 'wp_filter_kses', 1 );
-add_filter( 'bp_get_group_description', 'bp_groups_filter_kses', 1 );
-add_filter( 'bp_get_new_group_description', 'bp_groups_filter_kses', 1 );
+add_filter( 'bp_get_group_description', 'bboss_groups_filter_kses', 1 );
+add_filter( 'bp_get_new_group_description', 'bboss_groups_filter_kses', 1 );
 
 add_filter( 'bp_get_group_description_excerpt', 'wp_filter_kses', 1 );
 add_filter( 'groups_group_name_before_save', 'wp_filter_kses', 1 );
-add_filter( 'groups_group_description_before_save', 'bp_groups_filter_kses', 1 );
+add_filter( 'groups_group_description_before_save', 'bboss_groups_filter_kses', 1 );
 
 add_filter( 'bp_get_group_description', 'stripslashes' );
 add_filter( 'bp_get_group_description_excerpt', 'stripslashes' );
@@ -63,28 +63,28 @@ add_filter( 'bp_get_new_group_name', 'esc_attr' );
 add_filter( 'bp_get_new_group_description', 'esc_textarea' );
 
 // Format numerical output.
-add_filter( 'bp_get_total_group_count', 'bp_core_number_format' );
-add_filter( 'bp_get_group_total_for_member', 'bp_core_number_format' );
-add_filter( 'bp_get_group_total_members', 'bp_core_number_format' );
+add_filter( 'bp_get_total_group_count', 'bboss_core_number_format' );
+add_filter( 'bp_get_group_total_for_member', 'bboss_core_number_format' );
+add_filter( 'bp_get_group_total_members', 'bboss_core_number_format' );
 
 // Activity component integration.
-add_filter( 'bp_activity_at_name_do_notifications', 'bp_groups_disable_at_mention_notification_for_non_public_groups', 10, 4 );
-add_filter( 'bbp_forums_at_name_do_notifications', 'bp_groups_disable_at_mention_forums_notification_for_non_public_groups', 10, 4 );
+add_filter( 'bp_activity_at_name_do_notifications', 'bboss_groups_disable_at_mention_notification_for_non_public_groups', 10, 4 );
+add_filter( 'bbp_forums_at_name_do_notifications', 'bboss_groups_disable_at_mention_forums_notification_for_non_public_groups', 10, 4 );
 
 // Exclude Forums if group type hide.
-add_filter( 'bbp_after_has_forums_parse_args', 'bp_groups_exclude_forums_by_group_type_args' );
+add_filter( 'bbp_after_has_forums_parse_args', 'bboss_groups_exclude_forums_by_group_type_args' );
 // Exclude Forums if group type hide.
-add_filter( 'bbp_after_has_topics_parse_args', 'bp_groups_exclude_forums_topics_by_group_type_args' );
+add_filter( 'bbp_after_has_topics_parse_args', 'bboss_groups_exclude_forums_topics_by_group_type_args' );
 
 // media scope filter.
-add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10, 2 );
-add_filter( 'bp_video_set_groups_scope_args', 'bp_groups_filter_video_scope', 10, 2 );
-add_filter( 'bp_document_set_document_groups_scope_args', 'bp_groups_filter_document_scope', 10, 2 );
-add_filter( 'bp_document_set_folder_groups_scope_args', 'bp_groups_filter_folder_scope', 10, 2 );
+add_filter( 'bp_media_set_groups_scope_args', 'bboss_groups_filter_media_scope', 10, 2 );
+add_filter( 'bp_video_set_groups_scope_args', 'bboss_groups_filter_video_scope', 10, 2 );
+add_filter( 'bp_document_set_document_groups_scope_args', 'bboss_groups_filter_document_scope', 10, 2 );
+add_filter( 'bp_document_set_folder_groups_scope_args', 'bboss_groups_filter_folder_scope', 10, 2 );
 
-add_filter( 'bp_get_group_name', 'bb_core_remove_unfiltered_html', 99 );
-add_filter( 'bp_get_new_group_name', 'bb_core_remove_unfiltered_html', 99 );
-add_filter( 'groups_group_name_before_save', 'bb_core_remove_unfiltered_html', 99 );
+add_filter( 'bp_get_group_name', 'bboss_core_remove_unfiltered_html', 99 );
+add_filter( 'bp_get_new_group_name', 'bboss_core_remove_unfiltered_html', 99 );
+add_filter( 'groups_group_name_before_save', 'bboss_core_remove_unfiltered_html', 99 );
 
 // setup backward compatibilty to retrieve the encoded value from db.
 add_filter( 'groups_group_name_before_save', 'html_entity_decode' );
@@ -92,24 +92,24 @@ add_filter( 'bp_get_group_name', 'html_entity_decode' );
 add_filter( 'bp_get_group_description', 'html_entity_decode' );
 
 // Load Group Notifications.
-add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
+add_action( 'bp_groups_includes', 'bboss_load_groups_notifications' );
 
 // Filter group count.
-add_filter( 'bp_groups_get_where_count_conditions', 'bb_groups_count_update_where_sql', 10, 2 );
+add_filter( 'bp_groups_get_where_count_conditions', 'bboss_groups_count_update_where_sql', 10, 2 );
 
 // Remove from group forums and topics.
-add_action( 'groups_leave_group', 'bb_groups_unsubscribe_group_forums_topic', 10, 2 );
+add_action( 'groups_leave_group', 'bboss_groups_unsubscribe_group_forums_topic', 10, 2 );
 
 // The user suspends/unsuspends and only when a single group organizer then fire these hooks.
-add_action( 'bp_suspend_hide_user', 'bb_group_remove_suspended_user', 99, 1 );
-add_action( 'bp_suspend_unhide_user', 'bb_group_add_unsuspended_user', 9, 1 );
+add_action( 'bp_suspend_hide_user', 'bboss_group_remove_suspended_user', 99, 1 );
+add_action( 'bp_suspend_unhide_user', 'bboss_group_add_unsuspended_user', 9, 1 );
 
-add_action( 'bp_before_group_body', 'bb_before_group_body_callback' );
-add_action( 'bp_after_group_body', 'bb_after_group_body_callback' );
-add_action( 'bp_before_subgroups_loop', 'bb_before_group_body_callback' );
-add_action( 'bp_after_subgroups_loop', 'bb_after_group_body_callback' );
+add_action( 'bp_before_group_body', 'bboss_before_group_body_callback' );
+add_action( 'bp_after_group_body', 'bboss_after_group_body_callback' );
+add_action( 'bp_before_subgroups_loop', 'bboss_before_group_body_callback' );
+add_action( 'bp_after_subgroups_loop', 'bboss_after_group_body_callback' );
 
-add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_my_groups', 10, 1 );
+add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bboss_readylaunch_middle_content_my_groups', 10, 1 );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
@@ -119,7 +119,7 @@ add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle
  * @param string $content Content to filter.
  * @return string
  */
-function bp_groups_filter_kses( $content = '' ) {
+function bboss_groups_filter_kses( $content = '' ) {
 
 	$allowed_tags = array();
 	/**
@@ -170,18 +170,18 @@ function bp_groups_filter_kses( $content = '' ) {
  * @param bool $mentions_enabled True if mentions are enabled.
  * @return bool True if mentions scripts should be loaded.
  */
-function bp_groups_maybe_load_mentions_scripts( $load_mentions, $mentions_enabled ) {
+function bboss_groups_maybe_load_mentions_scripts( $load_mentions, $mentions_enabled ) {
 	if ( ! $mentions_enabled ) {
 		return $load_mentions;
 	}
 
-	if ( $load_mentions || bp_is_group_activity() ) {
+	if ( $load_mentions || bboss_is_group_activity() ) {
 		return true;
 	}
 
 	return $load_mentions;
 }
-add_filter( 'bp_activity_maybe_load_mentions_scripts', 'bp_groups_maybe_load_mentions_scripts', 10, 2 );
+add_filter( 'bp_activity_maybe_load_mentions_scripts', 'bboss_groups_maybe_load_mentions_scripts', 10, 2 );
 
 /**
  * Disable at-mention notifications for users who are not a member of the non-public group where the activity appears.
@@ -191,23 +191,23 @@ add_filter( 'bp_activity_maybe_load_mentions_scripts', 'bp_groups_maybe_load_men
  * @param bool                 $send      Whether to send the notification.
  * @param array                $usernames Array of all usernames being notified.
  * @param int                  $user_id   ID of the user to be notified.
- * @param BP_Activity_Activity $activity  Activity object.
+ * @param BBoss_Activity_Activity $activity  Activity object.
  * @return bool
  */
-function bp_groups_disable_at_mention_notification_for_non_public_groups( $send, $usernames, $user_id, $activity ) {
+function bboss_groups_disable_at_mention_notification_for_non_public_groups( $send, $usernames, $user_id, $activity ) {
 	// Skip the check for administrators, who can get notifications from non-public groups.
-	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+	if ( bboss_user_can( $user_id, 'bp_moderate' ) ) {
 		return $send;
 	}
 
 	if ( 'activity_update' === $activity->type ) {
 		$group_id = 'groups' === $activity->component ? $activity->item_id : 0;
 	} elseif ( 'activity_comment' === $activity->type ) {
-		$comment  = new BP_Activity_Activity( $activity->item_id );
+		$comment  = new BBoss_Activity_Activity( $activity->item_id );
 		$group_id = ! empty( $comment->component ) && 'groups' === $comment->component ? $comment->item_id : 0;
 	}
 
-	if ( $group_id && ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $group_id ) ) ) {
+	if ( $group_id && ! bboss_user_can( $user_id, 'groups_access_group', array( 'group_id' => $group_id ) ) ) {
 		$send = false;
 	}
 
@@ -225,14 +225,14 @@ function bp_groups_disable_at_mention_notification_for_non_public_groups( $send,
  * @return bool
  * @since BuddyBoss 1.2.9
  */
-function bp_groups_disable_at_mention_forums_notification_for_non_public_groups( $send, $usernames, $user_id, $forum_id ) {
+function bboss_groups_disable_at_mention_forums_notification_for_non_public_groups( $send, $usernames, $user_id, $forum_id ) {
 	// Skip the check for administrators, who can get notifications from non-public groups.
-	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+	if ( bboss_user_can( $user_id, 'bp_moderate' ) ) {
 		return $send;
 	}
 
 	// Get group ID's for this forum
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 
 	// Bail if the post isn't associated with a group
 	if ( empty( $group_ids ) ) {
@@ -242,7 +242,7 @@ function bp_groups_disable_at_mention_forums_notification_for_non_public_groups(
 	// @todo Multiple group forums/forum groups
 	$group_id = $group_ids[0];
 
-	if ( ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $group_id ) ) ) {
+	if ( ! bboss_user_can( $user_id, 'groups_access_group', array( 'group_id' => $group_id ) ) ) {
 		$send = false;
 	}
 
@@ -263,9 +263,9 @@ function bp_groups_disable_at_mention_forums_notification_for_non_public_groups(
  *
  * @return bool
  */
-function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $args ) {
+function bboss_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $args ) {
 	if ( empty( $args['group_id'] ) ) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 	} else {
 		$group_id = (int) $args['group_id'];
 	}
@@ -281,13 +281,13 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 			$retval = false;
 
 			// The group must allow joining, and the user should not currently be a member.
-			$group = groups_get_group( $group_id );
-			if ( ( 'public' === bp_get_group_status( $group )
-				&& ! groups_is_user_member( $user_id, $group->id )
-				&& ! groups_is_user_banned( $user_id, $group->id ) )
+			$group = bboss_groups_get_group( $group_id );
+			if ( ( 'public' === bboss_get_group_status( $group )
+				&& ! bboss_groups_is_user_member( $user_id, $group->id )
+				&& ! bboss_groups_is_user_banned( $user_id, $group->id ) )
 				// Site admins can join any group they are not a member of.
-				|| ( bp_user_can( $user_id, 'bp_moderate' )
-				&& ! groups_is_user_member( $user_id, $group->id ) )
+				|| ( bboss_user_can( $user_id, 'bp_moderate' )
+				&& ! bboss_groups_is_user_member( $user_id, $group->id ) )
 			) {
 				$retval = true;
 			}
@@ -306,11 +306,11 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 			* The group must accept membership requests, and the user should not
 			* currently be a member or be banned.
 			*/
-			$group = groups_get_group( $group_id );
-			if ( 'private' === bp_get_group_status( $group )
-				&& ! groups_is_user_member( $user_id, $group->id )
-				&& ! groups_check_for_membership_request( $user_id, $group->id )
-				&& ! groups_is_user_banned( $user_id, $group->id )
+			$group = bboss_groups_get_group( $group_id );
+			if ( 'private' === bboss_get_group_status( $group )
+				&& ! bboss_groups_is_user_member( $user_id, $group->id )
+				&& ! bboss_groups_check_for_membership_request( $user_id, $group->id )
+				&& ! bboss_groups_is_user_banned( $user_id, $group->id )
 			) {
 				$retval = true;
 			}
@@ -327,26 +327,26 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 			* currently be a member or be banned from the group.
 			*/
 			// Users with the 'bp_moderate' cap can always send invitations.
-			if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+			if ( bboss_user_can( $user_id, 'bp_moderate' ) ) {
 				$retval = true;
 			} else {
-				$invite_status = bp_group_get_invite_status( $group_id );
+				$invite_status = bboss_group_get_invite_status( $group_id );
 
 				switch ( $invite_status ) {
 					case 'admins':
-						if ( groups_is_user_admin( $user_id, $group_id ) ) {
+						if ( bboss_groups_is_user_admin( $user_id, $group_id ) ) {
 							$retval = true;
 						}
 						break;
 
 					case 'mods':
-						if ( groups_is_user_mod( $user_id, $group_id ) || groups_is_user_admin( $user_id, $group_id ) ) {
+						if ( bboss_groups_is_user_mod( $user_id, $group_id ) || bboss_groups_is_user_admin( $user_id, $group_id ) ) {
 							$retval = true;
 						}
 						break;
 
 					case 'members':
-						if ( groups_is_user_member( $user_id, $group_id ) ) {
+						if ( bboss_groups_is_user_member( $user_id, $group_id ) ) {
 							$retval = true;
 						}
 						break;
@@ -367,9 +367,9 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 			* The group must allow invitations, and the user should not
 			* currently be a member or be banned from the group.
 			*/
-			$group = groups_get_group( $group_id );
-			if ( ! groups_is_user_member( $user_id, $group->id )
-				&& ! groups_is_user_banned( $user_id, $group->id )
+			$group = bboss_groups_get_group( $group_id );
+			if ( ! bboss_groups_is_user_member( $user_id, $group->id )
+				&& ! bboss_groups_is_user_banned( $user_id, $group->id )
 			) {
 				$retval = true;
 			}
@@ -381,17 +381,17 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 				break;
 			}
 
-			$group = groups_get_group( $group_id );
+			$group = bboss_groups_get_group( $group_id );
 
 			// If the check is for the logged-in user, use the BP_Groups_Group property.
-			if ( $user_id === bp_loggedin_user_id() ) {
+			if ( $user_id === bboss_loggedin_user_id() ) {
 				$retval = $group->user_has_access;
 
 				/*
 				* If the check is for a specified user who is not the logged-in user
 				* run the check manually.
 				*/
-			} elseif ( 'public' === bp_get_group_status( $group ) || groups_is_user_member( $user_id, $group->id ) ) {
+			} elseif ( 'public' === bboss_get_group_status( $group ) || bboss_groups_is_user_member( $user_id, $group->id ) ) {
 				$retval = true;
 			}
 			break;
@@ -402,17 +402,17 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 				break;
 			}
 
-			$group = groups_get_group( $group_id );
+			$group = bboss_groups_get_group( $group_id );
 
 			// If the check is for the logged-in user, use the BP_Groups_Group property.
-			if ( $user_id === bp_loggedin_user_id() ) {
+			if ( $user_id === bboss_loggedin_user_id() ) {
 				$retval = $group->is_visible;
 
 				/*
 				* If the check is for a specified user who is not the logged-in user
 				* run the check manually.
 				*/
-			} elseif ( 'hidden' !== bp_get_group_status( $group ) || groups_is_user_member( $user_id, $group->id ) ) {
+			} elseif ( 'hidden' !== bboss_get_group_status( $group ) || bboss_groups_is_user_member( $user_id, $group->id ) ) {
 				$retval = true;
 			}
 			break;
@@ -421,7 +421,7 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 	return $retval;
 
 }
-add_filter( 'bp_user_can', 'bp_groups_user_can_filter', 10, 5 );
+add_filter( 'bp_user_can', 'bboss_groups_user_can_filter', 10, 5 );
 
 /**
  * Filter the bp_activity_user_can_delete value to allow moderators to delete activities of a group.
@@ -429,24 +429,24 @@ add_filter( 'bp_user_can', 'bp_groups_user_can_filter', 10, 5 );
  * @since BuddyBoss 1.0.0
  *
  * @param bool                       $can_delete     Whether or not the current user has the capability.
- * @param false|BP_Activity_Activity $activity
+ * @param false|BBoss_Activity_Activity $activity
  *
  * @return bool
  */
-function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
+function bboss_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 
 	// Allow Mods to delete activity of group
 	if ( ! $can_delete && is_user_logged_in() && 'groups' === $activity->component ) {
-		$group = groups_get_group( $activity->item_id );
+		$group = bboss_groups_get_group( $activity->item_id );
 
 		// As per the new logic moderator can delete the activity of all the users. So removed the && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) condition.
 		if (
 			! empty( $group ) &&
 			(
-				groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
-				groups_is_user_admin( get_current_user_id(), $activity->item_id )
+				bboss_groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
+				bboss_groups_is_user_admin( get_current_user_id(), $activity->item_id )
 			) &&
-			! groups_is_user_admin( bp_get_activity_user_id(), $activity->item_id )
+			! bboss_groups_is_user_admin( bboss_get_activity_user_id(), $activity->item_id )
 		) {
 			$can_delete = true;
 		}
@@ -454,7 +454,7 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 
 	return $can_delete;
 }
-add_filter( 'bp_activity_user_can_delete', 'bp_groups_allow_mods_to_delete_activity', 10, 2 );
+add_filter( 'bp_activity_user_can_delete', 'bboss_groups_allow_mods_to_delete_activity', 10, 2 );
 
 /**
  * Exclude Forums from forum loop if any forum is attached to a group and that group have a
@@ -465,16 +465,16 @@ add_filter( 'bp_activity_user_can_delete', 'bp_groups_allow_mods_to_delete_activ
  * @param $args_forum
  * @return mixed $args_forum
  */
-function bp_groups_exclude_forums_by_group_type_args( $args_forum ) {
-	if ( bbp_is_forum_archive() || bbp_is_topic_archive() ) {
+function bboss_groups_exclude_forums_by_group_type_args( $args_forum ) {
+	if ( bboss_bbp_is_forum_archive() || bboss_bbp_is_topic_archive() ) {
 		$exclude_forum_ids = array();
 		// Check group type enabled
-		if ( true === bp_disable_group_type_creation() ) {
+		if ( true === bboss_disable_group_type_creation() ) {
 			// Get excluded group ids.
-			$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
+			$exclude_group_ids = array_unique( bboss_groups_get_excluded_group_ids_by_type() );
 			foreach ( $exclude_group_ids as $exclude_group_id ) {
 				// Get forums id by group id.
-				$exclude_forum_ids_by_group = bbp_get_group_forum_ids( (int) $exclude_group_id );
+				$exclude_forum_ids_by_group = bboss_bbp_get_group_forum_ids( (int) $exclude_group_id );
 				foreach ( $exclude_forum_ids_by_group as $exclude_id ) {
 					// Set $exclude_forum_ids array.
 					$exclude_forum_ids[] = $exclude_id;
@@ -497,22 +497,22 @@ function bp_groups_exclude_forums_by_group_type_args( $args_forum ) {
  * @param $args_topic
  * @return mixed $args_topic
  */
-function bp_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
+function bboss_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
 
-	if ( bbp_is_forum_archive() || bbp_is_topic_archive() ) {
+	if ( bboss_bbp_is_forum_archive() || bboss_bbp_is_topic_archive() ) {
 		$exclude_topic_ids = array();
 		// Check group type enabled
-		if ( true === bp_disable_group_type_creation() ) {
+		if ( true === bboss_disable_group_type_creation() ) {
 			// Get excluded group ids.
-			$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
+			$exclude_group_ids = array_unique( bboss_groups_get_excluded_group_ids_by_type() );
 			foreach ( $exclude_group_ids as $exclude_group_id ) {
 				// Get forums id by group id.
-				$exclude_forum_ids = bbp_get_group_forum_ids( $exclude_group_id );
+				$exclude_forum_ids = bboss_bbp_get_group_forum_ids( $exclude_group_id );
 				// Loop forum ids to get topics
 				foreach ( $exclude_forum_ids as $exclude_forum_id ) {
 					$args = array(
 						'post_parent' => $exclude_forum_id,
-						'post_type'   => bbp_get_topic_post_type(),
+						'post_type'   => bboss_bbp_get_topic_post_type(),
 						'numberposts' => - 1,
 						'fields'      => 'ids',
 					);
@@ -541,20 +541,20 @@ function bp_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
+function bboss_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	if ( 'groups' !== $filter['scope'] ) {
 		// Fetch public groups.
-		$public_groups = groups_get_groups( array(
+		$public_groups = bboss_groups_get_groups( array(
 			'fields'   => 'ids',
 			'status'   => 'public',
 			'per_page' => - 1,
@@ -567,7 +567,7 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 	}
 
 	// Determine groups of user.
-	$groups = groups_get_user_groups( $user_id );
+	$groups = bboss_groups_get_user_groups( $user_id );
 	if ( ! empty( $groups['groups'] ) ) {
 		$groups = $groups['groups'];
 	} else {
@@ -587,8 +587,8 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => 0 );
 	}
 
-	if ( bp_is_group() ) {
-		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	if ( bboss_is_group() ) {
+		$group_ids = array( 'groups' => array( bboss_get_current_group_id() ) );
 	}
 
 	$args = array(
@@ -604,7 +604,7 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 		),
 	);
 
-	if ( ! bp_is_group_albums_support_enabled() ) {
+	if ( ! bboss_is_group_albums_support_enabled() ) {
 		$args[] = array(
 			'column'  => 'album_id',
 			'compare' => '=',
@@ -645,20 +645,20 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
+function bboss_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	if ( 'groups' !== $filter['scope'] ) {
 		// Fetch public groups.
-		$public_groups = groups_get_groups(
+		$public_groups = bboss_groups_get_groups(
 			array(
 				'fields'   => 'ids',
 				'status'   => 'public',
@@ -673,7 +673,7 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 	}
 
 	// Determine groups of user.
-	$groups = groups_get_user_groups( $user_id );
+	$groups = bboss_groups_get_user_groups( $user_id );
 	if ( ! empty( $groups['groups'] ) ) {
 		$groups = $groups['groups'];
 	} else {
@@ -693,8 +693,8 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => 0 );
 	}
 
-	if ( bp_is_group() ) {
-		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	if ( bboss_is_group() ) {
+		$group_ids = array( 'groups' => array( bboss_get_current_group_id() ) );
 	}
 
 	$args = array(
@@ -710,7 +710,7 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 		),
 	);
 
-	if ( ! bp_is_group_video_support_enabled() ) {
+	if ( ! bboss_is_group_video_support_enabled() ) {
 		$args[] = array(
 			'column'  => 'album_id',
 			'compare' => '=',
@@ -751,15 +751,15 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_groups_filter_document_scope( $retval = array(), $filter = array() ) {
+function bboss_groups_filter_document_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	$folder_id = 0;
@@ -770,7 +770,7 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 
 	if ( 'groups' !== $filter['scope'] ) {
 		// Fetch public groups.
-		$public_groups = groups_get_groups( array(
+		$public_groups = bboss_groups_get_groups( array(
 			'fields'   => 'ids',
 			'status'   => 'public',
 			'per_page' => - 1,
@@ -784,7 +784,7 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 	}
 
 	// Determine groups of user.
-	$groups = groups_get_user_groups( $user_id );
+	$groups = bboss_groups_get_user_groups( $user_id );
 	if ( ! empty( $groups['groups'] ) ) {
 		$groups = $groups['groups'];
 	} else {
@@ -804,8 +804,8 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 		$group_ids = array( 'groups' => array( 0 ) );
 	}
 
-	if ( bp_is_group() ) {
-		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	if ( bboss_is_group() ) {
+		$group_ids = array( 'groups' => array( bboss_get_current_group_id() ) );
 	} elseif ( ! empty( $filter['group_id'] ) ) {
 		$group_ids = array( 'groups' => array( $filter['group_id'] ) );
 	}
@@ -846,7 +846,7 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 		}
 	}
 
-	if ( ! bp_is_group_document_support_enabled() ) {
+	if ( ! bboss_is_group_document_support_enabled() ) {
 		$group_ids['groups'] = array( 0 );
 	}
 
@@ -867,9 +867,9 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 	return $args;
 }
 
-function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
+function bboss_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 
-	if ( ! bp_is_group_document_support_enabled() ) {
+	if ( ! bboss_is_group_document_support_enabled() ) {
 		return $retval;
 	}
 
@@ -877,9 +877,9 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	$folder_id = 0;
@@ -891,7 +891,7 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 
 	if ( 'groups' !== $filter['scope'] ) {
 		// Fetch public groups.
-		$public_groups = groups_get_groups( array(
+		$public_groups = bboss_groups_get_groups( array(
 			'fields'   => 'ids',
 			'status'   => 'public',
 			'per_page' => - 1,
@@ -905,7 +905,7 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 	}
 
 	// Determine groups of user.
-	$groups = groups_get_user_groups( $user_id );
+	$groups = bboss_groups_get_user_groups( $user_id );
 	if ( ! empty( $groups['groups'] ) ) {
 		$groups = $groups['groups'];
 	} else {
@@ -925,8 +925,8 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => array( 0 ) );
 	}
 
-	if ( bp_is_group() ) {
-		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	if ( bboss_is_group() ) {
+		$group_ids = array( 'groups' => array( bboss_get_current_group_id() ) );
 	} elseif ( ! empty( $filter['group_id'] ) ) {
 		$group_ids = array( 'groups' => array( $filter['group_id'] ) );
 	}
@@ -993,19 +993,19 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
  * @since BuddyBoss 1.5.8
  *
  * @param array                 $group_member_ids          Array of associated member IDs.
- * @param BP_Group_Member_Query $group_member_query_object Current BP_Group_Member_Query instance.
+ * @param BBoss_Group_Member_Query $group_member_query_object Current BBoss_Group_Member_Query instance.
  */
-function bb_group_member_query_group_message_member_ids( $group_member_ids, $group_member_query_object ) {
+function bboss_group_member_query_group_message_member_ids( $group_member_ids, $group_member_query_object ) {
 
-	if ( bp_is_active( 'groups' ) && bp_is_group_single() && bp_is_group_messages() && 'private-message' === bb_get_group_current_messages_tab() ) {
+	if ( bboss_is_active( 'groups' ) && bboss_is_group_single() && bboss_is_group_messages() && 'private-message' === bboss_bb_get_group_current_messages_tab() ) {
 
 		$can_send_arr  = array();
 		$cant_send_arr = array();
 
 		// Check if force friendship is enabled and check recipients.
-		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+		if ( bboss_force_friendship_to_message() && bboss_is_active( 'friends' ) ) {
 			foreach ( $group_member_ids as $member_id ) {
-				if ( friends_check_friendship( bp_loggedin_user_id(), $member_id ) ) {
+				if ( bboss_friends_check_friendship( bboss_loggedin_user_id(), $member_id ) ) {
 					$can_send_arr[] = $member_id;
 				} else {
 					$cant_send_arr[] = $member_id;
@@ -1024,11 +1024,11 @@ function bb_group_member_query_group_message_member_ids( $group_member_ids, $gro
 	 * @since BuddyBoss 1.5.8
 	 *
 	 * @param array                 $group_member_ids          Array of associated member IDs.
-	 * @param BP_Group_Member_Query $group_member_query_object Current BP_Group_Member_Query instance.
+	 * @param BBoss_Group_Member_Query $group_member_query_object Current BBoss_Group_Member_Query instance.
 	 */
 	return apply_filters( 'bb_group_member_query_group_message_member_ids', $group_member_ids, $group_member_query_object );
 }
-add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_group_message_member_ids', 9999, 2 );
+add_filter( 'bp_group_member_query_group_member_ids', 'bboss_group_member_query_group_message_member_ids', 9999, 2 );
 
 /**
  * Filters the my-groups menu url for the logged in group member.
@@ -1041,7 +1041,7 @@ add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_gro
  * @param array $sorted_menu_objects Array of menu objects.
  * @param array $args                Array of arguments.
  */
-function bb_my_group_menu_url( $sorted_menu_objects, $args ) {
+function bboss_my_group_menu_url( $sorted_menu_objects, $args ) {
 
 	if ( 'header-menu' !== $args->theme_location ) {
 		return $sorted_menu_objects;
@@ -1050,16 +1050,16 @@ function bb_my_group_menu_url( $sorted_menu_objects, $args ) {
 	foreach ( $sorted_menu_objects as $key => $menu_object ) {
 
 		// Replace the URL when bp_loggedin_user_domain && bp_displayed_user_domain are not same.
-		if ( class_exists( 'BuddyPress' ) ) {
-			if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
-				$menu_object->url = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $menu_object->url );
+		if ( class_exists( 'BBoss_Platform' ) ) {
+			if ( bboss_loggedin_user_domain() !== bboss_displayed_user_domain() ) {
+				$menu_object->url = str_replace( bboss_displayed_user_domain(), bboss_loggedin_user_domain(), $menu_object->url );
 			}
 		}
 	}
 
 	return $sorted_menu_objects;
 }
-add_filter( 'wp_nav_menu_objects', 'bb_my_group_menu_url', 10, 2 );
+add_filter( 'wp_nav_menu_objects', 'bboss_my_group_menu_url', 10, 2 );
 
 
 /**
@@ -1067,9 +1067,9 @@ add_filter( 'wp_nav_menu_objects', 'bb_my_group_menu_url', 10, 2 );
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_load_groups_notifications() {
-	if ( class_exists( 'BP_Groups_Notification' ) ) {
-		BP_Groups_Notification::instance();
+function bboss_load_groups_notifications() {
+	if ( class_exists( 'BBoss_Groups_Notification' ) ) {
+		BBoss_Groups_Notification::instance();
 	}
 }
 
@@ -1078,14 +1078,14 @@ function bb_load_groups_notifications() {
  *
  * @since BuddyBoss 2.0.0
  */
-function bb_load_group_type_label_custom_css() {
-	if ( true === bp_disable_group_type_creation() ) {
-		$registered_group_types = bp_groups_get_group_types();
+function bboss_load_group_type_label_custom_css() {
+	if ( true === bboss_disable_group_type_creation() ) {
+		$registered_group_types = bboss_groups_get_group_types();
 		$cache_key              = 'bb-group-type-label-css';
 		$group_type_custom_css  = wp_cache_get( $cache_key, 'bp_groups_group_type' );
 		if ( false === $group_type_custom_css && ! empty( $registered_group_types ) ) {
 			foreach ( $registered_group_types as $type ) {
-				$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $type ) : '';
+				$label_color_data = function_exists( 'bboss_get_group_type_label_colors' ) ? bboss_get_group_type_label_colors( $type ) : '';
 				if (
 					isset( $label_color_data ) &&
 					isset( $label_color_data['color_type'] ) &&
@@ -1104,9 +1104,9 @@ function bb_load_group_type_label_custom_css() {
 	}
 
 	// load the group card template.
-	bb_group_card_template();
+	bboss_group_card_template();
 }
-add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
+add_action( 'bp_enqueue_scripts', 'bboss_load_group_type_label_custom_css', 12 );
 
 /**
  * Display group header action button when layout is left.
@@ -1115,12 +1115,12 @@ add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
  *
  * @return void
  */
-function bb_group_single_left_header_actions() {
-	if ( 'left' === bb_platform_group_header_style() ) {
-		bb_group_single_header_actions();
+function bboss_group_single_left_header_actions() {
+	if ( 'left' === bboss_platform_group_header_style() ) {
+		bboss_group_single_header_actions();
 	}
 }
-add_action( 'bb_group_single_top_header_action', 'bb_group_single_left_header_actions' );
+add_action( 'bb_group_single_top_header_action', 'bboss_group_single_left_header_actions' );
 
 /**
  * Display group header action button when layout is center.
@@ -1129,12 +1129,12 @@ add_action( 'bb_group_single_top_header_action', 'bb_group_single_left_header_ac
  *
  * @return void
  */
-function bb_group_single_center_header_actions() {
-	if ( 'centered' === bb_platform_group_header_style() ) {
-		bb_group_single_header_actions();
+function bboss_group_single_center_header_actions() {
+	if ( 'centered' === bboss_platform_group_header_style() ) {
+		bboss_group_single_header_actions();
 	}
 }
-add_action( 'bb_group_single_bottom_header_action', 'bb_group_single_center_header_actions' );
+add_action( 'bb_group_single_bottom_header_action', 'bboss_group_single_center_header_actions' );
 
 /**
  * Filters the Where SQL statement.
@@ -1146,9 +1146,9 @@ add_action( 'bb_group_single_bottom_header_action', 'bb_group_single_center_head
  *
  * @return mixed Where SQL
  */
-function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) {
+function bboss_groups_count_update_where_sql( $where_conditions, $args = array() ) {
 
-	if ( ! bp_is_user_groups() && bp_is_groups_directory() && true === (bool) bp_enable_group_hide_subgroups() ) {
+	if ( ! bboss_is_user_groups() && bboss_is_groups_directory() && true === (bool) bboss_enable_group_hide_subgroups() ) {
 		$where_conditions[] = 'g.parent_id = 0';
 	}
 
@@ -1165,10 +1165,10 @@ function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) 
  *
  * @return void
  */
-function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
+function bboss_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 
 	// Bail if forum is disabled.
-	if ( ! bp_is_active( 'forums' ) ) {
+	if ( ! bboss_is_active( 'forums' ) ) {
 		return;
 	}
 
@@ -1177,12 +1177,12 @@ function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 		return;
 	}
 
-	$forum_ids = bbp_get_group_forum_ids( $group_id );
+	$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 	if ( empty( $forum_ids ) ) {
 		return;
 	}
 
-	$notifications = BB_Subscriptions::get(
+	$notifications = BBoss_Subscriptions::get(
 		array(
 			'user_id'           => $user_id,
 			'type'              => 'topic',
@@ -1197,12 +1197,12 @@ function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 
 	// Loop through subscribed topics and remove user from this group related topics.
 	foreach ( (array) $notifications['subscriptions'] as $topic_id ) {
-		$topic_forum_id = bbp_get_topic_forum_id( $topic_id );
+		$topic_forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 		if (
-			bbp_is_forum_private( $topic_forum_id ) ||
-			bbp_is_forum_hidden( $topic_forum_id )
+			bboss_bbp_is_forum_private( $topic_forum_id ) ||
+			bboss_bbp_is_forum_hidden( $topic_forum_id )
 		) {
-			bbp_remove_user_topic_subscription( $user_id, $topic_id );
+			bboss_bbp_remove_user_topic_subscription( $user_id, $topic_id );
 		}
 	}
 }
@@ -1216,15 +1216,15 @@ function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
  *
  * @return void
  */
-function bb_group_remove_suspended_user( $user_id ) {
+function bboss_group_remove_suspended_user( $user_id ) {
 	global $wpdb, $bp;
 	if ( empty( $user_id ) ) {
 		return;
 	}
 	// Remove user when suspended.
 	if (
-		function_exists( 'bp_moderation_is_user_suspended' ) &&
-		bp_moderation_is_user_suspended( $user_id )
+		function_exists( 'bboss_moderation_is_user_suspended' ) &&
+		bboss_moderation_is_user_suspended( $user_id )
 	) {
 		$group_ids = $wpdb->get_col(
 			$wpdb->prepare(
@@ -1239,7 +1239,7 @@ function bb_group_remove_suspended_user( $user_id ) {
 		if ( ! empty( $group_ids ) ) {
 			$admin = get_users(
 				array(
-					'blog_id' => bp_get_root_blog_id(),
+					'blog_id' => bboss_get_root_blog_id(),
 					'fields'  => 'id',
 					'number'  => 1,
 					'orderby' => 'ID',
@@ -1248,29 +1248,29 @@ function bb_group_remove_suspended_user( $user_id ) {
 				)
 			);
 			foreach ( $group_ids as $group_id ) {
-				if ( count( groups_get_group_admins( $group_id ) ) < 2 ) {
+				if ( count( bboss_groups_get_group_admins( $group_id ) ) < 2 ) {
 
 					if ( ! empty( $admin ) ) {
-						if ( bp_is_active( 'messages' ) ) {
-							remove_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+						if ( bboss_is_active( 'messages' ) ) {
+							remove_action( 'groups_join_group', 'bboss_group_messages_join_new_member', 10, 2 );
 						}
-						add_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+						add_filter( 'bb_group_join_groups_record_activity', 'bboss_group_join_groups_record_activity_unsuspend_users' );
 
-						groups_join_group( $group_id, $admin[0] );
+						bboss_groups_join_group( $group_id, $admin[0] );
 
-						remove_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
-						if ( bp_is_active( 'messages' ) ) {
-							add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+						remove_filter( 'bb_group_join_groups_record_activity', 'bboss_group_join_groups_record_activity_unsuspend_users' );
+						if ( bboss_is_active( 'messages' ) ) {
+							add_action( 'groups_join_group', 'bboss_group_messages_join_new_member', 10, 2 );
 						}
-						$member = new BP_Groups_Member( $admin[0], $group_id );
+						$member = new BBoss_Groups_Member( $admin[0], $group_id );
 						$member->promote( 'admin' );
 					}
 				}
 
-				BP_Groups_Member::delete( $user_id, $group_id );
+				BBoss_Groups_Member::delete( $user_id, $group_id );
 
 				// Update the group meta to store organiser when they suspended.
-				$suspended_users = groups_get_groupmeta( $group_id, 'bb_suspended_users' );
+				$suspended_users = bboss_groups_get_groupmeta( $group_id, 'bb_suspended_users' );
 				if ( ! empty( $suspended_users ) && ! empty( $suspended_users['admins'] ) ) {
 					$suspended_users['admin'][] = $user_id;
 				} else {
@@ -1282,7 +1282,7 @@ function bb_group_remove_suspended_user( $user_id ) {
 				}
 
 				$suspended_users['admin'] = array_unique( $suspended_users['admin'] );
-				groups_update_groupmeta( $group_id, 'bb_suspended_users', $suspended_users );
+				bboss_groups_update_groupmeta( $group_id, 'bb_suspended_users', $suspended_users );
 			}
 		}
 	}
@@ -1297,7 +1297,7 @@ function bb_group_remove_suspended_user( $user_id ) {
  *
  * @return void
  */
-function bb_group_add_unsuspended_user( $user_id ) {
+function bboss_group_add_unsuspended_user( $user_id ) {
 	global $wpdb, $bp;
 
 	if ( empty( $user_id ) ) {
@@ -1328,25 +1328,25 @@ function bb_group_add_unsuspended_user( $user_id ) {
 					// Remove that user from meta.
 					unset( $group_meta['admin'][ $result_index ] );
 
-					if ( bp_is_active( 'messages' ) ) {
-						remove_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+					if ( bboss_is_active( 'messages' ) ) {
+						remove_action( 'groups_join_group', 'bboss_group_messages_join_new_member', 10, 2 );
 					}
-					add_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+					add_filter( 'bb_group_join_groups_record_activity', 'bboss_group_join_groups_record_activity_unsuspend_users' );
 
 					// Join this user in the group.
-					groups_join_group( $group['group_id'], $user_id );
+					bboss_groups_join_group( $group['group_id'], $user_id );
 
-					remove_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
-					if ( bp_is_active( 'messages' ) ) {
-						add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+					remove_filter( 'bb_group_join_groups_record_activity', 'bboss_group_join_groups_record_activity_unsuspend_users' );
+					if ( bboss_is_active( 'messages' ) ) {
+						add_action( 'groups_join_group', 'bboss_group_messages_join_new_member', 10, 2 );
 					}
 
 					// Promoted to admin.
-					$member = new BP_Groups_Member( $user_id, $group['group_id'] );
+					$member = new BBoss_Groups_Member( $user_id, $group['group_id'] );
 					$member->promote( 'admin' );
 
 					// Update the group meta.
-					groups_update_groupmeta( $group['group_id'], 'bb_suspended_users', $group_meta );
+					bboss_groups_update_groupmeta( $group['group_id'], 'bb_suspended_users', $group_meta );
 				}
 			}
 		}
@@ -1361,7 +1361,7 @@ function bb_group_add_unsuspended_user( $user_id ) {
  *
  * @return bool Return false.
  */
-function bb_group_join_groups_record_activity_unsuspend_users() {
+function bboss_group_join_groups_record_activity_unsuspend_users() {
 	return false;
 }
 
@@ -1370,8 +1370,8 @@ function bb_group_join_groups_record_activity_unsuspend_users() {
  *
  * @since BuddyBoss 2.6.40
  */
-function bb_before_group_body_callback() {
-	add_filter( 'bp_after_groups_template_parse_args', 'bb_add_subgroups_args_single_home' );
+function bboss_before_group_body_callback() {
+	add_filter( 'bp_after_groups_template_parse_args', 'bboss_add_subgroups_args_single_home' );
 }
 
 /**
@@ -1379,8 +1379,8 @@ function bb_before_group_body_callback() {
  *
  * @since BuddyBoss 2.6.40
  */
-function bb_after_group_body_callback() {
-	remove_filter( 'bp_after_groups_template_parse_args', 'bb_add_subgroups_args_single_home' );
+function bboss_after_group_body_callback() {
+	remove_filter( 'bp_after_groups_template_parse_args', 'bboss_add_subgroups_args_single_home' );
 }
 
 /**
@@ -1392,9 +1392,9 @@ function bb_after_group_body_callback() {
  *
  * @return array
  */
-function bb_add_subgroups_args_single_home( $args ) {
-	if ( ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) || bp_is_group_subgroups() ) {
-		$descendant_groups   = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
+function bboss_add_subgroups_args_single_home( $args ) {
+	if ( ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) || bboss_is_group_subgroups() ) {
+		$descendant_groups   = bboss_get_descendent_groups( bboss_get_current_group_id(), bboss_loggedin_user_id() );
 		$ids                 = wp_list_pluck( $descendant_groups, 'id' );
 		$args['include']     = $ids;
 		$args['slug']        = '';
@@ -1417,8 +1417,8 @@ function bb_add_subgroups_args_single_home( $args ) {
  *
  * @since BuddyBoss 2.8.20
  */
-function bb_group_card_template() {
-	bp_get_template_part( 'groups/group-card' );
+function bboss_group_card_template() {
+	bboss_get_template_part( 'groups/group-card' );
 }
 
 /**
@@ -1430,10 +1430,10 @@ function bb_group_card_template() {
  *
  * @return bool|int True on success, false on failure.
  */
-function bb_delete_group_activity_topic( $group_id ) {
+function bboss_delete_group_activity_topic( $group_id ) {
 	global $wpdb;
 
-	$table_prefix = bp_core_get_table_prefix();
+	$table_prefix = bboss_core_get_table_prefix();
 	$deleted      = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$table_prefix . 'bb_topic_relationships',
 		array(
@@ -1449,7 +1449,7 @@ function bb_delete_group_activity_topic( $group_id ) {
 
 	return true;
 }
-add_action( 'groups_delete_group', 'bb_delete_group_activity_topic' );
+add_action( 'groups_delete_group', 'bboss_delete_group_activity_topic' );
 
 /**
  * Retrieves the groups the logged-in user is a member of and adds them to the provided arguments array.
@@ -1460,41 +1460,41 @@ add_action( 'groups_delete_group', 'bb_delete_group_activity_topic' );
  *
  * @return array Modified arguments array with the user's groups data.
  */
-function bb_readylaunch_middle_content_my_groups( $args = array() ) {
+function bboss_readylaunch_middle_content_my_groups( $args = array() ) {
 	$group_data = array(
 		'integration' => 'groups',
 	);
 
 	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_groups'] ) {
-		$group_data['heading']    = __( 'My Groups', 'buddyboss' );
-		$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss' );
+		$group_data['heading']    = __( 'My Groups', 'buddyboss-platform' );
+		$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss-platform' );
 
-		$user_id    = bp_loggedin_user_id();
+		$user_id    = bboss_loggedin_user_id();
 		$group_args = array(
 			'user_id'  => $user_id,
 			'per_page' => 6,
 		);
 		if ( ! empty( $user_id ) ) {
-			$count = groups_total_groups_for_user( $user_id );
+			$count = bboss_groups_total_groups_for_user( $user_id );
 		} else {
-			$count = bp_get_total_group_count();
+			$count = bboss_get_total_group_count();
 		}
 
-		$groups = groups_get_groups( $group_args );
+		$groups = bboss_groups_get_groups( $group_args );
 		if ( ! empty( $groups['groups'] ) ) {
 			foreach ( $groups['groups'] as $group ) {
 				$group_id                         = $group->id;
-				$thumbnail_url                    = bp_get_group_avatar_url( $group );
+				$thumbnail_url                    = bboss_get_group_avatar_url( $group );
 				$group_data['items'][ $group_id ] = array(
 					'title'     => $group->name,
-					'permalink' => bp_get_group_permalink( $group ),
+					'permalink' => bboss_get_group_permalink( $group ),
 					'thumbnail' => '<img src="' . $thumbnail_url . '" alt="' . $group->name . '" class="avatar group--avatar avatar-200 photo" width="200" height="200"/>',
 				);
 			}
 
 			if ( $count > 6 ) {
 				$group_data['has_more_items'] = true;
-				$group_data['show_more_link'] = bp_get_groups_directory_permalink();
+				$group_data['show_more_link'] = bboss_get_groups_directory_permalink();
 			}
 		}
 	}

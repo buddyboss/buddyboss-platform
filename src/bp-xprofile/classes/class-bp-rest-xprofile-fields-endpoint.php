@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_XProfile_Fields_Endpoint class
+ * BP REST: BBoss_REST_XProfile_Fields_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
+class BBoss_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Current Users ID.
@@ -31,8 +31,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->profile->id . '/fields';
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->profile->id . '/fields';
 
 		// Support for Blog comments.
 		// EX: /wp-json/wp/v2/comments.
@@ -71,7 +71,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the profile field.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the profile field.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -81,14 +81,14 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 					'args'                => array(
 						'user_id'          => array(
-							'description'       => __( 'Required if you want to load a specific user\'s data.', 'buddyboss' ),
+							'description'       => __( 'Required if you want to load a specific user\'s data.', 'buddyboss-platform' ),
 							'default'           => 0,
 							'type'              => 'integer',
 							'sanitize_callback' => 'absint',
 							'validate_callback' => 'rest_validate_request_arg',
 						),
 						'fetch_field_data' => array(
-							'description'       => __( 'Whether to fetch data for the field. Requires a $user_id.', 'buddyboss' ),
+							'description'       => __( 'Whether to fetch data for the field. Requires a $user_id.', 'buddyboss-platform' ),
 							'default'           => true,
 							'type'              => 'boolean',
 							'sanitize_callback' => 'rest_sanitize_boolean',
@@ -108,7 +108,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 					'args'                => array(
 						'delete_data' => array(
-							'description'       => __( 'Required if you want to delete users data for the field.', 'buddyboss' ),
+							'description'       => __( 'Required if you want to delete users data for the field.', 'buddyboss-platform' ),
 							'default'           => false,
 							'type'              => 'boolean',
 							'sanitize_callback' => 'rest_sanitize_boolean',
@@ -176,7 +176,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		$args = apply_filters( 'bp_rest_xprofile_fields_get_items_query_args', $args, $request );
 
 		// Actually, query it.
-		$field_groups = bp_xprofile_get_groups( $args );
+		$field_groups = bboss_xprofile_get_groups( $args );
 
 		$retval = array();
 		foreach ( $field_groups as $group ) {
@@ -185,12 +185,12 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				/**
 				 * Added support for display name format support from platform.
 				 */
-				if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+				if ( function_exists( 'bboss_core_hide_display_name_field' ) && true === bboss_core_hide_display_name_field( $field->id ) ) {
 					continue;
 				}
 
-				if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-					if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() === $field->id ) {
+				if ( function_exists( 'bboss_member_type_enable_disable' ) && false === bboss_member_type_enable_disable() ) {
+					if ( function_exists( 'bboss_get_xprofile_member_type_field_id' ) && bboss_get_xprofile_member_type_field_id() === $field->id ) {
 						continue;
 					}
 				}
@@ -231,10 +231,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -276,7 +276,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		if ( empty( $field->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field ID.', 'buddyboss' ),
+				__( 'Invalid field ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -287,13 +287,13 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			$field->data = new stdClass();
 
 			// Ensure that the requester is allowed to see this field.
-			$hidden_user_fields = bp_xprofile_get_hidden_fields_for_user( $request->get_param( 'user_id' ) );
+			$hidden_user_fields = bboss_xprofile_get_hidden_fields_for_user( $request->get_param( 'user_id' ) );
 
 			if ( in_array( $field->id, $hidden_user_fields, true ) ) {
-				$field->data->value = __( 'Value suppressed.', 'buddyboss' );
+				$field->data->value = __( 'Value suppressed.', 'buddyboss-platform' );
 			} else {
 				// Get the raw value for the field.
-				$field->data->value = BP_XProfile_ProfileData::get_value_byid( $field->id, $request->get_param( 'user_id' ) );
+				$field->data->value = BBoss_XProfile_ProfileData::get_value_byid( $field->id, $request->get_param( 'user_id' ) );
 			}
 		}
 
@@ -306,7 +306,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after XProfile field is fetched via the REST API.
 		 *
-		 * @param BP_XProfile_Field $field    Fetched field object.
+		 * @param BBoss_XProfile_Field $field    Fetched field object.
 		 * @param WP_REST_Response  $response The response data.
 		 * @param WP_REST_Request   $request  The request sent to the API.
 		 *
@@ -328,10 +328,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -342,7 +342,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && empty( $field->id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field ID.', 'buddyboss' ),
+				__( 'Invalid field ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -389,7 +389,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 
 			// Save the default visibility.
-			bp_xprofile_update_field_meta( $field_id, 'default_visibility', $default_visibility );
+			bboss_xprofile_update_field_meta( $field_id, 'default_visibility', $default_visibility );
 		}
 
 		// Define allow custom visibility property.
@@ -401,7 +401,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 
 			// Save the default visibility.
-			bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', $allow_custom_visibility );
+			bboss_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', $allow_custom_visibility );
 		}
 
 		// Define autolink property.
@@ -413,7 +413,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 
 			// Save the default visibility.
-			bp_xprofile_update_field_meta( $field_id, 'do_autolink', $do_autolink );
+			bboss_xprofile_update_field_meta( $field_id, 'do_autolink', $do_autolink );
 		}
 
 		// Define alternate title property.
@@ -425,7 +425,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 
 			// Save the alternate name.
-			bp_xprofile_update_field_meta( $field_id, 'alternate_name', $alternate_name );
+			bboss_xprofile_update_field_meta( $field_id, 'alternate_name', $alternate_name );
 		}
 	}
 
@@ -487,11 +487,11 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		 */
 		$args = apply_filters( 'bp_rest_xprofile_fields_create_item_query_args', $args, $request );
 
-		$field_id = xprofile_insert_field( $args );
+		$field_id = bboss_xprofile_insert_field( $args );
 		if ( ! $field_id ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_xprofile_field',
-				__( 'Cannot create new XProfile field.', 'buddyboss' ),
+				__( 'Cannot create new XProfile field.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -519,7 +519,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a XProfile field is created via the REST API.
 		 *
-		 * @param BP_XProfile_Field $field Created field object.
+		 * @param BBoss_XProfile_Field $field Created field object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
@@ -541,13 +541,13 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create a XProfile field.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to create a XProfile field.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
 		);
 
-		if ( is_user_logged_in() && bp_current_user_can( 'bp_moderate' ) ) {
+		if ( is_user_logged_in() && bboss_current_user_can( 'bp_moderate' ) ) {
 			$retval = true;
 		}
 
@@ -602,7 +602,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		if ( empty( $field->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid profile field ID.', 'buddyboss' ),
+				__( 'Invalid profile field ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -635,15 +635,15 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		$args = apply_filters( 'bp_rest_xprofile_fields_update_item_query_args', $args, $request );
 
 		// Specific check to make sure the Full Name xprofile field will remain undeletable.
-		if ( bp_xprofile_fullname_field_id() === $field->id ) {
+		if ( bboss_xprofile_fullname_field_id() === $field->id ) {
 			$args['can_delete'] = false;
 		}
 
-		$field_id = xprofile_insert_field( $args );
+		$field_id = bboss_xprofile_insert_field( $args );
 		if ( ! $field_id ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_xprofile_field',
-				__( 'Cannot update XProfile field.', 'buddyboss' ),
+				__( 'Cannot update XProfile field.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -671,7 +671,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a XProfile field is updated via the REST API.
 		 *
-		 * @param BP_XProfile_Field $field Updated field object.
+		 * @param BBoss_XProfile_Field $field Updated field object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
@@ -726,13 +726,13 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 
 		// Get the field before it's deleted.
-		$field    = new BP_XProfile_Field( (int) $request->get_param( 'id' ) );
+		$field    = new BBoss_XProfile_Field( (int) $request->get_param( 'id' ) );
 		$previous = $this->prepare_item_for_response( $field, $request );
 
 		if ( ! $field->delete( $request['delete_data'] ) ) {
 			return new WP_Error(
 				'bp_rest_xprofile_field_cannot_delete',
-				__( 'Could not delete XProfile field.', 'buddyboss' ),
+				__( 'Could not delete XProfile field.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -751,7 +751,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a XProfile field is deleted via the REST API.
 		 *
-		 * @param BP_XProfile_Field $field Deleted field object.
+		 * @param BBoss_XProfile_Field $field Deleted field object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
@@ -773,7 +773,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to delete this field.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -786,19 +786,19 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			if ( empty( $field->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid field ID.', 'buddyboss' ),
+					__( 'Invalid field ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
 				);
-			} elseif ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+			} elseif ( true === $retval && ! bboss_current_user_can( 'bp_moderate' ) ) {
 				$retval = $this->get_xprofile_field_display_permission( $retval, $field->id );
 			}
 
-			if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+			if ( true === $retval && ! bboss_current_user_can( 'bp_moderate' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to delete this field.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to delete this field.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -820,7 +820,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares single XProfile field data to return as an object.
 	 *
-	 * @param BP_XProfile_Field $field XProfile field object.
+	 * @param BBoss_XProfile_Field $field XProfile field object.
 	 * @param WP_REST_Request   $request Full data about the request.
 	 *
 	 * @return WP_REST_Response
@@ -837,7 +837,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request Request used to generate the response.
-		 * @param BP_XProfile_Field $field XProfile field object.
+		 * @param BBoss_XProfile_Field $field XProfile field object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -847,7 +847,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	/**
 	 * Assembles single XProfile field data for return as an object.
 	 *
-	 * @param BP_XProfile_Field $field XProfile field object.
+	 * @param BBoss_XProfile_Field $field XProfile field object.
 	 * @param WP_REST_Request   $request Full data about the request.
 	 *
 	 * @return array
@@ -877,7 +877,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// When we add paragraph as field for the profiles field then its not displaying proper format.
 		$current_user_id = $request->get_param( 'user_id' );
 		if ( empty( $current_user_id ) ) {
-			$current_user_id = bp_loggedin_user_id();
+			$current_user_id = bboss_loggedin_user_id();
 		}
 
 		$this->user_id = $current_user_id;
@@ -903,19 +903,19 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		// Added settings for date field.
 		if ( 'datebox' === $field->type ) {
-			$datebox_field    = new BP_XProfile_Field_Type_Datebox();
+			$datebox_field    = new BBoss_XProfile_Field_Type_Datebox();
 			$data['settings'] = $datebox_field::get_field_settings( $field->id );
 		}
 
 		// Added settings and format options for phone field.
 		if ( 'telephone' === $field->type ) {
-			$telephone_field                    = new BP_XProfile_Field_Type_Telephone();
+			$telephone_field                    = new BBoss_XProfile_Field_Type_Telephone();
 			$data['settings']                   = $telephone_field->get_field_settings( $field );
 			$data['settings']['format_options'] = $telephone_field->get_phone_formats();
 		}
 
 		// Added options for membertype field.
-		if ( 'membertypes' === $field->type && function_exists( 'bp_check_member_type_field_have_options' ) && true === bp_check_member_type_field_have_options() ) {
+		if ( 'membertypes' === $field->type && function_exists( 'bboss_check_member_type_field_have_options' ) && true === bboss_check_member_type_field_have_options() ) {
 			$data['options'] = $this->get_member_type_options( $field, $request );
 		}
 
@@ -945,13 +945,13 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			$data['options']['year']  = $this->get_date_field_options_array( $field, 'year' );
 		}
 
-		$is_repeater_enabled = 'on' === bp_xprofile_get_meta( $field->group_id, 'group', 'is_repeater_enabled', true ) ? true : false;
+		$is_repeater_enabled = 'on' === bboss_xprofile_get_meta( $field->group_id, 'group', 'is_repeater_enabled', true ) ? true : false;
 		if ( $is_repeater_enabled ) {
 			$data['repeater_data'] = $this->get_repeater_fields_data( $field, $request );
 		}
 
 		// Get alternate name for the field.
-		$alternate_name = bp_xprofile_get_meta( (int) $field->id, 'field', 'alternate_name' );
+		$alternate_name = bboss_xprofile_get_meta( (int) $field->id, 'field', 'alternate_name' );
 		if ( ! empty( $alternate_name ) ) {
 			$data['alternate_name'] = wp_specialchars_decode( $alternate_name );
 		}
@@ -966,7 +966,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BP_XProfile_Field $field XProfile field object.
+	 * @param BBoss_XProfile_Field $field XProfile field object.
 	 *
 	 * @return array
 	 * @since 0.1.0
@@ -988,7 +988,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		 * Filter links prepared for the REST response.
 		 *
 		 * @param array $links The prepared links of the REST response.
-		 * @param BP_XProfile_Field $field XProfile field object.
+		 * @param BBoss_XProfile_Field $field XProfile field object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -1000,7 +1000,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
-	 * @return BP_XProfile_Field|string XProfile field object|string.
+	 * @return BBoss_XProfile_Field|string XProfile field object|string.
 	 * @since 0.1.0
 	 */
 	public function get_xprofile_field_object( $request ) {
@@ -1012,7 +1012,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			$user_id  = $request->get_param( 'user_id' );
 		}
 
-		$field = xprofile_get_field( $field_id, $user_id );
+		$field = bboss_xprofile_get_field( $field_id, $user_id );
 
 		if ( empty( $field ) ) {
 			return '';
@@ -1025,7 +1025,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * Retrieve the rendered value of a profile field.
 	 *
 	 * @param string                    $value The raw value of the field.
-	 * @param integer|BP_XProfile_Field $profile_field The ID or the full object for the field.
+	 * @param integer|BBoss_XProfile_Field $profile_field The ID or the full object for the field.
 	 *
 	 * @return string                                   The field value for the display context.
 	 * @since 0.1.0
@@ -1035,14 +1035,14 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			return '';
 		}
 
-		$profile_field = xprofile_get_field( $profile_field );
+		$profile_field = bboss_xprofile_get_field( $profile_field );
 
 		if ( ! isset( $profile_field->id ) ) {
 			return '';
 		}
 
 		// Unserialize the BuddyPress way.
-		$value = bp_unserialize_profile_field( $value );
+		$value = bboss_unserialize_profile_field( $value );
 
 		global $field;
 		$reset_global = $field;
@@ -1093,7 +1093,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 *
 	 * @param string                    $value         The raw value of the field.
-	 * @param integer|BP_XProfile_Field $profile_field The ID or the full object for the field.
+	 * @param integer|BBoss_XProfile_Field $profile_field The ID or the full object for the field.
 	 *
 	 * @return array Field raw data.
 	 */
@@ -1103,7 +1103,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $profile_field ) ) {
-			$profile_field = xprofile_get_field( $profile_field );
+			$profile_field = bboss_xprofile_get_field( $profile_field );
 
 			if ( ! isset( $profile_field->id ) ) {
 				return '';
@@ -1125,7 +1125,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * Retrieve the unserialized value of a profile field.
 	 *
 	 * @param string                    $value The raw value of the field.
-	 * @param integer|BP_XProfile_Field $profile_field The ID or the full object for the field.
+	 * @param integer|BBoss_XProfile_Field $profile_field The ID or the full object for the field.
 	 *
 	 * @return array         The unserialized field value.
 	 * @since 0.1.0
@@ -1136,7 +1136,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $profile_field ) ) {
-			$profile_field = xprofile_get_field( $profile_field );
+			$profile_field = bboss_xprofile_get_field( $profile_field );
 
 			if ( ! isset( $profile_field->id ) ) {
 				return '';
@@ -1148,7 +1148,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		}
 
 		// Disallow object instantiation to prevent PHP object injection when reading stored field values.
-		$unserialized_value = bb_xprofile_safe_unserialize( $value );
+		$unserialized_value = bboss_xprofile_safe_unserialize( $value );
 		if ( ! is_array( $unserialized_value ) ) {
 			if ( 'textarea' === $profile_field->type ) {
 				$unserialized_value = (array) $unserialized_value;
@@ -1180,7 +1180,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			// Add specific properties to the view context.
 			$args['allow_custom_visibility'] = array(
 				'context'     => array( 'view' ),
-				'description' => __( 'Whether to allow members to set the visibility for the profile field data or not.', 'buddyboss' ),
+				'description' => __( 'Whether to allow members to set the visibility for the profile field data or not.', 'buddyboss-platform' ),
 				'type'        => 'string',
 				'enum'        => array( 'allowed', 'disabled' ),
 			);
@@ -1195,7 +1195,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 			// The visibility level chose by the administrator is the default visibility.
 			$edit_args['default_visibility']                = $args['visibility_level'];
-			$edit_args['default_visibility']['description'] = __( 'Default visibility for the profile field.', 'buddyboss' );
+			$edit_args['default_visibility']['description'] = __( 'Default visibility for the profile field.', 'buddyboss-platform' );
 
 			// Unset the visibility level which can be the user defined visibility.
 			unset( $args['visibility_level'] );
@@ -1203,7 +1203,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			// Add specific properties to the edit context.
 			$edit_args['allow_custom_visibility'] = array(
 				'context'     => array( 'edit' ),
-				'description' => __( 'Whether to allow members to set the visibility for the profile field data or not.', 'buddyboss' ),
+				'description' => __( 'Whether to allow members to set the visibility for the profile field data or not.', 'buddyboss-platform' ),
 				'default'     => 'allowed',
 				'type'        => 'string',
 				'enum'        => array( 'allowed', 'disabled' ),
@@ -1211,7 +1211,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 			$edit_args['do_autolink'] = array(
 				'context'     => array( 'edit' ),
-				'description' => __( 'Autolink status for this profile field', 'buddyboss' ),
+				'description' => __( 'Autolink status for this profile field', 'buddyboss-platform' ),
 				'default'     => 'off',
 				'type'        => 'string',
 				'enum'        => array( 'on', 'off' ),
@@ -1261,32 +1261,32 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the profile field.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the profile field.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'group_id'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the group the field is part of.', 'buddyboss' ),
+					'description' => __( 'The ID of the group the field is part of.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'parent_id'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the parent field.', 'buddyboss' ),
+					'description' => __( 'The ID of the parent field.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'type'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The type for the profile field.', 'buddyboss' ),
+					'description' => __( 'The type for the profile field.', 'buddyboss-platform' ),
 					'type'        => 'string',
-					'enum'        => buddypress()->profile->field_types,
+					'enum'        => bboss()->profile->field_types,
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_key',
 					),
 				),
 				'name'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the profile field.', 'buddyboss' ),
+					'description' => __( 'The name of the profile field.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -1294,7 +1294,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				),
 				'alternate_name'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The alternate name of the profile field.', 'buddyboss' ),
+					'description' => __( 'The alternate name of the profile field.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'default'     => '',
 					'arg_options' => array(
@@ -1303,7 +1303,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				),
 				'description'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The description of the profile field.', 'buddyboss' ),
+					'description' => __( 'The description of the profile field.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'arg_options' => array(
 						'sanitize_callback' => null,
@@ -1313,12 +1313,12 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the profile field, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the profile field, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'HTML content for the profile field, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML content for the profile field, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -1327,69 +1327,69 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				),
 				'is_required'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the profile field must have a value.', 'buddyboss' ),
+					'description' => __( 'Whether the profile field must have a value.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 				),
 				'can_delete'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the profile field can be deleted or not.', 'buddyboss' ),
+					'description' => __( 'Whether the profile field can be deleted or not.', 'buddyboss-platform' ),
 					'default'     => true,
 					'type'        => 'boolean',
 				),
 				'field_order'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The order of the profile field into the group of fields.', 'buddyboss' ),
+					'description' => __( 'The order of the profile field into the group of fields.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'option_order'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The order of the option into the profile field list of options', 'buddyboss' ),
+					'description' => __( 'The order of the option into the profile field list of options', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'order_by'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The way profile field\'s options are ordered.', 'buddyboss' ),
+					'description' => __( 'The way profile field\'s options are ordered.', 'buddyboss-platform' ),
 					'default'     => 'asc',
 					'type'        => 'string',
 					'enum'        => array( 'asc', 'desc' ),
 				),
 				'is_default_option' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the option is the default one for the profile field.', 'buddyboss' ),
+					'description' => __( 'Whether the option is the default one for the profile field.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 				),
 				'visibility_level'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Who may see the saved value for this profile field.', 'buddyboss' ),
+					'description' => __( 'Who may see the saved value for this profile field.', 'buddyboss-platform' ),
 					'default'     => 'public',
 					'type'        => 'string',
-					'enum'        => array_keys( bp_xprofile_get_visibility_levels() ),
+					'enum'        => array_keys( bboss_xprofile_get_visibility_levels() ),
 				),
 				'options'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Options of the profile field.', 'buddyboss' ),
+					'description' => __( 'Options of the profile field.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
 				'data'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The saved value for this profile field.', 'buddyboss' ),
+					'description' => __( 'The saved value for this profile field.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'properties'  => array(
 						'raw'          => array(
-							'description' => __( 'Value for the field, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Value for the field, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'unserialized' => array(
-							'description' => __( 'Unserialized value for the field, regular string will be casted as array.', 'buddyboss' ),
+							'description' => __( 'Unserialized value for the field, regular string will be casted as array.', 'buddyboss-platform' ),
 							'type'        => 'array',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
 						),
 						'rendered'     => array(
-							'description' => __( 'HTML value for the field, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML value for the field, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -1418,7 +1418,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'view';
 
 		$params['profile_group_id'] = array(
-			'description'       => __( 'ID of the profile group of fields that have profile fields', 'buddyboss' ),
+			'description'       => __( 'ID of the profile group of fields that have profile fields', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1426,7 +1426,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['hide_empty_groups'] = array(
-			'description'       => __( 'Whether to hide profile groups of fields that do not have any profile fields or not.', 'buddyboss' ),
+			'description'       => __( 'Whether to hide profile groups of fields that do not have any profile fields or not.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1434,24 +1434,24 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Required if you want to load a specific user\'s data.', 'buddyboss' ),
-			'default'           => bp_loggedin_user_id(),
+			'description'       => __( 'Required if you want to load a specific user\'s data.', 'buddyboss-platform' ),
+			'default'           => bboss_loggedin_user_id(),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['member_type'] = array(
-			'description'       => __( 'Limit fields by those restricted to a given member type, or array of member types. If `$user_id` is provided, the value of `$member_type` will be overridden by the member types of the provided user. The special value of \'any\' will return only those fields that are unrestricted by member type - i.e., those applicable to any type.', 'buddyboss' ),
+			'description'       => __( 'Limit fields by those restricted to a given member type, or array of member types. If `$user_id` is provided, the value of `$member_type` will be overridden by the member types of the provided user. The special value of \'any\' will return only those fields that are unrestricted by member type - i.e., those applicable to any type.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'string' ),
-			'sanitize_callback' => 'bp_rest_sanitize_member_types',
-			'validate_callback' => 'bp_rest_validate_member_types',
+			'sanitize_callback' => 'bboss_rest_sanitize_member_types',
+			'validate_callback' => 'bboss_rest_validate_member_types',
 		);
 
 		$params['hide_empty_fields'] = array(
-			'description'       => __( 'Whether to hide profile fields where the user has not provided data or not.', 'buddyboss' ),
+			'description'       => __( 'Whether to hide profile fields where the user has not provided data or not.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1459,7 +1459,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['fetch_field_data'] = array(
-			'description'       => __( 'Whether to fetch data for each field. Requires a $user_id.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch data for each field. Requires a $user_id.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1467,7 +1467,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['fetch_visibility_level'] = array(
-			'description'       => __( 'Whether to fetch the visibility level for each field.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch the visibility level for each field.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1475,25 +1475,25 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude_groups'] = array(
-			'description'       => __( 'Ensure result set excludes specific profile field groups.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific profile field groups.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
-			'sanitize_callback' => 'bp_rest_sanitize_string_list',
+			'sanitize_callback' => 'bboss_rest_sanitize_string_list',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['exclude_fields'] = array(
-			'description'       => __( 'Ensure result set excludes specific profile fields.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific profile fields.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'string' ),
-			'sanitize_callback' => 'bp_rest_sanitize_string_list',
+			'sanitize_callback' => 'bboss_rest_sanitize_string_list',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['update_meta_cache'] = array(
-			'description'       => __( 'Whether to pre-fetch xprofilemeta for all retrieved groups, fields, and data.', 'buddyboss' ),
+			'description'       => __( 'Whether to pre-fetch xprofilemeta for all retrieved groups, fields, and data.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1511,7 +1511,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get Profile field options
 	 *
-	 * @param BP_XProfile_Field $field XProfile field object.
+	 * @param BBoss_XProfile_Field $field XProfile field object.
 	 * @param array             $request request argument.
 	 *
 	 * @return array
@@ -1520,17 +1520,17 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		$posts = new \WP_Query(
 			array(
 				'posts_per_page' => - 1,
-				'post_type'      => bp_get_member_type_post_type(),
+				'post_type'      => bboss_get_member_type_post_type(),
 				'post_status'    => 'publish',
 				'orderby'        => 'menu_order',
 				'order'          => 'ASC',
 			)
 		);
 
-		$member_type   = bp_get_member_type( ! empty( $request['user_id'] ) ? (int) $request['user_id'] : get_current_user_id() );
+		$member_type   = bboss_get_member_type( ! empty( $request['user_id'] ) ? (int) $request['user_id'] : get_current_user_id() );
 		$post_selected = 0;
 		if ( '' !== $member_type ) {
-			$post_selected = (int) bp_member_type_post_by_type( $member_type );
+			$post_selected = (int) bboss_member_type_post_by_type( $member_type );
 		}
 
 		$options = array();
@@ -1561,7 +1561,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get datebox options
 	 *
-	 * @param BP_XProfile_Field $field XProfile field object.
+	 * @param BBoss_XProfile_Field $field XProfile field object.
 	 * @param string            $type Date type parameter.
 	 *
 	 * @return array
@@ -1605,7 +1605,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				break;
 
 			case 'year':
-				$settings = BP_XProfile_Field_Type_Datebox::get_field_settings( $field->id );
+				$settings = BBoss_XProfile_Field_Type_Datebox::get_field_settings( $field->id );
 
 				if ( 'relative' === $settings['range_type'] ) {
 					// phpcs:ignore
@@ -1632,7 +1632,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get Social Network field options
 	 *
-	 * @param BP_XProfile_Field $field XProfile field object.
+	 * @param BBoss_XProfile_Field $field XProfile field object.
 	 * @param array             $request request argument.
 	 *
 	 * @return array
@@ -1650,10 +1650,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 					'linkedIn',
 				)
 			);
-			$all_options     = bp_xprofile_social_network_provider();
+			$all_options     = bboss_xprofile_social_network_provider();
 			$options         = array();
 			if ( empty( $default_options ) ) {
-				$options = bp_xprofile_social_network_provider();
+				$options = bboss_xprofile_social_network_provider();
 			} else {
 				foreach ( $all_options as $opt ) {
 					if ( in_array( $opt->value, $default_options, true ) ) {
@@ -1663,11 +1663,11 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$providers = bp_xprofile_social_network_provider();
+		$providers = bboss_xprofile_social_network_provider();
 		if ( ! empty( $options ) ) {
 			foreach ( $options as $k => $option ) {
 				$option->value = $option->name;
-				$key           = bp_social_network_search_key( $option->name, $providers );
+				$key           = bboss_social_network_search_key( $option->name, $providers );
 				$option->name  = $providers[ $key ]->name;
 				$option->icon  = $providers[ $key ]->svg;
 				$options[ $k ] = $option;
@@ -1680,7 +1680,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get Gender field options
 	 *
-	 * @param BP_XProfile_Field $field XProfile field object.
+	 * @param BBoss_XProfile_Field $field XProfile field object.
 	 * @param array             $request request argument.
 	 *
 	 * @return array
@@ -1690,7 +1690,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		$options = $field->get_children();
 
 		if ( isset( $field->id ) && ! empty( $field->id ) ) {
-			$order = bp_xprofile_get_meta( $field->id, 'field', 'gender-option-order' );
+			$order = bboss_xprofile_get_meta( $field->id, 'field', 'gender-option-order' );
 		} else {
 			$order = array();
 		}
@@ -1723,7 +1723,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get Repeater field data.
 	 *
-	 * @param BP_XProfile_Field $field Field Object.
+	 * @param BBoss_XProfile_Field $field Field Object.
 	 * @param WP_REST_Request   $request Full data about the request.
 	 *
 	 * @return array|void
@@ -1735,7 +1735,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$user_id = ( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id();
+		$user_id = ( $request['user_id'] ) ? $request['user_id'] : bboss_loggedin_user_id();
 
 		if ( empty( $user_id ) ) {
 			return;
@@ -1743,12 +1743,12 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		$field_id = $field->id;
 
-		$clone_field_ids_all = bp_get_repeater_clone_field_ids_all( $field->group_id );
-		$exclude_fields_cs   = bp_get_repeater_template_field_ids( $field->group_id );
+		$clone_field_ids_all = bboss_get_repeater_clone_field_ids_all( $field->group_id );
+		$exclude_fields_cs   = bboss_get_repeater_template_field_ids( $field->group_id );
 
 		// include only the subset of clones the current user has data in.
-		$user_field_set_count     = bp_get_profile_field_set_count( $field->group_id, $user_id );
-		$clone_field_ids_has_data = bp_get_repeater_clone_field_ids_subset( $field->group_id, $user_field_set_count );
+		$user_field_set_count     = bboss_get_profile_field_set_count( $field->group_id, $user_id );
+		$clone_field_ids_has_data = bboss_get_repeater_clone_field_ids_subset( $field->group_id, $user_field_set_count );
 		$clones_to_exclude        = array_diff( $clone_field_ids_all, $clone_field_ids_has_data );
 
 		$exclude_fields_cs = array_merge( $exclude_fields_cs, $clones_to_exclude );
@@ -1769,10 +1769,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		$sql = $wpdb->prepare( $sql, $field_id );
 		// phpcs:ignore
 		$results = $wpdb->get_results( $sql );
-		$user_id = ( ! empty( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id() );
+		$user_id = ( ! empty( $request['user_id'] ) ? $request['user_id'] : bboss_loggedin_user_id() );
 		$data    = array();
 
-		$user_fields = bp_get_profile_field_set_count( $field->group_id, $user_id );
+		$user_fields = bboss_get_profile_field_set_count( $field->group_id, $user_id );
 
 		if ( ! empty( $results ) && ! is_wp_error( $results ) ) {
 
@@ -1801,8 +1801,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				}
 
 				if ( ! empty( $request['fetch_visibility_level'] ) ) {
-					$data[ $k ]['visibility_level']        = xprofile_get_field_visibility_level( $sub_field_id, $user_id );
-					$data[ $k ]['allow_custom_visibility'] = bp_xprofile_get_meta( $sub_field_id, 'field', 'allow_custom_visibility' );
+					$data[ $k ]['visibility_level']        = bboss_xprofile_get_field_visibility_level( $sub_field_id, $user_id );
+					$data[ $k ]['allow_custom_visibility'] = bboss_xprofile_get_meta( $sub_field_id, 'field', 'allow_custom_visibility' );
 				}
 
 				$count ++;
@@ -1832,19 +1832,19 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 		if (
 			(
-				function_exists( 'bp_core_hide_display_name_field' )
-				&& true === bp_core_hide_display_name_field( $field_id )
+				function_exists( 'bboss_core_hide_display_name_field' )
+				&& true === bboss_core_hide_display_name_field( $field_id )
 			)
 			|| (
-				function_exists( 'bp_member_type_enable_disable' )
-				&& false === bp_member_type_enable_disable()
-				&& function_exists( 'bp_get_xprofile_member_type_field_id' )
-				&& bp_get_xprofile_member_type_field_id() === $field_id
+				function_exists( 'bboss_member_type_enable_disable' )
+				&& false === bboss_member_type_enable_disable()
+				&& function_exists( 'bboss_get_xprofile_member_type_field_id' )
+				&& bboss_get_xprofile_member_type_field_id() === $field_id
 			)
 		) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field ID.', 'buddyboss' ),
+				__( 'Invalid field ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1857,7 +1857,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check current user can edit the visibility or not.
 	 *
-	 * @param BP_XProfile_Field $field_object Field Object.
+	 * @param BBoss_XProfile_Field $field_object Field Object.
 	 *
 	 * @return string
 	 */
@@ -1874,17 +1874,17 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param BP_XProfile_Field $field_object Field object.
+	 * @param BBoss_XProfile_Field $field_object Field object.
 	 *
 	 * @return string 'allowed' when the member may pick a level, 'disabled' when it is locked.
 	 */
 	public static function bb_rest_get_field_visibility_state( $field_object ) {
-		if ( ! $field_object instanceof BP_XProfile_Field || empty( $field_object->id ) ) {
+		if ( ! $field_object instanceof BBoss_XProfile_Field || empty( $field_object->id ) ) {
 			return 'disabled';
 		}
 
-		if ( function_exists( 'bb_xprofile_can_change_field_visibility' ) ) {
-			return bb_xprofile_can_change_field_visibility( $field_object->id ) ? 'allowed' : 'disabled';
+		if ( function_exists( 'bboss_xprofile_can_change_field_visibility' ) ) {
+			return bboss_xprofile_can_change_field_visibility( $field_object->id ) ? 'allowed' : 'disabled';
 		}
 
 		// Older Platform without the helper: resolve the capability the way the profile loop does.
@@ -1905,7 +1905,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		$GLOBALS['profile_template']->in_the_loop = true;
 		$GLOBALS['field']                         = $field_object;
 
-		$can_change = bp_current_user_can( 'bp_xprofile_change_field_visibility' );
+		$can_change = bboss_current_user_can( 'bp_xprofile_change_field_visibility' );
 
 		if ( $had_template ) {
 			$GLOBALS['profile_template'] = $template_backup;
@@ -1929,7 +1929,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param BP_XProfile_Field $field_object  Field object.
+	 * @param BBoss_XProfile_Field $field_object  Field object.
 	 * @param int               $user_id       Optional. Profile owner. Defaults to the logged-in user.
 	 * @param string            $state         Optional. Precomputed bb_rest_get_field_visibility_state() result.
 	 * @param string|null       $current_level Optional. Precomputed current level for the user.
@@ -1937,7 +1937,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @return array Permitted visibility levels as id => label.
 	 */
 	public static function bb_rest_get_field_visibility_options( $field_object, $user_id = 0, $state = '', $current_level = null ) {
-		$options = array_column( bp_xprofile_get_visibility_levels(), 'label', 'id' );
+		$options = array_column( bboss_xprofile_get_visibility_levels(), 'label', 'id' );
 
 		if ( '' === $state ) {
 			$state = self::bb_rest_get_field_visibility_state( $field_object );
@@ -1945,7 +1945,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		if ( 'allowed' !== $state ) {
 			if ( null === $current_level ) {
-				$current_level = xprofile_get_field_visibility_level( $field_object->id, $user_id ? $user_id : bp_loggedin_user_id() );
+				$current_level = bboss_xprofile_get_field_visibility_level( $field_object->id, $user_id ? $user_id : bboss_loggedin_user_id() );
 			}
 
 			if ( isset( $options[ $current_level ] ) ) {
@@ -1973,7 +1973,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 *
 		 * @param array             $options      Permitted visibility levels as id => label.
-		 * @param BP_XProfile_Field $field_object Field object.
+		 * @param BBoss_XProfile_Field $field_object Field object.
 		 */
 		return apply_filters( 'bb_rest_xprofile_field_visibility_options', $options, $field_object );
 	}
@@ -1983,7 +1983,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param BP_XProfile_Field|null $field_object Field object (null when the ID was unknown).
+	 * @param BBoss_XProfile_Field|null $field_object Field object (null when the ID was unknown).
 	 * @param int                    $user_id      Profile owner.
 	 * @param mixed                  $level        Submitted visibility level.
 	 * @param string                 $state        Optional. Precomputed bb_rest_get_field_visibility_state() result.
@@ -1994,13 +1994,13 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 */
 	public static function bb_rest_validate_field_visibility_level( $field_object, $user_id, $level, $state = '' ) {
 		if ( ! is_scalar( $level ) || '' === (string) $level ) {
-			return new WP_Error( 'bp_rest_invalid_visibility_level', __( 'Invalid visibility level.', 'buddyboss' ), array( 'status' => 400 ) );
+			return new WP_Error( 'bp_rest_invalid_visibility_level', __( 'Invalid visibility level.', 'buddyboss-platform' ), array( 'status' => 400 ) );
 		}
 
 		$level = (string) $level;
 
-		if ( ! $field_object instanceof BP_XProfile_Field || empty( $field_object->id ) ) {
-			return new WP_Error( 'bp_rest_invalid_profile_field', __( 'Invalid profile field.', 'buddyboss' ), array( 'status' => 400 ) );
+		if ( ! $field_object instanceof BBoss_XProfile_Field || empty( $field_object->id ) ) {
+			return new WP_Error( 'bp_rest_invalid_profile_field', __( 'Invalid profile field.', 'buddyboss-platform' ), array( 'status' => 400 ) );
 		}
 
 		if ( '' === $state ) {
@@ -2014,8 +2014,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// whose helper resolves the capability alone.
 		if (
 			'allowed' === $state
-			&& function_exists( 'bp_core_hide_display_name_field' )
-			&& true === bp_core_hide_display_name_field( $field_object->id )
+			&& function_exists( 'bboss_core_hide_display_name_field' )
+			&& true === bboss_core_hide_display_name_field( $field_object->id )
 		) {
 			$state = 'disabled';
 		}
@@ -2023,7 +2023,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Field names are stored with entities; the REST payload is data, not HTML, so decode them.
 		$field_name = wp_specialchars_decode( $field_object->name, ENT_QUOTES );
 
-		$current_level = xprofile_get_field_visibility_level( $field_object->id, $user_id );
+		$current_level = bboss_xprofile_get_field_visibility_level( $field_object->id, $user_id );
 
 		if ( 'allowed' !== $state ) {
 			// Resubmitting a locked field's current level is a harmless no-op.
@@ -2035,7 +2035,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				'bp_rest_visibility_level_locked',
 				sprintf(
 					/* translators: %s: Profile field name. */
-					__( 'The visibility of the "%s" field cannot be changed.', 'buddyboss' ),
+					__( 'The visibility of the "%s" field cannot be changed.', 'buddyboss-platform' ),
 					$field_name
 				),
 				array( 'status' => 403 )
@@ -2062,7 +2062,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				'bp_rest_visibility_level_not_allowed',
 				sprintf(
 					/* translators: 1: Submitted visibility level. 2: Profile field name. */
-					__( '"%1$s" is not an allowed visibility level for the "%2$s" field.', 'buddyboss' ),
+					__( '"%1$s" is not an allowed visibility level for the "%2$s" field.', 'buddyboss-platform' ),
 					$level,
 					$field_name
 				),
@@ -2079,11 +2079,11 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @param int $field_id Field id.
 	 * @param int $user_id User id.
 	 *
-	 * @return BP_XProfile_ProfileData
+	 * @return BBoss_XProfile_ProfileData
 	 * @since 0.1.0
 	 */
 	public function get_xprofile_field_data_object( $field_id, $user_id ) {
-		return new BP_XProfile_ProfileData( $field_id, $user_id );
+		return new BBoss_XProfile_ProfileData( $field_id, $user_id );
 	}
 
 	/**
@@ -2094,12 +2094,12 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @return int
 	 */
 	public function bp_rest_get_displayed_user( $user_id ) {
-		return ( ! empty( $this->user_id ) ? $this->user_id : bp_loggedin_user_id() );
+		return ( ! empty( $this->user_id ) ? $this->user_id : bboss_loggedin_user_id() );
 	}
 
 	/**
 	 * Filters a comment returned from the REST API.
-	 * - From: xprofile_filter_comments()
+	 * - From: bboss_xprofile_filter_comments()
 	 *
 	 * @param WP_REST_Response $response The response object.
 	 * @param WP_Comment       $comment  The original comment object.
@@ -2110,7 +2110,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		$data = $response->get_data();
 
-		$data['author_name'] = bp_core_get_user_displayname( $comment->user_id );
+		$data['author_name'] = bboss_core_get_user_displayname( $comment->user_id );
 
 		$response->set_data( $data );
 

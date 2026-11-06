@@ -8,7 +8,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-	$F = bp_profile_search_escaped_form_data();
+	$F = bboss_profile_search_escaped_form_data();
 if ( empty( $F->fields ) ) {
 	return false;
 }
@@ -21,17 +21,17 @@ foreach ( $F->fields as $f ) {
 		continue;
 	}
 
-	$filter = bp_ps_print_filter( $f );
+	$filter = bboss_ps_print_filter( $f );
 	$filter = apply_filters( 'bp_ps_print_filter', $filter, $f );
 
 	?>
-		<strong><?php echo $f->label; ?></strong> <span><?php echo $filter; ?></span><br>
+		<strong><?php echo esc_html( $f->label ); ?></strong> <span><?php echo esc_html( $filter ); ?></span><br>
 	<?php
 }
 
 if ( ! empty( $F->action ) ) {
 	?>
-		<a href='<?php echo $F->action; ?>'><?php _e( 'Clear', 'buddyboss' ); ?></a>
+		<a href='<?php echo esc_url( $F->action ); ?>'><?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?></a>
 	<?php
 }
 ?>

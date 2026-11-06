@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Invites_Ajax
+ * Class BBoss_Admin_Invites_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Invites_Ajax {
+class BBoss_Admin_Invites_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -75,7 +75,7 @@ class BB_Admin_Invites_Ajax {
 	 * @return void
 	 */
 	private function bb_verify_request() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -88,8 +88,8 @@ class BB_Admin_Invites_Ajax {
 	public function bb_admin_get_invites() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'invites' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Email Invites component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'invites' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Email Invites component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -117,7 +117,7 @@ class BB_Admin_Invites_Ajax {
 		$per_page = max( 1, min( self::PER_PAGE_CAP, $per_page ) );
 		$page     = max( 1, $page );
 
-		$post_type = bp_get_invite_post_type();
+		$post_type = bboss_get_invite_post_type();
 
 		// Build WP_Query args.
 		$query_args = array(
@@ -164,7 +164,7 @@ class BB_Admin_Invites_Ajax {
 		}
 
 		// Check custom registration once before the loop (avoids per-item call).
-		$is_custom_registration = bp_allow_custom_registration() && '' !== bp_custom_register_page_url();
+		$is_custom_registration = bboss_allow_custom_registration() && '' !== bboss_custom_register_page_url();
 
 		// Build items.
 		$items = array();
@@ -178,8 +178,8 @@ class BB_Admin_Invites_Ajax {
 			$items[] = array(
 				'id'              => $post->ID,
 				'sender_id'       => $author_id,
-				'sender_name'     => bp_core_get_user_displayname( $author_id ),
-				'sender_avatar'   => bp_core_fetch_avatar(
+				'sender_name'     => bboss_core_get_user_displayname( $author_id ),
+				'sender_avatar'   => bboss_core_fetch_avatar(
 					array(
 						'item_id' => $author_id,
 						'type'    => 'thumb',
@@ -188,19 +188,19 @@ class BB_Admin_Invites_Ajax {
 						'html'    => false,
 					)
 				),
-				'sender_url'      => bp_core_get_user_domain( $author_id ),
+				'sender_url'      => bboss_core_get_user_domain( $author_id ),
 				'recipient_name'  => $invitee_name ? $invitee_name : '',
 				'recipient_email' => $invitee_email ? $invitee_email : '',
 				'status'          => $is_registered ? 'registered' : 'pending',
 				'status_label'    => $is_registered
-					? __( 'Registered', 'buddyboss' )
+					? __( 'Registered', 'buddyboss-platform' )
 					: ( $is_custom_registration
-						? __( 'Invited', 'buddyboss' )
-						: __( 'Pending', 'buddyboss' )
+						? __( 'Invited', 'buddyboss-platform' )
+						: __( 'Pending', 'buddyboss-platform' )
 					),
 				'date_invited'    => get_the_date( 'd M Y H:i', $post ),
 				'can_revoke'      => ! $is_registered && ! $is_custom_registration,
-				'view_url'        => bp_core_get_user_domain( $author_id ),
+				'view_url'        => bboss_core_get_user_domain( $author_id ),
 				'edit_url'        => admin_url( 'user-edit.php?user_id=' . $author_id ),
 			);
 		}
@@ -214,15 +214,15 @@ class BB_Admin_Invites_Ajax {
 		// Include columns, bulk actions, and views on first load (include_meta = 1).
 		if ( 1 === $include_meta ) {
 			$response['columns'] = array(
-				'sender'          => __( 'Sender', 'buddyboss' ),
-				'recipient_name'  => __( 'Recipient', 'buddyboss' ),
-				'recipient_email' => __( 'Recipient Email', 'buddyboss' ),
-				'status'          => __( 'Status', 'buddyboss' ),
-				'date_invited'    => __( 'Date Invited', 'buddyboss' ),
+				'sender'          => __( 'Sender', 'buddyboss-platform' ),
+				'recipient_name'  => __( 'Recipient', 'buddyboss-platform' ),
+				'recipient_email' => __( 'Recipient Email', 'buddyboss-platform' ),
+				'status'          => __( 'Status', 'buddyboss-platform' ),
+				'date_invited'    => __( 'Date Invited', 'buddyboss-platform' ),
 			);
 
 			$response['bulk_actions'] = array(
-				'revoke' => __( 'Revoke Invite', 'buddyboss' ),
+				'revoke' => __( 'Revoke Invite', 'buddyboss-platform' ),
 			);
 
 			// View counts for filter dropdown.
@@ -252,8 +252,8 @@ class BB_Admin_Invites_Ajax {
 	public function bb_admin_invites_bulk_action() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'invites' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Email Invites component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'invites' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Email Invites component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -264,22 +264,22 @@ class BB_Admin_Invites_Ajax {
 		// Validate action against allowlist.
 		$allowed_actions = array( 'revoke' );
 		if ( empty( $action ) || ! in_array( $action, $allowed_actions, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No invites selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No invites selected.', 'buddyboss-platform' ) ) );
 		}
 
 		$id_array = array_map( 'absint', array_filter( explode( ',', $ids ) ) );
 		if ( empty( $id_array ) ) {
-			wp_send_json_error( array( 'message' => __( 'No invites selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No invites selected.', 'buddyboss-platform' ) ) );
 		}
 
 		// Cap to prevent abuse.
 		$id_array = array_slice( $id_array, 0, self::BULK_CAP );
 
-		$post_type = bp_get_invite_post_type();
+		$post_type = bboss_get_invite_post_type();
 
 		if ( 'revoke' === $action ) {
 			// Prime post and meta caches to avoid N+1 queries.
@@ -306,7 +306,7 @@ class BB_Admin_Invites_Ajax {
 			}
 
 			if ( 0 === $revoked ) {
-				wp_send_json_error( array( 'message' => __( 'No invites were revoked.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'No invites were revoked.', 'buddyboss-platform' ) ) );
 			}
 
 			wp_send_json_success(
@@ -317,7 +317,7 @@ class BB_Admin_Invites_Ajax {
 							'%d invite has been revoked.',
 							'%d invites have been revoked.',
 							$revoked,
-							'buddyboss'
+							'buddyboss-platform'
 						),
 						$revoked
 					),
@@ -327,7 +327,7 @@ class BB_Admin_Invites_Ajax {
 			);
 		}
 
-		wp_send_json_error( array( 'message' => __( 'Unknown action.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => __( 'Unknown action.', 'buddyboss-platform' ) ) );
 	}
 
 	/**
@@ -340,7 +340,7 @@ class BB_Admin_Invites_Ajax {
 	private function bb_get_invite_views() {
 		global $wpdb;
 
-		$post_type = bp_get_invite_post_type();
+		$post_type = bboss_get_invite_post_type();
 
 		// Total count.
 		$all_count = (int) wp_count_posts( $post_type )->publish;
@@ -356,15 +356,15 @@ class BB_Admin_Invites_Ajax {
 
 		return array(
 			'all'       => array(
-				'label' => __( 'All', 'buddyboss' ),
+				'label' => __( 'All', 'buddyboss-platform' ),
 				'count' => $all_count,
 			),
 			'mine'      => array(
-				'label' => __( 'Mine', 'buddyboss' ),
+				'label' => __( 'Mine', 'buddyboss-platform' ),
 				'count' => $mine_count,
 			),
 			'published' => array(
-				'label' => __( 'Published', 'buddyboss' ),
+				'label' => __( 'Published', 'buddyboss-platform' ),
 				'count' => $all_count,
 			),
 		);
@@ -446,4 +446,4 @@ class BB_Admin_Invites_Ajax {
 }
 
 // Initialize.
-new BB_Admin_Invites_Ajax();
+new BBoss_Admin_Invites_Ajax();

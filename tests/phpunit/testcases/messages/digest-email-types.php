@@ -44,7 +44,7 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 	/**
 	 * Record type, recipient and tokens.
 	 *
-	 * @param BP_Email $email      Email.
+	 * @param BBoss_Email $email      Email.
 	 * @param string   $email_type Type.
 	 * @param mixed    $to         Recipient (WP_User here).
 	 * @param array    $args       Args.
@@ -60,19 +60,19 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 	 * @param string[] $types Email types.
 	 */
 	protected function install_emails( $types ) {
-		$schema = bp_email_get_schema();
+		$schema = bboss_email_get_schema();
 		foreach ( $types as $type ) {
 			$this->assertArrayHasKey( $type, $schema, "{$type} is registered" );
 			$post_id = self::factory()->post->create(
 				array(
-					'post_type'    => bp_get_email_post_type(),
+					'post_type'    => bboss_get_email_post_type(),
 					'post_status'  => 'publish',
 					'post_title'   => $schema[ $type ]['post_title'],
 					'post_content' => $schema[ $type ]['post_content'],
 					'post_excerpt' => $schema[ $type ]['post_excerpt'],
 				)
 			);
-			wp_set_object_terms( $post_id, $type, bp_get_email_tax_type() );
+			wp_set_object_terms( $post_id, $type, bboss_get_email_tax_type() );
 		}
 	}
 
@@ -86,7 +86,7 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 		$b = self::factory()->user->create( array( 'display_name' => 'Sender B' ) );
 		$r = self::factory()->user->create( array( 'display_name' => 'Recipient' ) );
 
-		$thread_id = messages_new_message(
+		$thread_id = bboss_messages_new_message(
 			array(
 				'sender_id'  => $a,
 				'recipients' => array( $b, $r ),
@@ -95,9 +95,9 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 			)
 		);
 		$this->assertNotEmpty( $thread_id );
-		$m1 = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		$m1 = (int) BBoss_Messages_Thread::get_last_message( (int) $thread_id )->id;
 
-		$thread_id_2 = messages_new_message(
+		$thread_id_2 = bboss_messages_new_message(
 			array(
 				'sender_id'  => $b,
 				'recipients' => array( $a, $r ),
@@ -106,7 +106,7 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 			)
 		);
 		$this->assertSame( (int) $thread_id, (int) $thread_id_2, 'B\'s message joins the same thread' );
-		$m2 = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		$m2 = (int) BBoss_Messages_Thread::get_last_message( (int) $thread_id )->id;
 		$this->assertNotSame( $m1, $m2 );
 
 		$row = function ( $message_id, $sender_id, $recipient_id, $text ) use ( $thread_id ) {
@@ -128,7 +128,7 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 		);
 
 		$this->sent = array();
-		bb_render_digest_messages_template( $recipients, (int) $thread_id );
+		bboss_render_digest_messages_template( $recipients, (int) $thread_id );
 
 		$by_user = array();
 		foreach ( $this->sent as $s ) {
@@ -159,7 +159,7 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 		// notification + email types at boot; the harness boots with group messaging off.
 		add_filter( 'bp_disable_group_messages', '__return_true' );
 		add_filter( 'bb_delay_email_notifications_enabled', '__return_true' );
-		BP_Groups_Notification::instance()->register_notification_for_group_user_messages();
+		BBoss_Groups_Notification::instance()->register_notification_for_group_user_messages();
 		$this->install_emails( array( 'group-message-email', 'group-message-digest' ) );
 
 		$a        = self::factory()->user->create( array( 'display_name' => 'Sender A' ) );
@@ -169,9 +169,9 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 
 		// Each member has group message emails on in their notification settings. The site
 		// preference list is built once per request, before the types above were registered.
-		$type_key = bb_enabled_legacy_email_preference() ? 'notification_group_messages_new_message' : bb_get_prefences_key( 'legacy', 'notification_group_messages_new_message' );
+		$type_key = bboss_enabled_legacy_email_preference() ? 'notification_group_messages_new_message' : bboss_get_prefences_key( 'legacy', 'notification_group_messages_new_message' );
 		foreach ( array( $a, $b, $r ) as $user_id ) {
-			bp_update_user_meta( $user_id, $type_key, 'yes' );
+			bboss_update_user_meta( $user_id, $type_key, 'yes' );
 		}
 
 		// Group ▸ Send Message ▸ all members, open (same POST fields the group message form sends).
@@ -181,7 +181,7 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 			'type'  => 'open',
 		);
 
-		$thread_id = messages_new_message(
+		$thread_id = bboss_messages_new_message(
 			array(
 				'sender_id'  => $a,
 				'recipients' => array( $b, $r ),
@@ -190,12 +190,12 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 			)
 		);
 		$this->assertNotEmpty( $thread_id );
-		$m1 = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		$m1 = (int) BBoss_Messages_Thread::get_last_message( (int) $thread_id )->id;
 
 		// B replies in the thread (no group fields posted; the thread's group meta is inherited).
 		$_POST = array();
 
-		$thread_id_2 = messages_new_message(
+		$thread_id_2 = bboss_messages_new_message(
 			array(
 				'sender_id'  => $b,
 				'recipients' => array( $a, $r ),
@@ -204,12 +204,12 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 			)
 		);
 		$this->assertSame( (int) $thread_id, (int) $thread_id_2, 'B\'s message joins the same thread' );
-		$m2 = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		$m2 = (int) BBoss_Messages_Thread::get_last_message( (int) $thread_id )->id;
 		$this->assertNotSame( $m1, $m2 );
 
 		// The digest detects the group thread from the first message's meta.
-		$this->assertSame( $m1, (int) BP_Messages_Thread::get_first_message( (int) $thread_id )->id );
-		$this->assertSame( $group_id, (int) bp_messages_get_meta( $m1, 'group_id', true ) );
+		$this->assertSame( $m1, (int) BBoss_Messages_Thread::get_first_message( (int) $thread_id )->id );
+		$this->assertSame( $group_id, (int) bboss_messages_get_meta( $m1, 'group_id', true ) );
 
 		$row = function ( $message_id, $sender_id, $recipient_id, $text ) use ( $thread_id ) {
 			return array(
@@ -229,7 +229,7 @@ class BB_Tests_Messages_Digest_Email_Types extends BP_UnitTestCase_Emails {
 		);
 
 		$this->sent = array();
-		bb_render_digest_messages_template( $recipients, (int) $thread_id );
+		bboss_render_digest_messages_template( $recipients, (int) $thread_id );
 
 		$by_user = array();
 		foreach ( $this->sent as $s ) {

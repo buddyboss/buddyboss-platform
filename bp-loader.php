@@ -5,10 +5,11 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     3.7.0
- * Text Domain: buddyboss
+ * Version:     3.7.1
+ * Text Domain: buddyboss-platform
  * Domain Path: /src/languages
- * License:     GPLv2 or later (license.txt)
+ * License:     GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 // Exit if accessed directly.
@@ -22,18 +23,18 @@ if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) && file_exists(
 $bp_loader = dirname( __FILE__ ) . '/src/bp-loader.php';
 $subdir    = 'src';
 
-if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) ) {
+if ( ! defined( 'BBOSS_SOURCE_SUBDIRECTORY' ) ) {
 	// Set source subdirectory.
-	define( 'BP_SOURCE_SUBDIRECTORY', $subdir );
+	define( 'BBOSS_SOURCE_SUBDIRECTORY', $subdir );
 }
 
 // Define overrides - only applicable to those running trunk.
-if ( ! defined( 'BP_PLUGIN_DIR' ) ) {
-	define( 'BP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'BBOSS_PLUGIN_DIR' ) ) {
+	define( 'BBOSS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 }
-if ( ! defined( 'BP_PLUGIN_URL' ) ) {
+if ( ! defined( 'BBOSS_PLUGIN_URL' ) ) {
 	// Be nice to symlinked directories.
-	define( 'BP_PLUGIN_URL', plugins_url( trailingslashit( basename( constant( 'BP_PLUGIN_DIR' ) ) ) ) );
+	define( 'BBOSS_PLUGIN_URL', plugins_url( trailingslashit( basename( constant( 'BBOSS_PLUGIN_DIR' ) ) ) ) );
 }
 
 // Include BuddyBoss Platform.

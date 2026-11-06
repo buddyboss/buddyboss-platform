@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class BP_Media_Theme_Compat {
+class BBoss_Media_Theme_Compat {
 
 	/**
 	 * Set up the media component theme compatibility.
@@ -36,13 +36,13 @@ class BP_Media_Theme_Compat {
 	public function is_media() {
 
 		// Bail if not looking at a group.
-		if ( ! bp_is_media_component() ) {
+		if ( ! bboss_is_media_component() ) {
 			return;
 		}
 
 		// Media Directory.
-		if ( ! bp_displayed_user_id() && ! bp_current_action() ) {
-			bp_update_is_directory( true, 'media' );
+		if ( ! bboss_displayed_user_id() && ! bboss_current_action() ) {
+			bboss_update_is_directory( true, 'media' );
 
 			/** This action is documented in bp-media/bp-media-screens.php */
 			do_action( 'bp_media_screen_index' );
@@ -63,7 +63,7 @@ class BP_Media_Theme_Compat {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 * @param string $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function directory_template_hierarchy( $templates ) {
@@ -95,11 +95,11 @@ class BP_Media_Theme_Compat {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function directory_dummy_post() {
-		$media_page_id = bp_core_get_directory_page_id( 'media' );
-		bp_theme_compat_reset_post(
+		$media_page_id = bboss_core_get_directory_page_id( 'media' );
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $media_page_id ) ? $media_page_id : 0,
-				'post_title'     => bp_get_directory_title( 'media' ),
+				'post_title'     => bboss_get_directory_title( 'media' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',
@@ -117,7 +117,7 @@ class BP_Media_Theme_Compat {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function directory_content() {
-		return bp_buffer_template_part( 'media/index', null, false );
+		return bboss_buffer_template_part( 'media/index', null, false );
 	}
 
 	/** Single ****************************************************************/
@@ -129,7 +129,7 @@ class BP_Media_Theme_Compat {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 * @param string $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function single_template_hierarchy( $templates ) {
@@ -161,11 +161,11 @@ class BP_Media_Theme_Compat {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function single_dummy_post() {
-		$media_page_id = bp_core_get_directory_page_id( 'media' );
-		bp_theme_compat_reset_post(
+		$media_page_id = bboss_core_get_directory_page_id( 'media' );
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $media_page_id ) ? $media_page_id : 0,
-				'post_title'     => __( 'Photos', 'buddyboss' ),
+				'post_title'     => __( 'Photos', 'buddyboss-platform' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',
@@ -183,6 +183,6 @@ class BP_Media_Theme_Compat {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function single_dummy_content() {
-		return bp_buffer_template_part( 'media/single/home', null, false );
+		return bboss_buffer_template_part( 'media/single/home', null, false );
 	}
 }

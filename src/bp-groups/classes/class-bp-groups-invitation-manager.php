@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.3.5
  */
-class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
+class BBoss_Groups_Invitation_Manager extends BBoss_Invitation_Manager {
 	/**
 	 * Construct parameters.
 	 *
@@ -39,20 +39,20 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	 * @param int $id The ID of the invitation to mark as sent.
 	 * @return bool True on success, false on failure.
 	 */
-	public function run_send_action( BP_Invitation $invitation ) {
+	public function run_send_action( BBoss_Invitation $invitation ) {
 		// Notify group admins of the pending request
 		if ( 'request' === $invitation->type ) {
-			$admins = groups_get_group_admins( $invitation->item_id );
+			$admins = bboss_groups_get_group_admins( $invitation->item_id );
 
 			foreach ( $admins as $admin ) {
-				groups_notification_new_membership_request( $invitation->user_id, $admin->user_id, $invitation->item_id, $invitation->id );
+				bboss_groups_notification_new_membership_request( $invitation->user_id, $admin->user_id, $invitation->item_id, $invitation->id );
 			}
 			return true;
 
 		// Notify the invitee of the invitation.
 		} else {
-			$group = groups_get_group( $invitation->item_id );
-			groups_notification_group_invites( $group, $invitation->user_id, $invitation->inviter_id );
+			$group = bboss_groups_get_group( $invitation->item_id );
+			bboss_groups_notification_group_invites( $group, $invitation->user_id, $invitation->inviter_id );
 			return true;
 		}
 	}
@@ -70,12 +70,12 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	public function run_acceptance_action( $type, $r  ) {
 		// If the user is already a member (because BP at one point allowed two invitations to
 		// slip through), return early.
-		if ( groups_is_user_member( $r['user_id'], $r['item_id'] ) ) {
+		if ( bboss_groups_is_user_member( $r['user_id'], $r['item_id'] ) ) {
 			return true;
 		}
 
 		// Create the new membership.
-		$member = new BP_Groups_Member( $r['user_id'], $r['item_id'] );
+		$member = new BBoss_Groups_Member( $r['user_id'], $r['item_id'] );
 
 		if ( 'request' === $type ) {
 			$member->accept_request();
@@ -89,7 +89,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 
 		// Get the invitation.
 		$r['type']                  = $type;
-		$invites                    = groups_get_invites( $r );
+		$invites                    = bboss_groups_get_invites( $r );
 		$current_invite             = new stdClass();
 		$current_invite->id         = 0;
 		$current_invite->inviter_id = 0;
@@ -98,12 +98,12 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 		}
 
 		// Tracking group invitation accept.
-		groups_update_membermeta( $member->id, 'membership_accept_date', bp_core_current_time() );
+		groups_update_membermeta( $member->id, 'membership_accept_date', bboss_core_current_time() );
 
 		if ( 'request' === $type ) {
 
 			// Migrate the requested date from invite meta to group member meta.
-			$requested_date = invitation_get_invitemeta( $current_invite->id, 'requested_date' );
+			$requested_date = bboss_invitation_get_invitemeta( $current_invite->id, 'requested_date' );
 			groups_update_membermeta( $member->id, 'membership_requested_date', $requested_date );
 
 			/**
@@ -119,7 +119,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 		} else {
 
 			// Migrate the invited date from invite meta to group member meta.
-			$invited_date = invitation_get_invitemeta( $current_invite->id, 'invited_date' );
+			$invited_date = bboss_invitation_get_invitemeta( $current_invite->id, 'invited_date' );
 			groups_update_membermeta( $member->id, 'membership_invited_date', $invited_date );
 
 			/**
@@ -136,7 +136,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 		}
 
 		// Modify group meta.
-		groups_update_groupmeta( $r['item_id'], 'last_activity', bp_core_current_time() );
+		bboss_groups_update_groupmeta( $r['item_id'], 'last_activity', bboss_core_current_time() );
 
 		return true;
 	}
@@ -147,7 +147,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::mark_accepted_by_data()
+	 * @see BBoss_Invitation::mark_accepted_by_data()
 	 *      for a description of arguments.
 	 *
 	 * @param array $args.
@@ -171,17 +171,17 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	 */
 	public function allow_invitation( $args ) {
 		// Does the inviter have this capability?
-		if ( ! bp_user_can( $args['inviter_id'], 'groups_send_invitation', array( 'group_id' => $args['item_id'] ) ) ) {
+		if ( ! bboss_user_can( $args['inviter_id'], 'groups_send_invitation', array( 'group_id' => $args['item_id'] ) ) ) {
 			return false;
 		}
 
 		// Is the invited user eligible to receive an invitation?
-		if ( ! bp_user_can( $args['user_id'], 'groups_receive_invitation', array( 'group_id' => $args['item_id'] ) ) ) {
+		if ( ! bboss_user_can( $args['user_id'], 'groups_receive_invitation', array( 'group_id' => $args['item_id'] ) ) ) {
 			return false;
 		}
 
 		// Prevent duplicated invitations.
-		if ( groups_check_has_invite_from_user( $args['user_id'], $args['item_id'], $args['inviter_id'], 'all' ) ) {
+		if ( bboss_groups_check_has_invite_from_user( $args['user_id'], $args['item_id'], $args['inviter_id'], 'all' ) ) {
 			return false;
 		}
 
@@ -198,7 +198,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	 */
 	public function allow_request( $args ) {
 		// Does the requester have this capability? (Also checks for duplicates.)
-		if ( ! bp_user_can( $args['user_id'], 'groups_request_membership', array( 'group_id' => $args['item_id'] ) ) ) {
+		if ( ! bboss_user_can( $args['user_id'], 'groups_request_membership', array( 'group_id' => $args['item_id'] ) ) ) {
 			return false;
 		}
 

@@ -61,7 +61,7 @@ class XProfile_Group extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$assoc_args,
 			array(
 				'name'        => '',
@@ -70,7 +70,7 @@ class XProfile_Group extends BuddypressCommand {
 			)
 		);
 
-		$group_id = xprofile_insert_field_group( $r );
+		$group_id = bboss_xprofile_insert_field_group( $r );
 
 		if ( ! $group_id ) {
 			WP_CLI::error( 'Could not create field group.' );
@@ -79,7 +79,7 @@ class XProfile_Group extends BuddypressCommand {
 		if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'porcelain' ) ) {
 			WP_CLI::line( $group_id );
 		} else {
-			$group   = new \BP_XProfile_Group( $group_id );
+			$group   = new \BBoss_XProfile_Group( $group_id );
 			$success = sprintf(
 				'Created XProfile field group "%s" (ID %d).',
 				$group->name,
@@ -127,7 +127,7 @@ class XProfile_Group extends BuddypressCommand {
 			WP_CLI::error( 'Please provide a numeric field group ID.' );
 		}
 
-		$object = xprofile_get_field_group( $field_group_id );
+		$object = bboss_xprofile_get_field_group( $field_group_id );
 		if ( ! is_object( $object ) && empty( $object->id ) ) {
 			WP_CLI::error( 'No XProfile field group found.' );
 		}
@@ -170,7 +170,7 @@ class XProfile_Group extends BuddypressCommand {
 					WP_CLI::error( 'This is not a valid field group ID.' );
 				}
 
-				if ( xprofile_delete_field_group( $field_group_id ) ) {
+				if ( bboss_xprofile_delete_field_group( $field_group_id ) ) {
 					return array( 'success', 'Field group deleted.' );
 				} else {
 					return array( 'error', 'Could not delete the field group.' );

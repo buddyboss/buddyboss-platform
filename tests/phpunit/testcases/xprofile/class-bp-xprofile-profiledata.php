@@ -2,7 +2,7 @@
 
 /**
  * @group xprofile
- * @group BP_XProfile_ProfileData
+ * @group BBoss_XProfile_ProfileData
  */
 class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 	/**
@@ -15,7 +15,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $g,
 		) );
 
-		$d = new BP_XProfile_ProfileData( $f, $u );
+		$d = new BBoss_XProfile_ProfileData( $f, $u );
 
 		$this->assertFalse( $d->exists() );
 	}
@@ -30,9 +30,9 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $g,
 		) );
 
-		xprofile_set_field_data( $f, $u, 'foo' );
+		bboss_xprofile_set_field_data( $f, $u, 'foo' );
 
-		$d = new BP_XProfile_ProfileData( $f, $u );
+		$d = new BBoss_XProfile_ProfileData( $f, $u );
 
 		wp_cache_delete( "{$u}:{$f}", 'bp_xprofile_data' );
 
@@ -48,7 +48,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 		$f = self::factory()->xprofile_field->create( array(
 			'field_group_id' => $g,
 		) );
-		$d = new BP_XProfile_ProfileData( $f, $u );
+		$d = new BBoss_XProfile_ProfileData( $f, $u );
 
 		// Fake the cache
 		$c = new stdClass;
@@ -71,7 +71,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 		// Just to be sure
 		wp_cache_delete( "{$u}:{$f}", 'bp_xprofile_data' );
 
-		$this->assertEquals( 0, BP_XProfile_ProfileData::get_fielddataid_byid( $f, $u ) );
+		$this->assertEquals( 0, BBoss_XProfile_ProfileData::get_fielddataid_byid( $f, $u ) );
 	}
 
 	/**
@@ -84,7 +84,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $g,
 		) );
 
-		$d = new BP_XProfile_ProfileData();
+		$d = new BBoss_XProfile_ProfileData();
 		$d->user_id = $u;
 		$d->field_id = $f;
 		$d->value = 'foo';
@@ -93,7 +93,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 		// Ensure it's deleted from cache
 		wp_cache_delete( "{$u}:{$f}", 'bp_xprofile_data' );
 
-		$this->assertEquals( $d->id, BP_XProfile_ProfileData::get_fielddataid_byid( $f, $u ) );
+		$this->assertEquals( $d->id, BBoss_XProfile_ProfileData::get_fielddataid_byid( $f, $u ) );
 	}
 
 	/**
@@ -111,7 +111,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 		$d->id = 5;
 		wp_cache_set( "{$u}:{$f}", $d, 'bp_xprofile_data' );
 
-		$this->assertSame( 5, BP_XProfile_ProfileData::get_fielddataid_byid( $f, $u ) );
+		$this->assertSame( 5, BBoss_XProfile_ProfileData::get_fielddataid_byid( $f, $u ) );
 	}
 
 	/**
@@ -124,7 +124,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $g,
 		) );
 
-		$d = new BP_XProfile_ProfileData();
+		$d = new BBoss_XProfile_ProfileData();
 		$d->user_id = $u;
 		$d->field_id = $f;
 		$d->value = 'foo';
@@ -133,7 +133,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 		// Ensure it's deleted from cache
 		wp_cache_delete( "{$u}:{$f}", 'bp_xprofile_data' );
 
-		$this->assertSame( 'foo', BP_XProfile_ProfileData::get_value_byid( $f, $u ) );
+		$this->assertSame( 'foo', BBoss_XProfile_ProfileData::get_value_byid( $f, $u ) );
 	}
 
 	/**
@@ -154,14 +154,14 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 		$this->last_updated = $time;
 		add_filter( 'xprofile_data_last_updated_before_save', array( $this, 'filter_time' ) );
 
-		$d1 = new BP_XProfile_ProfileData();
+		$d1 = new BBoss_XProfile_ProfileData();
 		$d1->user_id = $u1;
 		$d1->field_id = $f;
 		$d1->value = 'foo';
 		$d1->last_updated = $time;
 		$d1->save();
 
-		$d2 = new BP_XProfile_ProfileData();
+		$d2 = new BBoss_XProfile_ProfileData();
 		$d2->user_id = $u2;
 		$d2->field_id = $f;
 		$d2->value = 'bar';
@@ -190,7 +190,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 
 		$expected = array( $eu1, $eu2 );
 
-		$this->assertEquals( $expected, BP_XProfile_ProfileData::get_value_byid( $f, array( $u1, $u2 ) ) );
+		$this->assertEquals( $expected, BBoss_XProfile_ProfileData::get_value_byid( $f, array( $u1, $u2 ) ) );
 	}
 
 	/**
@@ -203,7 +203,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $g,
 		) );
 
-		$time = bp_core_current_time();
+		$time = bboss_core_current_time();
 
 		// Fake the cache
 		$d = new stdClass;
@@ -211,7 +211,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 		$d->field_id = $f;
 		wp_cache_set( "{$u}:{$f}", $d, 'bp_xprofile_data' );
 
-		$this->assertSame( 'foo', BP_XProfile_ProfileData::get_value_byid( $f, $u ) );
+		$this->assertSame( 'foo', BBoss_XProfile_ProfileData::get_value_byid( $f, $u ) );
 	}
 
 	/**
@@ -261,7 +261,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 
 		$expected = array( $eu1, $eu2 );
 
-		$this->assertEquals( $expected, BP_XProfile_ProfileData::get_value_byid( $f, array( $u1, $u2 ) ) );
+		$this->assertEquals( $expected, BBoss_XProfile_ProfileData::get_value_byid( $f, array( $u1, $u2 ) ) );
 	}
 
 	/**
@@ -280,22 +280,22 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $g2,
 		) );
 
-		$time = bp_core_current_time();
+		$time = bboss_core_current_time();
 
 		// Get the fullname field - hackish
-		$f0_id = xprofile_get_field_id_from_name( bp_xprofile_fullname_field_name() );
-		$f0 = new BP_XProfile_Field( $f0_id );
-		$g0 = new BP_XProfile_Group( $f0->group_id );
-		$d0 = new BP_XProfile_ProfileData( $f0->id, $u );
+		$f0_id = bboss_xprofile_get_field_id_from_name( bboss_xprofile_fullname_field_name() );
+		$f0 = new BBoss_XProfile_Field( $f0_id );
+		$g0 = new BBoss_XProfile_Group( $f0->group_id );
+		$d0 = new BBoss_XProfile_ProfileData( $f0->id, $u );
 
-		$d1 = new BP_XProfile_ProfileData();
+		$d1 = new BBoss_XProfile_ProfileData();
 		$d1->user_id = $u;
 		$d1->field_id = $f1;
 		$d1->value = 'foo';
 		$d1->last_updated = $time;
 		$d1->save();
 
-		$d2 = new BP_XProfile_ProfileData();
+		$d2 = new BBoss_XProfile_ProfileData();
 		$d2->user_id = $u;
 		$d2->field_id = $f2;
 		$d2->value = 'bar';
@@ -308,10 +308,10 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 
 		$u_obj = new WP_User( $u );
 
-		$g1_obj = new BP_XProfile_Group( $g1 );
-		$g2_obj = new BP_XProfile_Group( $g2 );
-		$f1_obj = new BP_XProfile_Field( $f1 );
-		$f2_obj = new BP_XProfile_Field( $f2 );
+		$g1_obj = new BBoss_XProfile_Group( $g1 );
+		$g2_obj = new BBoss_XProfile_Group( $g2 );
+		$f1_obj = new BBoss_XProfile_Field( $f1 );
+		$f2_obj = new BBoss_XProfile_Field( $f2 );
 
 		$expected = array(
 			'user_login' => $u_obj->user_login,
@@ -340,7 +340,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertEquals( $expected, BP_XProfile_ProfileData::get_all_for_user( $u ) );
+		$this->assertEquals( $expected, BBoss_XProfile_ProfileData::get_all_for_user( $u ) );
 	}
 
 	/**
@@ -359,11 +359,11 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $g2,
 		) );
 
-		$time = bp_core_current_time();
+		$time = bboss_core_current_time();
 
-		$g0 = new BP_XProfile_Group( 1 );
-		$f0 = new BP_XProfile_Field( bp_xprofile_nickname_field_id() );
-		$d0 = new BP_XProfile_ProfileData( bp_xprofile_nickname_field_id(), $u );
+		$g0 = new BBoss_XProfile_Group( 1 );
+		$f0 = new BBoss_XProfile_Field( bboss_xprofile_nickname_field_id() );
+		$d0 = new BBoss_XProfile_ProfileData( bboss_xprofile_nickname_field_id(), $u );
 
 		$d1 = new stdClass;
 		$d1->user_id = $u;
@@ -384,10 +384,10 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 
 		$u_obj = new WP_User( $u );
 
-		$g1_obj = new BP_XProfile_Group( $g1 );
-		$g2_obj = new BP_XProfile_Group( $g2 );
-		$f1_obj = new BP_XProfile_Field( $f1 );
-		$f2_obj = new BP_XProfile_Field( $f2 );
+		$g1_obj = new BBoss_XProfile_Group( $g1 );
+		$g2_obj = new BBoss_XProfile_Group( $g2 );
+		$f1_obj = new BBoss_XProfile_Field( $f1 );
+		$f2_obj = new BBoss_XProfile_Field( $f2 );
 
 		$expected = array(
 			'user_login' => $u_obj->user_login,
@@ -416,7 +416,7 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertEquals( $expected, BP_XProfile_ProfileData::get_all_for_user( $u ) );
+		$this->assertEquals( $expected, BBoss_XProfile_ProfileData::get_all_for_user( $u ) );
 	}
 
 	/**
@@ -430,12 +430,12 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 			'field_group_id' => $g,
 		) );
 
-		xprofile_set_field_data( $f, $u, 'Foo' );
+		bboss_xprofile_set_field_data( $f, $u, 'Foo' );
 		// Prime the cache.
-		xprofile_get_field_data( $f, $u );
-		xprofile_remove_data( $u );
+		bboss_xprofile_get_field_data( $f, $u );
+		bboss_xprofile_remove_data( $u );
 
-		$d = new BP_XProfile_ProfileData( $f, $u );
+		$d = new BBoss_XProfile_ProfileData( $f, $u );
 		$this->assertFalse( $d->exists() );
 	}
 

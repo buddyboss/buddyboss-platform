@@ -20,10 +20,15 @@ export default function ActivationRequiredCTA() {
 	const [ isWorking, setIsWorking ] = useState( false );
 	const [ error, setError ] = useState( null );
 	const [ licenseUrl, setLicenseUrl ] = useState( '' );
+	const [ downloadUrl, setDownloadUrl ] = useState( '' );
 	const abortRef = useRef( null );
 
 	const ajaxUrl = ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || window.ajaxurl;
 
+	// Ask the server which state the addon is in. A failed probe shows an error with a
+	// reload-to-retry instead of guessing `not-installed`: a guessed Install Now would
+	// post to an install action that builds without the in-dashboard installer do not
+	// register.
 	useEffect( function () {
 		const controller = new AbortController();
 		abortRef.current = controller;
@@ -47,13 +52,16 @@ export default function ActivationRequiredCTA() {
 					if ( res.data.license_url ) {
 						setLicenseUrl( res.data.license_url );
 					}
+					if ( res.data.download_url ) {
+						setDownloadUrl( res.data.download_url );
+					}
 				} else {
-					setPluginState( 'not-installed' );
+					setPluginState( 'error' );
 				}
 			} )
 			.catch( function ( e ) {
 				if ( 'AbortError' !== e.name ) {
-					setPluginState( 'not-installed' );
+					setPluginState( 'error' );
 				}
 			} );
 
@@ -100,7 +108,7 @@ export default function ActivationRequiredCTA() {
 					window.location.reload();
 				} else {
 					const message = ( res && res.data && res.data.message )
-						|| __( 'Operation failed. Please try again.', 'buddyboss' );
+						|| __( 'Operation failed. Please try again.', 'buddyboss-platform' );
 					setError( message );
 					setIsWorking( false );
 				}
@@ -109,7 +117,7 @@ export default function ActivationRequiredCTA() {
 				if ( err && 'AbortError' === err.name ) {
 					return;
 				}
-				setError( __( 'Network error. Please try again.', 'buddyboss' ) );
+				setError( __( 'Network error. Please try again.', 'buddyboss-platform' ) );
 				setIsWorking( false );
 			} );
 	}, [ pluginState, isWorking ] );
@@ -132,10 +140,10 @@ export default function ActivationRequiredCTA() {
 					<span className="bb-icons-rl bb-icons-rl-info"></span>
 				</div>
 				<h2 className="bb-tools-activation-cta__title">
-					{ __( 'Coming Soon', 'buddyboss' ) }
+					{ __( 'Coming Soon', 'buddyboss-platform' ) }
 				</h2>
 				<p className="bb-tools-activation-cta__description">
-					{ __( 'The BuddyBoss Tools addon is installed, but this feature is not yet available. Update the addon to use it.', 'buddyboss' ) }
+					{ __( 'The BuddyBoss Tools addon is installed, but this feature is not yet available. Update the addon to use it.', 'buddyboss-platform' ) }
 				</p>
 			</div>
 		);
@@ -150,24 +158,78 @@ export default function ActivationRequiredCTA() {
 					<span className="bb-icons-rl bb-icons-rl-info"></span>
 				</div>
 				<h2 className="bb-tools-activation-cta__title">
-					{ __( 'License Required', 'buddyboss' ) }
+					{ __( 'License Required', 'buddyboss-platform' ) }
 				</h2>
 				<p className="bb-tools-activation-cta__description">
-					{ __( 'Please activate your BuddyBoss license to install and use this feature.', 'buddyboss' ) }
+					{ __( 'Please activate your BuddyBoss license to install and use this feature.', 'buddyboss-platform' ) }
 				</p>
 				<Button
 					variant="primary"
 					href={ licenseUrl || '#' }
 				>
-					{ __( 'Activate License', 'buddyboss' ) }
+					{ __( 'Activate License', 'buddyboss-platform' ) }
+				</Button>
+			</div>
+		);
+	}
+
+	if ( 'download' === pluginState ) {
+		// The server has no in-dashboard installer for the addon (the wordpress.org
+		// edition): send the admin to their BuddyBoss account to download it, then
+		// they upload it from Plugins → Add New.
+		return (
+			<div className="bb-tools-activation-cta">
+				<div className="bb-tools-activation-cta__icon">
+					<span className="bb-icons-rl bb-icons-rl-info"></span>
+				</div>
+				<h2 className="bb-tools-activation-cta__title">
+					{ __( 'Add-on Required', 'buddyboss-platform' ) }
+				</h2>
+				<p className="bb-tools-activation-cta__description">
+					{ __(
+						'Download the BuddyBoss Tools addon from your BuddyBoss account, then upload and activate it from Plugins to use this feature.',
+						'buddyboss-platform'
+					) }
+				</p>
+				<Button
+					variant="primary"
+					href={ downloadUrl || '#' }
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{ __( 'Go to My Account', 'buddyboss-platform' ) }
+				</Button>
+			</div>
+		);
+	}
+
+	if ( 'error' === pluginState ) {
+		return (
+			<div className="bb-tools-activation-cta">
+				<div className="bb-tools-activation-cta__icon">
+					<span className="bb-icons-rl bb-icons-rl-info"></span>
+				</div>
+				<h2 className="bb-tools-activation-cta__title">
+					{ __( 'Add-on Status Unavailable', 'buddyboss-platform' ) }
+				</h2>
+				<p className="bb-tools-activation-cta__description">
+					{ __( 'We could not check the BuddyBoss Tools addon. Please try again.', 'buddyboss-platform' ) }
+				</p>
+				<Button
+					variant="primary"
+					onClick={ function () {
+						window.location.reload();
+					} }
+				>
+					{ __( 'Try Again', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		);
 	}
 
 	const buttonLabel = 'installed' === pluginState
-		? __( 'Activate Now', 'buddyboss' )
-		: __( 'Install Now', 'buddyboss' );
+		? __( 'Activate Now', 'buddyboss-platform' )
+		: __( 'Install Now', 'buddyboss-platform' );
 
 	return (
 		<div className="bb-tools-activation-cta">
@@ -175,7 +237,7 @@ export default function ActivationRequiredCTA() {
 				<span className="bb-icons-rl bb-icons-rl-info"></span>
 			</div>
 			<h2 className="bb-tools-activation-cta__title">
-				{ __( 'Activation Required', 'buddyboss' ) }
+				{ __( 'Activation Required', 'buddyboss-platform' ) }
 			</h2>
 			{ /*
 			 * Single panel-agnostic copy by design — same component renders the
@@ -184,7 +246,7 @@ export default function ActivationRequiredCTA() {
 			 * reads correctly in every context without per-panel variants.
 			 */ }
 			<p className="bb-tools-activation-cta__description">
-				{ __( 'Please activate the BuddyBoss Tools addon to use this feature.', 'buddyboss' ) }
+				{ __( 'Please activate the BuddyBoss Tools addon to use this feature.', 'buddyboss-platform' ) }
 			</p>
 			{ error && (
 				<div className="bb-admin-notice bb-admin-notice--error">

@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @param  array $scripts  The array of scripts to register
  * @return array  The same array with the specific notifications scripts.
  */
-function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
+function bboss_nouveau_notifications_register_scripts( $scripts = array() ) {
 
 	if ( ! isset( $scripts['bp-nouveau'] ) ) {
 		return $scripts;
@@ -40,9 +40,9 @@ function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_notifications_enqueue_scripts() {
+function bboss_nouveau_notifications_enqueue_scripts() {
 
-	if ( ! bp_is_user_notifications() ) {
+	if ( ! bboss_is_user_notifications() ) {
 		return;
 	}
 
@@ -55,12 +55,12 @@ function bp_nouveau_notifications_enqueue_scripts() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_notifications_init_filters() {
-	if ( ! bp_is_user_notifications() ) {
+function bboss_nouveau_notifications_init_filters() {
+	if ( ! bboss_is_user_notifications() ) {
 		return;
 	}
 
-	bp_nouveau()->notifications->filters = array();
+	bboss_nouveau()->notifications->filters = array();
 
 	/**
 	 * Hook here to register your custom notification filters
@@ -84,10 +84,10 @@ function bp_nouveau_notifications_init_filters() {
  * }
  * @return bool True if the filter has been successfully registered. False otherwise.
  */
-function bp_nouveau_notifications_register_filter( $args = array() ) {
-	$bp_nouveau = bp_nouveau();
+function bboss_nouveau_notifications_register_filter( $args = array() ) {
+	$bp_nouveau = bboss_nouveau();
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'id'       => '',
@@ -117,8 +117,8 @@ function bp_nouveau_notifications_register_filter( $args = array() ) {
  *                     Leave empty to get all notifications filters.
  * @return array|false All or a specific notifications parameters. False if no match are found.
  */
-function bp_nouveau_notifications_get_filters( $id = '' ) {
-	$bp_nouveau = bp_nouveau();
+function bboss_nouveau_notifications_get_filters( $id = '' ) {
+	$bp_nouveau = bboss_nouveau();
 	if ( ! isset( $bp_nouveau->notifications->filters ) ) {
 		return false;
 	}
@@ -144,7 +144,7 @@ function bp_nouveau_notifications_get_filters( $id = '' ) {
  * @param  array $filters The notifications filters to order.
  * @return array  The sorted filters.
  */
-function bp_nouveau_notifications_sort( $filters = array() ) {
+function bboss_nouveau_notifications_sort( $filters = array() ) {
 	$sorted = array();
 
 	if ( empty( $filters ) || ! is_array( $filters ) ) {
@@ -185,7 +185,7 @@ function bp_nouveau_notifications_sort( $filters = array() ) {
  * @param  string $dashicon    The dashicon class.
  * @return string              Link Output.
  */
-function bp_nouveau_notifications_dashiconified_link( $link = '', $bp_tooltip = '', $dashicon = '' ) {
+function bboss_nouveau_notifications_dashiconified_link( $link = '', $bp_tooltip = '', $dashicon = '' ) {
 	preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', $link, $match );
 
 	if ( ! empty( $match[0] ) && ! empty( $match[1] ) && ! empty( $dashicon ) && ! empty( $bp_tooltip ) ) {
@@ -213,10 +213,10 @@ function bp_nouveau_notifications_dashiconified_link( $link = '', $bp_tooltip = 
  *
  * @return string Link Output.
  */
-function bp_nouveau_notifications_mark_unread_link( $link = '' ) {
-	return bp_nouveau_notifications_dashiconified_link(
+function bboss_nouveau_notifications_mark_unread_link( $link = '' ) {
+	return bboss_nouveau_notifications_dashiconified_link(
 		$link,
-		__( 'Mark Unread', 'buddyboss' ),
+		__( 'Mark Unread', 'buddyboss-platform' ),
 		'dashicons-hidden'
 	);
 }
@@ -230,10 +230,10 @@ function bp_nouveau_notifications_mark_unread_link( $link = '' ) {
  *
  * @return string Link Output.
  */
-function bp_nouveau_notifications_mark_read_link( $link = '' ) {
-	return bp_nouveau_notifications_dashiconified_link(
+function bboss_nouveau_notifications_mark_read_link( $link = '' ) {
+	return bboss_nouveau_notifications_dashiconified_link(
 		$link,
-		__( 'Mark Read', 'buddyboss' ),
+		__( 'Mark Read', 'buddyboss-platform' ),
 		'dashicons-visibility'
 	);
 }
@@ -247,10 +247,10 @@ function bp_nouveau_notifications_mark_read_link( $link = '' ) {
  *
  * @return string Link Output.
  */
-function bp_nouveau_notifications_delete_link( $link = '' ) {
-	return bp_nouveau_notifications_dashiconified_link(
+function bboss_nouveau_notifications_delete_link( $link = '' ) {
+	return bboss_nouveau_notifications_dashiconified_link(
 		$link,
-		__( 'Delete', 'buddyboss' ),
+		__( 'Delete', 'buddyboss-platform' ),
 		'dashicons-trash'
 	);
 }

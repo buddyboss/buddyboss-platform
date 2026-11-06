@@ -10,31 +10,34 @@
  * @version 1.0.0
  */
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+$is_send_ajax_request = bboss_is_send_ajax_request();
 ?>
-<h2 class="bp-screen-title<?php echo ( ! bp_is_group_home() ) ? ' bp-screen-reader-text' : ''; ?>">
-	<?php esc_html_e( 'Group Feed', 'buddyboss' ); ?>
+<h2 class="bp-screen-title<?php echo ( ! bboss_is_group_home() ) ? ' bp-screen-reader-text' : ''; ?>">
+	<?php esc_html_e( 'Group Feed', 'buddyboss-platform' ); ?>
 </h2>
 
-<?php bp_nouveau_groups_activity_post_form(); ?>
+<?php bboss_nouveau_groups_activity_post_form(); ?>
 
 <div class="activity-head-bar">
 
 	<div class="bb-subnav-filters-container bb-subnav-filters-search">
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
 			<i class="bb-icon-f bb-icon-search"></i>
-			<span class="screen-reader-text"><?php esc_html_e( 'Open search filters', 'buddyboss' ); ?></span>
+			<span class="screen-reader-text"><?php esc_html_e( 'Open search filters', 'buddyboss-platform' ); ?></span>
 		</button>
 		<div class="subnav-filters filters clearfix subnav-filters-modal">
 			<ul>
-				<li class="group-act-search"><?php bp_nouveau_search_form(); ?></li>
+				<li class="group-act-search"><?php bboss_nouveau_search_form(); ?></li>
 			</ul>
-			<?php bp_get_template_part( 'common/filters/groups-screens-filters' ); ?>
+			<?php bboss_get_template_part( 'common/filters/groups-screens-filters' ); ?>
 		</div><!-- .subnav-filters -->
 	</div><!-- .bb-subnav-filters-container -->
 
 	<?php
-	$avail_sorting_options = bb_get_enabled_activity_sorting_options();
+	$avail_sorting_options = bboss_get_enabled_activity_sorting_options();
 	arsort( $avail_sorting_options );
 	$default_selected = key( $avail_sorting_options );
 	if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
@@ -46,15 +49,15 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		}
 	}
 
-	$sorting_labels            = bb_get_activity_sorting_options_labels();
-	$sorting_labels_by_context = bb_get_activity_sorting_options_labels( 'by_context' );
+	$sorting_labels            = bboss_get_activity_sorting_options_labels();
+	$sorting_labels_by_context = bboss_get_activity_sorting_options_labels( 'by_context' );
 
 	// Get the default by context label.
 	$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : ( isset( $sorting_labels[ $default_selected ] ) ? $sorting_labels[ $default_selected ] : '' );
 	?>
 	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
-		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show by', 'buddyboss' ); ?></span>
+		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show by', 'buddyboss-platform' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
 				<span class="selected"><?php echo esc_html( $default_by_context_label ); ?></span>
@@ -83,7 +86,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	</div>
 </div>
 
-<?php bp_nouveau_group_hook( 'before', 'activity_content' ); ?>
+<?php bboss_nouveau_group_hook( 'before', 'activity_content' ); ?>
 
 <div id="activity-stream" class="activity single-group" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 	<?php
@@ -129,11 +132,11 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		<?php
 		echo '</li>';
 	} else {
-		bp_get_template_part( 'activity/activity-loop' );
+		bboss_get_template_part( 'activity/activity-loop' );
 	}
 	?>
 </div><!-- .activity -->
 
 <?php
-bp_nouveau_group_hook( 'after', 'activity_content' );
-bp_get_template_part( 'common/js-templates/activity/comments' );
+bboss_nouveau_group_hook( 'after', 'activity_content' );
+bboss_get_template_part( 'common/js-templates/activity/comments' );

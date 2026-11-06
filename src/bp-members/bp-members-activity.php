@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.2.0
  */
-function bp_members_register_activity_actions() {
+function bboss_members_register_activity_actions() {
 
-	bp_activity_set_action(
-		buddypress()->members->id,
+	bboss_activity_set_action(
+		bboss()->members->id,
 		'new_member',
-		__( 'New member registered', 'buddyboss' ),
-		'bp_members_format_activity_action_new_member',
-		__( 'New Members', 'buddyboss' ),
+		__( 'New member registered', 'buddyboss-platform' ),
+		'bboss_members_format_activity_action_new_member',
+		__( 'New Members', 'buddyboss-platform' ),
 		array( 'activity' )
 	);
 
@@ -32,7 +32,7 @@ function bp_members_register_activity_actions() {
 	 */
 	do_action( 'bp_members_register_activity_actions' );
 }
-add_action( 'bp_register_activity_actions', 'bp_members_register_activity_actions' );
+add_action( 'bp_register_activity_actions', 'bboss_members_register_activity_actions' );
 
 /**
  * Format 'new_member' activity actions.
@@ -43,9 +43,10 @@ add_action( 'bp_register_activity_actions', 'bp_members_register_activity_action
  * @param object $activity Activity object.
  * @return string $action
  */
-function bp_members_format_activity_action_new_member( $action, $activity ) {
-	$userlink = bp_core_get_userlink( $activity->user_id );
-	$action   = sprintf( __( '%s became a registered member', 'buddyboss' ), $userlink );
+function bboss_members_format_activity_action_new_member( $action, $activity ) {
+	$userlink = bboss_core_get_userlink( $activity->user_id );
+	/* translators: %s: member display name link. */
+	$action   = sprintf( __( '%s became a registered member', 'buddyboss-platform' ), $userlink );
 
 	// Legacy filter - pass $user_id instead of $activity.
 	if ( has_filter( 'bp_core_activity_registered_member_action' ) ) {
@@ -71,7 +72,7 @@ function bp_members_format_activity_action_new_member( $action, $activity ) {
  * @param array $user Array of userdata passed to bp_core_activated_user hook.
  * @return bool
  */
-function bp_core_new_user_activity( $user ) {
+function bboss_core_new_user_activity( $user ) {
 	if ( empty( $user ) ) {
 		return false;
 	}
@@ -86,12 +87,12 @@ function bp_core_new_user_activity( $user ) {
 		return false;
 	}
 
-	bp_activity_add(
+	bboss_activity_add(
 		array(
 			'user_id'   => $user_id,
-			'component' => buddypress()->members->id,
+			'component' => bboss()->members->id,
 			'type'      => 'new_member',
 		)
 	);
 }
-add_action( 'bp_core_activated_user', 'bp_core_new_user_activity' );
+add_action( 'bp_core_activated_user', 'bboss_core_new_user_activity' );

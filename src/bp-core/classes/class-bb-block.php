@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.9.00
  */
-class BB_Block {
+class BBoss_Block {
 
 	/**
 	 * WP Block Type object.
@@ -80,10 +80,10 @@ class BB_Block {
 	 */
 	public function __construct( $args ) {
 		if ( ! did_action( 'bb_blocks_init' ) ) {
-			_doing_it_wrong( __METHOD__, esc_html__( 'BB Blocks needs to be registered hooking `bb_blocks_init`', 'buddyboss' ), '2.9.00' );
+			_doing_it_wrong( __METHOD__, esc_html__( 'BB Blocks needs to be registered hooking `bb_blocks_init`', 'buddyboss-platform' ), '2.9.00' );
 		}
 
-		$min          = bp_core_get_minified_asset_suffix();
+		$min          = bboss_core_get_minified_asset_suffix();
 		$metadata_map = array(
 			'ancestor'        => 'ancestor',
 			'apiVersion'      => 'api_version',
@@ -128,7 +128,7 @@ class BB_Block {
 		}
 
 		if ( ! isset( $wp_args['name'] ) || ! $wp_args['name'] || ! isset( $wp_args['editor_script'] ) || ! $wp_args['editor_script'] ) {
-			$this->block = new WP_Error( 'missing_parameters', __( 'The `name` or `editor_script` required keys are missing.', 'buddyboss' ) );
+			$this->block = new WP_Error( 'missing_parameters', __( 'The `name` or `editor_script` required keys are missing.', 'buddyboss-platform' ) );
 		} else {
 			if ( isset( $wp_args['api_version'], $args['plugin_url'] ) && 2 === (int) $wp_args['api_version'] ) {
 				foreach ( array( 'editor_script', 'editor_style', 'script', 'style', 'view_script' ) as $asset_key ) {
@@ -164,7 +164,7 @@ class BB_Block {
 
 			// Register the scripts.
 			$this->registered_scripts = array();
-			$version                  = bp_get_version();
+			$version                  = bboss_get_version();
 			if ( isset( $wp_args['version'] ) && $wp_args['version'] ) {
 				$version = $wp_args['version'];
 			}
@@ -193,7 +193,7 @@ class BB_Block {
 			}
 
 			if ( ! isset( $this->registered_scripts['editor_script'] ) || ! $this->registered_scripts['editor_script'] ) {
-				$this->block = new WP_Error( 'script_registration_error', __( 'The required `editor_script` could not be registered.', 'buddyboss' ) );
+				$this->block = new WP_Error( 'script_registration_error', __( 'The required `editor_script` could not be registered.', 'buddyboss-platform' ) );
 
 				// Register the styles.
 			} else {

@@ -6,13 +6,16 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Screen handler to display a user's "Starred" private messages page.
  *
  * @since BuddyPress 2.3.0
  */
-function bp_messages_star_screen() {
-	add_action( 'bp_template_content', 'bp_messages_star_content' );
+function bboss_messages_star_screen() {
+	add_action( 'bp_template_content', 'bboss_messages_star_content' );
 
 	/**
 	 * Fires right before the loading of the "Starred" messages box.
@@ -21,7 +24,7 @@ function bp_messages_star_screen() {
 	 */
 	do_action( 'bp_messages_screen_star' );
 
-	bp_core_load_template( 'members/single/plugins' );
+	bboss_core_load_template( 'members/single/plugins' );
 }
 
 /**
@@ -29,13 +32,13 @@ function bp_messages_star_screen() {
  *
  * @since BuddyPress 2.3.0
  */
-function bp_messages_star_content() {
+function bboss_messages_star_content() {
 	// Add our message thread filter.
-	add_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );
+	add_filter( 'bp_after_has_message_threads_parse_args', 'bboss_messages_filter_starred_message_threads' );
 
 	// Load the message loop template part.
-	bp_get_template_part( 'members/single/messages/messages-loop' );
+	bboss_get_template_part( 'members/single/messages/messages-loop' );
 
 	// Remove our filter.
-	remove_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );
+	remove_filter( 'bp_after_has_message_threads_parse_args', 'bboss_messages_filter_starred_message_threads' );
 }

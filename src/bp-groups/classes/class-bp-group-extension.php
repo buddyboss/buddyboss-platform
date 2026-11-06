@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
  *   - 'access' Which users can visit the plugin's tab.
  *   - 'show_tab' Which users can see the plugin's navigation tab.
  *
- * BP_Group_Extension uses the concept of "settings screens". There are three
+ * BBoss_Group_Extension uses the concept of "settings screens". There are three
  * contexts for settings screens:
  *   - 'create', which inserts a new step into the group creation process
  *   - 'edit', which adds a tab for your extension into the Admin section of
@@ -56,7 +56,7 @@ defined( 'ABSPATH' ) || exit;
  * context-specific methods, for example:
  *   function edit_screen() {}
  *   function edit_screen_save() {}
- * BP_Group_Extension will use the more specific methods if they are available.
+ * BBoss_Group_Extension will use the more specific methods if they are available.
  *
  * You can further customize the settings screens (tab names, etc) by passing
  * an optional 'screens' parameter to the init array. The format is as follows:
@@ -71,7 +71,7 @@ defined( 'ABSPATH' ) || exit;
  *   'edit' => array( // ...
  *   ),
  * Only provide those arguments that you actually want to change from the
- * default configuration. BP_Group_Extension will do the rest.
+ * default configuration. BBoss_Group_Extension will do the rest.
  *
  * Note that the 'edit' screen accepts an additional parameter: 'submit_text',
  * which defines the text of the Submit button automatically added to the Edit
@@ -85,7 +85,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.1.0
  */
-class BP_Group_Extension {
+class BBoss_Group_Extension {
 
 	/** Public ************************************************************/
 
@@ -347,7 +347,7 @@ class BP_Group_Extension {
 	 *                                           to load the content of your main extension tab.
 	 *                                           Default: 'groups/single/plugins.php'.
 	 *     @type array        $screens           A multi-dimensional array of configuration information for the
-	 *                                           extension screens. See docblock of {@link BP_Group_Extension}
+	 *                                           extension screens. See docblock of {@link BBoss_Group_Extension}
 	 *                                           for more details.
 	 *     @type string|array $access            Which users can visit the plugin's tab. Possible values: 'anyone',
 	 *                                           'loggedin', 'member', 'mod', 'admin' or 'noone'. ('member', 'mod',
@@ -407,7 +407,7 @@ class BP_Group_Extension {
 	 * Marked 'public' because it must be accessible to add_action().
 	 * However, you should never need to invoke this method yourself - it
 	 * is called automatically at the right point in the load order by
-	 * bp_register_group_extension().
+	 * bboss_register_group_extension().
 	 *
 	 * @since BuddyPress 1.1.0
 	 */
@@ -483,7 +483,7 @@ class BP_Group_Extension {
 	public static function get_group_id() {
 
 		// Usually this will work.
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 
 		// On the admin, get the group id out of the $_GET params.
 		if ( empty( $group_id ) && is_admin() && ( isset( $_GET['page'] ) && ( 'bp-groups' === $_GET['page'] ) ) && ! empty( $_GET['gid'] ) ) {
@@ -492,8 +492,8 @@ class BP_Group_Extension {
 
 		// This fallback will only be hit when the create step is very
 		// early.
-		if ( empty( $group_id ) && bp_get_new_group_id() ) {
-			$group_id = bp_get_new_group_id();
+		if ( empty( $group_id ) && bboss_get_new_group_id() ) {
+			$group_id = bboss_get_new_group_id();
 		}
 
 		// On some setups, the group id has to be fetched out of the
@@ -521,7 +521,7 @@ class BP_Group_Extension {
 				'position' => 81,
 			),
 			'edit'   => array(
-				'submit_text' => __( 'Save Changes', 'buddyboss' ),
+				'submit_text' => __( 'Save Changes', 'buddyboss-platform' ),
 			),
 			'admin'  => array(
 				'metabox_context'  => 'normal',
@@ -586,7 +586,7 @@ class BP_Group_Extension {
 			if ( false === $this->params['enable_nav_item'] ) {
 				$this->params['access'] = 'noone';
 			} else {
-				$group = groups_get_group( $this->group_id );
+				$group = bboss_groups_get_group( $this->group_id );
 
 				if ( ! empty( $group->status ) && 'public' === $group->status ) {
 					// Tabs in public groups are accessible to anyone by default.
@@ -671,15 +671,15 @@ class BP_Group_Extension {
 
 		switch ( $access_condition ) {
 			case 'admin':
-				$meets_condition = groups_is_user_admin( bp_loggedin_user_id(), $this->group_id );
+				$meets_condition = bboss_groups_is_user_admin( bboss_loggedin_user_id(), $this->group_id );
 				break;
 
 			case 'mod':
-				$meets_condition = groups_is_user_mod( bp_loggedin_user_id(), $this->group_id );
+				$meets_condition = bboss_groups_is_user_mod( bboss_loggedin_user_id(), $this->group_id );
 				break;
 
 			case 'member':
-				$meets_condition = groups_is_user_member( bp_loggedin_user_id(), $this->group_id );
+				$meets_condition = bboss_groups_is_user_member( bboss_loggedin_user_id(), $this->group_id );
 				break;
 
 			case 'loggedin':
@@ -709,12 +709,12 @@ class BP_Group_Extension {
 	protected function setup_display_hooks() {
 
 		// Bail if not a group.
-		if ( ! bp_is_group() ) {
+		if ( ! bboss_is_group() ) {
 			return;
 		}
 
 		// Backward compatibility only.
-		if ( ( 'public' !== $this->visibility ) && ! buddypress()->groups->current_group->user_has_access ) {
+		if ( ( 'public' !== $this->visibility ) && ! bboss()->groups->current_group->user_has_access ) {
 			return;
 		}
 
@@ -722,13 +722,13 @@ class BP_Group_Extension {
 		$user_can_see_nav_item = $this->user_can_see_nav_item();
 
 		if ( $user_can_see_nav_item ) {
-			$group_permalink = bp_get_group_permalink( groups_get_current_group() );
+			$group_permalink = bboss_get_group_permalink( bboss_groups_get_current_group() );
 
-			bp_core_create_subnav_link(
+			bboss_core_create_subnav_link(
 				array(
 					'name'            => ! $this->nav_item_name ? $this->name : $this->nav_item_name,
 					'slug'            => $this->slug,
-					'parent_slug'     => bp_get_current_group_slug(),
+					'parent_slug'     => bboss_get_current_group_slug(),
 					'parent_url'      => $group_permalink,
 					'position'        => $this->nav_item_position,
 					'item_css_id'     => 'nav-' . $this->slug,
@@ -744,12 +744,12 @@ class BP_Group_Extension {
 		$user_can_visit = $this->user_can_visit();
 
 		if ( $user_can_visit ) {
-			$group_permalink = bp_get_group_permalink( groups_get_current_group() );
+			$group_permalink = bboss_get_group_permalink( bboss_groups_get_current_group() );
 
-			bp_core_register_subnav_screen_function(
+			bboss_core_register_subnav_screen_function(
 				array(
 					'slug'            => $this->slug,
-					'parent_slug'     => bp_get_current_group_slug(),
+					'parent_slug'     => bboss_get_current_group_slug(),
 					'screen_function' => array( &$this, '_display_hook' ),
 					'user_has_access' => $user_can_visit,
 					'no_access_url'   => $group_permalink,
@@ -758,7 +758,7 @@ class BP_Group_Extension {
 			);
 
 			// When we are viewing the extension display page, set the title and options title.
-			if ( bp_is_current_action( $this->slug ) ) {
+			if ( bboss_is_current_action( $this->slug ) ) {
 				add_filter( 'bp_group_user_has_access', array( $this, 'group_access_protection' ), 10, 2 );
 
 				$extension_name = $this->name;
@@ -778,7 +778,7 @@ class BP_Group_Extension {
 		}
 
 		// Hook the group home widget.
-		if ( bp_is_group_home() ) {
+		if ( bboss_is_group_home() ) {
 			add_action( $this->display_hook, array( &$this, 'widget_display' ) );
 		}
 	}
@@ -796,9 +796,9 @@ class BP_Group_Extension {
 		 * it was checking for access to that post before wp handles the post id assign
 		 * check `class-bp-forum-component.php` function `setup_components`
 		 */
-		add_action( 'bbp_template_redirect', 'bbp_check_forum_edit', 10 );
-		add_action( 'bbp_template_redirect', 'bbp_check_topic_edit', 10 );
-		add_action( 'bbp_template_redirect', 'bbp_check_reply_edit', 10 );
+		add_action( 'bbp_template_redirect', 'bboss_bbp_check_forum_edit', 10 );
+		add_action( 'bbp_template_redirect', 'bboss_bbp_check_topic_edit', 10 );
+		add_action( 'bbp_template_redirect', 'bboss_bbp_check_reply_edit', 10 );
 
 		/**
 		 * Filters the template to load for the main display method.
@@ -807,7 +807,7 @@ class BP_Group_Extension {
 		 *
 		 * @param string $template_file Path to the template to load.
 		 */
-		bp_core_load_template( apply_filters( 'bp_core_template_plugin', $this->template_file ) );
+		bboss_core_load_template( apply_filters( 'bp_core_template_plugin', $this->template_file ) );
 	}
 
 	/**
@@ -836,7 +836,7 @@ class BP_Group_Extension {
 	public function user_can_see_nav_item( $user_can_see_nav_item = false ) {
 
 		// Always allow moderators to see nav items, even if explicitly 'noone'
-		if ( ( 'noone' !== $this->params['show_tab'] ) && bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ( 'noone' !== $this->params['show_tab'] ) && bboss_current_user_can( 'bp_moderate' ) ) {
 			return true;
 		}
 
@@ -857,7 +857,7 @@ class BP_Group_Extension {
 	public function user_can_visit( $user_can_visit = false ) {
 
 		// Always allow moderators to visit a tab, even if explicitly 'noone'
-		if ( ( 'noone' !== $this->params['access'] ) && bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ( 'noone' !== $this->params['access'] ) && bboss_current_user_can( 'bp_moderate' ) ) {
 			return true;
 		}
 
@@ -865,10 +865,10 @@ class BP_Group_Extension {
 	}
 
 	/**
-	 * Filter the access check in bp_groups_group_access_protection() for this extension.
+	 * Filter the access check in bboss_groups_group_access_protection() for this extension.
 	 *
 	 * Note that $no_access_args is passed by reference, as there are some
-	 * circumstances where the bp_core_no_access() arguments need to be
+	 * circumstances where the bboss_core_no_access() arguments need to be
 	 * modified before the redirect takes place.
 	 *
 	 * @since BuddyPress 2.1.0
@@ -881,10 +881,10 @@ class BP_Group_Extension {
 		$user_can_visit = $this->user_can_visit();
 
 		if ( ! $user_can_visit && is_user_logged_in() ) {
-			$current_group = groups_get_group( $this->group_id );
+			$current_group = bboss_groups_get_group( $this->group_id );
 
-			$no_access_args['message']  = __( 'You do not have access to this content.', 'buddyboss' );
-			$no_access_args['root']     = bp_get_group_permalink( $current_group ) . 'home/';
+			$no_access_args['message']  = __( 'You do not have access to this content.', 'buddyboss-platform' );
+			$no_access_args['root']     = bboss_get_group_permalink( $current_group ) . 'home/';
 			$no_access_args['redirect'] = false;
 		}
 
@@ -907,7 +907,7 @@ class BP_Group_Extension {
 		$screen = $this->screens['create'];
 
 		// Insert the group creation step for the new group extension.
-		buddypress()->groups->group_creation_steps[ $screen['slug'] ] = array(
+		bboss()->groups->group_creation_steps[ $screen['slug'] ] = array(
 			'name'     => $screen['name'],
 			'slug'     => $screen['slug'],
 			'position' => $screen['position'],
@@ -928,7 +928,7 @@ class BP_Group_Extension {
 	 * @since BuddyPress 1.8.0
 	 */
 	public function maybe_create_screen() {
-		if ( ! bp_is_group_creation_step( $this->screens['create']['slug'] ) ) {
+		if ( ! bboss_is_group_creation_step( $this->screens['create']['slug'] ) ) {
 			return;
 		}
 
@@ -937,7 +937,7 @@ class BP_Group_Extension {
 
 		// The create screen requires an additional nonce field
 		// due to a quirk in the way the templates are built.
-		wp_nonce_field( 'groups_create_save_' . bp_get_groups_current_create_step(), '_wpnonce', false );
+		wp_nonce_field( 'groups_create_save_' . bboss_get_groups_current_create_step(), '_wpnonce', false );
 	}
 
 	/**
@@ -946,7 +946,7 @@ class BP_Group_Extension {
 	 * @since BuddyPress 1.8.0
 	 */
 	public function maybe_create_screen_save() {
-		if ( ! bp_is_group_creation_step( $this->screens['create']['slug'] ) ) {
+		if ( ! bboss_is_group_creation_step( $this->screens['create']['slug'] ) ) {
 			return;
 		}
 
@@ -963,12 +963,12 @@ class BP_Group_Extension {
 	 */
 	protected function setup_edit_hooks() {
 		// Bail if not in a group.
-		if ( ! bp_is_group() ) {
+		if ( ! bboss_is_group() ) {
 			return;
 		}
 
 		// Bail if not an edit screen.
-		if ( ! $this->is_screen_enabled( 'edit' ) || ! bp_is_item_admin() ) {
+		if ( ! $this->is_screen_enabled( 'edit' ) || ! bboss_is_item_admin() ) {
 			return;
 		}
 
@@ -977,17 +977,17 @@ class BP_Group_Extension {
 		$position  = isset( $screen['position'] ) ? (int) $screen['position'] : 10;
 		$position += 40;
 
-		$current_group = groups_get_current_group();
-		$admin_link    = trailingslashit( bp_get_group_permalink( $current_group ) . 'admin' );
+		$current_group = bboss_groups_get_current_group();
+		$admin_link    = trailingslashit( bboss_get_group_permalink( $current_group ) . 'admin' );
 
 		$subnav_args = array(
 			'name'            => $screen['name'],
 			'slug'            => $screen['slug'],
 			'parent_slug'     => $current_group->slug . '_manage',
 			'parent_url'      => $admin_link,
-			'user_has_access' => bp_is_item_admin(),
+			'user_has_access' => bboss_is_item_admin(),
 			'position'        => $position,
-			'screen_function' => 'groups_screen_group_admin',
+			'screen_function' => 'bboss_groups_screen_group_admin',
 		);
 
 		// Should we add a menu to the Group's WP Admin Bar.
@@ -996,24 +996,24 @@ class BP_Group_Extension {
 		}
 
 		// Add the tab to the manage navigation.
-		bp_core_new_subnav_item( $subnav_args, 'groups' );
+		bboss_core_new_subnav_item( $subnav_args, 'groups' );
 
 		// Catch the edit screen and forward it to the plugin template.
-		if ( bp_is_groups_component() && bp_is_current_action( 'admin' ) && bp_is_action_variable( $screen['slug'], 0 ) ) {
+		if ( bboss_is_groups_component() && bboss_is_current_action( 'admin' ) && bboss_is_action_variable( $screen['slug'], 0 ) ) {
 			$this->call_edit_screen_save( $this->group_id );
 
 			add_action( 'groups_custom_edit_steps', array( &$this, 'call_edit_screen' ) );
 
 			// Determine the proper template and save for later
 			// loading.
-			if ( '' !== bp_locate_template( array( 'groups/single/home.php' ), false ) ) {
+			if ( '' !== bboss_locate_template( array( 'groups/single/home.php' ), false ) ) {
 				$this->edit_screen_template = '/groups/single/home';
 			} else {
 				add_action(
 					'bp_template_content_header',
 					function() {
 						echo '<ul class="content-header-nav">';
-						bp_group_admin_tabs();
+						bboss_group_admin_tabs();
 						echo '</ul>';
 					}
 				);
@@ -1030,9 +1030,9 @@ class BP_Group_Extension {
 	/**
 	 * Call the edit_screen() method.
 	 *
-	 * Previous versions of BP_Group_Extension required plugins to provide
+	 * Previous versions of BBoss_Group_Extension required plugins to provide
 	 * their own Submit button and nonce fields when building markup. In
-	 * BP 1.8, this requirement was lifted - BP_Group_Extension now handles
+	 * BP 1.8, this requirement was lifted - BBoss_Group_Extension now handles
 	 * all required submit buttons and nonces.
 	 *
 	 * We put the edit screen markup into an output buffer before echoing.
@@ -1048,7 +1048,7 @@ class BP_Group_Extension {
 		$screen = ob_get_contents();
 		ob_end_clean();
 
-		echo $this->maybe_add_submit_button( $screen );
+		echo $this->maybe_add_submit_button( $screen ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- submit-button markup built with esc_attr(); wp_kses_post() strips <input>.
 
 		$this->nonce_field( 'edit' );
 	}
@@ -1065,7 +1065,7 @@ class BP_Group_Extension {
 
 		// When DOING_AJAX, the POST global will be populated, but we
 		// should assume it's a save.
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( defined( 'BBOSS_DOING_AJAX' ) && BBOSS_DOING_AJAX ) {
 			return;
 		}
 
@@ -1093,9 +1093,9 @@ class BP_Group_Extension {
 			 *
 			 * @param string $value URL to redirect to.
 			 */
-			$redirect_to = apply_filters( 'bp_group_extension_edit_screen_save_redirect', bp_get_requested_url() );
+			$redirect_to = apply_filters( 'bp_group_extension_edit_screen_save_redirect', bboss_get_requested_url() );
 
-			bp_core_redirect( $redirect_to );
+			bboss_core_redirect( $redirect_to );
 			die();
 		}
 	}
@@ -1111,10 +1111,10 @@ class BP_Group_Extension {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @see BP_Group_Extension::setup_edit_hooks()
+	 * @see BBoss_Group_Extension::setup_edit_hooks()
 	 */
 	public function call_edit_screen_template_loader() {
-		bp_core_load_template( $this->edit_screen_template );
+		bboss_core_load_template( $this->edit_screen_template );
 	}
 
 	/**
@@ -1212,7 +1212,7 @@ class BP_Group_Extension {
 	 * Check the nonce, and call the admin_screen_save() method.
 	 *
 	 * @since      BuddyPress 1.8.0
-	 * @deprecated BuddyBoss 3.0.0 Use BB_Admin_Meta_Field_Registry via bb_register_groups_meta_fields hook instead.
+	 * @deprecated BuddyBoss 3.0.0 Use BBoss_Admin_Meta_Field_Registry via bb_register_groups_meta_fields hook instead.
 	 */
 	public function call_admin_screen_save() {
 		_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'BB_Admin_Meta_Field_Registry::save_fields_data()' );
@@ -1316,7 +1316,7 @@ class BP_Group_Extension {
 	 * either provide context-specific methods, or you can let BP fall back
 	 * on the shared settings_* callbacks.
 	 *
-	 * For example, consider a BP_Group_Extension implementation that looks
+	 * For example, consider a BBoss_Group_Extension implementation that looks
 	 * like this:
 	 *
 	 *   // ...
@@ -1326,7 +1326,7 @@ class BP_Group_Extension {
 	 *   function settings_screen_save( $group_id ) { ... }
 	 *   // ...
 	 *
-	 * BP_Group_Extension will use your create_* methods for the Create
+	 * BBoss_Group_Extension will use your create_* methods for the Create
 	 * steps, and will use your generic settings_* methods for the Edit
 	 * and Admin contexts. This schema allows plugin authors maximum
 	 * flexibility without having to repeat themselves.
@@ -1377,7 +1377,7 @@ class BP_Group_Extension {
 	 * than overwriting the b array with the a array.
 	 *
 	 * The implementation of this function is specific to the needs of
-	 * BP_Group_Extension, where we know that arrays will always be
+	 * BBoss_Group_Extension, where we know that arrays will always be
 	 * associative, and that an argument under a given key in one array
 	 * will be matched by a value of identical depth in the other one. The
 	 * function is NOT designed for general use, and will probably result
@@ -1537,7 +1537,7 @@ class BP_Group_Extension {
 	/**
 	 * Return a list of legacy properties.
 	 *
-	 * The legacy implementation of BP_Group_Extension used all of these
+	 * The legacy implementation of BBoss_Group_Extension used all of these
 	 * object properties for configuration. Some have been moved.
 	 *
 	 * @since BuddyPress 1.8.0
@@ -1570,7 +1570,7 @@ class BP_Group_Extension {
 	/**
 	 * Parse legacy properties.
 	 *
-	 * The old standard for BP_Group_Extension was for plugins to register
+	 * The old standard for BBoss_Group_Extension was for plugins to register
 	 * their settings as properties in their constructor. The new method is
 	 * to pass a config array to the init() method. In order to support
 	 * legacy plugins, we slurp up legacy properties, and later on we'll
@@ -1659,7 +1659,7 @@ class BP_Group_Extension {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @see BP_Group_Extension::__get()
+	 * @see BBoss_Group_Extension::__get()
 	 */
 	protected function setup_legacy_properties() {
 
@@ -1736,7 +1736,7 @@ class BP_Group_Extension {
  * @param string $group_extension_class Name of the Extension class.
  * @return false|null Returns false on failure, otherwise null.
  */
-function bp_register_group_extension( $group_extension_class = '' ) {
+function bboss_register_group_extension( $group_extension_class = '' ) {
 
 	if ( ! class_exists( $group_extension_class ) ) {
 		return false;

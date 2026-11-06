@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_forums_after_save_settings( $feature_id, $settings, $saved ) {
+function bboss_forums_after_save_settings( $feature_id, $settings, $saved ) {
 	if ( 'forums' !== $feature_id ) {
 		return;
 	}
@@ -61,4 +61,4 @@ function bb_forums_after_save_settings( $feature_id, $settings, $saved ) {
 	do_action( 'bb_forums_after_save_settings' );
 }
 
-add_action( 'bb_admin_save_feature_settings_after', 'bb_forums_after_save_settings', 10, 3 );
+add_action( 'bb_admin_save_feature_settings_after', 'bboss_forums_after_save_settings', 10, 3 );

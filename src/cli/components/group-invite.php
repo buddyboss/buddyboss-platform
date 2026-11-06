@@ -39,7 +39,7 @@ class Group_Invite extends BuddypressCommand {
 	 * : Identifier for the inviter. Accepts either a user_login or a numeric ID.
 	 *
 	 * [--<field>=<value>]
-	 * : One or more parameters to pass. See groups_invite_user()
+	 * : One or more parameters to pass. See bboss_groups_invite_user()
 	 *
 	 * [--silent]
 	 * : Whether to silent the invite creation.
@@ -55,13 +55,13 @@ class Group_Invite extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$assoc_args,
 			array(
 				'user-id'       => '',
 				'group-id'      => '',
 				'inviter-id'    => '',
-				'date-modified' => bp_core_current_time(),
+				'date-modified' => bboss_core_current_time(),
 				'is-confirmed'  => 0,
 			)
 		);
@@ -70,7 +70,7 @@ class Group_Invite extends BuddypressCommand {
 		$user     = $this->get_user_id_from_identifier( $r['user-id'] );
 		$inviter  = $this->get_user_id_from_identifier( $r['inviter-id'] );
 
-		$invite = groups_invite_user(
+		$invite = bboss_groups_invite_user(
 			array(
 				'user_id'       => $user->ID,
 				'group_id'      => $group_id,
@@ -80,7 +80,7 @@ class Group_Invite extends BuddypressCommand {
 			)
 		);
 
-		groups_send_invites(
+		bboss_groups_send_invites(
 			array(
 				'inviter_id' => $inviter->ID,
 				'group_id' => $group_id
@@ -123,7 +123,7 @@ class Group_Invite extends BuddypressCommand {
 		$group_id = $this->get_group_id_from_identifier( $assoc_args['group-id'] );
 		$user     = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
 
-		if ( groups_uninvite_user( $user->ID, $group_id ) ) {
+		if ( bboss_groups_uninvite_user( $user->ID, $group_id ) ) {
 			WP_CLI::success( 'User uninvited from the group.' );
 		} else {
 			WP_CLI::error( 'Could not remove the user.' );
@@ -165,7 +165,7 @@ class Group_Invite extends BuddypressCommand {
 		$user_id  = $user->ID;
 
 		if ( $group_id ) {
-			$invite_query = new \BP_Group_Member_Query(
+			$invite_query = new \BBoss_Group_Member_Query(
 				array(
 					'is_confirmed' => false,
 					'group_id'     => $group_id,
@@ -208,7 +208,7 @@ class Group_Invite extends BuddypressCommand {
 			$formatter = $this->get_formatter( $assoc_args );
 			$formatter->display_items( $invites );
 		} else {
-			$invite_query = groups_get_invites_for_user( $user_id );
+			$invite_query = bboss_groups_get_invites_for_user( $user_id );
 			$invites      = $invite_query['groups'];
 
 			if ( empty( $assoc_args['fields'] ) ) {
@@ -246,7 +246,7 @@ class Group_Invite extends BuddypressCommand {
 
 		for ( $i = 0; $i < $assoc_args['count']; $i++ ) {
 
-			$random_group = \BP_Groups_Group::get_random( 1, 1 );
+			$random_group = \BBoss_Groups_Group::get_random( 1, 1 );
 			$this->add(
 				array(),
 				array(
@@ -286,7 +286,7 @@ class Group_Invite extends BuddypressCommand {
 		$group_id = $this->get_group_id_from_identifier( $assoc_args['group-id'] );
 		$user     = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
 
-		if ( groups_accept_invite( $user->ID, $group_id ) ) {
+		if ( bboss_groups_accept_invite( $user->ID, $group_id ) ) {
 			WP_CLI::success( 'User is now a "member" of the group.' );
 		} else {
 			WP_CLI::error( 'Could not accept user invitation to the group.' );
@@ -316,7 +316,7 @@ class Group_Invite extends BuddypressCommand {
 		$group_id = $this->get_group_id_from_identifier( $assoc_args['group-id'] );
 		$user     = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
 
-		if ( groups_reject_invite( $user->ID, $group_id ) ) {
+		if ( bboss_groups_reject_invite( $user->ID, $group_id ) ) {
 			WP_CLI::success( 'Member invitation rejected.' );
 		} else {
 			WP_CLI::error( 'Could not reject member invitation.' );
@@ -348,7 +348,7 @@ class Group_Invite extends BuddypressCommand {
 		$group_id = $this->get_group_id_from_identifier( $assoc_args['group-id'] );
 		$user     = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
 
-		if ( groups_delete_invite( $user->ID, $group_id ) ) {
+		if ( bboss_groups_delete_invite( $user->ID, $group_id ) ) {
 			WP_CLI::success( 'Member invitation deleted from the group.' );
 		} else {
 			WP_CLI::error( 'Could not delete member invitation from the group.' );

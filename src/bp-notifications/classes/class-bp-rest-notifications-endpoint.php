@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Notifications_Endpoint class
+ * BP REST: BBoss_REST_Notifications_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -21,8 +21,8 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->notifications->id;
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->notifications->id;
 	}
 
 	/**
@@ -57,7 +57,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the notification.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the notification.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -132,8 +132,8 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		$args = $this->prepare_get_item_for_database( $request );
 
 		// Actually, query it.
-		$notifications       = BP_Notifications_Notification::get( $args );
-		$notifications_count = BP_Notifications_Notification::get_total_count( $args );
+		$notifications       = BBoss_Notifications_Notification::get( $args );
+		$notifications_count = BBoss_Notifications_Notification::get_total_count( $args );
 
 		$retval = array();
 		foreach ( $notifications as $notification ) {
@@ -143,7 +143,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, $notifications_count, $args['per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, $notifications_count, $args['per_page'] );
 
 		/**
 		 * Fires after notifications are fetched via the REST API.
@@ -170,7 +170,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -178,10 +178,10 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( is_user_logged_in() ) {
 			$retval = true;
 
-			if ( bp_loggedin_user_id() !== $request['user_id'] && ! $this->can_see() ) {
+			if ( bboss_loggedin_user_id() !== $request['user_id'] && ! $this->can_see() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -228,7 +228,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a notification is fetched via the REST API.
 		 *
-		 * @param BP_Notifications_Notification $notification Fetched notification.
+		 * @param BBoss_Notifications_Notification $notification Fetched notification.
 		 * @param WP_REST_Response              $response     The response data.
 		 * @param WP_REST_Request               $request      The request sent to the API.
 		 *
@@ -250,7 +250,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -263,7 +263,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			if ( is_null( $notification->item_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_notification_invalid_id',
-					__( 'Invalid notification ID.', 'buddyboss' ),
+					__( 'Invalid notification ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -271,7 +271,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			} elseif ( ! $this->can_see( $notification->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you cannot view this notification.', 'buddyboss' ),
+					__( 'Sorry, you cannot view this notification.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -316,32 +316,32 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
 
-		if ( function_exists( 'bb_activity_add_notification_metas' ) ) {
-			add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+		if ( function_exists( 'bboss_activity_add_notification_metas' ) ) {
+			add_action( 'bp_notification_after_save', 'bboss_activity_add_notification_metas', 5 );
 		}
-		if ( function_exists( 'bb_groups_add_notification_metas' ) ) {
-			add_action( 'bp_notification_after_save', 'bb_groups_add_notification_metas', 5 );
+		if ( function_exists( 'bboss_groups_add_notification_metas' ) ) {
+			add_action( 'bp_notification_after_save', 'bboss_groups_add_notification_metas', 5 );
 		}
-		if ( function_exists( 'bb_forums_add_notification_metas' ) ) {
-			add_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
+		if ( function_exists( 'bboss_forums_add_notification_metas' ) ) {
+			add_action( 'bp_notification_after_save', 'bboss_forums_add_notification_metas', 5 );
 		}
 
-		$notification_id = bp_notifications_add_notification( $this->prepare_item_for_database( $request ) );
+		$notification_id = bboss_notifications_add_notification( $this->prepare_item_for_database( $request ) );
 
-		if ( function_exists( 'bb_activity_add_notification_metas' ) ) {
-			remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+		if ( function_exists( 'bboss_activity_add_notification_metas' ) ) {
+			remove_action( 'bp_notification_after_save', 'bboss_activity_add_notification_metas', 5 );
 		}
-		if ( function_exists( 'bb_groups_add_notification_metas' ) ) {
-			remove_action( 'bp_notification_after_save', 'bb_groups_add_notification_metas', 5 );
+		if ( function_exists( 'bboss_groups_add_notification_metas' ) ) {
+			remove_action( 'bp_notification_after_save', 'bboss_groups_add_notification_metas', 5 );
 		}
-		if ( function_exists( 'bb_forums_add_notification_metas' ) ) {
-			remove_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
+		if ( function_exists( 'bboss_forums_add_notification_metas' ) ) {
+			remove_action( 'bp_notification_after_save', 'bboss_forums_add_notification_metas', 5 );
 		}
 
 		if ( ! is_numeric( $notification_id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_notification',
-				__( 'Cannot create new notification.', 'buddyboss' ),
+				__( 'Cannot create new notification.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -364,7 +364,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a notification is created via the REST API.
 		 *
-		 * @param BP_Notifications_Notification $notification The created notification.
+		 * @param BBoss_Notifications_Notification $notification The created notification.
 		 * @param WP_REST_Response              $response     The response data.
 		 * @param WP_REST_Request               $request      The request sent to the API.
 		 *
@@ -423,7 +423,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( $request['is_new'] === $notification->is_new ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_notification_status',
-				__( 'Notification is already with the status you are trying to update into.', 'buddyboss' ),
+				__( 'Notification is already with the status you are trying to update into.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -436,7 +436,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( ! (bool) $updated ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_notification',
-				__( 'Cannot update the status of this notification.', 'buddyboss' ),
+				__( 'Cannot update the status of this notification.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -462,7 +462,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a notification is updated via the REST API.
 		 *
-		 * @param BP_Notifications_Notification $notification The updated notification.
+		 * @param BBoss_Notifications_Notification $notification The updated notification.
 		 * @param WP_REST_Response              $response     The response data.
 		 * @param WP_REST_Request               $request      The request sent to the API.
 		 *
@@ -519,10 +519,10 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		$notification = $this->get_notification_object( $request );
 		$previous     = $this->prepare_item_for_response( $notification, $request );
 
-		if ( ! BP_Notifications_Notification::delete( array( 'id' => $notification->id ) ) ) {
+		if ( ! BBoss_Notifications_Notification::delete( array( 'id' => $notification->id ) ) ) {
 			return new WP_Error(
 				'bp_rest_notification_invalid_id',
-				__( 'Invalid notification ID.', 'buddyboss' ),
+				__( 'Invalid notification ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -541,7 +541,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a notification is deleted via the REST API.
 		 *
-		 * @param BP_Notifications_Notification $notification The deleted notification.
+		 * @param BBoss_Notifications_Notification $notification The deleted notification.
 		 * @param WP_REST_Response              $response     The response data.
 		 * @param WP_REST_Request               $request      The request sent to the API.
 		 *
@@ -577,7 +577,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares notification data for return as an object.
 	 *
-	 * @param BP_Notifications_Notification $notification Notification data.
+	 * @param BBoss_Notifications_Notification $notification Notification data.
 	 * @param WP_REST_Request               $request      Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -591,7 +591,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			'secondary_item_id' => $notification->secondary_item_id,
 			'component'         => $notification->component_name,
 			'action'            => $notification->component_action,
-			'date'              => bp_rest_prepare_date_response( $notification->date_notified ),
+			'date'              => bboss_rest_prepare_date_response( $notification->date_notified ),
 			'is_new'            => $notification->is_new,
 			'description'       => array(
 				'rendered' => '',
@@ -649,7 +649,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		// Avatars.
 		$data['avatar_urls'] = array(
-			'full'  => bp_core_fetch_avatar(
+			'full'  => bboss_core_fetch_avatar(
 				array(
 					'item_id' => $item_id,
 					'html'    => false,
@@ -657,7 +657,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 					'object'  => $object,
 				)
 			),
-			'thumb' => bp_core_fetch_avatar(
+			'thumb' => bboss_core_fetch_avatar(
 				array(
 					'item_id' => $item_id,
 					'html'    => false,
@@ -681,7 +681,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		}
 
 		$bp->notifications->query_loop->notification = $notification;
-		$data['description']['rendered']             = bp_get_the_notification_description();
+		$data['description']['rendered']             = bboss_get_the_notification_description();
 
 		if ( ! empty( $data['description']['rendered'] ) ) {
 			// Extract the first URL from Description.
@@ -707,7 +707,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response              $response     The response data.
 		 * @param WP_REST_Request               $request      Request used to generate the response.
-		 * @param BP_Notifications_Notification $notification Notification object.
+		 * @param BBoss_Notifications_Notification $notification Notification object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -736,7 +736,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		} elseif ( isset( $notification->user_id ) ) {
 			$prepared_notification->user_id = $notification->user_id;
 		} else {
-			$prepared_notification->user_id = bp_loggedin_user_id();
+			$prepared_notification->user_id = bboss_loggedin_user_id();
 		}
 
 		if ( ! empty( $schema['properties']['item_id'] ) && isset( $request['item_id'] ) ) {
@@ -789,7 +789,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BP_Notifications_Notification $notification Notification item.
+	 * @param BBoss_Notifications_Notification $notification Notification item.
 	 * @param string                        $object Notification object.
 	 *
 	 * @return array Links for the given plugin.
@@ -816,7 +816,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $users_ids ) ),
+				'href'       => rest_url( bboss_rest_get_user_url( $users_ids ) ),
 				'embeddable' => true,
 			),
 		);
@@ -826,7 +826,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			'bbp_new_reply' === $notification->component_action
 		) {
 
-			$description = bp_get_the_notification_description( $notification );
+			$description = bboss_get_the_notification_description( $notification );
 			$url         = '';
 			$page        = '';
 			$topic_id    = '';
@@ -890,7 +890,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * Filter links prepared for the REST response.
 		 *
 		 * @param array                         $links        The prepared links of the REST response.
-		 * @param BP_Notifications_Notification $notification Notification object.
+		 * @param BBoss_Notifications_Notification $notification Notification object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -908,12 +908,12 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	protected function can_see( $notification_id = 0 ) {
 
 		// Check notification access.
-		if ( ! empty( $notification_id ) && (bool) BP_Notifications_Notification::check_access( bp_loggedin_user_id(), $notification_id ) ) {
+		if ( ! empty( $notification_id ) && (bool) BBoss_Notifications_Notification::check_access( bboss_loggedin_user_id(), $notification_id ) ) {
 			return true;
 		}
 
 		// Moderators as well.
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bboss_current_user_can( 'bp_moderate' ) ) {
 			return true;
 		}
 
@@ -925,13 +925,13 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
-	 * @return BP_Notifications_Notification|string A notification object.
+	 * @return BBoss_Notifications_Notification|string A notification object.
 	 * @since 0.1.0
 	 */
 	public function get_notification_object( $request ) {
 		$notification_id = is_numeric( $request ) ? $request : (int) $request['id'];
 
-		$notification = bp_notifications_get_notification( $notification_id );
+		$notification = bboss_notifications_get_notification( $notification_id );
 
 		if ( empty( $notification->id ) ) {
 			return '';
@@ -1005,66 +1005,66 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the notification.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the notification.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the user the notification is addressed to.', 'buddyboss' ),
+					'description' => __( 'The ID of the user the notification is addressed to.', 'buddyboss-platform' ),
 					'type'        => 'integer',
-					'default'     => bp_loggedin_user_id(),
+					'default'     => bboss_loggedin_user_id(),
 				),
 				'item_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the item associated with the notification.', 'buddyboss' ),
+					'description' => __( 'The ID of the item associated with the notification.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'secondary_item_id' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the secondary item associated with the notification.', 'buddyboss' ),
+					'description' => __( 'The ID of the secondary item associated with the notification.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'component'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the BuddyPress component the notification relates to.', 'buddyboss' ),
+					'description' => __( 'The name of the BuddyPress component the notification relates to.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'action'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the component\'s action the notification is about.', 'buddyboss' ),
+					'description' => __( 'The name of the component\'s action the notification is about.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'date'              => array(
-					'description' => __( 'The date the notification was created, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the notification was created, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'is_new'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether it\'s a new notification or not.', 'buddyboss' ),
+					'description' => __( 'Whether it\'s a new notification or not.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'default'     => 1,
 				),
 				'object'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the notification object.', 'buddyboss' ),
+					'description' => __( 'The name of the notification object.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'object_id'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the notification object.', 'buddyboss' ),
+					'description' => __( 'The ID of the notification object.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'description'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Description of notification.', 'buddyboss' ),
+					'description' => __( 'Description of notification.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'properties'  => array(
 						'rendered' => array(
-							'description' => __( 'HTML description for the object, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML description for the object, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -1073,17 +1073,17 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				),
 				'link_url'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Link URL for the notification.', 'buddyboss' ),
+					'description' => __( 'Link URL for the notification.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'rest_actions'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Rest Actions which perform accept/reject based on the status.', 'buddyboss' ),
+					'description' => __( 'Rest Actions which perform accept/reject based on the status.', 'buddyboss-platform' ),
 					'type'        => 'object',
 				),
 				'readonly'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Readonly for the moderated members notification.', 'buddyboss' ),
+					'description' => __( 'Readonly for the moderated members notification.', 'buddyboss-platform' ),
 					'type'        => 'object',
 				),
 			),
@@ -1093,7 +1093,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		$avatar_properties['full'] = array(
 			/* translators: Full image size for the member Avatar */
-			'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
+			'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bboss_core_number_format( bboss_core_avatar_full_width() ), bboss_core_number_format( bboss_core_avatar_full_height() ) ),
 			'type'        => 'string',
 			'format'      => 'uri',
 			'context'     => array( 'embed', 'view', 'edit' ),
@@ -1101,14 +1101,14 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		$avatar_properties['thumb'] = array(
 			/* translators: Thumb image size for the member Avatar */
-			'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
+			'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bboss_core_number_format( bboss_core_avatar_thumb_width() ), bboss_core_number_format( bboss_core_avatar_thumb_height() ) ),
 			'type'        => 'string',
 			'format'      => 'uri',
 			'context'     => array( 'embed', 'view', 'edit' ),
 		);
 
 		$schema['properties']['avatar_urls'] = array(
-			'description' => __( 'Avatar URLs for the notification.', 'buddyboss' ),
+			'description' => __( 'Avatar URLs for the notification.', 'buddyboss-platform' ),
 			'type'        => 'object',
 			'context'     => array( 'embed', 'view', 'edit' ),
 			'readonly'    => true,
@@ -1137,7 +1137,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		unset( $params['search'] );
 
 		$params['order_by'] = array(
-			'description'       => __( 'Name of the field to order according to.', 'buddyboss' ),
+			'description'       => __( 'Name of the field to order according to.', 'buddyboss-platform' ),
 			'default'           => 'id',
 			'type'              => 'string',
 			'enum'              => array(
@@ -1154,7 +1154,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['sort_order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'ASC',
 			'type'              => 'string',
 			'enum'              => array( 'ASC', 'DESC' ),
@@ -1163,7 +1163,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['component_name'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific component', 'buddyboss' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific component', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
@@ -1171,7 +1171,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['component_action'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific component\'s action name.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific component\'s action name.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
@@ -1179,15 +1179,15 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit result set to notifications addressed to a specific user.', 'buddyboss' ),
-			'default'           => bp_loggedin_user_id(),
+			'description'       => __( 'Limit result set to notifications addressed to a specific user.', 'buddyboss-platform' ),
+			'default'           => bboss_loggedin_user_id(),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['item_id'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific item ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific item ID.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1195,7 +1195,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['secondary_item_id'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific secondary item ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific secondary item ID.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1203,7 +1203,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['is_new'] = array(
-			'description'       => __( 'Limit result set to items from specific states.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items from specific states.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1221,7 +1221,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	/**
 	 * Action to perform.
 	 *
-	 * @param BP_Notifications_Notification $notification A notification object.
+	 * @param BBoss_Notifications_Notification $notification A notification object.
 	 *
 	 * @return array|string
 	 */
@@ -1250,26 +1250,26 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			case 'bb_connections_new_request':
 				if (
 					! empty( $notification->secondary_item_id )
-					&& bp_is_active( 'friends' )
-					&& class_exists( 'BP_Friends_Friendship' )
+					&& bboss_is_active( 'friends' )
+					&& class_exists( 'BBoss_Friends_Friendship' )
 				) {
-					$friendship = new BP_Friends_Friendship( $notification->secondary_item_id );
+					$friendship = new BBoss_Friends_Friendship( $notification->secondary_item_id );
 					if ( $friendship->id === $notification->secondary_item_id ) {
 
 						if ( ! empty( $friendship->is_confirmed ) ) {
-							$data['status'] = __( 'Accepted', 'buddyboss' );
+							$data['status'] = __( 'Accepted', 'buddyboss-platform' );
 						} else {
-							$data['status']             = __( 'Pending', 'buddyboss' );
-							$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . buddypress()->friends->id . '/' . $friendship->id );
+							$data['status']             = __( 'Pending', 'buddyboss-platform' );
+							$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . bboss()->friends->id . '/' . $friendship->id );
 							$data['accept']['method']   = 'PATCH';
-							$data['accept']['link_url'] = bp_loggedin_user_domain() . bp_get_friends_slug();
+							$data['accept']['link_url'] = bboss_loggedin_user_domain() . bboss_get_friends_slug();
 
-							$data['reject']['endpoint'] = rest_url( $this->namespace . '/' . buddypress()->friends->id . '/' . $friendship->id );
+							$data['reject']['endpoint'] = rest_url( $this->namespace . '/' . bboss()->friends->id . '/' . $friendship->id );
 							$data['reject']['method']   = 'DELETE';
-							$data['reject']['link_url'] = bp_loggedin_user_domain() . bp_get_friends_slug();
+							$data['reject']['link_url'] = bboss_loggedin_user_domain() . bboss_get_friends_slug();
 						}
 					} else {
-						$data['status'] = __( 'Rejected', 'buddyboss' );
+						$data['status'] = __( 'Rejected', 'buddyboss-platform' );
 					}
 				}
 				break;
@@ -1278,15 +1278,15 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			case 'bb_groups_new_request':
 				if (
 					! empty( $notification->secondary_item_id )
-					&& bp_is_active( 'groups' )
-					&& function_exists( 'groups_get_requests' )
+					&& bboss_is_active( 'groups' )
+					&& function_exists( 'bboss_groups_get_requests' )
 				) {
-					$group     = groups_get_group( $notification->item_id );
-					$is_member = groups_is_user_member( $notification->secondary_item_id, $notification->item_id );
+					$group     = bboss_groups_get_group( $notification->item_id );
+					$is_member = bboss_groups_is_user_member( $notification->secondary_item_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
-						$data['status'] = __( 'Accepted', 'buddyboss' );
+						$data['status'] = __( 'Accepted', 'buddyboss-platform' );
 					} else {
-						$requests = groups_get_requests(
+						$requests = bboss_groups_get_requests(
 							array(
 								'user_id' => $notification->secondary_item_id,
 								'item_id' => $notification->item_id,
@@ -1296,19 +1296,19 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 						if ( ! empty( $requests ) ) {
 							$current_request = current( $requests );
 							if ( ! empty( $current_request->accepted ) ) {
-								$data['status'] = __( 'Accepted', 'buddyboss' );
+								$data['status'] = __( 'Accepted', 'buddyboss-platform' );
 							} else {
-								$data['status']             = __( 'Pending', 'buddyboss' );
-								$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . buddypress()->groups->id . '/membership-requests/' . $current_request->id );
+								$data['status']             = __( 'Pending', 'buddyboss-platform' );
+								$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . bboss()->groups->id . '/membership-requests/' . $current_request->id );
 								$data['accept']['method']   = 'PATCH';
-								$data['accept']['link_url'] = trailingslashit( bp_get_group_permalink( $group ) . 'members' );
+								$data['accept']['link_url'] = trailingslashit( bboss_get_group_permalink( $group ) . 'members' );
 
-								$data['reject']['endpoint'] = rest_url( $this->namespace . '/' . buddypress()->groups->id . '/membership-requests/' . $current_request->id );
+								$data['reject']['endpoint'] = rest_url( $this->namespace . '/' . bboss()->groups->id . '/membership-requests/' . $current_request->id );
 								$data['reject']['method']   = 'DELETE';
-								$data['reject']['link_url'] = trailingslashit( bp_get_group_permalink( $group ) . 'members' );
+								$data['reject']['link_url'] = trailingslashit( bboss_get_group_permalink( $group ) . 'members' );
 							}
 						} else {
-							$data['status'] = __( 'Rejected', 'buddyboss' );
+							$data['status'] = __( 'Rejected', 'buddyboss-platform' );
 						}
 					}
 				}
@@ -1316,13 +1316,13 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 			case 'group_invite':
 			case 'bb_groups_new_invite':
-				if ( bp_is_active( 'groups' ) && function_exists( 'groups_get_invites' ) ) {
-					$group     = groups_get_group( $notification->item_id );
-					$is_member = groups_is_user_member( $notification->user_id, $notification->item_id );
+				if ( bboss_is_active( 'groups' ) && function_exists( 'bboss_groups_get_invites' ) ) {
+					$group     = bboss_groups_get_group( $notification->item_id );
+					$is_member = bboss_groups_is_user_member( $notification->user_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
-						$data['status'] = __( 'Accepted', 'buddyboss' );
+						$data['status'] = __( 'Accepted', 'buddyboss-platform' );
 					} else {
-						$invites = groups_get_invites(
+						$invites = bboss_groups_get_invites(
 							array(
 								'user_id' => $notification->user_id,
 								'item_id' => $notification->item_id,
@@ -1332,19 +1332,19 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 						if ( ! empty( $invites ) ) {
 							$current_invites = current( $invites );
 							if ( ! empty( $current_invites->accepted ) ) {
-								$data['status'] = __( 'Accepted', 'buddyboss' );
+								$data['status'] = __( 'Accepted', 'buddyboss-platform' );
 							} else {
-								$data['status']             = __( 'Pending', 'buddyboss' );
-								$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . buddypress()->groups->id . '/invites/' . $current_invites->id );
+								$data['status']             = __( 'Pending', 'buddyboss-platform' );
+								$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . bboss()->groups->id . '/invites/' . $current_invites->id );
 								$data['accept']['method']   = 'PATCH';
-								$data['accept']['link_url'] = bp_get_group_permalink( $group );
+								$data['accept']['link_url'] = bboss_get_group_permalink( $group );
 
-								$data['reject']['endpoint'] = rest_url( $this->namespace . '/' . buddypress()->groups->id . '/invites/' . $current_invites->id );
+								$data['reject']['endpoint'] = rest_url( $this->namespace . '/' . bboss()->groups->id . '/invites/' . $current_invites->id );
 								$data['reject']['method']   = 'DELETE';
-								$data['reject']['link_url'] = bp_get_group_permalink( $group );
+								$data['reject']['link_url'] = bboss_get_group_permalink( $group );
 							}
 						} else {
-							$data['status'] = __( 'Rejected', 'buddyboss' );
+							$data['status'] = __( 'Rejected', 'buddyboss-platform' );
 						}
 					}
 				}
@@ -1366,7 +1366,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * Update Link URL after request accept/reject.
 	 *
 	 * @param string                        $url          Link URL for the notification.
-	 * @param BP_Notifications_Notification $notification A notification object.
+	 * @param BBoss_Notifications_Notification $notification A notification object.
 	 *
 	 * @return string
 	 */
@@ -1389,16 +1389,16 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			case 'bb_connections_new_request':
 				if (
 					! empty( $notification->secondary_item_id )
-					&& bp_is_active( 'friends' )
-					&& class_exists( 'BP_Friends_Friendship' )
+					&& bboss_is_active( 'friends' )
+					&& class_exists( 'BBoss_Friends_Friendship' )
 				) {
-					$friendship = new BP_Friends_Friendship( $notification->secondary_item_id );
+					$friendship = new BBoss_Friends_Friendship( $notification->secondary_item_id );
 					if ( $friendship->id === $notification->secondary_item_id ) {
 						if ( ! empty( $friendship->is_confirmed ) ) {
-							$url = bp_loggedin_user_domain() . bp_get_friends_slug();
+							$url = bboss_loggedin_user_domain() . bboss_get_friends_slug();
 						}
 					} else {
-						$url = bp_loggedin_user_domain() . bp_get_friends_slug();
+						$url = bboss_loggedin_user_domain() . bboss_get_friends_slug();
 					}
 				}
 				break;
@@ -1407,15 +1407,15 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			case 'bb_groups_new_request':
 				if (
 					! empty( $notification->secondary_item_id )
-					&& bp_is_active( 'groups' )
-					&& function_exists( 'groups_get_requests' )
+					&& bboss_is_active( 'groups' )
+					&& function_exists( 'bboss_groups_get_requests' )
 				) {
-					$group     = groups_get_group( $notification->item_id );
-					$is_member = groups_is_user_member( $notification->secondary_item_id, $notification->item_id );
+					$group     = bboss_groups_get_group( $notification->item_id );
+					$is_member = bboss_groups_is_user_member( $notification->secondary_item_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
-						$url = trailingslashit( bp_get_group_permalink( $group ) . 'members' );
+						$url = trailingslashit( bboss_get_group_permalink( $group ) . 'members' );
 					} else {
-						$requests = groups_get_requests(
+						$requests = bboss_groups_get_requests(
 							array(
 								'user_id' => $notification->secondary_item_id,
 								'item_id' => $notification->item_id,
@@ -1423,7 +1423,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 						);
 
 						if ( empty( $requests ) ) {
-							$url = trailingslashit( bp_get_group_permalink( $group ) . 'members' );
+							$url = trailingslashit( bboss_get_group_permalink( $group ) . 'members' );
 						}
 					}
 				}
@@ -1431,13 +1431,13 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 			case 'group_invite':
 			case 'bb_groups_new_invite':
-				if ( bp_is_active( 'groups' ) && function_exists( 'groups_get_invites' ) ) {
-					$group     = groups_get_group( $notification->item_id );
-					$is_member = groups_is_user_member( $notification->user_id, $notification->item_id );
+				if ( bboss_is_active( 'groups' ) && function_exists( 'bboss_groups_get_invites' ) ) {
+					$group     = bboss_groups_get_group( $notification->item_id );
+					$is_member = bboss_groups_is_user_member( $notification->user_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
-						$url = bp_get_group_permalink( $group );
+						$url = bboss_get_group_permalink( $group );
 					} else {
-						$invites = groups_get_invites(
+						$invites = bboss_groups_get_invites(
 							array(
 								'user_id' => $notification->user_id,
 								'item_id' => $notification->item_id,
@@ -1445,7 +1445,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 						);
 
 						if ( empty( $invites ) ) {
-							$url = bp_get_group_permalink( $group );
+							$url = bboss_get_group_permalink( $group );
 						}
 					}
 				}
@@ -1477,7 +1477,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		$per_page = ! empty( $request->get_param( 'per_page' ) ) ? (int) $request->get_param( 'per_page' ) : $schema['per_page']['default'];
 
 		$user_id          = get_current_user_id();
-		$notification_ids = BP_Notifications_Notification::get(
+		$notification_ids = BBoss_Notifications_Notification::get(
 			array(
 				'user_id'           => $user_id,
 				'order_by'          => 'date_notified',
@@ -1490,7 +1490,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 		if ( $notification_ids ) {
 			foreach ( $notification_ids as $notification_id ) {
-				BP_Notifications_Notification::update(
+				BBoss_Notifications_Notification::update(
 					array( 'is_new' => 0 ),
 					array( 'id' => $notification_id )
 				);
@@ -1537,7 +1537,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	public function update_read_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1586,7 +1586,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( empty( $request->get_param( 'component_name' ) ) ) {
-			$args['component_name'] = bp_notifications_get_registered_components();
+			$args['component_name'] = bboss_notifications_get_registered_components();
 		}
 
 		if ( ! empty( $request->get_param( 'include' ) ) ) {

@@ -6,17 +6,20 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load the 'My Connections' activity page.
  *
  * @since BuddyPress 1.0.0
  */
-function bp_activity_screen_friends() {
-	if ( ! bp_is_active( 'friends' ) ) {
+function bboss_activity_screen_friends() {
+	if ( ! bboss_is_active( 'friends' ) ) {
 		return false;
 	}
 
-	bp_update_is_item_admin( bp_current_user_can( 'bp_moderate' ), 'activity' );
+	bboss_update_is_item_admin( bboss_current_user_can( 'bp_moderate' ), 'activity' );
 
 	/**
 	 * Fires right before the loading of the "My Connections" screen template file.
@@ -32,5 +35,5 @@ function bp_activity_screen_friends() {
 	 *
 	 * @param string $template Path to the activity template to load.
 	 */
-	bp_core_load_template( apply_filters( 'bp_activity_template_friends_activity', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'bp_activity_template_friends_activity', 'members/single/home' ) );
 }

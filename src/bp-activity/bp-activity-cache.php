@@ -21,8 +21,8 @@ defined( 'ABSPATH' ) || exit;
  * @param int|string|array|bool $activity_ids Accepts a single activity ID, or a comma-
  *                                            separated list or array of activity ids.
  */
-function bp_activity_update_meta_cache( $activity_ids = false ) {
-	$bp = buddypress();
+function bboss_activity_update_meta_cache( $activity_ids = false ) {
+	$bp = bboss();
 
 	$cache_args = array(
 		'object_ids'       => $activity_ids,
@@ -33,7 +33,7 @@ function bp_activity_update_meta_cache( $activity_ids = false ) {
 		'cache_key_prefix' => 'bp_activity_meta',
 	);
 
-	bp_update_meta_cache( $cache_args );
+	bboss_update_meta_cache( $cache_args );
 }
 
 /**
@@ -41,9 +41,9 @@ function bp_activity_update_meta_cache( $activity_ids = false ) {
  *
  * @since BuddyPress 2.0.0
  *
- * @param BP_Activity_Activity $activity Activity object.
+ * @param BBoss_Activity_Activity $activity Activity object.
  */
-function bp_activity_clear_cache_for_activity( $activity ) {
+function bboss_activity_clear_cache_for_activity( $activity ) {
 	wp_cache_delete( $activity->id, 'bp_activity' );
 	wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 	wp_cache_delete( 'bb_activity_hierarchy_' . $activity->id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
@@ -65,7 +65,7 @@ function bp_activity_clear_cache_for_activity( $activity ) {
 		wp_cache_delete( 'bp_get_child_comments_' . $activity->secondary_item_id, 'bp_activity_comments' ); // Used in BP_Activity_Activity::get_child_comments().
 	}
 }
-add_action( 'bp_activity_after_save', 'bp_activity_clear_cache_for_activity' );
+add_action( 'bp_activity_after_save', 'bboss_activity_clear_cache_for_activity' );
 
 /**
  * Clear cached data for deleted activity items.
@@ -74,7 +74,7 @@ add_action( 'bp_activity_after_save', 'bp_activity_clear_cache_for_activity' );
  *
  * @param array $deleted_ids IDs of deleted activity items.
  */
-function bp_activity_clear_cache_for_deleted_activity( $deleted_ids ) {
+function bboss_activity_clear_cache_for_deleted_activity( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_activity' );
 		wp_cache_delete( 'bb_activity_hierarchy_' . $deleted_id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
@@ -89,7 +89,7 @@ function bp_activity_clear_cache_for_deleted_activity( $deleted_ids ) {
 		wp_cache_delete( 'bb_get_activity_status_' . $deleted_id, 'bp_activity' );
 	}
 }
-add_action( 'bp_activity_deleted_activities', 'bp_activity_clear_cache_for_deleted_activity' );
+add_action( 'bp_activity_deleted_activities', 'bboss_activity_clear_cache_for_deleted_activity' );
 
 /**
  * Clear cached data for deleted activity items.
@@ -98,7 +98,7 @@ add_action( 'bp_activity_deleted_activities', 'bp_activity_clear_cache_for_delet
  *
  * @param array $activities Array of activities.
  */
-function bb_activity_clear_cache_after_deleted_activity( $activities ) {
+function bboss_activity_clear_cache_after_deleted_activity( $activities ) {
 	if ( ! empty( $activities ) ) {
 		foreach ( (array) $activities as $activity ) {
 			wp_cache_delete( $activity->id, 'bp_activity' );
@@ -123,7 +123,7 @@ function bb_activity_clear_cache_after_deleted_activity( $activities ) {
 		}
 	}
 }
-add_action( 'bp_activity_after_delete', 'bb_activity_clear_cache_after_deleted_activity', 10, 1 );
+add_action( 'bp_activity_after_delete', 'bboss_activity_clear_cache_after_deleted_activity', 10, 1 );
 
 /**
  * Reset cache incrementor for the Activity component.
@@ -135,18 +135,18 @@ add_action( 'bp_activity_after_delete', 'bb_activity_clear_cache_after_deleted_a
  *
  * @return bool True on success, false on failure.
  */
-function bp_activity_reset_cache_incrementor() {
-	$without_last_activity = bp_core_reset_incrementor( 'bp_activity' );
-	$with_last_activity    = bp_core_reset_incrementor( 'bp_activity_with_last_activity' );
+function bboss_activity_reset_cache_incrementor() {
+	$without_last_activity = bboss_core_reset_incrementor( 'bp_activity' );
+	$with_last_activity    = bboss_core_reset_incrementor( 'bp_activity_with_last_activity' );
 	return $without_last_activity && $with_last_activity;
 }
-add_action( 'bp_activity_delete', 'bp_activity_reset_cache_incrementor' );
-add_action( 'bp_activity_add', 'bp_activity_reset_cache_incrementor' );
-add_action( 'added_activity_meta', 'bp_activity_reset_cache_incrementor' );
-add_action( 'updated_activity_meta', 'bp_activity_reset_cache_incrementor' );
-add_action( 'deleted_activity_meta', 'bp_activity_reset_cache_incrementor' );
-add_action( 'bp_activity_mark_as_spam', 'bp_activity_reset_cache_incrementor' );
-add_action( 'bp_activity_mark_as_ham', 'bp_activity_reset_cache_incrementor' );
+add_action( 'bp_activity_delete', 'bboss_activity_reset_cache_incrementor' );
+add_action( 'bp_activity_add', 'bboss_activity_reset_cache_incrementor' );
+add_action( 'added_activity_meta', 'bboss_activity_reset_cache_incrementor' );
+add_action( 'updated_activity_meta', 'bboss_activity_reset_cache_incrementor' );
+add_action( 'deleted_activity_meta', 'bboss_activity_reset_cache_incrementor' );
+add_action( 'bp_activity_mark_as_spam', 'bboss_activity_reset_cache_incrementor' );
+add_action( 'bp_activity_mark_as_ham', 'bboss_activity_reset_cache_incrementor' );
 
 /**
  * Clear cached data for deleted users.
@@ -155,11 +155,11 @@ add_action( 'bp_activity_mark_as_ham', 'bp_activity_reset_cache_incrementor' );
  *
  * @param int $user_id ID of the user.
  */
-function bp_activity_follow_clear_user_object_cache( $user_id ) {
+function bboss_activity_follow_clear_user_object_cache( $user_id ) {
 	wp_cache_delete( 'bp_total_follower_for_user_' . $user_id, 'bp' );
 	wp_cache_delete( 'bp_total_following_for_user_' . $user_id, 'bp' );
 }
-add_action( 'bp_remove_follow_data', 'bp_activity_follow_clear_user_object_cache' );
+add_action( 'bp_remove_follow_data', 'bboss_activity_follow_clear_user_object_cache' );
 
 /**
  * Clear cached data for deleted users and reset incrementor.
@@ -168,7 +168,7 @@ add_action( 'bp_remove_follow_data', 'bp_activity_follow_clear_user_object_cache
  *
  * @param object $follow Follow object.
  */
-function bp_activity_follow_reset_cache_incrementor( $follow ) {
+function bboss_activity_follow_reset_cache_incrementor( $follow ) {
 
 	if ( ! empty( $follow->leader_id ) ) {
 		wp_cache_delete( 'bp_total_follower_for_user_' . $follow->leader_id, 'bp' );
@@ -180,10 +180,10 @@ function bp_activity_follow_reset_cache_incrementor( $follow ) {
 		wp_cache_delete( 'bp_total_following_for_user_' . $follow->follower_id, 'bp' );
 	}
 
-	return bp_core_reset_incrementor( 'bp_activity_follow' );
+	return bboss_core_reset_incrementor( 'bp_activity_follow' );
 }
-add_action( 'bp_start_following', 'bp_activity_follow_reset_cache_incrementor' );
-add_action( 'bp_stop_following', 'bp_activity_follow_reset_cache_incrementor' );
+add_action( 'bp_start_following', 'bboss_activity_follow_reset_cache_incrementor' );
+add_action( 'bp_stop_following', 'bboss_activity_follow_reset_cache_incrementor' );
 
 /**
  * Clear cached data for follow object.
@@ -192,13 +192,13 @@ add_action( 'bp_stop_following', 'bp_activity_follow_reset_cache_incrementor' );
  *
  * @param object $follow Follow object.
  */
-function bp_activity_follow_delete_object_cache( $follow ) {
+function bboss_activity_follow_delete_object_cache( $follow ) {
 	if ( ! empty( $follow->id ) ) {
 		wp_cache_delete( $follow->id, 'bp_activity_follow' );
-		bp_core_delete_incremented_cache( $follow->leader_id . '_' . $follow->follower_id, 'bp_activity_follow' );
+		bboss_core_delete_incremented_cache( $follow->leader_id . '_' . $follow->follower_id, 'bp_activity_follow' );
 	}
 }
-add_action( 'bp_stop_following', 'bp_activity_follow_delete_object_cache' );
+add_action( 'bp_stop_following', 'bboss_activity_follow_delete_object_cache' );
 
 /**
  * Clear cached data for follow object when user is deleted.
@@ -208,7 +208,7 @@ add_action( 'bp_stop_following', 'bp_activity_follow_delete_object_cache' );
  * @param int        $user_id ID of user.
  * @param array|bool $ids     array of follow ids or false.
  */
-function bp_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
+function bboss_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
 	if ( ! empty( $ids ) ) {
 		foreach ( $ids as $id ) {
 			if ( is_object( $id ) && isset( $id->id ) ) {
@@ -219,7 +219,7 @@ function bp_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
 		}
 	}
 }
-add_action( 'bp_remove_follow_data', 'bp_activity_follow_delete_follow_ids_object_cache', 10, 2 );
+add_action( 'bp_remove_follow_data', 'bboss_activity_follow_delete_follow_ids_object_cache', 10, 2 );
 
 /**
  * Clear cached data for activity meta data.
@@ -228,12 +228,12 @@ add_action( 'bp_remove_follow_data', 'bp_activity_follow_delete_follow_ids_objec
  *
  * @param int $activity_id ID of activity.
  */
-function bb_activity_clear_metadata( $meta_ids, $activity_id ) {
+function bboss_activity_clear_metadata( $meta_ids, $activity_id ) {
 	wp_cache_delete( $activity_id, 'activity_meta' );
 }
-add_action( 'deleted_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
-add_action( 'updated_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
-add_action( 'added_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
+add_action( 'deleted_activity_meta', 'bboss_activity_clear_metadata', 10, 2 );
+add_action( 'updated_activity_meta', 'bboss_activity_clear_metadata', 10, 2 );
+add_action( 'added_activity_meta', 'bboss_activity_clear_metadata', 10, 2 );
 
 /**
  * Clear cached data for activity comment counts.
@@ -242,10 +242,10 @@ add_action( 'added_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
  *
  * @param array $activities Array of activities.
  */
-function bb_activity_comment_reset_count( $activities ) {
+function bboss_activity_comment_reset_count( $activities ) {
 	if ( ! empty( $activities ) ) {
 
-		if ( ! is_array( $activities ) && $activities instanceof BP_Activity_Activity ) {
+		if ( ! is_array( $activities ) && $activities instanceof BBoss_Activity_Activity ) {
 			$activities = array( $activities );
 		}
 
@@ -254,11 +254,11 @@ function bb_activity_comment_reset_count( $activities ) {
 			wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
 			if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 				BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bp-activity_' . $activity->id );
-				BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity->id ) ) );
+				BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bboss_activity_get_permalink( $activity->id ) ) );
 			}
 
 			// Also clear cache for all top level item.
-			$comments = bb_get_activity_hierarchy( $activity->secondary_item_id );
+			$comments = bboss_get_activity_hierarchy( $activity->secondary_item_id );
 			if ( ! empty( $comments ) ) {
 				$descendants = wp_list_pluck( $comments, 'id' );
 				if ( ! empty( $descendants ) ) {
@@ -267,7 +267,7 @@ function bb_activity_comment_reset_count( $activities ) {
 
 						if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 							BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bp-activity_' . $activity_id );
-							BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity_id ) ) );
+							BuddyBoss\Performance\Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bboss_activity_get_permalink( $activity_id ) ) );
 						}
 					}
 				}
@@ -276,18 +276,18 @@ function bb_activity_comment_reset_count( $activities ) {
 	}
 }
 
-add_action( 'bp_activity_after_delete', 'bb_activity_comment_reset_count' );
-add_action( 'bp_activity_mark_as_spam', 'bb_activity_comment_reset_count' );
-add_action( 'bp_activity_mark_as_ham', 'bb_activity_comment_reset_count' );
+add_action( 'bp_activity_after_delete', 'bboss_activity_comment_reset_count' );
+add_action( 'bp_activity_mark_as_spam', 'bboss_activity_comment_reset_count' );
+add_action( 'bp_activity_mark_as_ham', 'bboss_activity_comment_reset_count' );
 
 /**
  * Reset cache incrementor for the activity when privacy is changed.
  *
  * @since BuddyBoss 2.8.20
  *
- * @param BP_Activity_Activity $activity Activity object.
+ * @param BBoss_Activity_Activity $activity Activity object.
  */
-function bb_activity_reset_cache_incrementor_on_privacy_change( $activity ) {
+function bboss_activity_reset_cache_incrementor_on_privacy_change( $activity ) {
 	// Check if the request is an ajax request and the action is activity_update_privacy.
 	if (
 		! wp_doing_ajax() ||
@@ -298,6 +298,6 @@ function bb_activity_reset_cache_incrementor_on_privacy_change( $activity ) {
 		return;
 	}
 
-	bp_activity_reset_cache_incrementor();
+	bboss_activity_reset_cache_incrementor();
 }
-add_action( 'bp_activity_after_save', 'bb_activity_reset_cache_incrementor_on_privacy_change' );
+add_action( 'bp_activity_after_save', 'bboss_activity_reset_cache_incrementor_on_privacy_change' );

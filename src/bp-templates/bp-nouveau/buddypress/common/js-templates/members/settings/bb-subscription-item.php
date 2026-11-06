@@ -7,6 +7,10 @@
  * @since   BuddyBoss 2.2.6
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <script type="text/html" id="tmpl-bb-subscription-item">
@@ -34,7 +38,7 @@
 			<# } #>
 		</div>
 	</a>
-	<button type="button" data-subscription-id="{{ item.id }}" class="subscription-item_remove" aria-label="<?php esc_html_e( 'Unsubscribe', 'buddyboss' ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Unsubscribe', 'buddyboss' ); ?>">
+	<button type="button" data-subscription-id="{{ item.id }}" class="subscription-item_remove" aria-label="<?php esc_html_e( 'Unsubscribe', 'buddyboss-platform' ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Unsubscribe', 'buddyboss-platform' ); ?>">
 		<i class="bb-icon-lined bb-icon-times"></i>
 	</button>
 </script>

@@ -11,25 +11,25 @@
  * - An empty result keeps the tabs and returns an empty state, never null HTML.
  *
  * @group groups
- * @group bb_group_members_widget
+ * @group BBoss_Group_Members_Widget
  */
 class BB_Tests_Group_Members_Widget extends BP_UnitTestCase {
 
 	/**
 	 * Widget under test.
 	 *
-	 * @var BB_Group_Members_Widget
+	 * @var BBoss_Group_Members_Widget
 	 */
 	protected $widget;
 
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! class_exists( 'BB_Group_Members_Widget' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-group-members-widget.php';
+		if ( ! class_exists( 'BBoss_Group_Members_Widget' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-group-members-widget.php';
 		}
 
-		$this->widget = new BB_Group_Members_Widget();
+		$this->widget = new BBoss_Group_Members_Widget();
 
 		add_filter( 'wp_doing_ajax', '__return_true' );
 		add_filter( 'wp_die_ajax_handler', array( $this, 'get_die_handler' ), 1 );
@@ -126,7 +126,7 @@ class BB_Tests_Group_Members_Widget extends BP_UnitTestCase {
 	 * @return bool
 	 */
 	protected function lists_user( $html, $user_id ) {
-		return false !== strpos( (string) $html, esc_url( bp_core_get_user_domain( $user_id ) ) );
+		return false !== strpos( (string) $html, esc_url( bboss_core_get_user_domain( $user_id ) ) );
 	}
 
 	/**
@@ -216,8 +216,8 @@ class BB_Tests_Group_Members_Widget extends BP_UnitTestCase {
 	public function test_ajax_tabs_include_group_organizers( $filter ) {
 		$g = $this->make_group( 'public' );
 		// The Popular sort reads total_friend_count; give both users a value.
-		bp_update_user_meta( $g['admin_id'], 'total_friend_count', 3 );
-		bp_update_user_meta( $g['member_id'], 'total_friend_count', 1 );
+		bboss_update_user_meta( $g['admin_id'], 'total_friend_count', 3 );
+		bboss_update_user_meta( $g['member_id'], 'total_friend_count', 1 );
 		self::set_current_user( $g['member_id'] );
 
 		$response = $this->call_ajax( $g['group_id'], $filter );
@@ -274,19 +274,19 @@ class BB_Tests_Group_Members_Widget extends BP_UnitTestCase {
 
 	public function test_query_args_match_between_tabs() {
 		foreach ( array( 'active', 'last_joined', 'popular' ) as $filter ) {
-			$args = BB_Group_Members_Widget::bb_get_query_args( 7, $filter, 5 );
+			$args = BBoss_Group_Members_Widget::bb_get_query_args( 7, $filter, 5 );
 			$this->assertSame( 0, $args['exclude_admins_mods'] );
 			$this->assertSame( $filter, $args['type'] );
 			$this->assertSame( 5, $args['max'] );
 		}
 
-		$this->assertSame( 'active', BB_Group_Members_Widget::bb_get_query_type( 'online' ) );
-		$this->assertSame( 'active', BB_Group_Members_Widget::bb_get_query_type( 'alphabetical' ) );
-		$this->assertSame( BB_Group_Members_Widget::MAX_MEMBERS, BB_Group_Members_Widget::bb_get_query_args( 7, 'active', 100000 )['max'] );
+		$this->assertSame( 'active', BBoss_Group_Members_Widget::bb_get_query_type( 'online' ) );
+		$this->assertSame( 'active', BBoss_Group_Members_Widget::bb_get_query_type( 'alphabetical' ) );
+		$this->assertSame( BBoss_Group_Members_Widget::MAX_MEMBERS, BBoss_Group_Members_Widget::bb_get_query_args( 7, 'active', 100000 )['max'] );
 	}
 
 	public function test_empty_result_returns_empty_state_html() {
-		$html = BB_Group_Members_Widget::bb_get_members_list_html(
+		$html = BBoss_Group_Members_Widget::bb_get_members_list_html(
 			array(
 				'group_id'            => PHP_INT_MAX >> 33,
 				'type'                => 'last_joined',
@@ -315,8 +315,8 @@ class BB_Tests_Group_Members_Widget extends BP_UnitTestCase {
 	public function test_widget_keeps_tabs_when_active_tab_is_empty() {
 		$g = $this->make_group( 'public' );
 		// Remove every last_activity row: nobody is "recently active".
-		BP_Core_User::delete_last_activity( $g['admin_id'] );
-		BP_Core_User::delete_last_activity( $g['member_id'] );
+		BBoss_Core_User::delete_last_activity( $g['admin_id'] );
+		BBoss_Core_User::delete_last_activity( $g['member_id'] );
 		self::set_current_user( $g['member_id'] );
 		$this->set_current_group( $g['group_id'] );
 
@@ -343,8 +343,8 @@ class BB_Tests_Group_Members_Widget extends BP_UnitTestCase {
 	 * @param int $group_id Group ID.
 	 */
 	protected function set_current_group( $group_id ) {
-		buddypress()->current_component     = buddypress()->groups->id;
-		buddypress()->groups->current_group = groups_get_group( $group_id );
+		bboss()->current_component     = bboss()->groups->id;
+		bboss()->groups->current_group = bboss_groups_get_group( $group_id );
 	}
 
 	/**

@@ -9,7 +9,7 @@
  * Why a manual compat (and not the auto-bridge):
  *   - The metabox renders two `<input type="checkbox" name="aj_*_mt[]">` field
  *     groups for member-type selection. The groups auto-bridge rejects any
- *     name containing `[`/`]` (see `bb_legacy_is_safe_post_key()`); array-shape
+ *     name containing `[`/`]` (see `bboss_legacy_is_safe_post_key()`); array-shape
  *     reassembly only exists on the CPT path, not the groups path.
  *   - The plugin's save handler (`bp_groups_admin_load` in
  *     `bp-auto-group-join-admin-class.php`) reads `$_POST` with its own nonce
@@ -21,7 +21,7 @@
  *     saved meta values.
  *
  * Implementation:
- *   - Register the 4 fields directly on `BB_Admin_Meta_Field_Registry` via
+ *   - Register the 4 fields directly on `BBoss_Admin_Meta_Field_Registry` via
  *     `bb_register_groups_meta_fields`.
  *   - Tell the auto-bridge to skip `bp_group_auto_join_member` so its radios
  *     don't get bridged a second time.
@@ -58,7 +58,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool True when BMT-driven member-type fields should be registered.
  */
-function bb_legacy_bpagj_member_types_enabled() {
+function bboss_legacy_bpagj_member_types_enabled() {
 	if ( ! function_exists( 'bp_auto_group_join' ) ) {
 		return false;
 	}
@@ -79,12 +79,12 @@ function bb_legacy_bpagj_member_types_enabled() {
  *
  * @return array Map of slug => label.
  */
-function bb_legacy_bpagj_member_types() {
-	if ( ! function_exists( 'bp_get_member_types' ) ) {
+function bboss_legacy_bpagj_member_types() {
+	if ( ! function_exists( 'bboss_get_member_types' ) ) {
 		return array();
 	}
 
-	$types = bp_get_member_types( array(), 'objects' );
+	$types = bboss_get_member_types( array(), 'objects' );
 	if ( ! is_array( $types ) ) {
 		return array();
 	}
@@ -115,16 +115,16 @@ function bb_legacy_bpagj_member_types() {
 
 /**
  * Build the member type options array used by both `checkbox_list` fields.
- * Shaped the way `BB_Admin_Meta_Field_Registry` expects (`label`/`value`
+ * Shaped the way `BBoss_Admin_Meta_Field_Registry` expects (`label`/`value`
  * pairs) and stable-ordered so React's React state diff is predictable.
  *
  * @since BuddyBoss 3.1.0
  *
  * @return array
  */
-function bb_legacy_bpagj_member_type_options() {
+function bboss_legacy_bpagj_member_type_options() {
 	$options = array();
-	foreach ( bb_legacy_bpagj_member_types() as $slug => $label ) {
+	foreach ( bboss_legacy_bpagj_member_types() as $slug => $label ) {
 		$options[] = array(
 			'value' => (string) $slug,
 			'label' => $label,
@@ -148,11 +148,11 @@ function bb_legacy_bpagj_member_type_options() {
  * @param mixed $raw Raw POST value.
  * @return array Sanitized slug list.
  */
-function bb_legacy_bpagj_sanitize_member_types( $raw ) {
+function bboss_legacy_bpagj_sanitize_member_types( $raw ) {
 	// Routes both shapes (object map from `toggle_list`, flat array from a
 	// direct caller) through the same converter so the saved meta is always
 	// the legacy flat list of selected slugs.
-	return bb_legacy_bpagj_toggle_list_to_meta( $raw );
+	return bboss_legacy_bpagj_toggle_list_to_meta( $raw );
 }
 
 /**
@@ -165,11 +165,11 @@ function bb_legacy_bpagj_sanitize_member_types( $raw ) {
  * @param mixed $stored Raw groupmeta value.
  * @return array Map of slug => 1.
  */
-function bb_legacy_bpagj_meta_to_toggle_list( $stored ) {
+function bboss_legacy_bpagj_meta_to_toggle_list( $stored ) {
 	if ( ! is_array( $stored ) ) {
 		return array();
 	}
-	$allowed = array_keys( bb_legacy_bpagj_member_types() );
+	$allowed = array_keys( bboss_legacy_bpagj_member_types() );
 	$out     = array();
 	foreach ( $stored as $slug ) {
 		$slug = sanitize_key( (string) $slug );
@@ -190,7 +190,7 @@ function bb_legacy_bpagj_meta_to_toggle_list( $stored ) {
  * @param mixed $raw React-side value.
  * @return array Flat list of selected slugs.
  */
-function bb_legacy_bpagj_toggle_list_to_meta( $raw ) {
+function bboss_legacy_bpagj_toggle_list_to_meta( $raw ) {
 	if ( is_string( $raw ) ) {
 		$raw = '' === $raw ? array() : explode( ',', $raw );
 	}
@@ -198,7 +198,7 @@ function bb_legacy_bpagj_toggle_list_to_meta( $raw ) {
 		return array();
 	}
 
-	$allowed = array_keys( bb_legacy_bpagj_member_types() );
+	$allowed = array_keys( bboss_legacy_bpagj_member_types() );
 	$out     = array();
 
 	// Object shape: { slug => 0|1 }. Guard against the empty array first: PHP's
@@ -238,7 +238,7 @@ function bb_legacy_bpagj_toggle_list_to_meta( $raw ) {
  * @param mixed $raw Raw POST value.
  * @return string One of the allowed values; defaults to '' for "no opinion".
  */
-function bb_legacy_bpagj_sanitize_policy( $raw ) {
+function bboss_legacy_bpagj_sanitize_policy( $raw ) {
 	$value   = is_scalar( $raw ) ? sanitize_text_field( (string) $raw ) : '';
 	$allowed = array( 'none', 'all_members', 'bp_member_types' );
 	return in_array( $value, $allowed, true ) ? $value : '';
@@ -254,12 +254,12 @@ function bb_legacy_bpagj_sanitize_policy( $raw ) {
  * @param string[] $skip Metabox ids the auto-bridge should ignore.
  * @return string[] Updated list.
  */
-function bb_legacy_bpagj_skip_auto_bridge( $skip ) {
+function bboss_legacy_bpagj_skip_auto_bridge( $skip ) {
 	$skip   = (array) $skip;
 	$skip[] = 'bp_group_auto_join_member';
 	return $skip;
 }
-add_filter( 'bb_legacy_meta_box_bridge_skip_groups', 'bb_legacy_bpagj_skip_auto_bridge' );
+add_filter( 'bb_legacy_meta_box_bridge_skip_groups', 'bboss_legacy_bpagj_skip_auto_bridge' );
 
 /**
  * Register the 4 auto-join fields directly on the registry.
@@ -277,10 +277,10 @@ add_filter( 'bb_legacy_meta_box_bridge_skip_groups', 'bb_legacy_bpagj_skip_auto_
  *
  * @since BuddyBoss 3.1.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
  */
-function bb_legacy_bpagj_register_fields( $registry, $component ) {
+function bboss_legacy_bpagj_register_fields( $registry, $component ) {
 	if ( 'groups' !== $component ) {
 		return;
 	}
@@ -288,23 +288,23 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 	$policy_options          = array(
 		array(
 			'value' => 'all_members',
-			'label' => __( 'All new registrations', 'buddyboss' ),
+			'label' => __( 'All new registrations', 'buddyboss-platform' ),
 		),
 		array(
 			'value' => 'bp_member_types',
-			'label' => __( 'Select by member type', 'buddyboss' ),
+			'label' => __( 'Select by member type', 'buddyboss-platform' ),
 		),
 		array(
 			'value' => 'none',
-			'label' => __( 'None', 'buddyboss' ),
+			'label' => __( 'None', 'buddyboss-platform' ),
 		),
 	);
 	$existing_policy_options = $policy_options;
 	// First option label differs between the two radios on the legacy screen.
-	$existing_policy_options[0]['label'] = __( 'All existing members', 'buddyboss' );
+	$existing_policy_options[0]['label'] = __( 'All existing members', 'buddyboss-platform' );
 
-	$bmt_enabled  = bb_legacy_bpagj_member_types_enabled();
-	$mt_options   = bb_legacy_bpagj_member_type_options();
+	$bmt_enabled  = bboss_legacy_bpagj_member_types_enabled();
+	$mt_options   = bboss_legacy_bpagj_member_type_options();
 	$has_mt_terms = ! empty( $mt_options );
 
 	// Drop the "Select by member type" radio entry when BMT support is off,
@@ -315,7 +315,7 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 		$existing_policy_options = array( $existing_policy_options[0], $existing_policy_options[2] );
 	}
 
-	$group_label = __( 'Auto-Join Users to this Group', 'buddyboss' );
+	$group_label = __( 'Auto-Join Users to this Group', 'buddyboss-platform' );
 
 	// Anchor every field to the modal's `details` tab. The auto-bridge default
 	// for groups is `details` (see `groups/legacy-meta-bridge.php` —
@@ -341,20 +341,20 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 		$component,
 		'bpagj_aj_new_registrations',
 		array(
-			'label'             => __( 'Join New Registrations', 'buddyboss' ),
+			'label'             => __( 'Join New Registrations', 'buddyboss-platform' ),
 			'type'              => 'radio',
 			'order'             => 6000,
 			'context'           => 'after',
 			'tab'               => $tab,
 			'field_group'       => 'bp_group_auto_join_member',
 			'field_group_label' => $group_label,
-			'sanitize_callback' => 'bb_legacy_bpagj_sanitize_policy',
+			'sanitize_callback' => 'bboss_legacy_bpagj_sanitize_policy',
 			'get_value'         => function ( $group ) {
 				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
 				if ( ! $group_id ) {
 					return '';
 				}
-				$value = groups_get_groupmeta( $group_id, 'aj_new_registrations', true );
+				$value = bboss_groups_get_groupmeta( $group_id, 'aj_new_registrations', true );
 				return '' !== $value ? (string) $value : 'none';
 			},
 			'get_options'       => function () use ( $policy_options ) {
@@ -366,14 +366,14 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 					return;
 				}
 				if ( '' === (string) $value || 'none' === $value ) {
-					groups_delete_groupmeta( $group_id, 'aj_new_registrations' );
-					groups_delete_groupmeta( $group_id, 'aj_new_registrations_mt' );
+					bboss_groups_delete_groupmeta( $group_id, 'aj_new_registrations' );
+					bboss_groups_delete_groupmeta( $group_id, 'aj_new_registrations_mt' );
 					return;
 				}
-				groups_update_groupmeta( $group_id, 'aj_new_registrations', $value );
+				bboss_groups_update_groupmeta( $group_id, 'aj_new_registrations', $value );
 				// Honor the legacy clear-on-policy-switch contract.
 				if ( 'bp_member_types' !== $value ) {
-					groups_delete_groupmeta( $group_id, 'aj_new_registrations_mt' );
+					bboss_groups_delete_groupmeta( $group_id, 'aj_new_registrations_mt' );
 				}
 			},
 		)
@@ -384,15 +384,15 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 			$component,
 			'bpagj_aj_new_registrations_mt',
 			array(
-				'label'             => __( 'Member types for new registrations', 'buddyboss' ),
-				'description'       => __( 'Choose which member types are auto-joined to this group when they register.', 'buddyboss' ),
+				'label'             => __( 'Member types for new registrations', 'buddyboss-platform' ),
+				'description'       => __( 'Choose which member types are auto-joined to this group when they register.', 'buddyboss-platform' ),
 				'type'              => 'toggle_list',
 				'order'             => 6010,
 				'context'           => 'after',
 				'tab'               => $tab,
 				'field_group'       => 'bp_group_auto_join_member',
 				'field_group_label' => $group_label,
-				'sanitize_callback' => 'bb_legacy_bpagj_sanitize_member_types',
+				'sanitize_callback' => 'bboss_legacy_bpagj_sanitize_member_types',
 				'conditional'       => array(
 					'field' => 'bpagj_aj_new_registrations',
 					'value' => 'bp_member_types',
@@ -402,8 +402,8 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 					if ( ! $group_id ) {
 						return array();
 					}
-					return bb_legacy_bpagj_meta_to_toggle_list(
-						groups_get_groupmeta( $group_id, 'aj_new_registrations_mt', true )
+					return bboss_legacy_bpagj_meta_to_toggle_list(
+						bboss_groups_get_groupmeta( $group_id, 'aj_new_registrations_mt', true )
 					);
 				},
 				'get_options'       => function () use ( $mt_options ) {
@@ -418,10 +418,10 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 						return;
 					}
 					if ( empty( $value ) ) {
-						groups_delete_groupmeta( $group_id, 'aj_new_registrations_mt' );
+						bboss_groups_delete_groupmeta( $group_id, 'aj_new_registrations_mt' );
 						return;
 					}
-					groups_update_groupmeta( $group_id, 'aj_new_registrations_mt', $value );
+					bboss_groups_update_groupmeta( $group_id, 'aj_new_registrations_mt', $value );
 				},
 			)
 		);
@@ -431,21 +431,21 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 		$component,
 		'bpagj_aj_existing_users',
 		array(
-			'label'             => __( 'Join Existing Members', 'buddyboss' ),
-			'description'       => __( 'Selecting "All existing members" or a set of member types will enroll matching users into this group on save.', 'buddyboss' ),
+			'label'             => __( 'Join Existing Members', 'buddyboss-platform' ),
+			'description'       => __( 'Selecting "All existing members" or a set of member types will enroll matching users into this group on save.', 'buddyboss-platform' ),
 			'type'              => 'radio',
 			'order'             => 6020,
 			'context'           => 'after',
 			'tab'               => $tab,
 			'field_group'       => 'bp_group_auto_join_member',
 			'field_group_label' => $group_label,
-			'sanitize_callback' => 'bb_legacy_bpagj_sanitize_policy',
+			'sanitize_callback' => 'bboss_legacy_bpagj_sanitize_policy',
 			'get_value'         => function ( $group ) {
 				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
 				if ( ! $group_id ) {
 					return '';
 				}
-				$value = groups_get_groupmeta( $group_id, 'aj_existing_users', true );
+				$value = bboss_groups_get_groupmeta( $group_id, 'aj_existing_users', true );
 				return '' !== $value ? (string) $value : 'none';
 			},
 			'get_options'       => function () use ( $existing_policy_options ) {
@@ -457,13 +457,13 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 					return;
 				}
 				if ( '' === (string) $value || 'none' === $value ) {
-					groups_delete_groupmeta( $group_id, 'aj_existing_users' );
-					groups_delete_groupmeta( $group_id, 'aj_existing_users_mt' );
+					bboss_groups_delete_groupmeta( $group_id, 'aj_existing_users' );
+					bboss_groups_delete_groupmeta( $group_id, 'aj_existing_users_mt' );
 					return;
 				}
-				groups_update_groupmeta( $group_id, 'aj_existing_users', $value );
+				bboss_groups_update_groupmeta( $group_id, 'aj_existing_users', $value );
 				if ( 'bp_member_types' !== $value ) {
-					groups_delete_groupmeta( $group_id, 'aj_existing_users_mt' );
+					bboss_groups_delete_groupmeta( $group_id, 'aj_existing_users_mt' );
 				}
 				// NOTE: the actual enrollment dispatch happens on
 				// `bb_admin_after_save_group` so it runs once after BOTH
@@ -479,15 +479,15 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 			$component,
 			'bpagj_aj_existing_users_mt',
 			array(
-				'label'             => __( 'Member types for existing members', 'buddyboss' ),
-				'description'       => __( 'Choose which member types are enrolled into this group on save.', 'buddyboss' ),
+				'label'             => __( 'Member types for existing members', 'buddyboss-platform' ),
+				'description'       => __( 'Choose which member types are enrolled into this group on save.', 'buddyboss-platform' ),
 				'type'              => 'toggle_list',
 				'order'             => 6030,
 				'context'           => 'after',
 				'tab'               => $tab,
 				'field_group'       => 'bp_group_auto_join_member',
 				'field_group_label' => $group_label,
-				'sanitize_callback' => 'bb_legacy_bpagj_sanitize_member_types',
+				'sanitize_callback' => 'bboss_legacy_bpagj_sanitize_member_types',
 				'conditional'       => array(
 					'field' => 'bpagj_aj_existing_users',
 					'value' => 'bp_member_types',
@@ -497,8 +497,8 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 					if ( ! $group_id ) {
 						return array();
 					}
-					return bb_legacy_bpagj_meta_to_toggle_list(
-						groups_get_groupmeta( $group_id, 'aj_existing_users_mt', true )
+					return bboss_legacy_bpagj_meta_to_toggle_list(
+						bboss_groups_get_groupmeta( $group_id, 'aj_existing_users_mt', true )
 					);
 				},
 				'get_options'       => function () use ( $mt_options ) {
@@ -511,16 +511,16 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 						return;
 					}
 					if ( empty( $value ) ) {
-						groups_delete_groupmeta( $group_id, 'aj_existing_users_mt' );
+						bboss_groups_delete_groupmeta( $group_id, 'aj_existing_users_mt' );
 						return;
 					}
-					groups_update_groupmeta( $group_id, 'aj_existing_users_mt', $value );
+					bboss_groups_update_groupmeta( $group_id, 'aj_existing_users_mt', $value );
 				},
 			)
 		);
 	}
 }
-add_action( 'bb_register_groups_meta_fields', 'bb_legacy_bpagj_register_fields', 1000, 2 );
+add_action( 'bb_register_groups_meta_fields', 'bboss_legacy_bpagj_register_fields', 1000, 2 );
 
 /**
  * Replay the legacy enrollment side-effect after the React save commits.
@@ -535,16 +535,16 @@ add_action( 'bb_register_groups_meta_fields', 'bb_legacy_bpagj_register_fields',
  * listeners (e.g. the legacy bridge's extension-save replay at priority 5).
  *
  * Idempotency: `bp_auto_group_join_all_members()` checks each candidate's
- * existing `BP_Groups_Member` row before joining, so re-running it on a
+ * existing `BBoss_Groups_Member` row before joining, so re-running it on a
  * group edit that didn't change the auto-join settings is a no-op for
  * already-enrolled users.
  *
  * @since BuddyBoss 3.1.0
  *
  * @param int             $group_id Saved group ID.
- * @param BP_Groups_Group $group    Saved group object (unused).
+ * @param BBoss_Groups_Group $group    Saved group object (unused).
  */
-function bb_legacy_bpagj_dispatch_existing_users_enrollment( $group_id, $group ) {
+function bboss_legacy_bpagj_dispatch_existing_users_enrollment( $group_id, $group ) {
 	unset( $group );
 
 	$group_id = (int) $group_id;
@@ -555,18 +555,18 @@ function bb_legacy_bpagj_dispatch_existing_users_enrollment( $group_id, $group )
 		return;
 	}
 
-	$policy = (string) groups_get_groupmeta( $group_id, 'aj_existing_users', true );
+	$policy = (string) bboss_groups_get_groupmeta( $group_id, 'aj_existing_users', true );
 	if ( 'all_members' === $policy ) {
 		bp_auto_group_join_all_members( $group_id );
 		return;
 	}
 
 	if ( 'bp_member_types' === $policy ) {
-		$types = groups_get_groupmeta( $group_id, 'aj_existing_users_mt', true );
+		$types = bboss_groups_get_groupmeta( $group_id, 'aj_existing_users_mt', true );
 		$types = is_array( $types ) ? array_values( array_filter( array_map( 'strval', $types ) ) ) : array();
 		if ( ! empty( $types ) ) {
 			bp_auto_group_join_all_members( $group_id, $types );
 		}
 	}
 }
-add_action( 'bb_admin_after_save_group', 'bb_legacy_bpagj_dispatch_existing_users_enrollment', 50, 2 );
+add_action( 'bb_admin_after_save_group', 'bboss_legacy_bpagj_dispatch_existing_users_enrollment', 50, 2 );

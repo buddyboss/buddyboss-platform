@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-class BP_Messages_Notice {
+class BBoss_Messages_Notice {
 	/**
 	 * The notice ID.
 	 *
@@ -102,7 +102,7 @@ class BP_Messages_Notice {
 	public function save() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->subject = apply_filters( 'messages_notice_subject_before_save', $this->subject, $this->id );
 		$this->message = apply_filters( 'messages_notice_message_before_save', $this->message, $this->id );
@@ -114,7 +114,7 @@ class BP_Messages_Notice {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Messages_Notice $this Current instance of the message notice item being saved. Passed by reference.
+		 * @param BBoss_Messages_Notice $this Current instance of the message notice item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'messages_notice_before_save', array( &$this ) );
 
@@ -124,7 +124,7 @@ class BP_Messages_Notice {
 			$sql = $wpdb->prepare( "UPDATE {$bp->messages->table_name_notices} SET subject = %s, message = %s, is_active = %d WHERE id = %d", $this->subject, $this->message, $this->is_active, $this->id );
 		}
 
-		if ( ! $wpdb->query( $sql ) ) {
+		if ( ! $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is the $wpdb->prepare()'d INSERT or UPDATE above; table name from buddypress().
 			return false;
 		}
 
@@ -135,14 +135,14 @@ class BP_Messages_Notice {
 		// Now deactivate all notices apart from the new one.
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_notices} SET is_active = 0 WHERE id != %d", $id ) );
 
-		bp_update_user_last_activity( bp_loggedin_user_id(), bp_core_current_time() );
+		bboss_update_user_last_activity( bboss_loggedin_user_id(), bboss_core_current_time() );
 
 		/**
 		 * Fires after the current message notice item has been saved.
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Messages_Notice $this Current instance of the message item being saved. Passed by reference.
+		 * @param BBoss_Messages_Notice $this Current instance of the message item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'messages_notice_after_save', array( &$this ) );
 
@@ -188,14 +188,14 @@ class BP_Messages_Notice {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Messages_Notice $this Current instance of the message notice item being deleted.
+		 * @param BBoss_Messages_Notice $this Current instance of the message notice item being deleted.
 		 */
 		do_action( 'messages_notice_before_delete', $this );
 
-		$bp  = buddypress();
+		$bp  = bboss();
 		$sql = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_notices} WHERE id = %d", $this->id );
 
-		if ( ! $wpdb->query( $sql ) ) {
+		if ( ! $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above (id as %d); table name from buddypress().
 			return false;
 		}
 
@@ -204,7 +204,7 @@ class BP_Messages_Notice {
 		 *
 		 * @since BuddyPress 2.8.0
 		 *
-		 * @param BP_Messages_Notice $this Current instance of the message notice item being deleted.
+		 * @param BBoss_Messages_Notice $this Current instance of the message notice item being deleted.
 		 */
 		do_action( 'messages_notice_after_delete', $this );
 
@@ -226,7 +226,7 @@ class BP_Messages_Notice {
 	 * @type int          $per_page    Optional. Number of items to return perpage of results. Default: 20.
 	 * @type int          $page        Optional. Page offset of results to return. Default: 1.
 	 * @type string       $fields      Which fields to return. Specify 'ids' to fetch a list of IDs. Default: 'all'
-	 *                                 (return BP_Groups_Group objects).
+	 *                                 (return BBoss_Groups_Group objects).
 	 * @type array|string $include     Array or comma-separated list of notice ids to limit results to.
 	 * @type array|string $exclude     Array or comma-separated list of notice ids that will be
 	 * @type int          $is_active   Fetch only Active notice or not Default null
@@ -244,7 +244,7 @@ class BP_Messages_Notice {
 	public static function get( $args = array() ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$defaults = array(
 			'orderby'     => 'date_sent',
@@ -258,7 +258,7 @@ class BP_Messages_Notice {
 			'count_total' => false,
 		);
 
-		$r = bp_parse_args( $args, $defaults, 'bp_messages_notice_get' );
+		$r = bboss_parse_args( $args, $defaults, 'bp_messages_notice_get' );
 
 		$sql = array(
 			'select'     => 'SELECT DISTINCT mn.id',
@@ -290,7 +290,7 @@ class BP_Messages_Notice {
 		$orderby = $r['orderby'];
 
 		// Sanitize 'order'.
-		$order = bp_esc_sql_order( $order );
+		$order = bboss_esc_sql_order( $order );
 
 		/**
 		 * Filters the converted 'orderby' term.
@@ -431,7 +431,7 @@ class BP_Messages_Notice {
 	 * @return object List of notices to display.
 	 */
 	public static function get_notices( $args = array() ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'pag_num'  => 20, // Number of notices per page.
@@ -496,13 +496,24 @@ class BP_Messages_Notice {
 	 * Returns the active notice that should be displayed on the front end.
 	 *
 	 * @since BuddyPress 1.0.0
+	 * @since BuddyBoss [BBVERSION] The cache holds the notice's properties, not the object.
 	 *
-	 * @return object The BP_Messages_Notice object.
+	 * @return object The BBoss_Messages_Notice object.
 	 */
 	public static function get_active() {
-		$notice = wp_cache_get( 'active_notice', 'bp_messages' );
+		$cached = wp_cache_get( 'active_notice', 'bp_messages' );
 
-		if ( false === $notice ) {
+		// The cache stores an array of properties: a cached object can only be read back
+		// while its class name exists. Anything else (e.g. an object cached by an older
+		// version) is treated as a miss and replaced.
+		if ( is_array( $cached ) ) {
+			$notice = new BBoss_Messages_Notice();
+			foreach ( $cached as $property => $value ) {
+				if ( property_exists( $notice, $property ) ) {
+					$notice->$property = $value;
+				}
+			}
+		} else {
 			$notices = self::get(
 				array(
 					'fields'    => 'ids',
@@ -513,9 +524,9 @@ class BP_Messages_Notice {
 			);
 
 			$notice_id = ! empty( $notices['notices'] ) ? current( $notices['notices'] ) : false;
-			$notice    = new BP_Messages_Notice( $notice_id );
+			$notice    = new BBoss_Messages_Notice( $notice_id );
 
-			wp_cache_set( 'active_notice', $notice, 'bp_messages' );
+			wp_cache_set( 'active_notice', get_object_vars( $notice ), 'bp_messages' );
 		}
 
 		/**

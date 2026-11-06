@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  */
-class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
+class BBoss_Walker_Nav_Menu extends Walker_Nav_Menu {
 
 	/**
 	 * Description of fields indexes for building markup.

@@ -8,20 +8,23 @@
  * @version 1.0.0
  */
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_before_groups_directory_content();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 
-if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
-	bp_get_template_part( 'common/nav/directory-nav' );
+bboss_nouveau_before_groups_directory_content();
+
+if ( ! bboss_nouveau_is_object_nav_in_sidebar() ) {
+	bboss_get_template_part( 'common/nav/directory-nav' );
 }
 
-if ( 'subgroups' === bp_current_action() && bb_enable_content_counts() ) {
+if ( 'subgroups' === bboss_current_action() && bboss_enable_content_counts() ) {
 	?>
 	<div class="bb-item-count">
 		<?php
 		if ( ! $is_send_ajax_request ) {
-			$count = (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
+			$count = (int) count( bboss_get_descendent_groups( bboss_get_current_group_id(), bboss_loggedin_user_id() ) );
 			printf(
 				wp_kses(
 					/* translators: %d is the group count */
@@ -29,7 +32,7 @@ if ( 'subgroups' === bp_current_action() && bb_enable_content_counts() ) {
 						'<span class="bb-count">%d</span> Group',
 						'<span class="bb-count">%d</span> Groups',
 						$count,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					array( 'span' => array( 'class' => true ) )
 				),
@@ -44,18 +47,18 @@ if ( 'subgroups' === bp_current_action() && bb_enable_content_counts() ) {
 }
 ?>
 <div class="screen-content">
-	<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+	<?php bboss_get_template_part( 'common/search-and-filters-bar' ); ?>
 	<div id="groups-dir-list" class="groups dir-list" data-bp-list="group_subgroups" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php
 		if ( $is_send_ajax_request ) {
 			echo '<div id="bp-ajax-loader">';
-			bp_nouveau_user_feedback( 'directory-groups-loading' );
+			bboss_nouveau_user_feedback( 'directory-groups-loading' );
 			echo '</div>';
 		} else {
-			bp_get_template_part( 'groups/groups-loop' );
+			bboss_get_template_part( 'groups/groups-loop' );
 		}
 		?>
 	</div><!-- #groups-dir-list -->
 
-	<?php bp_nouveau_after_groups_directory_content(); ?>
+	<?php bboss_nouveau_after_groups_directory_content(); ?>
 </div><!-- // .screen-content -->

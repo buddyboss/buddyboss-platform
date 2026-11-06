@@ -5,7 +5,7 @@
  * The default bootstrap loads BuddyBoss Platform only. The tests under
  * tests/phpunit/testcases/integrations/two-factor/ need the Two Factor plugin
  * loaded and reported as active before Platform boots, so that
- * bb_two_factor_plugin_is_active() is true and the integration's actions and
+ * bboss_two_factor_plugin_is_active() is true and the integration's actions and
  * filters files are included.
  *
  * Usage: tests/phpunit/two-factor.xml points its `bootstrap` attribute here.
@@ -72,7 +72,7 @@ function _bb_two_factor_tests_plugin_file() {
 /**
  * Report the Two Factor plugin as active for this site.
  *
- * Both bb_two_factor_plugin_is_active() and BP_Integration::is_activated() read
+ * Both bboss_two_factor_plugin_is_active() and BBoss_Integration::is_activated() read
  * the `active_plugins` option. A test may stack a later filter to flip it back.
  *
  * @since BuddyBoss 3.6.0
@@ -108,7 +108,7 @@ function _bb_two_factor_tests_load_plugin() {
 /**
  * Include the integration's runtime files if the integration did not.
  *
- * BB_Two_Factor_Integration::includes() loads them at bp_include only when the
+ * BBoss_Two_Factor_Integration::includes() loads them at bp_include only when the
  * Integration Bridge reports the integration activated, which depends on
  * options a fresh test install does not have. The files are guarded by
  * require_once, so this is a no-op when the real path already ran.
@@ -116,11 +116,11 @@ function _bb_two_factor_tests_load_plugin() {
  * @since BuddyBoss 3.6.0
  */
 function _bb_two_factor_tests_include_integration() {
-	if ( ! class_exists( 'Two_Factor_Core' ) || ! function_exists( 'bb_two_factor_is_active' ) || ! bb_two_factor_is_active() ) {
+	if ( ! class_exists( 'Two_Factor_Core' ) || ! function_exists( 'bboss_two_factor_is_active' ) || ! bboss_two_factor_is_active() ) {
 		return;
 	}
 
-	$dir = trailingslashit( buddypress()->plugin_dir ) . 'bb-features/integrations/two-factor/';
+	$dir = trailingslashit( bboss()->plugin_dir ) . 'bb-features/integrations/two-factor/';
 
 	require_once $dir . 'bb-two-factor-actions.php';
 	require_once $dir . 'bb-two-factor-filters.php';

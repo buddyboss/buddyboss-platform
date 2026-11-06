@@ -26,12 +26,12 @@ defined( 'ABSPATH' ) || exit;
  *                          secondary filenames, eg 'personal' for 'activity-personal.php'.
  * @param array       $args Optional. Extra args to pass to locate_template().
  *
- * @return false|string Path to located template. See {@link bp_locate_template()}.
+ * @return false|string Path to located template. See {@link bboss_locate_template()}.
  */
-function bp_get_template_part( $slug, $name = null, $args = array() ) {
+function bboss_get_template_part( $slug, $name = null, $args = array() ) {
 
 	/**
-	 * Fires at the start of bp_get_template_part().
+	 * Fires at the start of bboss_get_template_part().
 	 *
 	 * This is a variable hook that is dependent on the slug passed in.
 	 *
@@ -67,20 +67,20 @@ function bp_get_template_part( $slug, $name = null, $args = array() ) {
 	$templates = apply_filters( 'bp_get_template_part', $templates, $slug, $name, $args );
 
 	// Return the part that is found.
-	return bp_locate_template( $templates, true, false, $args );
+	return bboss_locate_template( $templates, true, false, $args );
 }
 
 /**
  * Get an asset template part.
  *
- * Basically the same as {@link bp_get_template_part()}, but with 'assets/'
+ * Basically the same as {@link bboss_get_template_part()}, but with 'assets/'
  * prepended to the slug.
  *
  * @since BuddyPress 2.6.0
  * @since BuddyPress 7.0.0 Added $args parameter.
  * @since BuddyBoss 2.3.90 Added $args parameter.
  *
- * @see bp_get_template_part() for full documentation.
+ * @see bboss_get_template_part() for full documentation.
  *
  * @param string      $slug Template slug.
  * @param string|null $name Template name.
@@ -88,8 +88,8 @@ function bp_get_template_part( $slug, $name = null, $args = array() ) {
  *
  * @return false|string
  */
-function bp_get_asset_template_part( $slug, $name = null, $args = array() ) {
-	return bp_get_template_part( "assets/{$slug}", $name, $args );
+function bboss_get_asset_template_part( $slug, $name = null, $args = array() ) {
+	return bboss_get_template_part( "assets/{$slug}", $name, $args );
 }
 
 /**
@@ -112,7 +112,7 @@ function bp_get_asset_template_part( $slug, $name = null, $args = array() ) {
  *
  * @return string The template filename if one is located.
  */
-function bp_locate_template( $template_names, $load = false, $require_once = true, $args = array() ) {
+function bboss_locate_template( $template_names, $load = false, $require_once = true, $args = array() ) {
 
 	// Bail when there are no templates to locate
 	if ( empty( $template_names ) ) {
@@ -130,7 +130,7 @@ function bp_locate_template( $template_names, $load = false, $require_once = tru
 
 	// No file found yet.
 	$located            = false;
-	$template_locations = bp_get_template_stack();
+	$template_locations = bboss_get_template_stack();
 
 	// Try to find a template file.
 	foreach ( (array) $template_names as $template_name ) {
@@ -186,7 +186,7 @@ function bp_locate_template( $template_names, $load = false, $require_once = tru
 /**
  * Get file data of the highest priority asset that exists.
  *
- * Similar to {@link bp_locate_template()}, but for files like CSS and JS.
+ * Similar to {@link bboss_locate_template()}, but for files like CSS and JS.
  *
  * @since BuddyPress 2.6.0
  *
@@ -194,9 +194,9 @@ function bp_locate_template( $template_names, $load = false, $require_once = tru
  * @return false|array Array of asset data if one is located (includes absolute filepath and URI).
  *                     Boolean false on failure.
  */
-function bp_locate_template_asset( $filename ) {
+function bboss_locate_template_asset( $filename ) {
 	// Use bp_locate_template() to find our asset.
-	$located = bp_locate_template( $filename, false );
+	$located = bboss_locate_template( $filename, false );
 	if ( false === $located ) {
 		return false;
 	}
@@ -207,12 +207,12 @@ function bp_locate_template_asset( $filename ) {
 
 	$find = array(
 		get_theme_root(),
-		bp_get_theme_compat_dir(),
+		bboss_get_theme_compat_dir(),
 	);
 
 	$replace = array(
 		get_theme_root_uri(),
-		bp_get_theme_compat_url(),
+		bboss_get_theme_compat_url(),
 	);
 
 	// Make sure URI path is relative to site URL.
@@ -226,7 +226,7 @@ function bp_locate_template_asset( $filename ) {
  *
  * This allows for templates to live in places beyond just the parent/child
  * relationship, to allow for custom template locations. Used in conjunction
- * with bp_locate_template(), this allows for easy template overrides.
+ * with bboss_locate_template(), this allows for easy template overrides.
  *
  * @since BuddyPress 1.7.0
  *
@@ -235,7 +235,7 @@ function bp_locate_template_asset( $filename ) {
  *                                  add_filter(). Default: 10.
  * @return bool See {@link add_filter()}.
  */
-function bp_register_template_stack( $location_callback = '', $priority = 10 ) {
+function bboss_register_template_stack( $location_callback = '', $priority = 10 ) {
 
 	// Bail if no location, or function/method is not callable.
 	if ( empty( $location_callback ) || ! is_callable( $location_callback ) ) {
@@ -251,14 +251,14 @@ function bp_register_template_stack( $location_callback = '', $priority = 10 ) {
  *
  * @since BuddyPress 1.7.0
  *
- * @see bp_register_template_stack()
+ * @see bboss_register_template_stack()
  *
  * @param string $location_callback Callback function that returns the stack location.
  * @param int    $priority          Optional. The priority parameter passed to
- *                                  {@link bp_register_template_stack()}. Default: 10.
+ *                                  {@link bboss_register_template_stack()}. Default: 10.
  * @return bool See {@link remove_filter()}.
  */
-function bp_deregister_template_stack( $location_callback = '', $priority = 10 ) {
+function bboss_deregister_template_stack( $location_callback = '', $priority = 10 ) {
 
 	// Bail if no location, or function/method is not callable.
 	if ( empty( $location_callback ) || ! is_callable( $location_callback ) ) {
@@ -277,7 +277,7 @@ function bp_deregister_template_stack( $location_callback = '', $priority = 10 )
  *
  * @since BuddyPress 1.7.0
  *
- * @see bp_register_template_stack()
+ * @see bboss_register_template_stack()
  *
  * @global array $wp_filter         Stores all of the filters.
  * @global array $merged_filters    Merges the filter hooks using this function.
@@ -285,7 +285,7 @@ function bp_deregister_template_stack( $location_callback = '', $priority = 10 )
  *                                  the current one last.
  * @return array The filtered value after all hooked functions are applied to it.
  */
-function bp_get_template_stack() {
+function bboss_get_template_stack() {
 	global $wp_filter, $merged_filters, $wp_current_filter;
 
 	// Setup some default variables.
@@ -348,33 +348,33 @@ function bp_get_template_stack() {
  * @since BuddyPress 7.0.0 Added $args parameter.
  * @since BuddyBoss 2.3.90 Added $args parameter.
  *
- * @see bp_get_template_part() for a description of $slug, $name and $args params.
+ * @see bboss_get_template_part() for a description of $slug, $name and $args params.
  *
- * @param string      $slug See {@link bp_get_template_part()}.
- * @param string|null $name See {@link bp_get_template_part()}.
+ * @param string      $slug See {@link bboss_get_template_part()}.
+ * @param string|null $name See {@link bboss_get_template_part()}.
  * @param bool        $echo If true, template content will be echoed. If false,
  *                          returned. Default: true.
- * @param array       $args See {@link bp_get_template_part()}.
+ * @param array       $args See {@link bboss_get_template_part()}.
  *
  * @return string|null If $echo, returns the template content.
  */
-function bp_buffer_template_part( $slug, $name = null, $echo = true, $args = array() ) {
+function bboss_buffer_template_part( $slug, $name = null, $echo = true, $args = array() ) {
 	ob_start();
 
 	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
-	remove_filter( 'the_content', 'bp_replace_the_content' );
+	remove_filter( 'the_content', 'bboss_replace_the_content' );
 
-	bp_get_template_part( $slug, $name, $args );
+	bboss_get_template_part( $slug, $name, $args );
 
 	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
-	add_filter( 'the_content', 'bp_replace_the_content' );
+	add_filter( 'the_content', 'bboss_replace_the_content' );
 
 	// Get the output buffer contents.
 	$output = ob_get_clean();
 
 	// Echo or return the output buffer contents.
 	if ( true === $echo ) {
-		echo $output;
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template-part output (may contain forms and scripts); every template escapes its own values.
 	} else {
 		return $output;
 	}
@@ -385,7 +385,7 @@ function bp_buffer_template_part( $slug, $name = null, $echo = true, $args = arr
  *
  * Used to quickly retrieve the path of a template without including the file
  * extension. It will also check the parent theme and theme-compat theme with
- * the use of {@link bp_locate_template()}. Allows for more generic template
+ * the use of {@link bboss_locate_template()}. Allows for more generic template
  * locations without the use of the other get_*_template() functions.
  *
  * @since BuddyPress 1.7.0
@@ -394,7 +394,7 @@ function bp_buffer_template_part( $slug, $name = null, $echo = true, $args = arr
  * @param array  $templates An optional list of template candidates.
  * @return string Full path to file.
  */
-function bp_get_query_template( $type, $templates = array() ) {
+function bboss_get_query_template( $type, $templates = array() ) {
 	$type = preg_replace( '|[^a-z0-9-]+|', '', $type );
 
 	if ( empty( $templates ) ) {
@@ -417,8 +417,8 @@ function bp_get_query_template( $type, $templates = array() ) {
 	 * Filter possible templates, try to match one, and set any BuddyPress theme
 	 * compat properties so they can be cross-checked later.
 	 */
-	$templates = bp_set_theme_compat_templates( $templates );
-	$template  = bp_locate_template( $templates );
+	$templates = bboss_set_theme_compat_templates( $templates );
+	$template  = bboss_locate_template( $templates );
 
 	/*
 	 * The current theme is using the WordPress Full Site Editing feature.
@@ -435,7 +435,7 @@ function bp_get_query_template( $type, $templates = array() ) {
 		$template = ABSPATH . WPINC . '/template-canvas.php';
 	}
 
-	$template = bp_set_theme_compat_template( $template );
+	$template = bboss_set_theme_compat_template( $template );
 
 	/**
 	 * Filters the path to a template file.
@@ -458,7 +458,7 @@ function bp_get_query_template( $type, $templates = array() ) {
  * @param array $templates Templates we are looking for.
  * @return array Possible subfolders to look in.
  */
-function bp_get_template_locations( $templates = array() ) {
+function bboss_get_template_locations( $templates = array() ) {
 	$locations = array(
 		'buddypress',
 		'community',
@@ -484,11 +484,11 @@ function bp_get_template_locations( $templates = array() ) {
  * @param array $stacks Array of template locations.
  * @return array Array of all template locations registered so far.
  */
-function bp_add_template_stack_locations( $stacks = array() ) {
+function bboss_add_template_stack_locations( $stacks = array() ) {
 	$retval = array();
 
 	// Get alternate locations.
-	$locations = bp_get_template_locations();
+	$locations = bboss_get_template_locations();
 
 	// Loop through locations and stacks and combine.
 	foreach ( (array) $stacks as $stack ) {
@@ -515,7 +515,7 @@ function bp_add_template_stack_locations( $stacks = array() ) {
  *
  * @param WP_Query $posts_query WP_Query object.
  */
-function bp_parse_query( $posts_query ) {
+function bboss_parse_query( $posts_query ) {
 
 	// Bail if $posts_query is not the main loop.
 	if ( ! $posts_query->is_main_query() ) {
@@ -559,7 +559,7 @@ function bp_parse_query( $posts_query ) {
  * @param string $template The path to the template file that is being used.
  * @return string The path to the template file that is being used.
  */
-function bp_template_include_theme_supports( $template = '' ) {
+function bboss_template_include_theme_supports( $template = '' ) {
 
 	/**
 	 * Filters whether or not to override the template being loaded in parent/child themes.
@@ -574,7 +574,7 @@ function bp_template_include_theme_supports( $template = '' ) {
 	// A BuddyPress template file was located, so override the WordPress
 	// template and use it to switch off BuddyPress's theme compatibility.
 	if ( ! empty( $new_template ) ) {
-		$template = bp_set_template_included( $new_template );
+		$template = bboss_set_template_included( $new_template );
 	}
 
 	/**
@@ -595,10 +595,10 @@ function bp_template_include_theme_supports( $template = '' ) {
  * @param mixed $template Default: false.
  * @return mixed False if empty. Template name if template included.
  */
-function bp_set_template_included( $template = false ) {
-	buddypress()->theme_compat->found_template = $template;
+function bboss_set_template_included( $template = false ) {
+	bboss()->theme_compat->found_template = $template;
 
-	return buddypress()->theme_compat->found_template;
+	return bboss()->theme_compat->found_template;
 }
 
 /**
@@ -608,8 +608,8 @@ function bp_set_template_included( $template = false ) {
  *
  * @return bool True if yes, false if no.
  */
-function bp_is_template_included() {
-	return ! empty( buddypress()->theme_compat->found_template );
+function bboss_is_template_included() {
+	return ! empty( bboss()->theme_compat->found_template );
 }
 
 /**
@@ -619,16 +619,16 @@ function bp_is_template_included() {
  *
  * @global string $pagenow
  */
-function bp_load_theme_functions() {
+function bboss_load_theme_functions() {
 	global $pagenow, $wp_query;
 
 	// Do not load our custom BP functions file if theme compat is disabled.
-	if ( ! bp_use_theme_compat_with_current_theme() ) {
+	if ( ! bboss_use_theme_compat_with_current_theme() ) {
 		return;
 	}
 
 	// Do not include on BuddyPress deactivation.
-	if ( bp_is_deactivation() ) {
+	if ( bboss_is_deactivation() ) {
 		return;
 	}
 
@@ -642,7 +642,7 @@ function bp_load_theme_functions() {
 
 	// Only include if not installing or if activating via wp-activate.php.
 	if ( ! defined( 'WP_INSTALLING' ) || 'wp-activate.php' === $pagenow ) {
-		bp_locate_template( 'buddypress-functions.php', true );
+		bboss_locate_template( 'buddypress-functions.php', true );
 	}
 }
 
@@ -654,8 +654,8 @@ function bp_load_theme_functions() {
  *
  * @return string Possible root level wrapper template files.
  */
-function bp_get_theme_compat_templates() {
-	return bp_get_query_template(
+function bboss_get_theme_compat_templates() {
+	return bboss_get_query_template(
 		'buddypress',
 		array(
 			'plugin-buddypress.php',
@@ -676,13 +676,13 @@ function bp_get_theme_compat_templates() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_show_hide_toolbar() {
+function bboss_show_hide_toolbar() {
 
 	if ( is_user_logged_in() ) {
 
 		$old_user = false;
-		if ( class_exists( 'BP_Core_Members_Switching' ) ) {
-			$old_user = BP_Core_Members_Switching::get_old_user();
+		if ( class_exists( 'BBoss_Core_Members_Switching' ) ) {
+			$old_user = BBoss_Core_Members_Switching::get_old_user();
 		}
 
 		$user = wp_get_current_user();
@@ -698,20 +698,20 @@ function bp_show_hide_toolbar() {
 		}
 
 		if ( current_user_can( 'administrator' ) && in_array( 'administrator', $current_user_caps ) ) {
-			if ( true === bp_show_admin_adminbar() ) {
+			if ( true === bboss_show_admin_adminbar() ) {
 				add_filter( 'show_admin_bar', '__return_true' );
 			} else {
 				add_filter( 'show_admin_bar', '__return_false' );
 			}
 		} else {
-			if ( true === bp_show_login_adminbar() ) {
+			if ( true === bboss_show_login_adminbar() ) {
 				add_filter( 'show_admin_bar', '__return_true' );
 			} else {
 				add_filter( 'show_admin_bar', '__return_false' );
 			}
 		}
 	} else {
-		if ( false === bp_hide_loggedout_adminbar() ) {
+		if ( false === bboss_hide_loggedout_adminbar() ) {
 			add_filter( 'show_admin_bar', '__return_true' );
 		}
 	}

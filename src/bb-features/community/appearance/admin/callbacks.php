@@ -3,11 +3,11 @@
  * BuddyBoss Admin Settings — Appearance Feature Admin Callbacks.
  *
  * Admin-only callbacks for the Appearance feature:
- *   - `bb_appearance_apply_configuration()` — shared side-effects (component
+ *   - `bboss_appearance_apply_configuration()` — shared side-effects (component
  *     activation, registration enablement, schema upgrade) called from both
  *     admin save and onboarding wizard completion.
- *   - `bb_appearance_on_settings_saved()` — hook on `bb_admin_save_feature_settings_after`.
- *   - `bb_appearance_normalize_field_data()` — hook on `bb_admin_settings_format_field_data`.
+ *   - `bboss_appearance_on_settings_saved()` — hook on `bb_admin_save_feature_settings_after`.
+ *   - `bboss_appearance_normalize_field_data()` — hook on `bb_admin_settings_format_field_data`.
  *
  * Pure sanitize / shape-normalize helpers live in
  * `includes/sanitizers.php` — loaded unconditionally so the version-update
@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit;
  * fired on the `bp_rest_platform_settings` filter — i.e. when the legacy
  * admin React app fetched its settings via REST. The new-code analog is the
  * `bb_admin_settings_format_field_data` filter (see
- * `bb_appearance_normalize_field_data()` below), which fires when the
+ * `bboss_appearance_normalize_field_data()` below), which fires when the
  * Settings 2.0 React app fetches per-field settings via the
  * `bb_admin_get_feature_settings` AJAX handler. Both fire only on admin
  * settings load — not on the frontend, not on every request — preserving
@@ -48,9 +48,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_appearance_seed_default_sidebars() {
-	if ( false === bp_get_option( 'bb_rl_activity_sidebars', false ) ) {
-		bp_update_option(
+function bboss_appearance_seed_default_sidebars() {
+	if ( false === bboss_get_option( 'bb_rl_activity_sidebars', false ) ) {
+		bboss_update_option(
 			'bb_rl_activity_sidebars',
 			array(
 				'complete_profile'  => true,
@@ -61,15 +61,15 @@ function bb_appearance_seed_default_sidebars() {
 		);
 	}
 
-	if ( false === bp_get_option( 'bb_rl_member_profile_sidebars', false ) ) {
+	if ( false === bboss_get_option( 'bb_rl_member_profile_sidebars', false ) ) {
 		$member_sidebar = array( 'complete_profile' => true );
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bboss_is_active( 'friends' ) ) {
 			$member_sidebar['connections'] = true;
 		}
-		if ( bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+		if ( bboss_is_active( 'activity' ) && function_exists( 'bboss_is_activity_follow_active' ) && bboss_is_activity_follow_active() ) {
 			$member_sidebar['my_network'] = true;
 		}
-		bp_update_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
+		bboss_update_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
 	}
 
 	// Only seed the Groups widget default when the Groups component is
@@ -78,8 +78,8 @@ function bb_appearance_seed_default_sidebars() {
 	// settings.php (mirrors legacy ReadyLaunchSettings.js:1046-1047). Without
 	// this guard, sites that never enable Groups still store a stale
 	// `bb_rl_groups_sidebars` option in wp_options.
-	if ( bp_is_active( 'groups' ) && false === bp_get_option( 'bb_rl_groups_sidebars', false ) ) {
-		bp_update_option(
+	if ( bboss_is_active( 'groups' ) && false === bboss_get_option( 'bb_rl_groups_sidebars', false ) ) {
+		bboss_update_option(
 			'bb_rl_groups_sidebars',
 			array(
 				'about_group'   => true,
@@ -96,7 +96,7 @@ function bb_appearance_seed_default_sidebars() {
  * enablement, and DB schema upgrade that the onboarding wizard runs after a user
  * completes the flow. Invoked from two entry points:
  *
- *   1. `BB_ReadyLaunch_Onboarding::apply_readylaunch_configuration()` (wizard completion).
+ *   1. `BBoss_ReadyLaunch_Onboarding::apply_readylaunch_configuration()` (wizard completion).
  *   2. `bb_admin_save_feature_settings_after` for the `appearance` feature (Settings 2.0 auto-save).
  *
  * Without this symmetry, toggling "Groups" in the Appearance → Menus → Side menu
@@ -112,7 +112,7 @@ function bb_appearance_seed_default_sidebars() {
  * @param array $settings Sanitized bb_rl_* + blogname settings to apply.
  * @return void
  */
-function bb_appearance_apply_configuration( $settings ) {
+function bboss_appearance_apply_configuration( $settings ) {
 	if ( empty( $settings ) || ! is_array( $settings ) ) {
 		return;
 	}
@@ -146,8 +146,8 @@ function bb_appearance_apply_configuration( $settings ) {
 	// side-menu item) don't include the layout flag in their payload. Existing
 	// sites that flipped layouts before this seed shipped will self-heal on
 	// the next Appearance save without requiring the admin to re-flip layouts.
-	if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() ) {
-		bb_appearance_seed_default_sidebars();
+	if ( function_exists( 'bboss_is_readylaunch_enabled' ) && bboss_is_readylaunch_enabled() ) {
+		bboss_appearance_seed_default_sidebars();
 	}
 
 	// Force-enable registration when the registration template page is on.
@@ -155,13 +155,13 @@ function bb_appearance_apply_configuration( $settings ) {
 		$pages = $settings['bb_rl_enabled_pages'];
 		if (
 			! empty( $pages['registration'] ) &&
-			function_exists( 'bp_enable_site_registration' ) &&
-			! bp_enable_site_registration( false ) &&
-			function_exists( 'bp_allow_custom_registration' ) &&
-			! bp_allow_custom_registration()
+			function_exists( 'bboss_enable_site_registration' ) &&
+			! bboss_enable_site_registration( false ) &&
+			function_exists( 'bboss_allow_custom_registration' ) &&
+			! bboss_allow_custom_registration()
 		) {
-			bp_update_option( 'bp-enable-site-registration', true );
-			bp_update_option( 'allow-custom-registration', 0 );
+			bboss_update_option( 'bp-enable-site-registration', true );
+			bboss_update_option( 'allow-custom-registration', 0 );
 		}
 	}
 
@@ -169,7 +169,7 @@ function bb_appearance_apply_configuration( $settings ) {
 	// below are coalesced so we pay the schema-upgrade / page-mapping cost at
 	// most once per save — not once per triggering field.
 	$components_to_activate = array();
-	$active_components      = bp_get_option( 'bp-active-components', array() );
+	$active_components      = bboss_get_option( 'bp-active-components', array() );
 	$newly_activated        = array();
 
 	// Side-menu ↔ component map (matches onboarding's map verbatim).
@@ -205,7 +205,7 @@ function bb_appearance_apply_configuration( $settings ) {
 
 		if ( $has_my_network ) {
 			$components_to_activate['activity'] = true;
-			bp_update_option( '_bp_enable_activity_follow', true );
+			bboss_update_option( '_bp_enable_activity_follow', true );
 		}
 		if ( $has_connections ) {
 			$components_to_activate['friends'] = true;
@@ -218,8 +218,8 @@ function bb_appearance_apply_configuration( $settings ) {
 		// Pattern mirrors `BB_Feature_Registry::bb_activate_feature()` — we can't
 		// just call that because (a) `friends` is not a registered feature, and
 		// (b) calling it per-component would run schema/page/flush N times.
-		$active_features = bp_get_option( 'bb-active-features', array() );
-		$registry        = function_exists( 'bb_feature_registry' ) ? bb_feature_registry() : null;
+		$active_features = bboss_get_option( 'bb-active-features', array() );
+		$registry        = function_exists( 'bboss_feature_registry' ) ? bboss_feature_registry() : null;
 
 		foreach ( array_keys( $components_to_activate ) as $component_key ) {
 			if ( empty( $active_components[ $component_key ] ) ) {
@@ -244,7 +244,7 @@ function bb_appearance_apply_configuration( $settings ) {
 			foreach ( $newly_activated as $component_key ) {
 				unset( $components_before[ $component_key ] );
 			}
-			$features_before = bp_get_option( 'bb-active-features', array() );
+			$features_before = bboss_get_option( 'bb-active-features', array() );
 			$features_before = is_array( $features_before ) ? $features_before : array();
 
 			// Treat each write independently. bp_update_option returns false in
@@ -257,22 +257,22 @@ function bb_appearance_apply_configuration( $settings ) {
 			$features_changed   = ( $features_before !== $active_features );
 
 			$components_ok = ! $components_changed
-				|| bp_update_option( 'bp-active-components', $active_components )
-				|| bp_get_option( 'bp-active-components', array() ) === $active_components;
+				|| bboss_update_option( 'bp-active-components', $active_components )
+				|| bboss_get_option( 'bp-active-components', array() ) === $active_components;
 			$features_ok   = ! $features_changed
-				|| bp_update_option( 'bb-active-features', $active_features )
-				|| bp_get_option( 'bb-active-features', array() ) === $active_features;
+				|| bboss_update_option( 'bb-active-features', $active_features )
+				|| bboss_get_option( 'bb-active-features', array() ) === $active_features;
 
 			if ( $components_ok && ! $features_ok ) {
 				// Features write failed — roll back the components write so the
 				// two options stay in sync.
-				bp_update_option( 'bp-active-components', $components_before );
+				bboss_update_option( 'bp-active-components', $components_before );
 			} elseif ( ! $components_ok && $features_ok ) {
 				// Components write failed but features wrote — roll back the
 				// features write to match. (Both options share the alloptions
 				// backend so single-side failure is rare in practice, but the
 				// symmetry keeps invariants honest.)
-				bp_update_option( 'bb-active-features', $features_before );
+				bboss_update_option( 'bb-active-features', $features_before );
 			}
 		}
 	}
@@ -282,17 +282,17 @@ function bb_appearance_apply_configuration( $settings ) {
 	// changed is safe but wasteful, so gate on `$newly_activated`.
 	if ( ! empty( $newly_activated ) ) {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		if ( defined( 'BP_PLUGIN_DIR' ) ) {
-			$schema_path = BP_PLUGIN_DIR . '/bp-core/admin/bp-core-admin-schema.php';
+		if ( defined( 'BBOSS_PLUGIN_DIR' ) ) {
+			$schema_path = BBOSS_PLUGIN_DIR . '/bp-core/admin/bp-core-admin-schema.php';
 			if ( file_exists( $schema_path ) ) {
 				require_once $schema_path;
 			}
 		}
-		if ( function_exists( 'bp_core_install' ) ) {
-			bp_core_install( $active_components );
+		if ( function_exists( 'bboss_core_install' ) ) {
+			bboss_core_install( $active_components );
 		}
-		if ( function_exists( 'bp_core_add_page_mappings' ) ) {
-			bp_core_add_page_mappings( $active_components );
+		if ( function_exists( 'bboss_core_add_page_mappings' ) ) {
+			bboss_core_add_page_mappings( $active_components );
 		}
 
 		// Clear the feature-registry caches for each newly-activated component.
@@ -330,7 +330,7 @@ function bb_appearance_apply_configuration( $settings ) {
 	/**
 	 * Fires after ReadyLaunch configuration has been applied.
 	 *
-	 * @since BuddyBoss 2.10.0 (moved from BB_ReadyLaunch_Onboarding in 3.0.0)
+	 * @since BuddyBoss 2.10.0 (moved from BBoss_ReadyLaunch_Onboarding in 3.0.0)
 	 *
 	 * @param array $settings The final configuration settings.
 	 */
@@ -341,7 +341,7 @@ function bb_appearance_apply_configuration( $settings ) {
  * Invoke the Appearance configuration side-effects after a Settings 2.0 save.
  *
  * Hooks `bb_admin_save_feature_settings_after` and delegates to
- * `bb_appearance_apply_configuration()` so the component-activation + schema
+ * `bboss_appearance_apply_configuration()` so the component-activation + schema
  * upgrade logic runs exactly once per save — keeping the Settings 2.0 and
  * onboarding code paths in lockstep.
  *
@@ -352,7 +352,7 @@ function bb_appearance_apply_configuration( $settings ) {
  * @param array  $saved      Sanitized values written to options.
  * @return void
  */
-function bb_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
+function bboss_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
 	if ( 'appearance' !== $feature_id ) {
 		return;
 	}
@@ -372,8 +372,8 @@ function bb_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
 		$new_blogname = sanitize_text_field( (string) $settings['blogname'] );
 		if ( '' !== $new_blogname ) {
 			$switched = false;
-			if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
-				$root_blog_id = bp_get_root_blog_id();
+			if ( is_multisite() && function_exists( 'bboss_get_root_blog_id' ) ) {
+				$root_blog_id = bboss_get_root_blog_id();
 				if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
 					switch_to_blog( $root_blog_id );
 					$switched = true;
@@ -393,9 +393,9 @@ function bb_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
 		}
 	}
 
-	bb_appearance_apply_configuration( is_array( $saved ) ? $saved : array() );
+	bboss_appearance_apply_configuration( is_array( $saved ) ? $saved : array() );
 }
-add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_on_settings_saved', 10, 3 );
+add_action( 'bb_admin_save_feature_settings_after', 'bboss_appearance_on_settings_saved', 10, 3 );
 
 /**
  * AJAX handler — activate the BuddyBoss Theme from the Appearance welcome
@@ -432,7 +432,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_on_settings_s
  *
  * @return void Sends JSON and exits.
  */
-function bb_appearance_ajax_activate_buddyboss_theme() {
+function bboss_appearance_ajax_activate_buddyboss_theme() {
 	// Same nonce the rest of the Settings 2.0 AJAX surface uses.
 	check_ajax_referer( 'bb_admin_settings', 'nonce' );
 
@@ -440,7 +440,7 @@ function bb_appearance_ajax_activate_buddyboss_theme() {
 		wp_send_json_error(
 			array(
 				'error_code' => 'cannot_switch_themes',
-				'message'    => __( 'You do not have permission to switch themes.', 'buddyboss' ),
+				'message'    => __( 'You do not have permission to switch themes.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -452,7 +452,7 @@ function bb_appearance_ajax_activate_buddyboss_theme() {
 		wp_send_json_error(
 			array(
 				'error_code' => 'not_installed',
-				'message'    => __( 'BuddyBoss Theme is not installed.', 'buddyboss' ),
+				'message'    => __( 'BuddyBoss Theme is not installed.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -467,7 +467,7 @@ function bb_appearance_ajax_activate_buddyboss_theme() {
 				'error_code' => 'theme_errors',
 				'message'    => sprintf(
 					/* translators: %s: theme error message. */
-					__( 'BuddyBoss Theme cannot be activated: %s', 'buddyboss' ),
+					__( 'BuddyBoss Theme cannot be activated: %s', 'buddyboss-platform' ),
 					$theme_errors->get_error_message()
 				),
 			)
@@ -479,7 +479,7 @@ function bb_appearance_ajax_activate_buddyboss_theme() {
 			array(
 				'active_theme'   => $stylesheet,
 				'already_active' => true,
-				'message'        => __( 'BuddyBoss Theme is already active.', 'buddyboss' ),
+				'message'        => __( 'BuddyBoss Theme is already active.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -495,11 +495,11 @@ function bb_appearance_ajax_activate_buddyboss_theme() {
 		array(
 			'active_theme'   => $stylesheet,
 			'already_active' => false,
-			'message'        => __( 'BuddyBoss Theme activated.', 'buddyboss' ),
+			'message'        => __( 'BuddyBoss Theme activated.', 'buddyboss-platform' ),
 		)
 	);
 }
-add_action( 'wp_ajax_bb_admin_activate_buddyboss_theme', 'bb_appearance_ajax_activate_buddyboss_theme' );
+add_action( 'wp_ajax_bb_admin_activate_buddyboss_theme', 'bboss_appearance_ajax_activate_buddyboss_theme' );
 
 /**
  * Coerce `bb_rl_enabled` for the Site Layout SelectControl.
@@ -514,8 +514,8 @@ add_action( 'wp_ajax_bb_admin_activate_buddyboss_theme', 'bb_appearance_ajax_act
  *
  * Sidebar / side-menu / enabled_pages shape normalization used to live here
  * too, but those shapes are now canonicalized at write time in
- * `BB_ReadyLaunch_Onboarding::sanitize_final_settings()` and a one-shot
- * migration (`bb_rl_migrate_settings()`) cleans any legacy sequential data in
+ * `BBoss_ReadyLaunch_Onboarding::sanitize_final_settings()` and a one-shot
+ * migration (`bboss_rl_migrate_settings()`) cleans any legacy sequential data in
  * the DB, so read-side normalization is no longer needed.
  *
  * @since BuddyBoss 3.0.0
@@ -525,7 +525,7 @@ add_action( 'wp_ajax_bb_admin_activate_buddyboss_theme', 'bb_appearance_ajax_act
  * @param string $feature_id The feature ID being formatted.
  * @return array Field data with normalized `value` / `default`.
  */
-function bb_appearance_normalize_field_data( $field_data, $field, $feature_id ) {
+function bboss_appearance_normalize_field_data( $field_data, $field, $feature_id ) {
 	if ( 'appearance' !== $feature_id ) {
 		return $field_data;
 	}
@@ -555,15 +555,15 @@ function bb_appearance_normalize_field_data( $field_data, $field, $feature_id ) 
 		// and the $settings mutation in a single pass; new code uses the
 		// per-field `bb_admin_settings_format_field_data` filter as the
 		// symmetric hook.
-		if ( false === bp_get_option( $name, false ) ) {
-			bb_appearance_seed_default_sidebars();
-			$seeded_value = bp_get_option( $name, array() );
+		if ( false === bboss_get_option( $name, false ) ) {
+			bboss_appearance_seed_default_sidebars();
+			$seeded_value = bboss_get_option( $name, array() );
 			if ( ! empty( $seeded_value ) ) {
 				$field_data['value'] = $seeded_value;
 			}
 		}
 
-		$rebuilt = bb_appearance_build_sidebar_description( $name );
+		$rebuilt = bboss_appearance_build_sidebar_description( $name );
 		if ( '' !== $rebuilt ) {
 			$field_data['label_description'] = $rebuilt;
 		}
@@ -571,12 +571,12 @@ function bb_appearance_normalize_field_data( $field_data, $field, $feature_id ) 
 
 	return $field_data;
 }
-add_filter( 'bb_admin_settings_format_field_data', 'bb_appearance_normalize_field_data', 10, 3 );
+add_filter( 'bb_admin_settings_format_field_data', 'bboss_appearance_normalize_field_data', 10, 3 );
 
 /**
  * Resolve a frontend permalink for one of the three sidebar-widget fields.
  *
- * Split out so `bb_appearance_build_sidebar_description()` reads as pure
+ * Split out so `bboss_appearance_build_sidebar_description()` reads as pure
  * templating. Returns '' when the component is inactive or the viewer has
  * nothing to link to — caller treats that as "keep the unlinked copy".
  *
@@ -587,33 +587,33 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_appearance_normalize_fiel
  *                                `loggedin_user` global may not be set yet).
  * @return string Frontend URL, or '' when one couldn't be resolved.
  */
-function bb_appearance_resolve_sidebar_url( $field_name, $current_user_id ) {
+function bboss_appearance_resolve_sidebar_url( $field_name, $current_user_id ) {
 	switch ( $field_name ) {
 		case 'bb_rl_activity_sidebars':
-			if ( ! bp_is_active( 'activity' ) ) {
+			if ( ! bboss_is_active( 'activity' ) ) {
 				return '';
 			}
 			// Prefer the canonical page permalink — avoids a 301 hop when the
 			// activity directory page is also the site's `page_on_front`.
-			$page_id = function_exists( 'bp_core_get_directory_page_id' ) ? bp_core_get_directory_page_id( 'activity' ) : 0;
+			$page_id = function_exists( 'bboss_core_get_directory_page_id' ) ? bboss_core_get_directory_page_id( 'activity' ) : 0;
 			$url     = $page_id ? get_permalink( $page_id ) : '';
-			return $url ? $url : ( function_exists( 'bp_get_activity_directory_permalink' ) ? bp_get_activity_directory_permalink() : '' );
+			return $url ? $url : ( function_exists( 'bboss_get_activity_directory_permalink' ) ? bboss_get_activity_directory_permalink() : '' );
 
 		case 'bb_rl_member_profile_sidebars':
-			if ( $current_user_id && function_exists( 'bp_core_get_user_domain' ) ) {
-				$url = bp_core_get_user_domain( $current_user_id );
+			if ( $current_user_id && function_exists( 'bboss_core_get_user_domain' ) ) {
+				$url = bboss_core_get_user_domain( $current_user_id );
 				if ( ! empty( $url ) ) {
 					return $url;
 				}
 			}
-			return function_exists( 'bp_get_members_directory_permalink' ) ? bp_get_members_directory_permalink() : '';
+			return function_exists( 'bboss_get_members_directory_permalink' ) ? bboss_get_members_directory_permalink() : '';
 
 		case 'bb_rl_groups_sidebars':
-			if ( ! bp_is_active( 'groups' ) ) {
+			if ( ! bboss_is_active( 'groups' ) ) {
 				return '';
 			}
-			if ( $current_user_id && function_exists( 'groups_get_groups' ) && function_exists( 'bp_get_group_permalink' ) ) {
-				$found = groups_get_groups(
+			if ( $current_user_id && function_exists( 'bboss_groups_get_groups' ) && function_exists( 'bboss_get_group_permalink' ) ) {
+				$found = bboss_groups_get_groups(
 					array(
 						'user_id'  => $current_user_id,
 						'type'     => 'active',
@@ -621,10 +621,10 @@ function bb_appearance_resolve_sidebar_url( $field_name, $current_user_id ) {
 					)
 				);
 				if ( ! empty( $found['groups'][0] ) ) {
-					return bp_get_group_permalink( $found['groups'][0] );
+					return bboss_get_group_permalink( $found['groups'][0] );
 				}
 			}
-			return function_exists( 'bp_get_groups_directory_permalink' ) ? bp_get_groups_directory_permalink() : '';
+			return function_exists( 'bboss_get_groups_directory_permalink' ) ? bboss_get_groups_directory_permalink() : '';
 	}
 
 	return '';
@@ -650,19 +650,19 @@ function bb_appearance_resolve_sidebar_url( $field_name, $current_user_id ) {
  *                           `bb_rl_groups_sidebars`.
  * @return string Sprintf template, or '' for an unknown field name.
  */
-function bb_appearance_get_sidebar_description_template( $field_name ) {
+function bboss_appearance_get_sidebar_description_template( $field_name ) {
 	switch ( $field_name ) {
 		case 'bb_rl_activity_sidebars':
 			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
-			return __( 'Enable or disable widgets to appear on the %1$sactivity feed%2$s.', 'buddyboss' );
+			return __( 'Enable or disable widgets to appear on the %1$sactivity feed%2$s.', 'buddyboss-platform' );
 
 		case 'bb_rl_member_profile_sidebars':
 			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
-			return __( 'Enable or disable widgets to appear on the %1$smember profile%2$s.', 'buddyboss' );
+			return __( 'Enable or disable widgets to appear on the %1$smember profile%2$s.', 'buddyboss-platform' );
 
 		case 'bb_rl_groups_sidebars':
 			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
-			return __( 'Enable or disable widgets to appear on the %1$sgroup single%2$s page.', 'buddyboss' );
+			return __( 'Enable or disable widgets to appear on the %1$sgroup single%2$s page.', 'buddyboss-platform' );
 	}
 
 	return '';
@@ -683,8 +683,8 @@ function bb_appearance_get_sidebar_description_template( $field_name ) {
  * @param string $close      Closing anchor tag (or '' for plain copy).
  * @return string Finished description HTML / plain copy, or ''.
  */
-function bb_appearance_render_sidebar_description( $field_name, $open = '', $close = '' ) {
-	$template = bb_appearance_get_sidebar_description_template( $field_name );
+function bboss_appearance_render_sidebar_description( $field_name, $open = '', $close = '' ) {
+	$template = bboss_appearance_get_sidebar_description_template( $field_name );
 	return '' === $template ? '' : sprintf( $template, $open, $close );
 }
 
@@ -697,13 +697,13 @@ function bb_appearance_render_sidebar_description( $field_name, $open = '', $clo
  * @param string $field_name Sidebar-widget field slug.
  * @return string Sprintf'd HTML with `<a>` link, or ''.
  */
-function bb_appearance_build_sidebar_description( $field_name ) {
-	$url = bb_appearance_resolve_sidebar_url( $field_name, get_current_user_id() );
+function bboss_appearance_build_sidebar_description( $field_name ) {
+	$url = bboss_appearance_resolve_sidebar_url( $field_name, get_current_user_id() );
 	if ( '' === $url ) {
 		return '';
 	}
 
-	return bb_appearance_render_sidebar_description(
+	return bboss_appearance_render_sidebar_description(
 		$field_name,
 		'<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer">',
 		'</a>'
@@ -713,8 +713,8 @@ function bb_appearance_build_sidebar_description( $field_name ) {
 /**
  * Coerce `bb_rl_enabled` in the save-response payload to the dropdown string shape.
  *
- * `bb_appearance_sanitize_layout()` deliberately stores `bb_rl_enabled` as a PHP
- * boolean so legacy `bb_is_readylaunch_enabled()` consumers keep working. The
+ * `bboss_appearance_sanitize_layout()` deliberately stores `bb_rl_enabled` as a PHP
+ * boolean so legacy `bboss_is_readylaunch_enabled()` consumers keep working. The
  * generic save handler echoes the sanitized value back in `response.saved`,
  * which the React form then merges into its state. A raw boolean `false` never
  * matches the SelectControl's string options (`'1'` / `'0'`) under strict
@@ -722,7 +722,7 @@ function bb_appearance_build_sidebar_description( $field_name ) {
  * (ReadyLaunch) — the user sees their WordPress-Theme choice revert visually
  * even though the database is correct.
  *
- * This mirrors the display-side `bb_appearance_normalize_field_data()` filter
+ * This mirrors the display-side `bboss_appearance_normalize_field_data()` filter
  * but runs on the save-response path, keeping the stored shape (bool) and the
  * wire shape (string) consistent on both read and write.
  *
@@ -734,7 +734,7 @@ function bb_appearance_build_sidebar_description( $field_name ) {
  * @param array  $saved         Sanitized values written to options (unused — we read from $response_data).
  * @return array Response with `saved.bb_rl_enabled` coerced to `'1'` / `'0'`.
  */
-function bb_appearance_normalize_save_response( $response_data, $feature_id, $settings, $saved ) {
+function bboss_appearance_normalize_save_response( $response_data, $feature_id, $settings, $saved ) {
 	if ( 'appearance' !== $feature_id ) {
 		return $response_data;
 	}
@@ -745,4 +745,4 @@ function bb_appearance_normalize_save_response( $response_data, $feature_id, $se
 
 	return $response_data;
 }
-add_filter( 'bb_admin_save_feature_settings_response', 'bb_appearance_normalize_save_response', 10, 4 );
+add_filter( 'bb_admin_save_feature_settings_response', 'bboss_appearance_normalize_save_response', 10, 4 );

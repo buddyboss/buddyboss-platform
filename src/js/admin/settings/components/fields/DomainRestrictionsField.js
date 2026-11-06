@@ -29,10 +29,10 @@ import { __ } from '@wordpress/i18n';
  * @type {Array}
  */
 var conditionOptions = [
-	{ value: '', label: __( 'Select Condition', 'buddyboss' ) },
-	{ value: 'always_allow', label: __( 'Always Allow', 'buddyboss' ) },
-	{ value: 'never_allow', label: __( 'Never Allow', 'buddyboss' ) },
-	{ value: 'only_allow', label: __( 'Only Allow', 'buddyboss' ) },
+	{ value: '', label: __( 'Select Condition', 'buddyboss-platform' ) },
+	{ value: 'always_allow', label: __( 'Always Allow', 'buddyboss-platform' ) },
+	{ value: 'never_allow', label: __( 'Never Allow', 'buddyboss-platform' ) },
+	{ value: 'only_allow', label: __( 'Only Allow', 'buddyboss-platform' ) },
 ];
 
 /**
@@ -289,7 +289,7 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 									onChange={ function( val ) {
 										updateRow( index, 'domain', val );
 									} }
-									placeholder={ __( 'Domain name', 'buddyboss' ) }
+									placeholder={ __( 'Domain name', 'buddyboss-platform' ) }
 									disabled={ disabled }
 									__nextHasNoMarginBottom
 								/>
@@ -301,7 +301,7 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 									onChange={ function( val ) {
 										updateRow( index, 'tld', val );
 									} }
-									placeholder={ __( 'Extension', 'buddyboss' ) }
+									placeholder={ __( 'Extension', 'buddyboss-platform' ) }
 									disabled={ disabled }
 									__nextHasNoMarginBottom
 								/>
@@ -324,7 +324,7 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 									removeRow( index );
 								} }
 								disabled={ disabled }
-								aria-label={ __( 'Remove Rule', 'buddyboss' ) }
+								aria-label={ __( 'Remove Rule', 'buddyboss-platform' ) }
 							>
 								<i className="bb-icons-rl bb-icons-rl-x" />
 							</button>
@@ -339,7 +339,7 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 				disabled={ disabled }
 			>
 				<i className="bb-icons-rl-plus"></i>
-				{ __( 'Add Domain', 'buddyboss' ) }
+				{ __( 'Add Domain', 'buddyboss-platform' ) }
 			</Button>
 		</div>
 	);

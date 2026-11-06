@@ -31,21 +31,21 @@ class BP_Tests_Message_Cache extends BP_UnitTestCase {
 		$m2 = $message_2->id;
 
 		// add cache for each message
-		bp_messages_update_meta( $m1, 'utensil',  'knive' );
-		bp_messages_update_meta( $m1, 'is_knive', 'yes' );
+		bboss_messages_update_meta( $m1, 'utensil',  'knive' );
+		bboss_messages_update_meta( $m1, 'is_knive', 'yes' );
 
-		bp_messages_update_meta( $m2, 'utensil',  'spoon' );
-		bp_messages_update_meta( $m2, 'is_knive', 'no' );
-		bp_messages_update_meta( $m2, 'is_spoon', 'yes' );
+		bboss_messages_update_meta( $m2, 'utensil',  'spoon' );
+		bboss_messages_update_meta( $m2, 'is_knive', 'no' );
+		bboss_messages_update_meta( $m2, 'is_spoon', 'yes' );
 
 		// prime cache
-		bp_messages_get_meta( $m1, 'utensil' );
+		bboss_messages_get_meta( $m1, 'utensil' );
 
 		// Ensure an empty cache for second message
 		wp_cache_delete( $m2, 'message_meta' );
 
 		// update message meta cache
-		bp_messages_update_meta_cache( array( $m1, $m2 ) );
+		bboss_messages_update_meta_cache( array( $m1, $m2 ) );
 
 		$expected = array(
 			$m1 => array(
@@ -93,10 +93,10 @@ class BP_Tests_Message_Cache extends BP_UnitTestCase {
 		) );
 
 		// add message cache
-		bp_messages_update_meta( $m->id, 'yolo', 'gah' );
+		bboss_messages_update_meta( $m->id, 'yolo', 'gah' );
 
 		// prime meta cache in message loop
-		bp_thread_has_messages( array(
+		bboss_thread_has_messages( array(
 			'thread_id' => $m->thread_id,
 			'update_meta_cache' => true
 		) );
@@ -165,7 +165,7 @@ class BP_Tests_Message_Cache extends BP_UnitTestCase {
 	 * @return array
 	 */
 	protected function get_message_ids( $thread_id = 0 ) {
-		$thread = new BP_Messages_Thread( $thread_id );
+		$thread = new BBoss_Messages_Thread( $thread_id );
 		return wp_list_pluck( $thread->messages, 'id' );
 	}
 }

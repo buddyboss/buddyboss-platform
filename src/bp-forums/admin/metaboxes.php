@@ -6,6 +6,9 @@
  * @package BuddyBoss\Administration
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /** Dashboard *****************************************************************/
 
 /**
@@ -15,11 +18,11 @@
  *
  * @since bbPress (r2770)
  *
- * @uses bbp_get_statistics() To get the forum statistics
+ * @uses bboss_bbp_get_statistics() To get the forum statistics
  * @uses current_user_can() To check if the user is capable of doing things
- * @uses bbp_get_forum_post_type() To get the forum post type
- * @uses bbp_get_topic_post_type() To get the topic post type
- * @uses bbp_get_reply_post_type() To get the reply post type
+ * @uses bboss_bbp_get_forum_post_type() To get the forum post type
+ * @uses bboss_bbp_get_topic_post_type() To get the topic post type
+ * @uses bboss_bbp_get_reply_post_type() To get the reply post type
  * @uses admin_url() To get the administration url
  * @uses add_query_arg() To add custom args to the url
  * @uses do_action() Calls 'bbp_dashboard_widget_right_now_content_table_end'
@@ -30,14 +33,14 @@
  *                    below the discussion table
  * @uses do_action() Calls 'bbp_dashboard_widget_right_now_end' below the widget
  */
-function bbp_dashboard_widget_right_now() {
+function bboss_bbp_dashboard_widget_right_now() {
 
 	// Get the statistics
-	$r = bbp_get_statistics(); ?>
+	$r = bboss_bbp_get_statistics(); ?>
 
 	<div class="table table_content">
 
-		<p class="sub"><?php esc_html_e( 'Forum Discussions', 'buddyboss' ); ?></p>
+		<p class="sub"><?php esc_html_e( 'Forum Discussions', 'buddyboss-platform' ); ?></p>
 
 		<table>
 
@@ -47,16 +50,16 @@ function bbp_dashboard_widget_right_now() {
 				$num  = empty( $r['forum_count'] ) ? 0 : (int) $r['forum_count'];
 				$text = sprintf(
 					/* translators: Total Forums. */
-					_n( '%s Forum', '%s Forums', $num, 'buddyboss' ),
+					_n( '%s Forum', '%s Forums', $num, 'buddyboss-platform' ),
 					'<span class="b b-forums">' . number_format_i18n( $num ) . '</span>'
 				);
 				if ( current_user_can( 'publish_forums' ) ) {
-					$link = add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), admin_url( 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bboss_bbp_get_forum_post_type() ), admin_url( 'edit.php' ) );
 					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 				}
 				?>
 
-				<td colspan="2" class="t forums"><?php echo $text; ?></td>
+				<td colspan="2" class="t forums"><?php echo wp_kses_post( $text ); ?></td>
 
 			</tr>
 
@@ -66,21 +69,21 @@ function bbp_dashboard_widget_right_now() {
 				$num  = empty( $r['topic_count'] ) ? 0 : (int) $r['topic_count'];
 				$text = sprintf(
 					/* translators: Total Discussions. */
-					_n( '%s Discussion', '%s Discussions', $num, 'buddyboss' ),
+					_n( '%s Discussion', '%s Discussions', $num, 'buddyboss-platform' ),
 					'<span class="b b-topics">' . number_format_i18n( $num ) . '</span>'
 				);
 
 				if ( current_user_can( 'publish_topics' ) ) {
-					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bboss_bbp_get_topic_post_type() ), admin_url( 'edit.php' ) );
 					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 				}
 				?>
 
-				<td colspan="2" class="t topics"><?php echo $text; ?></td>
+				<td colspan="2" class="t topics"><?php echo wp_kses_post( $text ); ?></td>
 
 			</tr>
 
-			<?php if ( bbp_allow_topic_tags() ) : ?>
+			<?php if ( bboss_bbp_allow_topic_tags() ) : ?>
 
 				<tr>
 
@@ -88,14 +91,14 @@ function bbp_dashboard_widget_right_now() {
 					$num  = empty( $r['topic_tag_count'] ) ? 0 : (int) $r['topic_tag_count'];
 					$text = sprintf(
 						/* translators: Total Discussion Tag. */
-						_n( '%s Discussion Tag', '%s Discussion Tags', $num, 'buddyboss' ),
+						_n( '%s Discussion Tag', '%s Discussion Tags', $num, 'buddyboss-platform' ),
 						'<span class="b b-topic_tags">' . number_format_i18n( $num ) . '</span>'
 					);
 					if ( current_user_can( 'manage_topic_tags' ) ) {
 						$link = add_query_arg(
 							array(
-								'taxonomy'  => bbp_get_topic_tag_tax_id(),
-								'post_type' => bbp_get_topic_post_type(),
+								'taxonomy'  => bboss_bbp_get_topic_tag_tax_id(),
+								'post_type' => bboss_bbp_get_topic_post_type(),
 							),
 							admin_url( 'edit-tags.php' )
 						);
@@ -103,7 +106,7 @@ function bbp_dashboard_widget_right_now() {
 					}
 					?>
 
-					<td colspan="2" class="t topic_tags"><?php echo $text; ?></td>
+					<td colspan="2" class="t topic_tags"><?php echo wp_kses_post( $text ); ?></td>
 
 				</tr>
 
@@ -115,17 +118,17 @@ function bbp_dashboard_widget_right_now() {
 				$num  = empty( $r['reply_count'] ) ? 0 : (int) $r['reply_count'];
 				$text = sprintf(
 					/* translators: Total Replies. */
-					_n( '%s Reply', '%s Replies', $num, 'buddyboss' ),
+					_n( '%s Reply', '%s Replies', $num, 'buddyboss-platform' ),
 					'<span class="b b-replies">' . number_format_i18n( $num ) . '</span>'
 				);
 
 				if ( current_user_can( 'publish_replies' ) ) {
-					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bboss_bbp_get_reply_post_type() ), admin_url( 'edit.php' ) );
 					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 				}
 				?>
 
-				<td colspan="2" class="t replies"><?php echo $text; ?></td>
+				<td colspan="2" class="t replies"><?php echo wp_kses_post( $text ); ?></td>
 
 			</tr>
 
@@ -138,7 +141,7 @@ function bbp_dashboard_widget_right_now() {
 
 	<div class="table table_discussion">
 
-		<p class="sub"><?php esc_html_e( 'Users &amp; Moderation', 'buddyboss' ); ?></p>
+		<p class="sub"><?php esc_html_e( 'Users &amp; Moderation', 'buddyboss-platform' ); ?></p>
 
 		<table>
 
@@ -148,7 +151,7 @@ function bbp_dashboard_widget_right_now() {
 				$num  = empty( $r['user_count'] ) ? 0 : (int) $r['user_count'];
 				$text = sprintf(
 					/* translators: Total Users. */
-					_n( '%s User', '%s Users', $num, 'buddyboss' ),
+					_n( '%s User', '%s Users', $num, 'buddyboss-platform' ),
 					'<span class="b b-users">' . number_format_i18n( $num ) . '</span>'
 				);
 
@@ -158,7 +161,7 @@ function bbp_dashboard_widget_right_now() {
 				}
 				?>
 
-				<td colspan="2" class="last t users"><?php echo $text; ?></td>
+				<td colspan="2" class="last t users"><?php echo wp_kses_post( $text ); ?></td>
 
 			</tr>
 
@@ -170,18 +173,18 @@ function bbp_dashboard_widget_right_now() {
 					$num  = $r['topic_count_hidden'];
 					$text = sprintf(
 						/* translators: Total Hidden Discussions. */
-						_n( '%s Hidden Discussion', '%s Hidden Discussions', $num, 'buddyboss' ),
+						_n( '%s Hidden Discussion', '%s Hidden Discussions', $num, 'buddyboss-platform' ),
 						'<span class="b b-hidden-topics">' . number_format_i18n( $num ) . '</span>'
 					);
 
-					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bboss_bbp_get_topic_post_type() ), admin_url( 'edit.php' ) );
 					if ( '0' !== $num ) {
-						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
+						$link = add_query_arg( array( 'post_status' => bboss_bbp_get_spam_status_id() ), $link );
 					}
 					$text = '<a class="waiting" href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_topic_title'] ) . '">' . $text . '</a>';
 					?>
 
-					<td colspan="2" class="last t hidden-replies"><?php echo $text; ?></td>
+					<td colspan="2" class="last t hidden-replies"><?php echo wp_kses_post( $text ); ?></td>
 
 				</tr>
 
@@ -195,24 +198,24 @@ function bbp_dashboard_widget_right_now() {
 					$num  = $r['reply_count_hidden'];
 					$text = sprintf(
 						/* translators: Total Hidden Reply. */
-						_n( '%s Hidden Reply', '%s Hidden Replies', $num, 'buddyboss' ),
+						_n( '%s Hidden Reply', '%s Hidden Replies', $num, 'buddyboss-platform' ),
 						'<span class="b b-hidden-replies">' . number_format_i18n( $num ) . '</span>'
 					);
 
-					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bboss_bbp_get_reply_post_type() ), admin_url( 'edit.php' ) );
 					if ( '0' !== $num ) {
-						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
+						$link = add_query_arg( array( 'post_status' => bboss_bbp_get_spam_status_id() ), $link );
 					}
 					$text = '<a class="waiting" href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_reply_title'] ) . '">' . $text . '</a>';
 					?>
 
-					<td colspan="2" class="last t hidden-replies"><?php echo $text; ?></td>
+					<td colspan="2" class="last t hidden-replies"><?php echo wp_kses_post( $text ); ?></td>
 
 				</tr>
 
 			<?php endif; ?>
 
-			<?php if ( bbp_allow_topic_tags() && isset( $r['empty_topic_tag_count'] ) ) : ?>
+			<?php if ( bboss_bbp_allow_topic_tags() && isset( $r['empty_topic_tag_count'] ) ) : ?>
 
 				<tr>
 
@@ -220,14 +223,14 @@ function bbp_dashboard_widget_right_now() {
 					$num  = empty( $r['empty_topic_tag_count'] ) ? 0 : (int) $r['empty_topic_tag_count'];
 					$text = sprintf(
 						/* translators: Total Empty Discussion Tag. */
-						_n( '%s Empty Discussion Tag', '%s Empty Discussion Tags', $num, 'buddyboss' ),
+						_n( '%s Empty Discussion Tag', '%s Empty Discussion Tags', $num, 'buddyboss-platform' ),
 						'<span class="b b-hidden-topic-tags">' . number_format_i18n( $num ) . '</span>'
 					);
 
 					$link = add_query_arg(
 						array(
-							'taxonomy'  => bbp_get_topic_tag_tax_id(),
-							'post_type' => bbp_get_topic_post_type(),
+							'taxonomy'  => bboss_bbp_get_topic_tag_tax_id(),
+							'post_type' => bboss_bbp_get_topic_post_type(),
 						),
 						admin_url( 'edit-tags.php' )
 					);
@@ -235,7 +238,7 @@ function bbp_dashboard_widget_right_now() {
 					$text = '<a class="waiting" href="' . esc_url( $link ) . '">' . $text . '</a>';
 					?>
 
-					<td colspan="2" class="last t hidden-topic-tags"><?php echo $text; ?></td>
+					<td colspan="2" class="last t hidden-topic-tags"><?php echo wp_kses_post( $text ); ?></td>
 
 				</tr>
 
@@ -265,7 +268,7 @@ function bbp_dashboard_widget_right_now() {
  * @param array $elements
  * @return array
  */
-function bbp_filter_dashboard_glance_items( $elements = array() ) {
+function bboss_bbp_filter_dashboard_glance_items( $elements = array() ) {
 
 	// Bail if user cannot spectate.
 	if ( ! current_user_can( 'spectate' ) ) {
@@ -273,7 +276,7 @@ function bbp_filter_dashboard_glance_items( $elements = array() ) {
 	}
 
 	// Get the statistics.
-	$r = bbp_get_statistics(
+	$r = bboss_bbp_get_statistics(
 		array(
 			'count_pending_topics'  => false,
 			'count_private_topics'  => false,
@@ -291,7 +294,7 @@ function bbp_filter_dashboard_glance_items( $elements = array() ) {
 	if ( isset( $r['user_count'] ) ) {
 		$link = admin_url( 'users.php' );
 		/* translators: %s: number of users */
-		$text       = sprintf( _n( '%s User', '%s Users', $r['user_count_int'], 'buddyboss' ), $r['user_count'] );
+		$text       = sprintf( _n( '%s User', '%s Users', $r['user_count_int'], 'buddyboss-platform' ), $r['user_count'] );
 		$elements[] = current_user_can( 'edit_users' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-users">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
@@ -301,12 +304,12 @@ function bbp_filter_dashboard_glance_items( $elements = array() ) {
 	if ( isset( $r['forum_count'] ) ) {
 		$link = add_query_arg(
 			array(
-				'post_type' => bbp_get_forum_post_type(),
+				'post_type' => bboss_bbp_get_forum_post_type(),
 			),
 			admin_url( 'edit.php' )
 		);
 		/* translators: %s: number of forums */
-		$text       = sprintf( _n( '%s Forum', '%s Forums', $r['forum_count_int'], 'buddyboss' ), $r['forum_count'] );
+		$text       = sprintf( _n( '%s Forum', '%s Forums', $r['forum_count_int'], 'buddyboss-platform' ), $r['forum_count'] );
 		$elements[] = current_user_can( 'publish_forums' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-forums">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
@@ -316,12 +319,12 @@ function bbp_filter_dashboard_glance_items( $elements = array() ) {
 	if ( isset( $r['topic_count'] ) ) {
 		$link = add_query_arg(
 			array(
-				'post_type' => bbp_get_topic_post_type(),
+				'post_type' => bboss_bbp_get_topic_post_type(),
 			),
 			admin_url( 'edit.php' )
 		);
 		/* translators: %s: number of topics */
-		$text       = sprintf( _n( '%s Discussion', '%s Discussions', $r['topic_count_int'], 'buddyboss' ), $r['topic_count'] );
+		$text       = sprintf( _n( '%s Discussion', '%s Discussions', $r['topic_count_int'], 'buddyboss-platform' ), $r['topic_count'] );
 		$elements[] = current_user_can( 'publish_topics' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-topics">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
@@ -331,28 +334,28 @@ function bbp_filter_dashboard_glance_items( $elements = array() ) {
 	if ( isset( $r['reply_count'] ) ) {
 		$link = add_query_arg(
 			array(
-				'post_type' => bbp_get_reply_post_type(),
+				'post_type' => bboss_bbp_get_reply_post_type(),
 			),
 			admin_url( 'edit.php' )
 		);
 		/* translators: %s: number of replies */
-		$text       = sprintf( _n( '%s Reply', '%s Replies', $r['reply_count_int'], 'buddyboss' ), $r['reply_count'] );
+		$text       = sprintf( _n( '%s Reply', '%s Replies', $r['reply_count_int'], 'buddyboss-platform' ), $r['reply_count'] );
 		$elements[] = current_user_can( 'publish_replies' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-replies">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
 	}
 
 	// Topic Tags.
-	if ( bbp_allow_topic_tags() && isset( $r['topic_tag_count'] ) ) {
+	if ( bboss_bbp_allow_topic_tags() && isset( $r['topic_tag_count'] ) ) {
 		$link = add_query_arg(
 			array(
-				'taxonomy'  => bbp_get_topic_tag_tax_id(),
-				'post_type' => bbp_get_topic_post_type(),
+				'taxonomy'  => bboss_bbp_get_topic_tag_tax_id(),
+				'post_type' => bboss_bbp_get_topic_post_type(),
 			),
 			admin_url( 'edit-tags.php' )
 		);
 		/* translators: %s: number of topic tags */
-		$text       = sprintf( _n( '%s Discussion Tag', '%s Discussion Tags', $r['topic_tag_count_int'], 'buddyboss' ), $r['topic_tag_count'] );
+		$text       = sprintf( _n( '%s Discussion Tag', '%s Discussion Tags', $r['topic_tag_count_int'], 'buddyboss-platform' ), $r['topic_tag_count'] );
 		$elements[] = current_user_can( 'manage_topic_tags' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-topic-tags">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );

@@ -16,12 +16,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_setup_core() {
-	buddypress()->core = new BP_Core();
+function bboss_setup_core() {
+	bboss()->core = new BBoss_Core();
 
 	// Load Admin Settings 2.0 initialization early.
-	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-init.php' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-init.php';
+	if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-init.php' ) ) {
+		require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-settings-init.php';
 	}
 }
-add_action( 'bp_loaded', 'bp_setup_core', 0 );
+add_action( 'bp_loaded', 'bboss_setup_core', 0 );

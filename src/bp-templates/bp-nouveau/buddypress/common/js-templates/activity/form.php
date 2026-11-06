@@ -8,6 +8,9 @@
  * @version 1.8.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Split each js template to its own file. Easier for child theme to
  * overwrite individual parts.
@@ -43,5 +46,5 @@ $template_parts = apply_filters(
 );
 
 foreach ( $template_parts as $template_part ) {
-	bp_get_template_part( 'common/js-templates/activity/' . $template_part );
+	bboss_get_template_part( 'common/js-templates/activity/' . $template_part );
 }

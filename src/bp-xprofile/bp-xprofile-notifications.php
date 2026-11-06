@@ -6,6 +6,9 @@
  * @since BuddyPress 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /** Notifications *************************************************************/
 
 /**
@@ -22,7 +25,7 @@
  *                                  for WP Toolbar. Default: 'string'.
  * @return string
  */
-function xprofile_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
+function bboss_xprofile_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
 	switch ( $action ) {
 		default:
 			/**

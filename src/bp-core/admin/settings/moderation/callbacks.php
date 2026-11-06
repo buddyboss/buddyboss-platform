@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return int The sanitized threshold value.
  */
-function bb_moderation_sanitize_auto_suspend_threshold( $value ) {
+function bboss_moderation_sanitize_auto_suspend_threshold( $value ) {
 	$value = absint( $value );
 
 	return max( 1, $value );
@@ -39,7 +39,7 @@ function bb_moderation_sanitize_auto_suspend_threshold( $value ) {
  *
  * @return int The sanitized threshold value.
  */
-function bb_moderation_sanitize_auto_hide_threshold( $value ) {
+function bboss_moderation_sanitize_auto_hide_threshold( $value ) {
 	$value = absint( $value );
 
 	return max( 1, min( 99, $value ) );
@@ -59,14 +59,14 @@ function bb_moderation_sanitize_auto_hide_threshold( $value ) {
  * @param array  $settings   Submitted settings.
  * @param array  $saved      Saved option keys/values.
  */
-function bb_moderation_sync_content_reporting_to_legacy( $feature_id, $settings, $saved ) {
+function bboss_moderation_sync_content_reporting_to_legacy( $feature_id, $settings, $saved ) {
 	if ( 'moderation' !== $feature_id ) {
 		return;
 	}
 
-	$content_types = bp_moderation_content_types();
-	unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
-	unset( $content_types[ BP_Moderation_Members::$moderation_type_report ] );
+	$content_types = bboss_moderation_content_types();
+	unset( $content_types[ BBoss_Moderation_Members::$moderation_type ] );
+	unset( $content_types[ BBoss_Moderation_Members::$moderation_type_report ] );
 
 	$reporting_array = (array) get_option( 'bpm_reporting_content_reporting', array() );
 	$auto_hide_array = (array) get_option( 'bpm_reporting_auto_hide', array() );
@@ -103,4 +103,4 @@ function bb_moderation_sync_content_reporting_to_legacy( $feature_id, $settings,
 		update_option( 'bpm_reporting_auto_hide_threshold', $threshold_array );
 	}
 }
-add_action( 'bb_admin_save_feature_settings_after', 'bb_moderation_sync_content_reporting_to_legacy', 10, 3 );
+add_action( 'bb_admin_save_feature_settings_after', 'bboss_moderation_sync_content_reporting_to_legacy', 10, 3 );

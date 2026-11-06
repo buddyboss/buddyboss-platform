@@ -18,17 +18,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_emails_feature() {
+function bboss_admin_settings_register_emails_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'emails',
 		array(
-			'label'              => __( 'Emails', 'buddyboss' ),
-			'description'        => __( 'Manage email templates sent by BuddyBoss.', 'buddyboss' ),
+			'label'              => __( 'Emails', 'buddyboss-platform' ),
+			'description'        => __( 'Manage email templates sent by BuddyBoss.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-envelope-simple',
@@ -52,11 +52,11 @@ function bb_admin_settings_register_emails_feature() {
 	// =========================================================================
 
 	// Side Panel: Email Templates (list screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'emails',
 		'all_emails',
 		array(
-			'title'      => __( 'Emails', 'buddyboss' ),
+			'title'      => __( 'Emails', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-bullets',
@@ -67,7 +67,7 @@ function bb_admin_settings_register_emails_feature() {
 	);
 }
 
-add_action( 'bb_register_features', 'bb_admin_settings_register_emails_feature', 25 );
+add_action( 'bb_register_features', 'bboss_admin_settings_register_emails_feature', 25 );
 
 // The Email Digest ships in the BuddyBoss Addons plugin. This registers the stand-in panel
 // for sites where that plugin is absent, inactive, or licensed on a plan that does not

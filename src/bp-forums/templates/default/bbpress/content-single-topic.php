@@ -6,39 +6,42 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="bbpress-forums">
 
-	<?php bbp_breadcrumb(); ?>
+	<?php bboss_bbp_breadcrumb(); ?>
 
 	<?php do_action( 'bbp_template_before_single_topic' ); ?>
 
 	<?php if ( post_password_required() ) : ?>
 
-		<?php bbp_get_template_part( 'form', 'protected' ); ?>
+		<?php bboss_bbp_get_template_part( 'form', 'protected' ); ?>
 
 	<?php else : ?>
 
-		<?php bbp_topic_tag_list(); ?>
+		<?php bboss_bbp_topic_tag_list(); ?>
 
-		<?php if ( bbp_show_lead_topic() ) : ?>
+		<?php if ( bboss_bbp_show_lead_topic() ) : ?>
 
-			<?php bbp_get_template_part( 'content', 'single-topic-lead' ); ?>
-
-		<?php endif; ?>
-
-		<?php if ( bbp_has_replies() ) : ?>
-
-			<?php bbp_get_template_part( 'pagination', 'replies' ); ?>
-
-			<?php bbp_get_template_part( 'loop', 'replies' ); ?>
-
-			<?php bbp_get_template_part( 'pagination', 'replies' ); ?>
+			<?php bboss_bbp_get_template_part( 'content', 'single-topic-lead' ); ?>
 
 		<?php endif; ?>
 
-		<?php bbp_get_template_part( 'form', 'reply' ); ?>
+		<?php if ( bboss_bbp_has_replies() ) : ?>
+
+			<?php bboss_bbp_get_template_part( 'pagination', 'replies' ); ?>
+
+			<?php bboss_bbp_get_template_part( 'loop', 'replies' ); ?>
+
+			<?php bboss_bbp_get_template_part( 'pagination', 'replies' ); ?>
+
+		<?php endif; ?>
+
+		<?php bboss_bbp_get_template_part( 'form', 'reply' ); ?>
 
 	<?php endif; ?>
 

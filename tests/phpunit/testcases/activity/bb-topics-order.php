@@ -8,7 +8,7 @@
 // Pro owns this helper; the Platform suite runs without Pro, so mirror its one-line body.
 if ( ! function_exists( 'bb_is_enabled_group_activity_topics' ) ) {
 	function bb_is_enabled_group_activity_topics( $enable_group_topics = false ) {
-		return (bool) apply_filters( 'bb_is_enabled_group_activity_topics', bp_get_option( 'bb-enable-group-activity-topics', $enable_group_topics ) );
+		return (bool) apply_filters( 'bb_is_enabled_group_activity_topics', bboss_get_option( 'bb-enable-group-activity-topics', $enable_group_topics ) );
 	}
 }
 
@@ -19,17 +19,17 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 	public function set_up() {
 		parent::set_up();
 		$this->admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		bp_update_option( 'bb-enable-group-activity-topics', 1 );
+		bboss_update_option( 'bb-enable-group-activity-topics', 1 );
 	}
 
 	public function tear_down() {
-		bp_delete_option( 'bb-enable-group-activity-topics' );
+		bboss_delete_option( 'bb-enable-group-activity-topics' );
 		parent::tear_down();
 	}
 
 	private function add_topic( $name, $item_type = 'activity', $item_id = 0, $permission = null ) {
 		self::set_current_user( $this->admin );
-		$topic = bb_topics_manager_instance()->bb_add_topic(
+		$topic = bboss_topics_manager_instance()->bb_add_topic(
 			array(
 				'name'            => $name,
 				'permission_type' => $permission ? $permission : ( 'groups' === $item_type ? 'members' : 'anyone' ),
@@ -44,7 +44,7 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 
 	private function order_of( $item_type, $item_id ) {
 		global $wpdb;
-		$table = bb_topics_manager_instance()->topic_rel_table;
+		$table = bboss_topics_manager_instance()->topic_rel_table;
 
 		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT topic_id FROM `{$table}` WHERE item_type = %s AND item_id = %d ORDER BY menu_order ASC, id ASC", $item_type, $item_id ) ) ); // phpcs:ignore
 	}
@@ -66,13 +66,13 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 		$this->assertSame( array( $a, $b ), $this->order_of( 'groups', $g1 ) );
 		$this->assertSame( array( $a, $b ), $this->order_of( 'groups', $g2 ) );
 
-		$this->assertTrue( bb_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), $g1, 'groups' ) );
+		$this->assertTrue( bboss_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), $g1, 'groups' ) );
 
 		$this->assertSame( array( $b, $a ), $this->order_of( 'groups', $g1 ), 'group 1 reordered' );
 		$this->assertSame( array( $a, $b ), $this->order_of( 'groups', $g2 ), 'group 2 untouched' );
 		$this->assertSame( array( $a, $b ), $this->order_of( 'activity', 0 ), 'site list untouched' );
 
-		$this->assertTrue( bb_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), 0, 'activity' ) );
+		$this->assertTrue( bboss_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), 0, 'activity' ) );
 		$this->assertSame( array( $b, $a ), $this->order_of( 'activity', 0 ) );
 		$this->assertSame( array( $a, $b ), $this->order_of( 'groups', $g2 ), 'site reorder leaves group 2 alone' );
 	}
@@ -81,10 +81,10 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 		$organizer = self::factory()->user->create();
 		$member    = self::factory()->user->create();
 		$g         = self::factory()->group->create( array( 'creator_id' => $organizer ) );
-		groups_join_group( $g, $member );
+		bboss_groups_join_group( $g, $member );
 		$other = self::factory()->group->create( array( 'creator_id' => $member ) );
 
-		$m = bb_topics_manager_instance();
+		$m = bboss_topics_manager_instance();
 
 		self::set_current_user( 0 );
 		$this->assertFalse( $m->bb_can_update_topics_order( $g, 'groups' ) );
@@ -99,9 +99,9 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 		$this->assertFalse( $m->bb_can_update_topics_order( 0, 'activity' ), 'organizer is not a moderator' );
 		$this->assertFalse( $m->bb_can_update_topics_order( 0, 'groups' ), 'group id required' );
 
-		bp_update_option( 'bb-enable-group-activity-topics', 0 );
+		bboss_update_option( 'bb-enable-group-activity-topics', 0 );
 		$this->assertFalse( $m->bb_can_update_topics_order( $g, 'groups' ), 'group topics disabled' );
-		bp_update_option( 'bb-enable-group-activity-topics', 1 );
+		bboss_update_option( 'bb-enable-group-activity-topics', 1 );
 
 		self::set_current_user( $this->admin );
 		$this->assertTrue( $m->bb_can_update_topics_order( $g, 'groups' ) );
@@ -114,11 +114,11 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 
 		// Members read this cached list (feed filter bar, composer, REST /bb-topics).
 		$list = function () {
-			return array_map( 'intval', wp_list_pluck( bb_activity_topics_manager_instance()->bb_get_activity_topics( array( 'item_type' => 'activity' ) ), 'topic_id' ) );
+			return array_map( 'intval', wp_list_pluck( bboss_activity_topics_manager_instance()->bb_get_activity_topics( array( 'item_type' => 'activity' ) ), 'topic_id' ) );
 		};
 		$this->assertSame( array( $a, $b ), $list(), 'list primed in the cache' );
 
-		$this->assertTrue( bb_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), 0, 'activity' ) );
+		$this->assertTrue( bboss_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), 0, 'activity' ) );
 
 		$this->assertSame( array( $b, $a ), $list(), 'members see the new order' );
 	}
@@ -132,7 +132,7 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 		// Pro caches the group list in the same group; the Platform suite runs without Pro.
 		wp_cache_set( 'bb_activity_topics_group_probe', array( $a, $b ), 'bb_activity_topics' );
 
-		$this->assertTrue( bb_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), $g, 'groups' ) );
+		$this->assertTrue( bboss_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), $g, 'groups' ) );
 
 		$this->assertFalse( wp_cache_get( 'bb_activity_topics_group_probe', 'bb_activity_topics' ) );
 	}
@@ -157,12 +157,12 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 		$wp_object_cache = new BB_Tests_Topics_Order_No_Group_Flush_Cache();
 
 		$list = function () {
-			return array_map( 'intval', wp_list_pluck( bb_activity_topics_manager_instance()->bb_get_activity_topics( array( 'item_type' => 'activity' ) ), 'topic_id' ) );
+			return array_map( 'intval', wp_list_pluck( bboss_activity_topics_manager_instance()->bb_get_activity_topics( array( 'item_type' => 'activity' ) ), 'topic_id' ) );
 		};
 
 		try {
 			$primed    = $list();
-			$reordered = bb_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), 0, 'activity' );
+			$reordered = bboss_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), 0, 'activity' );
 			$after     = $list();
 			$flushed   = $wp_object_cache->flushed;
 		} finally {
@@ -182,14 +182,14 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 		$b         = $this->add_topic( 'Beta', 'groups', $g );
 
 		// Pro keys its group lists with this incrementor; the Platform suite runs without Pro.
-		$before = bp_core_get_incrementor( 'bb_activity_topic_lists' );
+		$before = bboss_core_get_incrementor( 'bb_activity_topic_lists' );
 		usleep( 2 );
-		$this->assertTrue( bb_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), $g, 'groups' ) );
-		$after_group = bp_core_get_incrementor( 'bb_activity_topic_lists' );
+		$this->assertTrue( bboss_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), $g, 'groups' ) );
+		$after_group = bboss_core_get_incrementor( 'bb_activity_topic_lists' );
 
 		usleep( 2 );
 		do_action( 'bp_rest_topics_update_order', new WP_REST_Response( array() ), new WP_REST_Request( 'PATCH', '/buddyboss/v1/bb-topics/order' ) );
-		$after_rest = bp_core_get_incrementor( 'bb_activity_topic_lists' );
+		$after_rest = bboss_core_get_incrementor( 'bb_activity_topic_lists' );
 
 		$this->assertNotSame( $before, $after_group );
 		$this->assertNotSame( $after_group, $after_rest );
@@ -253,14 +253,14 @@ class BB_Tests_Topics_Order_Ajax extends BP_UnitTestCase {
 		$this->error_level = error_reporting();
 		error_reporting( $this->error_level & ~E_WARNING );
 
-		bp_update_option( 'bb-enable-group-activity-topics', 1 );
+		bboss_update_option( 'bb-enable-group-activity-topics', 1 );
 
 		$this->admin       = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		$this->organizer   = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		$this->member      = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		$this->own_group   = self::factory()->group->create( array( 'creator_id' => $this->organizer ) );
 		$this->other_group = self::factory()->group->create( array( 'creator_id' => $this->admin ) );
-		groups_join_group( $this->own_group, $this->member );
+		bboss_groups_join_group( $this->own_group, $this->member );
 
 		// Alpha and Beta site-wide, and adopted by both groups, all in the order Alpha, Beta.
 		self::set_current_user( $this->admin );
@@ -278,7 +278,7 @@ class BB_Tests_Topics_Order_Ajax extends BP_UnitTestCase {
 		remove_filter( 'wp_doing_ajax', '__return_true' );
 		remove_filter( 'wp_die_ajax_handler', array( $this, 'get_die_handler' ), 1 );
 		error_reporting( $this->error_level );
-		bp_delete_option( 'bb-enable-group-activity-topics' );
+		bboss_delete_option( 'bb-enable-group-activity-topics' );
 
 		parent::tear_down();
 	}
@@ -293,7 +293,7 @@ class BB_Tests_Topics_Order_Ajax extends BP_UnitTestCase {
 	}
 
 	private function add_topic( $name, $item_type, $item_id ) {
-		$topic = bb_topics_manager_instance()->bb_add_topic(
+		$topic = bboss_topics_manager_instance()->bb_add_topic(
 			array(
 				'name'            => $name,
 				'permission_type' => 'groups' === $item_type ? 'members' : 'anyone',
@@ -308,7 +308,7 @@ class BB_Tests_Topics_Order_Ajax extends BP_UnitTestCase {
 
 	private function order_of( $item_type, $item_id ) {
 		global $wpdb;
-		$table = bb_topics_manager_instance()->topic_rel_table;
+		$table = bboss_topics_manager_instance()->topic_rel_table;
 
 		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT topic_id FROM `{$table}` WHERE item_type = %s AND item_id = %d ORDER BY menu_order ASC, id ASC", $item_type, $item_id ) ) ); // phpcs:ignore
 	}
@@ -328,7 +328,7 @@ class BB_Tests_Topics_Order_Ajax extends BP_UnitTestCase {
 		$level               = ob_get_level();
 		ob_start();
 		try {
-			bb_topics_manager_instance()->bb_update_topics_order_ajax();
+			bboss_topics_manager_instance()->bb_update_topics_order_ajax();
 		} catch ( WPAjaxDieContinueException $e ) {
 			// The handler ended through wp_send_json_* or check_ajax_referer().
 		} catch ( WPAjaxDieStopException $e ) {

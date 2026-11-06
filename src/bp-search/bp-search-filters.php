@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_filter( 'template_include', 'bp_search_override_wp_native_results', 999 ); // don't leave any chance!.
+add_filter( 'template_include', 'bboss_search_override_wp_native_results', 999 ); // don't leave any chance!.
 
 /**
  * Force native wp search section to load page template so we can hook stuff into it.
@@ -20,9 +20,9 @@ add_filter( 'template_include', 'bp_search_override_wp_native_results', 999 ); /
  *
  * @return mixed
  **/
-function bp_search_override_wp_native_results( $template ) {
+function bboss_search_override_wp_native_results( $template ) {
 
-	if ( bp_search_is_search() ) { // if search page.
+	if ( bboss_search_is_search() ) { // if search page.
 
 		$live_template_names = array(
 			'buddyboss-global-search.php',
@@ -47,7 +47,7 @@ function bp_search_override_wp_native_results( $template ) {
 }
 
 
-add_filter( 'template_include', 'bp_search_result_page_dummy_post_load', 999 ); // don't leave any chance!.
+add_filter( 'template_include', 'bboss_search_result_page_dummy_post_load', 999 ); // don't leave any chance!.
 /**
  * Load dummy post for wp native search result. magic starts here.
  *
@@ -57,10 +57,10 @@ add_filter( 'template_include', 'bp_search_result_page_dummy_post_load', 999 ); 
  *
  * @return mixed
  **/
-function bp_search_result_page_dummy_post_load( $template ) {
+function bboss_search_result_page_dummy_post_load( $template ) {
 	global $wp_query;
 
-	if ( ! bp_search_is_search() ) { // cancel if not search page.
+	if ( ! bboss_search_is_search() ) { // cancel if not search page.
 		return $template;
 	}
 
@@ -109,7 +109,7 @@ function bp_search_result_page_dummy_post_load( $template ) {
 }
 
 
-add_filter( 'pre_get_posts', 'bp_search_clear_native_search_query' );
+add_filter( 'pre_get_posts', 'bboss_search_clear_native_search_query' );
 /**
  * Force native wp search page not to look any data into db to save query and performance
  *
@@ -119,11 +119,11 @@ add_filter( 'pre_get_posts', 'bp_search_clear_native_search_query' );
  *
  * @return mixed
  **/
-function bp_search_clear_native_search_query( $query ) {
+function bboss_search_clear_native_search_query( $query ) {
 
-	if ( bp_search_is_search() ) {
+	if ( bboss_search_is_search() ) {
 
-		remove_filter( 'pre_get_posts', 'bp_search_clear_native_search_query' ); // only do first time
+		remove_filter( 'pre_get_posts', 'bboss_search_clear_native_search_query' ); // only do first time
 
 	}
 
@@ -139,7 +139,7 @@ function bp_search_clear_native_search_query( $query ) {
  *
  * @return mixed
  **/
-function bp_search_filter_bp_before_has_groups_parse_args( $args ) {
+function bboss_search_filter_bp_before_has_groups_parse_args( $args ) {
 
 	if ( wp_doing_ajax() && isset( $_GET['action'] ) && $_GET['action'] === 'bp_search_ajax' ) {
 		$args['type'] = '';
@@ -148,4 +148,4 @@ function bp_search_filter_bp_before_has_groups_parse_args( $args ) {
 	return $args;
 }
 
-add_filter( 'bp_before_has_groups_parse_args', 'bp_search_filter_bp_before_has_groups_parse_args', 10, 1 );
+add_filter( 'bp_before_has_groups_parse_args', 'bboss_search_filter_bp_before_has_groups_parse_args', 10, 1 );

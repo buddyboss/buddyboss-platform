@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-class BP_Latest_Activities extends WP_Widget {
+class BBoss_Latest_Activities extends WP_Widget {
 	/**
 	 * Construct the widget.
 	 *
@@ -23,7 +23,7 @@ class BP_Latest_Activities extends WP_Widget {
 	public function __construct() {
 
 		/**
-		 * Filters the widget options for the BP_Latest_Activities widget.
+		 * Filters the widget options for the BBoss_Latest_Activities widget.
 		 *
 		 * @since BuddyPress 3.0.0
 		 *
@@ -32,12 +32,12 @@ class BP_Latest_Activities extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bp_latest_activities', array(
 				'classname'                   => 'bp-latest-activities buddypress',
-				'description'                 => __( 'Select to display the latest activity updates, by type, posted within your community.', 'buddyboss' ),
+				'description'                 => __( 'Select to display the latest activity updates, by type, posted within your community.', 'buddyboss-platform' ),
 				'customize_selective_refresh' => true,
 			)
 		);
 
-		parent::__construct( false, __( '(BB) Latest Activities', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BB) Latest Activities', 'buddyboss-platform' ), $widget_ops );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class BP_Latest_Activities extends WP_Widget {
 	 * @since BuddyPress 3.0.0
 	 */
 	public static function register_widget() {
-		register_widget( 'BP_Latest_Activities' );
+		register_widget( 'BBoss_Latest_Activities' );
 	}
 
 	/**
@@ -59,10 +59,10 @@ class BP_Latest_Activities extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		// Default values
-		$title      = __( 'Latest updates', 'buddyboss' );
+		$title      = __( 'Latest updates', 'buddyboss-platform' );
 		$type       = array( 'activity_update' );
 		$max        = 5;
-		$bp_nouveau = bp_nouveau();
+		$bp_nouveau = bboss_nouveau();
 
 		// Check instance for a custom title
 		if ( ! empty( $instance['title'] ) ) {
@@ -70,7 +70,7 @@ class BP_Latest_Activities extends WP_Widget {
 		}
 
 		/**
-		 * Filters the BP_Latest_Activities widget title.
+		 * Filters the BBoss_Latest_Activities widget title.
 		 *
 		 * @since BuddyPress 3.0.0
 		 *
@@ -97,10 +97,10 @@ class BP_Latest_Activities extends WP_Widget {
 			$args['before_widget'] = str_replace( 'bp-latest-activities', join( ' ', $classes ), $args['before_widget'] );
 		}
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		if ( $title ) {
-			echo $args['before_title'] . $title . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $args['after_title'] );
 		}
 
 		$reset_activities_template = null;
@@ -110,32 +110,32 @@ class BP_Latest_Activities extends WP_Widget {
 
 		$scope[] = 'public';
 
-		if ( bp_loggedin_user_id() ) {
+		if ( bboss_loggedin_user_id() ) {
 
 			$scope[] = 'just-me';
 
-			if ( bp_activity_do_mentions() ) {
+			if ( bboss_activity_do_mentions() ) {
 				$scope[] = 'mentions';
 			}
 
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 				$scope[] = 'friends';
 			}
 
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				$scope[] = 'groups';
 			}
 
-			if ( bp_is_activity_follow_active() ) {
+			if ( bboss_is_activity_follow_active() ) {
 				$scope[] = 'following';
 			}
 
-			if ( bp_is_active( 'forums' ) ) {
+			if ( bboss_is_active( 'forums' ) ) {
 				$scope[] = 'forums';
 			}
 		}
 
-		if ( bp_loggedin_user_id() && ! empty( $instance['relevant'] ) ) {
+		if ( bboss_loggedin_user_id() && ! empty( $instance['relevant'] ) ) {
 			$key = array_search( 'public', $scope, true );
 			if ( is_array( $scope ) && false !== $key ) {
 				unset( $scope[ $key ] );
@@ -151,7 +151,7 @@ class BP_Latest_Activities extends WP_Widget {
 
 		/**
 		 * Globalize the activity widget arguments.
-		 * @see bp_nouveau_activity_widget_query() to override
+		 * @see bboss_nouveau_activity_widget_query() to override
 		 */
 		$bp_nouveau->activity->widget_args = array(
 			'max'          => $max,
@@ -167,22 +167,22 @@ class BP_Latest_Activities extends WP_Widget {
 			$bp_nouveau->activity->widget_args['display_comments'] = 'stream';
 		}
 
-		if ( bp_is_active( 'blogs' ) && function_exists( 'bb_filter_activity_get_filter_sql' ) ) {
+		if ( bboss_is_active( 'blogs' ) && function_exists( 'bboss_filter_activity_get_filter_sql' ) ) {
 			$flag_activity_get_filter_sql = true;
-			add_filter( 'bb_activity_activity_get_filter_sql', 'bb_filter_activity_get_filter_sql', 10, 2 );
+			add_filter( 'bb_activity_activity_get_filter_sql', 'bboss_filter_activity_get_filter_sql', 10, 2 );
 		}
 
-		bp_get_template_part( 'activity/widget' );
+		bboss_get_template_part( 'activity/widget' );
 
 		if ( ! empty( $flag_activity_get_filter_sql ) ) {
-			remove_filter( 'bb_activity_activity_get_filter_sql', 'bb_filter_activity_get_filter_sql', 10, 2 );
+			remove_filter( 'bb_activity_activity_get_filter_sql', 'bboss_filter_activity_get_filter_sql', 10, 2 );
 		}
 
 		// Reset the globals
 		$GLOBALS['activities_template']    = $reset_activities_template;
 		$bp_nouveau->activity->widget_args = array();
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 	}
 
 	/**
@@ -198,7 +198,7 @@ class BP_Latest_Activities extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 
-		$instance['title']    = strip_tags( $new_instance['title'] );
+		$instance['title']    = wp_strip_all_tags( $new_instance['title'] );
 		$instance['relevant'] = isset( $new_instance['relevant'] ) ? (bool) $new_instance['relevant'] : false;
 		$instance['max']      = 5;
 		if ( ! empty( $new_instance['max'] ) ) {
@@ -223,10 +223,10 @@ class BP_Latest_Activities extends WP_Widget {
 	 * @return string HTML output.
 	 */
 	public function form( $instance ) {
-		$instance = bp_parse_args(
+		$instance = bboss_parse_args(
 			(array) $instance,
 			array(
-				'title'    => __( 'Latest updates', 'buddyboss' ),
+				'title'    => __( 'Latest updates', 'buddyboss-platform' ),
 				'max'      => 5,
 				'type'     => '',
 				'relevant' => false,
@@ -246,26 +246,26 @@ class BP_Latest_Activities extends WP_Widget {
 		}
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'max' ); ?>"><?php _e( 'Maximum amount to display:', 'buddyboss' ); ?></label>
-			<input type="number" class="widefat" id="<?php echo $this->get_field_id( 'max' ); ?>" name="<?php echo $this->get_field_name( 'max' ); ?>" value="<?php echo intval( $max ); ?>" step="1" min="1" max="20" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'max' ) ); ?>"><?php esc_html_e( 'Maximum amount to display:', 'buddyboss-platform' ); ?></label>
+			<input type="number" class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max' ) ); ?>" value="<?php echo intval( $max ); ?>" step="1" min="1" max="20" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php esc_html_e( 'Activity Type:', 'buddyboss' ); ?></label>
-			<select class="widefat" multiple="multiple" id="<?php echo $this->get_field_id( 'type' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>[]">
-				<?php foreach ( bp_nouveau_get_activity_filters() as $key => $name ) : ?>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'type' ) ); ?>"><?php esc_html_e( 'Activity Type:', 'buddyboss-platform' ); ?></label>
+			<select class="widefat" multiple="multiple" id="<?php echo esc_attr( $this->get_field_id( 'type' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'type' ) ); ?>[]">
+				<?php foreach ( bboss_nouveau_get_activity_filters() as $key => $name ) : ?>
 					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $type, true ) ); ?>><?php echo esc_html( $name ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>
 		<p>
-			<input type="checkbox" class="widefat" id="<?php echo $this->get_field_id( 'relevant' ); ?>" name="<?php echo $this->get_field_name( 'relevant' ); ?>" <?php checked( true, $relevant ); ?> value="1" />
-			<label for="<?php echo $this->get_field_id( 'relevant' ); ?>"><?php esc_html_e( 'Only show activities that are relevant to the logged-in member', 'buddyboss' ); ?></label>
-			<p><small><info style="color: #808080;font-size: 13px;"><?php esc_html_e( 'While logged in, members will only see activities from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.', 'buddyboss' ); ?></info></small></p>
+			<input type="checkbox" class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'relevant' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'relevant' ) ); ?>" <?php checked( true, $relevant ); ?> value="1" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'relevant' ) ); ?>"><?php esc_html_e( 'Only show activities that are relevant to the logged-in member', 'buddyboss-platform' ); ?></label>
+			<p><small><info style="color: #808080;font-size: 13px;"><?php esc_html_e( 'While logged in, members will only see activities from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.', 'buddyboss-platform' ); ?></info></small></p>
 		</p>
 		<?php
 	}

@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-define( 'BP_PS_FORM', 'bp_profile_search' );
+define( 'BBOSS_PS_FORM', 'bp_profile_search' );
 
 // Legacy admin metabox UI removed — now managed via Settings 2.0.
 require 'bps-directory.php';
@@ -24,7 +24,7 @@ require 'bps-xprofile.php';
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_meta( $form ) {
+function bboss_ps_meta( $form ) {
 	static $options;
 	if ( isset( $options[ $form ] ) ) {
 		return $options[ $form ];
@@ -45,23 +45,23 @@ function bp_ps_meta( $form ) {
 	return $options[ $form ];
 }
 
-add_action( 'init', 'bp_profile_search_register_post_type' );
+add_action( 'init', 'bboss_profile_search_register_post_type' );
 /**
  * Register BuddyBoss Profile Search post type.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_register_post_type() {
+function bboss_profile_search_register_post_type() {
 	$args = array(
 		'labels'          => array(
-			'name'               => __( 'Profile Search Forms', 'buddyboss' ),
-			'singular_name'      => __( 'Profile Search Form', 'buddyboss' ),
-			'all_items'          => __( 'Profile Search', 'buddyboss' ),
-			'add_new'            => __( 'Add New', 'buddyboss' ),
-			'add_new_item'       => __( 'Add New Form', 'buddyboss' ),
-			'edit_item'          => __( 'Profile Search', 'buddyboss' ),
-			'not_found'          => __( 'No forms found', 'buddyboss' ),
-			'not_found_in_trash' => __( 'No forms found in trash', 'buddyboss' ),
+			'name'               => __( 'Profile Search Forms', 'buddyboss-platform' ),
+			'singular_name'      => __( 'Profile Search Form', 'buddyboss-platform' ),
+			'all_items'          => __( 'Profile Search', 'buddyboss-platform' ),
+			'add_new'            => __( 'Add New', 'buddyboss-platform' ),
+			'add_new_item'       => __( 'Add New Form', 'buddyboss-platform' ),
+			'edit_item'          => __( 'Profile Search', 'buddyboss-platform' ),
+			'not_found'          => __( 'No forms found', 'buddyboss-platform' ),
+			'not_found_in_trash' => __( 'No forms found in trash', 'buddyboss-platform' ),
 		),
 		'show_ui'         => false,
 		'show_in_menu'    => '',
@@ -102,14 +102,14 @@ function bp_profile_search_register_post_type() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_prevent_delete() {
+function bboss_profile_search_prevent_delete() {
 	global $wp_roles;
 	$wp_roles->remove_cap( 'administrator', 'delete_bp_ps_forms' );
 	$wp_roles->remove_cap( 'administrator', 'delete_published_bp_ps_forms' );
 	$wp_roles->remove_cap( 'editor', 'delete_bp_ps_forms' );
 	$wp_roles->remove_cap( 'editor', 'delete_published_bp_ps_forms' );
 }
-add_action( 'init', 'bp_profile_search_prevent_delete' );
+add_action( 'init', 'bboss_profile_search_prevent_delete' );
 
 // Legacy admin UI functions removed (form_updated_messages, admin_head CSS,
 // admin JS enqueue, admin tab rendering, submenu highlight)
@@ -128,7 +128,7 @@ add_action( 'init', 'bp_profile_search_prevent_delete' );
  *
  * @return mixed Option value or default.
  */
-function bp_ps_get_option( $name, $default ) {
+function bboss_ps_get_option( $name, $default ) {
 	$settings = get_option( 'bp_ps_settings' );
 	return isset( $settings->{$name} ) ? $settings->{$name} : $default;
 }
@@ -138,7 +138,7 @@ function bp_ps_get_option( $name, $default ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_main_form() {
+function bboss_profile_search_main_form() {
 	/**
 	 * Filters the BuddyBoss Profile Search form ID.
 	 *
@@ -146,7 +146,7 @@ function bp_profile_search_main_form() {
 	 *
 	 * @param int $form_id BuddyBoss Profile Search form ID.
 	 */
-	return (int) apply_filters( 'bp_profile_search_main_form', bp_get_option( 'bp_profile_search_main_form' ) );
+	return (int) apply_filters( 'bp_profile_search_main_form', bboss_get_option( 'bp_profile_search_main_form' ) );
 }
 
 /**
@@ -154,16 +154,16 @@ function bp_profile_search_main_form() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_add_main_form() {
+function bboss_profile_search_add_main_form() {
 	$post_args = array(
-		'post_title'  => __( 'Filter Results', 'buddyboss' ),
+		'post_title'  => __( 'Filter Results', 'buddyboss-platform' ),
 		'post_type'   => 'bp_ps_form',
 		'post_status' => 'publish',
 	);
 
 	$post_id = wp_insert_post( $post_args, true );
 	if ( ! is_wp_error( $post_id ) ) {
-		bp_update_option( 'bp_profile_search_main_form', $post_id );
+		bboss_update_option( 'bp_profile_search_main_form', $post_id );
 	}
 }
 

@@ -10,20 +10,20 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Background_Process' ) ) {
+if ( ! class_exists( 'BBoss_Background_Process' ) ) {
 
 	if ( ! class_exists( 'WP_Async_Request', false ) ) {
-		include_once buddypress()->plugin_dir . 'bp-core/libraries/wp-async-request.php';
+		include_once bboss()->plugin_dir . 'bp-core/libraries/wp-async-request.php';
 	}
 
 	if ( ! class_exists( 'WP_Background_Process', false ) ) {
-		include_once buddypress()->plugin_dir . 'bp-core/libraries/wp-background-process.php';
+		include_once bboss()->plugin_dir . 'bp-core/libraries/wp-background-process.php';
 	}
 
 	/**
-	 * BP_Background_Process class.
+	 * BBoss_Background_Process class.
 	 */
-	abstract class BP_Background_Process extends WP_Background_Process {
+	abstract class BBoss_Background_Process extends WP_Background_Process {
 
 		/**
 		 * Is queue empty.
@@ -190,7 +190,7 @@ if ( ! class_exists( 'BP_Background_Process' ) ) {
 			$schedules[ $this->identifier . '_cron_interval' ] = array(
 				'interval' => MINUTE_IN_SECONDS * $interval,
 				/* translators: %d: interval */
-				'display'  => sprintf( __( 'Every %d minutes', 'buddyboss' ), $interval ),
+				'display'  => sprintf( __( 'Every %d minutes', 'buddyboss-platform' ), $interval ),
 			);
 
 			return $schedules;

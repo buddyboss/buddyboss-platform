@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
+class BBoss_XProfile_Field_Type_Gender extends BBoss_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the gender field type.
@@ -24,19 +24,19 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss' );
-		$this->name     = __( 'Gender', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Gender', 'buddyboss-platform' );
 
 		$this->supports_options = true;
 
 		$this->set_format( '/^.+$/', 'replace' );
 
 		/**
-		 * Fires inside __construct() method for BP_XProfile_Field_Type_Gender class.
+		 * Fires inside __construct() method for BBoss_XProfile_Field_Type_Gender class.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param BP_XProfile_Field_Type_Gender $this Current instance of
+		 * @param BBoss_XProfile_Field_Type_Gender $this Current instance of
 		 *                                               the field type select box.
 		 */
 		do_action( 'bp_xprofile_field_type_selectbox_gender', $this );
@@ -45,7 +45,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	/**
 	 * Output the edit field HTML for this field type.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -61,30 +61,30 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			$user_id = (int) $raw_properties['user_id'];
 			unset( $raw_properties['user_id'] );
 		} else {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		} ?>
 
-		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
-			<?php bp_the_profile_field_name(); ?>
-			<?php if ( bp_is_register_page() ) : ?>
-				<?php bp_the_profile_field_optional_label(); ?>
+		<legend id="<?php bboss_the_profile_field_input_name(); ?>-1">
+			<?php bboss_the_profile_field_name(); ?>
+			<?php if ( bboss_is_register_page() ) : ?>
+				<?php bboss_the_profile_field_optional_label(); ?>
 			<?php else : ?>
-				<?php bp_the_profile_field_required_label(); ?>
+				<?php bboss_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
 
-		<?php if ( bp_get_the_profile_field_description() ) : ?>
-			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
+		<?php if ( bboss_get_the_profile_field_description() ) : ?>
+			<p class="description" id="<?php bboss_the_profile_field_input_name(); ?>-3"><?php bboss_the_profile_field_description(); ?></p>
 		<?php endif; ?>
 
 		<?php
 
 		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() );
+		do_action( bboss_get_the_profile_field_errors_action() );
 		?>
 
-		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
-			<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
+		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?> aria-labelledby="<?php bboss_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bboss_the_profile_field_input_name(); ?>-3">
+			<?php bboss_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
 		</select>
 
 		<?php
@@ -96,27 +96,27 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	 * BuddyPress considers a field's "options" to be, for example, the items in a selectbox.
 	 * These are stored separately in the database, and their templating is handled separately.
 	 *
-	 * This templating is separate from {@link BP_XProfile_Field_Type::edit_field_html()} because
+	 * This templating is separate from {@link BBoss_XProfile_Field_Type::edit_field_html()} because
 	 * it's also used in the wp-admin screens when creating new fields, and for backwards compatibility.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
+	 * @param array $args Optional. The arguments passed to {@link bboss_the_profile_field_options()}.
 	 */
 	public function edit_field_options_html( array $args = array() ) {
-		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) ); // Object injection guard.
+		$original_option_values = bboss_xprofile_safe_unserialize( BBoss_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) ); // Object injection guard.
 
 		$options = $this->field_obj->get_children();
-		$html    = '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
+		$html    = '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss-platform' ) . '</option>';
 
 		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
 			$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
 		}
 
 		if ( isset( $this->field_obj->id) && ! empty( $this->field_obj->id ) ) {
-			$order = bp_xprofile_get_meta( $this->field_obj->id, 'field', 'gender-option-order' );
+			$order = bboss_xprofile_get_meta( $this->field_obj->id, 'field', 'gender-option-order' );
 		} else {
 			$order = array();
 		}
@@ -157,7 +157,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 
 			// Run the allowed option name through the before_save filter, so
 			// we'll be sure to get a match.
-			$allowed_options = xprofile_sanitize_data_value_before_save( $option_value, false, false );
+			$allowed_options = bboss_xprofile_sanitize_data_value_before_save( $option_value, false, false );
 
 			// First, check to see whether the user-entered value matches.
 			if ( in_array( $allowed_options, $option_values ) ) {
@@ -183,13 +183,13 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			$html .= apply_filters( 'bp_get_the_profile_field_options_select_gender', '<option' . $selected . ' value="' . esc_attr( stripslashes( $option_value ) ) . '">' . esc_html( stripslashes( $options[ $k ]->name ) ) . '</option>', $options[ $k ], $this->field_obj->id, $selected, $k );
 		}
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html is built from <option> markup with esc_attr/esc_html'd values; wp_kses_post would strip option tags.
 	}
 
 	/**
 	 * Output HTML for this field type on the wp-admin Profile Fields screen.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -198,14 +198,14 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	public function admin_field_html( array $raw_properties = array() ) {
 		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
+		<label for="<?php bboss_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Select', 'buddyboss' );
+																esc_html_e( 'Select', 'buddyboss-platform' );
 																?>
 			</label>
-		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
-			<?php bp_the_profile_field_options(); ?>
+		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?>>
+			<?php bboss_the_profile_field_options(); ?>
 		</select>
 
 		<?php
@@ -214,33 +214,33 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	/**
 	 * Output HTML for this field type's children options on the wp-admin Profile Fields "Add Field" and "Edit Field" screens.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
+	 * @param BBoss_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
 	 *                                         field's child options.
 	 */
-	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = 'radio' ) {
-		$type = array_search( get_class( $this ), bp_xprofile_get_field_types() );
+	public function admin_new_field_html( BBoss_XProfile_Field $current_field, $control_type = 'radio' ) {
+		$type = array_search( get_class( $this ), bboss_xprofile_get_field_types() );
 		if ( false === $type ) {
 			return;
 		}
 
 		$class            = $current_field->type != $type ? 'display: none;' : '';
-		$current_type_obj = bp_xprofile_create_field_type( $type );
+		$current_type_obj = bboss_xprofile_create_field_type( $type );
 		?>
 
 		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
-			<h3><?php esc_html_e( 'Male and Female use "his" and "her" pronouns in the activity feed. Other options use "their".', 'buddyboss' ); ?></h3>
+			<h3><?php esc_html_e( 'Male and Female use "his" and "her" pronouns in the activity feed. Other options use "their".', 'buddyboss-platform' ); ?></h3>
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
 				<p style="display: none;">
-					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss' ); ?></label>
+					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss-platform' ); ?></label>
 					<select name="sort_order_<?php echo esc_attr( $type ); ?>" id="sort_order_<?php echo esc_attr( $type ); ?>" >
-						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
-						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss' ); ?></option>
-						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss' ); ?></option>
+						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss-platform' ); ?></option>
+						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss-platform' ); ?></option>
+						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss-platform' ); ?></option>
 					</select>
 				</p>
 
@@ -251,11 +251,11 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 
 				// Set position of Gender fields option.
 				if ( isset( $_POST['gender-option-order'] ) && ! empty( $_POST['gender-option-order'] ) ) {
-					bp_xprofile_update_field_meta( $current_field->id, 'gender-option-order', $_POST['gender-option-order'] );
+					bboss_xprofile_update_field_meta( $current_field->id, 'gender-option-order', $_POST['gender-option-order'] );
 				}
 
 				if ( isset( $current_field->id ) && ! empty( $current_field->id ) ) {
-					$order = bp_xprofile_get_meta( $current_field->id, 'field', 'gender-option-order' );
+					$order = bboss_xprofile_get_meta( $current_field->id, 'field', 'gender-option-order' );
 				} else {
 					$order = array();
 				}
@@ -265,19 +265,19 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 					$options[] = (object) array(
 						'id'                => 1,
 						'is_default_option' => false,
-						'name'              => __( 'Male', 'buddyboss' ),
+						'name'              => __( 'Male', 'buddyboss-platform' ),
 						'key'               => 'male',
 					);
 					$options[] = (object) array(
 						'id'                => 2,
 						'is_default_option' => false,
-						'name'              => __( 'Female', 'buddyboss' ),
+						'name'              => __( 'Female', 'buddyboss-platform' ),
 						'key'               => 'female',
 					);
 					$options[] = (object) array(
 						'id'                => 3,
 						'is_default_option' => false,
-						'name'              => __( 'Prefer Not to Answer', 'buddyboss' ),
+						'name'              => __( 'Prefer Not to Answer', 'buddyboss-platform' ),
 						'key'               => 'other',
 					);
 				}
@@ -340,7 +340,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text">
 												   <?php
 													/* translators: accessibility text */
-													esc_html_e( 'Add an option', 'buddyboss' );
+													esc_html_e( 'Add an option', 'buddyboss-platform' );
 													?>
 								</label>
 							<?php
@@ -365,23 +365,23 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 							}
 
 							?>
-							<input type="hidden" name="<?php echo esc_attr( "{$type}-option-order[]" ); ?>" value="<?php echo $key; ?>" />
+							<input type="hidden" name="<?php echo esc_attr( "{$type}-option-order[]" ); ?>" value="<?php echo esc_attr( $key ); ?>" />
 							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}_{$key}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[ $i ]->name ) ); ?>" />
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">
 								<?php
 								if ( 'male' === $key ) {
-									_e( 'Male', 'buddyboss' );
+									esc_html_e( 'Male', 'buddyboss-platform' );
 								} elseif ( 'female' === $key ) {
-									_e( 'Female', 'buddyboss' );
+									esc_html_e( 'Female', 'buddyboss-platform' );
 								} else {
-									_e( 'Other', 'buddyboss' );
+									esc_html_e( 'Other', 'buddyboss-platform' );
 								}
 								?>
 							</label>
 
 							<?php if ( ! in_array( $key, array( 'male', 'female' ) ) ) : ?>
 								<div class ="delete-button">
-									<a href='javascript:remove_div("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+									<a href='javascript:remove_div("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></a>
 								</div>
 							<?php endif; ?>
 
@@ -393,7 +393,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				<?php } ?>
 
 				<div id="<?php echo esc_attr( "{$type}_more" ); ?>"></div>
-				<p><a href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option', 'buddyboss' ); ?></a></p>
+				<p><a href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option', 'buddyboss-platform' ); ?></a></p>
 
 				<?php
 
@@ -402,7 +402,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				 *
 				 * @since BuddyBoss 1.0.0
 				 *
-				 * @param BP_XProfile_Field $current_field Current field being rendered.
+				 * @param BBoss_XProfile_Field $current_field Current field being rendered.
 				 */
 				do_action( 'bp_xprofile_admin_new_field_additional_settings_gender', $current_field )
 				?>
@@ -431,7 +431,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		$split_value = explode( '_', $values, 2 );
 		if ( 2 === count( $split_value ) ) {
 			if ( '' !== $split_value[1] && '' !== $split_value[0] ) {
-				$table_name = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+				$table_name = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
 
 				if ( null === $get_parent_id_of_gender_field ) {
 					$get_parent_id_of_gender_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table_name} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );

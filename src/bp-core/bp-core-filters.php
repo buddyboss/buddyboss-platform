@@ -9,9 +9,9 @@
  * There are a few common places that additional filters can currently be found.
  *
  *  - BuddyPress: In {@link BuddyPress::setup_actions()} in buddypress.php
- *  - Component: In {@link BP_Component::setup_actions()} in
+ *  - Component: In {@link BBoss_Component::setup_actions()} in
  *                bp-core/bp-core-component.php
- *  - Admin: More in {@link BP_Admin::setup_actions()} in
+ *  - Admin: More in {@link BBoss_Admin::setup_actions()} in
  *            bp-core/bp-core-admin.php
  *
  * @package BuddyBoss\Core
@@ -39,10 +39,10 @@ defined( 'ABSPATH' ) || exit;
  *
  *           v--WordPress Actions       v--BuddyPress Sub-actions
  */
-add_filter( 'request', 'bp_request', 10 );
-add_filter( 'template_include', 'bp_template_include', 10 );
-add_filter( 'login_redirect', 'bp_login_redirect', PHP_INT_MAX, 3 );
-add_filter( 'map_meta_cap', 'bp_map_meta_caps', 10, 4 );
+add_filter( 'request', 'bboss_request', 10 );
+add_filter( 'template_include', 'bboss_template_include', 10 );
+add_filter( 'login_redirect', 'bboss_login_redirect', PHP_INT_MAX, 3 );
+add_filter( 'map_meta_cap', 'bboss_map_meta_caps', 10, 4 );
 
 // Add some filters to feedback messages.
 add_filter( 'bp_core_render_message_content', 'do_shortcode' );
@@ -60,9 +60,9 @@ add_filter( 'bp_email_set_content_plaintext', 'wp_strip_all_tags', 6 );
 add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 
 // Removed Document and Media from WordPress media endpoints.
-add_filter( 'rest_attachment_query', 'bp_rest_restrict_wp_attachment_query', 999 );
-add_filter( 'rest_prepare_attachment', 'bp_rest_restrict_wp_attachment_response', 999, 2 );
-add_filter( 'oembed_request_post_id', 'bp_rest_restrict_oembed_request_post_id', 999 );
+add_filter( 'rest_attachment_query', 'bboss_rest_restrict_wp_attachment_query', 999 );
+add_filter( 'rest_prepare_attachment', 'bboss_rest_restrict_wp_attachment_response', 999, 2 );
+add_filter( 'oembed_request_post_id', 'bboss_rest_restrict_oembed_request_post_id', 999 );
 
 // Widget display name.
 add_filter( 'bp_core_widget_user_display_name', 'wp_filter_kses' );
@@ -71,8 +71,8 @@ add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
 add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 
 // Redirects.
-add_filter( 'bp_login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
-add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
+add_filter( 'bp_login_redirect', 'bboss_bb_login_redirect', PHP_INT_MAX, 3 );
+add_filter( 'logout_redirect', 'bboss_logout_redirect', PHP_INT_MAX, 3 );
 
 // Avatars.
 /**
@@ -80,10 +80,10 @@ add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
  *
  * @since BuddyBoss 1.0.0
  */
-add_action( 'init', 'bp_enable_gravatar_callback' );
+add_action( 'init', 'bboss_enable_gravatar_callback' );
 // add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
-function bp_enable_gravatar_callback() {
-	$avatar = bp_enable_profile_gravatar();
+function bboss_enable_gravatar_callback() {
+	$avatar = bboss_enable_profile_gravatar();
 
 	if ( false === $avatar ) {
 
@@ -103,25 +103,25 @@ function bp_enable_gravatar_callback() {
  *
  * If you want to completely bypass this and manage your own custom BuddyPress
  * template hierarchy, start here by removing this filter, then look at how
- * bp_template_include() works and do something similar. :)
+ * bboss_template_include() works and do something similar. :)
  */
-add_filter( 'bp_template_include', 'bp_template_include_theme_supports', 2, 1 );
-add_filter( 'bp_template_include', 'bp_template_include_theme_compat', 4, 2 );
+add_filter( 'bp_template_include', 'bboss_template_include_theme_supports', 2, 1 );
+add_filter( 'bp_template_include', 'bboss_template_include_theme_compat', 4, 2 );
 
 // Filter BuddyPress template locations.
-add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+add_filter( 'bp_get_template_stack', 'bboss_add_template_stack_locations' );
 
 // Turn comments off for BuddyPress pages.
-add_filter( 'comments_open', 'bp_comments_open', 10, 2 );
+add_filter( 'comments_open', 'bboss_comments_open', 10, 2 );
 
 // Prevent DB query for WP's main loop.
-add_filter( 'posts_pre_query', 'bp_core_filter_wp_query', 10, 2 );
+add_filter( 'posts_pre_query', 'bboss_core_filter_wp_query', 10, 2 );
 
 // Remove deleted members link from mention for blog comment.
-add_filter( 'comment_text', 'bb_mention_remove_deleted_users_link', 20, 1 );
+add_filter( 'comment_text', 'bboss_mention_remove_deleted_users_link', 20, 1 );
 
 // Add user dynamic link for blog comment.
-add_filter( 'comment_text', 'bb_mention_add_user_dynamic_link', 20, 1 );
+add_filter( 'comment_text', 'bboss_mention_add_user_dynamic_link', 20, 1 );
 
 /**
  * Prevent specific pages (eg 'Activate') from showing on page listings.
@@ -132,14 +132,14 @@ add_filter( 'comment_text', 'bb_mention_add_user_dynamic_link', 20, 1 );
  *                     'wp_list_pages_excludes' filter.
  * @return array The exclude list, with BP's pages added.
  */
-function bp_core_exclude_pages( $pages = array() ) {
+function bboss_core_exclude_pages( $pages = array() ) {
 
 	// Bail if not the root blog.
-	if ( ! bp_is_root_blog() ) {
+	if ( ! bboss_is_root_blog() ) {
 		return $pages;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	if ( ! empty( $bp->pages->activate ) ) {
 		$pages[] = $bp->pages->activate->id;
@@ -158,7 +158,7 @@ function bp_core_exclude_pages( $pages = array() ) {
 	 */
 	return apply_filters( 'bp_core_exclude_pages', $pages );
 }
-add_filter( 'wp_list_pages_excludes', 'bp_core_exclude_pages' );
+add_filter( 'wp_list_pages_excludes', 'bboss_core_exclude_pages' );
 
 /**
  * Prevent specific pages (eg 'Activate') from showing in the Pages meta box of the Menu Administration screen.
@@ -168,10 +168,10 @@ add_filter( 'wp_list_pages_excludes', 'bp_core_exclude_pages' );
  * @param object|null $object The post type object used in the meta box.
  * @return object|null The $object, with a query argument to remove register and activate pages id.
  */
-function bp_core_exclude_pages_from_nav_menu_admin( $object = null ) {
+function bboss_core_exclude_pages_from_nav_menu_admin( $object = null ) {
 
 	// Bail if not the root blog.
-	if ( ! bp_is_root_blog() ) {
+	if ( ! bboss_is_root_blog() ) {
 		return $object;
 	}
 
@@ -179,7 +179,7 @@ function bp_core_exclude_pages_from_nav_menu_admin( $object = null ) {
 		return $object;
 	}
 
-	$bp    = buddypress();
+	$bp    = bboss();
 	$pages = array();
 
 	if ( ! empty( $bp->pages->activate ) ) {
@@ -196,7 +196,7 @@ function bp_core_exclude_pages_from_nav_menu_admin( $object = null ) {
 
 	return $object;
 }
-add_filter( 'nav_menu_meta_box_object', 'bp_core_exclude_pages_from_nav_menu_admin', 11, 1 );
+add_filter( 'nav_menu_meta_box_object', 'bboss_core_exclude_pages_from_nav_menu_admin', 11, 1 );
 
 /**
  * Adds current page CSS classes to the parent BP page in a WP Page Menu.
@@ -212,27 +212,27 @@ add_filter( 'nav_menu_meta_box_object', 'bp_core_exclude_pages_from_nav_menu_adm
  * @param WP_Post $page   The page properties for the current menu item.
  * @return array
  */
-function bp_core_menu_highlight_parent_page( $retval, $page ) {
-	if ( ! is_buddypress() ) {
+function bboss_core_menu_highlight_parent_page( $retval, $page ) {
+	if ( ! bboss_is_buddypress() ) {
 		return $retval;
 	}
 
 	$page_id = false;
 
 	// Loop against all BP component pages.
-	foreach ( (array) buddypress()->pages as $component => $bp_page ) {
+	foreach ( (array) bboss()->pages as $component => $bp_page ) {
 		// Handles the majority of components.
-		if ( bp_is_current_component( $component ) ) {
+		if ( bboss_is_current_component( $component ) ) {
 			$page_id = (int) $bp_page->id;
 		}
 
 		// Stop if not on a user page.
-		if ( ! bp_is_user() && ! empty( $page_id ) ) {
+		if ( ! bboss_is_user() && ! empty( $page_id ) ) {
 			break;
 		}
 
 		// Skip members component when on user profile pages to prevent highlighting members directory.
-		if ( bp_is_user() && 'members' === $component ) {
+		if ( bboss_is_user() && 'members' === $component ) {
 			continue;
 		}
 	}
@@ -251,7 +251,7 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 		if (
 			isset( $page->ID ) &&
 			$page->ID === $page_id &&
-			( 'members' !== $component || ! bp_is_user() )
+			( 'members' !== $component || ! bboss_is_user() )
 		) {
 			// Special handling for members component: don't highlight members page when on user profile pages.
 			$retval[] = 'current_page_item';
@@ -259,7 +259,7 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 			isset( $page->ID ) &&
 			$_bp_page &&
 			$page->ID === $_bp_page->post_parent &&
-			( 'members' !== $component || ! bp_is_user() )
+			( 'members' !== $component || ! bboss_is_user() )
 		) {
 			// Special handling for members component: don't highlight members page when on user profile pages
 			$retval[] = 'current-menu-item';
@@ -271,7 +271,7 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 
 	return $retval;
 }
-add_filter( 'page_css_class', 'bp_core_menu_highlight_parent_page', 10, 2 );
+add_filter( 'page_css_class', 'bboss_core_menu_highlight_parent_page', 10, 2 );
 
 /**
  * Adds current page CSS classes to the parent BP page in a WP Nav Menu.
@@ -285,9 +285,9 @@ add_filter( 'page_css_class', 'bp_core_menu_highlight_parent_page', 10, 2 );
  * @param WP_Post $item   The properties for the current nav menu item.
  * @return array
  */
-function bp_core_menu_highlight_nav_menu_item( $retval, $item ) {
+function bboss_core_menu_highlight_nav_menu_item( $retval, $item ) {
 	// If we're not on a BP page or if the current nav item is not a page, stop!
-	if ( ! is_buddypress() || 'page' !== $item->object ) {
+	if ( ! bboss_is_buddypress() || 'page' !== $item->object ) {
 		return $retval;
 	}
 
@@ -295,11 +295,11 @@ function bp_core_menu_highlight_nav_menu_item( $retval, $item ) {
 	$page = get_post( $item->object_id );
 
 	// See if we should add our highlight CSS classes for the page.
-	$retval = bp_core_menu_highlight_parent_page( $retval, $page );
+	$retval = bboss_core_menu_highlight_parent_page( $retval, $page );
 
 	return $retval;
 }
-add_filter( 'nav_menu_css_class', 'bp_core_menu_highlight_nav_menu_item', 10, 2 );
+add_filter( 'nav_menu_css_class', 'bboss_core_menu_highlight_nav_menu_item', 10, 2 );
 
 /**
  * Filter the blog post comments array and insert BuddyPress URLs for users.
@@ -310,7 +310,7 @@ add_filter( 'nav_menu_css_class', 'bp_core_menu_highlight_nav_menu_item', 10, 2 
  * @param int   $post_id  The post ID.
  * @return array $comments The modified comment array.
  */
-function bp_core_filter_comments( $comments, $post_id ) {
+function bboss_core_filter_comments( $comments, $post_id ) {
 	global $wpdb;
 
 	foreach ( (array) $comments as $comment ) {
@@ -330,7 +330,7 @@ function bp_core_filter_comments( $comments, $post_id ) {
 	}
 
 	foreach ( (array) $userdata as $user ) {
-		$users[ $user->user_id ] = bp_core_get_user_domain( $user->user_id, $user->user_nicename, $user->user_login );
+		$users[ $user->user_id ] = bboss_core_get_user_domain( $user->user_id, $user->user_nicename, $user->user_login );
 	}
 
 	foreach ( (array) $comments as $i => $comment ) {
@@ -343,7 +343,7 @@ function bp_core_filter_comments( $comments, $post_id ) {
 
 	return $comments;
 }
-add_filter( 'comments_array', 'bp_core_filter_comments', 10, 2 );
+add_filter( 'comments_array', 'bboss_core_filter_comments', 10, 2 );
 
 /**
  * When a user logs in, redirect him in a logical way.
@@ -358,10 +358,10 @@ add_filter( 'comments_array', 'bp_core_filter_comments', 10, 2 );
  *                                 logged-in user. Otherwise a WP_Error object.
  * @return string The redirect URL.
  */
-function bp_core_login_redirect( $redirect_to, $redirect_to_raw, $user ) {
+function bboss_core_login_redirect( $redirect_to, $redirect_to_raw, $user ) {
 
 	// Only modify the redirect if we're on the main BP blog.
-	if ( ! bp_is_root_blog() ) {
+	if ( ! bboss_is_root_blog() ) {
 		return $redirect_to;
 	}
 
@@ -406,9 +406,9 @@ function bp_core_login_redirect( $redirect_to, $redirect_to_raw, $user ) {
 	 *
 	 * @param string $value URL to redirect to.
 	 */
-	return apply_filters( 'bp_core_login_redirect_to', bp_get_root_domain() );
+	return apply_filters( 'bp_core_login_redirect_to', bboss_get_root_domain() );
 }
-add_filter( 'bp_login_redirect', 'bp_core_login_redirect', 10, 3 );
+add_filter( 'bp_login_redirect', 'bboss_core_login_redirect', 10, 3 );
 
 /**
  * Decode HTML entities for plain-text emails.
@@ -420,7 +420,7 @@ add_filter( 'bp_login_redirect', 'bp_core_login_redirect', 10, 3 );
  * @param string $transform Either 'raw' or 'replace-tokens'.
  * @return string|null $retval Modified email content.
  */
-function bp_email_plaintext_entity_decode( $retval, $prop, $transform ) {
+function bboss_email_plaintext_entity_decode( $retval, $prop, $transform ) {
 	switch ( $prop ) {
 		case 'content_plaintext':
 		case 'subject':
@@ -437,7 +437,7 @@ function bp_email_plaintext_entity_decode( $retval, $prop, $transform ) {
 			break;
 	}
 }
-add_filter( 'bp_email_get_property', 'bp_email_plaintext_entity_decode', 10, 3 );
+add_filter( 'bp_email_get_property', 'bboss_email_plaintext_entity_decode', 10, 3 );
 
 /**
  * Replace the generated password in the welcome email with '[User Set]'.
@@ -455,26 +455,26 @@ add_filter( 'bp_email_get_property', 'bp_email_plaintext_entity_decode', 10, 3 )
  *                by '[User Set]'.
  * @todo should [User Set] be in the text domain?
  */
-function bp_core_filter_user_welcome_email( $welcome_email ) {
+function bboss_core_filter_user_welcome_email( $welcome_email ) {
 
 	// Don't touch the email when a user is registered by the site admin.
-	if ( ( is_admin() || is_network_admin() ) && buddypress()->members->admin->signups_page != get_current_screen()->id ) {
+	if ( ( is_admin() || is_network_admin() ) && bboss()->members->admin->signups_page != get_current_screen()->id ) {
 		return $welcome_email;
 	}
 
-	if ( strpos( bp_get_requested_url(), 'wp-activate.php' ) !== false ) {
+	if ( strpos( bboss_get_requested_url(), 'wp-activate.php' ) !== false ) {
 		return $welcome_email;
 	}
 
 	// Don't touch the email if we don't have a custom registration template.
-	if ( ! bp_has_custom_signup_page() ) {
+	if ( ! bboss_has_custom_signup_page() ) {
 		return $welcome_email;
 	}
 
 	// [User Set] Replaces 'PASSWORD' in welcome email; Represents value set by user
-	return str_replace( 'PASSWORD', __( '[User Set]', 'buddyboss' ), $welcome_email );
+	return str_replace( 'PASSWORD', __( '[User Set]', 'buddyboss-platform' ), $welcome_email );
 }
-add_filter( 'update_welcome_user_email', 'bp_core_filter_user_welcome_email' );
+add_filter( 'update_welcome_user_email', 'bboss_core_filter_user_welcome_email' );
 
 /**
  * Replace the generated password in the welcome email with '[User Set]'.
@@ -493,22 +493,22 @@ add_filter( 'update_welcome_user_email', 'bp_core_filter_user_welcome_email' );
  * @param string $password      Password of user.
  * @return string Filtered $welcome_email with $password replaced by '[User Set]'.
  */
-function bp_core_filter_blog_welcome_email( $welcome_email, $blog_id, $user_id, $password ) {
+function bboss_core_filter_blog_welcome_email( $welcome_email, $blog_id, $user_id, $password ) {
 
 	// Don't touch the email when a user is registered by the site admin.
-	if ( ( is_admin() || is_network_admin() ) && buddypress()->members->admin->signups_page != get_current_screen()->id ) {
+	if ( ( is_admin() || is_network_admin() ) && bboss()->members->admin->signups_page != get_current_screen()->id ) {
 		return $welcome_email;
 	}
 
 	// Don't touch the email if we don't have a custom registration template.
-	if ( ! bp_has_custom_signup_page() ) {
+	if ( ! bboss_has_custom_signup_page() ) {
 		return $welcome_email;
 	}
 
 	// [User Set] Replaces $password in welcome email; Represents value set by user
-	return str_replace( $password, __( '[User Set]', 'buddyboss' ), $welcome_email );
+	return str_replace( $password, __( '[User Set]', 'buddyboss-platform' ), $welcome_email );
 }
-add_filter( 'update_welcome_email', 'bp_core_filter_blog_welcome_email', 10, 4 );
+add_filter( 'update_welcome_email', 'bboss_core_filter_blog_welcome_email', 10, 4 );
 
 /**
  * Notify new users of a successful registration (with blog).
@@ -528,10 +528,10 @@ add_filter( 'update_welcome_email', 'bp_core_filter_blog_welcome_email', 10, 4 )
  * @param string $key        The activation key created in wpmu_signup_blog().
  * @return bool              Returns false to stop original WPMU function from continuing.
  */
-function bp_core_activation_signup_blog_notification( $domain, $path, $title, $user, $user_email, $key ) {
+function bboss_core_activation_signup_blog_notification( $domain, $path, $title, $user, $user_email, $key ) {
 	$args = array(
 		'tokens' => array(
-			'activate-site.url' => esc_url( bp_get_activation_page() . '?key=' . urlencode( $key ) ),
+			'activate-site.url' => esc_url( bboss_get_activation_page() . '?key=' . urlencode( $key ) ),
 			'domain'            => $domain,
 			'key_blog'          => $key,
 			'path'              => $path,
@@ -541,12 +541,12 @@ function bp_core_activation_signup_blog_notification( $domain, $path, $title, $u
 		),
 	);
 
-	bp_send_email( 'core-user-registration-with-blog', array( array( $user_email => $user ) ), $args );
+	bboss_send_email( 'core-user-registration-with-blog', array( array( $user_email => $user ) ), $args );
 
 	// Return false to stop the original WPMU function from continuing.
 	return false;
 }
-add_filter( 'wpmu_signup_blog_notification', 'bp_core_activation_signup_blog_notification', 1, 6 );
+add_filter( 'wpmu_signup_blog_notification', 'bboss_core_activation_signup_blog_notification', 1, 6 );
 
 /**
  * Notify new users of a successful registration (without blog).
@@ -561,7 +561,7 @@ add_filter( 'wpmu_signup_blog_notification', 'bp_core_activation_signup_blog_not
  * @param array  $meta       By default, an empty array.
  * @return false|string Returns false to stop original WPMU function from continuing.
  */
-function bp_core_activation_signup_user_notification( $user, $user_email, $key, $meta ) {
+function bboss_core_activation_signup_user_notification( $user, $user_email, $key, $meta ) {
 	if ( is_admin() ) {
 
 		// If the user is created from the WordPress Add User screen, don't send BuddyPress signup notifications.
@@ -580,7 +580,7 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 			 * And the super admin goes in pending accounts to resend it. In this case, as the
 			 * meta['password'] is not set, the activation url must be WordPress one.
 			 */
-		} elseif ( buddypress()->members->admin->signups_page == get_current_screen()->id ) {
+		} elseif ( bboss()->members->admin->signups_page == get_current_screen()->id ) {
 			$is_hashpass_in_meta = maybe_unserialize( $meta );
 
 			if ( empty( $is_hashpass_in_meta['password'] ) ) {
@@ -597,19 +597,19 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 
 	$args = array(
 		'tokens' => array(
-			'activate.url' => esc_url( trailingslashit( bp_get_activation_page() ) . "{$key}/" ),
+			'activate.url' => esc_url( trailingslashit( bboss_get_activation_page() ) . "{$key}/" ),
 			'key'          => $key,
 			'user.email'   => $user_email,
 			'user.id'      => $user_id,
 		),
 	);
 
-	bp_send_email( 'core-user-registration', array( array( $user_email => $user ) ), $args );
+	bboss_send_email( 'core-user-registration', array( array( $user_email => $user ) ), $args );
 
 	// Return false to stop the original WPMU function from continuing.
 	return false;
 }
-add_filter( 'wpmu_signup_user_notification', 'bp_core_activation_signup_user_notification', 1, 4 );
+add_filter( 'wpmu_signup_user_notification', 'bboss_core_activation_signup_user_notification', 1, 4 );
 
 /**
  * Filter the page title for BuddyPress pages.
@@ -624,11 +624,11 @@ add_filter( 'wpmu_signup_user_notification', 'bp_core_activation_signup_user_not
  * @param string $seplocation Direction to display title.
  * @return string              New page title.
  */
-function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'right' ) {
+function bboss_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'right' ) {
 	global $paged, $page, $_wp_theme_features;
 
 	// Get the BuddyPress title parts.
-	$bp_title_parts = bp_get_title_parts( $seplocation );
+	$bp_title_parts = bboss_get_title_parts( $seplocation );
 
 	// If not set, simply return the original title.
 	if ( ! $bp_title_parts ) {
@@ -650,8 +650,9 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 	if ( true === $title_tag_compatibility ) {
 		$bp_title_parts['site'] = $blogname;
 
-		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
-			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss' ), max( $paged, $page ) );
+		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bboss_is_single_activity() && ! bboss_is_user_messages() ) {
+			/* translators: %s: page number. */
+			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss-platform' ), max( $paged, $page ) );
 		}
 	}
 
@@ -678,7 +679,7 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 	 */
 	return apply_filters( 'bp_modify_page_title', $new_title, $title, $sep, $seplocation );
 }
-add_filter( 'wp_title', 'bp_modify_page_title', 20, 3 );
+add_filter( 'wp_title', 'bboss_modify_page_title', 20, 3 );
 add_filter( 'bp_modify_page_title', 'wptexturize' );
 add_filter( 'bp_modify_page_title', 'convert_chars' );
 add_filter( 'bp_modify_page_title', 'esc_html' );
@@ -691,9 +692,9 @@ add_filter( 'bp_modify_page_title', 'esc_html' );
  * @param array $title The WordPress document title parts.
  * @return array the unchanged title parts or the BuddyPress ones
  */
-function bp_modify_document_title_parts( $title = array() ) {
+function bboss_modify_document_title_parts( $title = array() ) {
 	// Get the BuddyPress title parts.
-	$bp_title_parts = bp_get_title_parts();
+	$bp_title_parts = bboss_get_title_parts();
 
 	// If not set, simply return the original title.
 	if ( ! $bp_title_parts ) {
@@ -710,7 +711,7 @@ function bp_modify_document_title_parts( $title = array() ) {
 	);
 
 	// Add the pagination number if needed (not sure if this is necessary).
-	if ( isset( $title['page'] ) && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
+	if ( isset( $title['page'] ) && ! bboss_is_single_activity() && ! bboss_is_user_messages() ) {
 		$bp_title['page'] = $title['page'];
 	}
 
@@ -729,7 +730,7 @@ function bp_modify_document_title_parts( $title = array() ) {
 	 */
 	return apply_filters( 'bp_modify_document_title_parts', $bp_title, $title );
 }
-add_filter( 'document_title_parts', 'bp_modify_document_title_parts', 20, 1 );
+add_filter( 'document_title_parts', 'bboss_modify_document_title_parts', 20, 1 );
 
 /**
  * Add BuddyPress-specific items to the wp_nav_menu.
@@ -739,7 +740,7 @@ add_filter( 'document_title_parts', 'bp_modify_document_title_parts', 20, 1 );
  * @param WP_Post $menu_item The menu item.
  * @return WP_Post The modified WP_Post object.
  */
-function bp_setup_nav_menu_item( $menu_item ) {
+function bboss_setup_nav_menu_item( $menu_item ) {
 
 	if ( isset( $menu_item->classes ) && is_array( $menu_item->classes ) && in_array( 'bp-menu', $menu_item->classes, true ) ) {
 		$menu_item->type_label = 'BuddyBoss';
@@ -771,7 +772,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			if ( is_user_logged_in() ) {
 				$menu_item->_invalid = true;
 			} else {
-				$menu_item->url = wp_login_url( bp_get_requested_url() );
+				$menu_item->url = wp_login_url( bboss_get_requested_url() );
 			}
 
 			break;
@@ -780,7 +781,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			if ( ! is_user_logged_in() ) {
 				$menu_item->_invalid = true;
 			} else {
-				$menu_item->url = wp_logout_url( bp_get_requested_url() );
+				$menu_item->url = wp_logout_url( bboss_get_requested_url() );
 			}
 
 			break;
@@ -797,7 +798,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 		// and so are not relevant to logged-out users.
 		default:
 			if ( is_user_logged_in() ) {
-				$menu_item->url = bp_nav_menu_get_item_url( $matches[1] );
+				$menu_item->url = bboss_nav_menu_get_item_url( $matches[1] );
 			} else {
 				$menu_item->_invalid = true;
 			}
@@ -811,7 +812,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 
 		// Highlight the current page.
 	} else {
-		$current            = bp_get_requested_url();
+		$current            = bboss_get_requested_url();
 		$url_parts          = explode( '/', untrailingslashit( $menu_item->url ) );
 		$menu_item->classes = is_array( $menu_item->classes ) ? $menu_item->classes : array();
 
@@ -820,36 +821,36 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			$menu_item->classes[] = 'current-menu-item';
 		} else {
 
-			if ( bp_loggedin_user_domain() && strpos( $current, bp_loggedin_user_domain() ) !== false ) {
+			if ( bboss_loggedin_user_domain() && strpos( $current, bboss_loggedin_user_domain() ) !== false ) {
 				if (
 					(
 						! in_array( 'settings', $url_parts, true ) &&
 						(
 							(
-								bp_is_user_profile() &&
-								! bp_is_user_profile_edit() &&
-								! bp_is_user_change_avatar() &&
-								! bp_is_user_change_cover_image() &&
+								bboss_is_user_profile() &&
+								! bboss_is_user_profile_edit() &&
+								! bboss_is_user_change_avatar() &&
+								! bboss_is_user_change_cover_image() &&
 								'profile' === end( $url_parts )
 							) ||
 							(
-								bp_is_user_profile_edit() &&
+								bboss_is_user_profile_edit() &&
 								'edit' === end( $url_parts )
 							) ||
 							(
-								bp_is_user_change_avatar() &&
+								bboss_is_user_change_avatar() &&
 								'change-avatar' === end( $url_parts )
 							) ||
 							(
-								bp_is_user_change_cover_image() &&
+								bboss_is_user_change_cover_image() &&
 								'change-cover-image' === end( $url_parts )
 							) ||
 							(
 								in_array( 'bp-profile-nav', $menu_item->classes, true ) &&
 								(
-									bp_is_user_profile_edit() ||
-									bp_is_user_change_avatar() ||
-									bp_is_user_change_cover_image()
+									bboss_is_user_profile_edit() ||
+									bboss_is_user_change_avatar() ||
+									bboss_is_user_change_cover_image()
 								)
 							)
 						)
@@ -858,76 +859,76 @@ function bp_setup_nav_menu_item( $menu_item ) {
 						in_array( 'settings', $url_parts, true ) &&
 						(
 							(
-								bp_is_user_settings_general() &&
+								bboss_is_user_settings_general() &&
 								'settings' === end( $url_parts )
 							) ||
 							(
-								bp_is_user_settings_profile() &&
+								bboss_is_user_settings_profile() &&
 								'profile' === end( $url_parts )
 							) ||
 							(
-								bp_is_user_settings_notifications() &&
-								'subscriptions' === bp_action_variable() &&
+								bboss_is_user_settings_notifications() &&
+								'subscriptions' === bboss_action_variable() &&
 								'notifications' === end( $url_parts ) &&
 								in_array( 'bp-settings-notifications-sub-nav', $menu_item->classes, true )
 							) ||
 							(
 								in_array( 'bp-settings-nav', $menu_item->classes, true ) &&
 								(
-									bp_is_user_settings_general() ||
-									bp_is_user_settings_profile() ||
-									bp_is_user_settings_notifications()
+									bboss_is_user_settings_general() ||
+									bboss_is_user_settings_profile() ||
+									bboss_is_user_settings_notifications()
 								)
 							)
 						)
 					) ||
 					(
-						bp_is_user_invites() &&
-						'sent-invites' === bp_current_action() &&
+						bboss_is_user_invites() &&
+						'sent-invites' === bboss_current_action() &&
 						in_array( 'bp-invites-nav', $menu_item->classes, true )
 					) ||
 					(
-						bp_is_user_activity() &&
+						bboss_is_user_activity() &&
 						in_array( 'bp-activity-nav', $menu_item->classes, true ) &&
 						(
-							'groups' === bp_current_action() ||
-							'mentions' === bp_current_action() ||
-							'following' === bp_current_action() ||
-							'friends' === bp_current_action()
+							'groups' === bboss_current_action() ||
+							'mentions' === bboss_current_action() ||
+							'following' === bboss_current_action() ||
+							'friends' === bboss_current_action()
 						)
 					) ||
 					(
-						bp_is_user_notifications() &&
-						'read' === bp_current_action() &&
+						bboss_is_user_notifications() &&
+						'read' === bboss_current_action() &&
 						in_array( 'bp-notifications-nav', $menu_item->classes, true )
 					) ||
 					(
-						bp_is_user_messages() &&
+						bboss_is_user_messages() &&
 						in_array( 'bp-messages-nav', $menu_item->classes, true ) &&
 						(
-							'compose' === bp_current_action() ||
-							'archived' === bp_current_action()
+							'compose' === bboss_current_action() ||
+							'archived' === bboss_current_action()
 						)
 					) ||
 					(
-						bp_is_friends_component() &&
-						'requests' === bp_current_action() &&
+						bboss_is_friends_component() &&
+						'requests' === bboss_current_action() &&
 						in_array( 'bp-friends-nav', $menu_item->classes, true )
 					) ||
 					(
-						bp_is_groups_component() &&
-						'invites' === bp_current_action() &&
+						bboss_is_groups_component() &&
+						'invites' === bboss_current_action() &&
 						in_array( 'bp-groups-nav', $menu_item->classes, true )
 					) ||
 					(
-						bp_is_user_albums() &&
+						bboss_is_user_albums() &&
 						in_array( 'bp-photos-nav', $menu_item->classes, true )
 					) ||
 					(
-						bp_is_forums_component() &&
+						bboss_is_forums_component() &&
 						(
-							'favorites' === bp_current_action() ||
-							'replies' === bp_current_action()
+							'favorites' === bboss_current_action() ||
+							'replies' === bboss_current_action()
 						) &&
 						in_array( 'bp-forums-nav', $menu_item->classes, true )
 					)
@@ -936,8 +937,8 @@ function bp_setup_nav_menu_item( $menu_item ) {
 					$menu_item->classes[] = 'current-menu-item';
 				}
 			} elseif (
-				bp_is_groups_component() &&
-				bp_is_group_create() &&
+				bboss_is_groups_component() &&
+				bboss_is_group_create() &&
 				(
 					'create' === end( $url_parts ) ||
 					in_array( 'bp-groups-nav', $menu_item->classes, true )
@@ -954,7 +955,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 
 	return $menu_item;
 }
-add_filter( 'wp_setup_nav_menu_item', 'bp_setup_nav_menu_item', 10, 1 );
+add_filter( 'wp_setup_nav_menu_item', 'bboss_setup_nav_menu_item', 10, 1 );
 
 /**
  * Populate BuddyPress user nav items for the customizer.
@@ -967,11 +968,11 @@ add_filter( 'wp_setup_nav_menu_item', 'bp_setup_nav_menu_item', 10, 1 );
  * @param integer $page   The page num being requested.
  * @return array The paginated BuddyPress user nav items.
  */
-function bp_customizer_nav_menus_get_items( $items = array(), $type = '', $object = '', $page = 0 ) {
+function bboss_customizer_nav_menus_get_items( $items = array(), $type = '', $object = '', $page = 0 ) {
 	if ( 'bp_loggedin_nav' === $object ) {
-		$bp_items = bp_nav_menu_get_loggedin_pages();
+		$bp_items = bboss_nav_menu_get_loggedin_pages();
 	} elseif ( 'bp_loggedout_nav' === $object ) {
-		$bp_items = bp_nav_menu_get_loggedout_pages();
+		$bp_items = bboss_nav_menu_get_loggedout_pages();
 	} else {
 		return $items;
 	}
@@ -991,7 +992,7 @@ function bp_customizer_nav_menus_get_items( $items = array(), $type = '', $objec
 
 	return array_slice( $items, 10 * $page, 10 );
 }
-add_filter( 'customize_nav_menu_available_items', 'bp_customizer_nav_menus_get_items', 10, 4 );
+add_filter( 'customize_nav_menu_available_items', 'bboss_customizer_nav_menus_get_items', 10, 4 );
 
 /**
  * Set BuddyPress item navs for the customizer.
@@ -1001,17 +1002,17 @@ add_filter( 'customize_nav_menu_available_items', 'bp_customizer_nav_menus_get_i
  * @param array $item_types An associative array structured for the customizer.
  * @return array $item_types An associative array structured for the customizer.
  */
-function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
+function bboss_customizer_nav_menus_set_item_types( $item_types = array() ) {
 	$item_types = array_merge(
 		$item_types,
 		array(
 			'bp_loggedin_nav'  => array(
-				'title'  => __( 'BuddyBoss (logged-in)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-in)', 'buddyboss-platform' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedin_nav',
 			),
 			'bp_loggedout_nav' => array(
-				'title'  => __( 'BuddyBoss (logged-out)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-out)', 'buddyboss-platform' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedout_nav',
 			),
@@ -1020,7 +1021,7 @@ function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
 
 	return $item_types;
 }
-add_filter( 'customize_nav_menu_available_item_types', 'bp_customizer_nav_menus_set_item_types', 10, 1 );
+add_filter( 'customize_nav_menu_available_item_types', 'bboss_customizer_nav_menus_set_item_types', 10, 1 );
 
 /**
  * Filter SQL query strings to swap out the 'meta_id' column.
@@ -1038,7 +1039,7 @@ add_filter( 'customize_nav_menu_available_item_types', 'bp_customizer_nav_menus_
  * @param string $q SQL query.
  * @return string
  */
-function bp_filter_metaid_column_name( $q ) {
+function bboss_filter_metaid_column_name( $q ) {
 	/*
 	 * Replace quoted content with __QUOTE__ to avoid false positives.
 	 * This regular expression will match nested quotes.
@@ -1076,7 +1077,7 @@ function bp_filter_metaid_column_name( $q ) {
  * @return false|string Will be a boolean (false) if $post_id is 0. Will be a string (the unchanged edit link)
  *                      otherwise
  */
-function bp_core_filter_edit_post_link( $edit_link = '', $post_id = 0 ) {
+function bboss_core_filter_edit_post_link( $edit_link = '', $post_id = 0 ) {
 	if ( 0 === $post_id ) {
 		$edit_link = false;
 	}
@@ -1094,18 +1095,18 @@ function bp_core_filter_edit_post_link( $edit_link = '', $post_id = 0 ) {
  * @param bool $mentions_enabled True if mentions are enabled.
  * @return bool True if mentions scripts should be loaded.
  */
-function bp_maybe_load_mentions_scripts_for_blog_content( $load_mentions, $mentions_enabled ) {
+function bboss_maybe_load_mentions_scripts_for_blog_content( $load_mentions, $mentions_enabled ) {
 	if ( ! $mentions_enabled ) {
 		return $load_mentions;
 	}
 
-	if ( $load_mentions || ( bp_is_blog_page() && is_singular() && comments_open() ) ) {
+	if ( $load_mentions || ( bboss_is_blog_page() && is_singular() && comments_open() ) ) {
 		return true;
 	}
 
 	return $load_mentions;
 }
-add_filter( 'bp_activity_maybe_load_mentions_scripts', 'bp_maybe_load_mentions_scripts_for_blog_content', 10, 2 );
+add_filter( 'bp_activity_maybe_load_mentions_scripts', 'bboss_maybe_load_mentions_scripts_for_blog_content', 10, 2 );
 
 /**
  * Injects specific BuddyPress CSS classes into a widget sidebar.
@@ -1122,7 +1123,7 @@ add_filter( 'bp_activity_maybe_load_mentions_scripts', 'bp_maybe_load_mentions_s
  * @param array $params Current sidebar params.
  * @return array
  */
-function _bp_core_inject_bp_widget_css_class( $params ) {
+function bboss__bp_core_inject_bp_widget_css_class( $params ) {
 	global $wp_registered_widgets;
 
 	$widget_id = $params[0]['widget_id'];
@@ -1162,7 +1163,7 @@ function _bp_core_inject_bp_widget_css_class( $params ) {
 
 	return $params;
 }
-add_filter( 'dynamic_sidebar_params', '_bp_core_inject_bp_widget_css_class' );
+add_filter( 'dynamic_sidebar_params', 'bboss__bp_core_inject_bp_widget_css_class' );
 
 /**
  * Add email link styles to rendered email template.
@@ -1176,12 +1177,12 @@ add_filter( 'dynamic_sidebar_params', '_bp_core_inject_bp_widget_css_class' );
  * @param string $transform     How the return value was transformed.
  * @return string Updated value.
  */
-function bp_email_add_link_color_to_template( $value, $property_name, $transform ) {
+function bboss_email_add_link_color_to_template( $value, $property_name, $transform ) {
 	if ( $property_name !== 'template' || $transform !== 'add-content' ) {
 		return $value;
 	}
 
-	$settings    = bp_email_get_appearance_settings();
+	$settings    = bboss_email_get_appearance_settings();
 	$replacement = 'style="color: ' . esc_attr( $settings['link_text_color'] ) . ';';
 
 	// Find all links.
@@ -1203,7 +1204,7 @@ function bp_email_add_link_color_to_template( $value, $property_name, $transform
 
 	return $value;
 }
-add_filter( 'bp_email_get_property', 'bp_email_add_link_color_to_template', 6, 3 );
+add_filter( 'bp_email_get_property', 'bboss_email_add_link_color_to_template', 6, 3 );
 
 /**
  * Add custom headers to outgoing emails.
@@ -1213,11 +1214,11 @@ add_filter( 'bp_email_get_property', 'bp_email_add_link_color_to_template', 6, 3
  * @param array    $headers   Array of email headers.
  * @param string   $property  Name of property. Unused.
  * @param string   $transform Return value transformation. Unused.
- * @param BP_Email $email     Email object reference.
+ * @param BBoss_Email $email     Email object reference.
  * @return array
  */
-function bp_email_set_default_headers( $headers, $property, $transform, $email ) {
-	$headers['X-BuddyPress']      = bp_get_version();
+function bboss_email_set_default_headers( $headers, $property, $transform, $email ) {
+	$headers['X-BuddyPress']      = bboss_get_version();
 	$headers['X-BuddyPress-Type'] = $email->get( 'type' );
 
 	$tokens = $email->get_tokens();
@@ -1226,7 +1227,7 @@ function bp_email_set_default_headers( $headers, $property, $transform, $email )
 	if ( ! empty( $tokens['unsubscribe'] ) && $tokens['unsubscribe'] !== wp_login_url() ) {
 		$user = get_user_by( 'email', $tokens['recipient.email'] );
 
-		$link = bp_email_get_unsubscribe_link(
+		$link = bboss_email_get_unsubscribe_link(
 			array(
 				'user_id'           => $user->ID,
 				'notification_type' => $email->get( 'type' ),
@@ -1240,7 +1241,7 @@ function bp_email_set_default_headers( $headers, $property, $transform, $email )
 
 	return $headers;
 }
-add_filter( 'bp_email_get_headers', 'bp_email_set_default_headers', 6, 4 );
+add_filter( 'bp_email_get_headers', 'bboss_email_set_default_headers', 6, 4 );
 
 /**
  * Add default email tokens.
@@ -1250,17 +1251,17 @@ add_filter( 'bp_email_get_headers', 'bp_email_set_default_headers', 6, 4 );
  * @param array    $tokens        Email tokens.
  * @param string   $property_name Unused.
  * @param string   $transform     Unused.
- * @param BP_Email $email         Email being sent.
+ * @param BBoss_Email $email         Email being sent.
  * @return array
  */
-function bp_email_set_default_tokens( $tokens, $property_name, $transform, $email ) {
-	$tokens['site.admin-email'] = bp_get_option( 'admin_email' );
+function bboss_email_set_default_tokens( $tokens, $property_name, $transform, $email ) {
+	$tokens['site.admin-email'] = bboss_get_option( 'admin_email' );
 	$tokens['site.url']         = home_url();
 	$tokens['email.subject']    = $email->get_subject();
 
 	// These options are escaped with esc_html on the way into the database in sanitize_option().
-	$tokens['site.description'] = wp_specialchars_decode( bp_get_option( 'blogdescription' ), ENT_QUOTES );
-	$tokens['site.name']        = wp_specialchars_decode( bp_get_option( 'blogname' ), ENT_QUOTES );
+	$tokens['site.description'] = wp_specialchars_decode( bboss_get_option( 'blogdescription' ), ENT_QUOTES );
+	$tokens['site.name']        = wp_specialchars_decode( bboss_get_option( 'blogname' ), ENT_QUOTES );
 	$tokens['reset.url']        = esc_url( wp_lostpassword_url() );
 
 	// Default values for tokens set conditionally below.
@@ -1287,12 +1288,12 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 		if ( $user_obj ) {
 			$tokens['recipient.username'] = $user_obj->user_login;
 
-			if ( bp_is_active( 'settings' ) && empty( $tokens['unsubscribe'] ) ) {
+			if ( bboss_is_active( 'settings' ) && empty( $tokens['unsubscribe'] ) ) {
 				$tokens['unsubscribe'] = esc_url(
 					sprintf(
 						'%s%s/notifications/',
-						bp_core_get_user_domain( $user_obj->ID ),
-						bp_get_settings_slug()
+						bboss_core_get_user_domain( $user_obj->ID ),
+						bboss_get_settings_slug()
 					)
 				);
 			}
@@ -1312,7 +1313,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 
 	return $tokens;
 }
-add_filter( 'bp_email_get_tokens', 'bp_email_set_default_tokens', 6, 4 );
+add_filter( 'bp_email_get_tokens', 'bboss_email_set_default_tokens', 6, 4 );
 
 /**
  * Find and render the template for Email posts (the Customizer and admin previews).
@@ -1328,8 +1329,8 @@ add_filter( 'bp_email_get_tokens', 'bp_email_set_default_tokens', 6, 4 );
  * @param string $template Path to template (probably single.php).
  * @return string
  */
-function bp_core_render_email_template( $template ) {
-	if ( get_post_type() !== bp_get_email_post_type() || ! is_single() ) {
+function bboss_core_render_email_template( $template ) {
+	if ( get_post_type() !== bboss_get_email_post_type() || ! is_single() ) {
 		return $template;
 	}
 
@@ -1342,7 +1343,7 @@ function bp_core_render_email_template( $template ) {
 	 */
 	$email_template = apply_filters(
 		'bp_core_render_email_template',
-		bp_locate_template( bp_email_get_template( get_queried_object() ), false ),
+		bboss_locate_template( bboss_email_get_template( get_queried_object() ), false ),
 		$template
 	);
 
@@ -1356,14 +1357,14 @@ function bp_core_render_email_template( $template ) {
 	ob_end_clean();
 
 	// Make sure we add a <title> tag so WP Customizer picks it up.
-	$template = str_replace( '<head>', '<head><title>' . esc_html__( 'BuddyBoss Emails', 'buddyboss' ) . '</title>', $template );
-	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template );
+	$template = str_replace( '<head>', '<head><title>' . esc_html__( 'BuddyBoss Emails', 'buddyboss-platform' ) . '</title>', $template );
+	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- embed template HTML built by the plugin with wpautop()'d post content (kses on save); wp_kses_post() would strip embeds.
 
 	/*
 	 * Link colours are applied directly in the email template before sending, so we
 	 * need to add an extra style here to set the colour for the Customizer or preview.
 	 */
-	$settings = bp_email_get_appearance_settings();
+	$settings = bboss_email_get_appearance_settings();
 	printf(
 		'<style>a { color: %s; }</style>',
 		esc_attr( $settings['highlight_color'] )
@@ -1371,7 +1372,7 @@ function bp_core_render_email_template( $template ) {
 
 	return '';
 }
-add_action( 'bp_template_include', 'bp_core_render_email_template', 12 );
+add_action( 'bp_template_include', 'bboss_core_render_email_template', 12 );
 
 
 /**
@@ -1384,7 +1385,7 @@ add_action( 'bp_template_include', 'bp_core_render_email_template', 12 );
  *
  * @return array
  */
-function bp_dd_update_group_cover_images_url( $attachment_data, $param ) {
+function bboss_dd_update_group_cover_images_url( $attachment_data, $param ) {
 
 	$group_id = ! empty( $param['item_id'] ) ? absint( $param['item_id'] ) : 0;
 
@@ -1395,8 +1396,8 @@ function bp_dd_update_group_cover_images_url( $attachment_data, $param ) {
 		// groups is deactivated via Settings 2.0 the function is undefined.
 		// This filter is fired by S3-Offload-Media and similar plugins for
 		// every attachment URL lookup, regardless of BP component state.
-		if ( isset( $param['object_dir'] ) && 'groups' == $param['object_dir'] && bp_is_active( 'groups' ) ) {
-			$cover_image = trim( groups_get_groupmeta( $group_id, 'cover-image' ) );
+		if ( isset( $param['object_dir'] ) && 'groups' == $param['object_dir'] && bboss_is_active( 'groups' ) ) {
+			$cover_image = trim( bboss_groups_get_groupmeta( $group_id, 'cover-image' ) );
 			if ( ! empty( $cover_image ) ) {
 				$attachment_data = $cover_image;
 			}
@@ -1404,7 +1405,7 @@ function bp_dd_update_group_cover_images_url( $attachment_data, $param ) {
 
 		// check for user
 		if ( isset( $param['object_dir'] ) && 'members' == $param['object_dir'] ) {
-			$cover_image = trim( bp_get_user_meta( $group_id, 'cover-image', true ) );
+			$cover_image = trim( bboss_get_user_meta( $group_id, 'cover-image', true ) );
 			if ( ! empty( $cover_image ) ) {
 				$attachment_data = $cover_image;
 			}
@@ -1414,35 +1415,35 @@ function bp_dd_update_group_cover_images_url( $attachment_data, $param ) {
 	return $attachment_data;
 }
 
-add_filter( 'bp_attachments_pre_get_attachment', 'bp_dd_update_group_cover_images_url', 0, 2 );
+add_filter( 'bp_attachments_pre_get_attachment', 'bboss_dd_update_group_cover_images_url', 0, 2 );
 
 /**
  * Delete the group cover photo attachment
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_dd_delete_group_cover_images_url( $group_id ) {
+function bboss_dd_delete_group_cover_images_url( $group_id ) {
 	if ( ! empty( $group_id ) ) {
-		groups_delete_groupmeta( $group_id, 'cover-image' );
+		bboss_groups_delete_groupmeta( $group_id, 'cover-image' );
 	}
 }
 
-add_action( 'groups_cover_image_deleted', 'bp_dd_delete_group_cover_images_url', 10, 1 );
-add_action( 'groups_cover_image_uploaded', 'bp_dd_delete_group_cover_images_url', 10, 1 );
+add_action( 'groups_cover_image_deleted', 'bboss_dd_delete_group_cover_images_url', 10, 1 );
+add_action( 'groups_cover_image_uploaded', 'bboss_dd_delete_group_cover_images_url', 10, 1 );
 
 /**
  * Delete the user cover photo attachment
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_dd_delete_xprofile_cover_images_url( $user_id ) {
+function bboss_dd_delete_xprofile_cover_images_url( $user_id ) {
 	if ( ! empty( $user_id ) ) {
-		bp_delete_user_meta( $user_id, 'cover-image' );
+		bboss_delete_user_meta( $user_id, 'cover-image' );
 	}
 }
 
-add_action( 'xprofile_cover_image_deleted', 'bp_dd_delete_xprofile_cover_images_url', 10, 1 );
-add_action( 'xprofile_cover_image_uploaded', 'bp_dd_delete_xprofile_cover_images_url', 10, 1 );
+add_action( 'xprofile_cover_image_deleted', 'bboss_dd_delete_xprofile_cover_images_url', 10, 1 );
+add_action( 'xprofile_cover_image_uploaded', 'bboss_dd_delete_xprofile_cover_images_url', 10, 1 );
 
 
 /**
@@ -1457,18 +1458,18 @@ add_action( 'xprofile_cover_image_uploaded', 'bp_dd_delete_xprofile_cover_images
  *
  * @return string $avatar_url
  */
-function bp_dd_check_avatar_folder_dir( $avatar_folder_dir, $group_id, $object, $avatar_dir ) {
+function bboss_dd_check_avatar_folder_dir( $avatar_folder_dir, $group_id, $object, $avatar_dir ) {
 
-	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+	if ( ! empty( $group_id ) && bboss_is_active( 'groups' ) ) {
 		if ( 'group-avatars' === $avatar_dir ) {
-			$avatars = trim( groups_get_groupmeta( $group_id, 'avatars' ) );
+			$avatars = trim( bboss_groups_get_groupmeta( $group_id, 'avatars' ) );
 			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
 				wp_mkdir_p( $avatar_folder_dir );
 			}
 		}
 
 		if ( 'avatars' == $avatar_dir ) {
-			$avatars = trim( bp_get_user_meta( $group_id, 'avatars', true ) );
+			$avatars = trim( bboss_get_user_meta( $group_id, 'avatars', true ) );
 			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
 				wp_mkdir_p( $avatar_folder_dir );
 			}
@@ -1478,7 +1479,7 @@ function bp_dd_check_avatar_folder_dir( $avatar_folder_dir, $group_id, $object, 
 	return $avatar_folder_dir;
 }
 
-add_filter( 'bp_core_avatar_folder_dir', 'bp_dd_check_avatar_folder_dir', 0, 4 );
+add_filter( 'bp_core_avatar_folder_dir', 'bboss_dd_check_avatar_folder_dir', 0, 4 );
 
 /**
  * Get dummy URL from DB for Group and User
@@ -1490,7 +1491,7 @@ add_filter( 'bp_core_avatar_folder_dir', 'bp_dd_check_avatar_folder_dir', 0, 4 )
  *
  * @return string $avatar_url
  */
-function bp_dd_fetch_dummy_avatar_url( $avatar_url, $params ) {
+function bboss_dd_fetch_dummy_avatar_url( $avatar_url, $params ) {
 
 	$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
 	if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
@@ -1498,8 +1499,8 @@ function bp_dd_fetch_dummy_avatar_url( $avatar_url, $params ) {
 		// check for groups avatar
 		// Same gating rationale as `bp_dd_update_group_cover_images_url()`
 		// above — `groups_get_groupmeta()` requires the groups component.
-		if ( 'group-avatars' == $params['avatar_dir'] && bp_is_active( 'groups' ) ) {
-			$cover_image = trim( groups_get_groupmeta( $item_id, 'avatars' ) );
+		if ( 'group-avatars' == $params['avatar_dir'] && bboss_is_active( 'groups' ) ) {
+			$cover_image = trim( bboss_groups_get_groupmeta( $item_id, 'avatars' ) );
 			if ( ! empty( $cover_image ) ) {
 				$avatar_url = $cover_image;
 			}
@@ -1507,7 +1508,7 @@ function bp_dd_fetch_dummy_avatar_url( $avatar_url, $params ) {
 
 		// check for user avatar
 		if ( 'avatars' == $params['avatar_dir'] ) {
-			$cover_image = trim( bp_get_user_meta( $item_id, 'avatars', true ) );
+			$cover_image = trim( bboss_get_user_meta( $item_id, 'avatars', true ) );
 			if ( ! empty( $cover_image ) ) {
 				$avatar_url = $cover_image;
 			}
@@ -1517,7 +1518,7 @@ function bp_dd_fetch_dummy_avatar_url( $avatar_url, $params ) {
 	return $avatar_url;
 }
 
-add_filter( 'bp_core_fetch_avatar_url_check', 'bp_dd_fetch_dummy_avatar_url', 1000, 2 );
+add_filter( 'bp_core_fetch_avatar_url_check', 'bboss_dd_fetch_dummy_avatar_url', 1000, 2 );
 
 /**
  * Delete avatar of group and user
@@ -1526,36 +1527,36 @@ add_filter( 'bp_core_fetch_avatar_url_check', 'bp_dd_fetch_dummy_avatar_url', 10
  *
  * @param $args
  */
-function bp_dd_delete_avatar( $args ) {
+function bboss_dd_delete_avatar( $args ) {
 	$item_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
 	if ( ! empty( $item_id ) ) {
 
 		// check for user avatars getting deleted
 		if ( isset( $args['object'] ) && 'user' == $args['object'] ) {
-			bp_delete_user_meta( $item_id, 'avatars' );
+			bboss_delete_user_meta( $item_id, 'avatars' );
 		}
 
 		// check for group avatars getting deleted
 		if ( isset( $args['object'] ) && 'group' == $args['object'] ) {
-			groups_delete_groupmeta( $item_id, 'avatars' );
+			bboss_groups_delete_groupmeta( $item_id, 'avatars' );
 		}
 	}
 }
 
-add_action( 'bp_core_delete_existing_avatar', 'bp_dd_delete_avatar', 10, 1 );
+add_action( 'bp_core_delete_existing_avatar', 'bboss_dd_delete_avatar', 10, 1 );
 
 /**
  * Removed the CKEditor Js on the activity page.
  *
  * @since BuddyBoss 1.0.5
  */
-add_filter( 'script_loader_src', 'bp_remove_badgeos_conflict_ckeditor_dequeue_script', 9999, 2 );
+add_filter( 'script_loader_src', 'bboss_remove_badgeos_conflict_ckeditor_dequeue_script', 9999, 2 );
 
-function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
+function bboss_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
 
 	if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'badgeos/badgeos.php' ) ) {
 
-		if ( bp_is_user_activity() || bp_is_group_activity() || bp_is_activity_directory() || bp_is_messages_component() ) {
+		if ( bboss_is_user_activity() || bboss_is_group_activity() || bboss_is_activity_directory() || bboss_is_messages_component() ) {
 
 			if ( 'ck_editor_cdn' === $handle || 'custom_script' === $handle ) {
 				$src = '';
@@ -1571,7 +1572,7 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
  *
  * @since BuddyBoss 1.2.5
  */
-function bp_pages_terms_and_privacy_exclude( $pages ) {
+function bboss_pages_terms_and_privacy_exclude( $pages ) {
 
 	if ( ! empty( $pages ) ) {
 
@@ -1588,7 +1589,7 @@ function bp_pages_terms_and_privacy_exclude( $pages ) {
 
 	return $pages;
 }
-add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
+add_filter( 'bp_pages', 'bboss_pages_terms_and_privacy_exclude' );
 
 /**
  * Filter to change cover image dimensions to original for group and profile.
@@ -1600,7 +1601,7 @@ add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
  * @return array
  * @since BuddyBoss 1.5.1
  */
-function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
+function bboss_core_get_cover_image_dimensions( $wh, $settings, $component ) {
 	if ( 'xprofile' === $component || 'groups' === $component ) {
 		return array(
 			'width'  => 1950,
@@ -1611,7 +1612,7 @@ function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
 	return $wh;
 }
 
-add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_core_get_cover_image_dimensions', 10, 3 );
+add_filter( 'bp_attachments_get_cover_image_dimensions', 'bboss_core_get_cover_image_dimensions', 10, 3 );
 
 /**
  * Admin notice to update to BuddyBoss Theme 1.5.0 to fix fonts issues.
@@ -1621,7 +1622,7 @@ if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
 		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare( $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
 			$class   = 'notice notice-error';
-			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
+			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss-platform' );
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 		}
 	}
@@ -1638,7 +1639,7 @@ if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
  *
  * @return array
  */
-function bp_rest_restrict_wp_attachment_query( $args ) {
+function bboss_rest_restrict_wp_attachment_query( $args ) {
 	$meta_query = ( array_key_exists( 'meta_query', $args ) ? $args['meta_query'] : array() );
 
 	// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
@@ -1675,7 +1676,7 @@ function bp_rest_restrict_wp_attachment_query( $args ) {
  *
  * @return array
  */
-function bp_rest_restrict_wp_attachment_response( $response, $post ) {
+function bboss_rest_restrict_wp_attachment_response( $response, $post ) {
 	$media_meta    = get_post_meta( $post->ID, 'bp_media_upload', true );
 	$document_meta = get_post_meta( $post->ID, 'bp_document_upload', true );
 	$data          = $response->get_data();
@@ -1703,7 +1704,7 @@ function bp_rest_restrict_wp_attachment_response( $response, $post ) {
  *
  * @return mixed
  */
-function bp_rest_restrict_oembed_request_post_id( $post_id ) {
+function bboss_rest_restrict_oembed_request_post_id( $post_id ) {
 	$media_meta    = get_post_meta( $post_id, 'bp_media_upload', true );
 	$document_meta = get_post_meta( $post_id, 'bp_document_upload', true );
 	if (
@@ -1730,51 +1731,51 @@ function bp_rest_restrict_oembed_request_post_id( $post_id ) {
  * @return array $schedules Array of schedules from cron.
  * @since Buddyboss 1.7.0
  */
-function bp_core_cron_schedules( $schedules = array() ) {
+function bboss_core_cron_schedules( $schedules = array() ) {
 	$bb_schedules = array(
 		'bb_schedule_1min'    => array(
 			'interval' => MINUTE_IN_SECONDS,
-			'display'  => __( 'Every minute', 'buddyboss' ),
+			'display'  => __( 'Every minute', 'buddyboss-platform' ),
 		),
 		'bb_schedule_5min'    => array(
 			'interval' => 5 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 5 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 5 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_10min'   => array(
 			'interval' => 10 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 10 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 10 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_15min'   => array(
 			'interval' => 15 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 15 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 15 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_30min'   => array(
 			'interval' => 30 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 30 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 30 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_1hour'   => array(
 			'interval' => 60 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once Hourly', 'buddyboss' ),
+			'display'  => __( 'Once Hourly', 'buddyboss-platform' ),
 		),
 		'bb_schedule_3hours'  => array(
 			'interval' => 180 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 3 hours', 'buddyboss' ),
+			'display'  => __( 'Once in 3 hours', 'buddyboss-platform' ),
 		),
 		'bb_schedule_12hours' => array(
 			'interval' => 720 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 12 hours', 'buddyboss' ),
+			'display'  => __( 'Once in 12 hours', 'buddyboss-platform' ),
 		),
 		'bb_schedule_24hours' => array(
 			'interval' => 1440 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 24 hours', 'buddyboss' ),
+			'display'  => __( 'Once in 24 hours', 'buddyboss-platform' ),
 		),
 		'bb_schedule_15days'  => array(
 			'interval' => 15 * DAY_IN_SECONDS,
-			'display'  => __( 'Every 15 days', 'buddyboss' ),
+			'display'  => __( 'Every 15 days', 'buddyboss-platform' ),
 		),
 		'bb_schedule_30days'  => array(
 			'interval' => 30 * DAY_IN_SECONDS,
-			'display'  => __( 'Every 30 days', 'buddyboss' ),
+			'display'  => __( 'Every 30 days', 'buddyboss-platform' ),
 		),
 	);
 
@@ -1801,7 +1802,7 @@ function bp_core_cron_schedules( $schedules = array() ) {
 add_action(
 	'bp_init',
 	function () {
-		add_filter( 'cron_schedules', 'bp_core_cron_schedules', 99, 1 ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+		add_filter( 'cron_schedules', 'bboss_core_cron_schedules', 99, 1 ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
 	}
 );
 
@@ -1814,15 +1815,15 @@ add_action(
  *
  * @return array|mixed|string|string[]
  */
-function bb_rest_decode_default_avatar_url( $gravatar ) {
-	if ( function_exists( 'bb_is_rest' ) && bb_is_rest() ) {
+function bboss_rest_decode_default_avatar_url( $gravatar ) {
+	if ( function_exists( 'bboss_is_rest' ) && bboss_is_rest() ) {
 		$gravatar = str_replace( '&#038;', '&', $gravatar );
 	}
 
 	return $gravatar;
 }
 
-add_filter( 'bp_core_fetch_avatar_url', 'bb_rest_decode_default_avatar_url' );
+add_filter( 'bp_core_fetch_avatar_url', 'bboss_rest_decode_default_avatar_url' );
 
 /**
  * The custom profile and group avatar script data.
@@ -1832,18 +1833,18 @@ add_filter( 'bp_core_fetch_avatar_url', 'bb_rest_decode_default_avatar_url' );
  * @param array  $script_data The avatar script data.
  * @param string $object      The object the avatar belongs to (eg: user or group).
  */
-function bb_admin_setting_profile_group_add_script_data( $script_data, $object = '' ) {
+function bboss_admin_setting_profile_group_add_script_data( $script_data, $object = '' ) {
 
-	if ( ! is_admin() || ! function_exists( 'bp_core_get_admin_active_tab' ) ) {
+	if ( ! is_admin() || ! function_exists( 'bboss_core_get_admin_active_tab' ) ) {
 		return $script_data;
 	}
 
-	if ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) {
+	if ( 'bp-xprofile' === bboss_core_get_admin_active_tab() ) {
 		$script_data['bp_params'] = array(
 			'object'     => 'user',
 			'item_id'    => 0,
 			'item_type'  => 'default',
-			'has_avatar' => bb_has_default_custom_upload_profile_avatar(),
+			'has_avatar' => bboss_has_default_custom_upload_profile_avatar(),
 			'nonces'     => array(
 				'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
 				'remove' => wp_create_nonce( 'bp_delete_avatar_link' ),
@@ -1852,19 +1853,19 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 
 		// Set feedback messages.
 		$script_data['feedback_messages'] = array(
-			1 => esc_html__( 'There was a problem cropping custom profile avatar.', 'buddyboss' ),
-			2 => esc_html__( 'The custom profile avatar was uploaded successfully.', 'buddyboss' ),
-			3 => esc_html__( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss' ),
-			4 => esc_html__( 'The custom profile avatar was deleted successfully!', 'buddyboss' ),
+			1 => esc_html__( 'There was a problem cropping custom profile avatar.', 'buddyboss-platform' ),
+			2 => esc_html__( 'The custom profile avatar was uploaded successfully.', 'buddyboss-platform' ),
+			3 => esc_html__( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss-platform' ),
+			4 => esc_html__( 'The custom profile avatar was deleted successfully!', 'buddyboss-platform' ),
 		);
 	}
 
-	if ( 'bp-groups' === bp_core_get_admin_active_tab() ) {
+	if ( 'bp-groups' === bboss_core_get_admin_active_tab() ) {
 		$script_data['bp_params'] = array(
 			'object'     => 'group',
 			'item_id'    => 0,
 			'item_type'  => 'default',
-			'has_avatar' => bb_has_default_custom_upload_group_avatar(),
+			'has_avatar' => bboss_has_default_custom_upload_group_avatar(),
 			'nonces'     => array(
 				'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
 				'remove' => wp_create_nonce( 'bp_group_avatar_delete' ),
@@ -1873,10 +1874,10 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 
 		// Set feedback messages.
 		$script_data['feedback_messages'] = array(
-			1 => esc_html__( 'There was a problem cropping custom group avatar.', 'buddyboss' ),
-			2 => esc_html__( 'The custom group avatar was uploaded successfully.', 'buddyboss' ),
-			3 => esc_html__( 'There was a problem deleting custom group avatar. Please try again.', 'buddyboss' ),
-			4 => esc_html__( 'The custom group avatar was deleted successfully!', 'buddyboss' ),
+			1 => esc_html__( 'There was a problem cropping custom group avatar.', 'buddyboss-platform' ),
+			2 => esc_html__( 'The custom group avatar was uploaded successfully.', 'buddyboss-platform' ),
+			3 => esc_html__( 'There was a problem deleting custom group avatar. Please try again.', 'buddyboss-platform' ),
+			4 => esc_html__( 'The custom group avatar was deleted successfully!', 'buddyboss-platform' ),
 		);
 	}
 
@@ -1890,7 +1891,7 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
  *
  * @return bool True if request from admin and it's for profile cover otherwise false.
  */
-function bb_validate_custom_profile_group_avatar_ajax_reuqest() {
+function bboss_validate_custom_profile_group_avatar_ajax_reuqest() {
 	$bp_params           = array();
 	$profile_group_types = array( 'user', 'group' );
 	// Settings 2.0 admin cover-crop pipeline (`bb_admin_cover_image_set`) fires
@@ -1935,10 +1936,10 @@ function bb_validate_custom_profile_group_avatar_ajax_reuqest() {
  * @param array $upload_dir The original Uploads dir.
  * @return array Array containing the path, URL, and other helpful settings.
  */
-function bb_default_custom_profile_group_cover_image_upload_dir( $upload_dir = array() ) {
+function bboss_default_custom_profile_group_cover_image_upload_dir( $upload_dir = array() ) {
 
 	// Validate ajax request for upload custom profile and group cover.
-	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
+	$is_validate = bboss_validate_custom_profile_group_avatar_ajax_reuqest();
 
 	if ( ! $is_validate ) {
 		return $upload_dir;
@@ -1952,7 +1953,7 @@ function bb_default_custom_profile_group_cover_image_upload_dir( $upload_dir = a
 		$subdir = '/groups/0/cover-image';
 	}
 
-	$upload_dir = bp_attachments_uploads_dir_get();
+	$upload_dir = bboss_attachments_uploads_dir_get();
 
 	/**
 	 * Filters set upload directory for default custom profile or group cover.
@@ -1988,9 +1989,9 @@ function bb_default_custom_profile_group_cover_image_upload_dir( $upload_dir = a
  *                               Defaults to 'cover-image'.
  * @return string Actual custom uploaded cover relative path.
  */
-function bb_attachments_get_profile_group_attachment_dir( $cover_dir, $object_dir, $item_id, $type ) {
+function bboss_attachments_get_profile_group_attachment_dir( $cover_dir, $object_dir, $item_id, $type ) {
 	// Validate ajax request for upload custom profile cover.
-	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
+	$is_validate = bboss_validate_custom_profile_group_avatar_ajax_reuqest();
 
 	if ( ! $is_validate ) {
 		return $cover_dir;
@@ -1998,7 +1999,7 @@ function bb_attachments_get_profile_group_attachment_dir( $cover_dir, $object_di
 
 	$object = sanitize_text_field( $_POST['bp_params']['object'] );
 
-	$upload_dir = bp_attachments_uploads_dir_get();
+	$upload_dir = bboss_attachments_uploads_dir_get();
 
 	// Set the subdir.
 	$subdir = '/members/0/cover-image';
@@ -2021,9 +2022,9 @@ function bb_attachments_get_profile_group_attachment_dir( $cover_dir, $object_di
  *                                  Defaults to 'cover-image'.
  * @return string Actual custom uploaded cover relative sub path.
  */
-function bb_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $object_dir, $item_id, $type ) {
+function bboss_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $object_dir, $item_id, $type ) {
 	// Validate ajax request for upload custom profile cover.
-	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
+	$is_validate = bboss_validate_custom_profile_group_avatar_ajax_reuqest();
 
 	if ( ! $is_validate ) {
 		return $cover_sub_dir;
@@ -2035,10 +2036,10 @@ function bb_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $o
 // Hook default custom avatar/cover upload filters globally.
 // These self-guard via bb_validate_custom_profile_group_avatar_ajax_reuqest()
 // and are needed for both legacy settings and Settings 2.0 admin uploads.
-add_filter( 'bp_attachment_avatar_script_data', 'bb_admin_setting_profile_group_add_script_data', 10, 2 );
-add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_default_custom_profile_group_cover_image_upload_dir', 10, 1 );
-add_filter( 'bb_attachments_get_attachment_dir', 'bb_attachments_get_profile_group_attachment_dir', 10, 4 );
-add_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
+add_filter( 'bp_attachment_avatar_script_data', 'bboss_admin_setting_profile_group_add_script_data', 10, 2 );
+add_filter( 'bp_attachments_cover_image_upload_dir', 'bboss_default_custom_profile_group_cover_image_upload_dir', 10, 1 );
+add_filter( 'bb_attachments_get_attachment_dir', 'bboss_attachments_get_profile_group_attachment_dir', 10, 4 );
+add_filter( 'bb_attachments_get_attachment_sub_dir', 'bboss_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
 
 /**
  * Save default profile and group avatar option on upload custom avatar.
@@ -2049,7 +2050,7 @@ add_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile
  * @param string $type        Inform about the way the avatar was set ('camera').
  * @param array  $avatar_data Array of parameters passed to the avatar handler.
  */
-function bb_save_profile_group_options_on_upload_custom_avatar( $item_id, $type, $avatar_data = array() ) {
+function bboss_save_profile_group_options_on_upload_custom_avatar( $item_id, $type, $avatar_data = array() ) {
 	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : '';
 	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
 
@@ -2059,19 +2060,19 @@ function bb_save_profile_group_options_on_upload_custom_avatar( $item_id, $type,
 
 		if ( ! empty( $avatar ) ) {
 			if ( 'user' === sanitize_text_field( $_POST['object'] ) ) {
-				bp_update_option( 'bp-profile-avatar-type', 'BuddyBoss' );
-				bp_update_option( 'bp-default-profile-avatar-type', 'custom' );
-				bp_update_option( 'bp-default-custom-profile-avatar', $avatar );
+				bboss_update_option( 'bp-profile-avatar-type', 'BuddyBoss' );
+				bboss_update_option( 'bp-default-profile-avatar-type', 'custom' );
+				bboss_update_option( 'bp-default-custom-profile-avatar', $avatar );
 			} elseif ( 'group' === sanitize_text_field( $_POST['object'] ) ) {
-				bp_update_option( 'bp-disable-group-avatar-uploads', '' );
-				bp_update_option( 'bp-default-group-avatar-type', 'custom' );
-				bp_update_option( 'bp-default-custom-group-avatar', $avatar );
+				bboss_update_option( 'bp-disable-group-avatar-uploads', '' );
+				bboss_update_option( 'bp-default-group-avatar-type', 'custom' );
+				bboss_update_option( 'bp-default-custom-group-avatar', $avatar );
 			}
 		}
 	}
 }
-add_action( 'xprofile_avatar_uploaded', 'bb_save_profile_group_options_on_upload_custom_avatar', 10, 3 );
-add_action( 'groups_avatar_uploaded', 'bb_save_profile_group_options_on_upload_custom_avatar', 10, 3 );
+add_action( 'xprofile_avatar_uploaded', 'bboss_save_profile_group_options_on_upload_custom_avatar', 10, 3 );
+add_action( 'groups_avatar_uploaded', 'bboss_save_profile_group_options_on_upload_custom_avatar', 10, 3 );
 
 /**
  * Save default profile and group avatar option on delete custom avatar.
@@ -2091,7 +2092,7 @@ add_action( 'groups_avatar_uploaded', 'bb_save_profile_group_options_on_upload_c
  *                                          corresponding to the $object.
  * }
  */
-function bb_delete_default_profile_group_avatar( $args ) {
+function bboss_delete_default_profile_group_avatar( $args ) {
 	$item_id   = ! empty( $args['item_id'] ) ? (int) $args['item_id'] : '';
 	$item_type = ! empty( $args['item_type'] ) ? sanitize_text_field( $args['item_type'] ) : null;
 
@@ -2099,18 +2100,18 @@ function bb_delete_default_profile_group_avatar( $args ) {
 
 		// check for user avatars getting deleted.
 		if ( isset( $args['object'] ) && 'user' == $args['object'] ) {
-			bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
-			bp_update_option( 'bp-default-custom-profile-avatar', '' );
+			bboss_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+			bboss_update_option( 'bp-default-custom-profile-avatar', '' );
 		}
 
 		// check for group avatars getting deleted.
 		if ( isset( $args['object'] ) && 'group' == $args['object'] ) {
-			bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
-			bp_update_option( 'bp-default-custom-group-avatar', '' );
+			bboss_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+			bboss_update_option( 'bp-default-custom-group-avatar', '' );
 		}
 	}
 }
-add_action( 'bp_core_delete_existing_avatar', 'bb_delete_default_profile_group_avatar', 10, 1 );
+add_action( 'bp_core_delete_existing_avatar', 'bboss_delete_default_profile_group_avatar', 10, 1 );
 
 /**
  * Save default profile and group cover options on upload custom cover.
@@ -2119,27 +2120,27 @@ add_action( 'bp_core_delete_existing_avatar', 'bb_delete_default_profile_group_a
  *
  * @param int $item_id Inform about the item id the cover photo was deleted for.
  */
-function bb_save_profile_group_cover_options_on_upload_custom_cover( $item_id, $name, $cover_url, $feedback_code ) {
+function bboss_save_profile_group_cover_options_on_upload_custom_cover( $item_id, $name, $cover_url, $feedback_code ) {
 
-	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
+	$is_validate = bboss_validate_custom_profile_group_avatar_ajax_reuqest();
 
 	if ( $is_validate && ! empty( $cover_url ) ) {
 
 		$object = sanitize_text_field( $_POST['bp_params']['object'] );
 
 		if ( 'user' === $object ) {
-			bp_update_option( 'bp-disable-cover-image-uploads', '' );
-			bp_update_option( 'bp-default-profile-cover-type', 'custom' );
-			bp_update_option( 'bp-default-custom-profile-cover', $cover_url );
+			bboss_update_option( 'bp-disable-cover-image-uploads', '' );
+			bboss_update_option( 'bp-default-profile-cover-type', 'custom' );
+			bboss_update_option( 'bp-default-custom-profile-cover', $cover_url );
 		} elseif ( 'group' === $object ) {
-			bp_update_option( 'bp-disable-group-cover-image-uploads', '' );
-			bp_update_option( 'bp-default-group-cover-type', 'custom' );
-			bp_update_option( 'bp-default-custom-group-cover', $cover_url );
+			bboss_update_option( 'bp-disable-group-cover-image-uploads', '' );
+			bboss_update_option( 'bp-default-group-cover-type', 'custom' );
+			bboss_update_option( 'bp-default-custom-group-cover', $cover_url );
 		}
 	}
 }
-add_action( 'xprofile_cover_image_uploaded', 'bb_save_profile_group_cover_options_on_upload_custom_cover', 10, 4 );
-add_action( 'groups_cover_image_uploaded', 'bb_save_profile_group_cover_options_on_upload_custom_cover', 10, 4 );
+add_action( 'xprofile_cover_image_uploaded', 'bboss_save_profile_group_cover_options_on_upload_custom_cover', 10, 4 );
+add_action( 'groups_cover_image_uploaded', 'bboss_save_profile_group_cover_options_on_upload_custom_cover', 10, 4 );
 
 /**
  * Save default profile and group cover options on delete custom cover.
@@ -2148,23 +2149,23 @@ add_action( 'groups_cover_image_uploaded', 'bb_save_profile_group_cover_options_
  *
  * @param int $item_id Inform about the item id the cover photo was deleted for.
  */
-function bb_delete_profile_group_cover_images_url( $item_id ) {
+function bboss_delete_profile_group_cover_images_url( $item_id ) {
 	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : '';
 	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
 
 	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
 
 		if ( 'user' === sanitize_text_field( $_POST['object'] ) ) {
-			bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
-			bp_update_option( 'bp-default-custom-profile-cover', '' );
+			bboss_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
+			bboss_update_option( 'bp-default-custom-profile-cover', '' );
 		} elseif ( 'group' === sanitize_text_field( $_POST['object'] ) ) {
-			bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
-			bp_update_option( 'bp-default-custom-group-cover', '' );
+			bboss_update_option( 'bp-default-group-cover-type', 'buddyboss' );
+			bboss_update_option( 'bp-default-custom-group-cover', '' );
 		}
 	}
 }
-add_action( 'xprofile_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
-add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
+add_action( 'xprofile_cover_image_deleted', 'bboss_delete_profile_group_cover_images_url', 10, 1 );
+add_action( 'groups_cover_image_deleted', 'bboss_delete_profile_group_cover_images_url', 10, 1 );
 
 /**
  * Set gravatars when Gravatars is enabled from the Profile Images and Profile Avatars is BuddyBoss.
@@ -2175,22 +2176,22 @@ add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_
  * @param array  $params         The avatar's data.
  * @return string Set default 'mm' if upload avatars is 'BuddyBoss'.
  */
-function bb_profile_set_gravatar_default( $avatar_default, $params ) {
+function bboss_profile_set_gravatar_default( $avatar_default, $params ) {
 
-	if ( 'BuddyBoss' === bb_get_profile_avatar_type() ) {
+	if ( 'BuddyBoss' === bboss_get_profile_avatar_type() ) {
 		$avatar_default = 'mm';
 	}
 
 	return $avatar_default;
 }
-add_filter( 'bp_core_avatar_default', 'bb_profile_set_gravatar_default', 10, 2 );
+add_filter( 'bp_core_avatar_default', 'bboss_profile_set_gravatar_default', 10, 2 );
 
 /**
  * Add inline css for profile and group cover background color when selected 'none' or 'BuddyBoss'.
  *
  * @since BuddyBoss 1.8.6
  */
-function bb_add_default_cover_image_inline_css() {
+function bboss_add_default_cover_image_inline_css() {
 	$css_rules = '.list-wrap .bs-group-cover a:before{ background:unset; }';
 
 	// BuddyBoss theme is not activated.
@@ -2208,8 +2209,8 @@ function bb_add_default_cover_image_inline_css() {
 
 	if ( function_exists( 'buddyboss_theme' ) && version_compare( $bb_theme_version, '1.8.4', '<' ) ) {
 
-		$profile_cover_type = bb_get_default_profile_cover_type();
-		$group_cover_type   = bb_get_default_group_cover_type();
+		$profile_cover_type = bboss_get_default_profile_cover_type();
+		$group_cover_type   = bboss_get_default_group_cover_type();
 		$background_color   = function_exists( 'buddyboss_theme_get_option' ) ? buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ) : '#e2e9ef';
 
 		if ( empty( $background_color ) ) {
@@ -2217,18 +2218,18 @@ function bb_add_default_cover_image_inline_css() {
 			$background_color = '#e2e9ef';
 		}
 
-		if ( ! bp_disable_cover_image_uploads() && 'custom' !== $profile_cover_type ) {
+		if ( ! bboss_disable_cover_image_uploads() && 'custom' !== $profile_cover_type ) {
 			$css_rules .= '.bp_members #buddypress #header-cover-image, .bp_members #buddypress #header-cover-image .guillotine-window img{ background-color: ' . $background_color . '; }';
 		}
 
-		if ( ! bp_disable_group_cover_image_uploads() && 'custom' !== $group_cover_type ) {
+		if ( ! bboss_disable_group_cover_image_uploads() && 'custom' !== $group_cover_type ) {
 			$css_rules .= '.bp_group #buddypress #header-cover-image, .bp_group #buddypress #header-cover-image .guillotine-window img, .list-wrap .bs-group-cover a{ background-color: ' . $background_color . '; }';
 		}
 	}
 
 	wp_add_inline_style( 'bp-nouveau', $css_rules );
 }
-add_action( 'bp_enqueue_scripts', 'bb_add_default_cover_image_inline_css', 12 );
+add_action( 'bp_enqueue_scripts', 'bboss_add_default_cover_image_inline_css', 12 );
 
 /**
  * Enable gravatars for members when Profile Avatars is WordPress.
@@ -2239,22 +2240,22 @@ add_action( 'bp_enqueue_scripts', 'bb_add_default_cover_image_inline_css', 12 );
  * @param array $params Array of parameters for the avatar request.
  * @return bool.
  */
-function bb_member_enabled_gravatar( $no_grav, $params ) {
+function bboss_member_enabled_gravatar( $no_grav, $params ) {
 
 	if ( ! isset( $params['object'] ) ) {
 		return $no_grav;
 	}
 
 	// By default, Gravatar is pinged for members when WordPress is enabled.
-	$show_avatars = bp_get_option( 'show_avatars' );
+	$show_avatars = bboss_get_option( 'show_avatars' );
 
-	if ( 'user' === $params['object'] && $show_avatars && 'WordPress' === bb_get_profile_avatar_type() ) {
+	if ( 'user' === $params['object'] && $show_avatars && 'WordPress' === bboss_get_profile_avatar_type() ) {
 		$no_grav = false;
 	}
 
 	return $no_grav;
 }
-add_filter( 'bp_core_fetch_avatar_no_grav', 'bb_member_enabled_gravatar', 99, 2 );
+add_filter( 'bp_core_fetch_avatar_no_grav', 'bboss_member_enabled_gravatar', 99, 2 );
 
 /**
  * Filter the admin emails by notification preference.
@@ -2263,15 +2264,15 @@ add_filter( 'bp_core_fetch_avatar_no_grav', 'bb_member_enabled_gravatar', 99, 2 
  *
  * @param WP_Query $query The WP_Query instance (passed by reference).
  */
-function bb_filter_admin_emails( $query ) {
+function bboss_filter_admin_emails( $query ) {
 	if (
 		is_admin() &&
-		$query->get( 'post_type' ) === bp_get_email_post_type() &&
+		$query->get( 'post_type' ) === bboss_get_email_post_type() &&
 		! empty( $_GET['terms'] ) // phpcs:ignore
 	) {
 		$taxquery = array(
 			array(
-				'taxonomy' => bp_get_email_tax_type(),
+				'taxonomy' => bboss_get_email_tax_type(),
 				'field'    => 'slug',
 				'terms'    => explode( ',', $_GET['terms'] ), // phpcs:ignore
 			),
@@ -2280,7 +2281,7 @@ function bb_filter_admin_emails( $query ) {
 		$query->set( 'tax_query', $taxquery );
 	}
 }
-add_action( 'pre_get_posts', 'bb_filter_admin_emails' );
+add_action( 'pre_get_posts', 'bboss_filter_admin_emails' );
 
 /**
  * Filter to change the display user URLs and current user URLs.
@@ -2299,17 +2300,17 @@ add_action( 'pre_get_posts', 'bb_filter_admin_emails' );
  * @param stdClass $args  An object of wp_nav_menu() arguments.
  * @param int      $depth Depth of menu item. Used for padding.
  */
-function bb_change_nav_menu_links( $atts, $item, $args, $depth ) {
+function bboss_change_nav_menu_links( $atts, $item, $args, $depth ) {
 
 	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type && isset( $atts['href'] ) ) {
-		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
-			$atts['href'] = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $atts['href'] );
+		if ( bboss_loggedin_user_domain() !== bboss_displayed_user_domain() ) {
+			$atts['href'] = str_replace( bboss_displayed_user_domain(), bboss_loggedin_user_domain(), $atts['href'] );
 		}
 	}
 
 	return $atts;
 }
-add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
+add_filter( 'nav_menu_link_attributes', 'bboss_change_nav_menu_links', 10, 4 );
 
 /**
  * Filters to update the active classes for display user URLs and current user URLs.
@@ -2321,16 +2322,16 @@ add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
  * @param stdClass $args    An object of wp_nav_menu() arguments.
  * @param int      $depth   Depth of menu item. Used for padding.
  */
-function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
+function bboss_change_nav_menu_class( $classes, $item, $args, $depth ) {
 
-	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type && ! bp_is_groups_component() ) {
-		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type && ! bboss_is_groups_component() ) {
+		if ( bboss_loggedin_user_domain() !== bboss_displayed_user_domain() ) {
 			$classes = array_diff( $classes, array( 'current-menu-item', 'current_page_item' ) );
 		}
 	}
 
 	// Remove current classes from members page when on user profile pages.
-	if ( in_array( 'current_page_item', $classes, true ) && function_exists( 'bp_is_user' ) && bp_is_user() ) {
+	if ( in_array( 'current_page_item', $classes, true ) && function_exists( 'bboss_is_user' ) && bboss_is_user() ) {
 		$is_members_directory = false;
 
 		// Method 1: Check for bp-members-nav class.
@@ -2342,16 +2343,16 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 		}
 
 		// Method 2: Check if this menu item points to the actual members directory page.
-		if ( ! $is_members_directory && isset( $item->object_id ) && function_exists( 'bp_core_get_directory_page_id' ) ) {
-			$members_page_id = bp_core_get_directory_page_id( 'members' );
+		if ( ! $is_members_directory && isset( $item->object_id ) && function_exists( 'bboss_core_get_directory_page_id' ) ) {
+			$members_page_id = bboss_core_get_directory_page_id( 'members' );
 			if ( $members_page_id && $item->object_id === $members_page_id ) {
 				$is_members_directory = true;
 			}
 		}
 
 		// Method 3: Check URL structure (fallback for custom pages).
-		if ( ! $is_members_directory && isset( $item->url ) && function_exists( 'bp_get_members_directory_permalink' ) ) {
-			$members_page_url = bp_get_members_directory_permalink();
+		if ( ! $is_members_directory && isset( $item->url ) && function_exists( 'bboss_get_members_directory_permalink' ) ) {
+			$members_page_url = bboss_get_members_directory_permalink();
 			if ( $members_page_url && untrailingslashit( $item->url ) === untrailingslashit( $members_page_url ) ) {
 				$is_members_directory = true;
 			}
@@ -2364,7 +2365,7 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 
 	return $classes;
 }
-add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );
+add_filter( 'nav_menu_css_class', 'bboss_change_nav_menu_class', 10, 4 );
 
 /**
  * Update the digest schedule event on change messages component status.
@@ -2373,10 +2374,10 @@ add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );
  *
  * @param array $active_components Components to install.
  */
-function bb_update_digest_schedule_event_on_change_component_status( $active_components = array() ) {
+function bboss_update_digest_schedule_event_on_change_component_status( $active_components = array() ) {
 
 	$active_components = array_keys( $active_components );
-	$db_component      = array_keys( bp_get_option( 'bp-active-components', array() ) );
+	$db_component      = array_keys( bboss_get_option( 'bp-active-components', array() ) );
 
 	// If 'messages' component is disabled.
 	if ( in_array( 'messages', $db_component, true ) && ! in_array( 'messages', $active_components, true ) ) {
@@ -2387,7 +2388,7 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 		// If 'messages' component is enabled.
 	} elseif ( ! in_array( 'messages', $db_component, true ) && in_array( 'messages', $active_components, true ) ) {
 
-		$time_delay_email_notification = (int) bp_get_option( 'time_delay_email_notification', 15 );
+		$time_delay_email_notification = (int) bboss_get_option( 'time_delay_email_notification', 15 );
 		$schedule_key                  = 'bb_schedule_15min';
 		if ( 5 === $time_delay_email_notification ) {
 			$schedule_key = 'bb_schedule_5min';
@@ -2413,11 +2414,11 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 	$is_moderation_enabled  = ! in_array( 'moderation', $db_component, true ) && in_array( 'moderation', $active_components, true );
 
 	if ( $is_moderation_disabled || $is_moderation_enabled ) {
-		bb_create_background_member_friends_count();
+		bboss_create_background_member_friends_count();
 	}
 
 }
-add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
+add_action( 'bp_core_install', 'bboss_update_digest_schedule_event_on_change_component_status', 10, 1 );
 
 /**
  * Get member presence information.
@@ -2426,20 +2427,20 @@ add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_compon
  *
  * @return array
  */
-function bb_heartbeat_member_presence_info( $response = array(), $data = array() ) {
+function bboss_heartbeat_member_presence_info( $response = array(), $data = array() ) {
 	if ( ! isset( $data['presence_users'] ) ) {
 		return $response;
 	}
 
-	bp_core_record_activity();
+	bboss_core_record_activity();
 
 	$presence_user_ids          = wp_parse_id_list( $data['presence_users'] );
-	$response['users_presence'] = bb_get_users_presence( $presence_user_ids );
+	$response['users_presence'] = bboss_get_users_presence( $presence_user_ids );
 
 	return $response;
 }
-add_filter( 'heartbeat_received', 'bb_heartbeat_member_presence_info', 11, 2 );
-add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_member_presence_info', 11, 2 );
+add_filter( 'heartbeat_received', 'bboss_heartbeat_member_presence_info', 11, 2 );
+add_filter( 'heartbeat_nopriv_received', 'bboss_heartbeat_member_presence_info', 11, 2 );
 
 
 /**
@@ -2451,19 +2452,19 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_member_presence_info', 11
  *
  * @return mixed
  */
-function bb_heartbeat_settings( $settings ) {
-	$interval_time = bb_presence_interval();
+function bboss_heartbeat_settings( $settings ) {
+	$interval_time = bboss_presence_interval();
 
 	if ( isset( $settings['interval'] ) && $settings['interval'] !== $interval_time ) {
-		bp_update_option( 'bb_presence_interval', absint( $settings['interval'] ) );
+		bboss_update_option( 'bb_presence_interval', absint( $settings['interval'] ) );
 	} else {
-		bp_delete_option( 'bb_presence_interval' );
+		bboss_delete_option( 'bb_presence_interval' );
 	}
 
 	return $settings;
 }
 
-add_filter( 'heartbeat_settings', 'bb_heartbeat_settings', PHP_INT_MAX, 1 );
+add_filter( 'heartbeat_settings', 'bboss_heartbeat_settings', PHP_INT_MAX, 1 );
 
 /**
  * Function to update menu order for Theme Options and License Key in the BuddyBoss menu.
@@ -2618,11 +2619,11 @@ add_filter( 'menu_order', 'buddyboss_menu_order' );
  *
  * @return string
  */
-function bb_core_number_format_callback( $formatted ) {
+function bboss_core_number_format_callback( $formatted ) {
 	return html_entity_decode( $formatted, ENT_NOQUOTES );
 }
 
-add_filter( 'bp_core_number_format', 'bb_core_number_format_callback', 10, 1 );
+add_filter( 'bp_core_number_format', 'bboss_core_number_format_callback', 10, 1 );
 
 /**
  * Fix the issue with loom embed not working correctly.
@@ -2635,7 +2636,7 @@ add_filter( 'bp_core_number_format', 'bb_core_number_format_callback', 10, 1 );
  *
  * @return array|mixed|string|string[]|null
  */
-function bb_oembed_dataparse( $return, $data, $url ) {
+function bboss_oembed_dataparse( $return, $data, $url ) {
 	if ( ! empty( $return ) && false !== strpos( $return, 'loom.com' ) ) {
 		$return = preg_replace( '/\s*sandbox\s*=\s*(["\']).*?\1/', '', $return );
 	}
@@ -2643,7 +2644,7 @@ function bb_oembed_dataparse( $return, $data, $url ) {
 	return $return;
 }
 
-add_filter( 'oembed_dataparse', 'bb_oembed_dataparse', 999, 3 );
+add_filter( 'oembed_dataparse', 'bboss_oembed_dataparse', 999, 3 );
 
 /**
  * Make the loom video embed discoverable.
@@ -2655,7 +2656,7 @@ add_filter( 'oembed_dataparse', 'bb_oembed_dataparse', 999, 3 );
  *
  * @return bool
  */
-function bb_loom_oembed_discover_support( $retval, $url ) {
+function bboss_loom_oembed_discover_support( $retval, $url ) {
 	if ( ! empty( $url ) && false !== strpos( $url, 'loom.com' ) ) {
 		$retval = true;
 	}
@@ -2663,7 +2664,7 @@ function bb_loom_oembed_discover_support( $retval, $url ) {
 	return $retval;
 }
 
-add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10, 2 );
+add_filter( 'bb_oembed_discover_support', 'bboss_loom_oembed_discover_support', 10, 2 );
 
 /**
  * Redirect after login.
@@ -2676,7 +2677,7 @@ add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10,
  *
  * @return mixed|string
  */
-function bb_login_redirect( $redirect_to, $request, $user ) {
+function bboss_bb_login_redirect( $redirect_to, $request, $user ) {
 
 	if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
 
@@ -2684,7 +2685,7 @@ function bb_login_redirect( $redirect_to, $request, $user ) {
 		if ( in_array( 'administrator', $user->roles, true ) ) {
 			return $redirect_to;
 		}
-		$redirect_to = bb_redirect_after_action( $redirect_to, $user->ID, 'login' );
+		$redirect_to = bboss_redirect_after_action( $redirect_to, $user->ID, 'login' );
 	}
 
 	return $redirect_to;
@@ -2701,7 +2702,7 @@ function bb_login_redirect( $redirect_to, $request, $user ) {
  *
  * @return mixed|string
  */
-function bb_logout_redirect( $redirect_to, $request, $user ) {
+function bboss_logout_redirect( $redirect_to, $request, $user ) {
 
 	if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
 
@@ -2709,7 +2710,7 @@ function bb_logout_redirect( $redirect_to, $request, $user ) {
 		if ( in_array( 'administrator', $user->roles, true ) ) {
 			return $redirect_to;
 		}
-		$redirect_to = bb_redirect_after_action( $redirect_to, $user->ID, 'logout' );
+		$redirect_to = bboss_redirect_after_action( $redirect_to, $user->ID, 'logout' );
 	}
 
 	return $redirect_to;
@@ -2722,13 +2723,13 @@ function bb_logout_redirect( $redirect_to, $request, $user ) {
  *
  * @param array $hosts Array of allowed hosts.
  */
-function bb_redirection_allowed_third_party_domains( $hosts ) {
+function bboss_redirection_allowed_third_party_domains( $hosts ) {
 	$allow_custom_url_domains = array();
-	$custom_url               = esc_url( bb_custom_login_redirection() );
+	$custom_url               = esc_url( bboss_custom_login_redirection() );
 	if ( ! empty( $custom_url ) ) {
 		$allow_custom_url_domains[] = $custom_url;
 	}
-	$custom_url = esc_url( bb_custom_logout_redirection() );
+	$custom_url = esc_url( bboss_custom_logout_redirection() );
 	if ( ! empty( $custom_url ) ) {
 		$allow_custom_url_domains[] = $custom_url;
 	}
@@ -2774,8 +2775,8 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 
 	if ( count( $allow_custom_url_domains ) > 0 ) {
 		foreach ( $allow_custom_url_domains as $url ) {
-			$parsed_url   = parse_url( $url );
-			$current_host = $_SERVER['HTTP_HOST'];
+			$parsed_url   = wp_parse_url( $url );
+			$current_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
 
 			if (
 				isset( $parsed_url['host'] ) &&
@@ -2799,7 +2800,7 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
  *
  * @return bool
  */
-function bb_oembed_discover_support_callback( $retval, $url ) {
+function bboss_oembed_discover_support_callback( $retval, $url ) {
 	if ( ! empty( $url ) && false !== strpos( $url, 'dubb.com' ) ) {
 		$retval = true;
 	}
@@ -2807,4 +2808,4 @@ function bb_oembed_discover_support_callback( $retval, $url ) {
 	return $retval;
 }
 
-add_filter( 'bb_oembed_discover_support', 'bb_oembed_discover_support_callback', 10, 2 );
+add_filter( 'bb_oembed_discover_support', 'bboss_oembed_discover_support_callback', 10, 2 );

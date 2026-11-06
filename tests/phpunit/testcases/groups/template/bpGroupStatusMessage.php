@@ -9,7 +9,7 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->current_user = bp_loggedin_user_id();
+		$this->current_user = bboss_loggedin_user_id();
 		$this->set_current_user( 0 );
 
 		if ( isset( $GLOBALS['groups_template'] ) ) {
@@ -35,20 +35,20 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 
 		$this->set_current_user( $users[0] );
 
-		groups_invite_user( array(
+		bboss_groups_invite_user( array(
 			'user_id' => $users[0],
 			'group_id' => $g,
 			'inviter_id' => $users[1],
 		) );
 
-		if ( bp_has_groups( array( 'include' => array( $g ) ) ) ) {
-			while ( bp_groups() ) {
-				bp_the_group();
+		if ( bboss_has_groups( array( 'include' => array( $g ) ) ) ) {
+			while ( bboss_groups() ) {
+				bboss_the_group();
 				$found = get_echo( 'bp_group_status_message' );
 			}
 		}
 
-		$expected = __( 'This is a private group and you must request group membership in order to join.', 'buddyboss' );
+		$expected = __( 'This is a private group and you must request group membership in order to join.', 'buddyboss-platform' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -61,14 +61,14 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 
 		$this->set_current_user( $u );
 
-		if ( bp_has_groups( array( 'include' => array( $g ) ) ) ) {
-			while ( bp_groups() ) {
-				bp_the_group();
+		if ( bboss_has_groups( array( 'include' => array( $g ) ) ) ) {
+			while ( bboss_groups() ) {
+				bboss_the_group();
 				$found = get_echo( 'bp_group_status_message' );
 			}
 		}
 
-		$expected = __( 'This is a private group and you must request group membership in order to join.', 'buddyboss' );
+		$expected = __( 'This is a private group and you must request group membership in order to join.', 'buddyboss-platform' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -78,14 +78,14 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 	public function test_private_group_visited_by_a_non_logged_in_user() {
 		$g = self::factory()->group->create( array( 'status' => 'private' ) );
 
-		if ( bp_has_groups( array( 'include' => array( $g ) ) ) ) {
-			while ( bp_groups() ) {
-				bp_the_group();
+		if ( bboss_has_groups( array( 'include' => array( $g ) ) ) ) {
+			while ( bboss_groups() ) {
+				bboss_the_group();
 				$found = get_echo( 'bp_group_status_message' );
 			}
 		}
 
-		$expected = __( 'This is a private group. To join you must be a registered site member and request group membership.', 'buddyboss' );
+		$expected = __( 'This is a private group. To join you must be a registered site member and request group membership.', 'buddyboss-platform' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -98,16 +98,16 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 
 		$this->set_current_user( $u );
 
-		groups_send_membership_request( $u, $g );
+		bboss_groups_send_membership_request( $u, $g );
 
-		if ( bp_has_groups( array( 'include' => array( $g ) ) ) ) {
-			while ( bp_groups() ) {
-				bp_the_group();
+		if ( bboss_has_groups( array( 'include' => array( $g ) ) ) ) {
+			while ( bboss_groups() ) {
+				bboss_the_group();
 				$found = get_echo( 'bp_group_status_message' );
 			}
 		}
 
-		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group organizer.', 'buddyboss' );
+		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group organizer.', 'buddyboss-platform' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -120,11 +120,11 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 
 		$this->set_current_user( $u );
 
-		$group = groups_get_group( $g );
+		$group = bboss_groups_get_group( $g );
 
 		$found = get_echo( 'bp_group_status_message', array( $group ) );
 
-		$expected = __( 'This is a hidden group and only invited members can join.', 'buddyboss' );
+		$expected = __( 'This is a hidden group and only invited members can join.', 'buddyboss-platform' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -139,18 +139,18 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 
 		// Fake the current group.
 		$GLOBALS['groups_template'] = new stdClass;
-		$GLOBALS['groups_template']->group = groups_get_group( $groups[0] );
+		$GLOBALS['groups_template']->group = bboss_groups_get_group( $groups[0] );
 
-		groups_send_membership_request( $u, $groups[1] );
+		bboss_groups_send_membership_request( $u, $groups[1] );
 
-		$group1 = groups_get_group( array(
+		$group1 = bboss_groups_get_group( array(
 			'group_id' => $groups[1],
 			'populate_extras' => true,
 		) );
 
 		$found = get_echo( 'bp_group_status_message', array( $group1 ) );
 
-		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group organizer.', 'buddyboss' );
+		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group organizer.', 'buddyboss-platform' );
 		$this->assertSame( $expected, $found );
 	}
 }

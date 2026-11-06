@@ -25,10 +25,10 @@ class BP_Tests_BP_Messages_Notice_TestCases extends BP_UnitTestCase {
 		// send notice
 		$subject = 'Test notice';
 		$message = 'This is a notice';
-		messages_send_notice( $subject, $message );
+		bboss_messages_send_notice( $subject, $message );
 
 		// now get the active notice and assert
-		$notice = BP_Messages_Notice::get_active();
+		$notice = BBoss_Messages_Notice::get_active();
 		$this->assertEquals( $subject, $notice->subject );
 		$this->assertEquals( $message, $notice->message );
 
@@ -39,10 +39,10 @@ class BP_Tests_BP_Messages_Notice_TestCases extends BP_UnitTestCase {
 		// create a new notice
 		$subject2 = 'Another notice';
 		$message2 = 'Say what?';
-		messages_send_notice( $subject2, $message2 );
+		bboss_messages_send_notice( $subject2, $message2 );
 
 		// now get the new active notice
-		BP_Messages_Notice::get_active();
+		BBoss_Messages_Notice::get_active();
 
 		// grab the cache and make sure it equals our new notice
 		$cache = wp_cache_get( 'active_notice', 'bp_messages' );

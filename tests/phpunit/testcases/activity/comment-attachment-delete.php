@@ -76,7 +76,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	 * @return int Comment ID.
 	 */
 	protected function create_comment( $content = '', $user_id = 0, $parent = 0 ) {
-		return (int) bp_activity_new_comment(
+		return (int) bboss_activity_new_comment(
 			array(
 				'activity_id' => $this->activity_id,
 				'parent_id'   => $parent ? $parent : $this->activity_id,
@@ -109,7 +109,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 			$this->markTestSkipped( 'The video component is not loaded (it ships in BuddyBoss Add-ons).' );
 		}
 
-		$media                = 'video' === $type ? new BP_Video() : new BP_Media();
+		$media                = 'video' === $type ? new BP_Video() : new BBoss_Media();
 		$media->blog_id       = get_current_blog_id();
 		$media->attachment_id = $attachment_id;
 		$media->user_id       = $this->commenter;
@@ -117,16 +117,16 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$media->activity_id   = $activity_id;
 		$media->privacy       = 'comment';
 		$media->status        = 'published';
-		$media->date_created  = bp_core_current_time();
+		$media->date_created  = bboss_core_current_time();
 		$media->save();
 		$media_id = (int) $media->id;
 
 		$meta_prefix = 'video' === $type ? 'bp_video' : 'bp_media';
 		update_post_meta( $attachment_id, $meta_prefix . '_parent_activity_id', $activity_id );
 
-		$ids   = array_filter( explode( ',', (string) bp_activity_get_meta( $activity_id, $meta_prefix . '_ids', true ) ) );
+		$ids   = array_filter( explode( ',', (string) bboss_activity_get_meta( $activity_id, $meta_prefix . '_ids', true ) ) );
 		$ids[] = $media_id;
-		bp_activity_update_meta( $activity_id, $meta_prefix . '_ids', implode( ',', $ids ) );
+		bboss_activity_update_meta( $activity_id, $meta_prefix . '_ids', implode( ',', $ids ) );
 
 		return (int) $media_id;
 	}
@@ -159,16 +159,16 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$document->activity_id   = $activity_id;
 		$document->privacy       = 'comment';
 		$document->status        = 'published';
-		$document->date_created  = bp_core_current_time();
-		$document->date_modified = bp_core_current_time();
+		$document->date_created  = bboss_core_current_time();
+		$document->date_modified = bboss_core_current_time();
 		$document->save();
 		$document_id = (int) $document->id;
 
 		update_post_meta( $attachment_id, 'bp_document_parent_activity_id', $activity_id );
 
-		$ids   = array_filter( explode( ',', (string) bp_activity_get_meta( $activity_id, 'bp_document_ids', true ) ) );
+		$ids   = array_filter( explode( ',', (string) bboss_activity_get_meta( $activity_id, 'bp_document_ids', true ) ) );
 		$ids[] = $document_id;
-		bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $ids ) );
+		bboss_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $ids ) );
 
 		return (int) $document_id;
 	}
@@ -182,7 +182,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	protected function activity_exists( $activity_id ) {
 		global $wpdb;
 
-		$table = buddypress()->activity->table_name;
+		$table = bboss()->activity->table_name;
 
 		return (bool) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE id = %d", $activity_id ) ); // phpcs:ignore
 	}
@@ -196,7 +196,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	protected function media_exists( $media_id ) {
 		global $wpdb;
 
-		$table = buddypress()->media->table_name;
+		$table = bboss()->media->table_name;
 
 		return (bool) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE id = %d", $media_id ) ); // phpcs:ignore
 	}
@@ -210,7 +210,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	protected function document_exists( $document_id ) {
 		global $wpdb;
 
-		$table = buddypress()->document->table_name;
+		$table = bboss()->document->table_name;
 
 		return (bool) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE id = %d", $document_id ) ); // phpcs:ignore
 	}
@@ -223,7 +223,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$comment = $this->create_comment( 'keep me' );
 		$photo   = $this->attach_media( $comment );
 
-		$this->assertNotEmpty( bp_media_delete( array( 'id' => $photo ) ) );
+		$this->assertNotEmpty( bboss_media_delete( array( 'id' => $photo ) ) );
 
 		$this->assertFalse( $this->media_exists( $photo ) );
 		$this->assertTrue( $this->activity_exists( $comment ) );
@@ -236,14 +236,14 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$photo_3 = $this->attach_media( $comment );
 		$reply   = $this->create_comment( 'reply from another member', self::factory()->user->create(), $comment );
 
-		$this->assertNotEmpty( bp_media_delete( array( 'id' => $photo_2 ) ) );
+		$this->assertNotEmpty( bboss_media_delete( array( 'id' => $photo_2 ) ) );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
 		$this->assertTrue( $this->activity_exists( $reply ) );
 		$this->assertTrue( $this->media_exists( $photo_1 ) );
 		$this->assertFalse( $this->media_exists( $photo_2 ) );
 		$this->assertTrue( $this->media_exists( $photo_3 ) );
-		$this->assertSame( array( $photo_1, $photo_3 ), wp_parse_id_list( bp_activity_get_meta( $comment, 'bp_media_ids', true ) ) );
+		$this->assertSame( array( $photo_1, $photo_3 ), wp_parse_id_list( bboss_activity_get_meta( $comment, 'bp_media_ids', true ) ) );
 	}
 
 	public function test_photo_delete_keeps_comment_with_a_document() {
@@ -251,13 +251,13 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$photo    = $this->attach_media( $comment );
 		$document = $this->attach_document( $comment );
 
-		bp_media_delete( array( 'id' => $photo ) );
+		bboss_media_delete( array( 'id' => $photo ) );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
 		$this->assertTrue( $this->document_exists( $document ) );
 		// The document meta must survive the photo meta cleanup (V-7).
-		$this->assertSame( array( $document ), wp_parse_id_list( bp_activity_get_meta( $comment, 'bp_document_ids', true ) ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_media_ids', true ) );
+		$this->assertSame( array( $document ), wp_parse_id_list( bboss_activity_get_meta( $comment, 'bp_document_ids', true ) ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_media_ids', true ) );
 	}
 
 	public function test_photo_delete_keeps_comment_with_a_video() {
@@ -265,7 +265,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$photo   = $this->attach_media( $comment );
 		$video   = $this->attach_media( $comment, 'video' );
 
-		bp_media_delete( array( 'id' => $photo ) );
+		bboss_media_delete( array( 'id' => $photo ) );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
 		$this->assertTrue( $this->media_exists( $video ) );
@@ -274,9 +274,9 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	public function test_photo_delete_keeps_comment_with_a_gif() {
 		$comment = $this->create_comment();
 		$photo   = $this->attach_media( $comment );
-		bp_activity_update_meta( $comment, '_gif_data', array( 'still' => 1, 'mp4' => 2 ) );
+		bboss_activity_update_meta( $comment, '_gif_data', array( 'still' => 1, 'mp4' => 2 ) );
 
-		bp_media_delete( array( 'id' => $photo ) );
+		bboss_media_delete( array( 'id' => $photo ) );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
 	}
@@ -286,7 +286,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$photo   = $this->attach_media( $comment );
 		$reply   = $this->create_comment( 'reply', self::factory()->user->create(), $comment );
 
-		bp_media_delete( array( 'id' => $photo ) );
+		bboss_media_delete( array( 'id' => $photo ) );
 
 		$this->assertFalse( $this->activity_exists( $comment ) );
 		$this->assertFalse( $this->activity_exists( $reply ) );
@@ -328,8 +328,8 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$this->assertTrue( $this->activity_exists( $comment ) );
 		$this->assertTrue( $this->media_exists( $photo ) );
 		// The photo meta must survive the document meta cleanup (V-7).
-		$this->assertSame( array( $photo ), wp_parse_id_list( bp_activity_get_meta( $comment, 'bp_media_ids', true ) ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_document_ids', true ) );
+		$this->assertSame( array( $photo ), wp_parse_id_list( bboss_activity_get_meta( $comment, 'bp_media_ids', true ) ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_document_ids', true ) );
 	}
 
 	public function test_last_document_delete_deletes_empty_comment() {
@@ -364,8 +364,8 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$this->assertTrue( $this->activity_exists( $comment ) );
 		$this->assertTrue( $this->document_exists( $document ) );
 		// The document meta must survive the video meta cleanup (V-7).
-		$this->assertSame( array( $document ), wp_parse_id_list( bp_activity_get_meta( $comment, 'bp_document_ids', true ) ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_video_ids', true ) );
+		$this->assertSame( array( $document ), wp_parse_id_list( bboss_activity_get_meta( $comment, 'bp_document_ids', true ) ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_video_ids', true ) );
 	}
 
 	public function test_video_delete_keeps_comment_with_other_videos() {
@@ -390,7 +390,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$reply   = $this->create_comment( 'reply', self::factory()->user->create(), $comment );
 
 		// The fixture must match what the UI stores, or this test proves nothing.
-		$this->assertSame( '&#8203;', ( new BP_Activity_Activity( $comment ) )->content );
+		$this->assertSame( '&#8203;', ( new BBoss_Activity_Activity( $comment ) )->content );
 
 		bp_video_delete( array( 'id' => $video ) );
 
@@ -433,7 +433,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		);
 		$photo    = $this->attach_media( $activity );
 
-		bp_media_delete( array( 'id' => $photo ) );
+		bboss_media_delete( array( 'id' => $photo ) );
 
 		$this->assertTrue( $this->activity_exists( $activity ) );
 	}
@@ -448,7 +448,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		);
 		$photo    = $this->attach_media( $activity );
 
-		bp_media_delete( array( 'id' => $photo ) );
+		bboss_media_delete( array( 'id' => $photo ) );
 
 		$this->assertFalse( $this->activity_exists( $activity ) );
 	}
@@ -458,18 +458,18 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	 */
 
 	public function test_helper_rejects_non_comments_and_missing_ids() {
-		$this->assertFalse( bb_activity_comment_has_remaining_content( $this->activity_id ) );
-		$this->assertFalse( bb_activity_comment_has_remaining_content( 0 ) );
-		$this->assertFalse( bb_activity_comment_has_remaining_content( PHP_INT_MAX ) );
+		$this->assertFalse( bboss_activity_comment_has_remaining_content( $this->activity_id ) );
+		$this->assertFalse( bboss_activity_comment_has_remaining_content( 0 ) );
+		$this->assertFalse( bboss_activity_comment_has_remaining_content( PHP_INT_MAX ) );
 	}
 
 	public function test_helper_treats_markup_only_text_as_empty() {
 		$comment = $this->create_comment( '<p> </p>' );
 
-		$this->assertFalse( bb_activity_comment_has_remaining_content( $comment ) );
+		$this->assertFalse( bboss_activity_comment_has_remaining_content( $comment ) );
 
 		$this->attach_media( $comment );
-		$this->assertTrue( bb_activity_comment_has_remaining_content( $comment ) );
+		$this->assertTrue( bboss_activity_comment_has_remaining_content( $comment ) );
 	}
 
 	/**
@@ -499,7 +499,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$comment = $this->create_comment();
 		$this->set_comment_content( $comment, $content );
 
-		$this->assertFalse( bb_activity_comment_has_remaining_content( $comment ) );
+		$this->assertFalse( bboss_activity_comment_has_remaining_content( $comment ) );
 	}
 
 	public function test_helper_counts_real_text_next_to_placeholders() {
@@ -507,7 +507,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 
 		foreach ( array( '&#8203;ok', '0', '&nbsp;a&nbsp;', '<p>&#8203;</p><p>x</p>' ) as $content ) {
 			$this->set_comment_content( $comment, $content );
-			$this->assertTrue( bb_activity_comment_has_remaining_content( $comment ), $content );
+			$this->assertTrue( bboss_activity_comment_has_remaining_content( $comment ), $content );
 		}
 	}
 
@@ -521,9 +521,9 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	protected function set_comment_content( $comment_id, $content ) {
 		global $wpdb;
 
-		$wpdb->update( buddypress()->activity->table_name, array( 'content' => $content ), array( 'id' => $comment_id ) );
+		$wpdb->update( bboss()->activity->table_name, array( 'content' => $content ), array( 'id' => $comment_id ) );
 		wp_cache_delete( $comment_id, 'bp_activity' );
-		$this->assertSame( $content, ( new BP_Activity_Activity( $comment_id ) )->content );
+		$this->assertSame( $content, ( new BBoss_Activity_Activity( $comment_id ) )->content );
 	}
 
 	public function test_helper_result_is_filterable() {
@@ -531,7 +531,7 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$photo   = $this->attach_media( $comment );
 
 		add_filter( 'bb_activity_comment_has_remaining_content', '__return_true' );
-		bp_media_delete( array( 'id' => $photo ) );
+		bboss_media_delete( array( 'id' => $photo ) );
 		remove_filter( 'bb_activity_comment_has_remaining_content', '__return_true' );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
@@ -544,65 +544,65 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	public function test_last_photo_delete_clears_media_meta_on_kept_comment() {
 		$comment = $this->create_comment( 'keep me' );
 		$photo   = $this->attach_media( $comment );
-		bp_activity_update_meta( $comment, 'bp_media_id', $photo );
-		bp_activity_update_meta( $comment, 'bp_media_activity', '1' );
+		bboss_activity_update_meta( $comment, 'bp_media_id', $photo );
+		bboss_activity_update_meta( $comment, 'bp_media_activity', '1' );
 
-		bp_media_delete( array( 'id' => $photo ) );
+		bboss_media_delete( array( 'id' => $photo ) );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_media_ids', true ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_media_id', true ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_media_activity', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_media_ids', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_media_id', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_media_activity', true ) );
 	}
 
 	public function test_photo_delete_removes_only_the_deleted_id_from_kept_comment_meta() {
 		$comment = $this->create_comment();
 		$photo_1 = $this->attach_media( $comment );
 		$photo_2 = $this->attach_media( $comment );
-		bp_activity_update_meta( $comment, 'bp_media_id', $photo_1 );
+		bboss_activity_update_meta( $comment, 'bp_media_id', $photo_1 );
 
-		bp_media_delete( array( 'id' => $photo_1 ) );
+		bboss_media_delete( array( 'id' => $photo_1 ) );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
-		$this->assertSame( (string) $photo_2, (string) bp_activity_get_meta( $comment, 'bp_media_ids', true ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_media_id', true ) );
+		$this->assertSame( (string) $photo_2, (string) bboss_activity_get_meta( $comment, 'bp_media_ids', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_media_id', true ) );
 	}
 
 	public function test_last_document_delete_clears_document_meta_on_kept_comment() {
 		$comment  = $this->create_comment( 'keep me' );
 		$document = $this->attach_document( $comment );
-		bp_activity_update_meta( $comment, 'bp_document_id', $document );
-		bp_activity_update_meta( $comment, 'bp_document_activity', '1' );
+		bboss_activity_update_meta( $comment, 'bp_document_id', $document );
+		bboss_activity_update_meta( $comment, 'bp_document_activity', '1' );
 
 		bp_document_delete( array( 'id' => $document ) );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_document_ids', true ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_document_id', true ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_document_activity', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_document_ids', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_document_id', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_document_activity', true ) );
 	}
 
 	public function test_last_video_delete_clears_video_meta_on_kept_comment() {
 		$comment = $this->create_comment( 'keep me' );
 		$video   = $this->attach_media( $comment, 'video' );
-		bp_activity_update_meta( $comment, 'bp_video_id', $video );
-		bp_activity_update_meta( $comment, 'bp_video_activity', '1' );
+		bboss_activity_update_meta( $comment, 'bp_video_id', $video );
+		bboss_activity_update_meta( $comment, 'bp_video_activity', '1' );
 
 		bp_video_delete( array( 'id' => $video ) );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_video_ids', true ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_video_id', true ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_video_activity', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_video_ids', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_video_id', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_video_activity', true ) );
 	}
 
 	public function test_meta_helper_ignores_unknown_types() {
 		$comment = $this->create_comment( 'keep me' );
-		bp_activity_update_meta( $comment, 'bp_foo_ids', '5' );
+		bboss_activity_update_meta( $comment, 'bp_foo_ids', '5' );
 
-		bb_activity_comment_remove_deleted_attachment_meta( $comment, 'foo', array( 5 ) );
+		bboss_activity_comment_remove_deleted_attachment_meta( $comment, 'foo', array( 5 ) );
 
-		$this->assertSame( '5', (string) bp_activity_get_meta( $comment, 'bp_foo_ids', true ) );
+		$this->assertSame( '5', (string) bboss_activity_get_meta( $comment, 'bp_foo_ids', true ) );
 	}
 
 	/**
@@ -656,15 +656,15 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$item_1  = $this->attach_by_type( $comment, $type );
 		$item_2  = $this->attach_by_type( $comment, $type );
 		$item_3  = $this->attach_by_type( $comment, $type );
-		bp_activity_update_meta( $comment, 'bp_' . $type . '_id', $item_3 );
-		bp_activity_update_meta( $comment, 'bp_' . $type . '_activity', '1' );
+		bboss_activity_update_meta( $comment, 'bp_' . $type . '_id', $item_3 );
+		bboss_activity_update_meta( $comment, 'bp_' . $type . '_activity', '1' );
 
 		$this->delete_by_type( $item_1, $type );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
-		$this->assertSame( $item_2 . ',' . $item_3, (string) bp_activity_get_meta( $comment, 'bp_' . $type . '_ids', true ) );
-		$this->assertSame( (string) $item_3, (string) bp_activity_get_meta( $comment, 'bp_' . $type . '_id', true ) );
-		$this->assertSame( '1', (string) bp_activity_get_meta( $comment, 'bp_' . $type . '_activity', true ) );
+		$this->assertSame( $item_2 . ',' . $item_3, (string) bboss_activity_get_meta( $comment, 'bp_' . $type . '_ids', true ) );
+		$this->assertSame( (string) $item_3, (string) bboss_activity_get_meta( $comment, 'bp_' . $type . '_id', true ) );
+		$this->assertSame( '1', (string) bboss_activity_get_meta( $comment, 'bp_' . $type . '_activity', true ) );
 	}
 
 	/**
@@ -679,20 +679,20 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		$document = $this->attach_document( $comment );
 
 		// Give the document the photo's numeric ID.
-		$table = buddypress()->document->table_name;
+		$table = bboss()->document->table_name;
 		$this->assertEmpty( $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE id = %d", $photo ) ) ); // phpcs:ignore
 		$wpdb->update( $table, array( 'id' => $photo ), array( 'id' => $document ) ); // phpcs:ignore
 		wp_cache_flush();
-		bp_activity_update_meta( $comment, 'bp_document_ids', (string) $photo );
+		bboss_activity_update_meta( $comment, 'bp_document_ids', (string) $photo );
 		$this->assertTrue( $this->document_exists( $photo ) );
 
-		bp_media_delete( array( 'id' => $photo ) );
+		bboss_media_delete( array( 'id' => $photo ) );
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
 		$this->assertFalse( $this->media_exists( $photo ) );
 		$this->assertTrue( $this->document_exists( $photo ) );
-		$this->assertSame( (string) $photo, (string) bp_activity_get_meta( $comment, 'bp_document_ids', true ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_media_ids', true ) );
+		$this->assertSame( (string) $photo, (string) bboss_activity_get_meta( $comment, 'bp_document_ids', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_media_ids', true ) );
 	}
 
 	/**
@@ -700,16 +700,16 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	 */
 	public function test_meta_helper_with_empty_input_writes_nothing() {
 		$comment = $this->create_comment( 'keep me' );
-		bp_activity_update_meta( $comment, 'bp_media_id', 77 );
-		bp_activity_update_meta( $comment, 'bp_media_activity', '1' );
+		bboss_activity_update_meta( $comment, 'bp_media_id', 77 );
+		bboss_activity_update_meta( $comment, 'bp_media_activity', '1' );
 
-		bb_activity_comment_remove_deleted_attachment_meta( $comment, 'media', array() );
-		bb_activity_comment_remove_deleted_attachment_meta( $comment, 'media', '' );
-		bb_activity_comment_remove_deleted_attachment_meta( 0, 'media', array( 77 ) );
+		bboss_activity_comment_remove_deleted_attachment_meta( $comment, 'media', array() );
+		bboss_activity_comment_remove_deleted_attachment_meta( $comment, 'media', '' );
+		bboss_activity_comment_remove_deleted_attachment_meta( 0, 'media', array( 77 ) );
 
-		$this->assertSame( '77', (string) bp_activity_get_meta( $comment, 'bp_media_id', true ) );
-		$this->assertSame( '1', (string) bp_activity_get_meta( $comment, 'bp_media_activity', true ) );
-		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_media_ids', true ) );
+		$this->assertSame( '77', (string) bboss_activity_get_meta( $comment, 'bp_media_id', true ) );
+		$this->assertSame( '1', (string) bboss_activity_get_meta( $comment, 'bp_media_activity', true ) );
+		$this->assertEmpty( bboss_activity_get_meta( $comment, 'bp_media_ids', true ) );
 	}
 
 	/*

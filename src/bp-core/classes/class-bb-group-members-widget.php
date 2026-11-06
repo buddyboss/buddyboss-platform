@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.9.00
  */
-class BB_Group_Members_Widget extends WP_Widget {
+class BBoss_Group_Members_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
@@ -24,8 +24,8 @@ class BB_Group_Members_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'bb_group_members_widget',
-			esc_html__( 'Group Members', 'buddyboss' ),
-			array( 'description' => esc_html__( 'Displays group members with tabs.', 'buddyboss' ) )
+			esc_html__( 'Group Members', 'buddyboss-platform' ),
+			array( 'description' => esc_html__( 'Displays group members with tabs.', 'buddyboss-platform' ) )
 		);
 
 		add_action( 'wp_ajax_widget_groups_members_list', array( $this, 'groups_ajax_widget_groups_members_list' ) );
@@ -44,7 +44,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 	/**
 	 * Map a widget tab / filter value to the member query `type`.
 	 *
-	 * The "Active" tab lists recently active members (BP_User_Query `active`, the
+	 * The "Active" tab lists recently active members (BBoss_User_Query `active`, the
 	 * same sort the members directory uses for "Recently Active"). It used to query
 	 * `online`, whose SQL window (presence interval + time span, ~80s) is shorter
 	 * than the interval at which presence is written to the DB (300s), so it was
@@ -98,7 +98,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 	/**
 	 * Whether the current user may see the members of a group.
 	 *
-	 * Uses the same predicate as the group screens (`bp_group_is_visible()`):
+	 * Uses the same predicate as the group screens (`bboss_group_is_visible()`):
 	 * public groups are open to everyone, private/hidden groups only to members
 	 * and community moderators.
 	 *
@@ -110,16 +110,16 @@ class BB_Group_Members_Widget extends WP_Widget {
 	 */
 	public static function bb_can_view_group_members( $group_id ) {
 		$group_id = absint( $group_id );
-		if ( empty( $group_id ) || ! function_exists( 'groups_get_group' ) ) {
+		if ( empty( $group_id ) || ! function_exists( 'bboss_groups_get_group' ) ) {
 			return false;
 		}
 
-		$group = groups_get_group( $group_id );
+		$group = bboss_groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
 			return false;
 		}
 
-		return (bool) bp_group_is_visible( $group );
+		return (bool) bboss_group_is_visible( $group );
 	}
 
 	/**
@@ -127,30 +127,30 @@ class BB_Group_Members_Widget extends WP_Widget {
 	 *
 	 * @since BuddyBoss 3.7.0
 	 *
-	 * @param array $query_args Args for bp_group_has_members().
+	 * @param array $query_args Args for bboss_group_has_members().
 	 *
 	 * @return string List item HTML. Never empty.
 	 */
 	public static function bb_get_members_list_html( $query_args ) {
 		ob_start();
 
-		if ( bp_group_has_members( $query_args ) ) {
-			while ( bp_group_members() ) :
-				bp_group_the_member();
-				$member_id = bp_get_group_member_id();
+		if ( bboss_group_has_members( $query_args ) ) {
+			while ( bboss_group_members() ) :
+				bboss_group_the_member();
+				$member_id = bboss_get_group_member_id();
 				?>
 				<li class="bb-rl-group-member-item">
 					<div class="item-avatar">
-						<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
-							<?php echo wp_kses_post( bp_get_group_member_avatar() ); ?>
-							<?php bb_user_presence_html( $member_id ); ?>
+						<a href="<?php echo esc_url( bboss_core_get_user_domain( $member_id ) ); ?>"<?php echo bboss_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+							<?php echo wp_kses_post( bboss_get_group_member_avatar() ); ?>
+							<?php bboss_user_presence_html( $member_id ); ?>
 						</a>
 					</div>
 					<div class="item-content">
-						<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
-							<span class="member-name"><?php echo esc_html( bp_get_group_member_name() ); ?></span>
+						<a href="<?php echo esc_url( bboss_core_get_user_domain( $member_id ) ); ?>"<?php echo bboss_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+							<span class="member-name"><?php echo esc_html( bboss_get_group_member_name() ); ?></span>
 						</a>
-						<span class="member-active"><?php echo esc_html( bp_get_last_activity( $member_id ) ); ?></span>
+						<span class="member-active"><?php echo esc_html( bboss_get_last_activity( $member_id ) ); ?></span>
 					</div>
 				</li>
 				<?php
@@ -158,7 +158,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 		} else {
 			?>
 			<li class="bb-rl-group-members-empty widget-error">
-				<?php esc_html_e( 'There are no members to display.', 'buddyboss' ); ?>
+				<?php esc_html_e( 'There are no members to display.', 'buddyboss-platform' ); ?>
 			</li>
 			<?php
 		}
@@ -176,11 +176,11 @@ class BB_Group_Members_Widget extends WP_Widget {
 	 * @param array $instance Widget instance.
 	 */
 	public function widget( $args, $instance ) {
-		if ( ! function_exists( 'bp_is_group' ) || ! bp_is_group() ) {
+		if ( ! function_exists( 'bboss_is_group' ) || ! bboss_is_group() ) {
 			return;
 		}
 
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 
 		// Do not list the members of a private/hidden group to non-members.
 		if ( ! self::bb_can_view_group_members( $group_id ) ) {
@@ -195,22 +195,22 @@ class BB_Group_Members_Widget extends WP_Widget {
 		$tabs        = array(
 			'active'      => array(
 				'id'    => 'bb-rl-active-groups-members',
-				'label' => __( 'Active', 'buddyboss' ),
+				'label' => __( 'Active', 'buddyboss-platform' ),
 			),
 			'last_joined' => array(
 				'id'    => 'bb-rl-newest-groups-members',
-				'label' => __( 'New', 'buddyboss' ),
+				'label' => __( 'New', 'buddyboss-platform' ),
 			),
 			'popular'     => array(
 				'id'    => 'bb-rl-popular-groups-members',
-				'label' => __( 'Popular', 'buddyboss' ),
+				'label' => __( 'Popular', 'buddyboss-platform' ),
 			),
 		);
 		?>
 		<div class="widget-header">
-			<h2 class="widget-title"><?php esc_html_e( 'Group members', 'buddyboss' ); ?></h2>
-			<a href="<?php echo esc_url( bp_get_group_permalink( groups_get_group( $group_id ) ) ); ?>" class="widget-link">
-				<?php esc_html_e( 'See all', 'buddyboss' ); ?>
+			<h2 class="widget-title"><?php esc_html_e( 'Group members', 'buddyboss-platform' ); ?></h2>
+			<a href="<?php echo esc_url( bboss_get_group_permalink( bboss_groups_get_group( $group_id ) ) ); ?>" class="widget-link">
+				<?php esc_html_e( 'See all', 'buddyboss-platform' ); ?>
 			</a>
 		</div>
 		<div class="bb-rl-group-members-list-options item-options" id="bb-rl-groups-members-list-options">
@@ -255,7 +255,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 
 		$filter   = isset( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'active';
 		$max      = isset( $_POST['max'] ) ? absint( wp_unslash( $_POST['max'] ) ) : 5;
-		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : bp_get_current_group_id();
+		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : bboss_get_current_group_id();
 
 		// The nonce is shared by every guest; the group must be checked on its own.
 		if ( ! self::bb_can_view_group_members( $group_id ) ) {

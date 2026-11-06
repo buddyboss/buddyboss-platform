@@ -25,7 +25,7 @@ class BP_Tests_Blogs_Filters extends BP_UnitTestCase {
 	function tearDown() {
 		parent::tearDown();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		_unregister_post_type( 'using_old_filter' );
 		remove_filter( 'bp_blogs_record_post_post_types',    array( $this, 'filter_post_types' ), 10 );
@@ -36,7 +36,7 @@ class BP_Tests_Blogs_Filters extends BP_UnitTestCase {
 	 * @goup bp_activity_get_actions
 	 */
 	public function test_bp_activity_get_actions() {
-		$activity_actions = bp_activity_get_actions();
+		$activity_actions = bboss_activity_get_actions();
 
 		$this->assertTrue( ! isset( $activity_actions->activity->new_using_old_filter ), 'Post types registering using the bp_blogs_record_post_post_types filter should not have a specific action' );
 	}
@@ -95,7 +95,7 @@ class BP_Tests_Blogs_Filters extends BP_UnitTestCase {
 			'post_author' => $u,
 		) );
 
-		$parent_activity_id = bp_activity_get_activity_id( array(
+		$parent_activity_id = bboss_activity_get_activity_id( array(
 			'component'         => 'blogs',
 			'type'              => 'new_blog_post',
 			'item_id'           => get_current_blog_id(),
@@ -122,7 +122,7 @@ class BP_Tests_Blogs_Filters extends BP_UnitTestCase {
 	}
 
 	protected function activity_exists_for_post_type( $item_id, $secondary_item_id, $action, $display_comments = false ) {
-		$a = bp_activity_get( array(
+		$a = bboss_activity_get( array(
 			'display_comments'  => $display_comments,
 			'filter'            => array(
 				'action'        => $action,

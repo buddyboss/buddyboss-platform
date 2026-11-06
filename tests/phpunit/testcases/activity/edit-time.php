@@ -41,17 +41,17 @@ class BP_Tests_Activity_Edit_Time extends BP_UnitTestCase {
 	 * @dataProvider provider_stored_values
 	 */
 	public function test_normalize_edit_time( $stored, $expected ) {
-		$this->assertSame( $expected, bb_activity_normalize_edit_time( $stored ) );
+		$this->assertSame( $expected, bboss_activity_normalize_edit_time( $stored ) );
 	}
 
 	/**
 	 * The fallback is validated against the same set, so the return type contract holds.
 	 */
 	public function test_default_must_be_an_allowed_duration() {
-		$this->assertSame( 600, bb_activity_normalize_edit_time( '', 999999 ) );
-		$this->assertSame( 600, bb_activity_normalize_edit_time( '', 'abc' ) );
-		$this->assertSame( -1, bb_activity_normalize_edit_time( '', -1 ) );
-		$this->assertSame( 3600, bb_activity_normalize_edit_time( 'abc', '3600' ) );
+		$this->assertSame( 600, bboss_activity_normalize_edit_time( '', 999999 ) );
+		$this->assertSame( 600, bboss_activity_normalize_edit_time( '', 'abc' ) );
+		$this->assertSame( -1, bboss_activity_normalize_edit_time( '', -1 ) );
+		$this->assertSame( 3600, bboss_activity_normalize_edit_time( 'abc', '3600' ) );
 	}
 
 	/**
@@ -60,36 +60,36 @@ class BP_Tests_Activity_Edit_Time extends BP_UnitTestCase {
 	 * @dataProvider provider_stored_values
 	 */
 	public function test_sanitizer_matches_normalizer( $stored, $expected ) {
-		$callbacks = buddypress()->plugin_dir . 'bp-core/admin/settings/activity/callbacks.php';
-		if ( ! function_exists( 'bb_activity_sanitize_edit_time' ) && file_exists( $callbacks ) ) {
+		$callbacks = bboss()->plugin_dir . 'bp-core/admin/settings/activity/callbacks.php';
+		if ( ! function_exists( 'bboss_activity_sanitize_edit_time' ) && file_exists( $callbacks ) ) {
 			require_once $callbacks;
 		}
-		if ( ! function_exists( 'bb_activity_sanitize_edit_time' ) ) {
+		if ( ! function_exists( 'bboss_activity_sanitize_edit_time' ) ) {
 			$this->markTestSkipped( 'Admin settings callbacks are not loadable in this context.' );
 		}
 
-		$this->assertSame( $expected, bb_activity_sanitize_edit_time( $stored ) );
+		$this->assertSame( $expected, bboss_activity_sanitize_edit_time( $stored ) );
 	}
 
 	/**
 	 * The getters normalise the stored option; an absent row resolves to the default.
 	 */
 	public function test_getters_normalize_stored_option() {
-		$original = bp_get_option( '_bp_activity_edit_time', null );
+		$original = bboss_get_option( '_bp_activity_edit_time', null );
 
-		bp_update_option( '_bp_activity_edit_time', '' );
-		$this->assertSame( 600, bp_get_activity_edit_time() );
+		bboss_update_option( '_bp_activity_edit_time', '' );
+		$this->assertSame( 600, bboss_get_activity_edit_time() );
 
-		bp_update_option( '_bp_activity_edit_time', '-1' );
-		$this->assertSame( -1, bp_get_activity_edit_time() );
+		bboss_update_option( '_bp_activity_edit_time', '-1' );
+		$this->assertSame( -1, bboss_get_activity_edit_time() );
 
-		bp_delete_option( '_bp_activity_edit_time' );
-		$this->assertSame( 600, bp_get_activity_edit_time() );
-		$this->assertSame( -1, bp_get_activity_edit_time( -1 ) );
-		$this->assertSame( 600, bp_get_activity_edit_time( 999999 ) );
+		bboss_delete_option( '_bp_activity_edit_time' );
+		$this->assertSame( 600, bboss_get_activity_edit_time() );
+		$this->assertSame( -1, bboss_get_activity_edit_time( -1 ) );
+		$this->assertSame( 600, bboss_get_activity_edit_time( 999999 ) );
 
 		if ( null !== $original ) {
-			bp_update_option( '_bp_activity_edit_time', $original );
+			bboss_update_option( '_bp_activity_edit_time', $original );
 		}
 	}
 
@@ -98,10 +98,10 @@ class BP_Tests_Activity_Edit_Time extends BP_UnitTestCase {
 	 */
 	public function test_normalize_comment_threading_depth() {
 		foreach ( array( '' => 3, 'abc' => 3, '0' => 3, '5' => 3, '99' => 3, '1' => 1, '2' => 2, '3' => 3, '4' => 4 ) as $stored => $expected ) {
-			$this->assertSame( $expected, bb_activity_normalize_comment_threading_depth( $stored ), "stored '{$stored}'" );
+			$this->assertSame( $expected, bboss_activity_normalize_comment_threading_depth( $stored ), "stored '{$stored}'" );
 		}
-		$this->assertSame( 3, bb_activity_normalize_comment_threading_depth( null ) );
-		$this->assertSame( 2, bb_activity_normalize_comment_threading_depth( 2 ) );
+		$this->assertSame( 3, bboss_activity_normalize_comment_threading_depth( null ) );
+		$this->assertSame( 2, bboss_activity_normalize_comment_threading_depth( 2 ) );
 	}
 
 	/**
@@ -112,13 +112,13 @@ class BP_Tests_Activity_Edit_Time extends BP_UnitTestCase {
 			$times['one_week_plus'] = array( 'value' => 700000, 'label' => 'Custom' );
 			return $times;
 		};
-		$this->assertNotContains( 700000, bb_activity_get_allowed_edit_times() );
+		$this->assertNotContains( 700000, bboss_activity_get_allowed_edit_times() );
 
 		add_filter( 'bp_activity_edit_times', $add );
-		$this->assertContains( 700000, bb_activity_get_allowed_edit_times() );
-		$this->assertSame( 700000, bb_activity_normalize_edit_time( '700000' ) );
+		$this->assertContains( 700000, bboss_activity_get_allowed_edit_times() );
+		$this->assertSame( 700000, bboss_activity_normalize_edit_time( '700000' ) );
 		remove_filter( 'bp_activity_edit_times', $add );
 
-		$this->assertNotContains( 700000, bb_activity_get_allowed_edit_times() );
+		$this->assertNotContains( 700000, bboss_activity_get_allowed_edit_times() );
 	}
 }

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Media {
+class BBoss_Nouveau_Media {
 	/**
 	 * Constructor
 	 *
@@ -53,7 +53,7 @@ class BP_Nouveau_Media {
 		// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'media_' ) ) {
+				if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'media_' ) ) {
 					require $this->dir . 'ajax.php';
 				}
 			} );
@@ -67,7 +67,7 @@ class BP_Nouveau_Media {
 	 */
 	protected function setup_actions() {
 		// Enqueue the scripts for the new UI
-		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_media_enqueue_scripts' );
+		add_action( 'bp_nouveau_enqueue_scripts', 'bboss_nouveau_media_enqueue_scripts' );
 	}
 
 	/**
@@ -78,13 +78,13 @@ class BP_Nouveau_Media {
 	protected function setup_filters() {
 
 		// Register messages scripts.
-		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_media_register_scripts', 10, 1 );
+		add_filter( 'bp_nouveau_register_scripts', 'bboss_nouveau_media_register_scripts', 10, 1 );
 
 		// Localize Scripts.
-		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_media_localize_scripts', 10, 1 );
+		add_filter( 'bp_core_get_js_strings', 'bboss_nouveau_media_localize_scripts', 10, 1 );
 
 		// Redirect edit button media popup activity to parent activity edit.
-		add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bp_nouveau_media_activity_edit_button', 10, 2 );
+		add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bboss_nouveau_media_activity_edit_button', 10, 2 );
 	}
 }
 
@@ -93,11 +93,11 @@ class BP_Nouveau_Media {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_media( $bp_nouveau = null ) {
+function bboss_nouveau_media( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->media = new BP_Nouveau_Media();
+	$bp_nouveau->media = new BBoss_Nouveau_Media();
 }
-add_action( 'bp_nouveau_includes', 'bp_nouveau_media', 10, 1 );
+add_action( 'bp_nouveau_includes', 'bboss_nouveau_media', 10, 1 );

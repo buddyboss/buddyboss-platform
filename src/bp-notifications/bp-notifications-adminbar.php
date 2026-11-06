@@ -18,17 +18,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool
  */
-function bp_notifications_toolbar_menu() {
+function bboss_notifications_toolbar_menu() {
 	global $wp_admin_bar;
 
 	if ( ! is_user_logged_in() ) {
 		return false;
 	}
 
-	$count       = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+	$count       = bboss_notifications_get_unread_notification_count( bboss_loggedin_user_id() );
 	$alert_class = (int) $count > 0 ? 'pending-count alert' : 'count no-alert';
-	$menu_title  = '<span id="ab-pending-notifications" class="' . $alert_class . '">' . bp_core_number_format( $count ) . '</span>';
-	$menu_link   = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
+	$menu_title  = '<span id="ab-pending-notifications" class="' . $alert_class . '">' . bboss_core_number_format( $count ) . '</span>';
+	$menu_link   = trailingslashit( bboss_loggedin_user_domain() . bboss_get_notifications_slug() );
 
 	// Add the top-level Notifications button.
 	$wp_admin_bar->add_menu(
@@ -40,22 +40,22 @@ function bp_notifications_toolbar_menu() {
 		)
 	);
 
-	if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&per_page=6&user_id=' . get_current_user_id() . '&is_new=1' ) ) {
+	if ( bboss_has_notifications( bboss_ajax_querystring( 'notifications' ) . '&per_page=6&user_id=' . get_current_user_id() . '&is_new=1' ) ) {
 
-		$total = buddypress()->notifications->query_loop->total_notification_count;
-		while ( bp_the_notifications() ) :
-			bp_the_notification();
+		$total = bboss()->notifications->query_loop->total_notification_count;
+		while ( bboss_the_notifications() ) :
+			bboss_the_notification();
 
 			ob_start();
 			?>
 				<div class="notification-avatar">
-				<?php bb_notification_avatar(); ?>
+				<?php bboss_notification_avatar(); ?>
 				</div>
 				<div class="notification-content">
 					<div class="bb-full-link">
-						<?php bp_the_notification_description(); ?>
+						<?php bboss_the_notification_description(); ?>
 					</div>
-					<div class="posted"><?php bp_the_notification_time_since(); ?></div>
+					<div class="posted"><?php bboss_the_notification_time_since(); ?></div>
 				</div>
 				<?php
 
@@ -63,7 +63,7 @@ function bp_notifications_toolbar_menu() {
 				$wp_admin_bar->add_menu(
 					array(
 						'parent' => 'bp-notifications',
-						'id'     => 'notification-' . bp_get_the_notification_id(),
+						'id'     => 'notification-' . bboss_get_the_notification_id(),
 						'title'  => $html,
 					)
 				);
@@ -71,12 +71,12 @@ function bp_notifications_toolbar_menu() {
 			endwhile;
 
 		if ( $total > 6 ) {
-			$menu_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
+			$menu_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_notifications_slug() );
 			$wp_admin_bar->add_menu(
 				array(
 					'parent' => 'bp-notifications',
 					'id'     => 'notification-view-all',
-					'title'  => esc_html__( 'View Notifications', 'buddyboss' ),
+					'title'  => esc_html__( 'View Notifications', 'buddyboss-platform' ),
 					'href'   => $menu_link,
 				)
 			);
@@ -87,11 +87,11 @@ function bp_notifications_toolbar_menu() {
 			array(
 				'parent' => 'bp-notifications',
 				'id'     => 'no-notifications',
-				'title'  => __( 'No new notifications', 'buddyboss' ),
+				'title'  => __( 'No new notifications', 'buddyboss-platform' ),
 				'href'   => $menu_link,
 			)
 		);
 	}
 
 }
-add_action( 'admin_bar_menu', 'bp_members_admin_bar_notifications_menu', 90 );
+add_action( 'admin_bar_menu', 'bboss_members_admin_bar_notifications_menu', 90 );

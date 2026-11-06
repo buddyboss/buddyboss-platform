@@ -19,17 +19,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_invites_feature() {
+function bboss_admin_settings_register_invites_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'invites',
 		array(
-			'label'              => __( 'Email Invites', 'buddyboss' ),
-			'description'        => __( 'Allow members to send email invitations to help encourage others to register and join your community.', 'buddyboss' ),
+			'label'              => __( 'Email Invites', 'buddyboss-platform' ),
+			'description'        => __( 'Allow members to send email invitations to help encourage others to register and join your community.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-paper-plane-tilt',
@@ -38,7 +38,7 @@ function bb_admin_settings_register_invites_feature() {
 			'category'           => 'community',
 			'standalone'         => true,
 			'is_active_callback' => function () {
-				return bp_is_active( 'invites' );
+				return bboss_is_active( 'invites' );
 			},
 			'settings_route'     => '/settings/invites',
 			'order'              => 140,
@@ -47,7 +47,7 @@ function bb_admin_settings_register_invites_feature() {
 
 	// When email invites is disabled, only the feature card is needed (so admin can re-enable).
 	// Side panels, sections, and fields depend on email invite functions that aren't loaded.
-	if ( ! bp_is_active( 'invites' ) ) {
+	if ( ! bboss_is_active( 'invites' ) ) {
 		return;
 	}
 
@@ -59,16 +59,16 @@ function bb_admin_settings_register_invites_feature() {
 	// =========================================================================
 
 	// Side Panel 1: Email Invite Settings (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'invites',
 		'email_invite_settings',
 		array(
-			'title'      => __( 'Email Invite Settings', 'buddyboss' ),
+			'title'      => __( 'Email Invite Settings', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -83,11 +83,11 @@ function bb_admin_settings_register_invites_feature() {
 	);
 
 	// Side Panel 2: Email Invites (list screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'invites',
 		'invites_list',
 		array(
-			'title' => __( 'Email Invites', 'buddyboss' ),
+			'title' => __( 'Email Invites', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-envelope-simple-open',
@@ -104,44 +104,44 @@ function bb_admin_settings_register_invites_feature() {
 	// SECTION: EMAIL INVITE SETTINGS
 	// -------------------------------------------------------------------------
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'invites',
 		'email_invite_settings',
 		'email_invite_general',
 		array(
-			'title'    => __( 'Email Invite Settings', 'buddyboss' ),
+			'title'    => __( 'Email Invite Settings', 'buddyboss-platform' ),
 			'order'    => 10,
 			'help_url' => '636156',
 		)
 	);
 
 	// FIELD: Customize Email Subject (Toggle).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'invites',
 		'email_invite_settings',
 		'email_invite_general',
 		array(
 			'name'              => 'bp-disable-invite-member-email-subject',
-			'label'             => __( 'Email Subject', 'buddyboss' ),
+			'label'             => __( 'Email Subject', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to customize the email subject', 'buddyboss' ),
-			'default'           => absint( bp_get_option( 'bp-disable-invite-member-email-subject', 0 ) ),
+			'description'       => __( 'Allow members to customize the email subject', 'buddyboss-platform' ),
+			'default'           => absint( bboss_get_option( 'bp-disable-invite-member-email-subject', 0 ) ),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
 	);
 
 	// FIELD: Customize Email Content (Toggle).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'invites',
 		'email_invite_settings',
 		'email_invite_general',
 		array(
 			'name'              => 'bp-disable-invite-member-email-content',
-			'label'             => __( 'Email Content', 'buddyboss' ),
+			'label'             => __( 'Email Content', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to customize the email body content', 'buddyboss' ),
-			'default'           => absint( bp_get_option( 'bp-disable-invite-member-email-content', 1 ) ),
+			'description'       => __( 'Allow members to customize the email body content', 'buddyboss-platform' ),
+			'default'           => absint( bboss_get_option( 'bp-disable-invite-member-email-content', 1 ) ),
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
 		)
@@ -149,22 +149,22 @@ function bb_admin_settings_register_invites_feature() {
 
 	// FIELD: Select Profile Type (Toggle).
 	// Only show when profile types feature is enabled.
-	if ( true === bp_member_type_enable_disable() ) {
-		bb_register_feature_field(
+	if ( true === bboss_member_type_enable_disable() ) {
+		bboss_register_feature_field(
 			'invites',
 			'email_invite_settings',
 			'email_invite_general',
 			array(
 				'name'              => 'bp-disable-invite-member-type',
-				'label'             => __( 'Set Profile Type', 'buddyboss' ),
+				'label'             => __( 'Set Profile Type', 'buddyboss-platform' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow members to select profile type of invitee', 'buddyboss' ),
+				'description'       => __( 'Allow members to select profile type of invitee', 'buddyboss-platform' ),
 				'help_text'         => sprintf(
 					/* translators: %s: profile type link. */
-					__( 'Customize this setting while editing any of your %s.', 'buddyboss' ),
-					'<a href="' . esc_url( bb_get_feature_settings_url( 'members', 'profile_types' ) ) . '">' . __( 'profile type', 'buddyboss' ) . '</a>'
+					__( 'Customize this setting while editing any of your %s.', 'buddyboss-platform' ),
+					'<a href="' . esc_url( bboss_get_feature_settings_url( 'members', 'profile_types' ) ) . '">' . __( 'profile type', 'buddyboss-platform' ) . '</a>'
 				),
-				'default'           => absint( bp_get_option( 'bp-disable-invite-member-type', 0 ) ),
+				'default'           => absint( bboss_get_option( 'bp-disable-invite-member-type', 0 ) ),
 				'sanitize_callback' => 'absint',
 				'order'             => 30,
 			)
@@ -218,4 +218,4 @@ function bb_admin_settings_register_invites_feature() {
 	do_action( 'bb_invites_after_register_settings_fields' );
 }
 
-add_action( 'bb_register_features', 'bb_admin_settings_register_invites_feature', 20 );
+add_action( 'bb_register_features', 'bboss_admin_settings_register_invites_feature', 20 );

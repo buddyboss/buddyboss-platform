@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.6.0
  */
-class BP_Core_Nav {
+class BBoss_Core_Nav {
 	/**
 	 * An associative array containing the nav items for the object ID.
 	 *
@@ -42,7 +42,7 @@ class BP_Core_Nav {
 	 */
 	public function __construct( $object_id = 0 ) {
 		if ( empty( $object_id ) ) {
-			$this->object_id = (int) bp_displayed_user_id();
+			$this->object_id = (int) bboss_displayed_user_id();
 		} else {
 			$this->object_id = (int) $object_id;
 		}
@@ -91,7 +91,7 @@ class BP_Core_Nav {
 			$value['primary'] = true;
 		}
 
-		$this->nav[ $this->object_id ][ $key ] = new BP_Core_Nav_Item( $value );
+		$this->nav[ $this->object_id ][ $key ] = new BBoss_Core_Nav_Item( $value );
 	}
 
 	/**
@@ -127,7 +127,7 @@ class BP_Core_Nav {
 	 * @since BuddyPress 2.6.0
 	 *
 	 * @param array $args The nav item's arguments.
-	 * @return BP_Core_Nav_Item
+	 * @return BBoss_Core_Nav_Item
 	 */
 	public function add_nav( $args ) {
 		if ( empty( $args['slug'] ) ) {
@@ -146,7 +146,7 @@ class BP_Core_Nav {
 		}
 
 		// Add to the nav.
-		$this->nav[ $this->object_id ][ $slug ] = new BP_Core_Nav_Item( $args );
+		$this->nav[ $this->object_id ][ $slug ] = new BBoss_Core_Nav_Item( $args );
 
 		return $this->nav[ $this->object_id ][ $slug ];
 	}
@@ -159,7 +159,7 @@ class BP_Core_Nav {
 	 * @param array  $args        The nav item's arguments.
 	 * @param string $slug        The slug of the nav item.
 	 * @param string $parent_slug The slug of the parent nav item (required to edit a child).
-	 * @return BP_Core_Nav_Item
+	 * @return BBoss_Core_Nav_Item
 	 */
 	public function edit_nav( $args = array(), $slug = '', $parent_slug = '' ) {
 		if ( empty( $slug ) ) {
@@ -175,7 +175,7 @@ class BP_Core_Nav {
 			}
 
 			$nav_item                               = reset( $nav_items );
-			$this->nav[ $this->object_id ][ $slug ] = new BP_Core_Nav_Item( bp_parse_args( $args, (array) $nav_item ) );
+			$this->nav[ $this->object_id ][ $slug ] = new BBoss_Core_Nav_Item( bboss_parse_args( $args, (array) $nav_item ) );
 
 			// Return the edited object.
 			return $this->nav[ $this->object_id ][ $slug ];
@@ -196,14 +196,14 @@ class BP_Core_Nav {
 
 			$sub_item = reset( $sub_items );
 
-			$params = bp_parse_args( $args, (array) $sub_item );
+			$params = bboss_parse_args( $args, (array) $sub_item );
 
 			// When we have parents, it's for life, we can't change them!
 			if ( empty( $params['parent_slug'] ) || $parent_slug !== $params['parent_slug'] ) {
 				return false;
 			}
 
-			$this->nav[ $this->object_id ][ $parent_slug . '/' . $slug ] = new BP_Core_Nav_Item( $params );
+			$this->nav[ $this->object_id ][ $parent_slug . '/' . $slug ] = new BBoss_Core_Nav_Item( $params );
 
 			// Return the edited object.
 			return $this->nav[ $this->object_id ][ $parent_slug . '/' . $slug ];
@@ -336,7 +336,7 @@ class BP_Core_Nav {
 	 * @return array The list of primary objects nav
 	 */
 	public function get_primary( $args = array(), $sort = true ) {
-		$params = bp_parse_args( $args, array( 'primary' => true ) );
+		$params = bboss_parse_args( $args, array( 'primary' => true ) );
 
 		// This parameter is not overridable.
 		if ( empty( $params['primary'] ) ) {
@@ -366,7 +366,7 @@ class BP_Core_Nav {
 	 * @return bool|array The list of secondary objects nav, or false if none set.
 	 */
 	public function get_secondary( $args = array(), $sort = true ) {
-		$params = bp_parse_args( $args, array( 'parent_slug' => '' ) );
+		$params = bboss_parse_args( $args, array( 'parent_slug' => '' ) );
 
 		// No need to search children if the parent is not set.
 		if ( empty( $params['parent_slug'] ) && empty( $params['secondary'] ) ) {

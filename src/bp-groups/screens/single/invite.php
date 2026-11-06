@@ -6,20 +6,23 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of a group's Send Invites page.
  *
  * @since BuddyPress 1.0.0
  */
-function groups_screen_group_invite() {
+function bboss_groups_screen_group_invite() {
 
-	if ( ! bp_is_single_item() ) {
+	if ( ! bboss_is_single_item() ) {
 		return false;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
-	if ( bp_is_action_variable( 'send', 0 ) ) {
+	if ( bboss_is_action_variable( 'send', 0 ) ) {
 
 		if ( ! check_admin_referer( 'groups_send_invites', '_wpnonce_send_invites' ) ) {
 			return false;
@@ -27,7 +30,7 @@ function groups_screen_group_invite() {
 
 		if ( ! empty( $_POST['friends'] ) ) {
 			foreach ( (array) $_POST['friends'] as $friend ) {
-				groups_invite_user(
+				bboss_groups_invite_user(
 					array(
 						'user_id'  => $friend,
 						'group_id' => $bp->groups->current_group->id,
@@ -37,8 +40,8 @@ function groups_screen_group_invite() {
 		}
 
 		// Send the invites.
-		groups_send_invites( array( 'group_id' => $bp->groups->current_group->id ) );
-		bp_core_add_message( __( 'Group invites sent.', 'buddyboss' ) );
+		bboss_groups_send_invites( array( 'group_id' => $bp->groups->current_group->id ) );
+		bboss_core_add_message( __( 'Group invites sent.', 'buddyboss-platform' ) );
 
 		/**
 		 * Fires after the sending of a group invite inside the group's Send Invites page.
@@ -48,15 +51,15 @@ function groups_screen_group_invite() {
 		 * @param int $id ID of the group whose members are being displayed.
 		 */
 		do_action( 'groups_screen_group_invite', $bp->groups->current_group->id );
-		bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
+		bboss_core_redirect( bboss_get_group_permalink( $bp->groups->current_group ) );
 
-	} elseif ( ! bp_action_variable( 0 ) ) {
+	} elseif ( ! bboss_action_variable( 0 ) ) {
 
-		if ( false === bp_get_group_current_invite_tab() && 'invite' === bp_current_action() ) {
-			bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . 'invite/send-invites/' );
+		if ( false === bboss_get_group_current_invite_tab() && 'invite' === bboss_current_action() ) {
+			bboss_core_redirect( bboss_get_group_permalink( bboss_groups_get_current_group() ) . 'invite/send-invites/' );
 		}
 
-		add_action( 'bp_template_content', 'bp_groups_send_invite_screen_content' );
+		add_action( 'bp_template_content', 'bboss_groups_send_invite_screen_content' );
 
 		/**
 		 * Filters the template to load for a group's Send Invites page.
@@ -65,15 +68,15 @@ function groups_screen_group_invite() {
 		 *
 		 * @since BuddyPress 1.0.0
 		 */
-		bp_core_load_template( apply_filters( 'groups_template_group_invite', 'groups/single/home' ) );
+		bboss_core_load_template( apply_filters( 'groups_template_group_invite', 'groups/single/home' ) );
 
-	} elseif ( in_array( bp_get_group_current_invite_tab(), array( 'invite', 'send-invites', 'pending-invites' ), true ) ) {
+	} elseif ( in_array( bboss_get_group_current_invite_tab(), array( 'invite', 'send-invites', 'pending-invites' ), true ) ) {
 
-		if ( false === bp_get_group_current_invite_tab() && 'invite' === bp_current_action() ) {
-			bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . 'invite/send-invites/' );
+		if ( false === bboss_get_group_current_invite_tab() && 'invite' === bboss_current_action() ) {
+			bboss_core_redirect( bboss_get_group_permalink( bboss_groups_get_current_group() ) . 'invite/send-invites/' );
 		}
 
-		add_action( 'bp_template_content', 'bp_groups_send_invite_screen_content' );
+		add_action( 'bp_template_content', 'bboss_groups_send_invite_screen_content' );
 
 		/**
 		 * Filters the template to load for a group's Send Invites page.
@@ -82,14 +85,14 @@ function groups_screen_group_invite() {
 		 *
 		 * @since BuddyPress 1.0.0
 		 */
-		bp_core_load_template( apply_filters( 'groups_template_group_invite', 'groups/single/home' ) );
+		bboss_core_load_template( apply_filters( 'groups_template_group_invite', 'groups/single/home' ) );
 	} else {
-		bp_do_404();
+		bboss_do_404();
 	}
 }
 
-function bp_groups_send_invite_screen_content() {
-	bp_get_template_part( 'groups/single/invite' );
+function bboss_groups_send_invite_screen_content() {
+	bboss_get_template_part( 'groups/single/invite' );
 }
 
 /**
@@ -100,12 +103,12 @@ function bp_groups_send_invite_screen_content() {
  *
  * @since BuddyPress 2.0.0
  */
-function groups_remove_group_invite() {
-	if ( ! bp_is_group_invites() ) {
+function bboss_groups_remove_group_invite() {
+	if ( ! bboss_is_group_invites() ) {
 		return;
 	}
 
-	if ( ! bp_is_action_variable( 'remove', 0 ) || ! is_numeric( bp_action_variable( 1 ) ) ) {
+	if ( ! bboss_is_action_variable( 'remove', 0 ) || ! is_numeric( bboss_action_variable( 1 ) ) ) {
 		return;
 	}
 
@@ -113,24 +116,24 @@ function groups_remove_group_invite() {
 		return false;
 	}
 
-	$friend_id = intval( bp_action_variable( 1 ) );
-	$group_id  = bp_get_current_group_id();
-	$message   = __( 'Invite successfully removed', 'buddyboss' );
+	$friend_id = intval( bboss_action_variable( 1 ) );
+	$group_id  = bboss_get_current_group_id();
+	$message   = __( 'Invite successfully removed', 'buddyboss-platform' );
 	$redirect  = wp_get_referer();
 	$error     = false;
 
-	if ( ! bp_groups_user_can_send_invites( $group_id ) ) {
-		$message = __( 'You are not allowed to send or remove invites', 'buddyboss' );
+	if ( ! bboss_groups_user_can_send_invites( $group_id ) ) {
+		$message = __( 'You are not allowed to send or remove invites', 'buddyboss-platform' );
 		$error   = 'error';
-	} elseif ( groups_check_for_membership_request( $friend_id, $group_id ) ) {
-		$message = __( 'The member requested to join the group', 'buddyboss' );
+	} elseif ( bboss_groups_check_for_membership_request( $friend_id, $group_id ) ) {
+		$message = __( 'The member requested to join the group', 'buddyboss-platform' );
 		$error   = 'error';
-	} elseif ( ! groups_uninvite_user( $friend_id, $group_id ) ) {
-		$message = __( 'There was an error removing the invite', 'buddyboss' );
+	} elseif ( ! bboss_groups_uninvite_user( $friend_id, $group_id ) ) {
+		$message = __( 'There was an error removing the invite', 'buddyboss-platform' );
 		$error   = 'error';
 	}
 
-	bp_core_add_message( $message, $error );
-	bp_core_redirect( $redirect );
+	bboss_core_add_message( $message, $error );
+	bboss_core_redirect( $redirect );
 }
-add_action( 'bp_screens', 'groups_remove_group_invite' );
+add_action( 'bp_screens', 'bboss_groups_remove_group_invite' );

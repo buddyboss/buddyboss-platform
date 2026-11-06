@@ -6,7 +6,7 @@
  * filters, and AJAX loading support.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,19 +14,19 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 ?>
-<h2 class="bp-screen-title<?php echo ( ! bp_is_group_home() ) ? ' bp-screen-reader-text' : ''; ?>">
-	<?php esc_html_e( 'Group Feed', 'buddyboss' ); ?>
+<h2 class="bp-screen-title<?php echo ( ! bboss_is_group_home() ) ? ' bp-screen-reader-text' : ''; ?>">
+	<?php esc_html_e( 'Group Feed', 'buddyboss-platform' ); ?>
 </h2>
 
-<?php bp_nouveau_groups_activity_post_form(); ?>
+<?php bboss_nouveau_groups_activity_post_form(); ?>
 
 <div class="subnav-filters filters clearfix bb-rl-subnav-filters-group-activity activity-head-bar">
-	<?php bp_get_template_part( 'common/filters/groups-screens-filters' ); ?>
+	<?php bboss_get_template_part( 'common/filters/groups-screens-filters' ); ?>
 </div><!-- // .subnav-filters -->
 
-<?php bp_nouveau_group_hook( 'before', 'activity_content' ); ?>
+<?php bboss_nouveau_group_hook( 'before', 'activity_content' ); ?>
 
 <div class="bb-rl-screen-content">
 <div id="bb-rl-activity-stream" class="activity single-group" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
@@ -57,12 +57,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		}
 		echo '</div>';
 	} else {
-		bp_get_template_part( 'activity/activity-loop' );
+		bboss_get_template_part( 'activity/activity-loop' );
 	}
 	?>
 </div><!-- .activity -->
 </div><!-- .bb-rl-screen-content -->
 
 <?php
-bp_nouveau_group_hook( 'after', 'activity_content' );
-bp_get_template_part( 'common/js-templates/activity/comments' );
+bboss_nouveau_group_hook( 'after', 'activity_content' );
+bboss_get_template_part( 'common/js-templates/activity/comments' );

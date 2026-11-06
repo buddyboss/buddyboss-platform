@@ -7,7 +7,7 @@
 
 /**
  * Tests for the subscription fan-out: the light single-column fetch in
- * BB_Subscriptions::get(), the threshold-routed dispatcher, the keyset
+ * BBoss_Subscriptions::get(), the threshold-routed dispatcher, the keyset
  * background worker, and the chunk claim lifecycle.
  *
  * @group core
@@ -196,7 +196,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		for ( $i = 0; $i < $count; $i++ ) {
 			$user_id = self::factory()->user->create();
 
-			$subscription = bb_create_subscription(
+			$subscription = bboss_create_subscription(
 				array(
 					'type'    => self::$type,
 					'user_id' => $user_id,
@@ -237,7 +237,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id  = $this->next_item_id();
 		$user_ids = $this->create_subscribers( 5, $item_id );
 
-		$result = bb_get_subscription_users(
+		$result = bboss_get_subscription_users(
 			array(
 				'type'     => self::$type,
 				'item_id'  => $item_id,
@@ -264,7 +264,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$this->create_subscribers( 3, $item_id );
 
 		// Row ids for the created subscriptions.
-		$rows = BB_Subscriptions::get(
+		$rows = BBoss_Subscriptions::get(
 			array(
 				'type'    => self::$type,
 				'item_id' => $item_id,
@@ -277,7 +277,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 
 		wp_cache_flush();
 
-		bb_get_subscription_users(
+		bboss_get_subscription_users(
 			array(
 				'type'    => self::$type,
 				'item_id' => $item_id,
@@ -301,7 +301,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id = $this->next_item_id();
 		$this->create_subscribers( 3, $item_id );
 
-		$result = BB_Subscriptions::get(
+		$result = BBoss_Subscriptions::get(
 			array(
 				'type'     => self::$type,
 				'item_id'  => $item_id,
@@ -322,7 +322,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id = $this->next_item_id();
 		$this->create_subscribers( 2, $item_id );
 
-		$result = BB_Subscriptions::get(
+		$result = BBoss_Subscriptions::get(
 			array(
 				'type'     => self::$type,
 				'item_id'  => $item_id,
@@ -351,7 +351,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		};
 		add_filter( 'bb_subscriptions_get_paged_subscriptions_sql', $capture );
 
-		BB_Subscriptions::get(
+		BBoss_Subscriptions::get(
 			array(
 				'type'    => self::$type,
 				'item_id' => $item_id,
@@ -364,7 +364,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		remove_filter( 'bb_subscriptions_get_paged_subscriptions_sql', $capture );
 
 		$this->assertNotEmpty( $captured );
-		$this->assertFalse( bp_core_get_incremented_cache( end( $captured ), 'bb_subscriptions' ), 'A one-off read must not populate the incremented cache.' );
+		$this->assertFalse( bboss_core_get_incremented_cache( end( $captured ), 'bb_subscriptions' ), 'A one-off read must not populate the incremented cache.' );
 	}
 
 	/**
@@ -379,7 +379,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		// ( page - 1 ) * 100 overflows to a float here; unclamped, intval() of
 		// it is negative and the LIMIT is rejected by MySQL.
 		$wpdb->last_error = '';
-		$result           = BB_Subscriptions::get(
+		$result           = BBoss_Subscriptions::get(
 			array(
 				'type'     => self::$type,
 				'item_id'  => $item_id,
@@ -396,7 +396,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$this->assertSame( 2, (int) $result['total'], 'The total is unaffected by the page.' );
 
 		// Sanity: normal paging still works.
-		$page_two = BB_Subscriptions::get(
+		$page_two = BBoss_Subscriptions::get(
 			array(
 				'type'     => self::$type,
 				'item_id'  => $item_id,
@@ -414,7 +414,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 	 * An item with no subscribers returns an empty list.
 	 */
 	public function test_get_zero_rows_returns_empty_array() {
-		$result = BB_Subscriptions::get(
+		$result = BBoss_Subscriptions::get(
 			array(
 				'type'    => self::$type,
 				'item_id' => 999999,
@@ -434,7 +434,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id  = $this->next_item_id();
 		$user_ids = $this->create_subscribers( 1, $item_id );
 
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -458,7 +458,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id  = $this->next_item_id();
 		$user_ids = $this->create_subscribers( 5, $item_id );
 
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -484,7 +484,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id = $this->next_item_id();
 		$this->create_subscribers( 6, $item_id );
 
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -509,7 +509,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 	public function test_dispatcher_zero_subscribers_sends_nothing() {
 		global $wpdb;
 
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $this->next_item_id(),
@@ -530,9 +530,9 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id  = $this->next_item_id();
 		$user_ids = $this->create_subscribers( 2, $item_id );
 
-		bb_subscriptions_update_subscriptions_status( self::$type, $item_id, 0, get_current_blog_id() );
+		bboss_subscriptions_update_subscriptions_status( self::$type, $item_id, 0, get_current_blog_id() );
 
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -553,7 +553,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$activity     = new stdClass();
 		$activity->id = 4242;
 
-		$compact = bb_subscriptions_compact_notification_data(
+		$compact = bboss_subscriptions_compact_notification_data(
 			array(
 				'email_tokens' => array(
 					'tokens' => array(
@@ -570,7 +570,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$this->assertSame( 'Tester', $compact['email_tokens']['tokens']['poster.name'] );
 
 		$plain = array( 'topic_id' => 5, 'email_tokens' => array( 'tokens' => array( 'x' => 'y' ) ) );
-		$this->assertSame( $plain, bb_subscriptions_compact_notification_data( $plain ), 'Payloads without the object pass through unchanged.' );
+		$this->assertSame( $plain, bboss_subscriptions_compact_notification_data( $plain ), 'Payloads without the object pass through unchanged.' );
 	}
 
 	/**
@@ -585,7 +585,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id  = $this->next_item_id();
 		$user_ids = $this->create_subscribers( 3, $item_id );
 
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -619,7 +619,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		self::$rejected_user_id = $user_ids[0];
 		add_filter( 'bb_subscriptions_pre_validate', array( $this, 'reject_flagged_subscriber' ), 10, 2 );
 
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -651,7 +651,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		self::$rejected_user_id = $user_ids[0];
 		add_filter( 'bb_subscriptions_pre_validate', array( $this, 'reject_flagged_subscriber' ), 10, 2 );
 
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -695,7 +695,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$guard = 0;
 		while ( $args && $guard++ < 10 ) {
 			$this->truncate_page_rows_only();
-			bb_send_notifications_to_subscribers_batch( $args );
+			bboss_send_notifications_to_subscribers_batch( $args );
 
 			$args = null;
 			foreach ( $this->get_queue_rows() as $row ) {
@@ -745,13 +745,13 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 
 		// Two workers executing the same page row: the second resumes from the
 		// cursor (page 2, partial) and must not insert a second next-page row.
-		bb_send_notifications_to_subscribers_batch( $page_args );
-		bb_send_notifications_to_subscribers_batch( $page_args );
+		bboss_send_notifications_to_subscribers_batch( $page_args );
+		bboss_send_notifications_to_subscribers_batch( $page_args );
 
 		$next_rows = array_filter(
 			$this->get_queue_rows(),
 			function ( $row ) {
-				return 'bb_send_notifications_to_subscribers_batch' === $row['callback'];
+				return 'bboss_send_notifications_to_subscribers_batch' === $row['callback'];
 			}
 		);
 
@@ -769,7 +769,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id = $this->next_item_id();
 		$this->create_subscribers( 2, $item_id );
 
-		bb_send_notifications_to_subscribers_batch(
+		bboss_send_notifications_to_subscribers_batch(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -786,7 +786,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$page_rows = array_filter(
 			$rows,
 			function ( $row ) {
-				return 'bb_send_notifications_to_subscribers_batch' === $row['callback'];
+				return 'bboss_send_notifications_to_subscribers_batch' === $row['callback'];
 			}
 		);
 
@@ -817,11 +817,11 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			'per_page'          => 3,
 		);
 
-		bb_send_notifications_to_subscribers_batch( $page_args );
+		bboss_send_notifications_to_subscribers_batch( $page_args );
 		$first_run = $this->queued_chunk_user_ids();
 
 		// Re-run the SAME page row (stale-lock takeover / mid-task fatal retry).
-		bb_send_notifications_to_subscribers_batch( $page_args );
+		bboss_send_notifications_to_subscribers_batch( $page_args );
 		$after_rerun = $this->queued_chunk_user_ids();
 
 		// The re-run resumes past the durable cursor: page 1 must not be queued
@@ -858,7 +858,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$cursor_key = 'bb_sub_fanout_cursor_' . md5( maybe_serialize( array( $args['type'], $args['item_id'], (int) $args['blog_id'], $args['notification_from'], $args['data'], $args['fanout_id'] ) ) );
 		update_option( $cursor_key, 7, false );
 
-		bb_send_notifications_to_subscribers_batch( $args );
+		bboss_send_notifications_to_subscribers_batch( $args );
 
 		$this->assertSame( array(), $this->get_queue_rows(), 'A deleted source activity must terminate the chain without queueing.' );
 		$this->assertFalse( get_option( $cursor_key ), 'The terminating path must delete the chain cursor.' );
@@ -868,7 +868,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 	 * A trashed (or spammed/pending) forum topic ends the chain like a deleted one; a published topic does not.
 	 */
 	public function test_worker_trashed_topic_terminates_chain_but_published_topic_proceeds() {
-		if ( ! function_exists( 'bbp_get_topic_post_type' ) ) {
+		if ( ! function_exists( 'bboss_bbp_get_topic_post_type' ) ) {
 			$this->markTestSkipped( 'Forums component not loaded.' );
 		}
 
@@ -891,8 +891,8 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		// Trashed topic: chain must stop before queueing anything and remove its cursor.
 		$trashed_topic = self::factory()->post->create(
 			array(
-				'post_type'   => bbp_get_topic_post_type(),
-				'post_status' => bbp_get_trash_status_id(),
+				'post_type'   => bboss_bbp_get_topic_post_type(),
+				'post_status' => bboss_bbp_get_trash_status_id(),
 			)
 		);
 		$args          = $base_args;
@@ -900,7 +900,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$cursor_key    = 'bb_sub_fanout_cursor_' . md5( maybe_serialize( array( $args['type'], $args['item_id'], (int) $args['blog_id'], $args['notification_from'], $args['data'], $args['fanout_id'] ) ) );
 		update_option( $cursor_key, 3, false );
 
-		bb_send_notifications_to_subscribers_batch( $args );
+		bboss_send_notifications_to_subscribers_batch( $args );
 
 		$this->assertSame( array(), $this->get_queue_rows(), 'A trashed topic must end the chain without queueing.' );
 		$this->assertFalse( get_option( $cursor_key ), 'The trashed-topic path must delete the chain cursor.' );
@@ -908,13 +908,13 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		// Published topic: chain proceeds and queues the page.
 		$live_topic   = self::factory()->post->create(
 			array(
-				'post_type'   => bbp_get_topic_post_type(),
-				'post_status' => bbp_get_public_status_id(),
+				'post_type'   => bboss_bbp_get_topic_post_type(),
+				'post_status' => bboss_bbp_get_public_status_id(),
 			)
 		);
 		$args['data'] = array( 'topic_id' => $live_topic );
 
-		bb_send_notifications_to_subscribers_batch( $args );
+		bboss_send_notifications_to_subscribers_batch( $args );
 
 		$this->assertCount( 1, $this->get_queue_rows(), 'A published topic must be fanned out (one chunk row for two subscribers).' );
 	}
@@ -932,12 +932,12 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			'user_ids'          => array( 1, 2, 3 ),
 		);
 
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args ) );
-		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args ), 'The same chunk must not be claimable twice.' );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $args ) );
+		$this->assertFalse( bboss_subscriptions_claim_notification_chunk( $args ), 'The same chunk must not be claimable twice.' );
 
 		$other             = $args;
 		$other['user_ids'] = array( 4, 5, 6 );
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $other ), 'A different chunk must claim independently.' );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $other ), 'A different chunk must claim independently.' );
 	}
 
 	/**
@@ -953,28 +953,28 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			'user_ids'          => array( 10, 11, 12 ),
 		);
 
-		$chunk_key = bb_subscriptions_get_notification_chunk_key( $pristine );
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $pristine, $chunk_key ) );
+		$chunk_key = bboss_subscriptions_get_notification_chunk_key( $pristine );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $pristine, $chunk_key ) );
 
 		// Simulate the callbacks' author removal, then touch + complete with
 		// the pristine key exactly as the send callbacks do.
 		$mutated = $pristine;
 		unset( $mutated['user_ids'][1] );
 
-		$this->assertNotSame( $chunk_key, bb_subscriptions_get_notification_chunk_key( $mutated ), 'Removing the author changes the derived key — the premise of the explicit key.' );
+		$this->assertNotSame( $chunk_key, bboss_subscriptions_get_notification_chunk_key( $mutated ), 'Removing the author changes the derived key — the premise of the explicit key.' );
 
-		bb_subscriptions_touch_notification_chunk_claim( $mutated, $chunk_key );
+		bboss_subscriptions_touch_notification_chunk_claim( $mutated, $chunk_key );
 		$this->assertNotFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions_claims' ), 'The refresh must land on the pristine claim key.' );
 
-		bb_subscriptions_complete_notification_chunk( $mutated, $chunk_key );
+		bboss_subscriptions_complete_notification_chunk( $mutated, $chunk_key );
 
 		$this->assertNotFalse( wp_cache_get( 'bb_sub_chunk_done_' . $chunk_key, 'bb_subscriptions_claims' ), 'The completion marker must land on the pristine key.' );
 		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions_claims' ), 'Completion releases the pristine claim.' );
-		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_done_' . bb_subscriptions_get_notification_chunk_key( $mutated ), 'bb_subscriptions_claims' ), 'Nothing may be written under the mutated key.' );
+		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_done_' . bboss_subscriptions_get_notification_chunk_key( $mutated ), 'bb_subscriptions_claims' ), 'Nothing may be written under the mutated key.' );
 
 		// The claim is gone (as if its TTL lapsed), so only the marker can refuse.
 		$this->assertFalse(
-			bb_subscriptions_claim_notification_chunk( $pristine ),
+			bboss_subscriptions_claim_notification_chunk( $pristine ),
 			'A late duplicate row (pristine payload) must be refused by the completion marker.'
 		);
 	}
@@ -993,15 +993,15 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		);
 
 		wp_suspend_cache_addition( true );
-		$claimed = bb_subscriptions_claim_notification_chunk( $args );
+		$claimed = bboss_subscriptions_claim_notification_chunk( $args );
 		wp_suspend_cache_addition( false );
 
 		$this->assertTrue( $claimed, 'An infrastructure failure must not be mistaken for a lost race.' );
-		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . bb_subscriptions_get_notification_chunk_key( $args ), 'bb_subscriptions_claims' ), 'Nothing was stored while additions were suspended.' );
+		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . bboss_subscriptions_get_notification_chunk_key( $args ), 'bb_subscriptions_claims' ), 'Nothing was stored while additions were suspended.' );
 
 		// With a working cache the same chunk is a normal claim / lost race.
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args ) );
-		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args ) );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $args ) );
+		$this->assertFalse( bboss_subscriptions_claim_notification_chunk( $args ) );
 	}
 
 	/**
@@ -1017,19 +1017,19 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			'data'              => array( 'activity_id' => 321 ),
 			'user_ids'          => array( 30, 31, 32 ),
 		);
-		$key  = bb_subscriptions_get_notification_chunk_key( $args );
+		$key  = bboss_subscriptions_get_notification_chunk_key( $args );
 
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args ) );
-		bb_subscriptions_complete_notification_chunk( $args );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $args ) );
+		bboss_subscriptions_complete_notification_chunk( $args );
 
 		// Simulate the claim TTL lapsing: only the completion marker remains.
 		wp_cache_delete( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions_claims' );
 
-		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args ), 'A late duplicate row must be refused by the completion marker alone.' );
+		$this->assertFalse( bboss_subscriptions_claim_notification_chunk( $args ), 'A late duplicate row must be refused by the completion marker alone.' );
 
 		// Without the marker the same chunk would be claimable again — proves the marker is what refuses.
 		wp_cache_delete( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions_claims' );
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args ) );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $args ) );
 	}
 
 	/**
@@ -1103,7 +1103,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			'activity.type' => 'an update',
 		);
 
-		$email = new BP_Email( 'groups-new-activity' );
+		$email = new BBoss_Email( 'groups-new-activity' );
 		$email->set_content_html( '<a href="{{{poster.url}}}">{{poster.name}}</a>{{{activity.content}}}' );
 		$email->set_to( isset( $tokens['receiver-user.id'] ) ? (int) $tokens['receiver-user.id'] : 1 );
 		$email->set_tokens( $tokens );
@@ -1120,14 +1120,14 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$group_id = self::factory()->group->create( array( 'creator_id' => $author ) );
 		$activity = self::factory()->activity->create(
 			array(
-				'component' => buddypress()->groups->id,
+				'component' => bboss()->groups->id,
 				'type'      => 'activity_update',
 				'user_id'   => $author,
 				'item_id'   => $group_id,
 				'content'   => 'Object already present 4343',
 			)
 		);
-		$object   = new BP_Activity_Activity( $activity );
+		$object   = new BBoss_Activity_Activity( $activity );
 
 		$populates = 0;
 		$counter   = function ( $validate ) use ( &$populates ) {
@@ -1179,7 +1179,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$user_ids = $this->create_subscribers( 3, $item_id );
 
 		add_filter( 'bb_subscription_queue_min_count', array( $this, 'filter_two' ) );
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -1209,7 +1209,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$group_id = self::factory()->group->create( array( 'creator_id' => $author ) );
 		$activity = self::factory()->activity->create(
 			array(
-				'component' => buddypress()->groups->id,
+				'component' => bboss()->groups->id,
 				'type'      => 'activity_update',
 				'user_id'   => $author,
 				'item_id'   => $group_id,
@@ -1217,12 +1217,12 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			)
 		);
 
-		$compact = bb_subscriptions_compact_notification_data(
+		$compact = bboss_subscriptions_compact_notification_data(
 			array(
 				'activity_id'  => $activity,
 				'email_tokens' => array(
 					'tokens' => array(
-						'activity'    => new BP_Activity_Activity( $activity ),
+						'activity'    => new BBoss_Activity_Activity( $activity ),
 						'poster.name' => 'Author',
 					),
 				),
@@ -1230,7 +1230,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		);
 		$this->assertArrayNotHasKey( 'activity', $compact['email_tokens']['tokens'], 'Precondition: the queued shape has no object.' );
 
-		$result = bb_subscriptions_send_notification_chunk(
+		$result = bboss_subscriptions_send_notification_chunk(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $group_id,
@@ -1268,24 +1268,24 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			'user_ids'          => array( $author ),
 		);
 		$this->assertSame(
-			bb_subscriptions_get_notification_chunk_key( $queued_args ),
-			bb_subscriptions_get_notification_chunk_key( self::$sent[0] ),
+			bboss_subscriptions_get_notification_chunk_key( $queued_args ),
+			bboss_subscriptions_get_notification_chunk_key( self::$sent[0] ),
 			'Rehydration must not change the chunk claim key.'
 		);
 	}
 
 	/**
 	 * A re-run pass that hands the runner something other than the args array
-	 * (BB_Background_Updater::task() passes itself on a truthy return) is dropped
+	 * (BBoss_BB_Background_Updater::task() passes itself on a truthy return) is dropped
 	 * without calling the send callback.
 	 */
 	public function test_chunk_runner_drops_non_array_args() {
 		global $bb_background_updater;
 
-		$this->assertFalse( bb_subscriptions_send_notification_chunk( $bb_background_updater ), 'The updater object itself is refused.' );
-		$this->assertFalse( bb_subscriptions_send_notification_chunk( new stdClass() ) );
-		$this->assertFalse( bb_subscriptions_send_notification_chunk( 'group' ) );
-		$this->assertFalse( bb_subscriptions_send_notification_chunk( array( 'item_id' => 1, 'user_ids' => array( 1 ) ) ), 'An args array without a type is refused.' );
+		$this->assertFalse( bboss_subscriptions_send_notification_chunk( $bb_background_updater ), 'The updater object itself is refused.' );
+		$this->assertFalse( bboss_subscriptions_send_notification_chunk( new stdClass() ) );
+		$this->assertFalse( bboss_subscriptions_send_notification_chunk( 'group' ) );
+		$this->assertFalse( bboss_subscriptions_send_notification_chunk( array( 'item_id' => 1, 'user_ids' => array( 1 ) ) ), 'An args array without a type is refused.' );
 		$this->assertSame( array(), self::$sent );
 	}
 
@@ -1307,7 +1307,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		};
 		add_filter( 'bb_register_subscriptions_types', $add_type );
 
-		$result = bb_subscriptions_send_notification_chunk( array( 'type' => 'bbtest_broken', 'item_id' => 1, 'data' => array(), 'user_ids' => array( 1 ) ) );
+		$result = bboss_subscriptions_send_notification_chunk( array( 'type' => 'bbtest_broken', 'item_id' => 1, 'data' => array(), 'user_ids' => array( 1 ) ) );
 
 		remove_filter( 'bb_register_subscriptions_types', $add_type );
 
@@ -1327,19 +1327,19 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 
 		// A resolvable id must NOT be rebuilt when the row already carries an object.
 		$legacy = array( 'activity_id' => $real_id, 'email_tokens' => array( 'tokens' => array( 'activity' => $object, 'activity.id' => $real_id ) ) );
-		$out    = bb_subscriptions_rehydrate_notification_data( $legacy );
+		$out    = bboss_subscriptions_rehydrate_notification_data( $legacy );
 		$this->assertSame( $object, $out['email_tokens']['tokens']['activity'], 'A row that already carries the object keeps that exact object.' );
 		$this->assertSame( $legacy, $out );
 
 		$gone = array( 'activity_id' => 987654321, 'email_tokens' => array( 'tokens' => array( 'activity.id' => 987654321 ) ) );
-		$this->assertSame( $gone, bb_subscriptions_rehydrate_notification_data( $gone ), 'An unresolvable id leaves the token absent.' );
+		$this->assertSame( $gone, bboss_subscriptions_rehydrate_notification_data( $gone ), 'An unresolvable id leaves the token absent.' );
 
 		// Never compacted: no marker, so a bare activity_id must not grow an object.
 		$never = array( 'activity_id' => $real_id, 'email_tokens' => array( 'tokens' => array( 'poster.name' => 'x' ) ) );
-		$this->assertSame( $never, bb_subscriptions_rehydrate_notification_data( $never ), 'Only the compaction marker triggers rehydration.' );
+		$this->assertSame( $never, bboss_subscriptions_rehydrate_notification_data( $never ), 'Only the compaction marker triggers rehydration.' );
 
 		$plain = array( 'topic_id' => 5, 'email_tokens' => array( 'tokens' => array( 'x' => 'y' ) ) );
-		$this->assertSame( $plain, bb_subscriptions_rehydrate_notification_data( $plain ), 'Payloads that were never compacted pass through.' );
+		$this->assertSame( $plain, bboss_subscriptions_rehydrate_notification_data( $plain ), 'Payloads that were never compacted pass through.' );
 	}
 
 	/**
@@ -1360,7 +1360,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		};
 		add_filter( 'bb_register_subscriptions_types', $add_type );
 
-		$result = bb_subscriptions_send_notification_chunk( array( 'type' => 'bbtest_truthy', 'item_id' => 1, 'data' => array(), 'user_ids' => array( 1 ) ) );
+		$result = bboss_subscriptions_send_notification_chunk( array( 'type' => 'bbtest_truthy', 'item_id' => 1, 'data' => array(), 'user_ids' => array( 1 ) ) );
 
 		remove_filter( 'bb_register_subscriptions_types', $add_type );
 
@@ -1371,7 +1371,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 	 * A row whose type was unregistered after queuing is dropped, not fataled.
 	 */
 	public function test_chunk_runner_drops_row_for_unregistered_type() {
-		$result = bb_subscriptions_send_notification_chunk(
+		$result = bboss_subscriptions_send_notification_chunk(
 			array(
 				'type'     => 'bbtest_no_such_type',
 				'item_id'  => 1,
@@ -1400,7 +1400,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			$item_id  = $this->next_item_id();
 			$user_ids = $this->create_subscribers( 3, $item_id );
 
-			bb_send_notifications_to_subscribers(
+			bboss_send_notifications_to_subscribers(
 				array(
 					'type'              => self::$type,
 					'item_id'           => $item_id,
@@ -1435,7 +1435,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id  = $this->next_item_id();
 		$user_ids = $this->create_subscribers( 3, $item_id );
 
-		bb_send_notifications_to_subscribers_batch(
+		bboss_send_notifications_to_subscribers_batch(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -1454,7 +1454,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			array_filter(
 				$this->get_queue_rows(),
 				function ( $row ) {
-					return 'bb_send_notifications_to_subscribers_batch' !== $row['callback'];
+					return 'bboss_send_notifications_to_subscribers_batch' !== $row['callback'];
 				}
 			)
 		);
@@ -1481,20 +1481,20 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			'data'              => array( 'activity_id' => 654 ),
 			'user_ids'          => array( 40, 41 ),
 		);
-		$key  = bb_subscriptions_get_notification_chunk_key( $args );
+		$key  = bboss_subscriptions_get_notification_chunk_key( $args );
 
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args, $key ) );
-		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args, $key ), 'Held claims are refused.' );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $args, $key ) );
+		$this->assertFalse( bboss_subscriptions_claim_notification_chunk( $args, $key ), 'Held claims are refused.' );
 
-		bb_subscriptions_release_notification_chunk_claim( $args, $key );
+		bboss_subscriptions_release_notification_chunk_claim( $args, $key );
 
 		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions_claims' ), 'Release deletes the claim.' );
 		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions_claims' ), 'A released chunk is not marked complete.' );
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args, $key ), 'The chunk is claimable again after release.' );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $args, $key ), 'The chunk is claimable again after release.' );
 	}
 
 	/**
-	 * The claim markers live outside the `bb_subscriptions` data group, so the
+	 * The claim markers live outside the `BBoss_Subscriptions` data group, so the
 	 * wholesale flushes of that group cannot erase them mid-fan-out.
 	 */
 	public function test_claim_markers_survive_subscriptions_group_flush() {
@@ -1510,15 +1510,15 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			'data'              => array( 'activity_id' => 987 ),
 			'user_ids'          => array( 50, 51 ),
 		);
-		$key  = bb_subscriptions_get_notification_chunk_key( $args );
+		$key  = bboss_subscriptions_get_notification_chunk_key( $args );
 
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args, $key ) );
-		bb_subscriptions_complete_notification_chunk( $args, $key );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $args, $key ) );
+		bboss_subscriptions_complete_notification_chunk( $args, $key );
 
 		wp_cache_flush_group( 'bb_subscriptions' );
 
 		$this->assertNotFalse( wp_cache_get( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions_claims' ), 'The completion marker survives the data-group flush.' );
-		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args, $key ), 'A duplicate row is still refused after the flush.' );
+		$this->assertFalse( bboss_subscriptions_claim_notification_chunk( $args, $key ), 'A duplicate row is still refused after the flush.' );
 	}
 
 	/**
@@ -1547,26 +1547,26 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		);
 		update_option( $legacy, 7, false );
 
-		$deleted = bb_subscriptions_sweep_stale_fanout_cursors();
+		$deleted = bboss_subscriptions_sweep_stale_fanout_cursors();
 
 		$this->assertSame( 1, $deleted, 'Only the aged cursor is swept.' );
 		$this->assertFalse( get_option( $stale ), 'The aged cursor is gone.' );
 		$this->assertNotFalse( get_option( $fresh ), 'An in-flight cursor is kept.' );
-		$this->assertSame( 9, bb_subscriptions_get_fanout_cursor_last_id( get_option( $fresh ) ) );
+		$this->assertSame( 9, bboss_subscriptions_get_fanout_cursor_last_id( get_option( $fresh ) ) );
 
 		// A pre-release integer cursor may belong to a chain still in flight
 		// (even on an old-build server mid-deploy): the sweep leaves it exactly
 		// as it found it, and the reader still understands it.
 		$this->assertSame( 7, get_option( $legacy ), 'A timestamp-less cursor is never touched by the sweep.' );
-		$this->assertSame( 7, bb_subscriptions_get_fanout_cursor_last_id( get_option( $legacy ) ), 'A bare integer cursor still reads.' );
-		$this->assertSame( 0, bb_subscriptions_sweep_stale_fanout_cursors(), 'A second sweep finds nothing else to delete.' );
+		$this->assertSame( 7, bboss_subscriptions_get_fanout_cursor_last_id( get_option( $legacy ) ), 'A bare integer cursor still reads.' );
+		$this->assertSame( 0, bboss_subscriptions_sweep_stale_fanout_cursors(), 'A second sweep finds nothing else to delete.' );
 
 		delete_option( $legacy );
 		delete_option( $fresh );
 	}
 
 	/**
-	 * Markers written by a pre-release build into the `bb_subscriptions` group
+	 * Markers written by a pre-release build into the `BBoss_Subscriptions` group
 	 * are still honored (read-only) so a chunk mid-flight at deploy time is not
 	 * sent twice.
 	 */
@@ -1579,20 +1579,20 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			'data'              => array( 'activity_id' => 111 ),
 			'user_ids'          => array( 60, 61 ),
 		);
-		$key  = bb_subscriptions_get_notification_chunk_key( $args );
+		$key  = bboss_subscriptions_get_notification_chunk_key( $args );
 
 		// A claim held by the old build.
 		wp_cache_set( 'bb_sub_chunk_claim_' . $key, microtime( true ), 'bb_subscriptions', 30 );
-		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args, $key ), 'A legacy-group claim refuses the chunk.' );
+		$this->assertFalse( bboss_subscriptions_claim_notification_chunk( $args, $key ), 'A legacy-group claim refuses the chunk.' );
 		wp_cache_delete( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions' );
 
 		// A completion marker written by the old build.
 		wp_cache_set( 'bb_sub_chunk_done_' . $key, time(), 'bb_subscriptions', DAY_IN_SECONDS );
-		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args, $key ), 'A legacy-group completion marker refuses the chunk.' );
+		$this->assertFalse( bboss_subscriptions_claim_notification_chunk( $args, $key ), 'A legacy-group completion marker refuses the chunk.' );
 		wp_cache_delete( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions' );
 
 		// Nothing legacy left: the chunk claims normally, into the new group only.
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args, $key ) );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $args, $key ) );
 		$this->assertNotFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions_claims' ) );
 		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions' ), 'New claims never go to the legacy group.' );
 	}
@@ -1616,7 +1616,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id = $this->next_item_id();
 		$this->create_subscribers( 3, $item_id );
 
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -1635,7 +1635,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 	 * Parse-args helper: clamp any requested per_page above 2 down to 2, the way
 	 * a third-party query limiter would.
 	 *
-	 * @param array $parsed Parsed BB_Subscriptions::get() arguments.
+	 * @param array $parsed Parsed BBoss_Subscriptions::get() arguments.
 	 * @return array
 	 */
 	public function clamp_per_page_to_two( $parsed ) {
@@ -1673,7 +1673,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$guard = 0;
 		while ( $args && $guard++ < 10 ) {
 			$this->truncate_page_rows_only();
-			bb_send_notifications_to_subscribers_batch( $args );
+			bboss_send_notifications_to_subscribers_batch( $args );
 			++$pages;
 
 			$args = null;
@@ -1704,7 +1704,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$item_id = $this->next_item_id();
 		$this->create_subscribers( 3, $item_id );
 
-		bb_send_notifications_to_subscribers(
+		bboss_send_notifications_to_subscribers(
 			array(
 				'type'              => self::$type,
 				'item_id'           => $item_id,
@@ -1745,7 +1745,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			);
 		}
 
-		$deleted = bb_subscriptions_sweep_stale_fanout_cursors();
+		$deleted = bboss_subscriptions_sweep_stale_fanout_cursors();
 
 		remove_filter( 'bb_subscription_fanout_cursor_sweep_batch', $batch_filter );
 
@@ -1764,7 +1764,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		add_filter( 'bb_enable_legacy_notification_preference', '__return_false' );
 		add_filter( 'bb_enable_group_subscriptions', '__return_true' );
 
-		if ( ! class_exists( 'BP_Groups_Notification' ) || ! bp_is_active( 'activity' ) || ! bb_is_enabled_subscription( 'group' ) ) {
+		if ( ! class_exists( 'BBoss_Groups_Notification' ) || ! bboss_is_active( 'activity' ) || ! bboss_is_enabled_subscription( 'group' ) ) {
 			$this->markTestSkipped( 'Group subscriptions are not available in this test environment.' );
 		}
 
@@ -1777,13 +1777,13 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 			'data'              => array( 'activity_id' => PHP_INT_MAX ),
 			'user_ids'          => array( 70, 71 ),
 		);
-		$key  = bb_subscriptions_get_notification_chunk_key( $args );
+		$key  = bboss_subscriptions_get_notification_chunk_key( $args );
 
-		$result = BP_Groups_Notification::instance()->bb_send_subscribed_group_notifications( $args );
+		$result = BBoss_Groups_Notification::instance()->bb_send_subscribed_group_notifications( $args );
 
 		$this->assertFalse( $result, 'A missing activity bails with false (row deleted).' );
 		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions_claims' ), 'The bail path releases the claim.' );
 		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions_claims' ), 'A bailed chunk is not marked complete.' );
-		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args, $key ), 'The chunk is claimable again immediately.' );
+		$this->assertTrue( bboss_subscriptions_claim_notification_chunk( $args, $key ), 'The chunk is claimable again immediately.' );
 	}
 }

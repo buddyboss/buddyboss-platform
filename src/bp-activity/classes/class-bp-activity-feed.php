@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.8.0
  *
- * See {@link bp_activity_action_sitewide_feed()} as an example.
+ * See {@link bboss_activity_action_sitewide_feed()} as an example.
  *
  * @param array $args {
  *   @type string $id               Required. Internal id for the feed; should be alphanumeric only.
@@ -30,10 +30,10 @@ defined( 'ABSPATH' ) || exit;
  *   @type string $update_frequency Optional. Part of the syndication module.
  *                                            (see inline doc in constructor for more info)
  *   @type string $max              Optional. Number of feed items to display.
- *   @type array  $activity_args    Optional. Arguments passed to {@link bp_has_activities()}
+ *   @type array  $activity_args    Optional. Arguments passed to {@link bboss_has_activities()}
  * }
  */
-class BP_Activity_Feed {
+class BBoss_Activity_Feed {
 
 	/**
 	 * Holds our custom class properties.
@@ -107,7 +107,7 @@ class BP_Activity_Feed {
 		}
 
 		// Setup data.
-		$this->data = bp_parse_args(
+		$this->data = bboss_parse_args(
 			$args,
 			array(
 				// Internal identifier for the RSS feed - should be alphanumeric only.
@@ -150,7 +150,7 @@ class BP_Activity_Feed {
 		 *
 		 * @since BuddyPress 1.8.0
 		 *
-		 * @param BP_Activity_Feed $this Current instance of activity feed. Passed by reference.
+		 * @param BBoss_Activity_Feed $this Current instance of activity feed. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_activity_feed_prefetch', array( &$this ) );
 
@@ -159,7 +159,7 @@ class BP_Activity_Feed {
 
 		// Check if id is valid.
 		if ( empty( $this->id ) ) {
-			_doing_it_wrong( 'BP_Activity_Feed', __( "RSS feed 'id' must be defined", 'buddyboss' ), 'BP 1.8' );
+			_doing_it_wrong( 'BP_Activity_Feed', esc_html__( "RSS feed 'id' must be defined", 'buddyboss-platform' ), 'BP 1.8' );
 			return false;
 		}
 
@@ -168,7 +168,7 @@ class BP_Activity_Feed {
 		 *
 		 * @since BuddyPress 1.8.0
 		 *
-		 * @param BP_Activity_Feed $this Current instance of activity feed. Passed by reference.
+		 * @param BBoss_Activity_Feed $this Current instance of activity feed. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_activity_feed_postfetch', array( &$this ) );
 
@@ -191,14 +191,14 @@ class BP_Activity_Feed {
 	 */
 	protected function setup_properties() {
 		$this->id               = sanitize_title( $this->id );
-		$this->title            = strip_tags( $this->title );
+		$this->title            = wp_strip_all_tags( $this->title );
 		$this->link             = esc_url_raw( $this->link );
-		$this->description      = strip_tags( $this->description );
+		$this->description      = wp_strip_all_tags( $this->description );
 		$this->ttl              = (int) $this->ttl;
-		$this->update_period    = strip_tags( $this->update_period );
+		$this->update_period    = wp_strip_all_tags( $this->update_period );
 		$this->update_frequency = (int) $this->update_frequency;
 
-		$this->activity_args = bp_parse_args(
+		$this->activity_args = bboss_parse_args(
 			$this->activity_args,
 			array(
 				'max'              => $this->max,
@@ -235,7 +235,7 @@ class BP_Activity_Feed {
 		/**
 		 * Fires inside backpat_rss_attributes method for backwards compatibility related to RSS attributes.
 		 *
-		 * This hook was originally separated out for individual components but has since been abstracted into the BP_Activity_Feed class.
+		 * This hook was originally separated out for individual components but has since been abstracted into the BBoss_Activity_Feed class.
 		 *
 		 * @since BuddyPress 1.0.0
 		 */
@@ -252,7 +252,7 @@ class BP_Activity_Feed {
 		/**
 		 * Fires inside backpat_channel_elements method for backwards compatibility related to RSS channel elements.
 		 *
-		 * This hook was originally separated out for individual components but has since been abstracted into the BP_Activity_Feed class.
+		 * This hook was originally separated out for individual components but has since been abstracted into the BBoss_Activity_Feed class.
 		 *
 		 * @since BuddyPress 1.0.0
 		 */
@@ -283,7 +283,7 @@ class BP_Activity_Feed {
 		/**
 		 * Fires inside backpat_item_elements method for backwards compatibility related to RSS item elements.
 		 *
-		 * This hook was originally separated out for individual components but has since been abstracted into the BP_Activity_Feed class.
+		 * This hook was originally separated out for individual components but has since been abstracted into the BBoss_Activity_Feed class.
 		 *
 		 * @since BuddyPress 1.0.0
 		 */
@@ -298,7 +298,7 @@ class BP_Activity_Feed {
 	 * @since BuddyPress 1.8.0
 	 */
 	protected function feed_content() {
-		bp_activity_content_body();
+		bboss_activity_content_body();
 
 		switch ( $this->id ) {
 
@@ -307,10 +307,10 @@ class BP_Activity_Feed {
 			case 'friends':
 			case 'mentions':
 			case 'personal':
-				if ( 'activity_comment' == bp_get_activity_action_name() ) :
+				if ( 'activity_comment' == bboss_get_activity_action_name() ) :
 					?>
-				<strong><?php _e( 'In reply to', 'buddyboss' ); ?></strong> -
-					<?php bp_activity_parent_content(); ?>
+				<strong><?php esc_html_e( 'In reply to', 'buddyboss-platform' ); ?></strong> -
+					<?php bboss_activity_parent_content(); ?>
 					<?php
 				endif;
 
@@ -328,7 +328,7 @@ class BP_Activity_Feed {
 	protected function http_headers() {
 		// Set up some additional headers if not on a directory page
 		// this is done b/c BP uses pseudo-pages.
-		if ( ! bp_is_directory() ) {
+		if ( ! bboss_is_directory() ) {
 			global $wp_query;
 
 			$wp_query->is_404 = false;
@@ -340,7 +340,7 @@ class BP_Activity_Feed {
 		send_nosniff_header();
 
 		// Cache-related variables.
-		$last_modified      = mysql2date( 'D, d M Y H:i:s O', bp_activity_get_last_updated(), false );
+		$last_modified      = mysql2date( 'D, d M Y H:i:s O', bboss_activity_get_last_updated(), false );
 		$modified_timestamp = strtotime( $last_modified );
 		$etag               = md5( $last_modified );
 
@@ -400,10 +400,11 @@ class BP_Activity_Feed {
 	 * Output the RSS feed.
 	 *
 	 * @since BuddyPress 1.8.0
+	 * @since BuddyBoss 3.7.1 Skips items the current user cannot view.
 	 */
 	protected function output() {
 		$this->http_headers();
-		echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>';
+		echo '<?xml version="1.0" encoding="' . esc_attr( get_option( 'blog_charset' ) ) . '"?' . '>';
 		?>
 
 <rss version="2.0"
@@ -423,16 +424,16 @@ class BP_Activity_Feed {
 >
 
 <channel>
-	<title><?php echo $this->title; ?></title>
-	<link><?php echo $this->link; ?></link>
+	<title><?php echo esc_html( $this->title ); ?></title>
+	<link><?php echo esc_url( $this->link ); ?></link>
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
-	<description><?php echo $this->description; ?></description>
-	<lastBuildDate><?php echo mysql2date( 'D, d M Y H:i:s O', bp_activity_get_last_updated(), false ); ?></lastBuildDate>
-	<generator>https://buddypress.org/?v=<?php bp_version(); ?></generator>
+	<description><?php echo esc_html( $this->description ); ?></description>
+	<lastBuildDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', bboss_activity_get_last_updated(), false ) ); ?></lastBuildDate>
+	<generator>https://buddypress.org/?v=<?php bboss_version(); ?></generator>
 	<language><?php bloginfo_rss( 'language' ); ?></language>
-	<ttl><?php echo $this->ttl; ?></ttl>
-	<sy:updatePeriod><?php echo $this->update_period; ?></sy:updatePeriod>
-	<sy:updateFrequency><?php echo $this->update_frequency; ?></sy:updateFrequency>
+	<ttl><?php echo esc_html( $this->ttl ); ?></ttl>
+	<sy:updatePeriod><?php echo esc_html( $this->update_period ); ?></sy:updatePeriod>
+	<sy:updateFrequency><?php echo esc_html( $this->update_frequency ); ?></sy:updateFrequency>
 		<?php
 
 		/**
@@ -443,23 +444,29 @@ class BP_Activity_Feed {
 		do_action( 'bp_activity_feed_channel_elements' );
 		?>
 
-		<?php if ( bp_has_activities( $this->activity_args ) ) : ?>
+		<?php if ( bboss_has_activities( $this->activity_args ) ) : ?>
 			<?php
-			while ( bp_activities() ) :
-				bp_the_activity();
+			while ( bboss_activities() ) :
+				bboss_the_activity();
+
+				// The feed scopes match comments on private and hidden group posts and on
+				// friends-only posts, and render the root post's text with them (PROD-10649).
+				if ( ! bboss_activity_user_can_view( $GLOBALS['activities_template']->activity ) ) {
+					continue;
+				}
 				?>
 			<item>
-				<guid isPermaLink="false"><?php bp_activity_feed_item_guid(); ?></guid>
-				<title><?php echo stripslashes( bp_get_activity_feed_item_title() ); ?></title>
-				<link><?php bp_activity_thread_permalink(); ?></link>
-				<pubDate><?php echo mysql2date( 'D, d M Y H:i:s O', bp_get_activity_feed_item_date(), false ); ?></pubDate>
+				<guid isPermaLink="false"><?php bboss_activity_feed_item_guid(); ?></guid>
+				<title><?php echo esc_html( stripslashes( bboss_get_activity_feed_item_title() ) ); ?></title>
+				<link><?php bboss_activity_thread_permalink(); ?></link>
+				<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', bboss_get_activity_feed_item_date(), false ) ); ?></pubDate>
 
-				<?php if ( bp_get_activity_feed_item_description() ) : ?>
+				<?php if ( bboss_get_activity_feed_item_description() ) : ?>
 					<content:encoded><![CDATA[<?php $this->feed_content(); ?>]]></content:encoded>
 				<?php endif; ?>
 
-				<?php if ( bp_activity_can_comment() ) : ?>
-					<slash:comments><?php bp_activity_comment_count(); ?></slash:comments>
+				<?php if ( bboss_activity_can_comment() ) : ?>
+					<slash:comments><?php bboss_activity_comment_count(); ?></slash:comments>
 				<?php endif; ?>
 
 				<?php

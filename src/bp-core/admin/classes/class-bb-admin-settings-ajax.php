@@ -12,11 +12,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Settings_Ajax
+ * Class BBoss_Admin_Settings_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Settings_Ajax {
+class BBoss_Admin_Settings_Ajax {
 
 	/**
 	 * Nonce action.
@@ -88,7 +88,7 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $options ) ) {
-			wp_send_json_error( array( 'message' => __( 'Options parameter is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Options parameter is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$requested = array_map( 'sanitize_text_field', explode( ',', $options ) );
@@ -97,7 +97,7 @@ class BB_Admin_Settings_Ajax {
 
 		foreach ( $requested as $option_name ) {
 			if ( array_key_exists( $option_name, $allowed ) ) {
-				$settings[ $option_name ] = bp_get_option( $option_name, '' );
+				$settings[ $option_name ] = bboss_get_option( $option_name, '' );
 			}
 		}
 
@@ -120,20 +120,20 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $option_name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Option name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Option name is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$allowed = $this->bb_admin_get_allowed_platform_options();
 
 		if ( ! array_key_exists( $option_name, $allowed ) ) {
-			wp_send_json_error( array( 'message' => __( 'Option not allowed.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Option not allowed.', 'buddyboss-platform' ) ) );
 		}
 
 		// Apply per-option sanitize callback (defined in bb_admin_get_allowed_platform_options).
 		$sanitize_fn  = $allowed[ $option_name ];
 		$option_value = is_callable( $sanitize_fn ) ? call_user_func( $sanitize_fn, $raw_value ) : sanitize_text_field( $raw_value );
 
-		bp_update_option( $option_name, $option_value );
+		bboss_update_option( $option_name, $option_value );
 
 		// Force the autoloaded-options cache to match the DB after the write.
 		//
@@ -156,8 +156,8 @@ class BB_Admin_Settings_Ajax {
 		// AJAX request is executing on. Switch there before the delete, mirroring
 		// the sibling endpoints in this class (search / directory-page).
 		$switched = false;
-		if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
-			$root_blog_id = bp_get_root_blog_id();
+		if ( is_multisite() && function_exists( 'bboss_get_root_blog_id' ) ) {
+			$root_blog_id = bboss_get_root_blog_id();
 			if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
 				switch_to_blog( $root_blog_id );
 				$switched = true;
@@ -173,13 +173,13 @@ class BB_Admin_Settings_Ajax {
 		// Component-specific cache invalidation. Only fires when the relevant
 		// component is active so the handler stays usable when, say, Groups
 		// is deactivated but a Members option is being saved.
-		if ( 'bp-disable-group-type-creation' === $option_name && bp_is_active( 'groups' ) ) {
+		if ( 'bp-disable-group-type-creation' === $option_name && bboss_is_active( 'groups' ) ) {
 			wp_cache_delete( 'bp_group_types', 'bp_groups' );
 			wp_cache_delete( 'bb-group-type-label-css', 'bp_groups_group_type' );
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Setting saved successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Setting saved successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -223,7 +223,7 @@ class BB_Admin_Settings_Ajax {
 		);
 
 		// Strip any dangerous WordPress core options that a careless extension might add.
-		return bb_filter_allowed_options( $options );
+		return bboss_filter_allowed_options( $options );
 	}
 
 	/**
@@ -236,16 +236,16 @@ class BB_Admin_Settings_Ajax {
 
 		$features = array();
 
-		if ( function_exists( 'bb_feature_registry' ) && function_exists( 'bb_icon_registry' ) ) {
-			$registry      = bb_feature_registry();
-			$icon_registry = bb_icon_registry();
+		if ( function_exists( 'bboss_feature_registry' ) && function_exists( 'bboss_icon_registry' ) ) {
+			$registry      = bboss_feature_registry();
+			$icon_registry = bboss_icon_registry();
 			$registered    = $registry->bb_get_features( array( 'status' => 'all' ) );
 
 			// Get active features directly (bypasses bp_is_active() cache).
 			// Primary storage: bb-active-features (single source of truth).
-			$active_features = bp_get_option( 'bb-active-features', array() );
+			$active_features = bboss_get_option( 'bb-active-features', array() );
 			// Fallback for migration: bp-active-components (legacy).
-			$active_components = bp_get_option( 'bp-active-components', array() );
+			$active_components = bboss_get_option( 'bp-active-components', array() );
 
 			foreach ( $registered as $feature_id => $feature ) {
 				// Skip hidden features (e.g. Emails — has settings page but no grid card).
@@ -347,39 +347,21 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $feature_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! in_array( $status, array( 'active', 'inactive' ), true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid status. Must be "active" or "inactive".', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid status. Must be "active" or "inactive".', 'buddyboss-platform' ) ) );
 		}
 
-		if ( ! function_exists( 'bb_feature_registry' ) || ! function_exists( 'bb_icon_registry' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss' ) ) );
+		if ( ! function_exists( 'bboss_feature_registry' ) || ! function_exists( 'bboss_icon_registry' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-platform' ) ) );
 		}
 
-		$registry      = bb_feature_registry();
-		$icon_registry = bb_icon_registry();
+		$registry      = bboss_feature_registry();
+		$icon_registry = bboss_icon_registry();
 		$activate      = 'active' === $status;
 
-		// Defense-in-depth: refuse to activate a DRM-locked add-on feature via
-		// a crafted request — the card's toggle is already disabled in the UI
-		// (see bb_admin_mark_drm_locked_features()). Deactivation stays
-		// allowed so admins can still turn a locked feature off.
-		if ( $activate ) {
-			$registered = $registry->bb_get_feature( $feature_id );
-
-			if (
-				$registered &&
-				! empty( $registered['drm_product_slug'] ) &&
-				class_exists( '\\BuddyBoss\\Core\\Admin\\DRM\\BB_DRM_Registry' ) &&
-				\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::should_lock_addon_features( $registered['drm_product_slug'] )
-			) {
-				wp_send_json_error(
-					array( 'message' => __( 'This feature requires an active license.', 'buddyboss' ) )
-				);
-			}
-		}
 
 		$result = $activate
 			? $registry->bb_activate_feature( $feature_id )
@@ -403,9 +385,9 @@ class BB_Admin_Settings_Ajax {
 			'data'    => $formatted,
 			'message' => sprintf(
 				/* translators: 1: feature label, 2: activated/deactivated */
-				__( 'Feature "%1$s" %2$s successfully.', 'buddyboss' ),
+				__( 'Feature "%1$s" %2$s successfully.', 'buddyboss-platform' ),
 				$feature['label'],
-				$activate ? __( 'activated', 'buddyboss' ) : __( 'deactivated', 'buddyboss' )
+				$activate ? __( 'activated', 'buddyboss-platform' ) : __( 'deactivated', 'buddyboss-platform' )
 			),
 		);
 
@@ -434,7 +416,7 @@ class BB_Admin_Settings_Ajax {
 	 * @return bool|void
 	 */
 	private function bb_verify_request() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -450,19 +432,19 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $feature_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		if ( ! function_exists( 'bb_feature_registry' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss' ) ) );
+		if ( ! function_exists( 'bboss_feature_registry' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-platform' ) ) );
 		}
 
-		$registry = bb_feature_registry();
+		$registry = bboss_feature_registry();
 
 		// Get feature.
 		$feature = $registry->bb_get_feature( $feature_id );
 		if ( ! $feature ) {
-			wp_send_json_error( array( 'message' => __( 'Feature not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature not found.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -512,12 +494,12 @@ class BB_Admin_Settings_Ajax {
 						continue;
 					}
 					$opt_name       = $prefix . $key;
-					$stored         = bp_get_option( $opt_name, 1 );
+					$stored         = bboss_get_option( $opt_name, 1 );
 					$mapped[ $key ] = in_array( $stored, $truthy, true ) ? 1 : 0;
 				}
 				$settings[ $field['name'] ] = $mapped;
 			} else {
-				$settings[ $field['name'] ] = bp_get_option( $field['name'], $field['default'] ?? '' );
+				$settings[ $field['name'] ] = bboss_get_option( $field['name'], $field['default'] ?? '' );
 			}
 		}
 
@@ -554,7 +536,7 @@ class BB_Admin_Settings_Ajax {
 					// Ensure the toggle option is loaded into settings.
 					$toggle_name = $section['section_toggle'];
 					if ( ! isset( $settings[ $toggle_name ] ) ) {
-						$settings[ $toggle_name ] = bp_get_option( $toggle_name, 1 );
+						$settings[ $toggle_name ] = bboss_get_option( $toggle_name, 1 );
 					}
 
 					// Opt-in: when the section toggle is OFF, hide fields entirely instead
@@ -581,7 +563,7 @@ class BB_Admin_Settings_Ajax {
 				if ( ! empty( $section['pro_notice'] ) && is_array( $section['pro_notice'] ) ) {
 					$formatted_section['pro_notice'] = array(
 						'show'       => ! empty( $section['pro_notice']['show'] ),
-						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE LAUNCH', 'buddyboss' ) ),
+						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE LAUNCH', 'buddyboss-platform' ) ),
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
 						// Optional plan tier (e.g. 'start') for the badge style variant.
@@ -590,8 +572,8 @@ class BB_Admin_Settings_Ajax {
 
 					$section_modal = null;
 
-					if ( function_exists( 'bb_get_field_upgrade_for' ) ) {
-						$catalog_entry = bb_get_field_upgrade_for( $feature_id, $side_panel_id, $section_id );
+					if ( function_exists( 'bboss_get_field_upgrade_for' ) ) {
+						$catalog_entry = bboss_get_field_upgrade_for( $feature_id, $side_panel_id, $section_id );
 
 						if ( $catalog_entry ) {
 							// Optional catalog badge text (e.g. "UPGRADE START"). The registered
@@ -600,9 +582,9 @@ class BB_Admin_Settings_Ajax {
 								$formatted_section['pro_notice']['badge_text'] = sanitize_text_field( $catalog_entry['upgrade_badge_text'] );
 							}
 
-							$section_modal = bb_field_upgrade_to_modal_payload( $catalog_entry, $section['title'] );
-							if ( function_exists( 'bb_admin_apply_addon_upsell_tier' ) ) {
-								$section_modal = bb_admin_apply_addon_upsell_tier( $section_modal, $feature_id );
+							$section_modal = bboss_field_upgrade_to_modal_payload( $catalog_entry, $section['title'] );
+							if ( function_exists( 'bboss_admin_apply_addon_upsell_tier' ) ) {
+								$section_modal = bboss_admin_apply_addon_upsell_tier( $section_modal, $feature_id );
 							}
 						}
 					}
@@ -610,13 +592,17 @@ class BB_Admin_Settings_Ajax {
 					if ( empty( $section_modal ) && ! empty( $section['pro_notice']['modal'] ) && is_array( $section['pro_notice']['modal'] ) ) {
 						$registered_modal = $section['pro_notice']['modal'];
 
-						$registered_media = function_exists( 'bb_admin_build_upgrade_media' )
-							? bb_admin_build_upgrade_media( $registered_modal['video_url'] ?? '', $registered_modal['image_url'] ?? '' )
+						$registered_media = function_exists( 'bboss_admin_build_upgrade_media' )
+							? bboss_admin_build_upgrade_media( $registered_modal['video_url'] ?? '', $registered_modal['image_url'] ?? '' )
 							: array(
 								'type'   => ! empty( $registered_modal['image_url'] ) ? 'image' : '',
 								'url'    => esc_url_raw( $registered_modal['image_url'] ?? '' ),
 								'poster' => '',
 							);
+
+						// Builds without pricing links (the wordpress.org edition) have no
+						// fallback URL; UpgradeModal then renders no call-to-action link.
+						$registered_fallback_url = '';
 
 						$section_modal = array(
 							'tier'        => sanitize_key( $registered_modal['tier'] ?? 'pro' ),
@@ -625,7 +611,7 @@ class BB_Admin_Settings_Ajax {
 							'description' => wp_kses_post( $registered_modal['description'] ?? '' ),
 							'image_url'   => esc_url_raw( $registered_modal['image_url'] ?? '' ),
 							'media'       => $registered_media,
-							'url'         => esc_url_raw( $registered_modal['url'] ?? 'https://www.buddyboss.com/pricing/' ),
+							'url'         => esc_url_raw( $registered_modal['url'] ?? $registered_fallback_url ),
 						);
 					}
 
@@ -670,7 +656,7 @@ class BB_Admin_Settings_Ajax {
 			}
 
 			// Sort sections by order.
-			usort( $formatted_sections, 'bb_sort_by_order' );
+			usort( $formatted_sections, 'bboss_sort_by_order' );
 
 			$formatted_side_panels[] = array(
 				'id'           => $side_panel_id,
@@ -697,7 +683,7 @@ class BB_Admin_Settings_Ajax {
 		}
 
 		// Sort side panels by order.
-		usort( $formatted_side_panels, 'bb_sort_by_order' );
+		usort( $formatted_side_panels, 'bboss_sort_by_order' );
 
 		// Update settings with processed values from formatted fields.
 		foreach ( $formatted_side_panels as $panel ) {
@@ -733,8 +719,8 @@ class BB_Admin_Settings_Ajax {
 	 *
 	 * @param string              $feature_id    Feature ID.
 	 * @param array               $feature       Feature data.
-	 * @param BB_Feature_Registry $registry      Feature registry instance.
-	 * @param BB_Icon_Registry    $icon_registry Icon registry instance.
+	 * @param BBoss_Feature_Registry $registry      Feature registry instance.
+	 * @param BBoss_Icon_Registry    $icon_registry Icon registry instance.
 	 * @return array Formatted feature data.
 	 */
 	private function bb_format_feature_for_response( $feature_id, $feature, $registry, $icon_registry ) {
@@ -840,7 +826,7 @@ class BB_Admin_Settings_Ajax {
 			 * @since BuddyBoss 3.0.0
 			 */
 			if ( 'checkbox_list' === ( $field['type'] ?? '' ) ) {
-				$blog_id      = function_exists( 'bp_get_root_blog_id' ) ? bp_get_root_blog_id() : get_current_blog_id();
+				$blog_id      = function_exists( 'bboss_get_root_blog_id' ) ? bboss_get_root_blog_id() : get_current_blog_id();
 				$stored_value = get_blog_option( $blog_id, $field['name'], array() );
 
 				// If no stored value, use field defaults.
@@ -874,7 +860,7 @@ class BB_Admin_Settings_Ajax {
 			 * @since BuddyBoss 3.0.0
 			 */
 			if ( 'share_platforms' === ( $field['type'] ?? '' ) ) {
-				$blog_id      = function_exists( 'bp_get_root_blog_id' ) ? bp_get_root_blog_id() : get_current_blog_id();
+				$blog_id      = function_exists( 'bboss_get_root_blog_id' ) ? bboss_get_root_blog_id() : get_current_blog_id();
 				$stored_value = get_blog_option( $blog_id, $field['name'], null );
 
 				// Only use field defaults when option doesn't exist at all.
@@ -930,7 +916,7 @@ class BB_Admin_Settings_Ajax {
 					}
 					if ( ! empty( $control['name'] ) ) {
 						$control_default = $control['default'] ?? '';
-						$control_value   = bp_get_option( $control['name'], $control_default );
+						$control_value   = bboss_get_option( $control['name'], $control_default );
 
 						// A stored value the control cannot represent would otherwise render as
 						// whichever <option> comes first. Resolve it the same way a save would.
@@ -961,7 +947,7 @@ class BB_Admin_Settings_Ajax {
 				}
 
 				// Get stored value with proper default (same storage as legacy).
-				$stored_array = bp_get_option( $field['name'], $default_array );
+				$stored_array = bboss_get_option( $field['name'], $default_array );
 
 				// Handle edge cases: empty string, false, or non-array values.
 				if ( empty( $stored_array ) || ! is_array( $stored_array ) ) {
@@ -1179,7 +1165,7 @@ class BB_Admin_Settings_Ajax {
 			if (
 				! empty( $field_data['pro_only'] ) &&
 				empty( $field_data['pro_notice'] ) &&
-				function_exists( 'bb_admin_settings_get_pro_notice' )
+				function_exists( 'bboss_admin_settings_get_pro_notice' )
 			) {
 				// Add-on fields are gated on their PROVIDER, not on the host feature.
 				// bb_admin_settings_get_pro_notice() resolves by feature `type`, but
@@ -1189,14 +1175,14 @@ class BB_Admin_Settings_Ajax {
 				// would fall through to the "is Platform Pro installed?" branch.
 				// Since Pro no longer ships these features, that check unlocks a
 				// toggle nothing implements. Resolve by field name instead.
-				$pro_notice = bb_admin_settings_get_pro_notice( array( 'type' => $feature_id ) );
+				$pro_notice = bboss_admin_settings_get_pro_notice( array( 'type' => $feature_id ) );
 
 				if (
-					function_exists( 'bb_admin_addon_upsell_field_names' ) &&
-					function_exists( 'bb_admin_addon_field_has_provider' ) &&
-					in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+					function_exists( 'bboss_admin_addon_upsell_field_names' ) &&
+					function_exists( 'bboss_admin_addon_field_has_provider' ) &&
+					in_array( $field['name'], bboss_admin_addon_upsell_field_names(), true )
 				) {
-					$pro_notice['show'] = ! bb_admin_addon_field_has_provider( $field['name'] );
+					$pro_notice['show'] = ! bboss_admin_addon_field_has_provider( $field['name'] );
 				}
 
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
@@ -1262,21 +1248,21 @@ class BB_Admin_Settings_Ajax {
 			// copy — marketing wants one consistent fallback across the admin.
 			if (
 				! empty( $field_data['pro_notice']['show'] ) &&
-				function_exists( 'bb_get_field_upgrade_for' )
+				function_exists( 'bboss_get_field_upgrade_for' )
 			) {
-				$entry = bb_get_field_upgrade_for( $feature_id, $panel_id, $section_id, $field['name'] );
+				$entry = bboss_get_field_upgrade_for( $feature_id, $panel_id, $section_id, $field['name'] );
 				if ( $entry ) {
-					$field_modal = bb_field_upgrade_to_modal_payload( $entry, $field['label'] ?? '' );
-					if ( function_exists( 'bb_admin_apply_addon_upsell_tier' ) ) {
-						$field_modal = bb_admin_apply_addon_upsell_tier( $field_modal, $feature_id, $field['name'] );
+					$field_modal = bboss_field_upgrade_to_modal_payload( $entry, $field['label'] ?? '' );
+					if ( function_exists( 'bboss_admin_apply_addon_upsell_tier' ) ) {
+						$field_modal = bboss_admin_apply_addon_upsell_tier( $field_modal, $feature_id, $field['name'] );
 					}
 					$field_data['pro_notice']['modal'] = $field_modal;
 				} else {
 					// No catalog entry — point the play button at the pricing page so
 					// every pro_only field has a consistent upsell destination.
 					if (
-						function_exists( 'bb_admin_addon_upsell_field_names' )
-						&& in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+						function_exists( 'bboss_admin_addon_upsell_field_names' )
+						&& in_array( $field['name'], bboss_admin_addon_upsell_field_names(), true )
 					) {
 						// Add-on field (e.g. Pinned Post) with no remote catalog copy yet:
 						// synthesize an in-page "UPGRADE START" modal from the field's own
@@ -1301,12 +1287,11 @@ class BB_Admin_Settings_Ajax {
 									'url'    => '',
 									'poster' => '',
 								),
-							'url'         => 'https://www.buddyboss.com/pricing/',
+							// Builds without pricing links (the wordpress.org edition) keep it
+							// empty; UpgradeModal then renders no call-to-action link.
+							'url'         => '',
 						);
 					} elseif ( empty( $field['pro_notice']['link_url'] ) ) {
-						// A field that registered its own upgrade link (e.g. Email Digest's
-						// Start checkout) keeps it when the catalog has no entry.
-						$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
 					}
 				}
 			}
@@ -1320,15 +1305,15 @@ class BB_Admin_Settings_Ajax {
 			// of truth for "which fields belong to the moved features".
 			if (
 				! empty( $field_data['pro_notice']['show'] ) &&
-				function_exists( 'bb_admin_addon_upsell_feature_ids' ) &&
-				function_exists( 'bb_admin_addon_upsell_field_names' ) &&
+				function_exists( 'bboss_admin_addon_upsell_feature_ids' ) &&
+				function_exists( 'bboss_admin_addon_upsell_field_names' ) &&
 				(
-					in_array( $feature_id, bb_admin_addon_upsell_feature_ids(), true ) ||
-					in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+					in_array( $feature_id, bboss_admin_addon_upsell_feature_ids(), true ) ||
+					in_array( $field['name'], bboss_admin_addon_upsell_field_names(), true )
 				)
 			) {
 				$field_data['pro_notice']['tier']       = 'start';
-				$field_data['pro_notice']['badge_text'] = __( 'START', 'buddyboss' );
+				$field_data['pro_notice']['badge_text'] = __( 'START', 'buddyboss-platform' );
 			}
 
 			/*
@@ -1357,9 +1342,9 @@ class BB_Admin_Settings_Ajax {
 			 */
 			if (
 				! empty( $field['upgrade_from_catalog'] ) &&
-				function_exists( 'bb_get_field_upgrade_for' )
+				function_exists( 'bboss_get_field_upgrade_for' )
 			) {
-				$upsell_entry = bb_get_field_upgrade_for( $feature_id, $panel_id, $section_id );
+				$upsell_entry = bboss_get_field_upgrade_for( $feature_id, $panel_id, $section_id );
 
 				if ( ! empty( $upsell_entry['upgrade_url'] ) ) {
 					$field_data['upgrade_catalog_url'] = esc_url_raw( $upsell_entry['upgrade_url'] );
@@ -1375,11 +1360,11 @@ class BB_Admin_Settings_Ajax {
 					$field_data['button_label'] = sanitize_text_field( $upsell_entry['upgrade_button_label'] );
 				}
 
-				if ( ! empty( $upsell_entry ) && function_exists( 'bb_field_upgrade_to_modal_payload' ) ) {
+				if ( ! empty( $upsell_entry ) && function_exists( 'bboss_field_upgrade_to_modal_payload' ) ) {
 					// Prefer the empty state's own heading as the modal title fallback:
 					// on an upsell panel the empty-state title names the feature
 					// ("Email Digest") while `label` is typically blank.
-					$field_data['upgrade_modal'] = bb_field_upgrade_to_modal_payload(
+					$field_data['upgrade_modal'] = bboss_field_upgrade_to_modal_payload(
 						$upsell_entry,
 						$field_data['empty_state_title'] ?? $field_data['label'] ?? ''
 					);
@@ -1417,9 +1402,9 @@ class BB_Admin_Settings_Ajax {
 				empty( $field_data['upgrade_modal'] ) &&
 				! empty( $field['upgrade_modal'] ) &&
 				is_array( $field['upgrade_modal'] ) &&
-				function_exists( 'bb_field_upgrade_to_modal_payload' )
+				function_exists( 'bboss_field_upgrade_to_modal_payload' )
 			) {
-				$field_data['upgrade_modal'] = bb_field_upgrade_to_modal_payload(
+				$field_data['upgrade_modal'] = bboss_field_upgrade_to_modal_payload(
 					$field['upgrade_modal'],
 					$field_data['empty_state_title'] ?? $field_data['label'] ?? ''
 				);
@@ -1496,13 +1481,13 @@ class BB_Admin_Settings_Ajax {
 			// Attach notification_groups data for notification_types fields.
 			// Built lazily here (not during registration) because bb_register_notification_preferences()
 			// depends on component hooks that haven't fired yet at bb_register_features time.
-			if ( 'notification_types' === ( $field['type'] ?? '' ) && function_exists( 'bb_register_notification_preferences' ) ) {
+			if ( 'notification_types' === ( $field['type'] ?? '' ) && function_exists( 'bboss_register_notification_preferences' ) ) {
 				$field_data['notification_groups'] = $this->bb_build_notification_groups();
 			}
 
 			// Attach topic data and nonces for topic_list fields.
-			if ( 'topic_list' === ( $field['type'] ?? '' ) && function_exists( 'bb_topics_manager_instance' ) ) {
-				$topics_manager = bb_topics_manager_instance();
+			if ( 'topic_list' === ( $field['type'] ?? '' ) && function_exists( 'bboss_topics_manager_instance' ) ) {
+				$topics_manager = bboss_topics_manager_instance();
 				$topics_data    = array();
 				if ( $topics_manager ) {
 					$result      = $topics_manager->bb_get_topics(
@@ -1527,7 +1512,7 @@ class BB_Admin_Settings_Ajax {
 		}
 
 		// Sort by order.
-		usort( $formatted, 'bb_sort_by_order' );
+		usort( $formatted, 'bboss_sort_by_order' );
 
 		return $formatted;
 	}
@@ -1549,15 +1534,15 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( ! is_string( $raw_json ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid settings format.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid settings format.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $feature_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		if ( ! function_exists( 'bb_feature_registry' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss' ) ) );
+		if ( ! function_exists( 'bboss_feature_registry' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-platform' ) ) );
 		}
 
 		// Cap nesting depth at 8 — Settings 2.0 payloads never exceed
@@ -1566,13 +1551,13 @@ class BB_Admin_Settings_Ajax {
 		try {
 			$settings = json_decode( $raw_json, true, 8, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException $e ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss-platform' ) ) );
 		}
 		if ( ! is_array( $settings ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss-platform' ) ) );
 		}
 
-		$registry = bb_feature_registry();
+		$registry = bboss_feature_registry();
 
 		/**
 		 * Fires before feature settings are retrieved for the AJAX response.
@@ -1606,7 +1591,7 @@ class BB_Admin_Settings_Ajax {
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 
 		if ( empty( $all_fields ) ) {
-			wp_send_json_error( array( 'message' => __( 'No fields registered for this feature.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No fields registered for this feature.', 'buddyboss-platform' ) ) );
 		}
 
 		$saved = array();
@@ -1646,7 +1631,7 @@ class BB_Admin_Settings_Ajax {
 			if (
 				! empty( $field['pro_only'] )
 				&& ! function_exists( 'bb_platform_pro' )
-				&& ! ( '' !== $field_module && bb_addons_provides_module( $field_module ) )
+				&& ! ( '' !== $field_module && bboss_addons_provides_module( $field_module ) )
 			) {
 				continue;
 			}
@@ -1658,17 +1643,17 @@ class BB_Admin_Settings_Ajax {
 			// pro_notice resolution in bb_get_feature_data().
 			if (
 				! empty( $field['pro_only'] )
-				&& function_exists( 'bb_admin_addon_upsell_field_names' )
-				&& function_exists( 'bb_admin_addon_field_has_provider' )
-				&& in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
-				&& ! bb_admin_addon_field_has_provider( $field['name'] )
+				&& function_exists( 'bboss_admin_addon_upsell_field_names' )
+				&& function_exists( 'bboss_admin_addon_field_has_provider' )
+				&& in_array( $field['name'], bboss_admin_addon_upsell_field_names(), true )
+				&& ! bboss_admin_addon_field_has_provider( $field['name'] )
 			) {
 				continue;
 			}
 
 			// Skip denylisted option names — defense-in-depth against a malicious
 			// extension registering a field named 'siteurl', 'active_plugins', etc.
-			if ( function_exists( 'bb_get_options_denylist' ) && in_array( $name, bb_get_options_denylist(), true ) ) {
+			if ( function_exists( 'bboss_get_options_denylist' ) && in_array( $name, bboss_get_options_denylist(), true ) ) {
 				continue;
 			}
 
@@ -1731,7 +1716,7 @@ class BB_Admin_Settings_Ajax {
 					$prefix = $field['option_prefix'];
 					foreach ( $value as $opt_key => $opt_val ) {
 						$opt_name = $prefix . $opt_key;
-						bp_update_option( $opt_name, absint( $opt_val ) );
+						bboss_update_option( $opt_name, absint( $opt_val ) );
 					}
 					// Cast to object so `json_encode()` always emits a map (`{}`) — even when
 					// empty (all platforms toggled off). An empty PHP array encodes as `[]`,
@@ -1741,7 +1726,7 @@ class BB_Admin_Settings_Ajax {
 					$saved[ $name ] = (object) $value;
 				} else {
 					// BuddyBoss stores options via bp_update_option (same storage as legacy).
-					bp_update_option( $name, $value );
+					bboss_update_option( $name, $value );
 					$saved[ $name ] = $value;
 				}
 			}
@@ -1768,7 +1753,7 @@ class BB_Admin_Settings_Ajax {
 						} else {
 							$control_value = sanitize_text_field( $control_value );
 						}
-						bp_update_option( $control_name, $control_value );
+						bboss_update_option( $control_name, $control_value );
 						$saved[ $control_name ] = $control_value;
 					} elseif (
 						array_key_exists( $name, $settings ) &&
@@ -1789,7 +1774,7 @@ class BB_Admin_Settings_Ajax {
 						// bb_activity_load_type, for one, stores values supplied through the
 						// public bb_performance_activity_autoload filter, and its sanitizer
 						// returns 'infinite' for anything that filter is not currently offering.
-						$stored = bp_get_option( $control_name, $absent );
+						$stored = bboss_get_option( $control_name, $absent );
 
 						if ( $absent !== $stored && is_scalar( $stored ) ) {
 							$sanitized = call_user_func( $control['sanitize_callback'], $stored );
@@ -1798,7 +1783,7 @@ class BB_Admin_Settings_Ajax {
 							// database. The UI merges $saved into its state, so reporting a value
 							// that failed to write would show the admin a setting the site is not
 							// using — the very failure this repair exists to prevent.
-							if ( (string) $stored !== (string) $sanitized && bp_update_option( $control_name, $sanitized ) ) {
+							if ( (string) $stored !== (string) $sanitized && bboss_update_option( $control_name, $sanitized ) ) {
 								$saved[ $control_name ] = $sanitized;
 							}
 						}
@@ -1815,7 +1800,7 @@ class BB_Admin_Settings_Ajax {
 				if ( ! empty( $sec['section_toggle'] ) && array_key_exists( $sec['section_toggle'], $settings ) ) {
 					$toggle_name  = $sec['section_toggle'];
 					$toggle_value = absint( $settings[ $toggle_name ] );
-					bp_update_option( $toggle_name, $toggle_value );
+					bboss_update_option( $toggle_name, $toggle_value );
 					$saved[ $toggle_name ] = $toggle_value;
 				}
 			}
@@ -1843,7 +1828,7 @@ class BB_Admin_Settings_Ajax {
 		}
 
 		$response_data = array(
-			'message'        => __( 'Settings saved successfully.', 'buddyboss' ),
+			'message'        => __( 'Settings saved successfully.', 'buddyboss-platform' ),
 			'saved'          => $saved,
 			'refresh_panels' => $refresh_panels,
 		);
@@ -1907,12 +1892,12 @@ class BB_Admin_Settings_Ajax {
 	 * @return array Array of search results.
 	 */
 	private function bb_perform_search( $query ) {
-		if ( ! function_exists( 'bb_feature_registry' ) || ! function_exists( 'bb_icon_registry' ) ) {
+		if ( ! function_exists( 'bboss_feature_registry' ) || ! function_exists( 'bboss_icon_registry' ) ) {
 			return array();
 		}
 
-		$registry      = bb_feature_registry();
-		$icon_registry = bb_icon_registry();
+		$registry      = bboss_feature_registry();
+		$icon_registry = bboss_icon_registry();
 
 		// Get search index (cached or build on the fly).
 		$cache_key = 'bb_settings_search_index';
@@ -2014,7 +1999,7 @@ class BB_Admin_Settings_Ajax {
 	 * @return array Search index.
 	 */
 	private function bb_build_search_index() {
-		$registry = bb_feature_registry();
+		$registry = bboss_feature_registry();
 		$index    = array();
 
 		// Non-interactive field types to exclude from search (notices, status displays, info blocks).
@@ -2175,7 +2160,7 @@ class BB_Admin_Settings_Ajax {
 	 * @return string Settings route URL or empty string.
 	 */
 	private function bb_resolve_settings_route( $feature_id, $feature ) {
-		if ( ! function_exists( 'bb_get_feature_settings_url' ) ) {
+		if ( ! function_exists( 'bboss_get_feature_settings_url' ) ) {
 			return '';
 		}
 
@@ -2201,7 +2186,7 @@ class BB_Admin_Settings_Ajax {
 			return esc_url_raw( $feature['settings_route'] );
 		}
 
-		$settings_route = bb_get_feature_settings_url( $feature_id );
+		$settings_route = bboss_get_feature_settings_url( $feature_id );
 
 		// Custom settings_route points to a different feature's panel
 		// (e.g., OneSignal '/settings/notifications/onesignal' → Notifications > OneSignal panel).
@@ -2212,7 +2197,7 @@ class BB_Admin_Settings_Ajax {
 			$parts          = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
 			$route_tab      = isset( $parts[1] ) ? $parts[1] : $feature_id;
 			$route_pan      = isset( $parts[2] ) ? $parts[2] : '';
-			$settings_route = bb_get_feature_settings_url( $route_tab, $route_pan );
+			$settings_route = bboss_get_feature_settings_url( $route_tab, $route_pan );
 		}
 
 		return $settings_route;
@@ -2354,7 +2339,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Build notification groups data for the notification_types custom field.
 	 *
-	 * Called lazily at AJAX time because bb_register_notification_preferences()
+	 * Called lazily at AJAX time because bboss_register_notification_preferences()
 	 * depends on component hooks that haven't fired yet during bb_register_features.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -2362,8 +2347,8 @@ class BB_Admin_Settings_Ajax {
 	 * @return array Notification groups with fields, sub-types, and email template info.
 	 */
 	private function bb_build_notification_groups() {
-		$all_notifications    = bb_register_notification_preferences();
-		$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+		$all_notifications    = bboss_register_notification_preferences();
+		$enabled_notification = bboss_get_option( 'bb_enabled_notification', array() );
 		$notification_groups  = array();
 
 		if ( empty( $all_notifications ) ) {
@@ -2377,7 +2362,7 @@ class BB_Admin_Settings_Ajax {
 				continue;
 			}
 			foreach ( $field_group['fields'] as $notification_field ) {
-				$slugs = bb_register_notification_email_templates( $notification_field['key'] );
+				$slugs = bboss_register_notification_email_templates( $notification_field['key'] );
 				if ( ! empty( $slugs ) ) {
 					$all_email_slugs = array_merge( $all_email_slugs, $slugs );
 				}
@@ -2391,7 +2376,7 @@ class BB_Admin_Settings_Ajax {
 		if ( ! empty( $all_email_slugs ) ) {
 			$terms = get_terms(
 				array(
-					'taxonomy'   => bp_get_email_tax_type(),
+					'taxonomy'   => bboss_get_email_tax_type(),
 					'slug'       => $all_email_slugs,
 					'hide_empty' => false,
 				)
@@ -2413,10 +2398,10 @@ class BB_Admin_Settings_Ajax {
 					'posts_per_page'         => -1, // Bounded by tax_query — all matching email templates needed.
 					'no_found_rows'          => true, // Skip COUNT(*) — not paginating.
 					'update_post_meta_cache' => false, // Post meta not needed for URL resolution.
-					'post_type'              => bp_get_email_post_type(),
+					'post_type'              => bboss_get_email_post_type(),
 					'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 						array(
-							'taxonomy' => bp_get_email_tax_type(),
+							'taxonomy' => bboss_get_email_tax_type(),
 							'field'    => 'slug',
 							'terms'    => array_keys( $slug_term_ids ),
 						),
@@ -2426,12 +2411,12 @@ class BB_Admin_Settings_Ajax {
 			);
 
 			// Prime the term cache for all email posts to avoid N+1 queries.
-			update_object_term_cache( $email_posts, bp_get_email_post_type() );
+			update_object_term_cache( $email_posts, bboss_get_email_post_type() );
 
 			// Map each post to its email type slug(s). get_the_terms() reads the
 			// primed object cache directly; wp_get_object_terms() with custom
 			// fields bypasses that fast path and re-queries per post.
-			$tax = bp_get_email_tax_type();
+			$tax = bboss_get_email_tax_type();
 			foreach ( $email_posts as $post_id ) {
 				$post_terms = get_the_terms( $post_id, $tax );
 				if ( ! empty( $post_terms ) && ! is_wp_error( $post_terms ) ) {
@@ -2462,7 +2447,7 @@ class BB_Admin_Settings_Ajax {
 					}
 
 					// Get email template info using pre-fetched batch data.
-					$registered_emails = bb_register_notification_email_templates( $notification_field['key'] );
+					$registered_emails = bboss_register_notification_email_templates( $notification_field['key'] );
 					$email_template    = array(
 						'has_templates' => ! empty( $registered_emails ),
 						'count'         => count( $registered_emails ),
@@ -2492,8 +2477,8 @@ class BB_Admin_Settings_Ajax {
 							if ( empty( $email_template['url'] ) ) {
 								$email_template['url'] = add_query_arg(
 									array(
-										'post_type' => bp_get_email_post_type(),
-										'taxonomy'  => bp_get_email_tax_type(),
+										'post_type' => bboss_get_email_post_type(),
+										'taxonomy'  => bboss_get_email_tax_type(),
 										'terms'     => implode( ',', $registered_emails ),
 									),
 									admin_url( 'edit.php' )
@@ -2501,7 +2486,7 @@ class BB_Admin_Settings_Ajax {
 							}
 						} else {
 							$email_template['url'] = get_admin_url(
-								bp_get_root_blog_id(),
+								bboss_get_root_blog_id(),
 								'admin.php?page=bb-settings&tab=emails&panel=all_emails&popup=yes'
 							);
 						}
@@ -2509,15 +2494,15 @@ class BB_Admin_Settings_Ajax {
 						// No registered email templates — provide URL to emails admin
 						// so React can show "Missing Email Template" with a link.
 						$email_template['url'] = get_admin_url(
-							bp_get_root_blog_id(),
+							bboss_get_root_blog_id(),
 							'admin.php?page=bb-settings&tab=emails&panel=all_emails&popup=yes'
 						);
 					}
 
 					// Get preference sub-types (email, web, app).
 					$sub_types = array();
-					if ( function_exists( 'bb_notification_preferences_types' ) ) {
-						$options = bb_notification_preferences_types( $notification_field );
+					if ( function_exists( 'bboss_notification_preferences_types' ) ) {
+						$options = bboss_notification_preferences_types( $notification_field );
 						if ( ! empty( $options ) ) {
 							foreach ( $options as $key => $v ) {
 								$parent_disabled = ! empty( $notification_field['notification_read_only'] ) && true === $notification_field['notification_read_only'];
@@ -2618,16 +2603,16 @@ class BB_Admin_Settings_Ajax {
 		$all_options = array(
 			array(
 				'value' => '',
-				'label' => __( 'Default', 'buddyboss' ),
+				'label' => __( 'Default', 'buddyboss-platform' ),
 			),
 			array(
 				'value' => '0',
-				'label' => __( 'Custom URL', 'buddyboss' ),
+				'label' => __( 'Custom URL', 'buddyboss-platform' ),
 			),
 		);
 
-		if ( function_exists( 'bb_get_published_pages' ) ) {
-			$published = bb_get_published_pages( true );
+		if ( function_exists( 'bboss_get_published_pages' ) ) {
+			$published = bboss_get_published_pages( true );
 			if ( ! empty( $published ) ) {
 				$all_options = array_merge( $all_options, $published );
 			}
@@ -2692,7 +2677,7 @@ class BB_Admin_Settings_Ajax {
 	 *
 	 * Multisite: switches to the BP root blog before the page query so that on
 	 * a sub-site admin screen the results still come from the community's root
-	 * blog, matching what `bp_core_admin_get_directory_pages()` / the save
+	 * blog, matching what `bboss_core_admin_get_directory_pages()` / the save
 	 * handler operate on.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -2708,8 +2693,8 @@ class BB_Admin_Settings_Ajax {
 
 		$per_page = 20;
 		$switched = false;
-		if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
-			$root_blog_id = bp_get_root_blog_id();
+		if ( is_multisite() && function_exists( 'bboss_get_root_blog_id' ) ) {
+			$root_blog_id = bboss_get_root_blog_id();
 			if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
 				switch_to_blog( $root_blog_id );
 				$switched = true;
@@ -2723,16 +2708,16 @@ class BB_Admin_Settings_Ajax {
 		// page list we're about to return is authored there. Using
 		// `bp_current_user_can` keeps the cap check consistent with every
 		// other endpoint on this class and honours BP's cap-mapping filters.
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 			if ( $switched ) {
 				restore_current_blog();
 			}
-			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss-platform' ) ) );
 		}
 
 		$empty_option = array(
 			'value' => '',
-			'label' => __( '— Select a page —', 'buddyboss' ),
+			'label' => __( '— Select a page —', 'buddyboss-platform' ),
 		);
 
 		// Selected-ID resolve path: bypass pagination + search so the dropdown
@@ -2745,7 +2730,7 @@ class BB_Admin_Settings_Ajax {
 				$result = array(
 					'value' => (string) $post->ID,
 					/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
-					'label' => $post->post_title ? $post->post_title : sprintf( __( '(no title) #%d', 'buddyboss' ), $post->ID ),
+					'label' => $post->post_title ? $post->post_title : sprintf( __( '(no title) #%d', 'buddyboss-platform' ), $post->ID ),
 				);
 			}
 			if ( $switched ) {
@@ -2806,7 +2791,7 @@ class BB_Admin_Settings_Ajax {
 				$results[] = array(
 					'value' => (string) $page_id,
 					/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
-					'label' => $title ? $title : sprintf( __( '(no title) #%d', 'buddyboss' ), $page_id ),
+					'label' => $title ? $title : sprintf( __( '(no title) #%d', 'buddyboss-platform' ), $page_id ),
 				);
 			}
 		}
@@ -2850,7 +2835,7 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( '' === $slug ) {
-			wp_send_json_error( array( 'message' => __( 'Missing page slug.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Missing page slug.', 'buddyboss-platform' ) ) );
 		}
 
 		// Allow-list the slug against the set of directory keys that the
@@ -2861,19 +2846,19 @@ class BB_Admin_Settings_Ajax {
 		// (array) cast keeps this defensive against third-party filters
 		// returning non-arrays (PHP 8+ iterator contract).
 		$allowed_slugs = array();
-		if ( function_exists( 'bp_core_admin_get_directory_pages' ) ) {
-			$allowed_slugs = array_merge( $allowed_slugs, array_keys( (array) bp_core_admin_get_directory_pages() ) );
+		if ( function_exists( 'bboss_core_admin_get_directory_pages' ) ) {
+			$allowed_slugs = array_merge( $allowed_slugs, array_keys( (array) bboss_core_admin_get_directory_pages() ) );
 		}
-		if ( function_exists( 'bp_core_admin_get_static_pages' ) ) {
-			$allowed_slugs = array_merge( $allowed_slugs, array_keys( (array) bp_core_admin_get_static_pages() ) );
+		if ( function_exists( 'bboss_core_admin_get_static_pages' ) ) {
+			$allowed_slugs = array_merge( $allowed_slugs, array_keys( (array) bboss_core_admin_get_static_pages() ) );
 		}
 		if ( ! in_array( $slug, $allowed_slugs, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unknown directory slug.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unknown directory slug.', 'buddyboss-platform' ) ) );
 		}
 
 		$switched = false;
-		if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
-			$root_blog_id = bp_get_root_blog_id();
+		if ( is_multisite() && function_exists( 'bboss_get_root_blog_id' ) ) {
+			$root_blog_id = bboss_get_root_blog_id();
 			if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
 				switch_to_blog( $root_blog_id );
 				$switched = true;
@@ -2887,11 +2872,11 @@ class BB_Admin_Settings_Ajax {
 		// community owner should create directory pages. Using
 		// `bp_current_user_can` honours BP's cap-mapping filters (e.g. role
 		// plugins that remap `bp_moderate` for a custom role).
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 			if ( $switched ) {
 				restore_current_blog();
 			}
-			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss-platform' ) ) );
 		}
 
 		$title = '' !== $label ? $label : ucfirst( str_replace( array( '-', '_' ), ' ', $slug ) );
@@ -2934,4 +2919,4 @@ class BB_Admin_Settings_Ajax {
 }
 
 // Initialize.
-new BB_Admin_Settings_Ajax();
+new BBoss_Admin_Settings_Ajax();

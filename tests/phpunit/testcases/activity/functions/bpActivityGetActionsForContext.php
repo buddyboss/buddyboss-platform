@@ -7,7 +7,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActionsForContext extends BP_Unit
 	public function setUp() {
 		parent::setUp();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->reset_actions = clone $bp->activity->actions;
 		$bp->activity->actions = new stdClass();
@@ -17,7 +17,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActionsForContext extends BP_Unit
 	}
 
 	public function tearDown() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$bp->activity->actions = $this->reset_actions;
 
@@ -31,7 +31,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActionsForContext extends BP_Unit
 	}
 
 	public function test_should_include_actions_registered_for_context() {
-		bp_activity_set_action(
+		bboss_activity_set_action(
 			'foo',
 			'new_foo',
 			'Did a foo',
@@ -41,13 +41,13 @@ class BP_Tests_Activity_Functions_BpActivityGetActionsForContext extends BP_Unit
 			10
 		);
 
-		$actions = bp_activity_get_actions_for_context( 'member' );
+		$actions = bboss_activity_get_actions_for_context( 'member' );
 		$keys = wp_list_pluck( $actions, 'key' );
 		$this->assertContains( 'new_foo', $keys );
 	}
 
 	public function test_should_ignore_actions_not_registered_for_context() {
-		bp_activity_set_action(
+		bboss_activity_set_action(
 			'foo',
 			'new_foo',
 			'Did a foo',
@@ -57,7 +57,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActionsForContext extends BP_Unit
 			10
 		);
 
-		$actions = bp_activity_get_actions_for_context( 'group' );
+		$actions = bboss_activity_get_actions_for_context( 'group' );
 		$keys = wp_list_pluck( $actions, 'key' );
 		$this->assertNotContains( 'new_foo', $keys );
 	}

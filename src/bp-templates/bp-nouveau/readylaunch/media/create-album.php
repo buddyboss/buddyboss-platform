@@ -5,7 +5,7 @@
  * This template handles the create album modal and functionality.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -21,19 +21,19 @@ defined( 'ABSPATH' ) || exit;
 				<div id="boss-media-create-album-popup" class="modal-container">
 
 					<header class="bb-model-header">
-						<h4><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></h4>
+						<h4><?php esc_html_e( 'Create new album', 'buddyboss-platform' ); ?></h4>
 						<a class="bb-model-close-button" id="bp-media-create-album-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 
 					<div class="bb-field-wrap">
-						<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
-						<input id="bb-album-title" type="text" placeholder="<?php esc_html_e( 'Enter album title', 'buddyboss' ); ?>" />
+						<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss-platform' ); ?></label>
+						<input id="bb-album-title" type="text" placeholder="<?php esc_html_e( 'Enter album title', 'buddyboss-platform' ); ?>" />
 					</div>
 
 					<?php
 					if (
-						( bp_is_group() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_group_id() ) ) ||
-						( ( bp_is_my_profile() || bp_is_user_media() ) && bb_user_can_create_media() )
+						( bboss_is_group() && groups_can_user_manage_media( bboss_loggedin_user_id(), bboss_get_group_id() ) ) ||
+						( ( bboss_is_my_profile() || bboss_is_user_media() ) && bboss_user_can_create_media() )
 					) {
 						?>
 						<div class="bb-field-wrap">
@@ -44,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
 										<div class="dz-image">
 											<img data-dz-thumbnail />
 										</div>
-										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 										<div class="dz-details">
 											<div class="dz-filename"><span data-dz-name></span></div>
 											<div class="dz-size" data-dz-size></div>
@@ -63,11 +63,11 @@ defined( 'ABSPATH' ) || exit;
 					<?php } ?>
 
 					<footer class="bb-model-footer">
-						<?php if ( ! bp_is_group() ) : ?>
+						<?php if ( ! bboss_is_group() ) : ?>
 							<div class="bb-dropdown-wrap bb-rl-filter">
 								<select id="bb-album-privacy">
 									<?php
-									foreach ( bp_media_get_visibility_levels() as $k => $option ) {
+									foreach ( bboss_media_get_visibility_levels() as $k => $option ) {
 										?>
 										<option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $option ); ?></option>
 										<?php
@@ -76,7 +76,7 @@ defined( 'ABSPATH' ) || exit;
 								</select>
 							</div>
 						<?php endif; ?>
-						<a class="button" id="bp-media-create-album-submit" href="#"><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+						<a class="button" id="bp-media-create-album-submit" href="#"><?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?></a>
 					</footer>
 
 				</div>

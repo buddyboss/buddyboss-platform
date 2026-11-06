@@ -12,17 +12,17 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Fetch data about a BuddyPress user.
  *
- * BP_Core_User class can be used by any component. It will fetch useful
+ * BBoss_Core_User class can be used by any component. It will fetch useful
  * details for any user when provided with a user_id.
  *
  * Example:
- *    $user = new BP_Core_User( $user_id );
+ *    $user = new BBoss_Core_User( $user_id );
  *    $user_avatar = $user->avatar;
  *    $user_email = $user->email;
  *    $user_status = $user->status;
  *    etc.
  */
-class BP_Core_User {
+class BBoss_Core_User {
 
 	/**
 	 * ID of the user which the object relates to.
@@ -148,60 +148,64 @@ class BP_Core_User {
 	 */
 	public function populate() {
 
-		if ( bp_is_active( 'xprofile' ) ) {
+		if ( bboss_is_active( 'xprofile' ) ) {
 			$this->profile_data = $this->get_profile_data();
 		}
 
 		if ( ! empty( $this->profile_data ) ) {
-			$full_name_field_name = bp_xprofile_fullname_field_name();
+			$full_name_field_name = bboss_xprofile_fullname_field_name();
 
-			$this->user_url  = bp_core_get_user_domain( $this->id, $this->profile_data['user_nicename'], $this->profile_data['user_login'] );
+			$this->user_url  = bboss_core_get_user_domain( $this->id, $this->profile_data['user_nicename'], $this->profile_data['user_login'] );
 			$this->fullname  = esc_attr( $this->profile_data[ $full_name_field_name ]['field_data'] );
 			$this->user_link = "<a href='{$this->user_url}'>{$this->fullname}</a>";
 			$this->email     = esc_attr( $this->profile_data['user_email'] );
 		} else {
-			$this->user_url  = bp_core_get_user_domain( $this->id );
-			$this->user_link = bp_core_get_userlink( $this->id );
-			$this->fullname  = esc_attr( bp_core_get_user_displayname( $this->id ) );
-			$this->email     = esc_attr( bp_core_get_user_email( $this->id ) );
+			$this->user_url  = bboss_core_get_user_domain( $this->id );
+			$this->user_link = bboss_core_get_userlink( $this->id );
+			$this->fullname  = esc_attr( bboss_core_get_user_displayname( $this->id ) );
+			$this->email     = esc_attr( bboss_core_get_user_email( $this->id ) );
 		}
 
-		$this->avatar       = bp_core_fetch_avatar(
+		$this->avatar       = bboss_core_fetch_avatar(
 			array(
 				'item_id' => $this->id,
 				'type'    => 'full',
 				'alt'     => sprintf(
+					/* translators: %s: member display name. */
 					__(
 						'Profile photo of %s',
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$this->fullname
 				),
 			)
 		);
-		$this->avatar_thumb = bp_core_fetch_avatar(
+		$this->avatar_thumb = bboss_core_fetch_avatar(
 			array(
 				'item_id' => $this->id,
 				'type'    => 'thumb',
 				'alt'     => sprintf(
+					/* translators: %s: member display name. */
 					__(
 						'Profile photo of %s',
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$this->fullname
 				),
 			)
 		);
-		$this->avatar_mini  = bp_core_fetch_avatar(
+		$this->avatar_mini  = bboss_core_fetch_avatar(
 			array(
 				'item_id' => $this->id,
 				'type'    => 'thumb',
-				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $this->fullname ),
+				/* translators: %s: member display name. */
+				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $this->fullname ),
 				'width'   => 30,
 				'height'  => 30,
 			)
 		);
-		$this->last_active  = bp_core_get_last_activity( bp_get_user_last_activity( $this->id ), __( 'active %s', 'buddyboss' ) );
+		/* translators: %s: human-readable time since last activity. */
+		$this->last_active  = bboss_core_get_last_activity( bboss_get_user_last_activity( $this->id ), __( 'active %s', 'buddyboss-platform' ) );
 	}
 
 	/**
@@ -209,26 +213,27 @@ class BP_Core_User {
 	 */
 	public function populate_extras() {
 
-		if ( bp_is_active( 'friends' ) ) {
-			$this->total_friends = BP_Friends_Friendship::total_friend_count( $this->id );
+		if ( bboss_is_active( 'friends' ) ) {
+			$this->total_friends = BBoss_Friends_Friendship::total_friend_count( $this->id );
 		}
 
-		if ( bp_is_active( 'groups' ) ) {
-			$this->total_groups = BP_Groups_Member::total_group_count( $this->id );
-			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddyboss' ), $this->total_groups );
+		if ( bboss_is_active( 'groups' ) ) {
+			$this->total_groups = BBoss_Groups_Member::total_group_count( $this->id );
+			/* translators: %s: number. */
+			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddyboss-platform' ), $this->total_groups );
 		}
 	}
 
 	/**
 	 * Fetch xprofile data for the current user.
 	 *
-	 * @see BP_XProfile_ProfileData::get_all_for_user() for description of
+	 * @see BBoss_XProfile_ProfileData::get_all_for_user() for description of
 	 *      return value.
 	 *
 	 * @return array See {@link BP_XProfile_Profile_Data::get_all_for_user()}.
 	 */
 	public function get_profile_data() {
-		return BP_XProfile_ProfileData::get_all_for_user( $this->id );
+		return BBoss_XProfile_ProfileData::get_all_for_user( $this->id );
 	}
 
 	/** Static Methods ********************************************************/
@@ -236,26 +241,26 @@ class BP_Core_User {
 	/**
 	 * Get a list of users that match the query parameters.
 	 *
-	 * Since BuddyPress 1.7, use {@link BP_User_Query} instead.
+	 * Since BuddyPress 1.7, use {@link BBoss_User_Query} instead.
 	 *
-	 * @deprecated 1.7.0 Use {@link BP_User_Query}.
+	 * @deprecated 1.7.0 Use {@link BBoss_User_Query}.
 	 *
-	 * @see BP_User_Query for a description of parameters, most of which
+	 * @see BBoss_User_Query for a description of parameters, most of which
 	 *      are used there in the same way.
 	 *
-	 * @param string      $type            See {@link BP_User_Query}.
-	 * @param int         $limit           See {@link BP_User_Query}. Default: 0.
-	 * @param int         $page            See {@link BP_User_Query}. Default: 1.
-	 * @param int         $user_id         See {@link BP_User_Query}. Default: 0.
-	 * @param mixed       $include         See {@link BP_User_Query}. Default: false.
-	 * @param string|bool $search_terms    See {@link BP_User_Query}.
+	 * @param string      $type            See {@link BBoss_User_Query}.
+	 * @param int         $limit           See {@link BBoss_User_Query}. Default: 0.
+	 * @param int         $page            See {@link BBoss_User_Query}. Default: 1.
+	 * @param int         $user_id         See {@link BBoss_User_Query}. Default: 0.
+	 * @param mixed       $include         See {@link BBoss_User_Query}. Default: false.
+	 * @param string|bool $search_terms    See {@link BBoss_User_Query}.
 	 *                                     Default: false.
-	 * @param bool        $populate_extras See {@link BP_User_Query}.
+	 * @param bool        $populate_extras See {@link BBoss_User_Query}.
 	 *                                     Default: true.
-	 * @param mixed       $exclude         See {@link BP_User_Query}. Default: false.
-	 * @param string|bool $meta_key        See {@link BP_User_Query}.
+	 * @param mixed       $exclude         See {@link BBoss_User_Query}. Default: false.
+	 * @param string|bool $meta_key        See {@link BBoss_User_Query}.
 	 *                                     Default: false.
-	 * @param string|bool $meta_value      See {@link BP_User_Query}.
+	 * @param string|bool $meta_value      See {@link BBoss_User_Query}.
 	 *                                     Default: false.
 	 * @return false|array {
 	 *     @type int   $total_users Total number of users matched by query
@@ -269,7 +274,7 @@ class BP_Core_User {
 
 		_deprecated_function( __METHOD__, '1.7', 'BP_User_Query' );
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$sql = array();
 
@@ -298,7 +303,7 @@ class BP_Core_User {
 		$sql['from'] = "FROM {$wpdb->users} u LEFT JOIN {$wpdb->usermeta} um ON um.user_id = u.ID";
 
 		// We search against xprofile fields, so we must join the table.
-		if ( $search_terms && bp_is_active( 'xprofile' ) ) {
+		if ( $search_terms && bboss_is_active( 'xprofile' ) ) {
 			$sql['join_profiledata_search'] = "LEFT JOIN {$bp->profile->table_name_data} spd ON u.ID = spd.user_id";
 		}
 
@@ -311,14 +316,14 @@ class BP_Core_User {
 			$sql['join_meta'] = "LEFT JOIN {$wpdb->usermeta} umm ON umm.user_id = u.ID";
 		}
 
-		$sql['where'] = 'WHERE ' . bp_core_get_status_sql( 'u.' );
+		$sql['where'] = 'WHERE ' . bboss_core_get_status_sql( 'u.' );
 
 		if ( 'active' == $type || 'online' == $type || 'newest' == $type ) {
-			$sql['where_active'] = $wpdb->prepare( 'AND um.meta_key = %s', bp_get_user_meta_key( 'last_activity' ) );
+			$sql['where_active'] = $wpdb->prepare( 'AND um.meta_key = %s', bboss_get_user_meta_key( 'last_activity' ) );
 		}
 
 		if ( 'popular' == $type ) {
-			$sql['where_popular'] = $wpdb->prepare( 'AND um.meta_key = %s', bp_get_user_meta_key( 'total_friend_count' ) );
+			$sql['where_popular'] = $wpdb->prepare( 'AND um.meta_key = %s', bboss_get_user_meta_key( 'total_friend_count' ) );
 		}
 
 		if ( 'online' == $type ) {
@@ -326,7 +331,7 @@ class BP_Core_User {
 		}
 
 		if ( 'alphabetical' == $type ) {
-			$sql['where_alpha'] = 'AND pd.field_id = ' . bp_xprofile_nickname_field_id();
+			$sql['where_alpha'] = 'AND pd.field_id = ' . bboss_xprofile_nickname_field_id();
 		}
 
 		if ( ! empty( $exclude ) ) {
@@ -342,8 +347,8 @@ class BP_Core_User {
 			if ( ! empty( $include ) ) {
 				$include            = implode( ',', wp_parse_id_list( $include ) );
 				$sql['where_users'] = "AND u.ID IN ({$include})";
-			} elseif ( ! empty( $user_id ) && bp_is_active( 'friends' ) ) {
-				$friend_ids = friends_get_friend_user_ids( $user_id );
+			} elseif ( ! empty( $user_id ) && bboss_is_active( 'friends' ) ) {
+				$friend_ids = bboss_friends_get_friend_user_ids( $user_id );
 
 				if ( ! empty( $friend_ids ) ) {
 					$friend_ids           = implode( ',', wp_parse_id_list( $friend_ids ) );
@@ -356,8 +361,8 @@ class BP_Core_User {
 			}
 		}
 
-		if ( ! empty( $search_terms ) && bp_is_active( 'xprofile' ) ) {
-			$search_terms_like        = '%' . bp_esc_like( $search_terms ) . '%';
+		if ( ! empty( $search_terms ) && bboss_is_active( 'xprofile' ) ) {
+			$search_terms_like        = '%' . bboss_esc_like( $search_terms ) . '%';
 			$sql['where_searchterms'] = $wpdb->prepare( 'AND spd.value LIKE %s', $search_terms_like );
 		}
 
@@ -403,7 +408,7 @@ class BP_Core_User {
 		 * @param array  $sql   Array of SQL statement parts for the query.
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_get_paged_users_sql', join( ' ', (array) $sql ), $sql );
-		$paged_users     = $wpdb->get_results( $paged_users_sql );
+		$paged_users     = $wpdb->get_results( $paged_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_get_paged_users_sql; as built here: literal select/join/order parts, table names from $wpdb/buddypress(), bp_core_get_status_sql() literal, nickname field id (int), include/exclude/friend ids via wp_parse_id_list(), meta key/value, search and LIMIT $wpdb->prepare()'d.
 
 		// Re-jig the SQL so we can get the total user count.
 		unset( $sql['select_main'] );
@@ -435,7 +440,7 @@ class BP_Core_User {
 		 * @param array  $sql   Array of SQL statement parts for the query.
 		 */
 		$total_users_sql = apply_filters( 'bp_core_get_total_users_sql', join( ' ', (array) $sql ), $sql );
-		$total_users     = $wpdb->get_var( $total_users_sql );
+		$total_users     = $wpdb->get_var( $total_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_get_total_users_sql; the same $sql parts as the paged query above (see the reason there) with SELECT COUNT and no LIMIT.
 
 		/**
 		 * Lets fetch some other useful data in a separate queries, this will be faster than querying the data for every user in a list.
@@ -492,10 +497,10 @@ class BP_Core_User {
 			}
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
-		$letter_like = bp_esc_like( $letter ) . '%';
-		$status_sql  = bp_core_get_status_sql( 'u.' );
+		$letter_like = bboss_esc_like( $letter ) . '%';
+		$status_sql  = bboss_core_get_status_sql( 'u.' );
 
 		if ( ! empty( $exclude ) ) {
 			$exclude     = implode( ',', wp_parse_id_list( $exclude ) );
@@ -511,7 +516,7 @@ class BP_Core_User {
 		 *
 		 * @param string $value SQL prepared statement for the user count query.
 		 */
-		$total_users_sql = apply_filters( 'bp_core_users_by_letter_count_sql', $wpdb->prepare( "SELECT COUNT(DISTINCT u.ID) FROM {$wpdb->users} u LEFT JOIN {$bp->profile->table_name_data} pd ON u.ID = pd.user_id LEFT JOIN {$bp->profile->table_name_fields} pf ON pd.field_id = pf.id WHERE {$status_sql} AND pf.name = %s {$exclude_sql} AND pd.value LIKE %s ORDER BY pd.value ASC", bp_xprofile_fullname_field_name(), $letter_like ) );
+		$total_users_sql = apply_filters( 'bp_core_users_by_letter_count_sql', $wpdb->prepare( "SELECT COUNT(DISTINCT u.ID) FROM {$wpdb->users} u LEFT JOIN {$bp->profile->table_name_data} pd ON u.ID = pd.user_id LEFT JOIN {$bp->profile->table_name_fields} pf ON pd.field_id = pf.id WHERE {$status_sql} AND pf.name = %s {$exclude_sql} AND pd.value LIKE %s ORDER BY pd.value ASC", bboss_xprofile_fullname_field_name(), $letter_like ) );
 
 		/**
 		 * Filters the SQL used to query for users by first letter.
@@ -520,10 +525,10 @@ class BP_Core_User {
 		 *
 		 * @param string $value SQL prepared statement for the user query.
 		 */
-		$paged_users_sql = apply_filters( 'bp_core_users_by_letter_sql', $wpdb->prepare( "SELECT DISTINCT u.ID as id, u.user_registered, u.user_nicename, u.user_login, u.user_email FROM {$wpdb->users} u LEFT JOIN {$bp->profile->table_name_data} pd ON u.ID = pd.user_id LEFT JOIN {$bp->profile->table_name_fields} pf ON pd.field_id = pf.id WHERE {$status_sql} AND pf.name = %s {$exclude_sql} AND pd.value LIKE %s ORDER BY pd.value ASC{$pag_sql}", bp_xprofile_fullname_field_name(), $letter_like ) );
+		$paged_users_sql = apply_filters( 'bp_core_users_by_letter_sql', $wpdb->prepare( "SELECT DISTINCT u.ID as id, u.user_registered, u.user_nicename, u.user_login, u.user_email FROM {$wpdb->users} u LEFT JOIN {$bp->profile->table_name_data} pd ON u.ID = pd.user_id LEFT JOIN {$bp->profile->table_name_fields} pf ON pd.field_id = pf.id WHERE {$status_sql} AND pf.name = %s {$exclude_sql} AND pd.value LIKE %s ORDER BY pd.value ASC{$pag_sql}", bboss_xprofile_fullname_field_name(), $letter_like ) );
 
-		$total_users = $wpdb->get_var( $total_users_sql );
-		$paged_users = $wpdb->get_results( $paged_users_sql );
+		$total_users = $wpdb->get_var( $total_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_users_by_letter_count_sql; as built here: one $wpdb->prepare() (field name and LIKE pattern %s) with table names, bp_core_get_status_sql() literal and exclude ids via wp_parse_id_list().
+		$paged_users = $wpdb->get_results( $paged_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_users_by_letter_sql; same build as the count query above plus the %d-prepared LIMIT.
 
 		/**
 		 * Lets fetch some other useful data in a separate queries, this will be
@@ -551,7 +556,7 @@ class BP_Core_User {
 	/**
 	 * Get details of specific users from the database.
 	 *
-	 * Use {@link BP_User_Query} with the 'user_ids' param instead.
+	 * Use {@link BBoss_User_Query} with the 'user_ids' param instead.
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -571,7 +576,7 @@ class BP_Core_User {
 		}
 
 		$user_ids   = implode( ',', wp_parse_id_list( $user_ids ) );
-		$status_sql = bp_core_get_status_sql();
+		$status_sql = bboss_core_get_status_sql();
 
 		/**
 		 * Filter the SQL string used for querying specific user count.
@@ -627,8 +632,8 @@ class BP_Core_User {
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_user_get_specific_users_paged_sql', $paged_users_sql, $user_ids, $limit, $page, $populate_extras );
 
-		$total_users = $wpdb->get_var( $total_users_sql );
-		$paged_users = $wpdb->get_results( $paged_users_sql );
+		$total_users = $wpdb->get_var( $total_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_user_get_specific_users_count_sql (and deprecated bp_core_get_specific_users_count_sql); as built here: $wpdb->users, bp_core_get_status_sql() literal, ids via wp_parse_id_list().
+		$paged_users = $wpdb->get_results( $paged_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_user_get_specific_users_paged_sql (and deprecated bp_core_get_specific_users_count_sql); same build as the count query above plus the %d-prepared LIMIT.
 
 		/**
 		 * Lets fetch some other useful data in a separate queries, this will be
@@ -664,13 +669,13 @@ class BP_Core_User {
 	public static function search_users( $search_terms, $limit = null, $page = 1, $populate_extras = true ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$user_ids = array();
 		$pag_sql  = $limit && $page ? $wpdb->prepare( ' LIMIT %d, %d', intval( ( $page - 1 ) * intval( $limit ) ), intval( $limit ) ) : '';
 
-		$search_terms_like = '%' . bp_esc_like( $search_terms ) . '%';
-		$status_sql        = bp_core_get_status_sql( 'u.' );
+		$search_terms_like = '%' . bboss_esc_like( $search_terms ) . '%';
+		$status_sql        = bboss_core_get_status_sql( 'u.' );
 
 		/**
 		 * Filters the SQL used to query for searched users count.
@@ -690,8 +695,8 @@ class BP_Core_User {
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_search_users_sql', $wpdb->prepare( "SELECT DISTINCT u.ID as id, u.user_registered, u.user_nicename, u.user_login, u.user_email FROM {$wpdb->users} u LEFT JOIN {$bp->profile->table_name_data} pd ON u.ID = pd.user_id WHERE {$status_sql} AND pd.value LIKE %s ORDER BY pd.value ASC{$pag_sql}", $search_terms_like ), $search_terms, $pag_sql );
 
-		$total_users = $wpdb->get_var( $total_users_sql );
-		$paged_users = $wpdb->get_results( $paged_users_sql );
+		$total_users = $wpdb->get_var( $total_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_search_users_count_sql; as built here: one $wpdb->prepare() (LIKE pattern %s via bp_esc_like()) with table names and bp_core_get_status_sql() literal.
+		$paged_users = $wpdb->get_results( $paged_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_search_users_sql; same build as the count query above plus the %d-prepared LIMIT.
 
 		/**
 		 * Lets fetch some other useful data in a separate queries, this will be faster than querying the data for every user in a list.
@@ -727,7 +732,7 @@ class BP_Core_User {
 	public static function get_user_extras( &$paged_users, &$user_ids, $type = false ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( empty( $user_ids ) ) {
 			return $paged_users;
@@ -737,8 +742,8 @@ class BP_Core_User {
 		$user_ids = implode( ',', wp_parse_id_list( $user_ids ) );
 
 		// Fetch the user's full name.
-		if ( bp_is_active( 'xprofile' ) && 'alphabetical' != $type ) {
-			$names = $wpdb->get_results( $wpdb->prepare( "SELECT pd.user_id as id, pd.value as fullname FROM {$bp->profile->table_name_fields} pf, {$bp->profile->table_name_data} pd WHERE pf.id = pd.field_id AND pf.name = %s AND pd.user_id IN ( {$user_ids} )", bp_xprofile_fullname_field_name() ) );
+		if ( bboss_is_active( 'xprofile' ) && 'alphabetical' != $type ) {
+			$names = $wpdb->get_results( $wpdb->prepare( "SELECT pd.user_id as id, pd.value as fullname FROM {$bp->profile->table_name_fields} pf, {$bp->profile->table_name_data} pd WHERE pf.id = pd.field_id AND pf.name = %s AND pd.user_id IN ( {$user_ids} )", bboss_xprofile_fullname_field_name() ) );
 			for ( $i = 0, $count = count( $paged_users ); $i < $count; ++$i ) {
 				foreach ( (array) $names as $name ) {
 					if ( $name->id == $paged_users[ $i ]->id ) {
@@ -750,7 +755,7 @@ class BP_Core_User {
 
 		// Fetch the user's total friend count.
 		if ( 'popular' != $type ) {
-			$friend_count = $wpdb->get_results( $wpdb->prepare( "SELECT user_id as id, meta_value as total_friend_count FROM {$wpdb->usermeta} WHERE meta_key = %s AND user_id IN ( {$user_ids} )", bp_get_user_meta_key( 'total_friend_count' ) ) );
+			$friend_count = $wpdb->get_results( $wpdb->prepare( "SELECT user_id as id, meta_value as total_friend_count FROM {$wpdb->usermeta} WHERE meta_key = %s AND user_id IN ( {$user_ids} )", bboss_get_user_meta_key( 'total_friend_count' ) ) );
 			for ( $i = 0, $count = count( $paged_users ); $i < $count; ++$i ) {
 				foreach ( (array) $friend_count as $fcount ) {
 					if ( $fcount->id == $paged_users[ $i ]->id ) {
@@ -761,8 +766,8 @@ class BP_Core_User {
 		}
 
 		// Fetch whether or not the user is a friend.
-		if ( bp_is_active( 'friends' ) ) {
-			$friend_status = $wpdb->get_results( $wpdb->prepare( "SELECT initiator_user_id, friend_user_id, is_confirmed FROM {$bp->friends->table_name} WHERE (initiator_user_id = %d AND friend_user_id IN ( {$user_ids} ) ) OR (initiator_user_id IN ( {$user_ids} ) AND friend_user_id = %d )", bp_loggedin_user_id(), bp_loggedin_user_id() ) );
+		if ( bboss_is_active( 'friends' ) ) {
+			$friend_status = $wpdb->get_results( $wpdb->prepare( "SELECT initiator_user_id, friend_user_id, is_confirmed FROM {$bp->friends->table_name} WHERE (initiator_user_id = %d AND friend_user_id IN ( {$user_ids} ) ) OR (initiator_user_id IN ( {$user_ids} ) AND friend_user_id = %d )", bboss_loggedin_user_id(), bboss_loggedin_user_id() ) );
 			for ( $i = 0, $count = count( $paged_users ); $i < $count; ++$i ) {
 				foreach ( (array) $friend_status as $status ) {
 					if ( $status->initiator_user_id == $paged_users[ $i ]->id || $status->friend_user_id == $paged_users[ $i ]->id ) {
@@ -774,7 +779,7 @@ class BP_Core_User {
 
 		// Fetch the user's last_activity.
 		if ( 'active' != $type ) {
-			$user_activity = $wpdb->get_results( $wpdb->prepare( "SELECT user_id as id, meta_value as last_activity FROM {$wpdb->usermeta} WHERE meta_key = %s AND user_id IN ( {$user_ids} )", bp_get_user_meta_key( 'last_activity' ) ) );
+			$user_activity = $wpdb->get_results( $wpdb->prepare( "SELECT user_id as id, meta_value as last_activity FROM {$wpdb->usermeta} WHERE meta_key = %s AND user_id IN ( {$user_ids} )", bboss_get_user_meta_key( 'last_activity' ) ) );
 			for ( $i = 0, $count = count( $paged_users ); $i < $count; ++$i ) {
 				foreach ( (array) $user_activity as $activity ) {
 					if ( $activity->id == $paged_users[ $i ]->id ) {
@@ -785,7 +790,7 @@ class BP_Core_User {
 		}
 
 		// Fetch the user's latest update.
-		$user_update = $wpdb->get_results( $wpdb->prepare( "SELECT user_id as id, meta_value as latest_update FROM {$wpdb->usermeta} WHERE meta_key = %s AND user_id IN ( {$user_ids} )", bp_get_user_meta_key( 'bp_latest_update' ) ) );
+		$user_update = $wpdb->get_results( $wpdb->prepare( "SELECT user_id as id, meta_value as latest_update FROM {$wpdb->usermeta} WHERE meta_key = %s AND user_id IN ( {$user_ids} )", bboss_get_user_meta_key( 'bp_latest_update' ) ) );
 		for ( $i = 0, $count = count( $paged_users ); $i < $count; ++$i ) {
 			foreach ( (array) $user_update as $update ) {
 				if ( $update->id == $paged_users[ $i ]->id ) {
@@ -825,14 +830,14 @@ class BP_Core_User {
 			return false;
 		}
 
-		$uncached_user_ids = bp_get_non_cached_ids( $user_ids, 'bp_last_activity' );
+		$uncached_user_ids = bboss_get_non_cached_ids( $user_ids, 'bp_last_activity' );
 		if ( ! empty( $uncached_user_ids ) ) {
-			$bp = buddypress();
+			$bp = bboss();
 
 			$user_ids_sql = implode( ',', $uncached_user_ids );
 			$user_count   = count( $uncached_user_ids );
 
-			$last_activities = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql}) LIMIT {$user_count}", $bp->members->id ) );
+			$last_activities = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql}) LIMIT {$user_count}", $bp->members->id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $user_ids_sql is an int list (wp_parse_id_list(), filtered, then the uncached subset) and $user_count its count; table name from buddypress().
 
 			foreach ( $last_activities as $last_activity ) {
 				wp_cache_set(
@@ -879,7 +884,7 @@ class BP_Core_User {
 	 */
 	public static function update_last_activity( $user_id, $time ) {
 
-		$updated = BB_Presence::bb_update_last_activity( $user_id, $time );
+		$updated = BBoss_Presence::bb_update_last_activity( $user_id, $time );
 
 		/**
 		 * Fires when a user's last_activity value has been updated.
@@ -913,7 +918,7 @@ class BP_Core_User {
 		}
 
 		$deleted = $wpdb->delete(
-			buddypress()->members->table_name_last_activity,
+			bboss()->members->table_name_last_activity,
 			// WHERE.
 			array(
 				'id' => $existing[ $user_id ]['activity_id'],

@@ -8,12 +8,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_Documents' ) ) :
+if ( ! class_exists( 'BBoss_Search_Documents' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search document class
 	 */
-	class Bp_Search_Documents extends Bp_Search_Type {
+	class BBoss_Search_Documents extends BBoss_Search_Type {
 		private $type = 'documents';
 
 		/**
@@ -22,7 +22,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 		 *
 		 * @since BuddyBoss 1.4.0
 		 *
-		 * @return object Bp_Search_Documents
+		 * @return object BBoss_Search_Documents
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication.
@@ -30,7 +30,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 
 			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
-				$instance = new Bp_Search_Documents();
+				$instance = new BBoss_Search_Documents();
 			}
 
 			// Always return the instance.
@@ -51,10 +51,10 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 			global $wpdb, $bp;
 
 			$user_groups = array();
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 
 				// Fetch public groups.
-				$public_groups = groups_get_groups(
+				$public_groups = bboss_groups_get_groups(
 					array(
 						'fields'   => 'ids',
 						'status'   => 'public',
@@ -70,7 +70,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 				$user_groups = array();
 				if ( is_user_logged_in() ) {
 
-					$groups = groups_get_user_groups( bp_loggedin_user_id() );
+					$groups = bboss_groups_get_user_groups( bboss_loggedin_user_id() );
 					if ( ! empty( $groups['groups'] ) ) {
 						$user_groups = $groups['groups'];
 					} else {
@@ -82,14 +82,14 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 			}
 
 			$friends = array();
-			if ( bp_is_active( 'friends' ) && is_user_logged_in() ) {
+			if ( bboss_is_active( 'friends' ) && is_user_logged_in() ) {
 
 				// Determine friends of user.
-				$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
+				$friends = bboss_friends_get_friend_user_ids( bboss_loggedin_user_id() );
 				if ( empty( $friends ) ) {
 					$friends = array( 0 );
 				}
-				array_push( $friends, bp_loggedin_user_id() );
+				array_push( $friends, bboss_loggedin_user_id() );
 			}
 
 			$sql['select'] = 'SELECT';
@@ -116,6 +116,22 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 				$privacy[] = 'loggedin';
 			}
 
+			// Who may see a document: each visibility clause is prepared on its own, the
+			// privacy values bound as %s and the group/user ids as %d.
+			$visibility_sql = array(
+				$wpdb->prepare( '( d.privacy IN ( ' . implode( ', ', array_fill( 0, count( $privacy ), '%s' ) ) . ' ) )', $privacy ),
+			);
+			if ( ! empty( $user_groups ) ) {
+				$visibility_sql[] = $wpdb->prepare( '( d.group_id IN ( ' . implode( ', ', array_fill( 0, count( $user_groups ), '%d' ) ) . " ) AND d.privacy = 'grouponly' )", $user_groups );
+			}
+			if ( bboss_is_active( 'friends' ) && ! empty( $friends ) ) {
+				$visibility_sql[] = $wpdb->prepare( '( d.user_id IN ( ' . implode( ', ', array_fill( 0, count( $friends ), '%d' ) ) . " ) AND d.privacy = 'friends' )", $friends );
+			}
+			if ( is_user_logged_in() ) {
+				$visibility_sql[] = $wpdb->prepare( "( d.user_id = %d AND d.privacy = 'onlyme' )", bboss_loggedin_user_id() );
+			}
+
+			$like_term          = '%' . $wpdb->esc_like( $search_term ) . '%';
 			$where_conditions   = array( '1=1' );
 			$where_conditions[] = $wpdb->prepare(
 				" (
@@ -128,18 +144,12 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 						AND dm.meta_value LIKE %s
 					)
 					AND
-					(
-							( d.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " .
-				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( d.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND d.privacy = 'grouponly' )" : '' ) .
-				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( d.user_id IN ( '" . implode( "','", $friends ) . "' ) AND d.privacy = 'friends' )" : '' ) .
-				( is_user_logged_in() ? " OR ( d.user_id = '" . bp_loggedin_user_id() . "' AND d.privacy = 'onlyme' )" : '' ) .
-				')
-				)',
-				'%' . $wpdb->esc_like( $search_term ) . '%',
-				'%' . $wpdb->esc_like( $search_term ) . '%',
-				'%' . $wpdb->esc_like( $search_term ) . '%',
-				'%' . $wpdb->esc_like( $search_term ) . '%'
-			);
+					( ",
+				$like_term,
+				$like_term,
+				$like_term,
+				$like_term
+			) . implode( ' OR ', $visibility_sql ) . ' ) )';
 
 			/**
 			 * Filters the MySQL WHERE conditions for the document Search query.
@@ -191,7 +201,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 						'id'    => bp_get_document_id(),
 						'type'  => $this->type,
 						'title' => bp_get_document_title(),
-						'html'  => bp_search_buffer_template_part( 'loop/document', $template_type, false ),
+						'html'  => bboss_search_buffer_template_part( 'loop/document', $template_type, false ),
 					);
 
 					$this->search_results['items'][ bp_get_document_id() ] = $result;

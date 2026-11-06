@@ -4,7 +4,7 @@ include_once BP_TESTS_DIR . '/assets/group-extensions.php';
 
 /**
  * @group groups
- * @group BP_Group_Extension
+ * @group BBoss_Group_Extension
  */
 class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 	public function test_parse_legacy_properties() {
@@ -161,7 +161,7 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertEquals( $expected, BP_Group_Extension::parse_args_r( $a, $b ) );
+		$this->assertEquals( $expected, BBoss_Group_Extension::parse_args_r( $a, $b ) );
 	}
 
 	/**
@@ -205,14 +205,14 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 
 	public function test_has_submit_button() {
 		$a = '<p>Foo bar</p><input type="text" name="awesome" /><input name="save" type="submit" id="saverrrr" />sweet';
-		$this->assertTrue( BP_Group_Extension::has_submit_button( $a ) );
+		$this->assertTrue( BBoss_Group_Extension::has_submit_button( $a ) );
 
 		$b = '<p>Foo bar</p><input type="text" name="awesome" />sweet';
-		$this->assertFalse( BP_Group_Extension::has_submit_button( $b ) );
+		$this->assertFalse( BBoss_Group_Extension::has_submit_button( $b ) );
 
 		// switch the quotation marks
 		$c = "<p>Foo bar</p><input type='text' name='awesome' /><input name='save' type='submit' id='saverrrr' />sweet";
-		$this->assertTrue( BP_Group_Extension::has_submit_button( $c ) );
+		$this->assertTrue( BBoss_Group_Extension::has_submit_button( $c ) );
 	}
 
 	/**
@@ -220,22 +220,22 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_enable_nav_item_true() {
-		$old_options_nav = buddypress()->bp_options_nav;
+		$old_options_nav = bboss()->bp_options_nav;
 
 		$g = self::factory()->group->create();
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$class_name = 'BPTest_Group_Extension_Enable_Nav_Item_True';
 		$e = new $class_name();
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e->_register();
 
-		$this->assertTrue( isset( buddypress()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
+		$this->assertTrue( isset( bboss()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
 
 		// Clean up
-		buddypress()->bp_options_nav = $old_options_nav;
+		bboss()->bp_options_nav = $old_options_nav;
 	}
 
 	/**
@@ -243,22 +243,22 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_enable_nav_item_false() {
-		$old_options_nav = buddypress()->bp_options_nav;
+		$old_options_nav = bboss()->bp_options_nav;
 
 		$g = self::factory()->group->create();
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$class_name = 'BPTest_Group_Extension_Enable_Nav_Item_False';
 		$e = new $class_name();
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e->_register();
 
-		$this->assertFalse( isset( buddypress()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
+		$this->assertFalse( isset( bboss()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
 
 		// Clean up
-		buddypress()->bp_options_nav = $old_options_nav;
+		bboss()->bp_options_nav = $old_options_nav;
 	}
 
 	/**
@@ -266,36 +266,36 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_visibility_private() {
-		$old_options_nav = buddypress()->bp_options_nav;
+		$old_options_nav = bboss()->bp_options_nav;
 		$old_current_user = get_current_user_id();
 
 		$g = self::factory()->group->create( array(
 			'status' => 'private',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$class_name = 'BPTest_Group_Extension_Visibility_Private';
 		$e = new $class_name();
 
 		// Test as non-logged-in user
 		$this->set_current_user( 0 );
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 		$e->_register();
-		$this->assertFalse( isset( buddypress()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
+		$this->assertFalse( isset( bboss()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
 
 		// Clean up
-		buddypress()->bp_options_nav = $old_options_nav;
+		bboss()->bp_options_nav = $old_options_nav;
 
 		// Test as group member
 		$u = self::factory()->user->create();
 		$this->set_current_user( $u );
 		$this->add_user_to_group( $u, $g );
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 		$e->_register();
-		$this->assertTrue( isset( buddypress()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
+		$this->assertTrue( isset( bboss()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
 
 		// Clean up
-		buddypress()->bp_options_nav = $old_options_nav;
+		bboss()->bp_options_nav = $old_options_nav;
 		$this->set_current_user( $old_current_user );
 	}
 
@@ -304,42 +304,42 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 *
 	 * visibility=public + status=private results in adding the item to
-	 * the nav. However, BP_Groups_Component::setup_globals() bounces the
+	 * the nav. However, BBoss_Groups_Component::setup_globals() bounces the
 	 * user away from this page on a regular pageload (BP 2.0 and under)
 	 *
 	 * @see https://buddypress.trac.wordpress.org/ticket/4785
 	 */
 	public function test_visibility_public() {
-		$old_options_nav = buddypress()->bp_options_nav;
+		$old_options_nav = bboss()->bp_options_nav;
 		$old_current_user = get_current_user_id();
 
 		$g = self::factory()->group->create( array(
 			'status' => 'private',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$class_name = 'BPTest_Group_Extension_Visibility_Public';
 		$e = new $class_name();
 
 		// Test as non-logged-in user
 		$this->set_current_user( 0 );
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 		$e->_register();
-		$this->assertTrue( isset( buddypress()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
+		$this->assertTrue( isset( bboss()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
 
 		// Clean up
-		buddypress()->bp_options_nav = $old_options_nav;
+		bboss()->bp_options_nav = $old_options_nav;
 
 		// Test as group member
 		$u = self::factory()->user->create();
 		$this->set_current_user( $u );
 		$this->add_user_to_group( $u, $g );
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 		$e->_register();
-		$this->assertTrue( isset( buddypress()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
+		$this->assertTrue( isset( bboss()->bp_options_nav[ $g_obj->slug ][ $e->slug ] ) );
 
 		// Clean up
-		buddypress()->bp_options_nav = $old_options_nav;
+		bboss()->bp_options_nav = $old_options_nav;
 		$this->set_current_user( $old_current_user );
 	}
 
@@ -352,8 +352,8 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$g_obj = bboss_groups_get_group( $g );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$this->set_current_user( 0 );
 
@@ -378,8 +378,8 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$g_obj = bboss_groups_get_group( $g );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_Access_Anyone();
 		$e1->_register();
@@ -415,13 +415,13 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$u = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_Access_Anyone();
 		$e1->_register();
@@ -457,7 +457,7 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$u = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
@@ -465,7 +465,7 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 
 		$this->add_user_to_group( $u, $g );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_Access_Anyone();
 		$e1->_register();
@@ -501,17 +501,17 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$u = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u );
 
 		$m = $this->add_user_to_group( $u, $g );
-		$gm = new BP_Groups_Member( $u, $g );
+		$gm = new BBoss_Groups_Member( $u, $g );
 		$gm->promote( 'mod' );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_Access_Anyone();
 		$e1->_register();
@@ -547,17 +547,17 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$u = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u );
 
 		$m = $this->add_user_to_group( $u, $g );
-		$gm = new BP_Groups_Member( $u, $g );
+		$gm = new BBoss_Groups_Member( $u, $g );
 		$gm->promote( 'admin' );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_Access_Anyone();
 		$e1->_register();
@@ -593,12 +593,12 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( 0 );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_Access_Anyone();
 		$e1->_register();
@@ -634,12 +634,12 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( 0 );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_ShowTab_Anyone();
 		$e1->_register();
@@ -675,13 +675,13 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$u = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_ShowTab_Anyone();
 		$e1->_register();
@@ -717,7 +717,7 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$u = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
@@ -725,7 +725,7 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 
 		$this->add_user_to_group( $u, $g );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_ShowTab_Anyone();
 		$e1->_register();
@@ -761,17 +761,17 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$u = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u );
 
 		$this->add_user_to_group( $u, $g );
-		$gm = new BP_Groups_Member( $u, $g );
+		$gm = new BBoss_Groups_Member( $u, $g );
 		$gm->promote( 'mod' );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_ShowTab_Anyone();
 		$e1->_register();
@@ -807,17 +807,17 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
 		$u = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u );
 
 		$this->add_user_to_group( $u, $g );
-		$gm = new BP_Groups_Member( $u, $g );
+		$gm = new BBoss_Groups_Member( $u, $g );
 		$gm->promote( 'admin' );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_ShowTab_Anyone();
 		$e1->_register();
@@ -853,15 +853,15 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
-		$this->go_to( bp_get_group_permalink( $g_obj ) );
+		$this->go_to( bboss_get_group_permalink( $g_obj ) );
 
 		$e1 = new BPTest_Group_Extension_Widget_Method();
 		$e1->_register();
 
 		ob_start();
-		bp_custom_group_boxes();
+		bboss_custom_group_boxes();
 		$content = ob_get_clean();
 
 		$this->assertTrue( $content === 'Widget Displayed' );
@@ -874,15 +874,15 @@ class BP_Tests_Group_Extension_TestCases extends BP_UnitTestCase {
 		$g = self::factory()->group->create( array(
 			'status' => 'public',
 		) );
-		$g_obj = groups_get_group( $g );
+		$g_obj = bboss_groups_get_group( $g );
 
-		$this->go_to( trailingslashit( bp_get_group_permalink( $g_obj ) ) . 'members/' );
+		$this->go_to( trailingslashit( bboss_get_group_permalink( $g_obj ) ) . 'members/' );
 
 		$e1 = new BPTest_Group_Extension_Widget_Method();
 		$e1->_register();
 
 		ob_start();
-		bp_custom_group_boxes();
+		bboss_custom_group_boxes();
 		$content = ob_get_clean();
 
 		$this->assertFalse( $content === 'Widget Displayed' );

@@ -8,14 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Presence' ) ) {
+if ( ! class_exists( 'BBoss_Presence' ) ) {
 
 	/**
 	 * BuddyBoss Presence object.
 	 *
 	 * @since BuddyBoss 2.3.1
 	 */
-	class BB_Presence {
+	class BBoss_Presence {
 
 
 		/**
@@ -68,7 +68,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @since BuddyBoss 2.3.1
 		 *
-		 * @return Controller|BB_Presence|null
+		 * @return Controller|BBoss_Presence|null
 		 */
 		public static function instance() {
 
@@ -132,11 +132,11 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			}
 
 			// Update last activity in user meta also.
-			remove_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10 );
-			remove_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10 );
+			remove_filter( 'update_user_metadata', 'bboss__bp_update_user_meta_last_activity_warning', 10 );
+			remove_filter( 'get_user_metadata', 'bboss__bp_get_user_meta_last_activity_warning', 10 );
 			update_user_meta( $user_id, 'last_activity', $time );
-			add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10, 4 );
-			add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 4 );
+			add_filter( 'update_user_metadata', 'bboss__bp_update_user_meta_last_activity_warning', 10, 4 );
+			add_filter( 'get_user_metadata', 'bboss__bp_get_user_meta_last_activity_warning', 10, 4 );
 
 			if ( ! empty( $activity[ $user_id ]['activity_id'] ) ) {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -269,7 +269,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @since BuddyBoss 2.3.1
 		 */
 		public static function bb_load_presence_api_mu_plugin( $bypass = true ) {
-			if ( ! function_exists( 'buddypress' ) ) {
+			if ( ! function_exists( 'bboss' ) ) {
 				return;
 			}
 
@@ -279,7 +279,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			}
 
 			$wp_files_system        = new \WP_Filesystem_Direct( array() );
-			$bp_mu_plugin_file_path = buddypress()->plugin_dir . 'bp-core/mu-plugins/buddyboss-performance-api.php';
+			$bp_mu_plugin_file_path = bboss()->plugin_dir . 'bp-core/mu-plugins/buddyboss-performance-api.php';
 
 			$purge_nonce = ( ! empty( $_GET['download_mu_bpa_file'] ) ) ? wp_unslash( $_GET['download_mu_bpa_file'] ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
@@ -305,7 +305,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			// If mu-plugin directory not exists then create automatically.
 			if ( ! is_dir( WPMU_PLUGIN_DIR ) ) {
-				mkdir( WPMU_PLUGIN_DIR, 0755 );
+				wp_mkdir_p( WPMU_PLUGIN_DIR );
 			}
 
 			$mu_plugins = get_mu_plugins();
@@ -330,14 +330,14 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			set_transient( 'bb_presence_api_mu_download', 'true', WEEK_IN_SECONDS );
 
 			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-performance-api.php' ) ) {
-				self::$download_plugin_text = __( 'Download the plugin', 'buddyboss' );
+				self::$download_plugin_text = __( 'Download the plugin', 'buddyboss-platform' );
 				add_action( 'admin_notices', array( get_called_class(), 'bb_add_sitewide_notice_for_presence_api_mu_file' ) );
 			} elseif (
 				! empty( $mu_plugins ) &&
 				array_key_exists( 'buddyboss-performance-api.php', $mu_plugins ) &&
 				version_compare( $mu_plugins['buddyboss-performance-api.php']['Version'], '1.0.0', '<' )
 			) {
-				self::$download_plugin_text = __( 'Download v1.0.0', 'buddyboss' );
+				self::$download_plugin_text = __( 'Download v1.0.0', 'buddyboss-platform' );
 				add_action( 'admin_notices', array( get_called_class(), 'bb_add_sitewide_notice_for_presence_api_mu_file' ) );
 			}
 		}
@@ -354,12 +354,12 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$download_path = admin_url( 'admin.php?page=bb-settings&download_mu_bpa_file=' . $bp_performance_download_nonce );
 			$notice        = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
-				__( 'BuddyBoss Performance API cannot be automatically installed on your server. To improve performance, you need to manually install the "BuddyBoss Performance API" plugin in your', 'buddyboss' ),
+				__( 'BuddyBoss Performance API cannot be automatically installed on your server. To improve performance, you need to manually install the "BuddyBoss Performance API" plugin in your', 'buddyboss-platform' ),
 				'https://wordpress.org/support/article/must-use-plugins/',
-				__( 'must-use plugins', 'buddyboss' ),
+				__( 'must-use plugins', 'buddyboss-platform' ),
 				$download_path,
 				self::$download_plugin_text,
-				__( 'and then upload it into the "/wp-content/mu-plugins/" directory on your server.', 'buddyboss' )
+				__( 'and then upload it into the "/wp-content/mu-plugins/" directory on your server.', 'buddyboss-platform' )
 			);
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -428,8 +428,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				return false;
 			}
 
-			$bb_presence_interval  = function_exists( 'bb_presence_interval' ) ? bb_presence_interval() : self::bb_presence_interval();
-			$bb_presence_time_span = function_exists( 'bb_presence_time_span' ) ? bb_presence_time_span() : self::bb_presence_time_span();
+			$bb_presence_interval  = function_exists( 'bboss_presence_interval' ) ? bboss_presence_interval() : self::bb_presence_interval();
+			$bb_presence_time_span = function_exists( 'bboss_presence_time_span' ) ? bboss_presence_time_span() : self::bb_presence_time_span();
 			if ( is_int( $expiry ) && ! empty( $expiry ) ) {
 				$timeframe = $expiry;
 			} else {
@@ -938,7 +938,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				header( 'Content-Type: application/json' );
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 					array(
 						'status' => 401,
 					)
@@ -953,7 +953,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$retval = new WP_Error(
 					'rest_missing_callback_param',
 					/* translators: %s: List of required parameters. */
-					sprintf( __( 'Missing parameter(s): %s', 'buddyboss' ), 'ids' ),
+					sprintf( __( 'Missing parameter(s): %s', 'buddyboss-platform' ), 'ids' ),
 					array(
 						'status' => 400,
 						'params' => array( 'ids' ),
@@ -971,7 +971,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$arguments = array(
 				'args' => array(
 					'ids' => array(
-						'description'       => __( 'A unique users IDs of the member.', 'buddyboss' ),
+						'description'       => __( 'A unique users IDs of the member.', 'buddyboss-platform' ),
 						'type'              => 'array',
 						'required'          => true,
 						'items'             => array( 'type' => 'integer' ),
@@ -989,7 +989,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$invalid_params = array();
 
 			if ( false === $valid_check ) {
-				$invalid_params['ids'] = __( 'Invalid parameter.', 'buddyboss' );
+				$invalid_params['ids'] = __( 'Invalid parameter.', 'buddyboss-platform' );
 			}
 
 			if ( is_wp_error( $valid_check ) ) {
@@ -1001,7 +1001,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$retval = new WP_Error(
 					'rest_invalid_param',
 					/* translators: %s: List of invalid parameters. */
-					sprintf( __( 'Invalid parameter(s): %s', 'buddyboss' ), implode( ', ', array_keys( $invalid_params ) ) ),
+					sprintf( __( 'Invalid parameter(s): %s', 'buddyboss-platform' ), implode( ', ', array_keys( $invalid_params ) ) ),
 					array(
 						'status'  => 400,
 						'params'  => $invalid_params,
@@ -1050,7 +1050,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @since BuddyBoss 2.7.90
 		 */
 		public function bb_load_translations() {
-			$domain = 'buddyboss';
+			$domain = 'buddyboss-platform';
 			if ( function_exists( 'is_textdomain_loaded' ) && ! is_textdomain_loaded( $domain ) ) {
 				$mofile_custom  = sprintf( '%s-%s.mo', $domain, get_locale() );
 				$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/languages/';
@@ -1078,5 +1078,5 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		}
 	}
 
-	BB_Presence::instance();
+	BBoss_Presence::instance();
 }

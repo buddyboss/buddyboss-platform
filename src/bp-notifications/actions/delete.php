@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle deleting single notifications.
  *
@@ -13,17 +16,17 @@
  *
  * @return bool
  */
-function bp_notifications_action_delete() {
+function bboss_notifications_action_delete() {
 
 	// Bail if not the read or unread screen.
-	if ( ! bp_is_notifications_component() || ! ( bp_is_current_action( 'read' ) || bp_is_current_action( 'unread' ) ) ) {
+	if ( ! bboss_is_notifications_component() || ! ( bboss_is_current_action( 'read' ) || bboss_is_current_action( 'unread' ) ) ) {
 		return false;
 	}
 
 	// Get the action.
-	$action = ! empty( $_GET['action'] ) ? $_GET['action'] : '';
-	$nonce  = ! empty( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : '';
-	$id     = ! empty( $_GET['notification_id'] ) ? $_GET['notification_id'] : '';
+	$action = ! empty( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+	$nonce  = ! empty( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+	$id     = ! empty( $_GET['notification_id'] ) ? absint( $_GET['notification_id'] ) : 0;
 
 	// Bail if no action or no ID.
 	if ( ( 'delete' !== $action ) || empty( $id ) || empty( $nonce ) ) {
@@ -31,13 +34,13 @@ function bp_notifications_action_delete() {
 	}
 
 	// Check the nonce and delete the notification.
-	if ( bp_verify_nonce_request( 'bp_notification_delete_' . $id ) && bp_notifications_delete_notification( $id ) ) {
-		bp_core_add_message( __( 'Notification successfully deleted.', 'buddyboss' ) );
+	if ( bboss_verify_nonce_request( 'bp_notification_delete_' . $id ) && bboss_notifications_delete_notification( $id ) ) {
+		bboss_core_add_message( __( 'Notification successfully deleted.', 'buddyboss-platform' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss-platform' ), 'error' );
 	}
 
 	// Redirect.
-	bp_core_redirect( bp_displayed_user_domain() . bp_get_notifications_slug() . '/' . bp_current_action() . '/' );
+	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_notifications_slug() . '/' . bboss_current_action() . '/' );
 }
-add_action( 'bp_actions', 'bp_notifications_action_delete' );
+add_action( 'bp_actions', 'bboss_notifications_action_delete' );

@@ -23,7 +23,7 @@ require_once __DIR__ . '/member-blogs-addon.php';
  * Bookmarking / Subscriptions features registered on this screen.
  *
  * Both toggles are provided by Pro's blog module, which ships in the version
- * returned by bb_pro_blog_version(). When an older Pro is active it never
+ * returned by bboss_pro_blog_version(). When an older Pro is active it never
  * unlocks the fields, so they would sit as silent "UPGRADE LAUNCH" placeholders —
  * indistinguishable from Pro not being installed at all. This gate lets the
  * screen surface a version notice (and disable the toggles) so the admin knows
@@ -36,10 +36,10 @@ require_once __DIR__ . '/member-blogs-addon.php';
  *
  * @return bool True when Pro is active but older than the required version.
  */
-function bb_blog_is_pro_outdated_for_settings() {
+function bboss_blog_is_pro_outdated_for_settings() {
 	return function_exists( 'bb_platform_pro' )
-		&& function_exists( 'bb_pro_blog_version' )
-		&& version_compare( bb_platform_pro()->version, bb_pro_blog_version(), '<' );
+		&& function_exists( 'bboss_pro_blog_version' )
+		&& version_compare( bb_platform_pro()->version, bboss_pro_blog_version(), '<' );
 }
 
 /**
@@ -57,7 +57,7 @@ function bb_blog_is_pro_outdated_for_settings() {
  *
  * @return array Field registration arguments.
  */
-function bb_blog_get_version_compat_notice_field( $name, $order ) {
+function bboss_blog_get_version_compat_notice_field( $name, $order ) {
 	return array(
 		'name'              => $name,
 		'label'             => '',
@@ -65,8 +65,8 @@ function bb_blog_get_version_compat_notice_field( $name, $order ) {
 		'notice_type'       => 'warning',
 		'description'       => sprintf(
 			/* translators: %s: required BuddyBoss Platform Pro version, e.g. 3.1.0. */
-			__( 'Blog Bookmarking and Subscriptions require BuddyBoss Platform Pro %s or later. Please update BuddyBoss Platform Pro to use these features.', 'buddyboss' ),
-			function_exists( 'bb_pro_blog_version' ) ? bb_pro_blog_version() : '3.1.0'
+			__( 'Blog Bookmarking and Subscriptions require BuddyBoss Platform Pro %s or later. Please update BuddyBoss Platform Pro to use these features.', 'buddyboss-platform' ),
+			function_exists( 'bboss_pro_blog_version' ) ? bboss_pro_blog_version() : '3.1.0'
 		),
 		'sanitize_callback' => '__return_empty_string',
 		'order'             => $order,
@@ -80,14 +80,14 @@ function bb_blog_get_version_compat_notice_field( $name, $order ) {
  *
  * @return void
  */
-function bb_blogging_register_admin_settings() {
+function bboss_blogging_register_admin_settings() {
 
 	// Side panel: Blog Settings.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'blogging',
 		'blog_settings',
 		array(
-			'title'      => __( 'Blog Settings', 'buddyboss' ),
+			'title'      => __( 'Blog Settings', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
@@ -104,12 +104,12 @@ function bb_blogging_register_admin_settings() {
 	// Without Pro they render as locked "UPGRADE LAUNCH" placeholders; Pro flips
 	// them live via the `bb_admin_settings_format_field_data` filter when the
 	// license is valid (see BB_Blog's settings enrichment).
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'blogging',
 		'blog_settings',
 		'post_settings',
 		array(
-			'title'    => __( 'Post Settings', 'buddyboss' ),
+			'title'    => __( 'Post Settings', 'buddyboss-platform' ),
 			'help_url' => '648796',
 			'order'    => 10,
 		)
@@ -119,27 +119,27 @@ function bb_blogging_register_admin_settings() {
 	// version notice above the two toggles and disable them. The blog module that
 	// unlocks these fields ships in bb_pro_blog_version(); an older Pro leaves
 	// them locked, so the notice explains that Pro needs updating.
-	$bb_blog_pro_outdated = bb_blog_is_pro_outdated_for_settings();
+	$bb_blog_pro_outdated = bboss_blog_is_pro_outdated_for_settings();
 
 	if ( $bb_blog_pro_outdated ) {
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'blogging',
 			'blog_settings',
 			'post_settings',
-			bb_blog_get_version_compat_notice_field( 'bb_blog_version_compat_notice', 5 )
+			bboss_blog_get_version_compat_notice_field( 'bb_blog_version_compat_notice', 5 )
 		);
 	}
 
 	// Field: Bookmarking (Pro).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'blogging',
 		'blog_settings',
 		'post_settings',
 		array(
 			'name'        => 'bb_blog_enable_bookmarking',
-			'label'       => __( 'Bookmarking', 'buddyboss' ),
+			'label'       => __( 'Bookmarking', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Allow users to bookmark blog posts', 'buddyboss' ),
+			'description' => __( 'Allow users to bookmark blog posts', 'buddyboss-platform' ),
 			'default'     => 0,
 			'pro_only'    => true,
 			'disabled'    => $bb_blog_pro_outdated,
@@ -148,15 +148,15 @@ function bb_blogging_register_admin_settings() {
 	);
 
 	// Field: Subscriptions (Pro).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'blogging',
 		'blog_settings',
 		'post_settings',
 		array(
 			'name'        => 'bb_blog_enable_subscriptions',
-			'label'       => __( 'Subscriptions', 'buddyboss' ),
+			'label'       => __( 'Subscriptions', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Allow users to subscribe to blog post categories', 'buddyboss' ),
+			'description' => __( 'Allow users to subscribe to blog post categories', 'buddyboss-platform' ),
 			'default'     => 0,
 			'pro_only'    => true,
 			'disabled'    => $bb_blog_pro_outdated,
@@ -165,12 +165,12 @@ function bb_blogging_register_admin_settings() {
 	);
 
 	// Section: Page Settings.
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'blogging',
 		'blog_settings',
 		'page_settings',
 		array(
-			'title'    => __( 'Page Settings', 'buddyboss' ),
+			'title'    => __( 'Page Settings', 'buddyboss-platform' ),
 			'help_url' => '648801',
 			'order'    => 20,
 		)
@@ -178,10 +178,10 @@ function bb_blogging_register_admin_settings() {
 
 	// Page Settings render only via the BuddyBoss Theme or ReadyLaunch blog
 	// templates — without either, the fields are disabled behind a notice.
-	$bb_blog_page_settings_available = bb_blog_page_settings_is_available();
+	$bb_blog_page_settings_available = bboss_blog_page_settings_is_available();
 
 	if ( ! $bb_blog_page_settings_available ) {
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'blogging',
 			'blog_settings',
 			'page_settings',
@@ -190,7 +190,7 @@ function bb_blogging_register_admin_settings() {
 				'label'             => '',
 				'type'              => 'notice',
 				'notice_type'       => 'info',
-				'description'       => __( 'The Blog Page Settings are only available when the BuddyBoss Theme or ReadyLaunch is selected.', 'buddyboss' ),
+				'description'       => __( 'The Blog Page Settings are only available when the BuddyBoss Theme or ReadyLaunch is selected.', 'buddyboss-platform' ),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 5,
 			)
@@ -205,8 +205,8 @@ function bb_blogging_register_admin_settings() {
 	// (admin/callbacks.php) is loaded before this runs, but guard anyway and
 	// fall back to the canonical list. Labels are UI strings owned by this
 	// field registration and are looked up per key.
-	$bb_blog_social_defaults = function_exists( 'bb_blog_social_link_platforms' )
-		? bb_blog_social_link_platforms()
+	$bb_blog_social_defaults = function_exists( 'bboss_blog_social_link_platforms' )
+		? bboss_blog_social_link_platforms()
 		: array(
 			'facebook' => 1,
 			'linkedin' => 1,
@@ -216,11 +216,11 @@ function bb_blogging_register_admin_settings() {
 		);
 
 	$bb_blog_social_labels = array(
-		'facebook' => __( 'Facebook', 'buddyboss' ),
-		'linkedin' => __( 'Linkedin', 'buddyboss' ),
-		'x'        => __( 'X', 'buddyboss' ),
-		'whatsapp' => __( 'Whatsapp', 'buddyboss' ),
-		'email'    => __( 'Email', 'buddyboss' ),
+		'facebook' => __( 'Facebook', 'buddyboss-platform' ),
+		'linkedin' => __( 'Linkedin', 'buddyboss-platform' ),
+		'x'        => __( 'X', 'buddyboss-platform' ),
+		'whatsapp' => __( 'Whatsapp', 'buddyboss-platform' ),
+		'email'    => __( 'Email', 'buddyboss-platform' ),
 	);
 
 	$bb_blog_social_options = array();
@@ -231,33 +231,33 @@ function bb_blogging_register_admin_settings() {
 		);
 	}
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'blogging',
 		'blog_settings',
 		'page_settings',
 		array(
 			'name'              => 'bb_blog_social_links',
-			'label'             => __( 'Social Links', 'buddyboss' ),
+			'label'             => __( 'Social Links', 'buddyboss-platform' ),
 			'type'              => 'toggle_list',
 			'options'           => $bb_blog_social_options,
 			'default'           => $bb_blog_social_defaults,
 			'option_prefix'     => 'bb_blog_social_link_',
-			'sanitize_callback' => 'bb_blog_sanitize_social_links',
+			'sanitize_callback' => 'bboss_blog_sanitize_social_links',
 			'disabled'          => ! $bb_blog_page_settings_available,
 			'order'             => 10,
 		)
 	);
 
 	// Field: Related Posts.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'blogging',
 		'blog_settings',
 		'page_settings',
 		array(
 			'name'        => 'bb_blog_related_posts',
-			'label'       => __( 'Related Posts', 'buddyboss' ),
+			'label'       => __( 'Related Posts', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Enable related posts at the bottom of blog posts', 'buddyboss' ),
+			'description' => __( 'Enable related posts at the bottom of blog posts', 'buddyboss-platform' ),
 			'default'     => 1,
 			'disabled'    => ! $bb_blog_page_settings_available,
 			'order'       => 20,
@@ -265,15 +265,15 @@ function bb_blogging_register_admin_settings() {
 	);
 
 	// Field: Author Bio.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'blogging',
 		'blog_settings',
 		'page_settings',
 		array(
 			'name'        => 'bb_blog_author_bio',
-			'label'       => __( 'Author Bio', 'buddyboss' ),
+			'label'       => __( 'Author Bio', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Enable the Author Bio box at the bottom of blog posts', 'buddyboss' ),
+			'description' => __( 'Enable the Author Bio box at the bottom of blog posts', 'buddyboss-platform' ),
 			'default'     => 1,
 			'disabled'    => ! $bb_blog_page_settings_available,
 			'order'       => 30,
@@ -287,11 +287,11 @@ function bb_blogging_register_admin_settings() {
 	// keeps the "Member Blogs" tab visible for discovery/upsell even on sites
 	// that have not installed the Scale add-on.
 	if ( ! defined( 'BB_MEMBER_BLOG_VERSION' ) ) {
-		bb_register_side_panel(
+		bboss_register_side_panel(
 			'blogging',
 			'member_blogs',
 			array(
-				'title' => __( 'Member Blogs', 'buddyboss' ),
+				'title' => __( 'Member Blogs', 'buddyboss-platform' ),
 				'icon'  => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-newspaper',
@@ -300,12 +300,12 @@ function bb_blogging_register_admin_settings() {
 			)
 		);
 
-		bb_register_feature_section(
+		bboss_register_feature_section(
 			'blogging',
 			'member_blogs',
 			'member_blogs',
 			array(
-				'title' => __( 'Member Blogs', 'buddyboss' ),
+				'title' => __( 'Member Blogs', 'buddyboss-platform' ),
 				'order' => 10,
 			)
 		);
@@ -322,7 +322,11 @@ function bb_blogging_register_admin_settings() {
 		// The values below are the safe fallback for the case where that filter
 		// never runs: the Plus upsell, which is correct for any site that
 		// cannot install the add-on.
-		bb_register_feature_field(
+		//
+		// Builds without pricing links (the wordpress.org edition) leave the
+		// fallback URL empty, so the card renders no button.
+		$member_blogs_upgrade_url = '';
+		bboss_register_feature_field(
 			'blogging',
 			'member_blogs',
 			'member_blogs',
@@ -331,14 +335,14 @@ function bb_blogging_register_admin_settings() {
 				'label'                   => '',
 				'type'                    => 'empty_state',
 				'icon'                    => 'bb-icons-rl bb-icons-rl-newspaper',
-				'empty_state_title'       => __( 'Member Blogging', 'buddyboss' ),
-				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
-				'button_label'            => __( 'Upgrade to Scale', 'buddyboss' ),
+				'empty_state_title'       => __( 'Member Blogging', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Upgrade to Scale', 'buddyboss-platform' ),
 				// Fallback only. With `upgrade_from_catalog` on, the AJAX formatter
 				// replaces this with the campaign-tagged URL from the field-upgrades
 				// catalog when it holds an entry for this panel, so marketing can retarget
 				// the link from S3 without a plugin release.
-				'button_url'              => 'https://www.buddyboss.com/pricing/',
+				'button_url'              => $member_blogs_upgrade_url,
 				'upgrade_from_catalog'    => true,
 				'button_target'           => '_blank',
 				'sanitize_callback'       => '__return_empty_string',
@@ -357,4 +361,4 @@ function bb_blogging_register_admin_settings() {
 	 */
 	do_action( 'bb_blogging_after_register_settings_fields' );
 }
-add_action( 'bb_register_features', 'bb_blogging_register_admin_settings', 20 );
+add_action( 'bb_register_features', 'bboss_blogging_register_admin_settings', 20 );

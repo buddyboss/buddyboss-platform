@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Notifications {
+class BBoss_Nouveau_Notifications {
 	/**
 	 * Constructor
 	 *
@@ -55,13 +55,13 @@ class BP_Nouveau_Notifications {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_actions() {
-		add_action( 'bp_init', 'bp_nouveau_notifications_init_filters', 20 );
-		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_notifications_enqueue_scripts' );
+		add_action( 'bp_init', 'bboss_nouveau_notifications_init_filters', 20 );
+		add_action( 'bp_nouveau_enqueue_scripts', 'bboss_nouveau_notifications_enqueue_scripts' );
 
 		$ajax_actions = array(
 			array(
 				'notifications_filter' => array(
-					'function' => 'bp_nouveau_ajax_object_template_loader',
+					'function' => 'bboss_nouveau_ajax_object_template_loader',
 					'nopriv'   => false,
 				),
 			),
@@ -84,10 +84,10 @@ class BP_Nouveau_Notifications {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_filters() {
-		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_notifications_register_scripts', 10, 1 );
-		add_filter( 'bp_get_the_notification_mark_unread_link', 'bp_nouveau_notifications_mark_unread_link', 10, 1 );
-		add_filter( 'bp_get_the_notification_mark_read_link', 'bp_nouveau_notifications_mark_read_link', 10, 1 );
-		add_filter( 'bp_get_the_notification_delete_link', 'bp_nouveau_notifications_delete_link', 10, 1 );
+		add_filter( 'bp_nouveau_register_scripts', 'bboss_nouveau_notifications_register_scripts', 10, 1 );
+		add_filter( 'bp_get_the_notification_mark_unread_link', 'bboss_nouveau_notifications_mark_unread_link', 10, 1 );
+		add_filter( 'bp_get_the_notification_mark_read_link', 'bboss_nouveau_notifications_mark_read_link', 10, 1 );
+		add_filter( 'bp_get_the_notification_delete_link', 'bboss_nouveau_notifications_delete_link', 10, 1 );
 	}
 }
 
@@ -96,11 +96,11 @@ class BP_Nouveau_Notifications {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_notifications( $bp_nouveau = null ) {
+function bboss_nouveau_notifications( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->notifications = new BP_Nouveau_Notifications();
+	$bp_nouveau->notifications = new BBoss_Nouveau_Notifications();
 }
-add_action( 'bp_nouveau_includes', 'bp_nouveau_notifications', 10, 1 );
+add_action( 'bp_nouveau_includes', 'bboss_nouveau_notifications', 10, 1 );

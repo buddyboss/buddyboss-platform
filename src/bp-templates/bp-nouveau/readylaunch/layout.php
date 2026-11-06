@@ -6,7 +6,7 @@
  * It determines whether to load LearnDash integration or standard page content.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,9 +14,9 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_get_template_part( 'header/readylaunch-header' );
+bboss_get_template_part( 'header/readylaunch-header' );
 
-$readylaunch_instance = BB_Readylaunch::instance();
+$readylaunch_instance = BBoss_Readylaunch::instance();
 
 /**
  * Fires before the layout.
@@ -65,4 +65,4 @@ if ( have_posts() ) {
  */
 do_action( 'bb_rl_layout_after' );
 
-bp_get_template_part( 'footer/readylaunch-footer' );
+bboss_get_template_part( 'footer/readylaunch-footer' );

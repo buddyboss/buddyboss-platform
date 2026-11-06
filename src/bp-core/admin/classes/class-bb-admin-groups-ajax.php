@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Groups_Ajax
+ * Class BBoss_Admin_Groups_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Groups_Ajax {
+class BBoss_Admin_Groups_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -128,7 +128,7 @@ class BB_Admin_Groups_Ajax {
 	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_verify_request() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -145,7 +145,7 @@ class BB_Admin_Groups_Ajax {
 	 * @return bool True if at least one other admin exists, false if not.
 	 */
 	private function bb_group_has_other_admins( $group_id, $exclude_user_id ) {
-		$admins = groups_get_group_admins( $group_id );
+		$admins = bboss_groups_get_group_admins( $group_id );
 		foreach ( $admins as $admin ) {
 			if ( (int) $admin->user_id !== (int) $exclude_user_id ) {
 				return true;
@@ -162,7 +162,7 @@ class BB_Admin_Groups_Ajax {
 	 * The auxiliary `member_types` payload (only needed by the create/edit
 	 * modal) ships on the first load and is skipped on subsequent page-change
 	 * requests via `include_meta=0`. Mirrors the pattern in
-	 * `BB_Activity_Admin_Ajax::bb_admin_get_activities`.
+	 * `BBoss_Activity_Admin_Ajax::bb_admin_get_activities`.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 * @since BuddyBoss 3.1.0 Added pagination (page, per_page, total) +
@@ -174,8 +174,8 @@ class BB_Admin_Groups_Ajax {
 	public function get_group_types() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request() above.
@@ -184,7 +184,7 @@ class BB_Admin_Groups_Ajax {
 		$include_meta = ! ( isset( $_POST['include_meta'] ) && '0' === sanitize_text_field( wp_unslash( $_POST['include_meta'] ) ) );
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		$post_type = bp_groups_get_group_type_post_type();
+		$post_type = bboss_groups_get_group_type_post_type();
 
 		// WP_Query (instead of get_posts) so we can read `found_posts` for the
 		// pagination total in the same round-trip. `no_found_rows => false`
@@ -234,7 +234,7 @@ class BB_Admin_Groups_Ajax {
 			// gets its key backfilled here. Otherwise 'name' is empty and the
 			// admin modal (which now builds the [group type="<key>"] shortcode
 			// from it) would silently hide the Shortcode section for that type.
-			$type_key = bp_group_get_group_type_key( $post_id );
+			$type_key = bboss_group_get_group_type_key( $post_id );
 
 			$group_types[] = array(
 				'id'                  => $post_id,
@@ -287,7 +287,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Create a new group type.
 	 *
-	 * Mirrors legacy bp_save_group_type_post_meta_box_data() for key generation,
+	 * Mirrors legacy bboss_save_group_type_post_meta_box_data() for key generation,
 	 * label defaults, and cache clearing.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -297,8 +297,8 @@ class BB_Admin_Groups_Ajax {
 	public function create_group_type() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -309,10 +309,10 @@ class BB_Admin_Groups_Ajax {
 		$meta_data = $this->bb_extract_group_type_meta_from_post();
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group type name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group type name is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$post_type   = bp_groups_get_group_type_post_type();
+		$post_type   = bboss_groups_get_group_type_post_type();
 		$post_status = 'private' === $visibility ? 'private' : 'publish';
 
 		// Create the CPT post.
@@ -345,7 +345,7 @@ class BB_Admin_Groups_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Group type created successfully.', 'buddyboss' ),
+				'message' => __( 'Group type created successfully.', 'buddyboss-platform' ),
 				'id'      => $post_id,
 			)
 		);
@@ -354,7 +354,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Update an existing group type.
 	 *
-	 * Mirrors legacy bp_save_group_type_post_meta_box_data() for label defaults
+	 * Mirrors legacy bboss_save_group_type_post_meta_box_data() for label defaults
 	 * and cache clearing.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -364,8 +364,8 @@ class BB_Admin_Groups_Ajax {
 	public function update_group_type() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -377,13 +377,13 @@ class BB_Admin_Groups_Ajax {
 		$meta_data = $this->bb_extract_group_type_meta_from_post();
 
 		if ( empty( $type_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group type ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group type ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Verify post exists and is correct type.
 		$post = get_post( $type_id );
-		if ( ! $post || bp_groups_get_group_type_post_type() !== $post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss' ) ) );
+		if ( ! $post || bboss_groups_get_group_type_post_type() !== $post->post_type ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss-platform' ) ) );
 		}
 
 		// Update title and/or visibility if provided.
@@ -416,7 +416,7 @@ class BB_Admin_Groups_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Group type updated successfully.', 'buddyboss' ),
+				'message' => __( 'Group type updated successfully.', 'buddyboss-platform' ),
 				'id'      => $type_id,
 			)
 		);
@@ -432,8 +432,8 @@ class BB_Admin_Groups_Ajax {
 	public function delete_group_type() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -441,23 +441,23 @@ class BB_Admin_Groups_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $type_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group type ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group type ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Verify post exists and is correct type.
 		$post = get_post( $type_id );
-		if ( ! $post || bp_groups_get_group_type_post_type() !== $post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss' ) ) );
+		if ( ! $post || bboss_groups_get_group_type_post_type() !== $post->post_type ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss-platform' ) ) );
 		}
 
 		$result = wp_delete_post( $type_id, true );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to delete group type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to delete group type.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Group type deleted successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Group type deleted successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -485,8 +485,8 @@ class BB_Admin_Groups_Ajax {
 	public function get_groups() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -589,12 +589,12 @@ class BB_Admin_Groups_Ajax {
 			$query_args['group_type'] = $group_type;
 		}
 
-		$groups_result = groups_get_groups( $query_args );
+		$groups_result = bboss_groups_get_groups( $query_args );
 		$groups        = $groups_result['groups'];
 		$total         = (int) $groups_result['total'];
 
 		// Build a lookup map of group type slug => human-readable label.
-		$type_objects = bp_groups_get_group_types( array(), 'objects' );
+		$type_objects = bboss_groups_get_group_types( array(), 'objects' );
 		$type_labels  = array();
 		foreach ( $type_objects as $type_obj ) {
 			$type_labels[ $type_obj->name ] = $type_obj->labels['singular_name'];
@@ -608,7 +608,7 @@ class BB_Admin_Groups_Ajax {
 		// Pre-fetch group type slugs for all groups (now hits cache, not DB).
 		$group_type_map = array();
 		foreach ( $groups as $group ) {
-			$type_slug                    = bp_groups_get_group_type( $group->id, true );
+			$type_slug                    = bboss_groups_get_group_type( $group->id, true );
 			$group_type_map[ $group->id ] = ! empty( $type_slug ) ? $type_slug : '';
 		}
 
@@ -660,11 +660,11 @@ class BB_Admin_Groups_Ajax {
 			'bp_groups_list_table_get_columns',
 			array(
 				'cb'          => '<input name type="checkbox" />',
-				'comment'     => __( 'Name', 'buddyboss' ),
-				'description' => __( 'Description', 'buddyboss' ),
-				'status'      => __( 'Status', 'buddyboss' ),
-				'members'     => __( 'Members', 'buddyboss' ),
-				'last_active' => __( 'Last Active', 'buddyboss' ),
+				'comment'     => __( 'Name', 'buddyboss-platform' ),
+				'description' => __( 'Description', 'buddyboss-platform' ),
+				'status'      => __( 'Status', 'buddyboss-platform' ),
+				'members'     => __( 'Members', 'buddyboss-platform' ),
+				'last_active' => __( 'Last Active', 'buddyboss-platform' ),
 			)
 		);
 
@@ -694,13 +694,13 @@ class BB_Admin_Groups_Ajax {
 			$status_desc = '';
 			switch ( $group->status ) {
 				case 'public':
-					$status_desc = __( 'Public', 'buddyboss' );
+					$status_desc = __( 'Public', 'buddyboss-platform' );
 					break;
 				case 'private':
-					$status_desc = __( 'Private', 'buddyboss' );
+					$status_desc = __( 'Private', 'buddyboss-platform' );
 					break;
 				case 'hidden':
-					$status_desc = __( 'Hidden', 'buddyboss' );
+					$status_desc = __( 'Hidden', 'buddyboss-platform' );
 					break;
 			}
 			$status_desc = apply_filters_ref_array( 'bp_groups_admin_get_group_status', array( $status_desc, $item_array ) );
@@ -738,7 +738,7 @@ class BB_Admin_Groups_Ajax {
 						$item_array,
 					)
 				),
-				'avatar_url'    => bp_core_fetch_avatar(
+				'avatar_url'    => bboss_core_fetch_avatar(
 					array(
 						'item_id'    => $group->id,
 						'avatar_dir' => 'group-avatars',
@@ -747,7 +747,7 @@ class BB_Admin_Groups_Ajax {
 						'html'       => false,
 					)
 				),
-				'permalink'     => bp_get_group_permalink( $group ),
+				'permalink'     => bboss_get_group_permalink( $group ),
 			);
 
 			// Render custom columns via the same filter as BP_Groups_List_Table::column_default().
@@ -786,7 +786,7 @@ class BB_Admin_Groups_Ajax {
 
 			if ( false === $counts_map ) {
 				global $wpdb;
-				$bp = buddypress();
+				$bp = bboss();
 				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from BuddyPress internals, not user input.
 				$status_counts = $wpdb->get_results(
 					"SELECT status, COUNT(id) AS cnt FROM {$bp->groups->table_name} GROUP BY status"
@@ -804,19 +804,19 @@ class BB_Admin_Groups_Ajax {
 
 			$response['views'] = array(
 				'all'     => array(
-					'label' => __( 'All', 'buddyboss' ),
+					'label' => __( 'All', 'buddyboss-platform' ),
 					'count' => $count_all,
 				),
 				'public'  => array(
-					'label' => __( 'Public', 'buddyboss' ),
+					'label' => __( 'Public', 'buddyboss-platform' ),
 					'count' => isset( $counts_map['public'] ) ? $counts_map['public'] : 0,
 				),
 				'private' => array(
-					'label' => __( 'Private', 'buddyboss' ),
+					'label' => __( 'Private', 'buddyboss-platform' ),
 					'count' => isset( $counts_map['private'] ) ? $counts_map['private'] : 0,
 				),
 				'hidden'  => array(
-					'label' => __( 'Hidden', 'buddyboss' ),
+					'label' => __( 'Hidden', 'buddyboss-platform' ),
 					'count' => isset( $counts_map['hidden'] ) ? $counts_map['hidden'] : 0,
 				),
 			);
@@ -826,7 +826,7 @@ class BB_Admin_Groups_Ajax {
 			$legacy_bulk_actions = apply_filters(
 				'bp_groups_list_table_get_bulk_actions',
 				array(
-					'delete' => __( 'Delete', 'buddyboss' ),
+					'delete' => __( 'Delete', 'buddyboss-platform' ),
 				)
 			);
 
@@ -836,8 +836,8 @@ class BB_Admin_Groups_Ajax {
 
 			// Group type actions first (when types exist).
 			if ( ! empty( $type_objects ) ) {
-				$bulk_actions['bulk_change_group_type'] = __( 'Change Group Type to', 'buddyboss' );
-				$bulk_actions['bulk_remove_group_type'] = __( 'Remove Group Type', 'buddyboss' );
+				$bulk_actions['bulk_change_group_type'] = __( 'Change Group Type to', 'buddyboss-platform' );
+				$bulk_actions['bulk_remove_group_type'] = __( 'Remove Group Type', 'buddyboss-platform' );
 			}
 
 			// Append legacy + third-party actions, with Delete pulled out so
@@ -941,30 +941,30 @@ class BB_Admin_Groups_Ajax {
 	public function delete_group() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$group = groups_get_group( $group_id );
+		$group = bboss_groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
-		$result = groups_delete_group( $group_id );
+		$result = bboss_groups_delete_group( $group_id );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to delete group.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to delete group.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Group deleted successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Group deleted successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -978,8 +978,8 @@ class BB_Admin_Groups_Ajax {
 	public function group_bulk_action() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -992,7 +992,7 @@ class BB_Admin_Groups_Ajax {
 		$allowed_bulk_actions = apply_filters(
 			'bp_groups_list_table_get_bulk_actions',
 			array(
-				'delete' => __( 'Delete', 'buddyboss' ),
+				'delete' => __( 'Delete', 'buddyboss-platform' ),
 			)
 		);
 
@@ -1000,17 +1000,17 @@ class BB_Admin_Groups_Ajax {
 		$type_actions = array( 'change_group_type', 'remove_group_type' );
 
 		if ( ! array_key_exists( $do_action, $allowed_bulk_actions ) && ! in_array( $do_action, $type_actions, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $raw_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No groups selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No groups selected.', 'buddyboss-platform' ) ) );
 		}
 
 		$group_ids = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
 
 		if ( empty( $group_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No valid group IDs provided.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No valid group IDs provided.', 'buddyboss-platform' ) ) );
 		}
 
 		// Cap bulk operations to prevent timeout on large selections.
@@ -1024,8 +1024,8 @@ class BB_Admin_Groups_Ajax {
 		if ( 'change_group_type' === $do_action ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 			$new_group_type = isset( $_POST['group_type'] ) ? sanitize_key( wp_unslash( $_POST['group_type'] ) ) : '';
-			if ( empty( $new_group_type ) || ! bp_groups_get_group_type_object( $new_group_type ) ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss' ) ) );
+			if ( empty( $new_group_type ) || ! bboss_groups_get_group_type_object( $new_group_type ) ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss-platform' ) ) );
 			}
 		}
 
@@ -1036,23 +1036,23 @@ class BB_Admin_Groups_Ajax {
 
 		foreach ( $group_ids as $group_id ) {
 			if ( 'delete' === $do_action ) {
-				$result = groups_delete_group( $group_id );
+				$result = bboss_groups_delete_group( $group_id );
 				if ( $result ) {
 					++$processed;
 				} else {
 					++$failed;
 				}
 			} elseif ( 'change_group_type' === $do_action ) {
-				$result = bp_groups_set_group_type( $group_id, $new_group_type );
+				$result = bboss_groups_set_group_type( $group_id, $new_group_type );
 				if ( ! is_wp_error( $result ) && false !== $result ) {
 					++$processed;
 				} else {
 					++$failed;
 				}
 			} elseif ( 'remove_group_type' === $do_action ) {
-				$current_type = bp_groups_get_group_type( $group_id, true );
+				$current_type = bboss_groups_get_group_type( $group_id, true );
 				if ( ! empty( $current_type ) ) {
-					$result = bp_groups_remove_group_type( $group_id, $current_type );
+					$result = bboss_groups_remove_group_type( $group_id, $current_type );
 					if ( ! is_wp_error( $result ) && false !== $result ) {
 						++$processed;
 					} else {
@@ -1084,7 +1084,7 @@ class BB_Admin_Groups_Ajax {
 						'%d group deleted successfully.',
 						'%d groups deleted successfully.',
 						$processed,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$processed
 				);
@@ -1095,7 +1095,7 @@ class BB_Admin_Groups_Ajax {
 						'Group type changed for %d group.',
 						'Group type changed for %d groups.',
 						$processed,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$processed
 				);
@@ -1106,7 +1106,7 @@ class BB_Admin_Groups_Ajax {
 						'Group type removed from %d group.',
 						'Group type removed from %d groups.',
 						$processed,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$processed
 				);
@@ -1117,7 +1117,7 @@ class BB_Admin_Groups_Ajax {
 						'%d group updated successfully.',
 						'%d groups updated successfully.',
 						$processed,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$processed
 				);
@@ -1131,7 +1131,7 @@ class BB_Admin_Groups_Ajax {
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'No groups were processed.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No groups were processed.', 'buddyboss-platform' ) ) );
 		}
 	}
 
@@ -1145,8 +1145,8 @@ class BB_Admin_Groups_Ajax {
 	public function create_group() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -1156,7 +1156,7 @@ class BB_Admin_Groups_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group name is required.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -1171,23 +1171,23 @@ class BB_Admin_Groups_Ajax {
 			$status = 'public';
 		}
 
-		$group_id = groups_create_group(
+		$group_id = bboss_groups_create_group(
 			array(
 				'name'        => $name,
 				'description' => $description,
-				'slug'        => groups_check_slug( sanitize_title( $name ) ),
+				'slug'        => bboss_groups_check_slug( sanitize_title( $name ) ),
 				'status'      => $status,
-				'creator_id'  => bp_loggedin_user_id(),
+				'creator_id'  => bboss_loggedin_user_id(),
 			)
 		);
 
 		if ( ! $group_id ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to create group.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to create group.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Group created successfully.', 'buddyboss' ),
+				'message'  => __( 'Group created successfully.', 'buddyboss-platform' ),
 				'group_id' => $group_id,
 			)
 		);
@@ -1203,29 +1203,29 @@ class BB_Admin_Groups_Ajax {
 	public function get_group() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$group = groups_get_group( $group_id );
+		$group = bboss_groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
 		 * Fires after the registration of all of the default group meta boxes.
 		 *
-		 * Mirrors the legacy `bp_groups_admin_meta_boxes` action from bp_groups_admin_load().
-		 * Third-party plugins (e.g. LearnDash, BP_Group_Extension) hook here to register
+		 * Mirrors the legacy `bp_groups_admin_meta_boxes` action from bboss_groups_admin_load().
+		 * Third-party plugins (e.g. LearnDash, BBoss_Group_Extension) hook here to register
 		 * meta boxes. Output is suppressed — meta boxes registered here should expose their
-		 * data through the `registered_fields` array via BB_Admin_Meta_Field_Registry instead.
+		 * data through the `registered_fields` array via BBoss_Admin_Meta_Field_Registry instead.
 		 *
 		 * @since BuddyPress 1.7.0
 		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX get group.
@@ -1266,14 +1266,14 @@ class BB_Admin_Groups_Ajax {
 		/**
 		 * Fires before the group edit form is displayed so plugins can modify the group.
 		 *
-		 * Same hook as legacy bp_groups_admin_edit() before edit form display.
+		 * Same hook as legacy bboss_groups_admin_edit() before edit form display.
 		 * Group object is passed by reference so plugins can modify it before
 		 * the data is returned to the React edit modal.
 		 *
 		 * @since BuddyPress 1.7.0
 		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX get group.
 		 *
-		 * @param BP_Groups_Group $group The group object being edited, passed by reference.
+		 * @param BBoss_Groups_Group $group The group object being edited, passed by reference.
 		 */
 		ob_start();
 		do_action_ref_array( 'bp_groups_admin_edit', array( &$group ) );
@@ -1289,8 +1289,8 @@ class BB_Admin_Groups_Ajax {
 			'enable_forum'      => (int) $group->enable_forum,
 			'creator_id'        => (int) $group->creator_id,
 			'date_created'      => $group->date_created,
-			'permalink'         => bp_get_group_permalink( $group ),
-			'avatar_url'        => bp_core_fetch_avatar(
+			'permalink'         => bboss_get_group_permalink( $group ),
+			'avatar_url'        => bboss_core_fetch_avatar(
 				array(
 					'item_id'    => $group->id,
 					'avatar_dir' => 'group-avatars',
@@ -1299,7 +1299,7 @@ class BB_Admin_Groups_Ajax {
 					'html'       => false,
 				)
 			),
-			'registered_fields' => bb_admin_meta_field_registry()->get_fields_data( 'groups', $group ),
+			'registered_fields' => bboss_admin_meta_field_registry()->get_fields_data( 'groups', $group ),
 		);
 
 		/**
@@ -1319,8 +1319,8 @@ class BB_Admin_Groups_Ajax {
 	 * Flow:
 	 * 1. save_fields_data('groups', $group, 'before') — sets object properties.
 	 * 2. do_action('bb_admin_before_save_group') — pre-save hook.
-	 * 3. groups_edit_base_group_details() — fires groups_details_updated + cache.
-	 * 4. groups_edit_group_settings() — handles privacy + permissions + cache.
+	 * 3. bboss_groups_edit_base_group_details() — fires groups_details_updated + cache.
+	 * 4. bboss_groups_edit_group_settings() — handles privacy + permissions + cache.
 	 * 5. save_fields_data('groups', $group, 'after') — saves group_type + Pro fields.
 	 * 6. do_action('bb_admin_after_save_group') — post-save hook (forum lifecycle, etc.).
 	 * 7. do_action('bp_group_admin_edit_after') — backward compat.
@@ -1332,23 +1332,23 @@ class BB_Admin_Groups_Ajax {
 	public function save_group() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$group = groups_get_group( $group_id );
+		$group = bboss_groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
-		$registry = bb_admin_meta_field_registry();
+		$registry = bboss_admin_meta_field_registry();
 
 		// Capture original slug before registry modifies the group object.
 		$old_slug = $group->slug;
@@ -1371,7 +1371,7 @@ class BB_Admin_Groups_Ajax {
 		$new_slug = $group->slug;
 
 		// Save base group details (name, slug, description, parent).
-		groups_edit_base_group_details(
+		bboss_groups_edit_base_group_details(
 			array(
 				'group_id'    => $group_id,
 				'name'        => $group->name,
@@ -1383,7 +1383,7 @@ class BB_Admin_Groups_Ajax {
 
 		// Write previous_slug if slug changed.
 		if ( $old_slug !== $new_slug ) {
-			groups_update_groupmeta( $group_id, 'previous_slug', $old_slug );
+			bboss_groups_update_groupmeta( $group_id, 'previous_slug', $old_slug );
 		}
 
 		// Save group settings (status, permissions, forum).
@@ -1426,13 +1426,13 @@ class BB_Admin_Groups_Ajax {
 		);
 		foreach ( $permission_fallbacks as $meta_key => &$field_value ) {
 			if ( false === $field_value ) {
-				$stored      = groups_get_groupmeta( $group_id, $meta_key );
+				$stored      = bboss_groups_get_groupmeta( $group_id, $meta_key );
 				$field_value = ! empty( $stored ) ? $stored : false;
 			}
 		}
 		unset( $field_value );
 
-		groups_edit_group_settings(
+		bboss_groups_edit_group_settings(
 			$group_id,
 			$enable_forum,
 			$status,
@@ -1498,7 +1498,7 @@ class BB_Admin_Groups_Ajax {
 		 */
 		apply_filters_deprecated( 'bp_group_admin_edit_redirect', array( '' ), 'BuddyBoss 3.0.0', 'bb_admin_save_group_response' );
 
-		$response = array( 'message' => __( 'Group updated successfully.', 'buddyboss' ) );
+		$response = array( 'message' => __( 'Group updated successfully.', 'buddyboss-platform' ) );
 
 		/**
 		 * Filters the response data after saving a group from the admin edit modal.
@@ -1525,8 +1525,8 @@ class BB_Admin_Groups_Ajax {
 	public function get_group_members() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		$allowed_roles = array( 'admin', 'mod', 'member', 'banned' );
@@ -1541,17 +1541,17 @@ class BB_Admin_Groups_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$group = groups_get_group( $group_id );
+		$group = bboss_groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate role param if provided.
 		if ( ! empty( $role ) && ! in_array( $role, $allowed_roles, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'buddyboss-platform' ) ) );
 		}
 
 		$per_page = max( 1, min( self::PER_PAGE_CAP, $per_page ) );
@@ -1564,7 +1564,7 @@ class BB_Admin_Groups_Ajax {
 		 * Filters the number of group members displayed per page in the admin edit modal.
 		 *
 		 * Mirrors the legacy `bp_groups_admin_members_type_per_page` filter used by
-		 * bp_groups_admin_edit_metabox_members().
+		 * bboss_groups_admin_edit_metabox_members().
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
@@ -1589,7 +1589,7 @@ class BB_Admin_Groups_Ajax {
 			);
 		}
 
-		$members_data = groups_get_group_members( $query_args );
+		$members_data = bboss_groups_get_group_members( $query_args );
 
 		// Prime user cache.
 		if ( ! empty( $members_data['members'] ) ) {
@@ -1598,7 +1598,7 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// Count group admins once to flag sole-admin members (prevents role change in React UI).
-		$group_admins = groups_get_group_admins( $group_id );
+		$group_admins = bboss_groups_get_group_admins( $group_id );
 		$admin_count  = count( $group_admins );
 
 		$members = array();
@@ -1671,7 +1671,7 @@ class BB_Admin_Groups_Ajax {
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param object $member      Raw BP_Groups_Member-style object.
+	 * @param object $member      Raw BBoss_Groups_Member-style object.
 	 * @param object $group       The group object.
 	 * @param int    $admin_count Total group admins (for sole-admin flag).
 	 * @return array
@@ -1695,7 +1695,7 @@ class BB_Admin_Groups_Ajax {
 		 * @deprecated BuddyBoss 3.0.0 Use the {@see 'bb_admin_get_group_members_response'} filter instead.
 		 *
 		 * @param int             $user_id The user ID for the current member row.
-		 * @param BP_Groups_Group $group   The group object.
+		 * @param BBoss_Groups_Group $group   The group object.
 		 */
 		do_action_deprecated(
 			'bp_groups_admin_manage_member_row',
@@ -1706,8 +1706,8 @@ class BB_Admin_Groups_Ajax {
 
 		return array(
 			'user_id'       => (int) $member->user_id,
-			'name'          => bp_core_get_user_displayname( $member->user_id ),
-			'avatar_url'    => bp_core_fetch_avatar(
+			'name'          => bboss_core_get_user_displayname( $member->user_id ),
+			'avatar_url'    => bboss_core_fetch_avatar(
 				array(
 					'item_id' => $member->user_id,
 					'object'  => 'user',
@@ -1715,7 +1715,7 @@ class BB_Admin_Groups_Ajax {
 					'html'    => false,
 				)
 			),
-			'profile_url'   => bp_core_get_user_domain( $member->user_id ),
+			'profile_url'   => bboss_core_get_user_domain( $member->user_id ),
 			'role'          => $member_role,
 			'is_creator'    => ( (int) $member->user_id === (int) $group->creator_id ),
 			'is_sole_admin' => ( 'admin' === $member_role && 1 === $admin_count ),
@@ -1732,8 +1732,8 @@ class BB_Admin_Groups_Ajax {
 	public function update_group_member() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -1744,17 +1744,17 @@ class BB_Admin_Groups_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) || empty( $user_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID and User ID are required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID and User ID are required.', 'buddyboss-platform' ) ) );
 		}
 
-		$group = groups_get_group( $group_id );
+		$group = bboss_groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
 		$user = get_userdata( $user_id );
 		if ( ! $user ) {
-			wp_send_json_error( array( 'message' => __( 'User not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'User not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Add a new member.
@@ -1764,14 +1764,14 @@ class BB_Admin_Groups_Ajax {
 			// private/hidden groups — matching the legacy bp-groups-admin.php form submit behavior.
 			$_POST['bp-groups-new-members'] = $user_id; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 
-			$result = groups_join_group( $group_id, $user_id );
+			$result = bboss_groups_join_group( $group_id, $user_id );
 
 			unset( $_POST['bp-groups-new-members'] );
 
 			if ( $result ) {
-				wp_send_json_success( array( 'message' => __( 'Member added successfully.', 'buddyboss' ) ) );
+				wp_send_json_success( array( 'message' => __( 'Member added successfully.', 'buddyboss-platform' ) ) );
 			} else {
-				wp_send_json_error( array( 'message' => __( 'Failed to add member.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Failed to add member.', 'buddyboss-platform' ) ) );
 			}
 			return;
 		}
@@ -1779,65 +1779,65 @@ class BB_Admin_Groups_Ajax {
 		// Validate role.
 		$allowed_roles = array( 'admin', 'mod', 'member', 'banned', 'remove' );
 		if ( ! in_array( $role, $allowed_roles, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'buddyboss-platform' ) ) );
 		}
 
 		// Single instantiation for all role-change paths (avoids N+1 DB hits).
-		$member_obj = new BP_Groups_Member( $user_id, $group_id );
+		$member_obj = new BBoss_Groups_Member( $user_id, $group_id );
 
 		// Remove member.
 		if ( 'remove' === $role ) {
 			// Guard: do not allow removal of the last group admin (mirrors legacy bp-groups-admin.php behaviour).
 			if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
-				wp_send_json_error( array( 'message' => __( 'You cannot remove the only group administrator.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'You cannot remove the only group administrator.', 'buddyboss-platform' ) ) );
 			}
 
-			$result = groups_remove_member( $user_id, $group_id );
+			$result = bboss_groups_remove_member( $user_id, $group_id );
 			if ( $result ) {
-				wp_send_json_success( array( 'message' => __( 'Member removed successfully.', 'buddyboss' ) ) );
+				wp_send_json_success( array( 'message' => __( 'Member removed successfully.', 'buddyboss-platform' ) ) );
 			} else {
-				wp_send_json_error( array( 'message' => __( 'Failed to remove member.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Failed to remove member.', 'buddyboss-platform' ) ) );
 			}
 			return;
 		}
 
 		// Unban first if currently banned and changing to a non-banned role.
 		if ( $member_obj->is_banned && 'banned' !== $role ) {
-			groups_unban_member( $user_id, $group_id );
+			bboss_groups_unban_member( $user_id, $group_id );
 		}
 
 		$result = false;
 		switch ( $role ) {
 			case 'admin':
-				$result = groups_promote_member( $user_id, $group_id, $role );
+				$result = bboss_groups_promote_member( $user_id, $group_id, $role );
 				break;
 			case 'mod':
 				// Guard: do not allow demoting the last group admin to moderator.
 				if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
-					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss' ) ) );
+					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss-platform' ) ) );
 				}
-				$result = groups_promote_member( $user_id, $group_id, $role );
+				$result = bboss_groups_promote_member( $user_id, $group_id, $role );
 				break;
 			case 'member':
 				// Guard: do not allow demotion of the last group admin.
 				if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
-					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss' ) ) );
+					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss-platform' ) ) );
 				}
-				$result = groups_demote_member( $user_id, $group_id );
+				$result = bboss_groups_demote_member( $user_id, $group_id );
 				break;
 			case 'banned':
 				// Guard: do not allow banning the last group admin.
 				if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
-					wp_send_json_error( array( 'message' => __( 'You cannot ban the only group administrator.', 'buddyboss' ) ) );
+					wp_send_json_error( array( 'message' => __( 'You cannot ban the only group administrator.', 'buddyboss-platform' ) ) );
 				}
-				$result = groups_ban_member( $user_id, $group_id );
+				$result = bboss_groups_ban_member( $user_id, $group_id );
 				break;
 		}
 
 		if ( $result ) {
-			wp_send_json_success( array( 'message' => __( 'Member role updated successfully.', 'buddyboss' ) ) );
+			wp_send_json_success( array( 'message' => __( 'Member role updated successfully.', 'buddyboss-platform' ) ) );
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to update member role.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to update member role.', 'buddyboss-platform' ) ) );
 		}
 	}
 
@@ -1845,7 +1845,7 @@ class BB_Admin_Groups_Ajax {
 	 * Autocomplete members for adding to a group.
 	 *
 	 * This is a Settings 2.0 replacement for the legacy
-	 * bp_groups_admin_autocomplete_handler() which reads from $_GET.
+	 * bboss_groups_admin_autocomplete_handler() which reads from $_GET.
 	 * Our AJAX requests send data via POST FormData.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -1864,7 +1864,7 @@ class BB_Admin_Groups_Ajax {
 			wp_send_json_success( array( 'results' => array() ) );
 		}
 
-		$suggestions = bp_core_get_suggestions(
+		$suggestions = bboss_core_get_suggestions(
 			array(
 				'group_id' => $group_id ? -$group_id : 0, // Negative = exclude current members.
 				'limit'    => 10,
@@ -1883,11 +1883,11 @@ class BB_Admin_Groups_Ajax {
 					'name'  => $user->name,
 					'label' => sprintf(
 						/* translators: 1: user display name, 2: username (user_nicename). */
-						__( '%1$s (%2$s)', 'buddyboss' ),
+						__( '%1$s (%2$s)', 'buddyboss-platform' ),
 						$user->name,
 						isset( $user->user_nicename ) && '' !== $user->user_nicename ? $user->user_nicename : $user_id
 					),
-					'image' => bp_core_fetch_avatar(
+					'image' => bboss_core_fetch_avatar(
 						array(
 							'item_id' => $user_id,
 							'object'  => 'user',
@@ -1924,17 +1924,17 @@ class BB_Admin_Groups_Ajax {
 
 		// Mirror is_visible guards from the forum_id meta-field.
 		if (
-			! bp_is_active( 'forums' )
-			|| ! function_exists( 'bbp_is_group_forums_active' )
-			|| ! bbp_is_group_forums_active()
-			|| ! function_exists( 'bbp_is_user_keymaster' )
-			|| ! bbp_is_user_keymaster()
+			! bboss_is_active( 'forums' )
+			|| ! function_exists( 'bboss_bbp_is_group_forums_active' )
+			|| ! bboss_bbp_is_group_forums_active()
+			|| ! function_exists( 'bboss_bbp_is_user_keymaster' )
+			|| ! bboss_bbp_is_user_keymaster()
 		) {
-			wp_send_json_error( array( 'message' => __( 'Forums are not available.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums are not available.', 'buddyboss-platform' ) ) );
 		}
 
-		if ( ! function_exists( 'bbp_get_forum_post_type' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		if ( ! function_exists( 'bboss_bbp_get_forum_post_type' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -1949,7 +1949,7 @@ class BB_Admin_Groups_Ajax {
 		// When only selected_id is passed (initial load to resolve label), return just that forum.
 		if ( $selected_id && empty( $term ) && 1 === $page ) {
 			$forum = get_post( $selected_id );
-			if ( $forum && bbp_get_forum_post_type() === $forum->post_type ) {
+			if ( $forum && bboss_bbp_get_forum_post_type() === $forum->post_type ) {
 				wp_send_json_success(
 					array(
 						'results'  => array(
@@ -1971,7 +1971,7 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		$query_args = array(
-			'post_type'              => bbp_get_forum_post_type(),
+			'post_type'              => bboss_bbp_get_forum_post_type(),
 			'posts_per_page'         => $per_page + 1, // Fetch one extra to determine has_more.
 			'paged'                  => $page,
 			'orderby'                => 'title',
@@ -2034,8 +2034,8 @@ class BB_Admin_Groups_Ajax {
 	public function group_parent_autocomplete() {
 		$this->bb_verify_request();
 
-		if ( ! function_exists( 'bp_enable_group_hierarchies' ) || ! bp_enable_group_hierarchies() ) {
-			wp_send_json_error( array( 'message' => __( 'Group hierarchies are disabled.', 'buddyboss' ) ) );
+		if ( ! function_exists( 'bboss_enable_group_hierarchies' ) || ! bboss_enable_group_hierarchies() ) {
+			wp_send_json_error( array( 'message' => __( 'Group hierarchies are disabled.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -2057,7 +2057,7 @@ class BB_Admin_Groups_Ajax {
 		// saved value).
 		if ( '' === $term && 1 === $page && isset( $_POST['selected_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			if ( $selected_id ) {
-				$parent = groups_get_group( $selected_id );
+				$parent = bboss_groups_get_group( $selected_id );
 				if ( ! empty( $parent->id ) ) {
 					wp_send_json_success(
 						array(
@@ -2085,8 +2085,8 @@ class BB_Admin_Groups_Ajax {
 		$exclude_ids = array();
 		if ( $item_id ) {
 			$exclude_ids[] = $item_id;
-			if ( function_exists( 'bp_get_descendent_groups' ) ) {
-				$descendants = bp_get_descendent_groups( $item_id );
+			if ( function_exists( 'bboss_get_descendent_groups' ) ) {
+				$descendants = bboss_get_descendent_groups( $item_id );
 				if ( ! empty( $descendants ) && is_array( $descendants ) ) {
 					$exclude_ids = array_merge( $exclude_ids, wp_list_pluck( $descendants, 'id' ) );
 				}
@@ -2109,7 +2109,7 @@ class BB_Admin_Groups_Ajax {
 			$args['search_terms'] = $term;
 		}
 
-		$query  = groups_get_groups( $args );
+		$query  = bboss_groups_get_groups( $args );
 		$groups = isset( $query['groups'] ) && is_array( $query['groups'] ) ? $query['groups'] : array();
 
 		$has_more = count( $groups ) > $per_page;
@@ -2147,25 +2147,25 @@ class BB_Admin_Groups_Ajax {
 	public function get_group_topics() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		if ( ! bboss_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss-platform' ) ) );
 		}
 
-		$group = groups_get_group( $group_id );
+		$group = bboss_groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Check if group activity topics feature is enabled (Pro function).
 		if ( ! function_exists( 'bb_is_enabled_group_activity_topics' ) || ! bb_is_enabled_group_activity_topics() ) {
-			wp_send_json_error( array( 'message' => __( 'Group activity topics feature is not enabled.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group activity topics feature is not enabled.', 'buddyboss-platform' ) ) );
 		}
 
 		// Fetch topics for this group.
@@ -2193,8 +2193,8 @@ class BB_Admin_Groups_Ajax {
 						: $permission_type;
 
 					$topic_id  = isset( $topic_obj->topic_id ) ? (int) $topic_obj->topic_id : 0;
-					$is_global = function_exists( 'bb_topics_manager_instance' ) && $topic_id
-						? bb_topics_manager_instance()->bb_is_topic_global( $topic_id )
+					$is_global = function_exists( 'bboss_topics_manager_instance' ) && $topic_id
+						? bboss_topics_manager_instance()->bb_is_topic_global( $topic_id )
 						: false;
 
 					$topics_data[] = array(
@@ -2228,17 +2228,17 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// Get max topics limit.
-		$max_topics = function_exists( 'bb_topics_manager_instance' )
-			? bb_topics_manager_instance()->bb_topics_limit()
+		$max_topics = function_exists( 'bboss_topics_manager_instance' )
+			? bboss_topics_manager_instance()->bb_topics_limit()
 			: 20;
 
 		// Get global activity topics when mode allows selection from activity topics.
 		$global_topics = array();
 		if (
 			in_array( $topic_mode, array( 'only_from_activity_topics', 'allow_both' ), true ) &&
-			function_exists( 'bb_topics_manager_instance' )
+			function_exists( 'bboss_topics_manager_instance' )
 		) {
-			$raw_global = bb_topics_manager_instance()->bb_get_topics(
+			$raw_global = bboss_topics_manager_instance()->bb_get_topics(
 				array(
 					'item_type' => 'activity',
 					'per_page'  => self::LIST_CAP, // Sanity cap — all items are rendered in a dropdown at once.
@@ -2314,7 +2314,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Save group type meta fields from POST data.
 	 *
-	 * Mirrors legacy bp_save_group_type_post_meta_box_data():
+	 * Mirrors legacy bboss_save_group_type_post_meta_box_data():
 	 * - Labels default to $post_title when empty (same as legacy).
 	 * - Sanitization uses wp_kses() for labels (same as legacy).
 	 * - Boolean fields use absint() (same as legacy).
@@ -2470,11 +2470,11 @@ class BB_Admin_Groups_Ajax {
 	private function bb_get_available_member_types() {
 		$member_types = array();
 
-		if ( ! function_exists( 'bp_get_active_member_types' ) ) {
+		if ( ! function_exists( 'bboss_get_active_member_types' ) ) {
 			return $member_types;
 		}
 
-		$member_type_ids = bp_get_active_member_types();
+		$member_type_ids = bboss_get_active_member_types();
 
 		if ( empty( $member_type_ids ) ) {
 			return $member_types;
@@ -2509,7 +2509,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Slim list of every registered group type (one row per type).
 	 *
-	 * Parallel to `BB_Admin_Member_Types_Ajax::bb_get_member_types_summary()`.
+	 * Parallel to `BBoss_Admin_Member_Types_Ajax::bb_get_member_types_summary()`.
 	 * Used by consumers that need the full registry independent of the heavy
 	 * paginated `group_types` payload — e.g. a future "Default Group Type"
 	 * dropdown or any cross-reference grid that iterates all group types.
@@ -2525,13 +2525,13 @@ class BB_Admin_Groups_Ajax {
 	 * @return array<int, array{id:int, post_title:string, name:string, plural_label:string}>
 	 */
 	protected function bb_get_group_types_summary() {
-		if ( ! function_exists( 'bp_groups_get_group_type_post_type' ) ) {
+		if ( ! function_exists( 'bboss_groups_get_group_type_post_type' ) ) {
 			return array();
 		}
 
 		$summary_posts = get_posts(
 			array(
-				'post_type'              => bp_groups_get_group_type_post_type(),
+				'post_type'              => bboss_groups_get_group_type_post_type(),
 				'post_status'            => array( 'publish', 'private' ),
 				'posts_per_page'         => -1,
 				'orderby'                => 'title',
@@ -2581,14 +2581,14 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Clear group type caches after create/update.
 	 *
-	 * The legacy cache clearing hook bb_groups_clear_group_type_cache_on_update()
+	 * The legacy cache clearing hook bboss_groups_clear_group_type_cache_on_update()
 	 * checks for the legacy nonce $_POST['_bp-group-type-nonce'] which is not present
 	 * in Settings 2.0 AJAX requests. We replicate the same cache clearing here.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @see bb_groups_clear_group_type_cache_on_update() Legacy cache clearing (save_post hook).
-	 * @see bb_groups_clear_group_type_cache_before_delete() Delete cache clearing (before_delete_post hook) — works automatically.
+	 * @see bboss_groups_clear_group_type_cache_on_update() Legacy cache clearing (save_post hook).
+	 * @see bboss_groups_clear_group_type_cache_before_delete() Delete cache clearing (before_delete_post hook) — works automatically.
 	 *
 	 * @param int $post_id Post ID of the group type.
 	 */
@@ -2607,17 +2607,17 @@ class BB_Admin_Groups_Ajax {
 	 * Validate a group permission field against the allowed values whitelist.
 	 *
 	 * Reads the value from $_POST, sanitizes it, and validates against
-	 * bb_groups_get_settings_status(). If the value is not in the allowed list,
-	 * falls back via bb_groups_settings_default_fallback() — matching the
+	 * bboss_groups_get_settings_status(). If the value is not in the allowed list,
+	 * falls back via bboss_groups_settings_default_fallback() — matching the
 	 * legacy admin pattern (bp-groups-admin.php).
 	 *
 	 * Returns false when the field is not present in $_POST, which tells
-	 * groups_edit_group_settings() to skip updating that field.
+	 * bboss_groups_edit_group_settings() to skip updating that field.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $field_key    The POST field key suffix (e.g., 'perm_invite').
-	 * @param string $setting_type The setting type for bb_groups_get_settings_status() (e.g., 'invite').
+	 * @param string $setting_type The setting type for bboss_groups_get_settings_status() (e.g., 'invite').
 	 *
 	 * @return string|false Validated permission value or false if field not submitted.
 	 */
@@ -2631,15 +2631,15 @@ class BB_Admin_Groups_Ajax {
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request().
 		$value          = sanitize_key( wp_unslash( $_POST[ $post_key ] ) );
-		$allowed_values = bb_groups_get_settings_status( $setting_type );
+		$allowed_values = bboss_groups_get_settings_status( $setting_type );
 
 		if ( in_array( $value, (array) $allowed_values, true ) ) {
 			return $value;
 		}
 
-		return bb_groups_settings_default_fallback( $setting_type, current( (array) $allowed_values ) );
+		return bboss_groups_settings_default_fallback( $setting_type, current( (array) $allowed_values ) );
 	}
 }
 
 // Initialize.
-new BB_Admin_Groups_Ajax();
+new BBoss_Admin_Groups_Ajax();

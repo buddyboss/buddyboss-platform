@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Integration {
+class BBoss_Integration {
 
 	/**
 	 * Translatable name for the integration.
@@ -54,8 +54,8 @@ class BP_Integration {
 		$this->name = $name;
 
 		// Path for includes.
-		$this->path = trailingslashit( buddypress()->integration_dir ) . $path;
-		$this->url  = trailingslashit( buddypress()->integration_url ) . $path;
+		$this->path = trailingslashit( bboss()->integration_dir ) . $path;
+		$this->url  = trailingslashit( bboss()->integration_url ) . $path;
 
 		if ( $params ) {
 			if ( isset( $params['required_plugin'] ) ) {
@@ -75,7 +75,7 @@ class BP_Integration {
 			add_action( 'bp_late_include', array( $this, 'late_includes' ) );
 
 			// Register BP REST Endpoints.
-			if ( bp_rest_in_buddypress() && bp_rest_api_is_available() ) {
+			if ( bboss_rest_in_buddypress() && bboss_rest_api_is_available() ) {
 				add_action( 'bp_rest_api_init', array( $this, 'rest_api_init' ), 10 );
 			}
 		}
@@ -191,7 +191,7 @@ class BP_Integration {
 		}
 
 		/**
-		 * Fires in the rest_api_init method inside BP_Component.
+		 * Fires in the rest_api_init method inside BBoss_Component.
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *

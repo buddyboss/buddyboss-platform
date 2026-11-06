@@ -6,8 +6,11 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // No logged in users
-bbp_logged_in_redirect();
+bboss_bbp_logged_in_redirect();
 
 // Begin Template
 get_header(); ?>
@@ -29,9 +32,9 @@ get_header(); ?>
 
 				<div id="bbpress-forums">
 
-					<?php bbp_breadcrumb(); ?>
+					<?php bboss_bbp_breadcrumb(); ?>
 
-					<?php bbp_get_template_part( 'form', 'user-register' ); ?>
+					<?php bboss_bbp_get_template_part( 'form', 'user-register' ); ?>
 
 				</div>
 			</div>

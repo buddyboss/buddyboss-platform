@@ -27,7 +27,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertFalse( bp_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), true ) );
+		$this->assertFalse( bboss_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), true ) );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 
 		self::factory()->activity->create( array(
 			'user_id' => $d['u'],
-			'component' => buddypress()->profile->id,
+			'component' => bboss()->profile->id,
 			'type' => 'updated_profile',
 			'date_recorded' => $prev_time,
 		) );
@@ -61,7 +61,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertFalse( bp_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false ) );
+		$this->assertFalse( bboss_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false ) );
 	}
 
 	/**
@@ -70,13 +70,13 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 	public function test_bp_xprofile_updated_profile_activity_outside_of_throttle() {
 		$d = $this->setup_updated_profile_data();
 
-		$time = strtotime( bp_core_current_time() );
+		$time = strtotime( bboss_core_current_time() );
 		$prev_time = date( 'Y-m-d H:i:s', $time - ( 121 * 60 ) );
 		$now_time = date( 'Y-m-d H:i:s', $time );
 
 		self::factory()->activity->create( array(
 			'user_id' => $d['u'],
-			'component' => buddypress()->profile->id,
+			'component' => bboss()->profile->id,
 			'type' => 'updated_profile',
 			'recorded_time' => $prev_time,
 		) );
@@ -95,13 +95,13 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertTrue( bp_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
+		$this->assertTrue( bboss_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
 
-		$existing = bp_activity_get( array(
+		$existing = bboss_activity_get( array(
 			'max' => 1,
 			'filter' => array(
 				'user_id' => $d['u'],
-				'object' => buddypress()->profile->id,
+				'object' => bboss()->profile->id,
 				'action' => 'updated_profile',
 			),
 			'count_total' => 'count_query',
@@ -130,13 +130,13 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertTrue( bp_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
+		$this->assertTrue( bboss_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
 
-		$existing = bp_activity_get( array(
+		$existing = bboss_activity_get( array(
 			'max' => 1,
 			'filter' => array(
 				'user_id' => $d['u'],
-				'object' => buddypress()->profile->id,
+				'object' => bboss()->profile->id,
 				'action' => 'updated_profile',
 			),
 			'count_total' => 'count_query',
@@ -164,7 +164,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertFalse( bp_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
+		$this->assertFalse( bboss_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
 	}
 
 	/**
@@ -186,7 +186,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertFalse( bp_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
+		$this->assertFalse( bboss_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
 	}
 
 	/**
@@ -208,7 +208,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertFalse( bp_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
+		$this->assertFalse( bboss_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
 	}
 
 	/**
@@ -230,7 +230,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertTrue( bp_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
+		$this->assertTrue( bboss_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
 	}
 
 	/**
@@ -247,7 +247,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertTrue( bp_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
+		$this->assertTrue( bboss_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
 	}
 
 	/**
@@ -269,7 +269,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertTrue( bp_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
+		$this->assertTrue( bboss_xprofile_updated_profile_activity( $d['u'], array( $d['f'] ), false, $old_values, $new_values ) );
 	}
 
 	/**
@@ -284,9 +284,9 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			'user_id' => $u,
 		) );
 
-		$expected = sprintf( __( '%s changed their profile photo', 'buddyboss' ), bp_core_get_userlink( $u ) );
+		$expected = sprintf( __( '%s changed their profile photo', 'buddyboss-platform' ), bboss_core_get_userlink( $u ) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
 		$this->assertSame( $expected, $a_obj->action );
 	}
@@ -298,14 +298,14 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 	public function test_bp_xprofile_format_activity_action_updated_profile() {
 		$u = self::factory()->user->create();
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->profile->id,
+			'component' => bboss()->profile->id,
 			'type' => 'updated_profile',
 			'user_id' => $u,
 		) );
 
-		$expected = sprintf( __( "%s updated their profile", 'buddyboss' ), '<a href="' . bp_core_get_user_domain( $u ) . bp_get_profile_slug() . '/">' . bp_core_get_user_displayname( $u ) . '</a>' );
+		$expected = sprintf( __( "%s updated their profile", 'buddyboss-platform' ), '<a href="' . bboss_core_get_user_domain( $u ) . bboss_get_profile_slug() . '/">' . bboss_core_get_user_displayname( $u ) . '</a>' );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
 		$this->assertSame( $expected, $a_obj->action );
 	}

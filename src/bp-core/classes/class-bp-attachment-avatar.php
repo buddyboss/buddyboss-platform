@@ -17,29 +17,31 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 2.3.0
  */
 #[\AllowDynamicProperties]
-class BP_Attachment_Avatar extends BP_Attachment {
+class BBoss_Attachment_Avatar extends BBoss_Attachment {
 
 	/**
 	 * Construct Upload parameters.
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
-	 * @see  BP_Attachment::__construct() for list of parameters
+	 * @see  BBoss_Attachment::__construct() for list of parameters
 	 */
 	public function __construct() {
 		// Allowed avatar types.
-		$allowed_types = bp_core_get_allowed_avatar_types();
+		$allowed_types = bboss_core_get_allowed_avatar_types();
 
 		parent::__construct(
 			array(
 				'action'                => 'bp_avatar_upload',
 				'file_input'            => 'file',
-				'original_max_filesize' => bp_core_avatar_original_max_filesize(),
+				'original_max_filesize' => bboss_core_avatar_original_max_filesize(),
 
 				// Specific errors for avatars.
 				'upload_error_strings'  => array(
-					9  => sprintf( __( 'That photo is too big. Please upload one smaller than %s', 'buddyboss' ), size_format( bp_core_avatar_original_max_filesize() ) ),
-					10 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss' ), self::get_avatar_types( $allowed_types ) ),
+					/* translators: %s: maximum allowed file size. */
+					9  => sprintf( __( 'That photo is too big. Please upload one smaller than %s', 'buddyboss-platform' ), size_format( bboss_core_avatar_original_max_filesize() ) ),
+					/* translators: %s: comma-separated list of allowed file types. */
+					10 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss-platform' ), self::get_avatar_types( $allowed_types ) ),
 				),
 			)
 		);
@@ -55,7 +57,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 	 */
 	public static function get_avatar_types( $allowed_types = array() ) {
 		$types = array_map( 'strtoupper', $allowed_types );
-		$comma = _x( ',', 'avatar types separator', 'buddyboss' );
+		$comma = _x( ',', 'avatar types separator', 'buddyboss-platform' );
 		return join( $comma . ' ', $types );
 	}
 
@@ -65,10 +67,10 @@ class BP_Attachment_Avatar extends BP_Attachment {
 	 * @since BuddyPress 2.3.0
 	 */
 	public function set_upload_dir() {
-		if ( bp_core_avatar_upload_path() && bp_core_avatar_url() ) {
-			$this->upload_path = bp_core_avatar_upload_path();
-			$this->url         = bp_core_avatar_url();
-			$this->upload_dir  = bp_upload_dir();
+		if ( bboss_core_avatar_upload_path() && bboss_core_avatar_url() ) {
+			$this->upload_path = bboss_core_avatar_upload_path();
+			$this->url         = bboss_core_avatar_url();
+			$this->upload_dir  = bboss_upload_dir();
 		} else {
 			parent::set_upload_dir();
 		}
@@ -92,11 +94,11 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		}
 
 		// File size is too big.
-		if ( ! bp_core_check_avatar_size( array( 'file' => $file ) ) ) {
+		if ( ! bboss_core_check_avatar_size( array( 'file' => $file ) ) ) {
 			$file['error'] = 9;
 
 			// File is of invalid type.
-		} elseif ( ! bp_core_check_avatar_type( array( 'file' => $file ) ) ) {
+		} elseif ( ! bboss_core_check_avatar_type( array( 'file' => $file ) ) ) {
 			$file['error'] = 10;
 		}
 
@@ -122,7 +124,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		$edit_args = array();
 
 		// Defaults to the Avatar original max width constant.
-		$original_max_width = bp_core_avatar_original_max_width();
+		$original_max_width = bboss_core_avatar_original_max_width();
 
 		// The ui_available_width is defined and it's smaller than the Avatar original max width.
 		if ( ! empty( $ui_available_width ) && $ui_available_width < $original_max_width ) {
@@ -133,8 +135,8 @@ class BP_Attachment_Avatar extends BP_Attachment {
 			$original_max_width = $ui_available_width;
 
 			// $original_max_width has to be larger than the avatar's full width
-			if ( $original_max_width < bp_core_avatar_full_width() ) {
-				$original_max_width = bp_core_avatar_full_width();
+			if ( $original_max_width < bboss_core_avatar_full_width() ) {
+				$original_max_width = bboss_core_avatar_full_width();
 			}
 		}
 
@@ -179,8 +181,8 @@ class BP_Attachment_Avatar extends BP_Attachment {
 	 */
 	public static function is_too_small( $file = '' ) {
 		$uploaded_image = @getimagesize( $file );
-		$full_width     = bp_core_avatar_full_width();
-		$full_height    = bp_core_avatar_full_height();
+		$full_width     = bboss_core_avatar_full_width();
+		$full_height    = bboss_core_avatar_full_height();
 
 		if ( isset( $uploaded_image[0] ) && $uploaded_image[0] < $full_width || $uploaded_image[1] < $full_height ) {
 			return true;
@@ -194,7 +196,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
-	 * @see  BP_Attachment::crop for the list of parameters
+	 * @see  BBoss_Attachment::crop for the list of parameters
 	 *
 	 * @param array $args Array of arguments for the cropping.
 	 * @return array The cropped avatars (full and thumb).
@@ -205,7 +207,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 			return false;
 		}
 
-		if ( ! bp_attachments_current_user_can( 'edit_avatar', $args ) ) {
+		if ( ! bboss_attachments_current_user_can( 'edit_avatar', $args ) ) {
 			return false;
 		}
 
@@ -256,7 +258,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		}
 
 		// Delete the existing avatar files for the object.
-		$existing_avatar = bp_core_fetch_avatar(
+		$existing_avatar = bboss_core_fetch_avatar(
 			array(
 				'object'    => $args['object'],
 				'item_id'   => $args['item_id'],
@@ -270,7 +272,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		 * old one before deleting
 		 */
 		if ( ! empty( $existing_avatar ) && $existing_avatar !== $this->url . $relative_path ) {
-			bp_core_delete_existing_avatar(
+			bboss_core_delete_existing_avatar(
 				array(
 					'object'      => $args['object'],
 					'item_id'     => $args['item_id'],
@@ -282,11 +284,11 @@ class BP_Attachment_Avatar extends BP_Attachment {
 
 		// Make sure we at least have minimal data for cropping.
 		if ( empty( $args['crop_w'] ) ) {
-			$args['crop_w'] = bp_core_avatar_full_width();
+			$args['crop_w'] = bboss_core_avatar_full_width();
 		}
 
 		if ( empty( $args['crop_h'] ) ) {
-			$args['crop_h'] = bp_core_avatar_full_height();
+			$args['crop_h'] = bboss_core_avatar_full_height();
 		}
 
 		// Get the file extension.
@@ -302,11 +304,11 @@ class BP_Attachment_Avatar extends BP_Attachment {
 
 		foreach ( $avatar_types as $key_type => $type ) {
 			if ( 'thumb' === $key_type ) {
-				$args['dst_w'] = bp_core_avatar_thumb_width();
-				$args['dst_h'] = bp_core_avatar_thumb_height();
+				$args['dst_w'] = bboss_core_avatar_thumb_width();
+				$args['dst_h'] = bboss_core_avatar_thumb_height();
 			} else {
-				$args['dst_w'] = bp_core_avatar_full_width();
-				$args['dst_h'] = bp_core_avatar_full_height();
+				$args['dst_w'] = bboss_core_avatar_full_width();
+				$args['dst_h'] = bboss_core_avatar_full_height();
 			}
 
 			$filename         = wp_unique_filename( $avatar_folder_dir, uniqid() . "-bp{$key_type}.{$ext}" );
@@ -316,7 +318,9 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		}
 
 		// Remove the original.
-		@unlink( $absolute_path );
+		if ( file_exists( $absolute_path ) ) {
+			wp_delete_file( $absolute_path );
+		}
 
 		// Return the full and thumb cropped avatars.
 		return $avatar_types;
@@ -330,11 +334,11 @@ class BP_Attachment_Avatar extends BP_Attachment {
 	 * @return integer The user ID.
 	 */
 	private function get_user_id() {
-		$bp      = buddypress();
+		$bp      = bboss();
 		$user_id = 0;
 
-		if ( bp_is_user() ) {
-			$user_id = bp_displayed_user_id();
+		if ( bboss_is_user() ) {
+			$user_id = bboss_displayed_user_id();
 		}
 
 		if ( ! empty( $bp->members->admin->user_id ) ) {
@@ -354,8 +358,8 @@ class BP_Attachment_Avatar extends BP_Attachment {
 	private function get_group_id() {
 		$group_id = 0;
 
-		if ( bp_is_group() ) {
-			$group_id = bp_get_current_group_id();
+		if ( bboss_is_group() ) {
+			$group_id = bboss_get_current_group_id();
 		}
 
 		return $group_id;
@@ -384,14 +388,14 @@ class BP_Attachment_Avatar extends BP_Attachment {
 
 		if ( ! empty( $user_id ) ) {
 			// Should we load the the Webcam Avatar javascript file.
-			if ( bp_avatar_use_webcam() ) {
+			if ( bboss_avatar_use_webcam() ) {
 				$js_scripts = array( 'bp-webcam' );
 			}
 
 			$script_data['bp_params'] = array(
 				'object'     => 'user',
 				'item_id'    => $user_id,
-				'has_avatar' => bp_get_user_has_avatar( $user_id ),
+				'has_avatar' => bboss_get_user_has_avatar( $user_id ),
 				'nonces'     => array(
 					'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
 					'remove' => wp_create_nonce( 'bp_delete_avatar_link' ),
@@ -400,17 +404,17 @@ class BP_Attachment_Avatar extends BP_Attachment {
 
 			// Set feedback messages.
 			$script_data['feedback_messages'] = array(
-				1 => __( 'There was a problem cropping your profile photo.', 'buddyboss' ),
-				2 => __( 'Your new profile photo was uploaded successfully.', 'buddyboss' ),
-				3 => __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss' ),
-				4 => __( 'Your profile photo was deleted successfully!', 'buddyboss' ),
-				5 => __( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ),
+				1 => __( 'There was a problem cropping your profile photo.', 'buddyboss-platform' ),
+				2 => __( 'Your new profile photo was uploaded successfully.', 'buddyboss-platform' ),
+				3 => __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss-platform' ),
+				4 => __( 'Your profile photo was deleted successfully!', 'buddyboss-platform' ),
+				5 => __( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss-platform' ),
 			);
 		} elseif ( ! empty( $group_id ) ) {
 			$script_data['bp_params'] = array(
 				'object'     => 'group',
 				'item_id'    => $group_id,
-				'has_avatar' => bp_get_group_has_avatar( $group_id ),
+				'has_avatar' => bboss_get_group_has_avatar( $group_id ),
 				'nonces'     => array(
 					'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
 					'remove' => wp_create_nonce( 'bp_group_avatar_delete' ),
@@ -419,10 +423,10 @@ class BP_Attachment_Avatar extends BP_Attachment {
 
 			// Set feedback messages.
 			$script_data['feedback_messages'] = array(
-				1 => __( 'There was a problem cropping the group profile photo.', 'buddyboss' ),
-				2 => __( 'The group profile photo was uploaded successfully.', 'buddyboss' ),
-				3 => __( 'There was a problem deleting the group profile photo. Please try again.', 'buddyboss' ),
-				4 => __( 'The group profile photo was deleted successfully!', 'buddyboss' ),
+				1 => __( 'There was a problem cropping the group profile photo.', 'buddyboss-platform' ),
+				2 => __( 'The group profile photo was uploaded successfully.', 'buddyboss-platform' ),
+				3 => __( 'There was a problem deleting the group profile photo. Please try again.', 'buddyboss-platform' ),
+				4 => __( 'The group profile photo was deleted successfully!', 'buddyboss-platform' ),
 			);
 		} else {
 

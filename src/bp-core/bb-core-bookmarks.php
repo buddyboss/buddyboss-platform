@@ -3,7 +3,7 @@
  * BuddyBoss Bookmarks — public API and type registry.
  *
  * A generic bookmarking layer. Consumers register a bookmark type (see
- * BB_Bookmark_Type) and then use the functions here; nothing in this file knows
+ * BBoss_Bookmark_Type) and then use the functions here; nothing in this file knows
  * what a "post" or an "activity" is.
  *
  * @package BuddyBoss\Core
@@ -22,8 +22,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.2.0
  */
-if ( ! defined( 'BB_BOOKMARK_DELETE_CHUNK' ) ) {
-	define( 'BB_BOOKMARK_DELETE_CHUNK', 100 );
+if ( ! defined( 'BBOSS_BOOKMARK_DELETE_CHUNK' ) ) {
+	define( 'BBOSS_BOOKMARK_DELETE_CHUNK', 100 );
 }
 
 /**
@@ -35,7 +35,7 @@ if ( ! defined( 'BB_BOOKMARK_DELETE_CHUNK' ) ) {
  *
  * @return array All types, or the named type's data (empty array when unknown).
  */
-function bb_bookmark_register_types( $type = '' ) {
+function bboss_bookmark_register_types( $type = '' ) {
 
 	/**
 	 * Filters the registered bookmark types.
@@ -75,8 +75,8 @@ function bb_bookmark_register_types( $type = '' ) {
  *
  * @return int|WP_Error Bookmark row ID, or WP_Error on failure.
  */
-function bb_bookmark_add( $args ) {
-	$r = bp_parse_args(
+function bboss_bookmark_add( $args ) {
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'type'          => '',
@@ -90,18 +90,18 @@ function bb_bookmark_add( $args ) {
 	);
 
 	if ( empty( $r['type'] ) ) {
-		return new WP_Error( 'bb_bookmark_no_type', __( 'A bookmark type is required.', 'buddyboss' ), array( 'status' => 400 ) );
+		return new WP_Error( 'bb_bookmark_no_type', __( 'A bookmark type is required.', 'buddyboss-platform' ), array( 'status' => 400 ) );
 	}
 
 	if ( empty( $r['item_id'] ) ) {
-		return new WP_Error( 'bb_bookmark_no_item', __( 'An item ID is required to create a bookmark.', 'buddyboss' ), array( 'status' => 400 ) );
+		return new WP_Error( 'bb_bookmark_no_item', __( 'An item ID is required to create a bookmark.', 'buddyboss-platform' ), array( 'status' => 400 ) );
 	}
 
 	if ( empty( $r['user_id'] ) ) {
-		return new WP_Error( 'bb_bookmark_no_user', __( 'You must be logged in to bookmark.', 'buddyboss' ), array( 'status' => 401 ) );
+		return new WP_Error( 'bb_bookmark_no_user', __( 'You must be logged in to bookmark.', 'buddyboss-platform' ), array( 'status' => 401 ) );
 	}
 
-	$existing = bb_bookmark_get_by_item( $r['type'], (int) $r['item_id'], (int) $r['user_id'], (int) $r['blog_id'] );
+	$existing = bboss_bookmark_get_by_item( $r['type'], (int) $r['item_id'], (int) $r['user_id'], (int) $r['blog_id'] );
 
 	$obj                = new stdClass();
 	$obj->id            = ! empty( $existing->id ) ? (int) $existing->id : 0;
@@ -117,20 +117,20 @@ function bb_bookmark_add( $args ) {
 		return (int) $existing->id;
 	}
 
-	$bookmark_id = BB_Bookmarks::add( $obj );
+	$bookmark_id = BBoss_Bookmarks::add( $obj );
 
 	if ( empty( $bookmark_id ) ) {
 		// The insert may have lost a race against a concurrent request for the same
 		// (blog_id, user_id, type, item_id) — the table's UNIQUE key would have
 		// rejected our insert while the winner's row now exists. Look again: if a row
 		// exists now, the caller's intent (a bookmark exists) is satisfied either way.
-		$existing = bb_bookmark_get_by_item( $r['type'], (int) $r['item_id'], (int) $r['user_id'], (int) $r['blog_id'] );
+		$existing = bboss_bookmark_get_by_item( $r['type'], (int) $r['item_id'], (int) $r['user_id'], (int) $r['blog_id'] );
 
 		if ( ! empty( $existing->id ) ) {
 			return (int) $existing->id;
 		}
 
-		return new WP_Error( 'bb_bookmark_not_created', __( 'The bookmark could not be saved.', 'buddyboss' ), array( 'status' => 500 ) );
+		return new WP_Error( 'bb_bookmark_not_created', __( 'The bookmark could not be saved.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 	}
 
 	/**
@@ -157,14 +157,14 @@ function bb_bookmark_add( $args ) {
  *
  * @return bool
  */
-function bb_bookmark_delete( $bookmark_id ) {
+function bboss_bookmark_delete( $bookmark_id ) {
 	$bookmark_id = (int) $bookmark_id;
 
 	if ( empty( $bookmark_id ) ) {
 		return false;
 	}
 
-	$bookmark = BB_Bookmarks::get_single_bookmark( $bookmark_id );
+	$bookmark = BBoss_Bookmarks::get_single_bookmark( $bookmark_id );
 
 	if ( empty( $bookmark ) ) {
 		return false;
@@ -173,7 +173,7 @@ function bb_bookmark_delete( $bookmark_id ) {
 	$row     = new stdClass();
 	$row->id = $bookmark_id;
 
-	if ( ! BB_Bookmarks::delete( $row ) ) {
+	if ( ! BBoss_Bookmarks::delete( $row ) ) {
 		return false;
 	}
 
@@ -196,17 +196,17 @@ function bb_bookmark_delete( $bookmark_id ) {
  *
  * @since BuddyBoss 3.2.0
  *
- * @param array $args         Query args. See BB_Bookmarks::get().
+ * @param array $args         Query args. See BBoss_Bookmarks::get().
  * @param bool  $bypass_cache Bypass the object cache when true.
  *
  * @return array `array( 'bookmarks' => array, 'total' => int )`
  */
-function bb_bookmark_query( $args = array(), $bypass_cache = false ) {
+function bboss_bookmark_query( $args = array(), $bypass_cache = false ) {
 	if ( $bypass_cache ) {
 		$args['cache'] = false;
 	}
 
-	return BB_Bookmarks::get( $args );
+	return BBoss_Bookmarks::get( $args );
 }
 
 /**
@@ -219,14 +219,14 @@ function bb_bookmark_query( $args = array(), $bypass_cache = false ) {
  *
  * @return array `array( 'bookmarks' => array, 'total' => int )`
  */
-function bb_bookmark_get_user_items( $args = array(), $bypass_cache = false ) {
-	$args = bp_parse_args(
+function bboss_bookmark_get_user_items( $args = array(), $bypass_cache = false ) {
+	$args = bboss_parse_args(
 		$args,
 		array( 'user_id' => get_current_user_id() ),
 		'bb_bookmark_get_user_items'
 	);
 
-	return bb_bookmark_query( $args, $bypass_cache );
+	return bboss_bookmark_query( $args, $bypass_cache );
 }
 
 /**
@@ -241,7 +241,7 @@ function bb_bookmark_get_user_items( $args = array(), $bypass_cache = false ) {
  *
  * @return object|null Bookmark object, or null when not bookmarked.
  */
-function bb_bookmark_get_by_item( $type, $item_id, $user_id = 0, $blog_id = 0 ) {
+function bboss_bookmark_get_by_item( $type, $item_id, $user_id = 0, $blog_id = 0 ) {
 	$item_id = (int) $item_id;
 	$user_id = ! empty( $user_id ) ? (int) $user_id : get_current_user_id();
 	$blog_id = ! empty( $blog_id ) ? (int) $blog_id : get_current_blog_id();
@@ -250,7 +250,7 @@ function bb_bookmark_get_by_item( $type, $item_id, $user_id = 0, $blog_id = 0 ) 
 		return null;
 	}
 
-	$result = BB_Bookmarks::get(
+	$result = BBoss_Bookmarks::get(
 		array(
 			'type'    => $type,
 			'user_id' => $user_id,
@@ -275,7 +275,7 @@ function bb_bookmark_get_by_item( $type, $item_id, $user_id = 0, $blog_id = 0 ) 
  *
  * @return int Number of rows deleted.
  */
-function bb_bookmark_delete_by_item( $type, $item_id ) {
+function bboss_bookmark_delete_by_item( $type, $item_id ) {
 	global $wpdb;
 
 	$item_id = (int) $item_id;
@@ -284,7 +284,7 @@ function bb_bookmark_delete_by_item( $type, $item_id ) {
 		return 0;
 	}
 
-	$table   = BB_Bookmarks::get_bookmark_tbl();
+	$table   = BBoss_Bookmarks::get_bookmark_tbl();
 	$deleted = 0;
 
 	// Process in bounded chunks: a popular item can have thousands of rows, and
@@ -299,7 +299,7 @@ function bb_bookmark_delete_by_item( $type, $item_id ) {
 				"SELECT id, type, item_id, user_id FROM {$table} WHERE type = %s AND item_id = %d LIMIT %d",
 				$type,
 				$item_id,
-				BB_BOOKMARK_DELETE_CHUNK
+				BBOSS_BOOKMARK_DELETE_CHUNK
 			)
 		);
 
@@ -309,7 +309,7 @@ function bb_bookmark_delete_by_item( $type, $item_id ) {
 
 		$fetched = count( $bookmarks );
 
-		$batch_deleted = BB_Bookmarks::delete_many( $bookmarks );
+		$batch_deleted = BBoss_Bookmarks::delete_many( $bookmarks );
 
 		if ( $batch_deleted < 1 ) {
 			// The batch delete failed -- stop rather than loop forever on rows
@@ -320,10 +320,10 @@ function bb_bookmark_delete_by_item( $type, $item_id ) {
 		$deleted += $batch_deleted;
 
 		foreach ( $bookmarks as $bookmark ) {
-			/** This action is documented in bb_bookmark_delete(). */
+			/** This action is documented in bboss_bookmark_delete(). */
 			do_action( 'bb_bookmark_removed', $bookmark->type, (int) $bookmark->item_id, (int) $bookmark->user_id );
 		}
-	} while ( BB_BOOKMARK_DELETE_CHUNK === $fetched );
+	} while ( BBOSS_BOOKMARK_DELETE_CHUNK === $fetched );
 
 	return $deleted;
 }
@@ -339,7 +339,7 @@ function bb_bookmark_delete_by_item( $type, $item_id ) {
  *
  * @return bool
  */
-function bb_bookmark_is_bookmarked( $type, $item_id, $user_id = 0 ) {
+function bboss_bookmark_is_bookmarked( $type, $item_id, $user_id = 0 ) {
 	$item_id = (int) $item_id;
 	$user_id = ! empty( $user_id ) ? (int) $user_id : get_current_user_id();
 
@@ -348,13 +348,13 @@ function bb_bookmark_is_bookmarked( $type, $item_id, $user_id = 0 ) {
 	}
 
 	$key    = 'is_bookmarked:' . get_current_blog_id() . ':' . $user_id . ':' . $type . ':' . $item_id;
-	$cached = bp_core_get_incremented_cache( $key, BB_Bookmarks::CACHE_GROUP );
+	$cached = bboss_core_get_incremented_cache( $key, BBoss_Bookmarks::CACHE_GROUP );
 
 	if ( false !== $cached ) {
 		return ! empty( current( (array) $cached ) );
 	}
 
-	$result = BB_Bookmarks::get(
+	$result = BBoss_Bookmarks::get(
 		array(
 			'type'    => $type,
 			'user_id' => $user_id,
@@ -367,7 +367,7 @@ function bb_bookmark_is_bookmarked( $type, $item_id, $user_id = 0 ) {
 
 	$bookmarked = ! empty( $result['bookmarks'] );
 
-	bp_core_set_incremented_cache( $key, BB_Bookmarks::CACHE_GROUP, array( $bookmarked ? 1 : 0 ) );
+	bboss_core_set_incremented_cache( $key, BBoss_Bookmarks::CACHE_GROUP, array( $bookmarked ? 1 : 0 ) );
 
 	return $bookmarked;
 }
@@ -388,36 +388,36 @@ function bb_bookmark_is_bookmarked( $type, $item_id, $user_id = 0 ) {
  * @return bool|WP_Error True when now bookmarked, false when now removed,
  *                       WP_Error when the operation failed.
  */
-function bb_bookmark_toggle( $type, $item_id, $user_id = 0 ) {
+function bboss_bookmark_toggle( $type, $item_id, $user_id = 0 ) {
 	$item_id = (int) $item_id;
 	$user_id = ! empty( $user_id ) ? (int) $user_id : get_current_user_id();
 
 	if ( empty( $user_id ) ) {
-		return new WP_Error( 'bb_bookmark_no_user', __( 'You must be logged in to bookmark.', 'buddyboss' ), array( 'status' => 401 ) );
+		return new WP_Error( 'bb_bookmark_no_user', __( 'You must be logged in to bookmark.', 'buddyboss-platform' ), array( 'status' => 401 ) );
 	}
 
-	if ( empty( $type ) || empty( bb_bookmark_register_types( $type ) ) ) {
-		return new WP_Error( 'bb_bookmark_invalid_type', __( 'This item cannot be bookmarked.', 'buddyboss' ), array( 'status' => 400 ) );
+	if ( empty( $type ) || empty( bboss_bookmark_register_types( $type ) ) ) {
+		return new WP_Error( 'bb_bookmark_invalid_type', __( 'This item cannot be bookmarked.', 'buddyboss-platform' ), array( 'status' => 400 ) );
 	}
 
 	if ( empty( $item_id ) ) {
-		return new WP_Error( 'bb_bookmark_no_item', __( 'An item ID is required to bookmark.', 'buddyboss' ), array( 'status' => 400 ) );
+		return new WP_Error( 'bb_bookmark_no_item', __( 'An item ID is required to bookmark.', 'buddyboss-platform' ), array( 'status' => 400 ) );
 	}
 
-	$existing = bb_bookmark_get_by_item( $type, $item_id, $user_id );
+	$existing = bboss_bookmark_get_by_item( $type, $item_id, $user_id );
 
 	// Removal path: deliberately has NO availability check. A user must always
 	// be able to remove a bookmark, even if the item has since been unpublished
 	// or deleted — otherwise the bookmark is stuck in their list forever.
 	if ( ! empty( $existing->id ) && 1 === (int) $existing->status ) {
-		if ( ! bb_bookmark_delete( (int) $existing->id ) ) {
-			return new WP_Error( 'bb_bookmark_not_removed', __( 'The bookmark could not be removed.', 'buddyboss' ), array( 'status' => 500 ) );
+		if ( ! bboss_bookmark_delete( (int) $existing->id ) ) {
+			return new WP_Error( 'bb_bookmark_not_removed', __( 'The bookmark could not be removed.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 		}
 
 		return false;
 	}
 
-	$bookmark_id = bb_bookmark_add(
+	$bookmark_id = bboss_bookmark_add(
 		array(
 			'type'    => $type,
 			'item_id' => $item_id,
@@ -446,14 +446,14 @@ function bb_bookmark_toggle( $type, $item_id, $user_id = 0 ) {
  *
  * @return int
  */
-function bb_bookmark_get_count( $type, $item_id ) {
+function bboss_bookmark_get_count( $type, $item_id ) {
 	$item_id = (int) $item_id;
 
 	if ( empty( $type ) || empty( $item_id ) ) {
 		return 0;
 	}
 
-	$result = BB_Bookmarks::get(
+	$result = BBoss_Bookmarks::get(
 		array(
 			'type'       => $type,
 			'item_id'    => $item_id,
@@ -469,7 +469,7 @@ function bb_bookmark_get_count( $type, $item_id ) {
 /**
  * Warm the bookmark cache for a page of items in one query.
  *
- * Call this before a loop that will ask `bb_bookmark_is_bookmarked()` per item —
+ * Call this before a loop that will ask `bboss_bookmark_is_bookmarked()` per item —
  * otherwise a 20-card grid costs 20 queries.
  *
  * @since BuddyBoss 3.2.0
@@ -480,7 +480,7 @@ function bb_bookmark_get_count( $type, $item_id ) {
  *
  * @return void
  */
-function bb_bookmark_prime_cache( $type, $item_ids, $user_id = 0 ) {
+function bboss_bookmark_prime_cache( $type, $item_ids, $user_id = 0 ) {
 	$item_ids = wp_parse_id_list( $item_ids );
 	$user_id  = ! empty( $user_id ) ? (int) $user_id : get_current_user_id();
 
@@ -489,7 +489,7 @@ function bb_bookmark_prime_cache( $type, $item_ids, $user_id = 0 ) {
 	}
 
 	// One query for the user's bookmarked item IDs among $item_ids.
-	$result = BB_Bookmarks::get(
+	$result = BBoss_Bookmarks::get(
 		array(
 			'type'          => $type,
 			'user_id'       => $user_id,
@@ -510,7 +510,7 @@ function bb_bookmark_prime_cache( $type, $item_ids, $user_id = 0 ) {
 		$bookmarked = in_array( (int) $item_id, $bookmarked_item_ids, true );
 		$key        = 'is_bookmarked:' . get_current_blog_id() . ':' . $user_id . ':' . $type . ':' . $item_id;
 
-		bp_core_set_incremented_cache( $key, BB_Bookmarks::CACHE_GROUP, array( $bookmarked ? 1 : 0 ) );
+		bboss_core_set_incremented_cache( $key, BBoss_Bookmarks::CACHE_GROUP, array( $bookmarked ? 1 : 0 ) );
 	}
 }
 
@@ -527,16 +527,16 @@ function bb_bookmark_prime_cache( $type, $item_ids, $user_id = 0 ) {
  *
  * @return void
  */
-function bb_bookmark_delete_post_items( $post_id ) {
+function bboss_bookmark_delete_post_items( $post_id ) {
 	$post_type = get_post_type( $post_id );
 
-	if ( empty( $post_type ) || empty( bb_bookmark_register_types( $post_type ) ) ) {
+	if ( empty( $post_type ) || empty( bboss_bookmark_register_types( $post_type ) ) ) {
 		return;
 	}
 
-	bb_bookmark_delete_by_item( $post_type, (int) $post_id );
+	bboss_bookmark_delete_by_item( $post_type, (int) $post_id );
 }
-add_action( 'before_delete_post', 'bb_bookmark_delete_post_items' );
+add_action( 'before_delete_post', 'bboss_bookmark_delete_post_items' );
 
 /**
  * Purge a user's bookmarks when the user is deleted.
@@ -547,7 +547,7 @@ add_action( 'before_delete_post', 'bb_bookmark_delete_post_items' );
  *
  * @return void
  */
-function bb_bookmark_delete_user_items( $user_id ) {
+function bboss_bookmark_delete_user_items( $user_id ) {
 	global $wpdb;
 
 	$user_id = (int) $user_id;
@@ -556,7 +556,7 @@ function bb_bookmark_delete_user_items( $user_id ) {
 		return;
 	}
 
-	$table = BB_Bookmarks::get_bookmark_tbl();
+	$table = BBoss_Bookmarks::get_bookmark_tbl();
 
 	// Process in bounded chunks: a heavy user can have thousands of bookmarks.
 	// Each pass grabs up to BB_BOOKMARK_DELETE_CHUNK rows, deletes them in one
@@ -569,7 +569,7 @@ function bb_bookmark_delete_user_items( $user_id ) {
 			$wpdb->prepare(
 				"SELECT id, type, item_id, user_id FROM {$table} WHERE user_id = %d LIMIT %d",
 				$user_id,
-				BB_BOOKMARK_DELETE_CHUNK
+				BBOSS_BOOKMARK_DELETE_CHUNK
 			)
 		);
 
@@ -579,18 +579,18 @@ function bb_bookmark_delete_user_items( $user_id ) {
 
 		$fetched = count( $bookmarks );
 
-		if ( BB_Bookmarks::delete_many( $bookmarks ) < 1 ) {
+		if ( BBoss_Bookmarks::delete_many( $bookmarks ) < 1 ) {
 			break;
 		}
 
 		foreach ( $bookmarks as $bookmark ) {
-			/** This action is documented in bb_bookmark_delete(). */
+			/** This action is documented in bboss_bookmark_delete(). */
 			do_action( 'bb_bookmark_removed', $bookmark->type, (int) $bookmark->item_id, (int) $bookmark->user_id );
 		}
-	} while ( BB_BOOKMARK_DELETE_CHUNK === $fetched );
+	} while ( BBOSS_BOOKMARK_DELETE_CHUNK === $fetched );
 }
-add_action( 'deleted_user', 'bb_bookmark_delete_user_items' );
-add_action( 'wpmu_delete_user', 'bb_bookmark_delete_user_items' );
+add_action( 'deleted_user', 'bboss_bookmark_delete_user_items' );
+add_action( 'wpmu_delete_user', 'bboss_bookmark_delete_user_items' );
 
 /**
  * Purge a site's bookmarks when the site is deleted (multisite).
@@ -601,7 +601,7 @@ add_action( 'wpmu_delete_user', 'bb_bookmark_delete_user_items' );
  *
  * @return void
  */
-function bb_bookmark_delete_blog_items( $blog_id ) {
+function bboss_bookmark_delete_blog_items( $blog_id ) {
 	global $wpdb;
 
 	$blog_id = (int) $blog_id;
@@ -610,7 +610,7 @@ function bb_bookmark_delete_blog_items( $blog_id ) {
 		return;
 	}
 
-	$table = BB_Bookmarks::get_bookmark_tbl();
+	$table = BBoss_Bookmarks::get_bookmark_tbl();
 
 	// Process in bounded chunks, scoped strictly to this blog_id. Each pass
 	// grabs up to BB_BOOKMARK_DELETE_CHUNK rows for the target site, deletes
@@ -623,7 +623,7 @@ function bb_bookmark_delete_blog_items( $blog_id ) {
 			$wpdb->prepare(
 				"SELECT id, type, item_id, user_id FROM {$table} WHERE blog_id = %d LIMIT %d",
 				$blog_id,
-				BB_BOOKMARK_DELETE_CHUNK
+				BBOSS_BOOKMARK_DELETE_CHUNK
 			)
 		);
 
@@ -633,14 +633,14 @@ function bb_bookmark_delete_blog_items( $blog_id ) {
 
 		$fetched = count( $bookmarks );
 
-		if ( BB_Bookmarks::delete_many( $bookmarks ) < 1 ) {
+		if ( BBoss_Bookmarks::delete_many( $bookmarks ) < 1 ) {
 			break;
 		}
 
 		foreach ( $bookmarks as $bookmark ) {
-			/** This action is documented in bb_bookmark_delete(). */
+			/** This action is documented in bboss_bookmark_delete(). */
 			do_action( 'bb_bookmark_removed', $bookmark->type, (int) $bookmark->item_id, (int) $bookmark->user_id );
 		}
-	} while ( BB_BOOKMARK_DELETE_CHUNK === $fetched );
+	} while ( BBOSS_BOOKMARK_DELETE_CHUNK === $fetched );
 }
-add_action( 'delete_blog', 'bb_bookmark_delete_blog_items' );
+add_action( 'delete_blog', 'bboss_bookmark_delete_blog_items' );

@@ -6,7 +6,7 @@
  */
 class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase {
 	public function test_bp_core_get_directory_page_ids_on_directory_page_to_trash() {
-		$old_page_ids = bp_core_get_directory_page_ids();
+		$old_page_ids = bboss_core_get_directory_page_ids();
 
 		// Grab the and remove the first page.
 		foreach ( $old_page_ids as $component => $page_id ) {
@@ -18,13 +18,13 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 		// Move page to trash.
 		wp_delete_post( $p, false );
 
-		$new_page_ids = bp_core_get_directory_page_ids();
+		$new_page_ids = bboss_core_get_directory_page_ids();
 
 		$this->assertEquals( $old_page_ids, $new_page_ids );
 	}
 
 	public function test_bp_core_get_directory_page_ids_on_directory_page_delete() {
-		$old_page_ids = bp_core_get_directory_page_ids();
+		$old_page_ids = bboss_core_get_directory_page_ids();
 
 		// Grab the and remove the first page.
 		foreach ( $old_page_ids as $component => $page_id ) {
@@ -36,13 +36,13 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 		// Force delete page.
 		wp_delete_post( $p, true );
 
-		$new_page_ids = bp_core_get_directory_page_ids();
+		$new_page_ids = bboss_core_get_directory_page_ids();
 
 		$this->assertEquals( $old_page_ids, $new_page_ids );
 	}
 
 	public function test_bp_core_get_directory_page_ids_on_non_directory_page_delete() {
-		$old_page_ids = bp_core_get_directory_page_ids();
+		$old_page_ids = bboss_core_get_directory_page_ids();
 
 		$p = self::factory()->post->create( array(
 			'post_status' => 'publish',
@@ -52,14 +52,14 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 		// Force delete page.
 		wp_delete_post( $p, true );
 
-		$new_page_ids = bp_core_get_directory_page_ids();
+		$new_page_ids = bboss_core_get_directory_page_ids();
 
 		$this->assertEquals( $old_page_ids, $new_page_ids );
 	}
 
 	public function test_bp_core_get_directory_page_ids_non_active_component() {
-		$old_page_ids = bp_core_get_directory_page_ids();
-		$bp = buddypress();
+		$old_page_ids = bboss_core_get_directory_page_ids();
+		$bp = bboss();
 
 		// Grab the and remove the first page.
 		foreach ( $old_page_ids as $component => $page_id ) {
@@ -72,7 +72,7 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 		// Deactivate component.
 		unset( $bp->active_components[ $c ] );
 
-		$new_page_ids = bp_core_get_directory_page_ids();
+		$new_page_ids = bboss_core_get_directory_page_ids();
 
 		// Restore components.
 		$bp->active_components[ $c ] = 1;
@@ -84,13 +84,13 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 	 * @ticket BP6280
 	 */
 	public function test_inactive_components_should_not_be_removed_if_status_is_all() {
-		$old_page_ids = bp_core_get_directory_page_ids( 'all' );
+		$old_page_ids = bboss_core_get_directory_page_ids( 'all' );
 
 		$page_ids = $old_page_ids;
 		$page_ids['foo'] = 12345;
 
-		bp_core_update_directory_page_ids( $page_ids );
-		$found = bp_core_get_directory_page_ids( 'all' );
+		bboss_core_update_directory_page_ids( $page_ids );
+		$found = bboss_core_get_directory_page_ids( 'all' );
 
 		$this->assertEquals( 12345, $found['foo'] );
 	}
@@ -99,13 +99,13 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 	 * @ticket BP6280
 	 */
 	public function test_inactive_components_should_be_removed_if_status_is_active() {
-		$old_page_ids = bp_core_get_directory_page_ids( 'all' );
+		$old_page_ids = bboss_core_get_directory_page_ids( 'all' );
 
 		$page_ids = $old_page_ids;
 		$page_ids['foo'] = 12345;
 
-		bp_core_update_directory_page_ids( $page_ids );
-		$found = bp_core_get_directory_page_ids( 'active' );
+		bboss_core_update_directory_page_ids( $page_ids );
+		$found = bboss_core_get_directory_page_ids( 'active' );
 
 		$this->assertFalse( isset( $found['foo'] ) );
 	}
@@ -114,13 +114,13 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 	 * @ticket BP6280
 	 */
 	public function test_inactive_components_should_be_removed_if_status_is_unspecified() {
-		$old_page_ids = bp_core_get_directory_page_ids( 'all' );
+		$old_page_ids = bboss_core_get_directory_page_ids( 'all' );
 
 		$page_ids = $old_page_ids;
 		$page_ids['foo'] = 12345;
 
-		bp_core_update_directory_page_ids( $page_ids );
-		$found = bp_core_get_directory_page_ids( 'active' );
+		bboss_core_update_directory_page_ids( $page_ids );
+		$found = bboss_core_get_directory_page_ids( 'active' );
 
 		$this->assertFalse( isset( $found['foo'] ) );
 	}
@@ -128,10 +128,10 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 	public function test_bp_core_get_directory_page_ids_should_contain_register_and_activet_pages_when_registration_is_open() {
 		add_filter( 'bp_get_signup_allowed', '__return_true', 999 );
 
-		$ac = buddypress()->active_components;
-		bp_core_add_page_mappings( array_keys( $ac ) );
+		$ac = bboss()->active_components;
+		bboss_core_add_page_mappings( array_keys( $ac ) );
 
-		$page_ids = bp_core_get_directory_page_ids();
+		$page_ids = bboss_core_get_directory_page_ids();
 		$page_names = array_keys( $page_ids );
 
 		$this->assertContains( 'register', $page_names );
@@ -144,20 +144,20 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 
 		// Make sure the pages exist, to verify they're filtered out.
 		add_filter( 'bp_get_signup_allowed', '__return_true', 999 );
-		$ac = buddypress()->active_components;
-		bp_core_add_page_mappings( array_keys( $ac ) );
+		$ac = bboss()->active_components;
+		bboss_core_add_page_mappings( array_keys( $ac ) );
 		remove_filter( 'bp_get_signup_allowed', '__return_true', 999 );
 
 		// Get page ids
-		$page_ids = bp_core_get_directory_page_ids();
+		$page_ids = bboss_core_get_directory_page_ids();
 
 		// Need to delete these pages as previously created.
 		wp_delete_post( $page_ids['register'], true );
 		wp_delete_post( $page_ids['activate'], true );
 
 		add_filter( 'bp_get_signup_allowed', '__return_false', 999 );
-		bp_core_add_page_mappings( array_keys( $ac ) );
-		$page_ids = bp_core_get_directory_page_ids();
+		bboss_core_add_page_mappings( array_keys( $ac ) );
+		$page_ids = bboss_core_get_directory_page_ids();
 		remove_filter( 'bp_get_signup_allowed', '__return_false', 999 );
 
 		$page_names = array_keys( $page_ids );
@@ -169,9 +169,9 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 	public function test_bp_core_get_directory_pages_register_activate_page_created_signups_allowed() {
 		add_filter( 'bp_get_signup_allowed', '__return_true', 999 );
 
-		$ac = buddypress()->active_components;
-		bp_core_add_page_mappings( array_keys( $ac ) );
-		$directory_pages = bp_core_get_directory_pages();
+		$ac = bboss()->active_components;
+		bboss_core_add_page_mappings( array_keys( $ac ) );
+		$directory_pages = bboss_core_get_directory_pages();
 
 		remove_filter( 'bp_get_signup_allowed', '__return_true', 999 );
 
@@ -188,14 +188,14 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 	public function test_bp_core_get_directory_pages_register_activate_page_notcreated_signups_allowed() {
 		add_filter( 'bp_get_signup_allowed', '__return_false', 999 );
 
-		$ac = buddypress()->active_components;
-		bp_core_add_page_mappings( array_keys( $ac ) );
+		$ac = bboss()->active_components;
+		bboss_core_add_page_mappings( array_keys( $ac ) );
 
 		remove_filter( 'bp_get_signup_allowed', '__return_false', 999 );
 
 		add_filter( 'bp_get_signup_allowed', '__return_true', 999 );
 
-		$directory_pages = bp_core_get_directory_pages();
+		$directory_pages = bboss_core_get_directory_pages();
 
 		remove_filter( 'bp_get_signup_allowed', '__return_true', 999 );
 
@@ -206,14 +206,14 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 	public function test_bp_core_get_directory_pages_register_activate_page_created_signups_notallowed() {
 		add_filter( 'bp_get_signup_allowed', '__return_true', 999 );
 
-		$ac = buddypress()->active_components;
-		bp_core_add_page_mappings( array_keys( $ac ) );
+		$ac = bboss()->active_components;
+		bboss_core_add_page_mappings( array_keys( $ac ) );
 
 		remove_filter( 'bp_get_signup_allowed', '__return_true', 999 );
 
 		add_filter( 'bp_get_signup_allowed', '__return_false', 999 );
 
-		$directory_pages = bp_core_get_directory_pages();
+		$directory_pages = bboss_core_get_directory_pages();
 
 		remove_filter( 'bp_get_signup_allowed', '__return_false', 999 );
 
@@ -231,9 +231,9 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 
 		add_filter( 'bp_get_signup_allowed', '__return_false', 999 );
 
-		$ac = buddypress()->active_components;
-		bp_core_add_page_mappings( array_keys( $ac ) );
-		$directory_pages = bp_core_get_directory_pages();
+		$ac = bboss()->active_components;
+		bboss_core_add_page_mappings( array_keys( $ac ) );
+		$directory_pages = bboss_core_get_directory_pages();
 
 		remove_filter( 'bp_get_signup_allowed', '__return_false', 999 );
 
@@ -243,15 +243,15 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 
 	public function test_bp_core_get_directory_pages_pages_settings_update() {
 		// Set the cache
-		$pages = bp_core_get_directory_pages();
+		$pages = bboss_core_get_directory_pages();
 
 		// Mess with it but put it back
-		$v = bp_get_option( 'bp-pages' );
-		bp_update_option( 'bp-pages', 'foo' );
+		$v = bboss_get_option( 'bp-pages' );
+		bboss_update_option( 'bp-pages', 'foo' );
 
 		$this->assertFalse( wp_cache_get( 'directory_pages', 'bp' ) );
 
-		bp_update_option( 'bp-pages', $v );
+		bboss_update_option( 'bp-pages', $v );
 	}
 
 	public function test_bp_core_get_directory_pages_multisite_delete_post_with_same_bp_page_id() {
@@ -259,7 +259,7 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 			return;
 		}
 
-		$dir_pages = bp_core_get_directory_pages();
+		$dir_pages = bboss_core_get_directory_pages();
 
 		// create a blog
 		$u = self::factory()->user->create();
@@ -278,7 +278,7 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 		restore_current_blog();
 
 		// refetch BP directory pages
-		$dir_pages = bp_core_get_directory_pages();
+		$dir_pages = bboss_core_get_directory_pages();
 
 		// Now verify that our BP activity page was not wiped out
 		$this->assertNotEmpty( $dir_pages->activity );
@@ -293,17 +293,17 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 		}
 
 		// Emulate being in the admin area.
-		if ( ! class_exists( 'BP_Members_Admin', false ) ) {
-			require BP_PLUGIN_DIR . 'bp-members/classes/class-bp-members-admin.php';
+		if ( ! class_exists( 'BBoss_Members_Admin', false ) ) {
+			require BBOSS_PLUGIN_DIR . 'bp-members/classes/class-bp-members-admin.php';
 		}
-		$admin = new BP_Members_Admin;
+		$admin = new BBoss_Members_Admin;
 		add_action( 'update_option_users_can_register', array( $admin, 'single_site_registration_on' ), 10, 2 );
 
 		// Emulate turning registration on.
 		update_option( 'users_can_register', 1 );
 
 		// Now check directory pages.
-		$pages = bp_core_get_directory_pages();
+		$pages = bboss_core_get_directory_pages();
 
 		$this->assertNotEmpty( $pages->register );
 		$this->assertNotEmpty( $pages->activate );
@@ -320,17 +320,17 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 		}
 
 		// Emulate being in the network admin area.
-		if ( ! class_exists( 'BP_Members_Admin', false ) ) {
-			require BP_PLUGIN_DIR . 'bp-members/classes/class-bp-members-admin.php';
+		if ( ! class_exists( 'BBoss_Members_Admin', false ) ) {
+			require BBOSS_PLUGIN_DIR . 'bp-members/classes/class-bp-members-admin.php';
 		}
-		$admin = new BP_Members_Admin;
+		$admin = new BBoss_Members_Admin;
 		add_action( 'update_site_option_registration', array( $admin, 'multisite_registration_on' ), 10, 2 );
 
 		// Emulate turning registration on.
 		update_site_option( 'registration', 'user' );
 
 		// Now check directory pages.
-		$pages = bp_core_get_directory_pages();
+		$pages = bboss_core_get_directory_pages();
 
 		$this->assertNotEmpty( $pages->register );
 		$this->assertNotEmpty( $pages->activate );

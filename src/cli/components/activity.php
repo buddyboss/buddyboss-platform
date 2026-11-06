@@ -103,7 +103,7 @@ class Activity extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$assoc_args,
 			array(
 				'component'         => '',
@@ -114,7 +114,7 @@ class Activity extends BuddypressCommand {
 				'user-id'           => '',
 				'item-id'           => '',
 				'secondary-item-id' => '',
-				'date-recorded'     => bp_core_current_time(),
+				'date-recorded'     => bboss_core_current_time(),
 				'hide-sitewide'     => 0,
 				'is-spam'           => 0,
 			)
@@ -138,7 +138,7 @@ class Activity extends BuddypressCommand {
 			$r = $this->generate_item_details( $r );
 		}
 
-		$id = bp_activity_add(
+		$id = bboss_activity_add(
 			array(
 				'action'            => $r['action'],
 				'content'           => $r['content'],
@@ -248,7 +248,7 @@ class Activity extends BuddypressCommand {
 	public function _list( $_, $assoc_args ) {
 		$formatter = $this->get_formatter( $assoc_args );
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$assoc_args,
 			array(
 				'page'        => 1,
@@ -289,13 +289,13 @@ class Activity extends BuddypressCommand {
 			$r['fields'] = 'ids';
 		}
 
-		$activities = bp_activity_get( $r );
+		$activities = bboss_activity_get( $r );
 		if ( empty( $activities['activities'] ) ) {
 			WP_CLI::error( 'No activities found.' );
 		}
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', $activities['activities'] ); // WPCS: XSS ok.
+			echo esc_html( implode( ' ', $activities['activities'] ) );
 		} elseif ( 'count' === $formatter->format ) {
 			$formatter->display_items( $activities['total'] );
 		} else {
@@ -381,13 +381,13 @@ class Activity extends BuddypressCommand {
 	public function get( $args, $assoc_args ) {
 		$activity_id = $args[0];
 
-		$activity = new \BP_Activity_Activity( $activity_id );
+		$activity = new \BBoss_Activity_Activity( $activity_id );
 
 		if ( empty( $activity->id ) ) {
 			WP_CLI::error( 'No activity found by that ID.' );
 		}
 
-		$activity = bp_activity_get_specific(
+		$activity = bboss_activity_get_specific(
 			array(
 				'activity_ids'     => $activity_id,
 				'spam'             => null,
@@ -402,7 +402,7 @@ class Activity extends BuddypressCommand {
 		}
 
 		$activity_arr        = get_object_vars( $activity );
-		$activity_arr['url'] = bp_activity_get_permalink( $activity_id );
+		$activity_arr['url'] = bboss_activity_get_permalink( $activity_id );
 
 		if ( empty( $assoc_args['fields'] ) ) {
 			$assoc_args['fields'] = array_keys( $activity_arr );
@@ -442,13 +442,13 @@ class Activity extends BuddypressCommand {
 			array( $activity_id ),
 			$assoc_args,
 			function( $activity_id ) {
-				$activity = new \BP_Activity_Activity( $activity_id );
+				$activity = new \BBoss_Activity_Activity( $activity_id );
 
 				if ( empty( $activity->id ) ) {
 					WP_CLI::error( 'No activity found by that ID.' );
 				}
 
-				$retval = bp_activity_delete(
+				$retval = bboss_activity_delete(
 					array(
 						'id' => $activity_id,
 					)
@@ -482,14 +482,14 @@ class Activity extends BuddypressCommand {
 	 * @alias unham
 	 */
 	public function spam( $args, $assoc_args ) {
-		$activity = new \BP_Activity_Activity( $args[0] );
+		$activity = new \BBoss_Activity_Activity( $args[0] );
 
 		if ( empty( $activity->id ) ) {
 			WP_CLI::error( 'No activity found by that ID.' );
 		}
 
 		// Mark as spam.
-		bp_activity_mark_as_spam( $activity );
+		bboss_activity_mark_as_spam( $activity );
 
 		$activity->title_required = false;
 		if ( $activity->save() ) {
@@ -518,14 +518,14 @@ class Activity extends BuddypressCommand {
 	 * @alias unspam
 	 */
 	public function ham( $args, $assoc_args ) {
-		$activity = new \BP_Activity_Activity( $args[0] );
+		$activity = new \BBoss_Activity_Activity( $args[0] );
 
 		if ( empty( $activity->id ) ) {
 			WP_CLI::error( 'No activity found by that ID.' );
 		}
 
 		// Mark as ham.
-		bp_activity_mark_as_ham( $activity );
+		bboss_activity_mark_as_ham( $activity );
 
 		$activity->title_required = false;
 		if ( $activity->save() ) {
@@ -563,7 +563,7 @@ class Activity extends BuddypressCommand {
 		$user = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
 
 		// Post the activity update.
-		$id = bp_activity_post_update(
+		$id = bboss_activity_post_update(
 			array(
 				'content'        => $assoc_args['content'],
 				'user_id'        => $user->ID,
@@ -612,7 +612,7 @@ class Activity extends BuddypressCommand {
 	 *     Success: Successfully added a new activity comment (ID #494)
 	 */
 	public function comment( $args, $assoc_args ) {
-		$activity = new \BP_Activity_Activity( $args[0] );
+		$activity = new \BBoss_Activity_Activity( $args[0] );
 
 		if ( empty( $activity->id ) ) {
 			WP_CLI::error( 'No activity found by that ID.' );
@@ -622,7 +622,7 @@ class Activity extends BuddypressCommand {
 		$skip_notification = WP_CLI\Utils\get_flag_value( $assoc_args, 'skip-notification' );
 
 		// Add activity comment.
-		$id = bp_activity_new_comment(
+		$id = bboss_activity_new_comment(
 			array(
 				'content'           => $assoc_args['content'],
 				'user_id'           => $user->ID,
@@ -669,7 +669,7 @@ class Activity extends BuddypressCommand {
 	 */
 	public function delete_comment( $args, $assoc_args ) {
 		$activity_id = $args[0];
-		$activity    = new \BP_Activity_Activity( $activity_id );
+		$activity    = new \BBoss_Activity_Activity( $activity_id );
 
 		if ( empty( $activity->id ) ) {
 			WP_CLI::error( 'No activity found by that ID.' );
@@ -678,7 +678,7 @@ class Activity extends BuddypressCommand {
 		WP_CLI::confirm( 'Are you sure you want to delete this activity comment?', $assoc_args );
 
 		// Delete Comment. True if deleted.
-		if ( bp_activity_delete_comment( $activity_id, $assoc_args['comment-id'] ) ) {
+		if ( bboss_activity_delete_comment( $activity_id, $assoc_args['comment-id'] ) ) {
 			WP_CLI::success( 'Activity comment deleted.' );
 		} else {
 			WP_CLI::error( 'Could not delete the activity comment.' );
@@ -710,7 +710,7 @@ class Activity extends BuddypressCommand {
 			function( $component ) {
 				return array_keys( (array) $component );
 			},
-			(array) bp_activity_get_actions()
+			(array) bboss_activity_get_actions()
 		);
 
 		return $actions;
@@ -739,7 +739,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					// get the group.
-					$group_obj = groups_get_group(
+					$group_obj = bboss_groups_get_group(
 						array(
 							'group_id' => $r['item-id'],
 						)
@@ -751,16 +751,18 @@ class Activity extends BuddypressCommand {
 					}
 
 					// stolen from groups_join_group.
-					$r['action'] = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group_obj ) . '">' . bp_get_group_name( $group_obj ) . '</a>' );
+					// translators: 1: user link, 2: group link.
+					$r['action'] = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss-platform' ), bboss_core_get_userlink( $r['user-id'] ), '<a href="' . bboss_get_group_permalink( $group_obj ) . '">' . bboss_get_group_name( $group_obj ) . '</a>' );
 				} else {
 					// old way, for some other kind of update.
-					$r['action'] = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ) );
+					// translators: %s: user link.
+					$r['action'] = sprintf( __( '%s posted an update', 'buddyboss-platform' ), bboss_core_get_userlink( $r['user-id'] ) );
 				}
 				if ( empty( $r['content'] ) ) {
 					$r['content'] = $this->generate_random_text();
 				}
 
-				$r['primary-link'] = bp_core_get_userlink( $r['user-id'] );
+				$r['primary-link'] = bboss_core_get_userlink( $r['user-id'] );
 
 				break;
 
@@ -778,16 +780,17 @@ class Activity extends BuddypressCommand {
 					$r['item-id'] = $parent_item->id;
 				}
 
-				$r['action']       = sprintf( __( '%s posted a new activity comment', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ) );
+				// translators: %s: user link.
+				$r['action']       = sprintf( __( '%s posted a new activity comment', 'buddyboss-platform' ), bboss_core_get_userlink( $r['user-id'] ) );
 				$r['content']      = $this->generate_random_text();
-				$r['primary-link'] = bp_core_get_userlink( $r['user-id'] );
+				$r['primary-link'] = bboss_core_get_userlink( $r['user-id'] );
 
 				break;
 
 			case 'new_blog':
 			case 'new_blog_post':
 			case 'new_blog_comment':
-				if ( ! bp_is_active( 'blogs' ) ) {
+				if ( ! bboss_is_active( 'blogs' ) ) {
 					return $r;
 				}
 
@@ -823,7 +826,8 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( ! $r['action'] ) {
-						$r['action'] = sprintf( __( '%1$s created the site %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . get_home_url( $r['item-id'] ) . '">' . esc_attr( get_blog_option( $r['item-id'], 'blogname' ) ) . '</a>' );
+						/* translators: 1: member profile link, 2: site link. */
+						$r['action'] = sprintf( __( '%1$s created the site %2$s', 'buddyboss-platform' ), bboss_core_get_userlink( $r['user-id'] ), '<a href="' . get_home_url( $r['item-id'] ) . '">' . esc_attr( get_blog_option( $r['item-id'], 'blogname' ) ) . '</a>' );
 					}
 
 					if ( ! $r['primary-link'] ) {
@@ -841,7 +845,8 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( '' === $r['action'] ) {
-						$r['action'] = sprintf( __( '%1$s wrote a new post, %2$s', 'buddyboss' ), bp_core_get_userlink( (int) $post->post_author ), '<a href="' . $r['primary-link'] . '">' . $post->post_title . '</a>' );
+						// translators: 1: user link, 2: post link.
+						$r['action'] = sprintf( __( '%1$s wrote a new post, %2$s', 'buddyboss-platform' ), bboss_core_get_userlink( (int) $post->post_author ), '<a href="' . $r['primary-link'] . '">' . $post->post_title . '</a>' );
 					}
 
 					if ( '' === $r['content'] ) {
@@ -870,7 +875,8 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( '' === $r['action'] ) {
-						$r['action'] = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $post_permalink . '">' . apply_filters( 'the_title', $post->post_title, $post->ID ) . '</a>' );
+						// translators: 1: user link, 2: post link.
+						$r['action'] = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss-platform' ), bboss_core_get_userlink( $r['user-id'] ), '<a href="' . $post_permalink . '">' . apply_filters( 'the_title', $post->post_title, $post->ID ) . '</a>' );
 					}
 
 					if ( '' === $r['content'] ) {
@@ -895,17 +901,18 @@ class Activity extends BuddypressCommand {
 					$r['item-id'] = $this->get_random_user_id();
 				}
 
-				$r['action'] = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), bp_core_get_userlink( $r['item-id'] ) );
+				// translators: 1: first user link, 2: second user link.
+				$r['action'] = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss-platform' ), bboss_core_get_userlink( $r['user-id'] ), bboss_core_get_userlink( $r['item-id'] ) );
 
 				break;
 
 			case 'created_group':
 				if ( empty( $r['item-id'] ) ) {
-					$random_group = \BP_Groups_Group::get_random( 1, 1 );
+					$random_group = \BBoss_Groups_Group::get_random( 1, 1 );
 					$r['item-id'] = $random_group['groups'][0]->slug;
 				}
 
-				$group = groups_get_group(
+				$group = bboss_groups_get_group(
 					array(
 						'group_id' => $r['item-id'],
 					)
@@ -916,10 +923,11 @@ class Activity extends BuddypressCommand {
 					$r['user-id'] = $group->creator_id;
 				}
 
-				$group_permalink = bp_get_group_permalink( $group );
+				$group_permalink = bboss_get_group_permalink( $group );
 
 				if ( empty( $r['action'] ) ) {
-					$r['action'] = sprintf( __( '%1$s created the group %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $group_permalink . '">' . esc_attr( $group->name ) . '</a>' );
+					/* translators: 1: member profile link, 2: group link. */
+					$r['action'] = sprintf( __( '%1$s created the group %2$s', 'buddyboss-platform' ), bboss_core_get_userlink( $r['user-id'] ), '<a href="' . $group_permalink . '">' . esc_attr( $group->name ) . '</a>' );
 				}
 
 				if ( empty( $r['primary-link'] ) ) {
@@ -930,11 +938,11 @@ class Activity extends BuddypressCommand {
 
 			case 'joined_group':
 				if ( empty( $r['item-id'] ) ) {
-					$random_group = \BP_Groups_Group::get_random( 1, 1 );
+					$random_group = \BBoss_Groups_Group::get_random( 1, 1 );
 					$r['item-id'] = $random_group['groups'][0]->slug;
 				}
 
-				$group = groups_get_group(
+				$group = bboss_groups_get_group(
 					array(
 						'group_id' => $r['item-id'],
 					)
@@ -945,11 +953,12 @@ class Activity extends BuddypressCommand {
 				}
 
 				if ( empty( $r['action'] ) ) {
-					$r['action'] = sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' );
+					/* translators: 1: member profile link, 2: group link. */
+					$r['action'] = sprintf( __( '%1$s joined the group %2$s', 'buddyboss-platform' ), bboss_core_get_userlink( $r['user-id'] ), '<a href="' . bboss_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' );
 				}
 
 				if ( empty( $r['primary-link'] ) ) {
-					$r['primary-link'] = bp_get_group_permalink( $group );
+					$r['primary-link'] = bboss_get_group_permalink( $group );
 				}
 
 				break;
@@ -961,19 +970,22 @@ class Activity extends BuddypressCommand {
 					$r['user-id'] = $this->get_random_user_id();
 				}
 
-				$userlink = bp_core_get_userlink( $r['user-id'] );
+				$userlink = bboss_core_get_userlink( $r['user-id'] );
 
 				// new_avatar.
 				if ( 'new_avatar' === $r['type'] ) {
-					$r['action'] = sprintf( __( '%1$s changed %2$s profile photo', 'buddyboss' ), $userlink, bp_get_user_gender_pronoun_type( $r['user-id'] ) );
+					// translators: 1: user link, 2: gender possessive pronoun (e.g. his/her/their).
+					$r['action'] = sprintf( __( '%1$s changed %2$s profile photo', 'buddyboss-platform' ), $userlink, bboss_get_user_gender_pronoun_type( $r['user-id'] ) );
 
 					// new_member.
 				} elseif ( 'new_member' === $r['type'] ) {
-					$r['action'] = sprintf( __( '%s became a registered member', 'buddyboss' ), $userlink );
+					// translators: %s: user link.
+					$r['action'] = sprintf( __( '%s became a registered member', 'buddyboss-platform' ), $userlink );
 
 					// updated_profile.
 				} else {
-					$r['action'] = sprintf( __( '%1$s updated %2$s profile', 'buddyboss' ), $userlink, bp_get_user_gender_pronoun_type( $r['user-id'] ) );
+					// translators: 1: user link, 2: gender possessive pronoun (e.g. his/her/their).
+					$r['action'] = sprintf( __( '%1$s updated %2$s profile', 'buddyboss-platform' ), $userlink, bboss_get_user_gender_pronoun_type( $r['user-id'] ) );
 				}
 
 				break;

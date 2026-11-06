@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_invites_slug() {
-	echo bp_get_invites_slug();
+function bboss_invites_slug() {
+	echo esc_attr( bboss_get_invites_slug() );
 }
 	/**
 	 * Return the invites component slug.
@@ -24,7 +24,7 @@ function bp_invites_slug() {
 	 *
 	 * @return string
 	 */
-function bp_get_invites_slug() {
+function bboss_get_invites_slug() {
 
 	/**
 	 * Filters the invites component slug.
@@ -33,7 +33,7 @@ function bp_get_invites_slug() {
 	 *
 	 * @param string $slug Invites component slug.
 	 */
-	return apply_filters( 'bp_get_invites_slug', buddypress()->invites->slug );
+	return apply_filters( 'bp_get_invites_slug', bboss()->invites->slug );
 }
 
 /**
@@ -41,8 +41,8 @@ function bp_get_invites_slug() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_invites_root_slug() {
-	echo bp_get_invites_root_slug();
+function bboss_invites_root_slug() {
+	echo esc_attr( bboss_get_invites_root_slug() );
 }
 	/**
 	 * Return the invites component root slug.
@@ -51,7 +51,7 @@ function bp_invites_root_slug() {
 	 *
 	 * @return string
 	 */
-function bp_get_invites_root_slug() {
+function bboss_get_invites_root_slug() {
 
 	/**
 	 * Filters the invites component root slug.
@@ -60,6 +60,6 @@ function bp_get_invites_root_slug() {
 	 *
 	 * @param string $root_slug Invites component root slug.
 	 */
-	return apply_filters( 'bp_get_invites_root_slug', buddypress()->invites->root_slug );
+	return apply_filters( 'bp_get_invites_root_slug', bboss()->invites->root_slug );
 }
 

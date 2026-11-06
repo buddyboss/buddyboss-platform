@@ -8,21 +8,24 @@
  * @version 1.0.0
  */
 
-if ( bp_current_component() === 'activity' ) {
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+if ( bboss_current_component() === 'activity' ) {
 	return '';
 }
 
-$bb_get_filter_id = bp_nouveau_get_filter_id();
+$bb_get_filter_id = bboss_nouveau_get_filter_id();
 ?>
 
 <div id="dir-filters" class="component-filters clearfix">
-	<div id="<?php bp_nouveau_filter_container_id(); ?>" class="last filter">
+	<div id="<?php bboss_nouveau_filter_container_id(); ?>" class="last filter">
 		<label class="bp-screen-reader-text" for="<?php echo esc_attr( $bb_get_filter_id ); ?>">
-			<span ><?php bp_nouveau_filter_label(); ?></span>
+			<span ><?php bboss_nouveau_filter_label(); ?></span>
 		</label>
 		<div class="select-wrap">
-			<select id="<?php echo esc_attr( $bb_get_filter_id ); ?>" data-bp-filter="<?php bp_nouveau_filter_component(); ?>">
-				<?php bp_nouveau_filter_options(); ?>
+			<select id="<?php echo esc_attr( $bb_get_filter_id ); ?>" data-bp-filter="<?php bboss_nouveau_filter_component(); ?>">
+				<?php bboss_nouveau_filter_options(); ?>
 			</select>
 			<span class="select-arrow" aria-hidden="true"></span>
 		</div>

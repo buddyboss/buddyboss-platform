@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.0.0
  */
-class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
+class BBoss_XProfile_Field_Type_Multiselectbox extends BBoss_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the multi-selectbox field type.
@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss' );
-		$this->name     = __( 'Multi Select', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Multi Select', 'buddyboss-platform' );
 
 		$this->supports_multiple_defaults = true;
 		$this->accepts_null_value         = true;
@@ -34,11 +34,11 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 		$this->set_format( '/^.+$/', 'replace' );
 
 		/**
-		 * Fires inside __construct() method for BP_XProfile_Field_Type_Multiselectbox class.
+		 * Fires inside __construct() method for BBoss_XProfile_Field_Type_Multiselectbox class.
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @param BP_XProfile_Field_Type_Multiselectbox $this Current instance of
+		 * @param BBoss_XProfile_Field_Type_Multiselectbox $this Current instance of
 		 *                                                    the field type multiple select box.
 		 */
 		do_action( 'bp_xprofile_field_type_multiselectbox', $this );
@@ -47,7 +47,7 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 	/**
 	 * Output the edit field HTML for this field type.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
@@ -63,40 +63,40 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 			$user_id = (int) $raw_properties['user_id'];
 			unset( $raw_properties['user_id'] );
 		} else {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		}
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$raw_properties,
 			array(
 				'multiple' => 'multiple',
-				'id'       => bp_get_the_profile_field_input_name() . '[]',
-				'name'     => bp_get_the_profile_field_input_name() . '[]',
+				'id'       => bboss_get_the_profile_field_input_name() . '[]',
+				'name'     => bboss_get_the_profile_field_input_name() . '[]',
 			)
 		); ?>
 
-		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
-			<?php bp_the_profile_field_name(); ?>
-			<?php if ( bp_is_register_page() ) : ?>
-				<?php bp_the_profile_field_optional_label(); ?>
+		<legend id="<?php bboss_the_profile_field_input_name(); ?>-1">
+			<?php bboss_the_profile_field_name(); ?>
+			<?php if ( bboss_is_register_page() ) : ?>
+				<?php bboss_the_profile_field_optional_label(); ?>
 			<?php else : ?>
-				<?php bp_the_profile_field_required_label(); ?>
+				<?php bboss_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
 		
-		<?php if ( bp_get_the_profile_field_description() ) : ?>
-			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
+		<?php if ( bboss_get_the_profile_field_description() ) : ?>
+			<p class="description" id="<?php bboss_the_profile_field_input_name(); ?>-3"><?php bboss_the_profile_field_description(); ?></p>
 		<?php endif; ?>
 
 		<?php
 
 		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() );
+		do_action( bboss_get_the_profile_field_errors_action() );
 		?>
 
-		<select <?php echo $this->get_edit_field_html_elements( $r ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+		<select <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?> aria-labelledby="<?php bboss_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bboss_the_profile_field_input_name(); ?>-3">
 			<?php
-			bp_the_profile_field_options(
+			bboss_the_profile_field_options(
 				array(
 					'user_id' => $user_id,
 				)
@@ -104,10 +104,10 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 			?>
 		</select>
 
-		<?php if ( ! bp_get_the_profile_field_is_required() ) : ?>
+		<?php if ( ! bboss_get_the_profile_field_is_required() ) : ?>
 
-			<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bp_get_the_profile_field_input_name() ); ?>[]' );">
-				<?php esc_html_e( 'Clear', 'buddyboss' ); ?>
+			<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bboss_get_the_profile_field_input_name() ); ?>[]' );">
+				<?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?>
 			</a>
 
 		<?php endif; ?>
@@ -120,17 +120,17 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 	 * BuddyPress considers a field's "options" to be, for example, the items in a selectbox.
 	 * These are stored separately in the database, and their templating is handled separately.
 	 *
-	 * This templating is separate from {@link BP_XProfile_Field_Type::edit_field_html()} because
+	 * This templating is separate from {@link BBoss_XProfile_Field_Type::edit_field_html()} because
 	 * it's also used in the wp-admin screens when creating new fields, and for backwards compatibility.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
-	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
+	 * @param array $args Optional. The arguments passed to {@link bboss_the_profile_field_options()}.
 	 */
 	public function edit_field_options_html( array $args = array() ) {
-		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) ); // Object injection guard.
+		$original_option_values = bboss_xprofile_safe_unserialize( BBoss_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) ); // Object injection guard.
 
 		$options = $this->field_obj->get_children();
 		$html    = '';
@@ -155,7 +155,7 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 
 			// Run the allowed option name through the before_save filter, so
 			// we'll be sure to get a match.
-			$allowed_options = xprofile_sanitize_data_value_before_save( $options[ $k ]->name, false, false );
+			$allowed_options = bboss_xprofile_sanitize_data_value_before_save( $options[ $k ]->name, false, false );
 
 			// First, check to see whether the user-entered value matches.
 			if ( in_array( $allowed_options, $option_values ) ) {
@@ -181,20 +181,20 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 			$html .= apply_filters( 'bp_get_the_profile_field_options_multiselect', '<option' . $selected . ' value="' . esc_attr( stripslashes( $options[ $k ]->name ) ) . '">' . esc_html( stripslashes( $options[ $k ]->name ) ) . '</option>', $options[ $k ], $this->field_obj->id, $selected, $k );
 		}
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- <option>/<select> markup built with esc_attr()/esc_html() per value; wp_kses_post() strips the controls.
 	}
 
 	/**
 	 * Output HTML for this field type on the wp-admin Profile Fields screen.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes that you want to add.
 	 */
 	public function admin_field_html( array $raw_properties = array() ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$raw_properties,
 			array(
 				'multiple' => 'multiple',
@@ -202,14 +202,14 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 		);
 		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
+		<label for="<?php bboss_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Select', 'buddyboss' );
+																esc_html_e( 'Select', 'buddyboss-platform' );
 																?>
 		</label>
-		<select <?php echo $this->get_edit_field_html_elements( $r ); ?>>
-			<?php bp_the_profile_field_options(); ?>
+		<select <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
+			<?php bboss_the_profile_field_options(); ?>
 		</select>
 
 		<?php
@@ -219,15 +219,15 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 	 * Output HTML for this field type's children options on the wp-admin Profile Fields,
 	 * "Add Field" and "Edit Field" screens.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
-	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
+	 * @param BBoss_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
 	 *                                         field's child options.
 	 */
-	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = '' ) {
+	public function admin_new_field_html( BBoss_XProfile_Field $current_field, $control_type = '' ) {
 		parent::admin_new_field_html( $current_field, 'checkbox' );
 	}
 }

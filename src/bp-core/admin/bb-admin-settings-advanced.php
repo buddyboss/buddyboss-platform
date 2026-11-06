@@ -19,17 +19,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_admin_settings_register_advanced_feature() {
+function bboss_admin_settings_register_advanced_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'advanced',
 		array(
-			'label'              => __( 'Advanced', 'buddyboss' ),
-			'description'        => __( 'Find your site extended performance and privacy settings.', 'buddyboss' ),
+			'label'              => __( 'Advanced', 'buddyboss-platform' ),
+			'description'        => __( 'Find your site extended performance and privacy settings.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
@@ -55,16 +55,16 @@ function bb_admin_settings_register_advanced_feature() {
 	// =========================================================================
 
 	// Side Panel 1: General (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'advanced',
 		'general',
 		array(
-			'title'      => __( 'General', 'buddyboss' ),
+			'title'      => __( 'General', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -79,16 +79,16 @@ function bb_admin_settings_register_advanced_feature() {
 	);
 
 	// Side Panel 2: Privacy.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'advanced',
 		'privacy',
 		array(
-			'title'    => __( 'Privacy', 'buddyboss' ),
+			'title'    => __( 'Privacy', 'buddyboss-platform' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-lock-simple',
 			),
-			'help_url' => bp_get_admin_url(
+			'help_url' => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -102,18 +102,18 @@ function bb_admin_settings_register_advanced_feature() {
 	);
 
 	/*
-	 * Side Panel 3: Telemetry (unlicensed sites only).
+	 * Side Panel 3: Telemetry.
 	 *
-	 * Paid sites are forced to "complete" reporting by
-	 * bb_force_telemetry_for_licensed_sites(), so showing the control there
-	 * would offer a choice that has no effect.
+	 * Builds without "complete" reporting (the WordPress.org edition) force
+	 * nothing, so they always show it.
 	 */
-	if ( ! bb_has_paid_product() ) {
-		bb_register_side_panel(
+	$bb_show_telemetry = true;
+	if ( $bb_show_telemetry ) {
+		bboss_register_side_panel(
 			'advanced',
 			'telemetry',
 			array(
-				'title'    => __( 'Telemetry', 'buddyboss' ),
+				'title'    => __( 'Telemetry', 'buddyboss-platform' ),
 				'icon'     => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-cylinder',
@@ -128,12 +128,12 @@ function bb_admin_settings_register_advanced_feature() {
 	// REGISTER FIELDS (delegated to sub-files)
 	// =========================================================================
 
-	bb_advanced_register_general_fields();
-	bb_advanced_register_privacy_fields();
+	bboss_advanced_register_general_fields();
+	bboss_advanced_register_privacy_fields();
 
 	// Telemetry fields only where the panel above was registered.
-	if ( ! bb_has_paid_product() ) {
-		bb_advanced_register_telemetry_fields();
+	if ( $bb_show_telemetry ) {
+		bboss_advanced_register_telemetry_fields();
 	}
 
 	/**
@@ -145,4 +145,4 @@ function bb_admin_settings_register_advanced_feature() {
 	do_action( 'bb_advanced_after_register_settings_fields' );
 }
 
-add_action( 'bb_register_features', 'bb_admin_settings_register_advanced_feature', 25 );
+add_action( 'bb_register_features', 'bboss_admin_settings_register_advanced_feature', 25 );

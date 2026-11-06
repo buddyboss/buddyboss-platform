@@ -64,7 +64,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var fieldOptions = useMemo( function () {
-		var options = [ { label: __( '— Select a field —', 'buddyboss' ), value: '', disabled: true } ];
+		var options = [ { label: __( '— Select a field —', 'buddyboss-platform' ), value: '', disabled: true } ];
 
 		if ( ! availableFields || ! availableFields.length ) {
 			return options;
@@ -160,7 +160,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 	 */
 	function handleSave() {
 		if ( ! fieldCode ) {
-			setToast( { status: 'error', message: __( 'Please select a field.', 'buddyboss' ) } );
+			setToast( { status: 'error', message: __( 'Please select a field.', 'buddyboss-platform' ) } );
 			return;
 		}
 
@@ -182,21 +182,21 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 			.then( function ( response ) {
 				setIsSaving( false );
 				if ( response.success ) {
-					setToast( { status: 'success', message: response.data.message || __( 'Field saved.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: response.data.message || __( 'Field saved.', 'buddyboss-platform' ) } );
 					onSave();
 				} else {
-					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save field.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save field.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function ( error ) {
 				setIsSaving( false );
-				setToast( { status: 'error', message: error.message || __( 'Failed to save field.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: error.message || __( 'Failed to save field.', 'buddyboss-platform' ) } );
 			} );
 	}
 
 	// Get placeholder text for label.
 	var selectedField = getFieldByCode( fieldCode );
-	var labelPlaceholder = selectedField ? decodeEntities( selectedField.name ) : __( 'Field label', 'buddyboss' );
+	var labelPlaceholder = selectedField ? decodeEntities( selectedField.name ) : __( 'Field label', 'buddyboss-platform' );
 
 	// Build search mode options.
 	var modeOptions = availableModes.map( function ( mode ) {
@@ -208,7 +208,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 
 	return (
 		<Modal
-			title={ isEditing ? __( 'Edit Search Field', 'buddyboss' ) : __( 'Add Search Field', 'buddyboss' ) }
+			title={ isEditing ? __( 'Edit Search Field', 'buddyboss-platform' ) : __( 'Add Search Field', 'buddyboss-platform' ) }
 			onRequestClose={ onClose }
 			shouldCloseOnClickOutside={ false }
 			className="bb-ps-field-modal bb-admin-settings-modal"
@@ -218,7 +218,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 
 				{/* Field Select. */}
 					<SelectControl
-						label={ __( 'Select Field', 'buddyboss' ) }
+						label={ __( 'Select Field', 'buddyboss-platform' ) }
 						value={ fieldCode }
 						options={ fieldOptions }
 						onChange={ function ( val ) {
@@ -232,7 +232,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 
 					{/* Label. */}
 					<TextControl
-						label={ __( 'Label', 'buddyboss' ) }
+						label={ __( 'Label', 'buddyboss-platform' ) }
 						value={ fieldLabel }
 						placeholder={ labelPlaceholder }
 						onChange={ setFieldLabel }
@@ -240,7 +240,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 
 					{/* Description. */}
 					<TextControl
-						label={ __( 'Description', 'buddyboss' ) }
+						label={ __( 'Description', 'buddyboss-platform' ) }
 						value={ fieldDesc }
 						onChange={ setFieldDesc }
 					/>
@@ -248,7 +248,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 					{/* Search Mode (only if modes are available and not heading). */}
 					{ 'heading' !== fieldCode && modeOptions.length > 0 && (
 						<SelectControl
-							label={ __( 'Search Mode', 'buddyboss' ) }
+							label={ __( 'Search Mode', 'buddyboss-platform' ) }
 							value={ fieldMode }
 							options={ modeOptions }
 							onChange={ setFieldMode }
@@ -261,7 +261,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 						( selectedField && selectedField.is_repeater_group )
 					) && (
 						<Notice status="warning" isDismissible={ false }>
-							{ __( 'You are adding a date field which is inside a repeater set. This will not work correctly in search.', 'buddyboss' ) }
+							{ __( 'You are adding a date field which is inside a repeater set. This will not work correctly in search.', 'buddyboss-platform' ) }
 						</Notice>
 					) }
 				</div>
@@ -272,7 +272,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 					variant="secondary"
 					onClick={ onClose }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -280,7 +280,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 					disabled={ ! fieldCode || isSaving }
 					onClick={ handleSave }
 				>
-					{ isEditing ? __( 'Save', 'buddyboss' ) : __( 'Add Field', 'buddyboss' ) }
+					{ isEditing ? __( 'Save', 'buddyboss-platform' ) : __( 'Add Field', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 

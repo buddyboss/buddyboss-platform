@@ -10,14 +10,14 @@
 defined( 'ABSPATH' ) || exit;
 
 // add shortcode support
-add_shortcode( 'BBOSS_AJAX_SEARCH_FORM', 'bp_search_ajax_search_form_shortcode' );
+add_shortcode( 'BBOSS_AJAX_SEARCH_FORM', 'bboss_search_ajax_search_form_shortcode' );
 /**
  * Returns search buffer ajax template part
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_ajax_search_form_shortcode( $atts ) {
-	return bp_search_buffer_template_part( 'ajax-search-form', '', false );
+function bboss_search_ajax_search_form_shortcode( $atts ) {
+	return bboss_search_buffer_template_part( 'ajax-search-form', '', false );
 }
 
 /**
@@ -26,10 +26,10 @@ function bp_search_ajax_search_form_shortcode( $atts ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_activity_intro( $character_limit = 50 ) {
+function bboss_search_activity_intro( $character_limit = 50 ) {
 	$content = '';
-	if ( bp_activity_has_content() ) {
-		$content = bp_get_activity_content_body();
+	if ( bboss_activity_has_content() ) {
+		$content = bboss_get_activity_content_body();
 
 		if ( $content ) {
 			$content = wp_strip_all_tags( $content, true );
@@ -53,15 +53,15 @@ function bp_search_activity_intro( $character_limit = 50 ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_reply_intro( $character_limit = 50 ) {
+function bboss_search_reply_intro( $character_limit = 50 ) {
 	$content = '';
 
 	switch ( get_post_type( get_the_ID() ) ) {
 		case 'topic':
-			$reply_content = bbp_get_topic_content( get_the_ID() );
+			$reply_content = bboss_bbp_get_topic_content( get_the_ID() );
 			break;
 		case 'reply':
-			$reply_content = bbp_get_reply_content( get_the_ID() );
+			$reply_content = bboss_bbp_get_reply_content( get_the_ID() );
 			break;
 		default:
 			$reply_content = get_the_content();
@@ -70,11 +70,11 @@ function bp_search_reply_intro( $character_limit = 50 ) {
 
 	if ( $reply_content ) {
 		$content     = wp_strip_all_tags( $reply_content, true );
-		$search_term = BP_Search::instance()->get_search_term();
+		$search_term = BBoss_Search::instance()->get_search_term();
 
 		$search_term_position = stripos( $content, $search_term );
 		if ( $search_term_position !== false ) {
-			$shortened_content = bp_search_result_match( $content, $search_term );
+			$shortened_content = bboss_search_result_match( $content, $search_term );
 
 			// highlight search keyword
 
@@ -103,10 +103,10 @@ function bp_search_reply_intro( $character_limit = 50 ) {
  *
  * @return mixed|void
  */
-function bp_search_result_intro( $content, $character_limit = 50 ) {
+function bboss_search_result_intro( $content, $character_limit = 50 ) {
 
 	$content     = wp_strip_all_tags( $content, true );
-	$search_term = BP_Search::instance()->search->get_search_term();
+	$search_term = BBoss_Search::instance()->search->get_search_term();
 
 	$search_term_position = stripos( $content, $search_term );
 
@@ -139,7 +139,7 @@ function bp_search_result_intro( $content, $character_limit = 50 ) {
  *
  * @return string
  */
-function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
+function bboss_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
 
 	$words       = preg_split( '/\s+/', $in );
 	$wordsToFind = preg_split( '/\s+/', $wordToFind );
@@ -173,7 +173,7 @@ function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
 
 }
 
-if ( ! function_exists( 'bp_search_pagination' ) ) :
+if ( ! function_exists( 'bboss_search_pagination' ) ) :
 
 	/**
 	 * Prints pagination links for given parameters with pagination value as a querystring parameter.
@@ -195,7 +195,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 	 *
 	 * @return void
 	 */
-	function bp_search_pagination( $total_items, $items_per_page, $curr_paged, $slug, $links_on_each_side = 2, $hashlink = '', $param_key = 'list' ) {
+	function bboss_search_pagination( $total_items, $items_per_page, $curr_paged, $slug, $links_on_each_side = 2, $hashlink = '', $param_key = 'list' ) {
 		$use_bootstrap = false;
 		if ( defined( 'BOOTSTRAP_ACTIVE' ) ) {
 			$use_bootstrap = true;
@@ -307,7 +307,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 							}
 
 							// $link_html = "<li class='" . esc_attr($class) . "'>" . $link_html . "</li>";
-							echo $link_html;
+							echo wp_kses_post( $link_html );
 						}
 						?>
 						<?php if ( $use_bootstrap ) : ?>
@@ -329,7 +329,7 @@ endif;
  *
  * @return mixed|void
  */
-function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_paged ) {
+function bboss_search_pagination_page_counts( $total_items, $items_per_page, $curr_paged ) {
 
 	if ( $curr_paged == 0 ) {
 		$curr_paged = 1;
@@ -341,7 +341,10 @@ function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_
 	?>
 	<div class="pag-count bottom">
 		<div class="pag-data">
-			<?php printf( __( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss' ), $from_num, min( $total_items, $to_num ), $total_items ); ?>
+			<?php
+			/* translators: 1: starting result number, 2: ending result number, 3: total number of results. */
+			printf( esc_html__( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss-platform' ), (int) $from_num, (int) min( $total_items, $to_num ), (int) $total_items );
+			?>
 		</div>
 	</div>
 	<?php
@@ -355,26 +358,26 @@ function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_
  *
  * @return mixed|void
  */
-function bp_search_items() {
+function bboss_search_items() {
 
 	$items = array(
-		'posts'          => __( 'Blog Posts', 'buddyboss' ),
-		'pages'          => __( 'Pages', 'buddyboss' ),
-		'posts_comments' => __( 'Post Comments', 'buddyboss' ),
-		'members'        => __( 'Members', 'buddyboss' ),
+		'posts'          => __( 'Blog Posts', 'buddyboss-platform' ),
+		'pages'          => __( 'Pages', 'buddyboss-platform' ),
+		'posts_comments' => __( 'Post Comments', 'buddyboss-platform' ),
+		'members'        => __( 'Members', 'buddyboss-platform' ),
 	);
 
 	// forums?
 
-	$items['forum'] = __( 'Forums', 'buddyboss' );
-	$items['topic'] = __( 'Forum Discussions', 'buddyboss' );
-	$items['reply'] = __( 'Forum Replies', 'buddyboss' );
+	$items['forum'] = __( 'Forums', 'buddyboss-platform' );
+	$items['topic'] = __( 'Forum Discussions', 'buddyboss-platform' );
+	$items['reply'] = __( 'Forum Replies', 'buddyboss-platform' );
 
 	// other buddypress components
 	$bp_components = array(
-		'groups'   => __( 'Groups', 'buddyboss' ),
-		'activity' => __( 'Activity', 'buddyboss' ),
-		'messages' => __( 'Messages', 'buddyboss' ),
+		'groups'   => __( 'Groups', 'buddyboss-platform' ),
+		'activity' => __( 'Activity', 'buddyboss-platform' ),
+		'messages' => __( 'Messages', 'buddyboss-platform' ),
 		/*
 		 should we search notifications as well?
 		'notifications'	=> __( 'Notifications', 'buddyboss' ), */
@@ -382,11 +385,11 @@ function bp_search_items() {
 
 	// only the active ones please!
 	foreach ( $bp_components as $component => $label ) {
-		if ( function_exists( 'bp_is_active' ) && bp_is_active( $component ) ) {
+		if ( function_exists( 'bboss_is_active' ) && bboss_is_active( $component ) ) {
 			$items[ $component ] = $label;
 
 			if ( 'activity' === $component ) {
-				$items['activity_comment'] = __( 'Activity Comments', 'buddyboss' );
+				$items['activity_comment'] = __( 'Activity Comments', 'buddyboss-platform' );
 			}
 		}
 	}
@@ -405,13 +408,13 @@ function bp_search_items() {
  * @param type $old_values
  * @param type $new_values
  */
-function bb_gs_create_searchstring( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+function bboss_gs_create_searchstring( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
 
-	if ( ! function_exists( 'bp_is_active' ) || ! bp_is_active( 'xprofile' ) ) {
+	if ( ! function_exists( 'bboss_is_active' ) || ! bboss_is_active( 'xprofile' ) ) {
 		return;
 	}
 
-	$items_to_search = BP_Search::instance()->searchable_items;
+	$items_to_search = BBoss_Search::instance()->searchable_items;
 
 	$search_string = '';
 
@@ -425,7 +428,7 @@ function bb_gs_create_searchstring( $user_id, $posted_field_ids, $errors, $old_v
 
 }
 
-add_action( 'xprofile_updated_profile', 'bb_gs_create_searchstring', 1, 5 );
+add_action( 'xprofile_updated_profile', 'bboss_gs_create_searchstring', 1, 5 );
 
 /**
  * Generate search string on group update.
@@ -434,9 +437,9 @@ add_action( 'xprofile_updated_profile', 'bb_gs_create_searchstring', 1, 5 );
  *
  * @param type $groupid
  */
-function bb_gs_create_group_searchstring( $groupid ) {
+function bboss_gs_create_group_searchstring( $groupid ) {
 
-	if ( ! function_exists( 'bp_is_active' ) || ! bp_is_active( 'groups' ) ) {
+	if ( ! function_exists( 'bboss_is_active' ) || ! bboss_is_active( 'groups' ) ) {
 		return;
 	}
 
@@ -453,30 +456,30 @@ function bb_gs_create_group_searchstring( $groupid ) {
 	$country = isset( $_POST['bpla-group-country'] ) ? $_POST['bpla-group-country'] : '';
 
 	if ( $address ) {
-		groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address );
+		bboss_groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address );
 	}
 	if ( $street ) {
-		groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street );
+		bboss_groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street );
 	}
 	if ( $city ) {
-		groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street . ' ' . $city );
+		bboss_groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street . ' ' . $city );
 	}
 	if ( $state ) {
-		groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street . ' ' . $city . ' ' . $state );
+		bboss_groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street . ' ' . $city . ' ' . $state );
 	}
 	if ( $zip ) {
-		groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street . ' ' . $city . ' ' . $state . ' ' . $zip );
+		bboss_groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street . ' ' . $city . ' ' . $state . ' ' . $zip );
 	}
 	if ( $country ) {
-		groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street . ' ' . $city . ' ' . $state . ' ' . $zip . ' ' . $country );
+		bboss_groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street . ' ' . $city . ' ' . $state . ' ' . $zip . ' ' . $country );
 	}
 
 }
 
-add_action( 'groups_create_group_step_save_group-details', 'bb_gs_create_group_searchstring' );
-add_action( 'groups_details_updated', 'bb_gs_create_group_searchstring' );
+add_action( 'groups_create_group_step_save_group-details', 'bboss_gs_create_group_searchstring' );
+add_action( 'groups_details_updated', 'bboss_gs_create_group_searchstring' );
 
-add_filter( 'body_class', 'bp_search_body_class', 10, 1 );
+add_filter( 'body_class', 'bboss_search_body_class', 10, 1 );
 
 /**
  * Add 'buddypress' and 'directory' in Body tag classes list
@@ -485,9 +488,9 @@ add_filter( 'body_class', 'bp_search_body_class', 10, 1 );
  *
  * @return mixed|void
  */
-function bp_search_body_class( $wp_classes ) {
+function bboss_search_body_class( $wp_classes ) {
 
-	if ( bp_search_is_search() ) { // if search page.
+	if ( bboss_search_is_search() ) { // if search page.
 		$wp_classes[] = 'buddypress';
 		$wp_classes[] = 'directory';
 	}
@@ -502,12 +505,12 @@ function bp_search_body_class( $wp_classes ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_get_search_user_fields() {
+function bboss_get_search_user_fields() {
 	return array(
-		'user_meta'    => __( 'User Meta', 'buddyboss' ),
-		'display_name' => __( 'Display Name', 'buddyboss' ),
-		'user_email'   => __( 'User Email', 'buddyboss' ),
-		'user_login'   => __( 'Username', 'buddyboss' ),
+		'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
+		'display_name' => __( 'Display Name', 'buddyboss-platform' ),
+		'user_email'   => __( 'User Email', 'buddyboss-platform' ),
+		'user_login'   => __( 'Username', 'buddyboss-platform' ),
 	);
 }
 
@@ -516,26 +519,26 @@ function bp_get_search_user_fields() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) {
+function bboss_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) {
 
 	$default = array(
-		'product'             => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/product.svg' : 'bb-icon-shopping-cart',
-		'post'                => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/blog-post.svg' : 'bb-icon-article',
-		'forum'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comments-square',
-		'topic'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comment-square-dots',
-		'reply'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-reply',
-		'bp-member-type'      => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
-		'memberpressproduct'  => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
-		'wp-parser-function'  => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'wp-parser-class'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'wp-parser-hook'      => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'wp-parser-method'    => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'command'             => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'llms_membership'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
-		'llms_assignment'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
-		'llms_certificate'    => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
-		'llms_my_certificate' => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
-		'llms_quiz'           => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/quiz.svg' : 'bb-icon-quiz',
+		'product'             => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/product.svg' : 'bb-icon-shopping-cart',
+		'post'                => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/blog-post.svg' : 'bb-icon-article',
+		'forum'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comments-square',
+		'topic'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comment-square-dots',
+		'reply'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-reply',
+		'bp-member-type'      => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
+		'memberpressproduct'  => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
+		'wp-parser-function'  => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-class'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-hook'      => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-method'    => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'command'             => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'llms_membership'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
+		'llms_assignment'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
+		'llms_certificate'    => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
+		'llms_my_certificate' => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
+		'llms_quiz'           => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/quiz.svg' : 'bb-icon-quiz',
 	);
 
 	/**
@@ -556,7 +559,7 @@ function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) 
 		return $default[ $post_type ];
 	}
 
-	return ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/default.svg' : 'bb-icon-f bb-icon-file-doc';
+	return ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/default.svg' : 'bb-icon-f bb-icon-file-doc';
 
 }
 
@@ -566,20 +569,21 @@ function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) 
  * @since BuddyBoss 1.0.0
  * @return bool
  */
-function bp_search_is_search() {
+function bboss_search_is_search() {
 	return ! is_admin() && is_search() && isset( $_REQUEST['bp_search'] );
 }
 
 if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (array) get_option( 'active_plugins', array() ) ), true ) ) {
 
-	function bps_get_request( $type, $form = 0 ) {
-		$current        = bps_current_page();
-		$hidden_filters = bps_get_hidden_filters();
+	function bboss_bps_get_request( $type, $form = 0 ) {
+		$current        = bboss_bps_current_page();
+		$hidden_filters = bboss_bps_get_hidden_filters();
 
 		$cookie  = apply_filters( 'bps_cookie_name', 'bps_request' );
-		$request = isset( $_REQUEST['bps_form'] ) ? $_REQUEST : array();
+		$request = isset( $_REQUEST['bps_form'] ) ? map_deep( wp_unslash( $_REQUEST ), 'sanitize_text_field' ) : array();
 		if ( empty( $request ) && isset( $_COOKIE[ $cookie ] ) ) {
-			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $request );
+			parse_str( wp_unslash( $_COOKIE[ $cookie ] ), $request );
+			$request = map_deep( $request, 'sanitize_text_field' );
 		}
 
 		switch ( $type ) {
@@ -611,33 +615,34 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
 		return apply_filters( 'bps_request', $request, $type, $form );
 	}
 
-	function bps_current_page() {
-		$current = defined( 'DOING_AJAX' ) ? parse_url(
-			$_SERVER['HTTP_REFERER'],
+	function bboss_bps_current_page() {
+		$current = defined( 'BBOSS_DOING_AJAX' ) ? wp_parse_url(
+			isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '',
 			PHP_URL_PATH
-		) : parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		) : wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
 		return apply_filters( 'bps_current_page', $current );        // published interface, 20190324
 	}
 
-	function bps_get_hidden_filters() {
-		$data = bps_get_directory_data();
+	function bboss_bps_get_hidden_filters() {
+		$data = bboss_bps_get_directory_data();
 		unset( $data['page'], $data['template'], $data['ajax_template'], $data['show'], $data['order_by'] );
 
 		return apply_filters( 'bps_hidden_filters', $data );
 	}
 
-	function bps_get_directory_data() {
+	function bboss_bps_get_directory_data() {
 		global $bps_directory_data;
 
 		$data   = array();
 		$cookie = apply_filters( 'bps_cookie_name', 'bps_directory' );
 
-		if ( ! defined( 'DOING_AJAX' ) ) {
+		if ( ! defined( 'BBOSS_DOING_AJAX' ) ) {
 			$data = isset( $bps_directory_data ) ? $bps_directory_data : array();
 		} elseif ( isset( $_COOKIE[ $cookie ] ) ) {
-			$current = bps_current_page();
-			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $data );
+			$current = bboss_bps_current_page();
+			parse_str( wp_unslash( $_COOKIE[ $cookie ] ), $data );
+			$data = map_deep( $data, 'sanitize_text_field' );
 			if ( $data['page'] != $current ) {
 				$data = array();
 			}
@@ -656,7 +661,7 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
  *
  * @return array
  */
-function bp_search_is_post_restricted( $post_id = 0, $user_id = 0, $type = 'post' ) {
+function bboss_search_is_post_restricted( $post_id = 0, $user_id = 0, $type = 'post' ) {
 
 	$restricted_post_data = array();
 
@@ -671,12 +676,12 @@ function bp_search_is_post_restricted( $post_id = 0, $user_id = 0, $type = 'post
 		// check for the default post.
 		if ( $user_has_post_access && 'post' === $type ) {
 			$restricted_post_data['post_class']     = 'has-access';
-			$restricted_post_data['post_thumbnail'] = get_the_post_thumbnail_url() ? get_the_post_thumbnail_url() : bp_search_get_post_thumbnail_default( get_post_type(), 'icon' );
+			$restricted_post_data['post_thumbnail'] = get_the_post_thumbnail_url() ? get_the_post_thumbnail_url() : bboss_search_get_post_thumbnail_default( get_post_type(), 'icon' );
 			$restricted_post_data['post_content']   = make_clickable( get_the_excerpt() );
 			$restricted_post_data['has_thumb']      = (bool) get_the_post_thumbnail_url();
 		} elseif ( 'post' === $type ) {
 			$restricted_post_data['post_class']     = 'has-no-access';
-			$restricted_post_data['post_thumbnail'] = bp_search_get_post_thumbnail_default( get_post_type(), 'icon' );
+			$restricted_post_data['post_thumbnail'] = bboss_search_get_post_thumbnail_default( get_post_type(), 'icon' );
 			$restricted_post_data['post_content']   = pmpro_membership_content_filter( apply_filters( 'bp_post_restricted_message', 'This post has restricted content' ), false );
 			$restricted_post_data['has_thumb']      = false;
 		}
@@ -684,18 +689,18 @@ function bp_search_is_post_restricted( $post_id = 0, $user_id = 0, $type = 'post
 		// Check for the forums.
 		if ( $user_has_post_access && 'forum' === $type ) {
 			$restricted_post_data['post_class']     = 'has-access';
-			$restricted_post_data['post_thumbnail'] = bbp_get_forum_thumbnail_src( $post_id ) ? bbp_get_forum_thumbnail_src( $post_id ) : bp_search_get_post_thumbnail_default( get_post_type(), 'icon' );
-			$restricted_post_data['post_content']   = wp_trim_words( bbp_get_forum_content( $post_id ), 30, '...' );
-			$restricted_post_data['has_thumb']      = (bool) bbp_get_forum_thumbnail_src( $post_id );
+			$restricted_post_data['post_thumbnail'] = bboss_bbp_get_forum_thumbnail_src( $post_id ) ? bboss_bbp_get_forum_thumbnail_src( $post_id ) : bboss_search_get_post_thumbnail_default( get_post_type(), 'icon' );
+			$restricted_post_data['post_content']   = wp_trim_words( bboss_bbp_get_forum_content( $post_id ), 30, '...' );
+			$restricted_post_data['has_thumb']      = (bool) bboss_bbp_get_forum_thumbnail_src( $post_id );
 		} elseif ( 'forum' === $type ) {
 			$restricted_post_data['post_class']     = 'has-no-access';
-			$restricted_post_data['post_thumbnail'] = bp_search_get_post_thumbnail_default( get_post_type(), 'icon' );
+			$restricted_post_data['post_thumbnail'] = bboss_search_get_post_thumbnail_default( get_post_type(), 'icon' );
 			$restricted_post_data['post_content']   = pmpro_membership_content_filter( apply_filters( 'bp_post_restricted_message', 'This post has restricted content' ), false );
 			$restricted_post_data['has_thumb']      = false;
 		}
 	} else {
 		$restricted_post_data['post_class']     = 'has-access';
-		$restricted_post_data['post_thumbnail'] = get_the_post_thumbnail_url() ? get_the_post_thumbnail_url() : bp_search_get_post_thumbnail_default( get_post_type(), 'icon' );
+		$restricted_post_data['post_thumbnail'] = get_the_post_thumbnail_url() ? get_the_post_thumbnail_url() : bboss_search_get_post_thumbnail_default( get_post_type(), 'icon' );
 		$restricted_post_data['post_content']   = make_clickable( get_the_excerpt() );
 		$restricted_post_data['has_thumb']      = (bool) get_the_post_thumbnail_url();
 	}
@@ -713,7 +718,7 @@ function bp_search_is_post_restricted( $post_id = 0, $user_id = 0, $type = 'post
  *
  * @return array Array of search string.
  */
-function bb_search_get_search_keywords_by_term( $search_term = '', $post_type = '' ) {
+function bboss_search_get_search_keywords_by_term( $search_term = '', $post_type = '' ) {
 	static $cache_search_terms = array();
 
 	$search_term_array = array();
@@ -731,7 +736,7 @@ function bb_search_get_search_keywords_by_term( $search_term = '', $post_type = 
 	$search_term = str_replace( array( "\r", "\n" ), '', stripslashes( $search_term ) );
 
 	if ( preg_match_all( '/".*?("|$)|((?<=[\t ",+])|^)[^\t ",+]+/', $search_term, $matches ) ) {
-		$search_term_array = bb_search_parse_search_terms( $matches[0] );
+		$search_term_array = bboss_search_parse_search_terms( $matches[0] );
 
 		// If the search string has only short terms or stopwords, or is 10+ terms long, match it as sentence.
 		if ( empty( $search_term_array ) || count( $search_term_array ) > 9 ) {
@@ -756,7 +761,7 @@ function bb_search_get_search_keywords_by_term( $search_term = '', $post_type = 
  *
  * @return array Array contains validate search string.
  */
-function bb_search_parse_search_terms( $terms = array() ) {
+function bboss_search_parse_search_terms( $terms = array() ) {
 	$strtolower = function_exists( 'mb_strtolower' ) ? 'mb_strtolower' : 'strtolower';
 	$checked    = array();
 
@@ -764,7 +769,7 @@ function bb_search_parse_search_terms( $terms = array() ) {
 		return $checked;
 	}
 
-	$stopwords = bb_search_get_search_stopwords();
+	$stopwords = bboss_search_get_search_stopwords();
 
 	foreach ( $terms as $term ) {
 		// Keep before/after spaces when term is for exact match.
@@ -796,7 +801,7 @@ function bb_search_parse_search_terms( $terms = array() ) {
  *
  * @return array Stopwords.
  */
-function bb_search_get_search_stopwords() {
+function bboss_search_get_search_stopwords() {
 	static $stoped_keywords = array();
 
 	if ( ! empty( $stoped_keywords ) ) {
@@ -813,7 +818,7 @@ function bb_search_get_search_stopwords() {
 		_x(
 			'about,an,are,as,at,be,by,com,for,from,how,in,is,it,of,on,or,that,the,this,to,was,what,when,where,who,will,with,www',
 			'Comma-separated list of search stopwords in your language',
-			'buddyboss'
+			'buddyboss-platform'
 		)
 	);
 
@@ -836,7 +841,7 @@ function bb_search_get_search_stopwords() {
  *
  * @return mixed
  */
-function bb_network_search_allowed_tags( $tags ) {
+function bboss_network_search_allowed_tags( $tags ) {
 	unset( $tags['blockquote'], $tags['img'], $tags['code'], $tags['ul'], $tags['ol'], $tags['li'], $tags['pre'], $tags['div'], $tags['span'] );
 
 	return $tags;
