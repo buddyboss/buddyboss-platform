@@ -1130,6 +1130,12 @@
 
 .bb-rl-group-manage-form .bb-rl-search-group-members-wrapper {
   position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.bb-rl-group-manage-form .bb-rl-search-group-members-wrapper input[type="search"] {
+  padding-left: var(--bb-rl-space-400);
 }
 
 .bb-rl-group-manage-form .bb-rl-search-group-members-wrapper::before {
@@ -1151,6 +1157,16 @@
 
 .bb-rl-group-manage-form .members-search .search-form_reset {
   display: none;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  line-height: 1;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: var(--bb-rl-space-100);
+  opacity: 0.4;
+  cursor: pointer;
 }
 
 .bb-rl-group-manage-form input[type="search"] {
