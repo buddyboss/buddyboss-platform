@@ -336,8 +336,12 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
+		// 'members' is in the default registered component list, so it is counted
+		// by bp_notifications_get_unread_notification_count(). 'messages' is not:
+		// it is filtered out of bp_notifications_get_registered_components() when
+		// message notifications are hidden.
 		self::factory()->notification->create( array(
-			'component_name'    => 'messages',
+			'component_name'    => 'members',
 			'component_action'  => 'new_message',
 			'item_id'           => 99,
 			'user_id'           => $u2,
@@ -346,10 +350,13 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		// prime cache
-		bp_notifications_get_unread_notification_count( $u2 );
+		$primed = bp_notifications_get_unread_notification_count( $u2 );
+
+		// just to be sure...
+		$this->assertEquals( 1, $primed, 'Cache count should be 1 before marking as read.' );
 
 		// mark the created notification as read
-		bp_notifications_mark_notifications_by_item_id( $u2, 99, 'messages', 'new_message', $u1 );
+		bp_notifications_mark_notifications_by_item_id( $u2, 99, 'members', 'new_message', $u1 );
 
 		// now grab the updated notification count
 		$n = bp_notifications_get_unread_notification_count( $u2 );
