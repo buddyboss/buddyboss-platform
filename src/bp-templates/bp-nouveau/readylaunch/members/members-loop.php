@@ -88,9 +88,9 @@ if ( ! empty( $_GET['bb-rl-scope'] ) ) {
 			}
 
 			// Member joined data.
-			add_filter( 'bb_get_member_joined_date', 'BB_Readylaunch::bb_rl_modify_member_joined_date', 10, 2 );
+			add_filter( 'bb_get_member_joined_date', 'BB_Readylaunch::bb_rl_modify_member_joined_date', 10, 3 );
 			$member_joined_date = bb_get_member_joined_date( $bp_get_member_user_id );
-			remove_filter( 'bb_get_member_joined_date', 'BB_Readylaunch::bb_rl_modify_member_joined_date', 10, 2 );
+			remove_filter( 'bb_get_member_joined_date', 'BB_Readylaunch::bb_rl_modify_member_joined_date', 10, 3 );
 
 			// Member last activity.
 			$member_last_activity = bp_get_last_activity( $bp_get_member_user_id );
