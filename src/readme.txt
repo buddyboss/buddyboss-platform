@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.7.0
+Stable tag: 3.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,6 @@ The full source code, including the uncompressed JavaScript and SCSS sources and
 - [Tutorials](https://www.buddyboss.com/resources/docs/)
 - [Code Reference](https://www.buddyboss.com/resources/reference/)
 - [Github](https://github.com/buddyboss/buddyboss-platform/wiki)
-- [Roadmap](https://www.buddyboss.com/roadmap/)
 
 == Requirements ==
 
@@ -97,6 +96,18 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * **Who provides it:** BuddyBoss. [Terms](https://www.buddyboss.com/terms-and-conditions/), [Privacy Policy](https://www.buddyboss.com/privacy-policy/).
 
 == Changelog ==
+
+= 3.7.1 =
+* Bug: Activity - Fixed a slowdown caused by activity post drafts with pasted images taking up too much storage
+* Bug: Activity - Fixed an issue where long links in activity post titles did not wrap on mobile and desktop
+* Bug: Core - Fixed a broken Roadmap link in the plugin description
+* Bug: Core - Fixed an issue where some scheduled background cleanup tasks for media, videos and documents were not running
+* Bug: Core - Fixed an issue where the settings page layout did not expand to full width when a meta box was visible
+* Bug: Elementor - Fixed an issue where the activity feed layout broke after deleting media in the Elementor activity widget
+* Bug: Groups - Fixed a security issue related to comments on private and hidden group posts
+* Bug: Media - Fixed an issue where saving a photo or video description caused an unnecessary failed request in the background
+* Bug: Media - Fixed an issue where video uploads over 100 MB failed in forum discussions on sites behind Cloudflare
+* Bug: ReadyLaunch - Fixed a display issue with the radio buttons in the ReadyLaunch onboarding wizard
 
 = 3.7.0 =
 * Enhancement: Core - Moved Videos, Documents, Animated GIFs and Group Subscription to the Addons plugin, with existing customers keeping access

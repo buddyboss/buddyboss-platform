@@ -708,7 +708,8 @@ function bb_get_member_invitation_query() {
 				array(
 					'taxonomy' => bp_get_email_tax_type(),
 					'field'    => 'term_id',
-					'terms'    => $term->term_id,
+					// The email type term is missing when the emails were never installed or were deleted.
+					'terms'    => ! empty( $term->term_id ) ? $term->term_id : 0,
 				),
 			),
 		);
