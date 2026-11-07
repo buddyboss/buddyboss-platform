@@ -1849,27 +1849,7 @@ window.bp = window.bp || {};
 					$wrap.data( 'bb-list-layout', layout );
 					bp.Nouveau.setListLayout( $wrap, layout );
 
-					// The save has its own request: sharing bp.Nouveau.ajax_request let a page or
-					// Load More request abort the save, and let this click abort that request.
-					if ( bp.Nouveau.layout_request ) {
-						bp.Nouveau.layout_request.abort();
-					}
-
-					bp.Nouveau.layout_request = $.ajax(
-						{
-							method: 'POST',
-							url: bbRLAjaxUrl,
-							data: {
-								action: 'buddyboss_directory_save_layout',
-								object: object,
-								option: 'bb_layout_view',
-								nonce: bbRlNonce[ object ],
-								type: layout
-							},
-							success: function () {
-							}
-						}
-					);
+					bp.Nouveau.saveListLayout( object, layout );
 				}
 			);
 
@@ -1900,6 +1880,57 @@ window.bp = window.bp || {};
 			$wrap.find( '.bb-rl-grid-filters .layout-view' ).removeClass( 'active' ).filter( '.layout-' + layout + '-view' ).addClass( 'active' );
 			// Server-rendered lists carry 'list' or 'grid', so swap both rather than toggling 'grid'.
 			$wrap.find( '.bp-list' ).removeClass( 'grid list' ).addClass( layout );
+		},
+
+		/**
+		 * Save the grid/list choice, one request at a time.
+		 *
+		 * The server stores the choice with a read-modify-write of the member's bb_layout_view
+		 * meta (or cookie), so two saves running together can finish in either order and leave the
+		 * earlier click stored; aborting the first one in the browser does not stop it on the server.
+		 * While a save runs, a newer choice waits and only the latest one is sent after it.
+		 * The save also has its own request: sharing bp.Nouveau.ajax_request let a page or Load More
+		 * request abort it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} object Layout object (members, groups...).
+		 * @param {string} layout 'grid' or 'list'.
+		 */
+		saveListLayout: function ( object, layout ) {
+			var self = this;
+
+			self.layout_queue = self.layout_queue || {};
+
+			if ( self.layout_request && 'pending' === self.layout_request.state() ) {
+				self.layout_queue[ object ] = layout;
+				return;
+			}
+
+			self.layout_request = $.ajax(
+				{
+					method: 'POST',
+					url: bbRLAjaxUrl,
+					data: {
+						action: 'buddyboss_directory_save_layout',
+						object: object,
+						option: 'bb_layout_view',
+						nonce: bbRlNonce[ object ],
+						type: layout
+					}
+				}
+			).always(
+				function () {
+					var next = Object.keys( self.layout_queue )[ 0 ];
+
+					if ( next ) {
+						var nextLayout = self.layout_queue[ next ];
+
+						delete self.layout_queue[ next ];
+						self.saveListLayout( next, nextLayout );
+					}
+				}
+			);
 		},
 
 		sendInvitesRevokeAccess: function () {
@@ -2847,6 +2878,8 @@ window.bp = window.bp || {};
 			var searchFilter = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' );
 			if ( searchFilter.length ) {
 				search_terms = searchFilter.val();
+			} else {
+				search_terms = self.getListSearchTerms( $( event.delegateTarget ), object, search_terms );
 			}
 
 			var queryData = {
@@ -2995,6 +3028,57 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Search terms to keep when a list without its own search box changes page.
+		 *
+		 * The list's last (re)load knows its search. A Members/Groups list the server rendered with
+		 * the page was searched from the URL (members_search / groups_search) - e.g. the Members
+		 * directory with Advanced Profile Search, which replaces the search box.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} $list    The [data-bp-list] element.
+		 * @param {string} object   List object (data-bp-list value).
+		 * @param {*}      fallback Returned when the list has no known search.
+		 * @return {*} Search terms.
+		 */
+		getListSearchTerms: function ( $list, object, fallback ) {
+			var query = $list.data( 'bp-list-query' );
+
+			if ( query && undefined !== query.search_terms && null !== query.search_terms ) {
+				return query.search_terms;
+			}
+
+			if ( 'members' === object || 'groups' === object ) {
+				return this.getUrlSearchTerms( object ) || fallback;
+			}
+
+			return fallback;
+		},
+
+		/**
+		 * Search terms a Members/Groups list was opened with from the URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} object List object (data-bp-list value).
+		 * @return {string} Decoded members_search / groups_search, or '' when the URL has none.
+		 */
+		getUrlSearchTerms: function ( object ) {
+			var searchArg = ( 'groups' === object || 'group_subgroups' === object ? 'groups' : 'members' ) + '_search',
+				urlSearch = this.querystring && this.querystring[ searchArg ];
+
+			if ( ! urlSearch ) {
+				return '';
+			}
+
+			try {
+				return decodeURIComponent( urlSearch.replace( /\+/g, ' ' ) );
+			} catch ( e ) {
+				return urlSearch;
+			}
+		},
+
+		/**
 		 * Read the query of a Members/Groups list from the page, for a list that the server
 		 * rendered with the page and that has not been reloaded since.
 		 *
@@ -3032,15 +3116,10 @@ window.bp = window.bp || {};
 			// The server reads it from the URL (members_search / groups_search), and initObjects()
 			// only copies that into the box with .val(), so read the URL first; the box's rendered
 			// value covers a template that prints the search itself.
-			var searchArg = ( 'groups' === object || 'group_subgroups' === object ? 'groups' : 'members' ) + '_search',
-				urlSearch = this.querystring && this.querystring[ searchArg ];
+			var urlSearch = this.getUrlSearchTerms( object );
 
 			if ( urlSearch ) {
-				try {
-					query.search_terms = decodeURIComponent( urlSearch.replace( /\+/g, ' ' ) );
-				} catch ( e ) {
-					query.search_terms = urlSearch;
-				}
+				query.search_terms = urlSearch;
 			} else if ( $search.length ) {
 				query.search_terms = $search.prop( 'defaultValue' ) || '';
 			}
