@@ -3911,8 +3911,14 @@ function bp_member_type_shortcode_callback( $atts ) {
 		buddypress()->is_directory        = true;
 	}
 
+	// The shortcode marks its page as a members directory, but Members & Groups Loading only
+	// applies to the real directory and the profile/group lists, so the shortcode keeps pagination.
+	add_filter( 'bb_is_list_autoload_active', '__return_false', 9999 );
+
 	// Get a BuddyPress members-loop template part for display in a theme.
 	bp_get_template_part( 'members/members-loop' );
+
+	remove_filter( 'bb_is_list_autoload_active', '__return_false', 9999 );
 
 	echo '</div> <!-- #members-dir-list -->';
 	echo '</div><!-- .members-directory-content -->';
