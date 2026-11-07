@@ -54,7 +54,8 @@
 		}
 	}
 
-	// Infinite scroll: no pagination follows the list, so keep the last row off the page bottom.
+	// Infinite scroll: no pagination follows the list,
+	// so keep the last row off the page bottom.
 	&.bb-list-autoload {
 		margin-bottom: var(--bb-rl-space-400);
 	}
