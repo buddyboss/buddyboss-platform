@@ -799,8 +799,12 @@ window.bp = window.bp || {};
 					}
 
 					if ( ! _.isUndefined( response.data.layout ) ) {
+						// A layout picked on this page wins over the saved one the server answered
+						// with: the save may still be on its way (see switchGridList).
+						var listLayout = $( data.target ).closest( '.buddypress-wrap' ).data( 'bb-list-layout' ) || response.data.layout;
+
 						$( '.layout-view' ).removeClass( 'active' );
-						$( '.layout-' + response.data.layout + '-view' ).addClass( 'active' );
+						$( '.layout-' + listLayout + '-view' ).addClass( 'active' );
 					}
 
 					var $buddypressElem = $( 'body.group-members.members.buddypress' );
@@ -1822,26 +1826,20 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					if ( 'undefined' !== typeof bp.Nouveau.ajax_request && null !== bp.Nouveau.ajax_request && false !== bp.Nouveau.ajax_request ) {
-						bp.Nouveau.ajax_request.abort();
+					var layout = $this.hasClass( 'layout-list-view' ) ? 'list' : 'grid',
+						$wrap  = $this.parents( '.buddypress-wrap' );
 
-						$( '.bb-rl-component-navigation [data-bp-object]' ).each(
-							function () {
-								$( this ).removeClass( 'loading' );
-							}
-						);
+					// Remember the choice so a list (re)loaded before it is saved keeps it (see below).
+					$wrap.data( 'bb-list-layout', layout );
+					bp.Nouveau.setListLayout( $wrap, layout );
+
+					// The save has its own request: sharing bp.Nouveau.ajax_request let a page or
+					// Load More request abort the save, and let this click abort that request.
+					if ( bp.Nouveau.layout_request ) {
+						bp.Nouveau.layout_request.abort();
 					}
 
-					var layout = $this.hasClass( 'layout-list-view' ) ? 'list' : 'grid';
-					gridfilters.find( '.layout-view' ).removeClass( 'active' );
-					$this.addClass( 'active' );
-					if ( 'list' === layout ) {
-						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
-					} else {
-						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).addClass( 'grid' );
-					}
-
-					bp.Nouveau.ajax_request = $.ajax(
+					bp.Nouveau.layout_request = $.ajax(
 						{
 							method: 'POST',
 							url: bbRLAjaxUrl,
@@ -1858,6 +1856,34 @@ window.bp = window.bp || {};
 					);
 				}
 			);
+
+			// The server renders a list in the saved layout, so a page requested while the choice is
+			// still being saved comes back in the previous one. Put the member's choice back.
+			$( document ).on(
+				'bp_ajax_request',
+				function ( event ) {
+					var $wrap  = $( event.target ).closest( '.buddypress-wrap' ),
+						layout = $wrap.data( 'bb-list-layout' );
+
+					if ( layout ) {
+						bp.Nouveau.setListLayout( $wrap, layout );
+					}
+				}
+			);
+		},
+
+		/**
+		 * Show the lists and the grid/list switch of a wrap in the given layout.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} $wrap  The .buddypress-wrap holding the lists.
+		 * @param {string} layout 'grid' or 'list'.
+		 */
+		setListLayout: function ( $wrap, layout ) {
+			$wrap.find( '.bb-rl-grid-filters .layout-view' ).removeClass( 'active' ).filter( '.layout-' + layout + '-view' ).addClass( 'active' );
+			// Server-rendered lists carry 'list' or 'grid', so swap both rather than toggling 'grid'.
+			$wrap.find( '.bp-list' ).removeClass( 'grid list' ).addClass( layout );
 		},
 
 		sendInvitesRevokeAccess: function () {
