@@ -771,9 +771,25 @@ window.bp = window.bp || {};
 				delete postdata.continue_list;
 			}
 
-			return this.ajax( postdata, data.object ).done(
+			var request = this.ajax( postdata, data.object ),
+				// While a list reloads, its Load More still continues the old query: a click or a
+				// scroll autoload would abort the reload (bp.Nouveau.ajax() aborts the pending
+				// request) and append the old query's next page. Park the button until the reload
+				// replaces it, and hand it back if the reload does not (a newer reload re-parks it).
+				$parkedLoadMore = 'reset' === data.method ? $( '#buddypress [data-bp-list="' + listObject + '"] li.load-more' ) : $(),
+				unparkLoadMore  = function () {
+					if ( $parkedLoadMore.data( 'bp-parked-by' ) === request ) {
+						$parkedLoadMore.removeData( 'bp-parked-by' );
+					}
+				};
+
+			$parkedLoadMore.data( 'bp-parked-by', request );
+			request.fail( unparkLoadMore );
+
+			return request.done(
 				function ( response ) {
 					if ( false === response.success || _.isUndefined( response.data ) ) {
+						unparkLoadMore();
 						return;
 					}
 
@@ -2877,6 +2893,11 @@ window.bp = window.bp || {};
 		loadMoreItems: function ( event ) {
 			event.preventDefault();
 
+			// The list is reloading with a new query (see objectRequest).
+			if ( $( event.currentTarget ).closest( 'li.load-more' ).data( 'bp-parked-by' ) ) {
+				return;
+			}
+
 			var self        = event.data,
 				$loadMore   = $( event.currentTarget ).closest( 'li.load-more' ),
 				$list       = $loadMore.closest( '[data-bp-list]' ),
@@ -3048,7 +3069,8 @@ window.bp = window.bp || {};
 			$loadMoreBtns.each( function () {
 				var $btn = $( this );
 
-				if ( $btn.data( 'bp-autoloaded' ) ) {
+				// Already triggered, or parked while the list reloads (see objectRequest).
+				if ( $btn.data( 'bp-autoloaded' ) || $btn.data( 'bp-parked-by' ) ) {
 					return;
 				}
 

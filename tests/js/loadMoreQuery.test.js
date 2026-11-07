@@ -75,12 +75,23 @@ function boot( bundle, html ) {
 	}
 
 	const posts = [];
+	// A reload answers with the list markup, as the server does, and is injected at once (no fade),
+	// so the Load More clicked afterwards is the one the reload rendered.
+	const listMarkup = document.querySelector( '[data-bp-list]' )
+		? document.querySelector( '[data-bp-list]' ).innerHTML
+		: '';
+	window.jQuery.fx.off = true;
 	window.bp.Nouveau.objectNavParent = '#buddypress';
 	window.bp.Nouveau.ajax = ( postData ) => {
 		posts.push( window.jQuery.extend( {}, postData ) );
 		return window.jQuery
 			.Deferred()
-			.resolve( { success: true, data: { contents: '' } } )
+			.resolve( {
+				success: true,
+				data: {
+					contents: 'reset' === postData.method ? listMarkup : '',
+				},
+			} )
 			.promise();
 	};
 	return posts;
@@ -369,4 +380,71 @@ describeWithLibs.each( BUNDLES )( 'Load More query (%s)', ( label, bundle ) => {
 			expect( posts[ 1 ] ).toMatchObject( { page: 2, method: 'append' } );
 		}
 	);
+
+	describe( 'a Load More while the list reloads with a new query', () => {
+		let posts, pending;
+
+		// Start a search reload whose request stays pending until the test settles it.
+		const startReload = () => {
+			window.bp.Nouveau.objectRequest( {
+				object: 'members',
+				scope: 'all',
+				search_terms: 'zed',
+				page: 1,
+				method: 'reset',
+			} );
+		};
+
+		beforeEach( () => {
+			posts = [];
+			pending = [];
+			boot( bundle, LIST( 'members', '?upage=2' ) );
+			window.bp.Nouveau.ajax = ( postData ) => {
+				posts.push( window.jQuery.extend( {}, postData ) );
+				const request = window.jQuery.Deferred();
+				pending.push( request );
+				return request.promise();
+			};
+			startReload();
+		} );
+
+		test( 'is ignored, so the reload is not aborted for the old query\'s next page', () => {
+			clickLoadMore();
+
+			expect( posts ).toHaveLength( 1 );
+			expect( posts[ 0 ] ).toMatchObject( {
+				method: 'reset',
+				search_terms: 'zed',
+			} );
+		} );
+
+		test.each( [
+			[ 'fails', ( request ) => request.reject() ],
+			[
+				'answers with an error',
+				( request ) => request.resolve( { success: false } ),
+			],
+		] )( 'is handed back when the reload %s', ( _case, settle ) => {
+			settle( pending[ 0 ] );
+
+			clickLoadMore();
+
+			expect( posts ).toHaveLength( 2 );
+			expect( posts[ 1 ] ).toMatchObject( { method: 'append', page: 2 } );
+		} );
+
+		test( 'stays parked for a newer reload when an older one is aborted', () => {
+			startReload();
+			// bp.Nouveau.ajax() aborts the first reload when the second starts.
+			pending[ 0 ].reject();
+
+			clickLoadMore();
+
+			expect( posts ).toHaveLength( 2 );
+			expect( posts.map( ( post ) => post.method ) ).toEqual( [
+				'reset',
+				'reset',
+			] );
+		} );
+	} );
 } );
