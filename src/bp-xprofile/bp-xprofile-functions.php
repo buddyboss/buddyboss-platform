@@ -845,8 +845,13 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 	// that omits it serves whichever context asked second the first one's answer.
 	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean . '_' . $query->uid_name . '_' . $query->uid_table . '_' . bb_core_get_viewer_user_id() . '_' . bp_core_display_name_format() );
 
+	// Only the search clause is cached. The rest of $sql (type, scope, per_page, page) belongs to
+	// the query being run, so reusing it would hand a later query with the same search terms the
+	// first one's LIMIT - e.g. the per_page=1 member count run before the directory loop.
 	if ( isset( $cache[ $cache_key ] ) ) {
-		return $cache[ $cache_key ];
+		$sql['where']['search'] = $cache[ $cache_key ];
+
+		return $sql;
 	}
 
 	if ( $query->query_vars['search_wildcard'] === 'left' ) {
@@ -904,7 +909,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		$sql['where']['search'] = " ( {$search_profile} OR {$search_core} )";
 	}
 
-	$cache[ $cache_key ] = $sql;
+	$cache[ $cache_key ] = $sql['where']['search'];
 
 	return $sql;
 }
