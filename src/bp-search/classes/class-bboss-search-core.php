@@ -30,10 +30,10 @@ if ( ! class_exists( 'BBoss_Search_Core' ) ) :
 		 */
 		private $main_includes = array(
 			// Core
-			'bp-search-functions',
-			'bp-search-template',
-			'bp-search-filters',
-			'bp-search-settings',
+			'bboss-search-functions',
+			'bboss-search-template',
+			'bboss-search-filters',
+			'bboss-search-settings',
 			'classes/class-bboss-search',
 			'plugins/search-cpt/index',
 		);
