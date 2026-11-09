@@ -10,6 +10,10 @@
  * Domain Path: /src/languages
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * BuddyBoss Platform began as a fork of BuddyPress (https://buddypress.org/) and
+ * bbPress (https://bbpress.org/) and still contains code from both, released under
+ * the GPL. Copyright for that code remains with its original authors.
  */
 
 // Exit if accessed directly.
