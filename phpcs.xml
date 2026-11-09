@@ -13,7 +13,6 @@
 	<exclude-pattern>*/bp-integrations/*</exclude-pattern>
 	<exclude-pattern>*/bp-core/classes/class-bp-php-mailer.php</exclude-pattern>
 	<exclude-pattern>*/bp-core/classes/class-bp-email-tokens.php</exclude-pattern>
-	<exclude-pattern>*/js/autocomplete/*</exclude-pattern>
 	<exclude-pattern>*/js-templates/*</exclude-pattern>
 	<exclude-pattern>awpcp_ad_listing-ajax.php</exclude-pattern>
 	<exclude-pattern>*/cli/*</exclude-pattern>

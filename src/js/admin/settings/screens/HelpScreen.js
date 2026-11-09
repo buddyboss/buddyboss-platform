@@ -202,13 +202,38 @@ export function HelpScreen( { onNavigate } ) {
 			scrollToFooter();
 			return;
 		}
-		// Widget unavailable. If chat.js failed to load (CSP / air-gapped /
-		// network), don't leave the button doing nothing — fall back to the
-		// support page. If it's merely still loading, this is a harmless no-op.
-		if ( window.bbDocsbotFailed ) {
-			window.open( 'https://buddyboss.com/my-account/?tab=support', '_blank', 'noopener,noreferrer' );
-		}
+		// Not loaded yet: the widget is fetched from docsbot.ai only now, on
+		// this first click (readme: External services, "on click"), then opened.
+		openChatWhenReady();
 	}, [] );
+
+	/**
+	 * Load the DocsBot widget on demand and open the chat, falling back to the
+	 * support page when chat.js cannot be loaded (CSP / air-gapped / network).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @returns {void}
+	 */
+	function openChatWhenReady() {
+		var fallback = function () {
+			window.open( 'https://buddyboss.com/my-account/?tab=support', '_blank', 'noopener,noreferrer' );
+		};
+		if ( 'function' !== typeof window.bbDocsbotEnsure ) {
+			if ( window.bbDocsbotFailed ) {
+				fallback();
+			}
+			return;
+		}
+		window.bbDocsbotEnsure()
+			.then( function () {
+				if ( window.DocsBotAI && 'function' === typeof window.DocsBotAI.open ) {
+					window.DocsBotAI.open();
+					scrollToFooter();
+				}
+			} )
+			.catch( fallback );
+	}
 
 	/**
 	 * Handle the "Ask Buddy" CTA: scroll down to the help footer, then open the
@@ -228,11 +253,8 @@ export function HelpScreen( { onNavigate } ) {
 			scrollToFooter();
 			return;
 		}
-		// Same fallback as toggleChatbot: open the support page if the chat
-		// widget failed to load, rather than silently doing nothing.
-		if ( window.bbDocsbotFailed ) {
-			window.open( 'https://buddyboss.com/my-account/?tab=support', '_blank', 'noopener,noreferrer' );
-		}
+		// Same as toggleChatbot: load on this click, then open.
+		openChatWhenReady();
 	}, [] );
 
 	// Keep `chatOpen` in sync with the widget's actual state. DocsBot exposes
@@ -290,10 +312,18 @@ export function HelpScreen( { onNavigate } ) {
 	var openKb = kb.open;
 	var closeKb = kb.close;
 
+	// Support Access ships only in the buddyboss.com build (the server sets the
+	// flag when its class exists); without it the card, its route and the
+	// state request below are skipped.
+	var supportAccessAvailable = !! ( window.bbAdminData && window.bbAdminData.supportAccessAvailable );
+
 	// Load the real Support Access state on mount so the "Support Access" card
 	// badge reflects the live toggle value from SupportAccessScreen.
 	useEffect( function () {
 		var cancelled = false;
+		if ( ! supportAccessAvailable ) {
+			return undefined;
+		}
 		ajaxFetch( 'bb_admin_support_access_get' )
 			.then( function ( res ) {
 				if ( cancelled ) {
@@ -675,6 +705,7 @@ export function HelpScreen( { onNavigate } ) {
 						</a>
 					</article>
 
+					{ supportAccessAvailable && (
 					<article className="bb-admin-help-card">
 						<i
 							className="bb-icons-rl bb-icons-rl-key bb-admin-help-card__icon"
@@ -721,6 +752,7 @@ export function HelpScreen( { onNavigate } ) {
 							{ __( 'Open Access', 'buddyboss' ) }
 						</Button>
 					</article>
+					) }
 				</div>
 
 				<section

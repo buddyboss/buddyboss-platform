@@ -49,9 +49,12 @@ function bb_admin_settings_init() {
 	// self-boots via BB_Support_Access::instance() at the bottom of its file,
 	// registering the front-end `init` login, the expiry cron, and the admin
 	// AJAX handlers.
+	// @bbwt-com-start support-access
+	// Support Access ships only in the buddyboss.com build.
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php';
 	}
+	// @bbwt-com-end support-access
 
 	// Admin/AJAX-only: AJAX handlers, meta field registry, settings page, feature settings
 	// (panels, sections, fields), and icon registry. Skip on frontend for performance —
