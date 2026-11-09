@@ -2507,7 +2507,7 @@ function bboss__bp_strip_spans_from_title( $title_part = '' ) {
  * @return string
  */
 function bboss_core_get_minified_asset_suffix() {
-	$ext = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	$ext = '.min';
 	return $ext;
 }
 
