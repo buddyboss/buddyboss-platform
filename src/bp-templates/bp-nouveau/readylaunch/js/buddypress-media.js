@@ -3954,6 +3954,14 @@ window.bp = window.bp || {};
 				return; // prevent user to add not supported characters.
 			}
 
+			// Block an empty title before sending the request.
+			if ( '' === document_name_val ) {
+				document_edit.addClass( 'error' );
+				$errorBox.text( bbRlMedia.i18n_strings.title_required ).show();
+				event.preventDefault();
+				return;
+			}
+
 			// If nothing changed, just close the modal.
 			if ( ! nameChanged && ! privacyChanged ) {
 				$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );

@@ -4615,6 +4615,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				wp_send_json_error( $response );
 			}
 
+			// A rename needs a title; don't report success when nothing is renamed.
+			if ( $update_name && '' === trim( (string) $name ) ) {
+				$response['feedback'] = esc_html__( 'Please enter a title.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+
 			$result = array(
 				'document_id' => $document_id,
 				'type'        => $type,
@@ -4629,7 +4635,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 
 				// Update name if requested.
-				if ( $update_name && ! empty( $name ) ) {
+				if ( $update_name ) {
 					$renamed = bp_document_rename_file( $document_id, $attachment_document_id, $name );
 					if ( isset( $renamed['document_id'] ) && $renamed['document_id'] > 0 ) {
 						$result['name']    = $name;
@@ -4696,7 +4702,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 
 				// Update name if requested.
-				if ( $update_name && ! empty( $name ) ) {
+				if ( $update_name ) {
 					$renamed = bp_document_rename_folder( $document_id, $name );
 					if ( $renamed > 0 ) {
 						$result['name']    = $name;
