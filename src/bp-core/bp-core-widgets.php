@@ -1,50 +1,6 @@
 <?php
-/**
- * BuddyBoss Core Component Widgets.
- *
- * @package BuddyBoss\Core
- * @since BuddyPress 1.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Register bp-core widgets.
- *
- * @since BuddyPress 1.0.0
- */
-function bboss_core_register_widgets() {
-	add_action(
-		'widgets_init',
-		function() {
-			register_widget( 'BBoss_Core_Login_Widget' );
-		}
-	);
-	if ( is_multisite() ) {
-		add_action(
-			'widgets_init',
-			function() {
-				register_widget( 'BBoss_Core_Network_Posts_Widget' );
-			}
-		);
-	}
-	if ( function_exists( 'bboss_get_following_ids' ) && class_exists( 'BBoss_Core_Follow_Following_Widget' ) ) {
-		add_action(
-			'widgets_init',
-			function() {
-				register_widget( 'BBoss_Core_Follow_Following_Widget' );
-			}
-		);
-	}
-
-	if ( function_exists( 'bboss_get_following_ids' ) && class_exists( 'BBoss_Core_Follow_Follower_Widget' ) ) {
-		add_action(
-			'widgets_init',
-			function() {
-				register_widget( 'BBoss_Core_Follow_Follower_Widget' );
-			}
-		);
-	}
-}
-add_action( 'bp_register_widgets', 'bp_core_register_widgets' );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-core-widgets.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-core-widgets.php';
+// @bbwt-com-end compat-layer

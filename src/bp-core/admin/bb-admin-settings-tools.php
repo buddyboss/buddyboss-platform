@@ -232,7 +232,7 @@ function bboss_admin_settings_localize_tools_repair_config() {
 	// surface the AJAX nonces to lower-privileged users. Using BuddyBoss's
 	// own `bp_current_user_can( 'bp_moderate' )` matches the adjacent
 	// admin code (this file's localize block above, `bb-admin-settings-page.php:268`,
-	// `bp_admin_repair_tools_wrapper_function()` at `bp-core-admin-tools.php:992`).
+	// `bp_admin_repair_tools_wrapper_function()` at `bboss-core-admin-tools.php:992`).
 	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return;
 	}
@@ -247,7 +247,7 @@ function bboss_admin_settings_localize_tools_repair_config() {
 	// loaded when the user is on `?page=bp-tools` / `?page=bbp-repair`. The
 	// `bp_admin_repair_list()` and `bbp_admin_repair_list()` functions live
 	// inside these files (locked-BC, third-party-extensible).
-	$bp_tools_file  = bboss()->plugin_dir . 'bp-core/admin/bp-core-admin-tools.php';
+	$bp_tools_file  = bboss()->plugin_dir . 'bp-core/admin/bboss-core-admin-tools.php';
 	$bbp_tools_file = bboss()->plugin_dir . 'bp-forums/admin/tools.php';
 	if ( ! function_exists( 'bboss_admin_repair_list' ) && file_exists( $bp_tools_file ) ) {
 		require_once $bp_tools_file;

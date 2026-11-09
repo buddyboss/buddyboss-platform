@@ -20,7 +20,7 @@ function bboss_ps_escaped_form_data47( $version ) {
 	$fields = bboss_ps_parse_request( bboss_ps_get_request( 'form', $form ) );
 	wp_register_script(
 		'bp-ps-template',
-		bboss()->plugin_url . 'bp-core/profile-search/bp-ps-template.js',
+		bboss()->plugin_url . 'bp-core/profile-search/bboss-ps-template.js',
 		array(),
 		bboss_get_version()
 	);

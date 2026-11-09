@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Search Settings 2.0 deprecated functions and hook compatibility.
-// Legacy settings API functions were removed from bp-search-settings.php.
+// Legacy settings API functions were removed from bboss-search-settings.php.
 // Search settings are now managed by Settings 2.0 (bb-admin-settings-search.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -459,7 +459,7 @@ add_action(
 // ──────────────────────────────────────────────────────────────────────────────
 // Media / Video / Document legacy settings filter bridges.
 // These apply_filters hooks were used by legacy getter functions in
-// bp-media-settings.php. Plugins adding custom sections/fields should now use
+// bboss-media-settings.php. Plugins adding custom sections/fields should now use
 // bb_register_feature_section() and bb_register_feature_field().
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -750,7 +750,7 @@ add_action(
 );
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Groups admin tabs (moved from bp-core-admin-functions.php).
+// Groups admin tabs (moved from bboss-core-admin-functions.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
 /**
@@ -833,7 +833,7 @@ function bboss_core_get_groups_admin_tabs( $active_tab = '' ) {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Legacy Groups admin page functions (moved from bp-groups-admin.php).
+// Legacy Groups admin page functions (moved from bboss-groups-admin.php).
 // Settings 2.0 replaces: listing → GroupsListScreen.js,
 // edit/create → GroupEditModal.js, delete → React modal.
 // ──────────────────────────────────────────────────────────────────────────────
@@ -2152,7 +2152,7 @@ if ( ! function_exists( 'bboss_activate_notification' ) ) {
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Moderation Settings 2.0 deprecated functions and hook compatibility.
-// Legacy settings API functions were removed from bp-moderation-settings.php.
+// Legacy settings API functions were removed from bboss-moderation-settings.php.
 // Moderation settings are now managed by Settings 2.0 (bb-admin-settings-moderation.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -2290,7 +2290,7 @@ if ( ! function_exists( 'bboss_moderation_admin_category_listing_add_tab' ) ) {
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Email Invites Settings 2.0 deprecated functions.
-// Legacy settings render callbacks were removed from bp-core-admin-settings.php.
+// Legacy settings render callbacks were removed from bboss-core-admin-settings.php.
 // Invites settings are now managed by Settings 2.0 (bb-admin-settings-invites.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -2416,7 +2416,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_invites_fire_deprecated_
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Email Templates Settings 2.0 deprecated functions.
-// Legacy email admin tabs were removed from bp-core-admin-functions.php.
+// Legacy email admin tabs were removed from bboss-core-admin-functions.php.
 // Email Templates are now managed by Settings 2.0 (bb-admin-settings-emails.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -2490,7 +2490,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_registration_fire_deprec
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Registration Settings 2.0 deprecated render callbacks.
-// Legacy render callbacks were removed from bp-core-admin-settings.php.
+// Legacy render callbacks were removed from bboss-core-admin-settings.php.
 // Registration settings are now managed by Settings 2.0 (bb-admin-settings-registration.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -2842,7 +2842,7 @@ if ( ! function_exists( 'bboss_labs_no_settings_callback' ) ) {
  *
  * The two data helpers that lived alongside these — `bp_core_admin_get_components()`
  * and `bp_core_admin_get_active_components_from_submitted_settings()` — were
- * relocated to `src/bp-core/admin/bp-core-admin-functions.php` because they are
+ * relocated to `src/bp-core/admin/bboss-core-admin-functions.php` because they are
  * pure data utilities still consumed by the test suite and may be hooked by
  * third-party code via the `bp_core_admin_get_components` filter.
  * ------------------------------------------------------------------------- */
@@ -3057,7 +3057,7 @@ add_action(
 // warning, which is the intended migration signal. Data helpers
 // `bp_core_admin_get_directory_pages()` and `bp_core_admin_get_static_pages()`
 // were deliberately NOT deprecated — the new React panel reads them from
-// `src/bp-core/admin/bp-core-admin-slugs.php` which stays live.
+// `src/bp-core/admin/bboss-core-admin-slugs.php` which stays live.
 // ──────────────────────────────────────────────────────────────────────────────
 
 if ( ! function_exists( 'bboss_core_admin_pages_settings' ) ) {
@@ -3637,7 +3637,7 @@ add_action( 'admin_init', 'bb_deprecated_tools_admin_tabs_hooks_notice' );
 // ─────────────────────────────────────────────────────────────────────────
 
 // `BP_DEFAULT_DATA_DIR` / `BP_DEFAULT_DATA_URL` were defined inside the
-// legacy `bp_core_admin_tools()` page renderer (bp-core-admin-tools.php
+// legacy `bp_core_admin_tools()` page renderer (bboss-core-admin-tools.php
 // lines 18-25). Task 2.10 deletes that define block. Third-party code
 // reading either constant directly would hit "Use of undefined constant" —
 // notice on PHP 7.4, fatal on PHP 8.x. Define empty-string fallbacks so
@@ -4349,7 +4349,7 @@ if ( ! function_exists( 'bboss_dd_friends_add_friend_date_fix' ) ) {
 // bp_core_get_tools_import_profile_settings_admin_tabs) — moved to the
 // buddyboss-tools plugin's `migration/profile-types/` folder in BuddyBoss
 // 3.1.0. The legacy `?page=bp-member-type-import` admin page is
-// retired; 301 redirect lives in bp-core-admin-actions.php.
+// retired; 301 redirect lives in bboss-core-admin-actions.php.
 //
 // Removal scheduled BBVERSION + 2 per project deprecation convention.
 // See PHASE-3-INVENTORY.md (gitignored) for the legacy code audit.

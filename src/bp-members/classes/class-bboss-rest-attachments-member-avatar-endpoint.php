@@ -255,7 +255,7 @@ class BBoss_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 			'crop_y'        => 0,
 		);
 
-		/** This action is documented in bp-core/bp-core-avatars.php */
+		/** This action is documented in bp-core/bboss-core-avatars.php */
 		do_action( 'xprofile_avatar_uploaded', (int) $request['user_id'], 'crop', $r );
 
 		$retval = $this->prepare_response_for_collection(

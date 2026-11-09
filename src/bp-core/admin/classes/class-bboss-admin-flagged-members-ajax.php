@@ -85,7 +85,7 @@ class BBoss_Admin_Flagged_Members_Ajax {
 	 * the current admin. Without it, clicking through from the admin lands
 	 * on the same suspension/block UI a regular member would see, defeating
 	 * the purpose of the panel. The bypass is honoured by
-	 * `bp-moderation-filters.php` and `BBoss_Moderation_Abstract`, which both
+	 * `bboss-moderation-filters.php` and `BBoss_Moderation_Abstract`, which both
 	 * read `modbypass` from `INPUT_GET`.
 	 *
 	 * @since BuddyBoss 3.0.0

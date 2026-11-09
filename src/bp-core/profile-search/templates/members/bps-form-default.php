@@ -155,7 +155,7 @@ foreach ( $F->fields as $f ) {
 			 * Attach the location autocomplete/geolocate init to the enqueued
 			 * 'bp-ps-template' handle (enqueued for the distance field in
 			 * bp_ps_escaped_form_data47()) instead of a raw <script>.
-			 * bp_ps_autocomplete()/bp_ps_locate() are defined in bp-ps-template.js
+			 * bp_ps_autocomplete()/bp_ps_locate() are defined in bboss-ps-template.js
 			 * shipped by that handle; the field id is passed via wp_json_encode().
 			 */
 			$autocomplete_js = sprintf(

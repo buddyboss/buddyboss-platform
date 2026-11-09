@@ -119,13 +119,13 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 		 * @since BuddyPress 1.6.0
 		 */
 		private function includes() {
-			require $this->admin_dir . 'bp-core-admin-actions.php';
-			require $this->admin_dir . 'bp-core-admin-settings.php';
-			require $this->admin_dir . 'bp-core-admin-functions.php';
-			require $this->admin_dir . 'bp-core-admin-slugs.php';
-			require $this->admin_dir . 'bp-core-admin-tools.php';
-			require $this->admin_dir . 'bp-core-admin-help.php';
-			require $this->admin_dir . 'bp-core-admin-theme-settings.php';
+			require $this->admin_dir . 'bboss-core-admin-actions.php';
+			require $this->admin_dir . 'bboss-core-admin-settings.php';
+			require $this->admin_dir . 'bboss-core-admin-functions.php';
+			require $this->admin_dir . 'bboss-core-admin-slugs.php';
+			require $this->admin_dir . 'bboss-core-admin-tools.php';
+			require $this->admin_dir . 'bboss-core-admin-help.php';
+			require $this->admin_dir . 'bboss-core-admin-theme-settings.php';
 
 			// Load the BuddyBoss React settings.
 			require $this->admin_dir . 'bb-settings/index.php';
@@ -353,14 +353,14 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// Legacy "Components" submenu removed in Settings 2.0. Components now live
 			// inside the Settings grid as feature cards. The bp-components URL is
 			// redirected to bb-settings by bb_redirect_bp_settings_before_permission_check()
-			// in bp-core-admin-actions.php.
+			// in bboss-core-admin-actions.php.
 
 			// Legacy "Pages" submenu retired in Settings 2.0 — the page-directory
 			// mapping now lives under Appearance → Pages inside the React admin.
 			// Bookmarks and third-party links targeting `admin.php?page=bp-pages`
 			// are forwarded by the `bp-pages` branch inside
 			// `bb_redirect_bp_settings_before_permission_check()`
-			// (`src/bp-core/admin/bp-core-admin-actions.php`), which runs on
+			// (`src/bp-core/admin/bboss-core-admin-actions.php`), which runs on
 			// `admin_menu` at PHP_INT_MAX so it fires before WP's permission
 			// gate — required because the submenu slug no longer exists here.
 
@@ -379,7 +379,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// Legacy "Plugin Integrations" submenu removed in Settings 2.0. Integrations
 			// now live inside the Settings grid under the "Integrations" category.
 			// The bp-integrations URL is redirected by bb_redirect_bp_integrations_*
-			// in bp-core-admin-actions.php.
+			// in bboss-core-admin-actions.php.
 		}
 
 		/**
@@ -483,14 +483,14 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// Legacy "Components" submenu removed in Settings 2.0. Components now live
 			// inside the Settings grid as feature cards. The bp-components URL is
 			// redirected to bb-settings by bb_redirect_bp_settings_before_permission_check()
-			// in bp-core-admin-actions.php.
+			// in bboss-core-admin-actions.php.
 
 			// Legacy "Pages" submenu retired in Settings 2.0 — the page-directory
 			// mapping now lives under Appearance → Pages inside the React admin.
 			// Bookmarks and third-party links targeting `admin.php?page=bp-pages`
 			// are forwarded by the `bp-pages` branch inside
 			// `bb_redirect_bp_settings_before_permission_check()`
-			// (`src/bp-core/admin/bp-core-admin-actions.php`), which runs on
+			// (`src/bp-core/admin/bboss-core-admin-actions.php`), which runs on
 			// `admin_menu` at PHP_INT_MAX so it fires before WP's permission
 			// gate — required because the submenu slug no longer exists here.
 
@@ -509,7 +509,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// Legacy "Plugin Integrations" submenu removed in Settings 2.0. The
 			// per-integration settings now live inside the Settings grid under the
 			// "Integrations" category (the bp-integrations URL is redirected by
-			// bb_redirect_bp_integrations_* in bp-core-admin-actions.php).
+			// bb_redirect_bp_integrations_* in bboss-core-admin-actions.php).
 			//
 			// Separately, the Integrations *marketplace* — a curated directory of
 			// third-party integrations fetched from buddyboss.com — is its own
@@ -528,7 +528,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 
 			// ReadyLaunch legacy admin page retired in BuddyBoss 3.0.0 —
 			// the `bb-readylaunch` URL now redirects to Appearance in Settings 2.0
-			// via `bp_core_admin_backpat_menu()` (`bp-core-admin-actions.php`).
+			// via `bp_core_admin_backpat_menu()` (`bboss-core-admin-actions.php`).
 
 			// Help submenu points at the Settings 2.0 Help tab. WordPress treats
 			// a `menu_slug` containing a URL (with `?`) as a direct link rather

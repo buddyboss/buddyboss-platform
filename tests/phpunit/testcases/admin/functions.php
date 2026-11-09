@@ -11,7 +11,7 @@ class BP_Tests_Admin_Functions extends BP_UnitTestCase {
 		$this->set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 
 		if ( ! function_exists( 'bboss_admin' ) ) {
-			require_once( BBOSS_PLUGIN_DIR . 'bp-core/bp-core-admin.php' );
+			require_once( BBOSS_PLUGIN_DIR . 'bp-core/bboss-core-admin.php' );
 		}
 
 		if ( ! function_exists( 'bboss_new_site' ) ) {
@@ -234,7 +234,7 @@ class BP_Tests_Admin_Functions extends BP_UnitTestCase {
 		// Fake the existence of split terms by offsetting the term_taxonomy table.
 		$wpdb->insert( $wpdb->term_taxonomy, array( 'term_id' => 9999, 'taxonomy' => 'post_tag', 'description' => 'foo description', 'parent' => 0, 'count' => 0 ) );
 
-		require_once( BBOSS_PLUGIN_DIR . '/bp-core/admin/bp-core-admin-schema.php' );
+		require_once( BBOSS_PLUGIN_DIR . '/bp-core/admin/bboss-core-admin-schema.php' );
 		bboss_core_install_emails();
 
 		$d_terms = get_terms( bboss_get_email_tax_type(), array(

@@ -1,22 +1,6 @@
 <?php
-/**
- * BuddyBoss Invites Loader.
- *
- * A invites component, Allow your users to send email invites to non-members to join the network.
- *
- * @package BuddyBoss\Invites\Loader
- * @since BuddyBoss 1.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Set up the bp-invites component.
- *
- * @since BuddyBoss 1.0.0
- */
-function bboss_setup_invites() {
-	bboss()->invites = new BBoss_Invites_Component();
-}
-add_action( 'bp_setup_components', 'bp_setup_invites', 6 );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-invites-loader.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-invites-loader.php';
+// @bbwt-com-end compat-layer

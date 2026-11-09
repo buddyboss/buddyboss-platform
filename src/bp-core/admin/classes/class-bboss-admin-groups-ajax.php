@@ -135,7 +135,7 @@ class BBoss_Admin_Groups_Ajax {
 	 * Check whether a group has at least one admin other than the given user.
 	 *
 	 * Used to prevent removal or demotion of the last group administrator,
-	 * mirroring the legacy bp-groups-admin.php no_admins guard.
+	 * mirroring the legacy bboss-groups-admin.php no_admins guard.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -780,7 +780,7 @@ class BBoss_Admin_Groups_Ajax {
 		if ( $include_meta ) {
 			// Get counts per status — use object cache to avoid repeated queries.
 			// Cache is invalidated by groups_delete_group, groups_create_group, and groups_settings_updated hooks
-			// via the bp_groups_delete_group_cache / bp_groups_clear_group_count_caches callbacks in bp-groups-cache.php.
+			// via the bp_groups_delete_group_cache / bp_groups_clear_group_count_caches callbacks in bboss-groups-cache.php.
 			$cache_key  = 'bb_admin_groups_status_counts';
 			$counts_map = wp_cache_get( $cache_key, 'bp_groups' );
 
@@ -1397,7 +1397,7 @@ class BBoss_Admin_Groups_Ajax {
 		$enable_forum = isset( $_POST['registered_field_enable_forum'] ) ? absint( wp_unslash( $_POST['registered_field_enable_forum'] ) ) : (int) $group->enable_forum;
 
 		// Permission fields: validate against bb_groups_get_settings_status() whitelist,
-		// matching the legacy admin pattern (bp-groups-admin.php). If the value is invalid
+		// matching the legacy admin pattern (bboss-groups-admin.php). If the value is invalid
 		// or not submitted, fall back via bb_groups_settings_default_fallback().
 		$invite_status   = $this->bb_validate_group_permission_field( 'perm_invite', 'invite' );
 		$activity_status = $this->bb_validate_group_permission_field( 'perm_activity_feed', 'activity_feed' );
@@ -1761,7 +1761,7 @@ class BBoss_Admin_Groups_Ajax {
 		if ( 'add' === $action_type ) {
 			// Set the POST key that groups_join_group() checks to identify admin-initiated joins.
 			// This ensures joined_from='admin' meta is set and joined_date is recorded for
-			// private/hidden groups — matching the legacy bp-groups-admin.php form submit behavior.
+			// private/hidden groups — matching the legacy bboss-groups-admin.php form submit behavior.
 			$_POST['bp-groups-new-members'] = $user_id; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 
 			$result = bboss_groups_join_group( $group_id, $user_id );
@@ -1787,7 +1787,7 @@ class BBoss_Admin_Groups_Ajax {
 
 		// Remove member.
 		if ( 'remove' === $role ) {
-			// Guard: do not allow removal of the last group admin (mirrors legacy bp-groups-admin.php behaviour).
+			// Guard: do not allow removal of the last group admin (mirrors legacy bboss-groups-admin.php behaviour).
 			if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
 				wp_send_json_error( array( 'message' => __( 'You cannot remove the only group administrator.', 'buddyboss' ) ) );
 			}
@@ -2609,7 +2609,7 @@ class BBoss_Admin_Groups_Ajax {
 	 * Reads the value from $_POST, sanitizes it, and validates against
 	 * bboss_groups_get_settings_status(). If the value is not in the allowed list,
 	 * falls back via bboss_groups_settings_default_fallback() — matching the
-	 * legacy admin pattern (bp-groups-admin.php).
+	 * legacy admin pattern (bboss-groups-admin.php).
 	 *
 	 * Returns false when the field is not present in $_POST, which tells
 	 * bboss_groups_edit_group_settings() to skip updating that field.

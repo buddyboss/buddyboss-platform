@@ -95,7 +95,7 @@ function bboss_media_get_group_context_description( $prefix ) {
 }
 
 // Master section-toggle force-disable filters (Photos / Videos / Documents /
-// Emoji / GIFs) live in src/bp-media/bp-media-filters.php so they load on
+// Emoji / GIFs) live in src/bp-media/bboss-media-filters.php so they load on
 // frontend requests too — this admin-only callbacks file is gated by
 // is_admin() || wp_doing_ajax() in bb-admin-settings-init.php and would
 // otherwise leave the master toggles unenforced on the frontend.

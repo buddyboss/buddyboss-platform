@@ -1,24 +1,6 @@
 <?php
-/**
- * BuddyBoss Groups Loader.
- *
- * A groups component, for users to group themselves together. Includes a
- * robust sub-component API that allows Groups to be extended.
- * Comes preconfigured with an activity feed, discussion forums, and settings.
- *
- * @package BuddyBoss\Groups\Loader
- * @since BuddyPress 1.5.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Set up the bp-groups component.
- *
- * @since BuddyPress 1.5.0
- */
-function bboss_setup_groups() {
-	bboss()->groups = new BBoss_Groups_Component();
-}
-add_action( 'bp_setup_components', 'bp_setup_groups', 6 );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-groups-loader.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-groups-loader.php';
+// @bbwt-com-end compat-layer

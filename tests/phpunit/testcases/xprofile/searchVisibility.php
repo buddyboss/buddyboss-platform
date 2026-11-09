@@ -838,7 +838,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// include the component never ran. Load the base class first, then the subclass.
 		$search_dir = bboss()->plugin_dir . 'bp-search/';
 
-		foreach ( array( 'bp-search-functions.php', 'bp-search-settings.php' ) as $search_file ) {
+		foreach ( array( 'bboss-search-functions.php', 'bboss-search-settings.php' ) as $search_file ) {
 			if ( file_exists( $search_dir . $search_file ) ) {
 				require_once $search_dir . $search_file;
 			}
@@ -2468,7 +2468,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// absent, and WP's test suite wipes them. Re-establish them the way BP_UnitTestCase_Emails
 		// does - bp_core_install_emails() lives in the admin schema file, which is not loaded here.
 		if ( is_wp_error( bboss_get_email( 'groups-invitation' ) ) ) {
-			require_once bboss()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+			require_once bboss()->plugin_dir . '/bp-core/admin/bboss-core-admin-schema.php';
 			bboss_core_install_emails();
 		}
 
@@ -2928,7 +2928,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	protected function load_search_members_engine() {
 		$search_dir = bboss()->plugin_dir . 'bp-search/';
 
-		foreach ( array( 'bp-search-functions.php', 'bp-search-settings.php' ) as $search_file ) {
+		foreach ( array( 'bboss-search-functions.php', 'bboss-search-settings.php' ) as $search_file ) {
 			if ( file_exists( $search_dir . $search_file ) ) {
 				require_once $search_dir . $search_file;
 			}

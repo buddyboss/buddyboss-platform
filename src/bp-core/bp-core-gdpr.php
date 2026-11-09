@@ -1,22 +1,6 @@
 <?php
-/**
- * BuddyBoss Core Gdpr Loader.
- *
- * Core contains the commonly used functions, classes, and APIs.
- *
- * @package BuddyBoss\Core
- * @since BuddyBoss 1.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Set up the bp-core component.
- *
- * @since BuddyBoss 1.0.0
- */
-function bboss_setup_gdpr() {
-	new BBoss_Core_Gdpr();
-}
-add_action( 'bp_loaded', 'bp_setup_gdpr', 0 );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-core-gdpr.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-core-gdpr.php';
+// @bbwt-com-end compat-layer

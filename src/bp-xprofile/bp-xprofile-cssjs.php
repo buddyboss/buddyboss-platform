@@ -1,13 +1,6 @@
 <?php
-/**
- * BuddyPress XProfile CSS and JS.
- *
- * Legacy admin CSS/JS enqueue functions removed — Profile Fields admin
- * is now managed via Settings 2.0 React interface.
- *
- * @package BuddyBoss\XProfile
- * @since BuddyPress 1.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-xprofile-cssjs.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-xprofile-cssjs.php';
+// @bbwt-com-end compat-layer

@@ -365,7 +365,7 @@ class BBoss_Moderation_Comment extends BBoss_Moderation_Abstract {
 		//     "Report Comment" strings into the XML payload, which feed readers
 		//     either render as a foreign dropdown or strip into plain text
 		//     appended to every comment.
-		//   - Mention notification emails (bp-core-actions.php) — fires the
+		//   - Mention notification emails (bboss-core-actions.php) — fires the
 		//     filter to build the email body. The caller flips the static skip
 		//     flag below for its single filter pass so we don't pollute the
 		//     `usermessage` / `mentioned.content` tokens.

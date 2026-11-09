@@ -863,7 +863,7 @@ class BBoss_Email_Templates_Admin_Ajax {
 				$category = 'other';
 			}
 
-			/** This filter is documented in src/bp-core/bp-core-functions.php */
+			/** This filter is documented in src/bp-core/bboss-core-functions.php */
 			$category     = apply_filters( 'bb_email_type_group', $category, $term->slug );
 			$stored_group = get_term_meta( $term->term_id, 'bb_email_group', true );
 

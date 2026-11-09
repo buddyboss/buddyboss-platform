@@ -1,0 +1,17 @@
+<?php
+/**
+ * The template for displaying activity post form options
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bboss-activity-post-form-options.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?>
+<script type="text/html" id="tmpl-activity-post-form-options">
+	<?php bboss_nouveau_activity_hook( '', 'post_form_options' ); ?>
+</script>

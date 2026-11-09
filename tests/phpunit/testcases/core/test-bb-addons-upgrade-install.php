@@ -1,7 +1,7 @@
 <?php
 /**
  * Tests for the PROD-10242 BuddyBoss Addons upgrade-install migration
- * (functions in bp-core-update.php).
+ * (functions in bboss-core-update.php).
  *
  * Covers the pure-logic / early-return paths that do not require a live
  * Mothership call: the entitlement short-circuit seam, the already-active

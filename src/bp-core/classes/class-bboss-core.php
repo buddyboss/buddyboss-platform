@@ -128,7 +128,7 @@ class BBoss_Core extends BBoss_Component {
 				$trimmed[] = str_replace( '.php', '', str_replace( 'bp-', '', $component ) );
 			}
 
-			/** This filter is documented in bp-core/bp-core-loader.php */
+			/** This filter is documented in bp-core/bboss-core-loader.php */
 			$bp->deactivated_components = apply_filters( 'bp_deactivated_components', $trimmed );
 
 			// Setup the active components.
@@ -177,15 +177,15 @@ class BBoss_Core extends BBoss_Component {
 
 		// Loop through optional components.
 		foreach ( $bp->optional_components as $component ) {
-			if ( bboss_is_active( $component ) && file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' ) ) {
-				include $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php';
+			if ( bboss_is_active( $component ) && file_exists( $bp->plugin_dir . 'bp-' . $component . '/bboss-' . $component . '-loader.php' ) ) {
+				include $bp->plugin_dir . 'bp-' . $component . '/bboss-' . $component . '-loader.php';
 			}
 		}
 
 		// Loop through required components.
 		foreach ( $bp->required_components as $component ) {
-			if ( file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' ) ) {
-				include $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php';
+			if ( file_exists( $bp->plugin_dir . 'bp-' . $component . '/bboss-' . $component . '-loader.php' ) ) {
+				include $bp->plugin_dir . 'bp-' . $component . '/bboss-' . $component . '-loader.php';
 			}
 		}
 
@@ -323,7 +323,7 @@ class BBoss_Core extends BBoss_Component {
 		 * Video and Document need Media. When Media is off, keep them out of the
 		 * runtime list so a provider (BuddyBoss Add-ons) never boots them without
 		 * bp-media loaded. The stored option is cleaned up by the `bp_init` media
-		 * sync in bp-core-actions.php; nothing is written here.
+		 * sync in bboss-core-actions.php; nothing is written here.
 		 */
 		if ( empty( $bp->active_components['media'] ) ) {
 			unset( $bp->active_components['video'], $bp->active_components['document'] );

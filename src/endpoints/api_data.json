@@ -12,7 +12,7 @@
         "name": "LoggedInUser"
       }
     ],
-    "filename": "src/bp-settings/classes/class-bp-rest-account-settings-endpoint.php",
+    "filename": "src/bp-settings/classes/class-bboss-rest-account-settings-endpoint.php",
     "groupTitle": "Account_Settings"
   },
   {
@@ -49,7 +49,7 @@
         ]
       }
     },
-    "filename": "src/bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php",
+    "filename": "src/bp-settings/classes/class-bboss-rest-account-settings-options-endpoint.php",
     "groupTitle": "Account_Settings"
   },
   {
@@ -93,7 +93,7 @@
         ]
       }
     },
-    "filename": "src/bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php",
+    "filename": "src/bp-settings/classes/class-bboss-rest-account-settings-options-endpoint.php",
     "groupTitle": "Account_Settings"
   },
   {
@@ -149,7 +149,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-comment-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -304,7 +304,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -333,7 +333,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -369,7 +369,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-comment-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -411,7 +411,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-comment-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -610,7 +610,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -621,7 +621,7 @@
     "group": "Activity",
     "description": "<p>Retrieve activity details (includes nav, filters and post_in)</p>",
     "version": "1.0.0",
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-details-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-details-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -663,7 +663,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -712,7 +712,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-comment-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -741,7 +741,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-link-preview-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -781,7 +781,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -943,7 +943,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -983,7 +983,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -1068,7 +1068,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-comment-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-comment-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -1115,7 +1115,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -1155,7 +1155,7 @@
         ]
       }
     },
-    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "filename": "src/bp-activity/classes/class-bboss-rest-activity-endpoint.php",
     "groupTitle": "Activity"
   },
   {
@@ -1226,7 +1226,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-bb-rest-topics-endpoint.php",
     "groupTitle": "BB_Topics"
   },
   {
@@ -1283,7 +1283,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-bb-rest-topics-endpoint.php",
     "groupTitle": "BB_Topics"
   },
   {
@@ -1312,7 +1312,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-bb-rest-topics-endpoint.php",
     "groupTitle": "BB_Topics"
   },
   {
@@ -1357,7 +1357,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-bb-rest-topics-endpoint.php",
     "groupTitle": "BB_Topics"
   },
   {
@@ -1421,7 +1421,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-bb-rest-topics-endpoint.php",
     "groupTitle": "BB_Topics"
   },
   {
@@ -1471,7 +1471,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-bb-rest-topics-endpoint.php",
     "groupTitle": "BB_Topics"
   },
   {
@@ -1495,7 +1495,7 @@
         ]
       }
     },
-    "filename": "src/bp-blogs/classes/class-bp-rest-blogs-endpoint.php",
+    "filename": "src/bp-blogs/classes/class-bboss-rest-blogs-endpoint.php",
     "groupTitle": "Blogs"
   },
   {
@@ -1562,7 +1562,7 @@
         ]
       }
     },
-    "filename": "src/bp-blogs/classes/class-bp-rest-blogs-endpoint.php",
+    "filename": "src/bp-blogs/classes/class-bboss-rest-blogs-endpoint.php",
     "groupTitle": "Blogs"
   },
   {
@@ -1624,7 +1624,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-components-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-rest-components-endpoint.php",
     "groupTitle": "Components"
   },
   {
@@ -1667,7 +1667,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-mention-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-rest-mention-endpoint.php",
     "groupTitle": "Components"
   },
   {
@@ -1707,7 +1707,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-components-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-rest-components-endpoint.php",
     "groupTitle": "Components"
   },
   {
@@ -1750,7 +1750,7 @@
         ]
       }
     },
-    "filename": "src/bp-friends/classes/class-bp-rest-friends-endpoint.php",
+    "filename": "src/bp-friends/classes/class-bboss-rest-friends-endpoint.php",
     "groupTitle": "Connections"
   },
   {
@@ -1779,7 +1779,7 @@
         ]
       }
     },
-    "filename": "src/bp-friends/classes/class-bp-rest-friends-endpoint.php",
+    "filename": "src/bp-friends/classes/class-bboss-rest-friends-endpoint.php",
     "groupTitle": "Connections"
   },
   {
@@ -1808,7 +1808,7 @@
         ]
       }
     },
-    "filename": "src/bp-friends/classes/class-bp-rest-friends-endpoint.php",
+    "filename": "src/bp-friends/classes/class-bboss-rest-friends-endpoint.php",
     "groupTitle": "Connections"
   },
   {
@@ -1908,7 +1908,7 @@
         ]
       }
     },
-    "filename": "src/bp-friends/classes/class-bp-rest-friends-endpoint.php",
+    "filename": "src/bp-friends/classes/class-bboss-rest-friends-endpoint.php",
     "groupTitle": "Connections"
   },
   {
@@ -1937,7 +1937,7 @@
         ]
       }
     },
-    "filename": "src/bp-friends/classes/class-bp-rest-friends-endpoint.php",
+    "filename": "src/bp-friends/classes/class-bboss-rest-friends-endpoint.php",
     "groupTitle": "Connections"
   },
   {
@@ -1966,7 +1966,7 @@
         ]
       }
     },
-    "filename": "src/bp-friends/classes/class-bp-rest-friends-endpoint.php",
+    "filename": "src/bp-friends/classes/class-bboss-rest-friends-endpoint.php",
     "groupTitle": "Connections"
   },
   {
@@ -2009,7 +2009,7 @@
         ]
       }
     },
-    "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
+    "filename": "src/bp-invites/classes/class-bboss-rest-invites-endpoint.php",
     "groupTitle": "Email_Invites"
   },
   {
@@ -2038,7 +2038,7 @@
         ]
       }
     },
-    "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
+    "filename": "src/bp-invites/classes/class-bboss-rest-invites-endpoint.php",
     "groupTitle": "Email_Invites"
   },
   {
@@ -2101,7 +2101,7 @@
         ]
       }
     },
-    "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
+    "filename": "src/bp-invites/classes/class-bboss-rest-invites-endpoint.php",
     "groupTitle": "Email_Invites"
   },
   {
@@ -2117,7 +2117,7 @@
         "name": "LoggedInUser"
       }
     ],
-    "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
+    "filename": "src/bp-invites/classes/class-bboss-rest-invites-endpoint.php",
     "groupTitle": "Email_Invites"
   },
   {
@@ -2164,7 +2164,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-reply-actions-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-reply-actions-endpoint.php",
     "groupTitle": "Forum_Replies"
   },
   {
@@ -2249,7 +2249,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-reply-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-reply-endpoint.php",
     "groupTitle": "Forum_Replies"
   },
   {
@@ -2278,7 +2278,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-reply-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-reply-endpoint.php",
     "groupTitle": "Forum_Replies"
   },
   {
@@ -2411,7 +2411,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-reply-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-reply-endpoint.php",
     "groupTitle": "Forum_Replies"
   },
   {
@@ -2440,7 +2440,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-reply-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-reply-endpoint.php",
     "groupTitle": "Forum_Replies"
   },
   {
@@ -2494,7 +2494,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-reply-actions-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-reply-actions-endpoint.php",
     "groupTitle": "Forum_Replies"
   },
   {
@@ -2600,7 +2600,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-reply-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-reply-endpoint.php",
     "groupTitle": "Forum_Replies"
   },
   {
@@ -2652,7 +2652,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-topics-actions-endpoint.php",
     "groupTitle": "Forum_Topics"
   },
   {
@@ -2751,7 +2751,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-topics-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-topics-endpoint.php",
     "groupTitle": "Forum_Topics"
   },
   {
@@ -2780,7 +2780,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-topics-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-topics-endpoint.php",
     "groupTitle": "Forum_Topics"
   },
   {
@@ -2809,7 +2809,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-topics-actions-endpoint.php",
     "groupTitle": "Forum_Topics"
   },
   {
@@ -2838,7 +2838,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-topics-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-topics-endpoint.php",
     "groupTitle": "Forum_Topics"
   },
   {
@@ -3001,7 +3001,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-topics-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-topics-endpoint.php",
     "groupTitle": "Forum_Topics"
   },
   {
@@ -3061,7 +3061,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-topics-actions-endpoint.php",
     "groupTitle": "Forum_Topics"
   },
   {
@@ -3146,7 +3146,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-topics-actions-endpoint.php",
     "groupTitle": "Forum_Topics"
   },
   {
@@ -3266,7 +3266,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-topics-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-topics-endpoint.php",
     "groupTitle": "Forum_Topics"
   },
   {
@@ -3295,7 +3295,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-forums-link-preview-endpoint.php",
     "groupTitle": "Forums"
   },
   {
@@ -3324,7 +3324,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-forums-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-forums-endpoint.php",
     "groupTitle": "Forums"
   },
   {
@@ -3353,7 +3353,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-forums-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-forums-endpoint.php",
     "groupTitle": "Forums"
   },
   {
@@ -3494,7 +3494,7 @@
         ]
       }
     },
-    "filename": "src/bp-forums/classes/class-bp-rest-forums-endpoint.php",
+    "filename": "src/bp-forums/classes/class-bboss-rest-forums-endpoint.php",
     "groupTitle": "Forums"
   },
   {
@@ -3543,7 +3543,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-membership-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -3582,7 +3582,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-attachments-group-avatar-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-attachments-group-avatar-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -3621,7 +3621,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-attachments-group-cover-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-attachments-group-cover-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -3706,7 +3706,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-groups-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-groups-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -3765,7 +3765,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-invites-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-invites-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -3808,7 +3808,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-request-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-membership-request-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -3866,7 +3866,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-invites-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-invites-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -3902,7 +3902,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-groups-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-groups-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -3931,7 +3931,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-attachments-group-avatar-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-attachments-group-avatar-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -3960,7 +3960,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-attachments-group-cover-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-attachments-group-cover-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -3989,7 +3989,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-invites-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-invites-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4025,7 +4025,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-membership-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4054,7 +4054,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-request-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-membership-request-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4083,7 +4083,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-groups-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-groups-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4127,7 +4127,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-attachments-group-avatar-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-attachments-group-avatar-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4156,7 +4156,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-attachments-group-cover-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-attachments-group-cover-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4331,7 +4331,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-groups-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-groups-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4360,7 +4360,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-groups-details-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-groups-details-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4390,7 +4390,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-groups-details-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-groups-details-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4419,7 +4419,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-invites-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-invites-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4514,7 +4514,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-invites-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-invites-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4630,7 +4630,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-membership-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4684,7 +4684,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-request-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-membership-request-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4713,7 +4713,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-request-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-membership-request-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4755,7 +4755,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-settings-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-settings-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4771,7 +4771,7 @@
         "name": "LoggedInUser if the site is in Private Network."
       }
     ],
-    "filename": "src/bp-groups/classes/class-bp-rest-groups-types-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-groups-types-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4868,7 +4868,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-groups-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-groups-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4897,7 +4897,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-invites-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-invites-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4960,7 +4960,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-membership-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -4989,7 +4989,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-membership-request-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-membership-request-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -5025,7 +5025,7 @@
         ]
       }
     },
-    "filename": "src/bp-groups/classes/class-bp-rest-group-settings-endpoint.php",
+    "filename": "src/bp-groups/classes/class-bboss-rest-group-settings-endpoint.php",
     "groupTitle": "Groups"
   },
   {
@@ -5090,7 +5090,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-albums-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-albums-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5162,7 +5162,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5191,7 +5191,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-albums-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-albums-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5220,7 +5220,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5249,7 +5249,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5278,7 +5278,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5323,7 +5323,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-albums-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-albums-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5449,7 +5449,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-albums-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-albums-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5465,7 +5465,7 @@
         "name": "LoggedInUser if the site is in Private Network."
       }
     ],
-    "filename": "src/bp-media/classes/class-bp-rest-media-details-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-details-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5494,7 +5494,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5648,7 +5648,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5691,7 +5691,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-details-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-details-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5741,7 +5741,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-albums-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-albums-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5805,7 +5805,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5834,7 +5834,7 @@
         ]
       }
     },
-    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "filename": "src/bp-media/classes/class-bboss-rest-media-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5873,7 +5873,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-attachments-member-avatar-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-attachments-member-avatar-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -5912,7 +5912,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-attachments-member-cover-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-attachments-member-cover-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -5941,7 +5941,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-attachments-member-avatar-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-attachments-member-avatar-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -5970,7 +5970,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-attachments-member-cover-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-attachments-member-cover-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -5999,7 +5999,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-members-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-members-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6051,7 +6051,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-attachments-member-avatar-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-attachments-member-avatar-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6080,7 +6080,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-attachments-member-cover-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-attachments-member-cover-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6096,7 +6096,7 @@
         "name": "LoggedInUser"
       }
     ],
-    "filename": "src/bp-members/classes/class-bp-rest-members-permissions-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-members-permissions-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6221,7 +6221,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-members-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-members-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6250,7 +6250,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-members-actions-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-members-actions-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6290,7 +6290,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-members-actions-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-members-actions-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6319,7 +6319,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-members-details-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-members-details-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6330,7 +6330,7 @@
     "group": "Members",
     "description": "<p>Retrieve Members details(includes tabs and order_options)</p>",
     "version": "1.0.0",
-    "filename": "src/bp-members/classes/class-bp-rest-members-details-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-members-details-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6359,7 +6359,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-members-details-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-members-details-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6375,7 +6375,7 @@
         "name": "LoggedInUser"
       }
     ],
-    "filename": "src/bp-members/classes/class-bp-rest-members-details-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-members-details-endpoint.php",
     "groupTitle": "Members"
   },
   {
@@ -6449,7 +6449,7 @@
         ]
       }
     },
-    "filename": "src/bp-messages/classes/class-bp-rest-group-messages-endpoint.php",
+    "filename": "src/bp-messages/classes/class-bboss-rest-group-messages-endpoint.php",
     "groupTitle": "Messages"
   },
   {
@@ -6506,7 +6506,7 @@
         ]
       }
     },
-    "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
+    "filename": "src/bp-messages/classes/class-bboss-rest-messages-endpoint.php",
     "groupTitle": "Messages"
   },
   {
@@ -6564,7 +6564,7 @@
         ]
       }
     },
-    "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
+    "filename": "src/bp-messages/classes/class-bboss-rest-messages-endpoint.php",
     "groupTitle": "Messages"
   },
   {
@@ -6615,7 +6615,7 @@
         ]
       }
     },
-    "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
+    "filename": "src/bp-messages/classes/class-bboss-rest-messages-endpoint.php",
     "groupTitle": "Messages"
   },
   {
@@ -6700,7 +6700,7 @@
         ]
       }
     },
-    "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
+    "filename": "src/bp-messages/classes/class-bboss-rest-messages-endpoint.php",
     "groupTitle": "Messages"
   },
   {
@@ -6748,7 +6748,7 @@
         ]
       }
     },
-    "filename": "src/bp-messages/classes/class-bp-rest-messages-actions-endpoint.php",
+    "filename": "src/bp-messages/classes/class-bboss-rest-messages-actions-endpoint.php",
     "groupTitle": "Messages"
   },
   {
@@ -6806,7 +6806,7 @@
         ]
       }
     },
-    "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
+    "filename": "src/bp-messages/classes/class-bboss-rest-messages-endpoint.php",
     "groupTitle": "Messages"
   },
   {
@@ -6849,7 +6849,7 @@
         ]
       }
     },
-    "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
+    "filename": "src/bp-messages/classes/class-bboss-rest-messages-endpoint.php",
     "groupTitle": "Messages"
   },
   {
@@ -6907,7 +6907,7 @@
         ]
       }
     },
-    "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
+    "filename": "src/bp-messages/classes/class-bboss-rest-messages-endpoint.php",
     "groupTitle": "Messages"
   },
   {
@@ -6936,7 +6936,7 @@
         ]
       }
     },
-    "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
+    "filename": "src/bp-messages/classes/class-bboss-rest-messages-endpoint.php",
     "groupTitle": "Messages"
   },
   {
@@ -6965,7 +6965,7 @@
         ]
       }
     },
-    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "filename": "src/bp-moderation/classes/class-bboss-rest-moderation-endpoint.php",
     "groupTitle": "Moderation"
   },
   {
@@ -6994,7 +6994,7 @@
         ]
       }
     },
-    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "filename": "src/bp-moderation/classes/class-bboss-rest-moderation-endpoint.php",
     "groupTitle": "Moderation"
   },
   {
@@ -7010,7 +7010,7 @@
         "name": "LoggedInUser"
       }
     ],
-    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php",
+    "filename": "src/bp-moderation/classes/class-bboss-rest-moderation-report-endpoint.php",
     "groupTitle": "Moderation"
   },
   {
@@ -7070,7 +7070,7 @@
         ]
       }
     },
-    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php",
+    "filename": "src/bp-moderation/classes/class-bboss-rest-moderation-report-endpoint.php",
     "groupTitle": "Moderation"
   },
   {
@@ -7099,7 +7099,7 @@
         ]
       }
     },
-    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "filename": "src/bp-moderation/classes/class-bboss-rest-moderation-endpoint.php",
     "groupTitle": "Moderation"
   },
   {
@@ -7206,7 +7206,7 @@
         ]
       }
     },
-    "filename": "src/bp-moderation/classes/class-bp-rest-moderation-endpoint.php",
+    "filename": "src/bp-moderation/classes/class-bboss-rest-moderation-endpoint.php",
     "groupTitle": "Moderation"
   },
   {
@@ -7277,7 +7277,7 @@
         ]
       }
     },
-    "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
+    "filename": "src/bp-notifications/classes/class-bboss-rest-notifications-endpoint.php",
     "groupTitle": "Notifications"
   },
   {
@@ -7306,7 +7306,7 @@
         ]
       }
     },
-    "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
+    "filename": "src/bp-notifications/classes/class-bboss-rest-notifications-endpoint.php",
     "groupTitle": "Notifications"
   },
   {
@@ -7335,7 +7335,7 @@
         ]
       }
     },
-    "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
+    "filename": "src/bp-notifications/classes/class-bboss-rest-notifications-endpoint.php",
     "groupTitle": "Notifications"
   },
   {
@@ -7445,7 +7445,7 @@
         ]
       }
     },
-    "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
+    "filename": "src/bp-notifications/classes/class-bboss-rest-notifications-endpoint.php",
     "groupTitle": "Notifications"
   },
   {
@@ -7482,7 +7482,7 @@
         ]
       }
     },
-    "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
+    "filename": "src/bp-notifications/classes/class-bboss-rest-notifications-endpoint.php",
     "groupTitle": "Notifications"
   },
   {
@@ -7498,7 +7498,7 @@
         "name": "LoggedInUser"
       }
     ],
-    "filename": "src/bp-notifications/classes/class-bp-rest-notifications-endpoint.php",
+    "filename": "src/bp-notifications/classes/class-bboss-rest-notifications-endpoint.php",
     "groupTitle": "Notifications"
   },
   {
@@ -7652,7 +7652,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-fields-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -7704,7 +7704,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-field-groups-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -7757,7 +7757,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-repeater-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -7793,7 +7793,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-data-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -7830,7 +7830,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-fields-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -7859,7 +7859,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-field-groups-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -7919,7 +7919,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-repeater-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -7935,7 +7935,7 @@
         "name": "LoggedInUser if the site is in Private Network."
       }
     ],
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-types-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-types-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8026,7 +8026,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-field-groups-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8070,7 +8070,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-fields-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8106,7 +8106,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-data-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8204,7 +8204,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-fields-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8310,7 +8310,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-field-groups-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8334,7 +8334,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-search-form-fields-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-search-form-fields-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8439,7 +8439,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-update-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8482,7 +8482,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-data-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8643,7 +8643,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-fields-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8707,7 +8707,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-field-groups-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8767,7 +8767,7 @@
         ]
       }
     },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php",
+    "filename": "src/bp-xprofile/classes/class-bboss-rest-xprofile-repeater-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
   {
@@ -8778,7 +8778,7 @@
     "group": "Reactions",
     "description": "<p>Retrieve supported reactions</p>",
     "version": "1.0.0",
-    "filename": "src/bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php",
+    "filename": "src/bb-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
     "groupTitle": "Reactions"
   },
   {
@@ -8789,7 +8789,7 @@
     "group": "Settings",
     "description": "<p>Retrieve settings</p>",
     "version": "1.0.0",
-    "filename": "src/bp-core/classes/class-bp-rest-settings-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-rest-settings-endpoint.php",
     "groupTitle": "Settings"
   },
   {
@@ -8800,7 +8800,7 @@
     "group": "Settings",
     "description": "<p>Save settings</p>",
     "version": "1.0.0",
-    "filename": "src/bp-core/classes/class-bp-rest-settings-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-rest-settings-endpoint.php",
     "groupTitle": "Settings"
   },
   {
@@ -8824,7 +8824,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-signup-endpoint.php",
     "groupTitle": "Signups"
   },
   {
@@ -8874,7 +8874,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-signup-endpoint.php",
     "groupTitle": "Signups"
   },
   {
@@ -8903,7 +8903,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-signup-endpoint.php",
     "groupTitle": "Signups"
   },
   {
@@ -8919,7 +8919,7 @@
         "name": "WithoutLoggedInUser"
       }
     ],
-    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-signup-endpoint.php",
     "groupTitle": "Signups"
   },
   {
@@ -8988,7 +8988,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-signup-endpoint.php",
     "groupTitle": "Signups"
   },
   {
@@ -9017,7 +9017,7 @@
         ]
       }
     },
-    "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
+    "filename": "src/bp-members/classes/class-bboss-rest-signup-endpoint.php",
     "groupTitle": "Signups"
   },
   {
@@ -9078,7 +9078,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-rest-subscriptions-endpoint.php",
     "groupTitle": "Subscription"
   },
   {
@@ -9107,7 +9107,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-rest-subscriptions-endpoint.php",
     "groupTitle": "Subscriptions"
   },
   {
@@ -9136,7 +9136,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-rest-subscriptions-endpoint.php",
     "groupTitle": "Subscriptions"
   },
   {
@@ -9147,7 +9147,7 @@
     "group": "Subscriptions",
     "description": "<p>Retrieve subscription Types</p>",
     "version": "1.0.0",
-    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-rest-subscriptions-endpoint.php",
     "groupTitle": "Subscriptions"
   },
   {
@@ -9267,7 +9267,7 @@
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-subscriptions-endpoint.php",
+    "filename": "src/bp-core/classes/class-bboss-rest-subscriptions-endpoint.php",
     "groupTitle": "Subscriptions"
   },
   {
@@ -9296,7 +9296,7 @@
         ]
       }
     },
-    "filename": "src/bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php",
+    "filename": "src/bb-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
     "groupTitle": "User_Reaction"
   },
   {
@@ -9387,7 +9387,7 @@
         ]
       }
     },
-    "filename": "src/bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php",
+    "filename": "src/bb-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
     "groupTitle": "User_Reactions"
   },
   {
@@ -9437,7 +9437,7 @@
         ]
       }
     },
-    "filename": "src/bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php",
+    "filename": "src/bb-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
     "groupTitle": "User_reaction"
   },
   {
@@ -9466,7 +9466,7 @@
         ]
       }
     },
-    "filename": "src/bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php",
+    "filename": "src/bb-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
     "groupTitle": "User_reaction"
   }
 ]

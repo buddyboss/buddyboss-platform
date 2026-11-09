@@ -1,21 +1,6 @@
 <?php
-/**
- * BuddyBoss App Integration Loader.
- *
- * @package BuddyBoss\App
- * @since BuddyBoss 1.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Set up the bp app integration.
- *
- * @since BuddyBoss 1.0.0
- */
-function bboss_register_buddyboss_app_integration() {
-	require_once dirname( __FILE__ ) . '/bp-buddyboss-app-integration.php';
-	bboss()->integrations['buddyboss-app'] = new BBoss_App_Integration();
-}
-add_action( 'bp_setup_integrations', 'bp_register_buddyboss_app_integration' );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-buddyboss-app-loader.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-buddyboss-app-loader.php';
+// @bbwt-com-end compat-layer

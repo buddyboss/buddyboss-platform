@@ -1,24 +1,6 @@
 <?php
-/**
- * BuddyPress Blogs Loader
- *
- * The blogs component tracks posts and comments to member activity feeds,
- * shows blogs the member can post to in their profiles, and caches useful
- * information from those blogs to make querying blogs in bulk more performant.
- *
- * @package BuddyBoss\Blogs\Core
- * @since BuddyPress 1.5.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Set up the bp-blogs component.
- *
- * @since BuddyPress 1.5.0
- */
-function bboss_setup_blogs() {
-	bboss()->blogs = new BBoss_Blogs_Component();
-}
-add_action( 'bp_setup_components', 'bp_setup_blogs', 6 );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-blogs-loader.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-blogs-loader.php';
+// @bbwt-com-end compat-layer

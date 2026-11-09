@@ -1,22 +1,6 @@
 <?php
-/**
- * BuddyBoss Performance Loader.
- *
- * A performance component, Allow to cache BuddyBoss Platform REST API.
- *
- * @package BuddyBoss\Performance\Loader
- * @since BuddyBoss 1.5.7
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Set up the bp-performance component.
- *
- * @since BuddyBoss 1.5.7
- */
-function bboss_setup_performance() {
-	bboss()->performance = new BBoss_Performance_Component();
-}
-add_action( 'bp_setup_components', 'bp_setup_performance', 1 );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-performance-loader.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-performance-loader.php';
+// @bbwt-com-end compat-layer

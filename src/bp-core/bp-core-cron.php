@@ -1,38 +1,6 @@
 <?php
-/**
- * BuddyBoss Core Cron Loader.
- *
- * @package BuddyBoss\Core
- * @since BuddyBoss 1.7.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * The main function responsible for returning the one true BBoss_Core_Cron Instance to functions everywhere.
- *
- * Use this function like you would a global variable, except without needing
- * to declare the global.
- *
- * @return BBoss_Core_Cron|null The one true BBoss_Core_Cron Instance.
- * @since BuddyBoss 1.7.0
- */
-function bboss_core_cron() {
-	return BBoss_Core_Cron::instance();
-}
-
-/**
- * Schedule a bp cron.
- *
- * @param string $hook       Action hook to execute when the event is run.
- * @param string $callback   Function to execute when the hook is run.
- * @param string $recurrence How often the event should subsequently recur. See bboss_core_cron_schedules() for accepted values.
- *
- * @return bool True if cron is scheduled, otherwise false.
- * @since BuddyBoss 1.7.0
- */
-function bboss_core_schedule_cron( $hook, $callback, $recurrence = 'bb_schedule_5min' ) {
-	// Add cron to schedule.
-	return bboss_core_cron()->add( $hook, $callback, $recurrence );
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-core-cron.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-core-cron.php';
+// @bbwt-com-end compat-layer

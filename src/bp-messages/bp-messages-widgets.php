@@ -1,25 +1,6 @@
 <?php
-/**
- * BuddyBoss Messages Widgets.
- *
- * @package BuddyBoss\Messages
- * @since BuddyPress 1.9.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Register widgets for the Messages component.
- *
- * @since BuddyPress 1.9.0
- */
-function bboss_messages_register_widgets() {
-	add_action(
-		'widgets_init',
-		function() {
-			register_widget( 'BBoss_Messages_Sitewide_Notices_Widget' );
-		}
-	);
-}
-add_action( 'bp_register_widgets', 'bp_messages_register_widgets' );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-messages-widgets.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-messages-widgets.php';
+// @bbwt-com-end compat-layer

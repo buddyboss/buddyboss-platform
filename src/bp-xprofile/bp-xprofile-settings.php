@@ -1,61 +1,6 @@
 <?php
-/**
- * BuddyPress XProfile Settings.
- *
- * @package BuddyPress\XProfile
- * @since BuddyPress 2.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Query all profile fields and their visibility data for display in settings.
- *
- * @since BuddyPress 2.0.0
- *
- * @param array|string $args Array of args for the settings fields.
- * @return bool
- */
-function bboss_xprofile_get_settings_fields( $args = '' ) {
-
-	// Parse the possible arguments.
-	$r = bboss_parse_args(
-		$args,
-		array(
-			'user_id'                => bboss_displayed_user_id(),
-			'profile_group_id'       => false,
-			'hide_empty_groups'      => false,
-			'hide_empty_fields'      => false,
-			'fetch_fields'           => true,
-			'fetch_field_data'       => false,
-			'fetch_visibility_level' => true,
-			'exclude_groups'         => false,
-			'exclude_fields'         => false,
-		),
-		'xprofile_get_settings_fields'
-	);
-
-	return bboss_has_profile( $r );
-}
-
-/**
- * Adds feedback messages when successfully saving profile field settings.
- *
- * @since BuddyPress 2.0.0
- */
-function bboss_xprofile_settings_add_feedback_message() {
-
-	// Default message type is success.
-	$type    = 'success';
-	$message = __( 'Your profile settings have been saved.', 'buddyboss' );
-
-	// Community moderator editing another user's settings.
-	if ( ! bboss_is_my_profile() && bboss_core_can_edit_settings() ) {
-		$message = __( "This member's profile settings have been saved.", 'buddyboss' );
-	}
-
-	// Add the message.
-	bboss_core_add_message( $message, $type );
-}
-add_action( 'bp_xprofile_settings_after_save', 'bp_xprofile_settings_add_feedback_message' );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-xprofile-settings.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-xprofile-settings.php';
+// @bbwt-com-end compat-layer

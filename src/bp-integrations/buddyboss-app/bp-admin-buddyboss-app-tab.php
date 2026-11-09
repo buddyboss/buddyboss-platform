@@ -1,32 +1,6 @@
 <?php
-/**
- * BuddyBoss App integration admin tab
- *
- * @package BuddyBoss\App
- * @since BuddyBoss 1.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Setup BuddyBoss App integration admin tab class.
- *
- * @since BuddyBoss 1.0.0
- */
-class BBoss_App_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
-	protected $current_section;
-
-	public function initialize() {
-		$this->tab_order       = 10;
-		$this->intro_template  = $this->root_path . '/templates/admin/integration-tab-intro.php';
-		$this->current_section = 'bp_buddyboss_app-integration';
-	}
-
-	public function form_html() {
-		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
-		if ( is_file( $this->intro_template ) ) {
-			require $this->intro_template;
-		}
-	}
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-admin-buddyboss-app-tab.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-admin-buddyboss-app-tab.php';
+// @bbwt-com-end compat-layer

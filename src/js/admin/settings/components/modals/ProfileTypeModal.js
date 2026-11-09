@@ -79,7 +79,7 @@ var DEFAULT_FORM_DATA = {
 	enable_profile_field: 0,
 	// Match legacy default: an unsaved/empty `_bp_member_type_enabled_group_type_create`
 	// meta means "no restriction — all group types selectable" (see
-	// `bp-core-admin-functions.php:1934-1938` in PROD-8676). The 'all' mode
+	// `bboss-core-admin-functions.php:1934-1938` in PROD-8676). The 'all' mode
 	// in the save path writes an empty string back, which PHP stores as ''
 	// → reads as array() → matches legacy "leave all unchecked" semantic.
 	// Defaulting to 'none' here would silently hide the create-group type
@@ -111,7 +111,7 @@ var DEFAULT_FORM_DATA = {
  * @returns {string} 'none', 'all', or 'specific'.
  */
 function getGroupTypeCreateMode( value ) {
-	// Legacy storage shape (see legacy `bp-core-admin-functions.php` and
+	// Legacy storage shape (see legacy `bboss-core-admin-functions.php` and
 	// the frontend gate in `groups/single/admin/group-settings.php`):
 	//   ''  / array()     → no restriction, all group types selectable
 	//   array( 'none' )   → hide the "What type of group is this?" picker
@@ -346,7 +346,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 
 		// WP roles. Same empty-marker reason as group_type_create above —
 		// PHP gates the meta write on `isset( $_POST['wp_roles'] )` (see
-		// `class-bb-admin-member-types-ajax.php` ~line 669), so picking
+		// `class-bboss-admin-member-types-ajax.php` ~line 669), so picking
 		// "None" without this marker would silently leave the prior role
 		// assigned because the wire payload wouldn't carry the key at all.
 		if ( formData.wp_roles.length > 0 ) {
@@ -591,7 +591,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 								// code converted "None" to an empty array, which legacy
 								// reads as "no value" and falls back to displaying
 								// Subscriber checked (see legacy
-								// `bp-core-admin-functions.php:2189`), causing a
+								// `bboss-core-admin-functions.php:2189`), causing a
 								// cross-UI mismatch where React showed "None" while
 								// legacy showed "Subscriber".
 								updateField( 'wp_roles', [ value ] );

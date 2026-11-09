@@ -1,15 +1,6 @@
 <?php
-/**
- * BuddyBoss Performance Functions.
- *
- * Functions are where all the magic happens in BuddyPress. They will
- * handle the actual saving or manipulation of information. Usually they will
- * hand off to a database class for data access, then return
- * true or false on success or failure.
- *
- * @package BuddyBoss\Performance\Functions
- * @since   BuddyBoss 1.6.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-performance-functions.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-performance-functions.php';
+// @bbwt-com-end compat-layer

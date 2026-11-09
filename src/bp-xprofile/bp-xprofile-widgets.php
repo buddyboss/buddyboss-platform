@@ -1,33 +1,6 @@
 <?php
-/**
- * BuddyBoss xProfile Component Widgets.
- *
- * Functions here registers Profile Completion Widget.
- *
- * @package BuddyBoss\XProfile
- * @since BuddyBoss 1.2.5
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Register bp-profile widgets.
- *
- * @since BuddyBoss 1.2.5
- */
-function bboss_xprofile_register_widgets() {
-
-	/**
-	 * Profile Completion Widget
-	 */
-	add_action(
-		'widgets_init',
-		function () {
-			register_widget( 'BBoss_Xprofile_Profile_Completion_Widget' );
-		}
-	);
-
-}
-
-add_action( 'bp_register_widgets', 'bp_xprofile_register_widgets' );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-xprofile-widgets.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-xprofile-widgets.php';
+// @bbwt-com-end compat-layer

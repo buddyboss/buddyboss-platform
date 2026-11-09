@@ -136,7 +136,7 @@ function bboss_platform_3_offload_media_required_version() {
  * Keyed by theme directory (template). A row is checked only when that
  * theme is active, or is the parent of the active child theme.
  * The floor comes from bboss_platform_3_theme_required_version()
- * (bp-incompatible-plugins-helper.php), which also gates the document
+ * (bboss-incompatible-plugins-helper.php), which also gates the document
  * meta shim for older theme builds.
  *
  * @since BuddyBoss 3.7.0

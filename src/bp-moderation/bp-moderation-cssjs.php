@@ -1,10 +1,6 @@
 <?php
-/**
- * Moderation component CSS/JS
- *
- * @since   BuddyBoss 1.5.6
- * @package BuddyBoss\Moderation
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-moderation-cssjs.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-moderation-cssjs.php';
+// @bbwt-com-end compat-layer

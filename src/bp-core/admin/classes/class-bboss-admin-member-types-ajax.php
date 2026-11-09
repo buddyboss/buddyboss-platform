@@ -121,7 +121,7 @@ class BBoss_Admin_Member_Types_Ajax {
 		// Admin listing order (per design spec): private items first,
 		// then oldest → newest within each visibility group so newly
 		// added types fall to the END of their group. The callback is
-		// defined as a named function in `bp-members-filters.php`
+		// defined as a named function in `bboss-members-filters.php`
 		// (`bb_admin_member_types_listing_orderby`) so it's
 		// `remove_filter()`-able by string reference. See that function's
 		// docblock for the full rationale.

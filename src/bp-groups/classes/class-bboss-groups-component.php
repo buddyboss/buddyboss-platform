@@ -1048,7 +1048,7 @@ class BBoss_Groups_Component extends BBoss_Component {
 			do_action( 'groups_setup_nav', $this->current_group->user_has_access );
 		} else {
 
-			/** This action is documented in bp-groups/bp-groups-loader.php */
+			/** This action is documented in bp-groups/bboss-groups-loader.php */
 			do_action( 'groups_setup_nav' );
 		}
 	}

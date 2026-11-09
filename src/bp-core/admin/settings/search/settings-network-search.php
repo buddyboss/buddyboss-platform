@@ -61,7 +61,7 @@ function bboss_search_register_network_search_fields() {
 
 	// User account fields — use bp_get_search_user_fields() when available,
 	// otherwise inline fallback values since the function is defined in
-	// bp-search-functions.php which loads at 'init' (after bb_register_features).
+	// bboss-search-functions.php which loads at 'init' (after bb_register_features).
 	$user_fields = function_exists( 'bboss_get_search_user_fields' )
 		? bboss_get_search_user_fields()
 		: array(

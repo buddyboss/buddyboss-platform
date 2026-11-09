@@ -36,7 +36,7 @@ if ( ! class_exists( 'BBoss_SEO_Helpers' ) ) {
 	 * - Rank Math        - the author breadcrumb crumb (class-breadcrumbs.php:455).
 	 *
 	 * Each plugin's remaining schema goes through get_the_author_meta() and is already redacted by
-	 * the member name filters in bp-members-filters.php, with two boundaries this layer does not
+	 * the member name filters in bboss-members-filters.php, with two boundaries this layer does not
 	 * reach. Both were established by reading the plugins' source rather than at runtime:
 	 *
 	 * - All in One SEO resolves its own smart tags AFTER the graph filter has run - getOutput()

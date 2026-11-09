@@ -166,7 +166,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 
 	/*
 	 * Task 3 (`$is_pro_locked` amplifier fix in bb_admin_settings_get_pro_notice(),
-	 * the moved-features elseif branch at ~bp-core-functions.php:10291) is a direct
+	 * the moved-features elseif branch at ~bboss-core-functions.php:10291) is a direct
 	 * delegation to bb_is_feature_provided() for the polls/sso/reactions branches —
 	 * no new branching logic of its own. Its shim-vs-real-provider behavior is
 	 * already exercised by the Task 1 helper tests above

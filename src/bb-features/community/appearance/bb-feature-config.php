@@ -55,7 +55,7 @@ bboss_register_feature(
  * install time.
  *
  * Hook fires exactly once, inside the `bboss_is_install()` branch of
- * `bboss_version_updater()` in `bp-core-update.php`. Upgrades and re-activations
+ * `bboss_version_updater()` in `bboss-core-update.php`. Upgrades and re-activations
  * never hit that branch, so existing admins who intentionally stayed on the
  * WordPress theme are unaffected.
  *

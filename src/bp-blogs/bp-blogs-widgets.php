@@ -1,27 +1,6 @@
 <?php
-/**
- * BuddyPress Blogs Widgets.
- *
- * @package BuddyBoss\Blogs\Widgets
- * @since BuddyPress 1.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Register the widgets for the Blogs component.
- */
-function bboss_blogs_register_widgets() {
-	global $wpdb;
-
-	if ( bboss_is_active( 'activity' ) && bboss_is_root_blog( $wpdb->blogid ) ) {
-		add_action(
-			'widgets_init',
-			function() {
-				register_widget( 'BBoss_Blogs_Recent_Posts_Widget' );
-			}
-		);
-	}
-}
-add_action( 'bp_register_widgets', 'bp_blogs_register_widgets' );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-blogs-widgets.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-blogs-widgets.php';
+// @bbwt-com-end compat-layer

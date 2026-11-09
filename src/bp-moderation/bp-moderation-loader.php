@@ -1,23 +1,6 @@
 <?php
-/**
- * BuddyBoss Moderation Loader.
- *
- * An Moderation component, for users, groups, and site moderation.
- *
- * @since   BuddyBoss 1.5.6
- * @package BuddyBoss\Moderation
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Set up the bp-Moderation component.
- *
- * @since BuddyBoss 1.5.6
- */
-function bboss_setup_moderation() {
-	bboss()->moderation = new BBoss_Moderation_Component();
-}
-
-add_action( 'bp_setup_components', 'bp_setup_moderation', 1 );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-moderation-loader.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-moderation-loader.php';
+// @bbwt-com-end compat-layer

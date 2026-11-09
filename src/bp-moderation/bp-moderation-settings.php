@@ -1,51 +1,6 @@
 <?php
-/**
- * Moderation Settings
- *
- * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.6
- */
-
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-/**
- * Return Moderation settings API option
- *
- * @since BuddyBoss 1.5.6
- *
- * @param string $option  Option name.
- * @param string $default Default value.
- *
- * @return mixed
- * @uses  get_option()
- * @uses  esc_attr()
- * @uses  apply_filters()
- */
-function bboss_moderation_get_setting( $option, $default = '' ) {
-
-	// Get the option and sanitize it.
-	$value = get_option( $option, $default );
-
-	// Fallback to default.
-	if ( empty( $value ) ) {
-		$value = $default;
-	}
-
-	// Allow plugins to further filter the output.
-	return apply_filters( 'bp_moderation_get_setting', $value, $option );
-}
-
-/**
- * Output Moderation settings API option
- *
- * @since BuddyBoss 1.5.6
- *
- * @param string $option  Option name.
- * @param string $default Default value.
- */
-function bboss_moderation_setting( $option, $default = '' ) {
-	echo esc_attr( bboss_moderation_get_setting( $option, $default ) );
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-moderation-settings.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-moderation-settings.php';
+// @bbwt-com-end compat-layer

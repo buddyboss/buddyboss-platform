@@ -10,7 +10,7 @@ class BB_Tests_Activity_Topics_Delete extends BP_UnitTestCase {
 	public function set_up() {
 		parent::set_up();
 
-		// bp-activity-filters.php registers the cleanup at load; re-arm it in case a test removed it.
+		// bboss-activity-filters.php registers the cleanup at load; re-arm it in case a test removed it.
 		if ( ! has_action( 'bp_activity_after_delete', 'bb_delete_topic_relationships_of_deleted_activities' ) ) {
 			add_action( 'bp_activity_after_delete', 'bb_delete_topic_relationships_of_deleted_activities' );
 		}
@@ -163,7 +163,7 @@ class BB_Tests_Activity_Topics_Delete extends BP_UnitTestCase {
 
 	public function test_repair_tool_is_registered_and_paginates() {
 		if ( ! function_exists( 'bboss_admin_repair_list' ) ) {
-			require_once BBOSS_PLUGIN_DIR . '/bp-core/admin/bp-core-admin-tools.php';
+			require_once BBOSS_PLUGIN_DIR . '/bp-core/admin/bboss-core-admin-tools.php';
 		}
 		$slugs = wp_list_pluck( bboss_admin_repair_list(), 0 );
 		$this->assertContains( 'bp-activity-topic-relationships', $slugs );

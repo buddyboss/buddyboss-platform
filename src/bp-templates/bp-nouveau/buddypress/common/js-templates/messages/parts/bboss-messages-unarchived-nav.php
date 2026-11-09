@@ -1,0 +1,18 @@
+<?php
+/**
+ * BP Nouveau messages nav template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bboss-messages-unarchived-nav.php.
+ *
+ * @since BuddyBoss 2.2.6
+ * @version 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?>
+
+<script type="text/html" id="tmpl-bp-messages-unarchived-nav">
+	<?php bboss_get_template_part( 'members/single/parts/item-subnav' ); ?>
+</script>

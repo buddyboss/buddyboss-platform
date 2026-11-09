@@ -1,12 +1,6 @@
 <?php
-/**
- * BuddyBoss Performance Filters.
- *
- * @package BuddyBoss\Performance\Filter
- * @since BuddyBoss 1.5.7
- */
-
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file was renamed to bboss-performance-filters.php (decision 0009); kept so code that
+// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/bboss-performance-filters.php';
+// @bbwt-com-end compat-layer

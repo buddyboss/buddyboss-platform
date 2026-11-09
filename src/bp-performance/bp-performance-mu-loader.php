@@ -20,8 +20,8 @@ if ( ! function_exists( 'bboss_performance_loaded' ) ) {
 			require_once __DIR__ . '/classes/class-performance.php';
 			\BuddyBoss\Performance\Performance::instance();
 
-			if ( file_exists( __DIR__ . '/bp-performance-includes.php' ) ) {
-				require_once __DIR__ . '/bp-performance-includes.php';
+			if ( file_exists( __DIR__ . '/bboss-performance-includes.php' ) ) {
+				require_once __DIR__ . '/bboss-performance-includes.php';
 			}
 		}
 	}

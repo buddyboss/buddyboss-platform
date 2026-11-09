@@ -152,7 +152,7 @@ class BBoss_Nouveau extends BBoss_Theme_Compat {
 		$width      = 1178;
 		$top_offset = 200;
 
-		/** This filter is documented in bp-core/bp-core-avatars.php. */
+		/** This filter is documented in bp-core/bboss-core-avatars.php. */
 		$avatar_height = apply_filters( 'bp_core_avatar_full_height', $top_offset );
 
 		if ( $avatar_height > $top_offset ) {

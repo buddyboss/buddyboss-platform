@@ -1303,9 +1303,9 @@ class BBoss_Feature_Registry {
 		// Run core install to create DB tables for newly activated components
 		// and create directory pages. This mirrors the behavior of the legacy
 		// component-toggle screen, which always called these after activation.
-		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php' ) ) {
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bboss-core-admin-schema.php' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			require_once bboss()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php';
+			require_once bboss()->plugin_dir . 'bp-core/admin/bboss-core-admin-schema.php';
 			bboss_core_install( $active_components );
 		}
 		bboss_core_add_page_mappings( $active_components );
