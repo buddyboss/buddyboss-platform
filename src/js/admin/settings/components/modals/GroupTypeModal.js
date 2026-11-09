@@ -351,7 +351,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 		//                 functionally equivalent to "all allowed," but
 		//                 stored explicitly so the round-trip preserves
 		//                 admin intent and so the auto-join consumer
-		//                 (`bp-groups-functions.php:2616`) can match every
+		//                 (`bboss-groups-functions.php:2616`) can match every
 		//                 user type via `in_array()`)
 		//   Selected → array of the toggled ids
 		var availableMemberTypeIds = ( memberTypes || [] ).map( function ( mt ) {
@@ -374,7 +374,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 
 		// Profile Type Joining — same storage semantics as the invites field
 		// above; the `_bp_group_type_enabled_member_type_join` consumer at
-		// `bp-groups-functions.php:2616` uses `in_array($user_type, $meta)`
+		// `bboss-groups-functions.php:2616` uses `in_array($user_type, $meta)`
 		// to decide whether to auto-approve, so "All" needs the full type
 		// list listed explicitly to actually auto-approve every user; '' /
 		// "None" falls through to the normal admin-approval flow.

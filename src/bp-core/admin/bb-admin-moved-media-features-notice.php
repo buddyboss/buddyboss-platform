@@ -218,7 +218,7 @@ function bboss_moved_media_features_is_entitled_from_cache() {
 		return false;
 	}
 
-	/** This filter is documented in bp-core/bp-core-update.php */
+	/** This filter is documented in bp-core/bboss-core-update.php */
 	if ( null !== apply_filters( 'bb_pre_is_entitled_to_addons', null ) ) {
 		return bboss_is_entitled_to_addons();
 	}

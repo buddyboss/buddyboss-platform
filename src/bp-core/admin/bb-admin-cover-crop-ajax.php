@@ -60,7 +60,7 @@ const BBOSS_ADMIN_COVER_CROP_ALLOWED_OBJECTS = array( 'user', 'group' );
  * one we manage.
  *
  * The subdir mirrors `bboss_default_custom_profile_group_cover_image_upload_dir()`
- * in `bp-core/bp-core-filters.php` — same admin-default location the legacy
+ * in `bp-core/bboss-core-filters.php` — same admin-default location the legacy
  * single-step upload writes to, so anything reading the option after the fact
  * sees the same path layout.
  *
@@ -470,11 +470,11 @@ function bboss_admin_cover_image_set_ajax() {
 	// 'item_type' => 'default']
 	// Some listeners (including
 	// `bb_save_profile_group_cover_options_on_upload_custom_cover` in
-	// bp-core-filters.php) read `$_POST['bp_params']['object']` to decide
+	// bboss-core-filters.php) read `$_POST['bp_params']['object']` to decide
 	// between the user vs group option keys. We mirror the same shape the
 	// single-step uploader sends so they pick the right branch — and we
 	// admit `bb_admin_cover_image_set` to the validation gate's allowlist
-	// in bp-core-filters.php so the listener accepts our action.
+	// in bboss-core-filters.php so the listener accepts our action.
 	//
 	// We restore `$_POST['bp_params']` inside a try/finally so a listener
 	// that throws or calls wp_die()/exit() can't leave the request with a

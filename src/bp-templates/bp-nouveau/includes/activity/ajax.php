@@ -595,7 +595,7 @@ function bboss_nouveau_ajax_get_single_activity_content() {
 		}
 	}
 
-	/** This filter is documented in bp-activity/bp-activity-template.php */
+	/** This filter is documented in bp-activity/bboss-activity-template.php */
 	$content = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
 
 	wp_send_json_success( array( 'contents' => $content ) );

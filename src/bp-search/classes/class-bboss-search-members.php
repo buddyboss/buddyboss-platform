@@ -537,7 +537,7 @@ if ( ! class_exists( 'BBoss_Search_Members' ) ) :
 			// option is filterable through `pre_option_bp-display-name-format`, so one request can
 			// see more than one format - and a key without it hands whichever context asks second
 			// the first one's predicate, dropping the format hide. The direction of that miss is a
-			// leak, so it is keyed the same way bp-members-filters.php keys its own memo.
+			// leak, so it is keyed the same way bboss-members-filters.php keys its own memo.
 			$cache_key = md5( (string) $search_term ) . '_' . $viewer_id . '_' . $display_name_format;
 
 			if ( isset( $cache[ $cache_key ] ) ) {

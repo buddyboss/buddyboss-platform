@@ -76,7 +76,7 @@ class BBoss_Activity_Component extends BBoss_Component {
 		// Load Akismet support if Akismet is configured.
 		$akismet_key = bboss_get_option( 'wordpress_api_key' );
 
-		/** This filter is documented in bp-activity/bp-activity-akismet.php */
+		/** This filter is documented in bp-activity/bboss-activity-akismet.php */
 		if ( defined( 'AKISMET_VERSION' ) && class_exists( 'Akismet' ) && ( ! empty( $akismet_key ) || defined( 'WPCOM_API_KEY' ) ) && apply_filters( 'bp_activity_use_akismet', bboss_is_akismet_active() ) ) {
 			$includes[] = 'akismet';
 		}

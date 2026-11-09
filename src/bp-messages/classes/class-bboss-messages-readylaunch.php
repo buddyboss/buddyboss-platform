@@ -68,8 +68,8 @@ class BBoss_Messages_Readylaunch {
 	 * @return array The modified template parts.
 	 */
 	public function bb_messages_js_template_parts( $template_parts ) {
-		$template_parts[] = 'parts/bp-messages-right-panel';
-		$template_parts[] = 'parts/bp-messages-no-unread-threads';
+		$template_parts[] = 'parts/bboss-messages-right-panel';
+		$template_parts[] = 'parts/bboss-messages-no-unread-threads';
 
 		return $template_parts;
 	}

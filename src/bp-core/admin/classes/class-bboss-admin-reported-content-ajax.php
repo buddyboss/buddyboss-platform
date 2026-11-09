@@ -86,7 +86,7 @@ class BBoss_Admin_Reported_Content_Ajax {
 	 * link without `modbypass=1` lands on the same suspension/block UI a
 	 * regular member would see, hiding the user from the very admin trying
 	 * to review the report. The bypass flag is honoured by
-	 * `bp-moderation-filters.php` and `BBoss_Moderation_Abstract`.
+	 * `bboss-moderation-filters.php` and `BBoss_Moderation_Abstract`.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *

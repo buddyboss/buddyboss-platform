@@ -1061,7 +1061,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					) }
 					{ /* Removable unless they are the sole remaining admin. The group
 					     creator is NOT specially protected — legacy WP-admin
-					     (bp-groups-admin.php) always let the creator be removed; the
+					     (bboss-groups-admin.php) always let the creator be removed; the
 					     is_creator gate here was a 3.0.0 migration regression. */ }
 					{ ! member.is_sole_admin && (
 						<button

@@ -541,7 +541,7 @@ if ( ! class_exists( 'BBoss_WPML_Helpers' ) ) {
 				return;
 			}
 
-			// This WPML shim is loaded by bp-incompatible-plugins-helper.php
+			// This WPML shim is loaded by bboss-incompatible-plugins-helper.php
 			// based on `class_exists( 'SitePress' )`, NOT on BP component
 			// state. When activity is deactivated via Settings 2.0, the
 			// `bp_activity_*` helpers are undefined — bail rather than

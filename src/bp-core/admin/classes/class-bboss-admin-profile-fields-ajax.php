@@ -308,7 +308,7 @@ class BBoss_Admin_Profile_Fields_Ajax {
 			wp_send_json_error( array( 'message' => __( 'There was an error updating the field set. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
-		// Update base group name option for group_id=1, matching legacy bp-xprofile-admin.php:431.
+		// Update base group name option for group_id=1, matching legacy bboss-xprofile-admin.php:431.
 		if ( 1 === $group_id ) {
 			bboss_update_option( 'bp-xprofile-base-group-name', ! empty( $name ) ? $name : $group->name );
 		}
@@ -1298,7 +1298,7 @@ class BBoss_Admin_Profile_Fields_Ajax {
 			bboss_xprofile_delete_meta( $field_id, 'field', '_placeholder_text' );
 		}
 
-		// Gender option order (matching legacy bp-xprofile-admin.php:611-612).
+		// Gender option order (matching legacy bboss-xprofile-admin.php:611-612).
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$gender_option_order = isset( $_POST['gender_option_order'] ) ? sanitize_text_field( wp_unslash( $_POST['gender_option_order'] ) ) : '';
 		if ( ! empty( $gender_option_order ) ) {
@@ -1361,7 +1361,7 @@ class BBoss_Admin_Profile_Fields_Ajax {
 			// Mirror the action `set_member_types()` fires at
 			// `class-bboss-xprofile-field.php:788` so listeners that piggy-back on
 			// member-type changes still run. The platform's own listener
-			// `bp_xprofile_clear_member_type_cache` (`bp-xprofile-cache.php:232`)
+			// `bp_xprofile_clear_member_type_cache` (`bboss-xprofile-cache.php:232`)
 			// flushes the global `field_member_types` cache key — without this
 			// fire, that cache stays stale and `get_member_types()` keeps
 			// returning the pre-delete value until the cache TTL/eviction.

@@ -2010,7 +2010,7 @@ function bboss_subscriptions_get_notification_chunk_claim_ttl( $args ) {
  * dedicated group does NOT survive a full wp_cache_flush(): the moderation
  * component issues one on every hide, unhide, suspend and report save
  * (bboss_moderation_clear_status_change_cache() and siblings in
- * bp-moderation-filters.php, also reached when a forum is connected to a
+ * bboss-moderation-filters.php, also reached when a forum is connected to a
  * group), and the subscription migrations do too. After such a flush a
  * re-run of an already-finished chunk row is no longer refused, so the
  * duplicate protection is best-effort across full flushes, not a guarantee:

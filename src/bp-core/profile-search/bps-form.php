@@ -41,7 +41,7 @@ function bboss_profile_search_escaped_form_data( $form = false ) {
 
 	$meta   = bboss_ps_meta( $form );
 	$fields = bboss_ps_parse_request( bboss_ps_get_request( 'form', $form ) );
-	wp_register_script( 'bp-ps-template-form', bboss()->plugin_url . 'bp-core/profile-search/bp-ps-template.js', array(), bboss_get_version() );
+	wp_register_script( 'bp-ps-template-form', bboss()->plugin_url . 'bp-core/profile-search/bboss-ps-template.js', array(), bboss_get_version() );
 	wp_enqueue_script( 'bp-ps-template-form' );
 	$F            = new stdClass();
 	$F->id        = $form;

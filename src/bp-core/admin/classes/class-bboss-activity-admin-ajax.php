@@ -266,11 +266,11 @@ class BBoss_Activity_Admin_Ajax {
 				// Apply content filters (same as legacy column_comment()).
 				$display_content = '';
 				if ( ! empty( $activity_obj->content ) ) {
-					/** This filter is documented in bp-activity/bp-activity-template.php */
+					/** This filter is documented in bp-activity/bboss-activity-template.php */
 					$display_content = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_obj->content, &$activity_obj ) );
 				} else {
 					$r = array( 'no_timestamp' => false );
-					/** This filter is documented in bp-activity/bp-activity-template.php */
+					/** This filter is documented in bp-activity/bboss-activity-template.php */
 					$display_content = apply_filters_ref_array( 'bp_get_activity_action', array( $activity_obj->action, &$activity_obj, $r ) );
 				}
 

@@ -491,7 +491,7 @@ function bboss_reverse_sync_components_to_features( $old_value, $new_value ) {
 	}
 
 	// Only run if Feature Registry is loaded. The facade function lives in
-	// bp-core-functions.php (loaded early), so also require the CLASS —
+	// bboss-core-functions.php (loaded early), so also require the CLASS —
 	// it loads at `bp_loaded` priority 4. A component write earlier in the
 	// boot (e.g. the availability scrub at `bp_loaded` priority 1) defers
 	// the sync until the registry exists instead of fataling.

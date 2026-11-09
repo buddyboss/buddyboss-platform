@@ -2242,7 +2242,7 @@ function bboss_admin_forum_repair_tools_wrapper_function() {
 	}
 
 	// Additive enrichment for the Settings 2.0 Repair Platform React UI —
-	// see bb_admin_repair_extract_count_summary() in bp-core-admin-tools.php.
+	// see bb_admin_repair_extract_count_summary() in bboss-core-admin-tools.php.
 	// Pass the whole $status array so the helper can scan `message`, `records`,
 	// and `feedback` for a count. LOCKED-BC preserved (additive).
 	//

@@ -414,7 +414,7 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 		}
 
 		// Run the setup, in case tables have to be created.
-		require_once bboss()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php';
+		require_once bboss()->plugin_dir . 'bp-core/admin/bboss-core-admin-schema.php';
 
 		bboss_core_install( $active_components );
 		bboss_core_add_page_mappings( $active_components );

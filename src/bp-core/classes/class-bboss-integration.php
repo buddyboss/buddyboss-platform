@@ -135,13 +135,13 @@ class BBoss_Integration {
 			$paths = array(
 
 				// Passed with no extension.
-				'bp-' . $this->id . '/bp-' . $this->id . '-' . $file . '.php',
-				'bp-' . $this->id . '-' . $file . '.php',
+				'bp-' . $this->id . '/bboss-' . $this->id . '-' . $file . '.php',
+				'bboss-' . $this->id . '-' . $file . '.php',
 				'bp-' . $this->id . '/' . $file . '.php',
 
 				// Passed with extension.
 				$file,
-				'bp-' . $this->id . '-' . $file,
+				'bboss-' . $this->id . '-' . $file,
 				'bp-' . $this->id . '/' . $file,
 			);
 

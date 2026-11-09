@@ -3038,5 +3038,5 @@ if ( defined( 'WP_FUSION_VERSION' ) || defined( 'WPF_VERSION' ) || function_exis
 	require_once __DIR__ . '/compat/wp-fusion.php';
 }
 if ( defined( 'BP_AUTO_GROUP_JOIN_PLUGIN_VERSION' ) ) {
-	require_once __DIR__ . '/compat/bp-auto-group-join.php';
+	require_once __DIR__ . '/compat/bboss-auto-group-join.php';
 }

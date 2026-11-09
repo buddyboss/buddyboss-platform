@@ -605,7 +605,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 = 2.7.80 =
 * Bug: Core - Fixed color functionality and spacing issues in the WordPress Customizer when using a default theme
 * Bug: Profiles - Fixed an issue where adding or removing repeater fields in a repeater fieldset was not functioning correctly
-* Bug: Performance - Removed an unused variable from class-bp-search.php and ensured network search functionality works as expected
+* Bug: Performance - Removed an unused variable from class-bboss-search.php and ensured network search functionality works as expected
 
 = 2.7.70 =
 * Enhancement: Forums - Added a new hook to control forum-related notifications

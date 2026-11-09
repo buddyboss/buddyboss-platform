@@ -87,7 +87,7 @@ function bboss_messages_reschedule_cron_after_save( $feature_id, $settings, $sav
 		// BP_Core_Cron::schedule(), which runs on `bp_init` — already past in this
 		// AJAX request — so the event would never be created and delayed message
 		// emails would stop. The hook's callback is attached at load time in
-		// bp-messages-filters.php, so scheduling the event is all that is needed
+		// bboss-messages-filters.php, so scheduling the event is all that is needed
 		// (same approach as bb_update_digest_schedule_event_on_change_component_status()).
 		if ( ! empty( $new_schedule ) && ! wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
 			wp_schedule_event( time(), $new_schedule['schedule_key'], 'bb_digest_email_notifications_hook' );

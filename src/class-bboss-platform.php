@@ -516,10 +516,10 @@ class BBoss_Platform {
 
 
 		// Load the compatibility helpers for third party plugins.
-		require $this->compatibility_dir . '/bp-incompatible-plugins-helper.php';
+		require $this->compatibility_dir . '/bboss-incompatible-plugins-helper.php';
 
 		// Load the WP abstraction file so BuddyPress can run on all WordPress setups.
-		require $this->plugin_dir . 'bp-core/bp-core-wpabstraction.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-wpabstraction.php';
 
 		// Setup the versions (after we include multisite abstraction above).
 		$this->versions();
@@ -527,38 +527,38 @@ class BBoss_Platform {
 		/** Update/Install */
 
 		// Theme compatibility.
-		require $this->plugin_dir . 'bp-core/bp-core-template-loader.php';
-		require $this->plugin_dir . 'bp-core/bp-core-theme-compatibility.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-template-loader.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-theme-compatibility.php';
 
 		// Require all of the BuddyPress core libraries.
-		require $this->plugin_dir . 'bp-core/bp-core-dependency.php';
-		require $this->plugin_dir . 'bp-core/bp-core-actions.php';
-		require $this->plugin_dir . 'bp-core/bp-core-caps.php';
-		require $this->plugin_dir . 'bp-core/bp-core-cache.php';
-		require $this->plugin_dir . 'bp-core/bp-core-cssjs.php';
-		require $this->plugin_dir . 'bp-core/bp-core-update.php';
-		require $this->plugin_dir . 'bp-core/bp-core-options.php';
-		require $this->plugin_dir . 'bp-core/bp-core-taxonomy.php';
-		require $this->plugin_dir . 'bp-core/bp-core-filters.php';
-		require $this->plugin_dir . 'bp-core/bp-core-attachments.php';
-		require $this->plugin_dir . 'bp-core/bp-core-avatars.php';
-		require $this->plugin_dir . 'bp-core/bp-core-widgets.php';
-		require $this->plugin_dir . 'bp-core/bp-core-template.php';
-		require $this->plugin_dir . 'bp-core/bp-core-adminbar.php';
-		require $this->plugin_dir . 'bp-core/bp-core-buddybar.php';
-		require $this->plugin_dir . 'bp-core/bp-core-catchuri.php';
-		require $this->plugin_dir . 'bp-core/bp-core-functions.php';
-		require $this->plugin_dir . 'bp-core/bp-core-moderation.php';
-		require $this->plugin_dir . 'bp-core/bp-core-cron.php';
-		require $this->plugin_dir . 'bp-core/bp-core-loader.php';
-		require $this->plugin_dir . 'bp-core/bp-core-customizer-email.php';
-		require $this->plugin_dir . 'bp-core/bp-core-emails.php';
-		require $this->plugin_dir . 'bp-core/bp-core-wp-emails.php';
-		require $this->plugin_dir . 'bp-core/bp-core-profile-search.php';
-		require $this->plugin_dir . 'bp-core/bp-core-gdpr.php';
-		require $this->plugin_dir . 'bp-core/bp-core-rest-api.php';
-		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
-		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-dependency.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-actions.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-caps.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-cache.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-cssjs.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-update.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-options.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-taxonomy.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-filters.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-attachments.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-avatars.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-widgets.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-template.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-adminbar.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-buddybar.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-catchuri.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-functions.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-moderation.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-cron.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-loader.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-customizer-email.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-emails.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-wp-emails.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-profile-search.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-gdpr.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-rest-api.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-notification.php';
+		require $this->plugin_dir . 'bp-core/bboss-core-invitation.php';
 		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
 		require $this->plugin_dir . 'bp-core/bb-core-bookmarks.php';
 		require $this->plugin_dir . 'bp-core/bb-core-drafts.php';

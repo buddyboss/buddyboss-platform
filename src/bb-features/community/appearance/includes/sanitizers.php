@@ -5,7 +5,7 @@
  * Stateless helpers shared by three entry points:
  *   1. Settings 2.0 admin save (`admin/callbacks.php :: bb_appearance_on_settings_saved`).
  *   2. Onboarding wizard save (`BBoss_ReadyLaunch_Onboarding::sanitize_final_settings`).
- *   3. One-shot version-update migration (`bb_rl_migrate_settings` in `bp-core-update.php`).
+ *   3. One-shot version-update migration (`bb_rl_migrate_settings` in `bboss-core-update.php`).
  *
  * This file is loaded unconditionally from `bb-feature-config.php` — NOT inside
  * the admin gate that wraps `admin/settings.php`. The migration runs on

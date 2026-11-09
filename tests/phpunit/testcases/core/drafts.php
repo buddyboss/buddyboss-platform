@@ -3059,7 +3059,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->isolate_draft_maintenance();
 
 		if ( ! function_exists( 'bboss_version_updater' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/bp-core-update.php';
+			require_once bboss()->plugin_dir . 'bp-core/bboss-core-update.php';
 		}
 
 		$this->assertGreaterThan( 23631, (int) bboss()->db_version, 'db_version must be above the 3.7.0 value so the upgrade routine runs.' );
@@ -3112,7 +3112,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->isolate_draft_maintenance();
 
 		if ( ! function_exists( 'bboss_drafts_cleanup_on_upgrade' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/bp-core-update.php';
+			require_once bboss()->plugin_dir . 'bp-core/bboss-core-update.php';
 		}
 
 		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
@@ -3429,7 +3429,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->isolate_draft_maintenance();
 
 		if ( ! function_exists( 'bboss_drafts_cleanup_on_upgrade' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/bp-core-update.php';
+			require_once bboss()->plugin_dir . 'bp-core/bboss-core-update.php';
 		}
 
 		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
