@@ -286,6 +286,9 @@ function bboss_admin_settings_page() {
 		// Pass the user's legacy groups-per-page screen option so GroupsListScreen
 		// can honour the preference set in the old WP admin list table.
 		'groupsPerPage'             => $groups_per_page,
+		// Support Access (time-boxed BuddyBoss support login) ships only in the
+		// buddyboss.com build; the Help screen hides its card and route otherwise.
+		'supportAccessAvailable'    => class_exists( 'BBoss_Support_Access' ),
 	);
 
 	// Component active status for conditional UI in React.
@@ -414,9 +417,11 @@ function bboss_admin_settings_page() {
 	 * only ships on the bb-settings screen at all (it is attached to the
 	 * bb-admin-settings script handle, enqueued exclusively by this render
 	 * callback), and (b) only initializes the widget when the active tab is
-	 * `help`, mounting/unmounting as the admin navigates between SPA tabs so the
-	 * chatbot never appears on any other Settings tab. The DocsBot ID is the
-	 * only configurable value and is JSON-encoded so it is safely escaped.
+	 * `help`, and only when the admin clicks "Chat with Buddy" / "Ask Buddy"
+	 * (nothing is requested from docsbot.ai before that; see readme External
+	 * services), unmounting as the admin navigates to another SPA tab so the
+	 * chatbot never appears elsewhere. The DocsBot ID is the only configurable
+	 * value and is JSON-encoded so it is safely escaped.
 	 *
 	 * The widget's own floating launcher button is hidden via CSS below; the
 	 * "Chat with Buddy" button in the Help footer (HelpScreen.js) is the sole
@@ -511,22 +516,43 @@ function bboss_admin_settings_page() {
 				}
 			}
 
-			function sync() {
-				if ( onHelpTab() ) {
-					if ( ! mounted ) {
+			// Nothing is loaded from docsbot.ai until the admin clicks "Chat with
+			// Buddy" / "Ask Buddy" (readme: External services, "on click"). The Help
+			// screen calls this and opens the chat once it resolves; a second call
+			// while mounted resolves at once.
+			var pending = null;
+			function ensure() {
+				if ( ! onHelpTab() ) {
+					return Promise.reject( new Error( "not on the Help tab" ) );
+				}
+				if ( mounted ) {
+					return Promise.resolve();
+				}
+				if ( pending ) {
+					return pending;
+				}
+				window.bbDocsbotFailed = false;
+				pending = DocsBotAI.init( { id: DOCSBOT_ID } )
+					.then( function () {
 						mounted = true;
-						window.bbDocsbotFailed = false;
-						DocsBotAI.init( { id: DOCSBOT_ID } )
-							.then( hideLauncher )
-							.catch( function () {
-								// chat.js failed to load (CSP, air-gapped, network)
-								// — flag it so the Help footer button can fall back
-								// instead of silently doing nothing.
-								mounted = false;
-								window.bbDocsbotFailed = true;
-							} );
-					}
-				} else {
+						pending = null;
+						hideLauncher();
+					} )
+					.catch( function ( err ) {
+						// chat.js failed to load (CSP, air-gapped, network)
+						// — flag it so the Help footer button can fall back
+						// instead of silently doing nothing.
+						mounted = false;
+						pending = null;
+						window.bbDocsbotFailed = true;
+						throw err;
+					} );
+				return pending;
+			}
+			window.bbDocsbotEnsure = ensure;
+
+			function sync() {
+				if ( ! onHelpTab() ) {
 					unmount();
 				}
 			}

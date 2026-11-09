@@ -49,9 +49,6 @@ function bboss_admin_settings_init() {
 	// self-boots via BB_Support_Access::instance() at the bottom of its file,
 	// registering the front-end `init` login, the expiry cron, and the admin
 	// AJAX handlers.
-	if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-support-access.php' ) ) {
-		require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-support-access.php';
-	}
 
 	// Admin/AJAX-only: AJAX handlers, meta field registry, settings page, feature settings
 	// (panels, sections, fields), and icon registry. Skip on frontend for performance —
