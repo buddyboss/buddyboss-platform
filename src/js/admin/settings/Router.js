@@ -228,7 +228,7 @@ export function Router({ currentRoute, onNavigate }) {
 			if ( 'help' === featureId ) {
 				// Sub-route: /settings/help/support-access opens the dedicated
 				// Support Access management page from the Open Access card.
-				if ( 'support-access' === sidePanelId ) {
+				if ( 'support-access' === sidePanelId && window.bbAdminData && window.bbAdminData.supportAccessAvailable ) {
 					return <SupportAccessScreen onNavigate={onNavigate} />;
 				}
 				return <HelpScreen onNavigate={onNavigate} />;

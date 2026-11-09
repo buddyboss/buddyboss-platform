@@ -40,7 +40,7 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 	}
 
 	// A ticket ID must be a positive integer — mirror the server-side check
-	// (ctype_digit + > 0 in BB_Support_Access::ajax_set_ticket()) so the admin
+	// (ctype_digit + > 0 in the server-side ajax_set_ticket handler) so the admin
 	// gets immediate feedback instead of only a post-submit error toast.
 	var trimmedTicket = ticket.trim();
 	var isValidTicket = /^[0-9]+$/.test( trimmedTicket ) && parseInt( trimmedTicket, 10 ) > 0;
