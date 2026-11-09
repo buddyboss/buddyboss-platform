@@ -329,6 +329,19 @@ function bp_helper_plugins_loaded_callback() {
 	if ( class_exists( 'LifterLMS' ) ) {
 		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
 	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * - Prevent the "Prevent discovery of usernames" author-scan block from
+	 *   404ing BuddyBoss REST API requests that use an `author` parameter.
+	 *
+	 * Support Wordfence Security.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 */
+	if ( class_exists( 'wordfence' ) ) {
+		add_filter( 'request', 'bb_core_wordfence_rest_author_scan_compatibility', 5 );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -1216,3 +1229,241 @@ function bb_om_compatibility_helper() {
 	}
 }
 add_action( 'init', 'bb_om_compatibility_helper', 10 );
+
+/**
+ * Keep BuddyBoss REST API requests working when Wordfence's
+ * "Prevent discovery of usernames" protection is enabled.
+ *
+ * Wordfence hooks the `request` filter (`wordfence::preventAuthorNScans`) and
+ * exits with a 404 when the main query vars contain a numeric `author` value.
+ * Because `author` is a public query var, it is populated for `/wp-json/*`
+ * URLs too, which kills requests such as
+ * `GET /wp-json/buddyboss/v1/topics?author=N` before the REST server
+ * dispatches. The main query is never used to build a REST response, so the
+ * `author` query var can safely be dropped for BuddyBoss REST requests — the
+ * REST controllers read `author` from the WP_REST_Request object, not from
+ * the main query. Front-end `?author=N` scans and the WP core users endpoints
+ * are untouched, so Wordfence's username-enumeration protection stays intact.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param array $query_vars The array of requested query variables.
+ *
+ * @return array The query variables without `author` for BuddyBoss REST requests.
+ */
+function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
+	// `rest_route` arrives as an array for `?rest_route[]=…`; core's rest_api_loaded() ignores those too.
+	if ( empty( $query_vars['rest_route'] ) || ! is_string( $query_vars['rest_route'] ) || empty( $query_vars['author'] ) ) {
+		return $query_vars;
+	}
+
+	/**
+	 * Filters the REST namespaces exempted from Wordfence's author-scan block.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param array $namespaces REST namespaces whose requests keep working
+	 *                          with an `author` parameter.
+	 */
+	$namespaces = apply_filters( 'bb_rest_author_scan_compat_namespaces', array( bp_rest_namespace(), 'buddyboss-app' ) );
+
+	$rest_route = ltrim( $query_vars['rest_route'], '/' );
+
+	foreach ( $namespaces as $rest_namespace ) {
+		if ( 0 === strpos( $rest_route, trailingslashit( $rest_namespace ) ) ) {
+			unset( $query_vars['author'] );
+			break;
+		}
+	}
+
+	return $query_vars;
+}
+
+/**
+ * Minimum BuddyBoss Theme version for this Platform.
+ *
+ * Theme builds before PROD-9995 build `BP_Document` objects from activity
+ * meta in the Elementor Activity widget without checking that the Documents
+ * component is loaded. Documents now ship in BuddyBoss Add-ons, so on a site
+ * without it those builds fatal. {@see bb_theme_document_activity_meta_compat()}
+ * keeps them working until the theme is updated.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string Minimum BuddyBoss Theme version.
+ */
+function bb_platform_3_theme_required_version() {
+	return '2.23.0';
+}
+
+/**
+ * Get the version of the active BuddyBoss Theme, or the parent of the active child theme.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string Theme version, or an empty string when BuddyBoss Theme is not in use.
+ */
+function bb_get_active_buddyboss_theme_version() {
+	$theme = wp_get_theme();
+
+	if ( 'buddyboss-theme' !== $theme->get_template() ) {
+		return '';
+	}
+
+	$parent = $theme->parent();
+
+	return (string) ( $parent ? $parent->get( 'Version' ) : $theme->get( 'Version' ) );
+}
+
+/**
+ * Activity meta keys that older BuddyBoss Theme builds turn into `BP_Document` objects.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string[] Meta keys.
+ */
+function bb_theme_document_activity_meta_keys() {
+	return array( 'bp_document_ids', 'bp_document_folder_activity', 'bp_document_id' );
+}
+
+/**
+ * Hide document activity meta from BuddyBoss Theme builds that cannot handle a missing Documents component.
+ *
+ * Handles single-key reads; full reads are filtered by
+ * bb_theme_document_activity_cached_meta_compat(). Applies only when an older
+ * BuddyBoss Theme is active and `BP_Document` is not loaded. Nothing else can use these keys then: the code that reads them ships
+ * in BuddyBoss Add-ons. The stored meta is untouched, so documents reappear
+ * once Add-ons is active again.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param mixed  $value     Short-circuit value; null to read the meta normally.
+ * @param int    $object_id Activity ID.
+ * @param string $meta_key  Meta key, or an empty string for all meta.
+ * @param bool   $single    Whether a single value was requested.
+ *
+ * @return mixed
+ */
+function bb_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single ) {
+	/*
+	 * Full reads are left alone: bb_activity_get_metadata() caches what it reads
+	 * in `activity_meta`, and a stripped array kept in a persistent object cache
+	 * would hide the documents after Add-ons is back. That path is filtered on
+	 * return by bb_theme_document_activity_cached_meta_compat() instead.
+	 */
+	if ( null !== $value || '' === $meta_key || class_exists( 'BP_Document' ) || ! in_array( $meta_key, bb_theme_document_activity_meta_keys(), true ) ) {
+		return $value;
+	}
+
+	return $single ? array( '' ) : array();
+}
+
+/**
+ * Register the document meta compatibility filter for older BuddyBoss Theme builds.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return void
+ */
+function bb_register_theme_document_meta_compat() {
+	$theme_version = bb_get_active_buddyboss_theme_version();
+
+	if (
+		'' !== $theme_version &&
+		version_compare( $theme_version, bb_platform_3_theme_required_version(), '<' ) &&
+		! class_exists( 'BP_Document' )
+	) {
+		add_filter( 'get_activity_metadata', 'bb_theme_document_activity_meta_compat', 10, 4 );
+		add_filter( 'bb_activity_get_metadata', 'bb_theme_document_activity_cached_meta_compat', 10, 2 );
+
+		/*
+		 * The Elementor Activity widget of these builds also treats every activity
+		 * as a document one when the request has `action=document_get_activity`,
+		 * and then calls BP_Document. That action is an Add-ons AJAX handler and is
+		 * not registered while Documents is off, so drop it from other requests.
+		 */
+		if ( ! wp_doing_ajax() ) {
+			// phpcs:disable WordPress.Security.NonceVerification
+			if ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) {
+				unset( $_REQUEST['action'] );
+			}
+			if ( isset( $_GET['action'] ) && 'document_get_activity' === $_GET['action'] ) {
+				unset( $_GET['action'] );
+			}
+			if ( isset( $_POST['action'] ) && 'document_get_activity' === $_POST['action'] ) {
+				unset( $_POST['action'] );
+			}
+			// phpcs:enable WordPress.Security.NonceVerification
+		}
+	}
+}
+
+/**
+ * Hide document activity meta from older BuddyBoss Theme builds on full reads.
+ *
+ * The theme's Elementor Activity widget reads all meta through
+ * bb_activity_get_metadata(). That function caches what it reads in
+ * `activity_meta`, and returns the cache entry directly once the activity loop
+ * has primed it (bp_update_meta_cache()). Filtering its return value, cold or
+ * cached, hides the keys without ever caching a stripped copy, which a
+ * persistent object cache would keep after Add-ons is back.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param array|mixed $meta_data   All metadata of the activity.
+ * @param int         $activity_id Activity ID.
+ *
+ * @return array|mixed
+ */
+function bb_theme_document_activity_cached_meta_compat( $meta_data, $activity_id ) {
+	if ( ! is_array( $meta_data ) || class_exists( 'BP_Document' ) ) {
+		return $meta_data;
+	}
+
+	return array_diff_key( $meta_data, array_flip( bb_theme_document_activity_meta_keys() ) );
+}
+add_action( 'after_setup_theme', 'bb_register_theme_document_meta_compat', 1 );
+
+/**
+ * Define a no-op group subscription sender when nothing else provides one.
+ *
+ * BuddyBoss Platform Pro 3.3.4 and older call
+ * `bb_subscription_send_subscribe_group_notifications()` without a
+ * `function_exists()` check when a scheduled group post is published. The
+ * function moved to BuddyBoss Add-ons, which defines it only when its Group
+ * Subscription module loads (`bp_include`, priority 20). Without this fallback,
+ * a site that updates Platform before Pro, without that module, gets a fatal
+ * error in the scheduled post cron.
+ *
+ * Runs late on `bp_loaded`, after the Add-ons module has had its chance to
+ * define the real function. Defining the stub at file load instead would win
+ * the race and stop Add-ons from defining the real one. It lives here, not in
+ * the deprecated files, because those do not load on installs that ignore
+ * deprecated code (the default for new installs since BuddyBoss 2.1.4).
+ *
+ * @since BuddyBoss 3.7.0
+ */
+function bb_maybe_define_group_subscription_send_fallback() {
+	if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+		return;
+	}
+
+	/**
+	 * Send group subscription notifications.
+	 *
+	 * Fallback that does nothing; group subscriptions need BuddyBoss Add-ons. It
+	 * raises no deprecation notice, because Platform's own guarded callers reach
+	 * it on every group post when the Add-ons module is not loaded.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 * @deprecated BuddyBoss 3.7.0 Group subscriptions moved to BuddyBoss Add-ons.
+	 *
+	 * @param string $content     The content of the update.
+	 * @param int    $user_id     ID of the user posting the update.
+	 * @param int    $group_id    ID of the group being posted to.
+	 * @param int    $activity_id ID of the activity item being updated.
+	 */
+	function bb_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	}
+}
+add_action( 'bp_loaded', 'bb_maybe_define_group_subscription_send_fallback', 99 );

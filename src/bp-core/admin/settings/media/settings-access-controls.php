@@ -68,39 +68,45 @@ function bb_media_register_access_controls_panel_fields() {
 		)
 	);
 
-	// FIELD: Upload Videos access control.
-	bb_register_feature_field(
-		'media',
-		'access_controls',
-		'media_access_controls',
-		array(
-			'name'              => 'bb-access-control-upload-video',
-			'label'             => __( 'Upload Videos', 'buddyboss' ),
-			'type'              => 'access_control',
-			'description'       => __( 'Select which members can upload videos based on:', 'buddyboss' ),
-			'default'           => '',
-			'pro_only'          => true,
-			'order'             => 20,
-			'sanitize_callback' => 'bb_media_sanitize_access_control',
-		)
-	);
+	// Videos are provided by BuddyBoss Add-ons; hide the rule when the component is unavailable.
+	if ( bp_is_active( 'video' ) ) {
+		// FIELD: Upload Videos access control.
+		bb_register_feature_field(
+			'media',
+			'access_controls',
+			'media_access_controls',
+			array(
+				'name'              => 'bb-access-control-upload-video',
+				'label'             => __( 'Upload Videos', 'buddyboss' ),
+				'type'              => 'access_control',
+				'description'       => __( 'Select which members can upload videos based on:', 'buddyboss' ),
+				'default'           => '',
+				'pro_only'          => true,
+				'order'             => 20,
+				'sanitize_callback' => 'bb_media_sanitize_access_control',
+			)
+		);
+	}
 
-	// FIELD: Upload Documents access control.
-	bb_register_feature_field(
-		'media',
-		'access_controls',
-		'media_access_controls',
-		array(
-			'name'              => 'bb-access-control-upload-document',
-			'label'             => __( 'Upload Documents', 'buddyboss' ),
-			'type'              => 'access_control',
-			'description'       => __( 'Select which members can upload documents based on:', 'buddyboss' ),
-			'default'           => '',
-			'pro_only'          => true,
-			'order'             => 30,
-			'sanitize_callback' => 'bb_media_sanitize_access_control',
-		)
-	);
+	// Documents are provided by BuddyBoss Add-ons; hide the rule when the component is unavailable.
+	if ( bp_is_active( 'document' ) ) {
+		// FIELD: Upload Documents access control.
+		bb_register_feature_field(
+			'media',
+			'access_controls',
+			'media_access_controls',
+			array(
+				'name'              => 'bb-access-control-upload-document',
+				'label'             => __( 'Upload Documents', 'buddyboss' ),
+				'type'              => 'access_control',
+				'description'       => __( 'Select which members can upload documents based on:', 'buddyboss' ),
+				'default'           => '',
+				'pro_only'          => true,
+				'order'             => 30,
+				'sanitize_callback' => 'bb_media_sanitize_access_control',
+			)
+		);
+	}
 
 	// FIELD: Admin notice (displayed once at the end of the section).
 	bb_register_feature_field(

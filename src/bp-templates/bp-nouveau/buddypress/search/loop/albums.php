@@ -58,7 +58,7 @@ $albums_link = bp_get_album_link();
 					?>
 				</span>
 				<?php
-				if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) {
+				if ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) {
 					?>
 					<span class="middot">&middot;</span>
 					<span class="media-photo_count">
