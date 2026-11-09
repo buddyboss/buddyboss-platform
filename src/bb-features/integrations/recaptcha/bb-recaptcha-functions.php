@@ -631,7 +631,7 @@ function bb_recaptcha_display( $action = '' ) {
 				wp_register_script( 'bb-recaptcha-api', $api_url, false, buddypress()->version, true );
 			}
 		}
-		$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+		$min     = bp_core_get_minified_asset_suffix();
 		$rtl_css = is_rtl() ? '-rtl' : '';
 		wp_enqueue_style( 'bb-recaptcha', bb_recaptcha_integration_url( '/assets/css/bb-recaptcha' . $rtl_css . $min . '.css' ), false, buddypress()->version );
 

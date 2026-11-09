@@ -57,7 +57,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$active_tab = bp_core_get_admin_active_tab();
 
 		if ( 'bb-pusher' === $active_tab ) {
-			$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			$min     = bp_core_get_minified_asset_suffix();
 			$rtl_css = is_rtl() ? '-rtl' : '';
 			wp_enqueue_style( 'bb-pusher-admin', bb_pusher_integration_url( '/assets/css/bb-pusher-admin' . $rtl_css . $min . '.css' ), false, buddypress()->version );
 		}

@@ -303,7 +303,29 @@ module.exports = function (grunt) {
 							// (Plugin Check flags the shell scripts and the test helpers).
 							'!cli/features/**',
 							'!cli/bin/**',
-							'!cli/utils/behat-tags.php'
+							'!cli/utils/behat-tags.php',
+							// Dev-only sources and artefacts that nothing reads at runtime
+							// (PROD-9562 zip size, re-done from PROD-9826): SCSS sources
+							// (the compiled CSS ships), CSS source maps, the WP-CLI command
+							// docs and their manifest, and Composer package test suites,
+							// docs and metadata. LICENSE files must ship with redistributed
+							// code, so they are re-included last (last matching pattern wins).
+							'!**/*.scss',
+							'!**/*.map',
+							'!cli/**/*.md',
+							'!cli/commands-manifest.json',
+							'!vendor/myclabs/php-enum/src/PHPUnit/**',
+							'!vendor/**/tests/**',
+							'!vendor/**/test/**',
+							'!vendor/**/docs/**',
+							'!vendor/**/.github/**',
+							'!vendor/**/phpunit.xml*',
+							'!vendor/**/README*',
+							'!vendor/**/readme*',
+							'!vendor/**/CHANGELOG*',
+							'!vendor/**/*.md',
+							'!vendor/**/composer.json',
+							'vendor/**/LICENSE*'
 						].concat( BP_EXCLUDED_MISC )
 					},
 					{
