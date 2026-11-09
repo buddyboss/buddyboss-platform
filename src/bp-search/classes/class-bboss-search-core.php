@@ -34,7 +34,7 @@ if ( ! class_exists( 'BBoss_Search_Core' ) ) :
 			'bp-search-template',
 			'bp-search-filters',
 			'bp-search-settings',
-			'classes/class-bp-search',
+			'classes/class-bboss-search',
 			'plugins/search-cpt/index',
 		);
 
