@@ -1376,7 +1376,7 @@ function bboss_get_theme_package_id( $default = 'nouveau' ) {
 function bboss_force_friendship_to_message( $default = false ) {
 
 	$value = (bool) bboss_get_option( 'bp-force-friendship-to-message', $default );
-	if ( ( ! is_admin() && bboss_current_user_can( 'bp_moderate' ) ) || ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && bboss_current_user_can( 'bp_moderate' ) ) ) {
+	if ( ( ! is_admin() && bboss_current_user_can( 'bp_moderate' ) ) || ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && bboss_current_user_can( 'bp_moderate' ) ) ) {
 		$value = false;
 	}
 

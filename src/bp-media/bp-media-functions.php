@@ -555,7 +555,7 @@ function bboss_media_add( $args = '' ) {
 	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
 		// `BP_Activity_Activity` is loaded by the activity component and is
-		// NOT in the always-on autoload list (src/class-buddypress.php). When
+		// NOT in the always-on autoload list (src/class-bboss-platform.php). When
 		// activity is deactivated via Settings, the class is missing and
 		// the unguarded `new` would fatal during a group media upload.
 		if ( ! empty( $media->activity_id ) && bboss_is_active( 'activity' ) ) {

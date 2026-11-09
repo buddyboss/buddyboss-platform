@@ -83,7 +83,7 @@ if ( isset( $_GET['direct_allow'] ) ) { // phpcs:ignore WordPress.Security.Nonce
 }
 
 // Include BB_Presence class.
-require_once __DIR__ . '/classes/class-bb-presence.php';
+require_once __DIR__ . '/classes/class-bboss-presence.php';
 
 BBoss_Presence::instance()->bb_presence_mu_loader();
 

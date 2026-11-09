@@ -26,8 +26,8 @@ function bboss_core_default_install_emails( $default_components ) {
 	if ( ! class_exists( 'BBoss_Members_Notification' ) ) {
 
 		// Load members notification file.
-		if ( file_exists( bboss()->plugin_dir . 'bp-members/classes/class-bp-members-notification.php' ) ) {
-			require bboss()->plugin_dir . 'bp-members/classes/class-bp-members-notification.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-members/classes/class-bboss-members-notification.php' ) ) {
+			require bboss()->plugin_dir . 'bp-members/classes/class-bboss-members-notification.php';
 		}
 
 		BBoss_Members_Notification::instance();
@@ -37,8 +37,8 @@ function bboss_core_default_install_emails( $default_components ) {
 	if ( ! class_exists( 'BBoss_Members_Mentions_Notification' ) ) {
 
 		// Load members mentions notification file.
-		if ( file_exists( bboss()->plugin_dir . 'bp-members/classes/class-bp-members-mentions-notification.php' ) ) {
-			require bboss()->plugin_dir . 'bp-members/classes/class-bp-members-mentions-notification.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-members/classes/class-bboss-members-mentions-notification.php' ) ) {
+			require bboss()->plugin_dir . 'bp-members/classes/class-bboss-members-mentions-notification.php';
 		}
 
 		BBoss_Members_Mentions_Notification::instance();
@@ -48,8 +48,8 @@ function bboss_core_default_install_emails( $default_components ) {
 	if ( ! class_exists( 'BBoss_Activity_Notification' ) ) {
 
 		// Load Activity notification file.
-		if ( file_exists( bboss()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php' ) ) {
-			require bboss()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-activity/classes/class-bboss-activity-notification.php' ) ) {
+			require bboss()->plugin_dir . 'bp-activity/classes/class-bboss-activity-notification.php';
 		}
 
 		BBoss_Activity_Notification::instance();
@@ -59,8 +59,8 @@ function bboss_core_default_install_emails( $default_components ) {
 	if ( ! class_exists( 'BBoss_Groups_Notification' ) ) {
 
 		// Load Groups notification file.
-		if ( file_exists( bboss()->plugin_dir . 'bp-groups/classes/class-bp-groups-notification.php' ) ) {
-			require bboss()->plugin_dir . 'bp-groups/classes/class-bp-groups-notification.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-groups/classes/class-bboss-groups-notification.php' ) ) {
+			require bboss()->plugin_dir . 'bp-groups/classes/class-bboss-groups-notification.php';
 		}
 
 		BBoss_Groups_Notification::instance();
@@ -70,8 +70,8 @@ function bboss_core_default_install_emails( $default_components ) {
 	if ( ! class_exists( 'BBoss_Friends_Notification' ) ) {
 
 		// Load Friends notification file.
-		if ( file_exists( bboss()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php' ) ) {
-			require bboss()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-friends/classes/class-bboss-friends-notification.php' ) ) {
+			require bboss()->plugin_dir . 'bp-friends/classes/class-bboss-friends-notification.php';
 		}
 
 		BBoss_Friends_Notification::instance();
@@ -81,8 +81,8 @@ function bboss_core_default_install_emails( $default_components ) {
 	if ( ! class_exists( 'BBoss_Forums_Notification' ) ) {
 
 		// Load Forums notification file.
-		if ( file_exists( bboss()->plugin_dir . 'bp-forums/classes/class-bp-forums-notification.php' ) ) {
-			require bboss()->plugin_dir . 'bp-forums/classes/class-bp-forums-notification.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-forums/classes/class-bboss-forums-notification.php' ) ) {
+			require bboss()->plugin_dir . 'bp-forums/classes/class-bboss-forums-notification.php';
 		}
 
 		BBoss_Forums_Notification::instance();
@@ -92,8 +92,8 @@ function bboss_core_default_install_emails( $default_components ) {
 	if ( ! class_exists( 'BBoss_Messages_Notification' ) ) {
 
 		// Load Messages notification file.
-		if ( file_exists( bboss()->plugin_dir . 'bp-messages/classes/class-bp-messages-notification.php' ) ) {
-			require bboss()->plugin_dir . 'bp-messages/classes/class-bp-messages-notification.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-messages/classes/class-bboss-messages-notification.php' ) ) {
+			require bboss()->plugin_dir . 'bp-messages/classes/class-bboss-messages-notification.php';
 		}
 
 		BBoss_Messages_Notification::instance();
@@ -103,8 +103,8 @@ function bboss_core_default_install_emails( $default_components ) {
 	if ( ! class_exists( 'BBoss_Post_Notification' ) ) {
 
 		// Load Messages notification file.
-		if ( file_exists( bboss()->plugin_dir . 'bp-core/classes/class-bb-post-notification.php' ) ) {
-			require bboss()->plugin_dir . 'bp-core/classes/class-bb-post-notification.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/classes/class-bboss-post-notification.php' ) ) {
+			require bboss()->plugin_dir . 'bp-core/classes/class-bboss-post-notification.php';
 		}
 
 		BBoss_Post_Notification::instance();

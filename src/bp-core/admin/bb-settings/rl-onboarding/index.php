@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Load the ReadyLaunch onboarding implementation.
-require_once __DIR__ . '/class-bb-readylaunch-onboarding.php';
+require_once __DIR__ . '/class-bboss-readylaunch-onboarding.php';
 
 // Initialize the ReadyLaunch onboarding wizard.
 if ( class_exists( 'BBoss_ReadyLaunch_Onboarding' ) ) {

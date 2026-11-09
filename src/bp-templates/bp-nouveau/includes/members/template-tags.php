@@ -292,7 +292,7 @@ function bboss_nouveau_get_members_buttons( $args ) {
 	$add_pre_post_text          = $args['button_attr']['add_pre_post_text'] ?? true;
 
 	// @todo Not really sure why BP Legacy needed to do this...
-	if ( 'profile' === $type && is_admin() && ! ( defined( 'BBOSS_DOING_AJAX' ) && BBOSS_DOING_AJAX ) ) {
+	if ( 'profile' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 		return $buttons;
 	}
 

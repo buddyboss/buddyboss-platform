@@ -1306,10 +1306,10 @@ function bboss_blogs_setup_activity_loop_globals( $activity ) {
  */
 function bboss_blogs_setup_comment_loop_globals_on_ajax() {
 	// Not AJAX? stop now!
-	if ( ! defined( 'BBOSS_DOING_AJAX' ) ) {
+	if ( ! defined( 'DOING_AJAX' ) ) {
 		return;
 	}
-	if ( false === (bool) constant( 'BBOSS_DOING_AJAX' ) ) {
+	if ( false === (bool) constant( 'DOING_AJAX' ) ) {
 		return;
 	}
 

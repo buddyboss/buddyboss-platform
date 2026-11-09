@@ -1720,13 +1720,13 @@ function bboss_core_get_upload_dir( $type = 'upload_path' ) {
 
 	switch ( $type ) {
 		case 'upload_path':
-			$constant = 'BP_AVATAR_UPLOAD_PATH';
+			$constant = 'BBOSS_AVATAR_UPLOAD_PATH';
 			$key      = 'basedir';
 
 			break;
 
 		case 'url':
-			$constant = 'BP_AVATAR_URL';
+			$constant = 'BBOSS_AVATAR_URL';
 			$key      = 'baseurl';
 
 			break;

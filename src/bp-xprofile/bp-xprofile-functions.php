@@ -185,7 +185,7 @@ function bboss_xprofile_get_field_types() {
 	);
 
 	if ( function_exists( 'bboss_member_type_enable_disable' ) && true === bboss_member_type_enable_disable() ) {
-		$fields['membertypes'] = 'BP_XProfile_Field_Type_Member_Types';
+		$fields['membertypes'] = 'BBoss_XProfile_Field_Type_Member_Types';
 	}
 
 	/**

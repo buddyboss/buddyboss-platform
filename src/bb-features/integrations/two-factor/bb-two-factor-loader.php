@@ -39,7 +39,7 @@ add_action( 'bb_integration_bridge_init', 'bboss_two_factor_register_managed_int
  * @since BuddyBoss 3.6.0
  */
 function bboss_register_two_factor_integration() {
-	require_once __DIR__ . '/classes/class-bb-two-factor-integration.php';
+	require_once __DIR__ . '/classes/class-bboss-two-factor-integration.php';
 	bboss()->integrations['two-factor'] = new BBoss_Two_Factor_Integration();
 }
 add_action( 'bp_setup_integrations', 'bboss_register_two_factor_integration', 20 );

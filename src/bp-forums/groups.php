@@ -577,7 +577,7 @@ if ( ! class_exists( 'BBoss_BBP_Forums_Group_Extension' ) && class_exists( 'BBos
 		 * @deprecated BuddyBoss 3.0.0 No longer used. Settings 2.0 handles forum via BBoss_Admin_Meta_Field_Registry.
 		 */
 		public function group_admin_ui_edit_screen() {
-			_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'BB_Admin_Meta_Field_Registry' );
+			_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'bboss_admin_meta_field_registry' );
 		}
 
 		/**
@@ -589,7 +589,7 @@ if ( ! class_exists( 'BBoss_BBP_Forums_Group_Extension' ) && class_exists( 'BBos
 		 * @param object $item Group object.
 		 */
 		public function group_admin_ui_display_metabox( $item ) {
-			_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'BB_Admin_Meta_Field_Registry' );
+			_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'bboss_admin_meta_field_registry' );
 		}
 
 		/** Create ****************************************************************/

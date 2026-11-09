@@ -222,7 +222,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\BP_Performance_Includes' ) ) {
 					BB_Videos::instance();
 				}
 
-				$subscriptions_integration = __DIR__ . '/classes/integrations/class-bb-subscriptions.php';
+				$subscriptions_integration = __DIR__ . '/classes/integrations/class-bboss-subscriptions.php';
 				if ( file_exists( $subscriptions_integration ) ) {
 					require_once $subscriptions_integration;
 					BB_Subscriptions::instance();

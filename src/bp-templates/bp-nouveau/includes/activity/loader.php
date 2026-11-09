@@ -55,7 +55,7 @@ class BBoss_Nouveau_Activity {
 		} else {
 			add_action( 'admin_init', function() {
 				// AJAX condtion.
-				if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX &&
+				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX &&
 					// Check to see if action is activity-specific.
 					( false !== strpos( $_REQUEST['action'], 'activity' ) || ( 'post_update' === $_REQUEST['action'] ) )
 				) {

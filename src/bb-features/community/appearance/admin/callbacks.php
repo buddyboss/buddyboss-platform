@@ -322,7 +322,7 @@ function bboss_appearance_apply_configuration( $settings ) {
 		// Mirror `bb_feature_activated` so Pro / third-party hooks that listen
 		// for registry-level activation still fire.
 		foreach ( $newly_activated as $component_key ) {
-			/** This action is documented in class-bb-feature-registry.php */
+			/** This action is documented in class-bboss-feature-registry.php */
 			do_action( 'bb_feature_activated', $component_key );
 		}
 	}

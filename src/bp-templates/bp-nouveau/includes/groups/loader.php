@@ -55,7 +55,7 @@ class BBoss_Nouveau_Groups {
 		// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'groups_' ) ) {
+				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'groups_' ) ) {
 					require $this->dir . 'ajax.php';
 				}
 			} );

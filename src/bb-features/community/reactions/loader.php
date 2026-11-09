@@ -42,13 +42,13 @@ if (
 	$bb_reactions_feature_dir = __DIR__;
 
 	// Load class definitions.
-	if ( file_exists( $bb_reactions_feature_dir . '/classes/class-bb-reaction.php' ) ) {
-		require_once $bb_reactions_feature_dir . '/classes/class-bb-reaction.php';
+	if ( file_exists( $bb_reactions_feature_dir . '/classes/class-bboss-reaction.php' ) ) {
+		require_once $bb_reactions_feature_dir . '/classes/class-bboss-reaction.php';
 	}
 
 	// Only load REST endpoint class when REST is bundled in Platform (separate API plugin provides its own copy).
-	if ( function_exists( 'bboss_rest_in_buddypress' ) && bboss_rest_in_buddypress() && file_exists( $bb_reactions_feature_dir . '/classes/class-bb-rest-reactions-endpoint.php' ) ) {
-		require_once $bb_reactions_feature_dir . '/classes/class-bb-rest-reactions-endpoint.php';
+	if ( function_exists( 'bboss_rest_in_buddypress' ) && bboss_rest_in_buddypress() && file_exists( $bb_reactions_feature_dir . '/classes/class-bboss-rest-reactions-endpoint.php' ) ) {
+		require_once $bb_reactions_feature_dir . '/classes/class-bboss-rest-reactions-endpoint.php';
 	}
 
 	// Load reaction functions (AJAX handlers, template helpers, etc.).

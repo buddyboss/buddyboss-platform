@@ -70,7 +70,7 @@ function bboss_core_set_uri_globals() {
 	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
 	// Ajax or not?
-	if ( defined( 'BBOSS_DOING_AJAX' ) && BBOSS_DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
 		$path = bboss_get_referer_path();
 	} elseif ( ! empty( $_REQUEST['_wp_http_referer'] ) && ! empty( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], array( 'bbp-edit-topic', 'bbp-new-topic' ), true ) ) {
 		$path = esc_url( esc_url_raw( wp_unslash( $_REQUEST['_wp_http_referer'] ) ) );

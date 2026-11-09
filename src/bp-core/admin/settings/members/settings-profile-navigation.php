@@ -687,7 +687,7 @@ function bboss_get_third_party_profile_nav_items() {
 	try {
 		// Bootstrap displayed_user so component setup_nav callbacks that gate on
 		// `bp_displayed_user_id()` register their items. The members component's
-		// guard at class-bp-members-component.php:setup_nav() requires
+		// guard at class-bboss-members-component.php:setup_nav() requires
 		// `is_user_logged_in() || bp_is_user()` — we already satisfy the first.
 		if ( ! $prev_displayed_existed ) {
 			$bp->displayed_user = new stdClass();

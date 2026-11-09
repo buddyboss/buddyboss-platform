@@ -99,7 +99,7 @@ if ( ! function_exists( 'bboss_register_invite_type_sections_filters_actions' ) 
 	 * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 {@see BBoss_Admin_Invites_Ajax}.
 	 */
 	function bboss_register_invite_type_sections_filters_actions() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'BB_Admin_Invites_Ajax' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'BBoss_Admin_Invites_Ajax' );
 	}
 }
 

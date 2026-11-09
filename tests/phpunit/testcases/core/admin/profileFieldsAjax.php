@@ -33,7 +33,7 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 		parent::set_up();
 
 		if ( ! class_exists( 'BBoss_Admin_Profile_Fields_Ajax' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php';
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-profile-fields-ajax.php';
 		}
 
 		$this->ajax = new BBoss_Admin_Profile_Fields_Ajax();
@@ -201,7 +201,7 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 	 * any set_up() ran) makes the branch unreachable in the process — skip.
 	 */
 	public function test_hide_member_types_for_the_profile_type_field() {
-		$this->assertInstanceOf( 'BP_XProfile_Field', $this->member_type_field );
+		$this->assertInstanceOf( 'BBoss_XProfile_Field', $this->member_type_field );
 
 		$memo_id = (int) bboss_get_xprofile_member_type_field_id();
 

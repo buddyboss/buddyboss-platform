@@ -554,7 +554,7 @@ function bboss_init_background_updater() {
 	global $bp_background_updater;
 
 	if ( ! class_exists( 'BBoss_Background_Updater' ) ) {
-		include_once bboss()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
+		include_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-background-updater.php';
 	}
 	$bp_background_updater = new BBoss_Background_Updater();
 
@@ -575,7 +575,7 @@ function bboss_bb_init_background_updater() {
 	global $bb_background_updater;
 
 	if ( ! class_exists( 'BBoss_BB_Background_Updater' ) ) {
-		include_once bboss()->plugin_dir . 'bp-core/classes/class-bb-background-updater.php';
+		include_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-bb-background-updater.php';
 	}
 
 	$bb_background_updater = new BBoss_BB_Background_Updater();
@@ -834,7 +834,7 @@ function bboss_init_email_background_updater() {
 	global $bb_email_background_updater;
 
 	if ( ! class_exists( 'BBoss_Background_Updater' ) ) {
-		include_once bboss()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
+		include_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-background-updater.php';
 	}
 	$bb_email_background_updater = new BBoss_Email_Background_Updater();
 
@@ -859,7 +859,7 @@ function bboss_init_notifications_background_updater() {
 	global $bb_notifications_background_updater;
 
 	if ( ! class_exists( 'BBoss_Background_Updater' ) ) {
-		include_once bboss()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
+		include_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-background-updater.php';
 	}
 	$bb_notifications_background_updater = new BBoss_Notifications_Background_Updater();
 

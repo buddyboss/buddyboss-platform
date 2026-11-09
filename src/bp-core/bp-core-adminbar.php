@@ -22,7 +22,7 @@ function bboss_admin_bar_my_account_root() {
 	global $wp_admin_bar;
 
 	// Bail if this is an ajax request.
-	if ( ! bboss_use_wp_admin_bar() || defined( 'BBOSS_DOING_AJAX' ) ) {
+	if ( ! bboss_use_wp_admin_bar() || defined( 'DOING_AJAX' ) ) {
 		return;
 	}
 

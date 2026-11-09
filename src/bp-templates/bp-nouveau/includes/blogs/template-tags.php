@@ -164,7 +164,7 @@ function bboss_nouveau_blogs_loop_buttons( $args = array() ) {
 		$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'loop';
 
 		// @todo Not really sure why BP Legacy needed to do this...
-		if ( 'loop' !== $type && is_admin() && ! ( defined( 'BBOSS_DOING_AJAX' ) && BBOSS_DOING_AJAX ) ) {
+		if ( 'loop' !== $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return array();
 		}
 

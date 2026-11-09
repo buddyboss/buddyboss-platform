@@ -97,7 +97,7 @@ class BBoss_Nouveau extends BBoss_Theme_Compat {
 			add_action(
 				'admin_init',
 				function() {
-					if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX ) {
+					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX ) {
 						require $this->includes_dir . 'ajax.php';
 					}
 				},
@@ -972,7 +972,7 @@ JS;
 	 * @return string       the BP Uri.
 	 */
 	public function customizer_set_uri( $path ) {
-		if ( ! defined( 'BBOSS_DOING_AJAX' ) || ! BBOSS_DOING_AJAX ) {
+		if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
 			return $path;
 		}
 

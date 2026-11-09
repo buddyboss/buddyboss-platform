@@ -380,7 +380,7 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 		 * not load. Cover each type whose code is loaded; media always is.
 		 */
 		$types = array(
-			'media'    => array( 'BP_Media', 'bp_media_add', 'bp_media_ids' ),
+			'media'    => array( 'BBoss_Media', 'bp_media_add', 'bp_media_ids' ),
 			'video'    => array( 'BP_Video', 'bp_video_add', 'bp_video_ids' ),
 			'document' => array( 'BP_Document', 'bp_document_add', 'bp_document_ids' ),
 		);

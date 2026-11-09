@@ -708,7 +708,7 @@ function bboss_nouveau_get_groups_buttons( $args = array() ) {
 	$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'group';
 
 	// @todo Not really sure why BP Legacy needed to do this...
-	if ( 'group' === $type && is_admin() && ! ( defined( 'BBOSS_DOING_AJAX' ) && BBOSS_DOING_AJAX ) ) {
+	if ( 'group' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 		return;
 	}
 
@@ -1142,7 +1142,7 @@ function bboss_nouveau_get_groups_bubble_buttons( $args = array() ) {
 	$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'group';
 
 	// @todo Not really sure why BP Legacy needed to do this...
-	if ( 'group' === $type && is_admin() && ! ( defined( 'BBOSS_DOING_AJAX' ) && BBOSS_DOING_AJAX ) ) {
+	if ( 'group' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 		return;
 	}
 

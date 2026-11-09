@@ -406,7 +406,7 @@ add_filter( 'map_meta_cap', 'bboss__bp_enforce_bp_moderate_cap_for_admins', 10, 
  * @deprecated 1.7.0
  */
 function bboss_add_roles() {
-	_doing_it_wrong( 'bp_add_roles', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
+	_doing_it_wrong( 'bboss_add_roles', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
 }
 
 /**
@@ -418,7 +418,7 @@ function bboss_add_roles() {
  * @deprecated 1.7.0
  */
 function bboss_remove_roles() {
-	_doing_it_wrong( 'bp_remove_roles', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
+	_doing_it_wrong( 'bboss_remove_roles', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
 }
 
 
@@ -432,7 +432,7 @@ function bboss_remove_roles() {
  * @deprecated 1.7.0
  */
 function bboss_get_participant_role() {
-	_doing_it_wrong( 'bp_get_participant_role', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
+	_doing_it_wrong( 'bboss_get_participant_role', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
 }
 
 /**
@@ -442,5 +442,5 @@ function bboss_get_participant_role() {
  * @deprecated 1.7.0
  */
 function bboss_get_moderator_role() {
-	_doing_it_wrong( 'bp_get_moderator_role', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
+	_doing_it_wrong( 'bboss_get_moderator_role', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss-platform' ), '1.7' );
 }

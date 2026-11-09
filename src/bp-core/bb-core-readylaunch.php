@@ -71,26 +71,26 @@ function bboss_rl_register_widgets() {
 	if ( function_exists( 'bboss_get_following_ids' ) ) {
 		bboss_rl_register_single_widget(
 			'BBoss_Core_Follow_My_Network_Widget',
-			$plugin_dir . '/bp-core/classes/class-bb-core-follow-my-network-widget.php'
+			$plugin_dir . '/bp-core/classes/class-bboss-core-follow-my-network-widget.php'
 		);
 	}
 
 	// Recent Blog Posts Widget.
 	bboss_rl_register_single_widget(
 		'BBoss_Recent_Blog_Posts_Widget',
-		$plugin_dir . '/bp-core/classes/class-bb-recent-blog-posts-widget.php'
+		$plugin_dir . '/bp-core/classes/class-bboss-recent-blog-posts-widget.php'
 	);
 
 	// About Group / Group Members Widgets — depend on the groups component.
 	if ( bboss_is_active( 'groups' ) ) {
 		bboss_rl_register_single_widget(
 			'BBoss_Group_About_Widget',
-			$plugin_dir . '/bp-core/classes/class-bb-group-about-widget.php'
+			$plugin_dir . '/bp-core/classes/class-bboss-group-about-widget.php'
 		);
 
 		bboss_rl_register_single_widget(
 			'BBoss_Group_Members_Widget',
-			$plugin_dir . '/bp-core/classes/class-bb-group-members-widget.php'
+			$plugin_dir . '/bp-core/classes/class-bboss-group-members-widget.php'
 		);
 	}
 
@@ -98,7 +98,7 @@ function bboss_rl_register_widgets() {
 	if ( function_exists( 'bboss_friends_get_friend_user_ids' ) ) {
 		bboss_rl_register_single_widget(
 			'BBoss_Core_Connections_Widget',
-			$plugin_dir . '/bp-core/classes/class-bb-core-connections-widget.php'
+			$plugin_dir . '/bp-core/classes/class-bboss-core-connections-widget.php'
 		);
 	}
 }
@@ -126,7 +126,7 @@ function bboss_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 
 		// Define URLs based on widget class.
 		$updated_widget_urls = array(
-			'BP_Core_Recently_Active_Widget' => esc_url( bboss_get_members_directory_permalink() . '?bb-rl-order-by=active&bb-rl-scope=all' ),
+			'BBoss_Core_Recently_Active_Widget' => esc_url( bboss_get_members_directory_permalink() . '?bb-rl-order-by=active&bb-rl-scope=all' ),
 		);
 
 		$widget_class = get_class( $widget );

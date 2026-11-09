@@ -49,7 +49,7 @@ function bboss_remove_avatar_settings_from_options_discussion_page() {
  */
 function bboss_groups_default_avatar( $avatar, $params ) {
 
-	_deprecated_function( __FUNCTION__, '1.8.6', 'bb_attachments_get_default_profile_group_avatar_image' );
+	_deprecated_function( __FUNCTION__, '1.8.6', 'bboss_attachments_get_default_profile_group_avatar_image' );
 
 	$params['object'] = 'group';
 	return bboss_attachments_get_default_profile_group_avatar_image( $params );
@@ -66,7 +66,7 @@ function bboss_groups_default_avatar( $avatar, $params ) {
  * @see bboss_activity_mentions_script()
  */
 function bboss_friends_prime_mentions_results() {
-	_deprecated_function( __FUNCTION__, '1.8.6', 'bp_friends_prime_mentions_results' );
+	_deprecated_function( __FUNCTION__, '1.8.6', 'bboss_friends_prime_mentions_results' );
 
 	return bboss_core_prime_mentions_results();
 }

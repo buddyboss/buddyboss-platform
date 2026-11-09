@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bboss_core_get_member_display_name( $display_name, $user_id = null ) {
 
-	_deprecated_function( __FUNCTION__, '1.2.3', 'bp_core_get_user_displayname' );
+	_deprecated_function( __FUNCTION__, '1.2.3', 'bboss_core_get_user_displayname' );
 
 	// some cases it calls the filter directly, therefore no user id is passed
 	if ( ! $user_id ) {

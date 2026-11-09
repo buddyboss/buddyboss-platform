@@ -1244,7 +1244,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$this->assertFalse( $result, 'The send callback return value (false) is passed through.' );
 		$this->assertCount( 1, self::$sent );
 		$received = self::$sent[0]['data']['email_tokens']['tokens']['activity'];
-		$this->assertInstanceOf( 'BP_Activity_Activity', $received );
+		$this->assertInstanceOf( 'BBoss_Activity_Activity', $received );
 		$this->assertSame( (int) $activity, $received->id );
 		$this->assertSame( 'Rehydrated for the callback 4444', $received->content );
 		$this->assertSame( 'Author', self::$sent[0]['data']['email_tokens']['tokens']['poster.name'], 'Other tokens are untouched.' );

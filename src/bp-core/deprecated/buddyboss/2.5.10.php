@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @return int|string
  */
 function bboss_activity_get_favorite_users_string( $activity_id ) {
-	_deprecated_function( __FUNCTION__, '2.5.10', 'bb_activity_reaction_names_and_count' );
+	_deprecated_function( __FUNCTION__, '2.5.10', 'bboss_activity_reaction_names_and_count' );
 
 	if ( ! bboss_is_activity_like_active() ) {
 		return 0;
@@ -40,7 +40,7 @@ function bboss_activity_get_favorite_users_string( $activity_id ) {
  * @return string
  */
 function bboss_activity_get_favorite_users_tooltip_string( $activity_id ) {
-	_deprecated_function( __FUNCTION__, '2.5.10', 'bb_activity_reaction_names_and_count' );
+	_deprecated_function( __FUNCTION__, '2.5.10', 'bboss_activity_reaction_names_and_count' );
 
 	if ( ! bboss_is_activity_like_active() ) {
 		return false;

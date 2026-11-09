@@ -389,7 +389,7 @@ module.exports = function (grunt) {
 					// Excluded here so the flatten-to-bp-core sweep doesn't
 					// recreate a stale duplicate at `bp-core/classes/`. See
 					// the dedicated `bp_rest_reactions` task below.
-					'!**/class-bb-rest-reactions-endpoint.php'
+					'!**/class-bboss-rest-reactions-endpoint.php'
 					],
 					options: {
 						process : function( content ) {
@@ -410,7 +410,7 @@ module.exports = function (grunt) {
 					expand: true,
 					flatten: true,
 					filter: 'isFile',
-					src: ['class-bb-rest-reactions-endpoint.php'],
+					src: ['class-bboss-rest-reactions-endpoint.php'],
 					options: {
 						process : function( content ) {
 							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
