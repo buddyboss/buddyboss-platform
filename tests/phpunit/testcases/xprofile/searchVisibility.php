@@ -844,16 +844,16 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			}
 		}
 
-		if ( ! class_exists( 'BBoss_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bp-search-types.php' ) ) {
-			require_once $search_dir . 'classes/class-bp-search-types.php';
+		if ( ! class_exists( 'BBoss_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bboss-search-types.php' ) ) {
+			require_once $search_dir . 'classes/class-bboss-search-types.php';
 		}
 
 		if ( ! class_exists( 'BBoss_Search_Type', false ) ) {
 			$this->markTestSkipped( 'The Search component is not available in this configuration.' );
 		}
 
-		if ( ! class_exists( 'BBoss_Search_Members', false ) && file_exists( $search_dir . 'classes/class-bp-search-members.php' ) ) {
-			require_once $search_dir . 'classes/class-bp-search-members.php';
+		if ( ! class_exists( 'BBoss_Search_Members', false ) && file_exists( $search_dir . 'classes/class-bboss-search-members.php' ) ) {
+			require_once $search_dir . 'classes/class-bboss-search-members.php';
 		}
 
 		if ( ! class_exists( 'BBoss_Search_Members', false ) || ! function_exists( 'bboss_get_search_user_fields' ) || ! function_exists( 'bboss_is_search_user_field_enable' ) ) {
@@ -1668,7 +1668,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->go_to( get_author_posts_url( $user_id ) );
 
-		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		require_once bboss()->compatibility_dir . '/class-bboss-seo-helpers.php';
 		$helper = BBoss_SEO_Helpers::instance();
 
 		$permalink = get_author_posts_url( $user_id );
@@ -1744,7 +1744,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$this->set_current_user( 0 );
 		$this->go_to( get_author_posts_url( $user_id ) );
 
-		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		require_once bboss()->compatibility_dir . '/class-bboss-seo-helpers.php';
 		BBoss_SEO_Helpers::instance();
 
 		// Exactly the shape Slack::get_author_data() builds: a flat label => value map whose
@@ -1808,7 +1808,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->set_current_user( 0 );
 
-		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		require_once bboss()->compatibility_dir . '/class-bboss-seo-helpers.php';
 		$helper = BBoss_SEO_Helpers::instance();
 
 		// No go_to(): this is the REST shape, where nothing has been queried.
@@ -1865,7 +1865,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->set_current_user( $viewer );
 
-		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		require_once bboss()->compatibility_dir . '/class-bboss-seo-helpers.php';
 		$helper = BBoss_SEO_Helpers::instance();
 
 		$context                         = new stdClass();
@@ -1908,7 +1908,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->set_current_user( 0 );
 
-		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		require_once bboss()->compatibility_dir . '/class-bboss-seo-helpers.php';
 		$helper = BBoss_SEO_Helpers::instance();
 
 		// Stand in for Yoast's Indexable_Presentation: `model` is the indexable, not `indexable`.
@@ -1939,7 +1939,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->set_current_user( $viewer );
 
-		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		require_once bboss()->compatibility_dir . '/class-bboss-seo-helpers.php';
 		$helper = BBoss_SEO_Helpers::instance();
 
 		$presentation                     = new stdClass();
@@ -2810,7 +2810,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			return null;
 		}
 
-		$instance = new ReflectionProperty( 'BB_SEO_Helpers', 'instance' );
+		$instance = new ReflectionProperty( 'BBoss_SEO_Helpers', 'instance' );
 		$instance->setAccessible( true );
 
 		return $instance->getValue();
@@ -2871,7 +2871,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			remove_filter( $hook, array( $previous, 'redact_author_name' ), (int) $priority );
 		}
 
-		$instance = new ReflectionProperty( 'BB_SEO_Helpers', 'instance' );
+		$instance = new ReflectionProperty( 'BBoss_SEO_Helpers', 'instance' );
 		$instance->setAccessible( true );
 		$instance->setValue( null, null );
 
@@ -2934,16 +2934,16 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			}
 		}
 
-		if ( ! class_exists( 'BBoss_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bp-search-types.php' ) ) {
-			require_once $search_dir . 'classes/class-bp-search-types.php';
+		if ( ! class_exists( 'BBoss_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bboss-search-types.php' ) ) {
+			require_once $search_dir . 'classes/class-bboss-search-types.php';
 		}
 
 		if ( ! class_exists( 'BBoss_Search_Type', false ) ) {
 			return false;
 		}
 
-		if ( ! class_exists( 'BBoss_Search_Members', false ) && file_exists( $search_dir . 'classes/class-bp-search-members.php' ) ) {
-			require_once $search_dir . 'classes/class-bp-search-members.php';
+		if ( ! class_exists( 'BBoss_Search_Members', false ) && file_exists( $search_dir . 'classes/class-bboss-search-members.php' ) ) {
+			require_once $search_dir . 'classes/class-bboss-search-members.php';
 		}
 
 		return class_exists( 'BBoss_Search_Members', false )
@@ -3827,7 +3827,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_the_visibility_table_probe_is_tri_state_and_a_failed_probe_is_not_memoised() {
 		global $wpdb;
 
-		$memo = new ReflectionProperty( 'BB_XProfile_Visibility', 'table_exists_cache' );
+		$memo = new ReflectionProperty( 'BBoss_XProfile_Visibility', 'table_exists_cache' );
 		$memo->setAccessible( true );
 		$memo_backup = $memo->getValue();
 

@@ -132,7 +132,7 @@ function bboss_core_add_admin_menu_page( $args = '' ) {
  * @deprecated BuddyPress 1.5.0
  */
 function bboss_is_activity_permalink() {
-	_deprecated_function( __FUNCTION__, '1.5', 'bp_is_single_activity' );
+	_deprecated_function( __FUNCTION__, '1.5', 'bboss_is_single_activity' );
 	bboss_is_single_activity();
 }
 
@@ -220,7 +220,7 @@ function bboss_core_get_wp_profile() {
  * @deprecated Use bboss_is_my_profile()
  */
 function bboss_is_home() {
-	_deprecated_function( __FUNCTION__, '1.5', 'bp_is_my_profile' );
+	_deprecated_function( __FUNCTION__, '1.5', 'bboss_is_my_profile' );
 	return bboss_is_my_profile();
 }
 
@@ -255,7 +255,7 @@ function bboss_is_activity_front_page() {
  * @deprecated use bboss_is_user()
  */
 function bboss_is_member() {
-	_deprecated_function( __FUNCTION__, '1.5', 'bp_is_user' );
+	_deprecated_function( __FUNCTION__, '1.5', 'bboss_is_user' );
 	return bboss_is_user();
 }
 
@@ -266,7 +266,7 @@ function bboss_is_member() {
  * @deprecated use bboss_loggedin_user_link()
  */
 function bboss_loggedinuser_link() {
-	_deprecated_function( __FUNCTION__, '1.5', 'bp_loggedin_user_link' );
+	_deprecated_function( __FUNCTION__, '1.5', 'bboss_loggedin_user_link' );
 	bboss_loggedin_user_link();
 }
 

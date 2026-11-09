@@ -17,10 +17,10 @@ if ( ! function_exists( 'is_plugin_active' ) ) {
 }
 
 // File from the build version.
-$buddyboss_presence = WP_PLUGIN_DIR . '/buddyboss-platform/bp-core/classes/class-bb-presence.php';
+$buddyboss_presence = WP_PLUGIN_DIR . '/buddyboss-platform/bp-core/classes/class-bboss-presence.php';
 
 // File from the development version.
-$buddyboss_presence_dev = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-core/classes/class-bb-presence.php';
+$buddyboss_presence_dev = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-core/classes/class-bboss-presence.php';
 
 if ( is_plugin_active( 'buddyboss-platform/bp-loader.php' ) ) {
 	if ( file_exists( $buddyboss_presence ) ) {

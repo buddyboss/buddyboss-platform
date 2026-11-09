@@ -503,7 +503,7 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 		$levels   = array( 'friends', 'loggedin', 'adminsonly' );
 		$user_ids = array( $restricted, $permitted );
 
-		$table_memo = new ReflectionProperty( 'BB_XProfile_Visibility', 'table_exists_cache' );
+		$table_memo = new ReflectionProperty( 'BBoss_XProfile_Visibility', 'table_exists_cache' );
 		$table_memo->setAccessible( true );
 		$table_memo->setValue( null, false );
 

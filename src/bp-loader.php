@@ -380,7 +380,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			bb_compat_load_functions();
 		}
 		// @bbwt-com-end compat-layer
-		require dirname( __FILE__ ) . '/class-buddypress.php';
+		require dirname( __FILE__ ) . '/class-bboss-platform.php';
 
 		/**
 		 * The main function responsible for returning the one true BuddyBoss Instance to functions everywhere.
@@ -397,7 +397,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		}
 
 		// load the member switch class so all the hook prior to bp_init can be hook in.
-		require dirname( __FILE__ ) . '/bp-members/classes/class-bp-core-members-switching.php';
+		require dirname( __FILE__ ) . '/bp-members/classes/class-bboss-core-members-switching.php';
 
 		/*
 		 * Hook BuddyPress early onto the 'plugins_loaded' action.
@@ -415,7 +415,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			// hence we grab the pure db value and load the class
 			// so all the hook prior to bp_init can be hook in.
 			if ( $bp_forum_active ) {
-				require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
+				require dirname( __FILE__ ) . '/bp-forums/classes/class-bboss-forums.php';
 				add_action( 'plugins_loaded', 'bboss_forums', (int) BUDDYPRESS_LATE_LOAD );
 			}
 
@@ -425,7 +425,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 			$bp_forum_active = array_key_exists( 'forums', bboss_get_option( 'bp-active-components', array() ) );
 			if ( $bp_forum_active ) {
-				require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
+				require dirname( __FILE__ ) . '/bp-forums/classes/class-bboss-forums.php';
 				$GLOBALS['bbp'] = bboss_forums();
 			}
 		}

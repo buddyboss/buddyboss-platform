@@ -22,7 +22,7 @@ function bboss_members_admin_bar_my_account_menu() {
 	global $wp_admin_bar;
 
 	// Bail if this is an ajax request.
-	if ( defined( 'BBOSS_DOING_AJAX' ) ) {
+	if ( defined( 'DOING_AJAX' ) ) {
 		return;
 	}
 

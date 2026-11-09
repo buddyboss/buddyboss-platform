@@ -11,8 +11,8 @@
 	<exclude-pattern>*/build/*</exclude-pattern>
 	<exclude-pattern>*/deprecated/*</exclude-pattern>
 	<exclude-pattern>*/bp-integrations/*</exclude-pattern>
-	<exclude-pattern>*/bp-core/classes/class-bp-phpmailer.php</exclude-pattern>
-	<exclude-pattern>*/bp-core/classes/class-bp-email-tokens.php</exclude-pattern>
+	<exclude-pattern>*/bp-core/classes/class-bboss-php-mailer.php</exclude-pattern>
+	<exclude-pattern>*/bp-core/classes/class-bboss-email-tokens.php</exclude-pattern>
 	<exclude-pattern>*/js/autocomplete/*</exclude-pattern>
 	<exclude-pattern>*/js-templates/*</exclude-pattern>
 	<exclude-pattern>awpcp_ad_listing-ajax.php</exclude-pattern>
@@ -48,15 +48,6 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array" value="buddyboss" />
-		</properties>
-	</rule>
-
-	<!-- The generated editions rename classes (BP_Foo -> BBoss_Foo) but keep the file names: the
-	     autoloader maps class names to files through src/bp-core/bb-class-legacy-map.php, so
-	     class-bp-foo.php stays. File names must still be lowercase-hyphenated. -->
-	<rule ref="WordPress.Files.FileName">
-		<properties>
-			<property name="strict_class_file_names" value="false" />
 		</properties>
 	</rule>
 

@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @param WP_Customize_Manager $wp_customize The Customizer object.
  */
 function bboss_email_init_customizer( WP_Customize_Manager $wp_customize ) {
-	if ( ! bboss_is_email_customizer() && ( ! defined( 'BBOSS_DOING_AJAX' ) || ! BBOSS_DOING_AJAX ) ) {
+	if ( ! bboss_is_email_customizer() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 		return;
 	}
 

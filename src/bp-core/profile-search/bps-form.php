@@ -53,7 +53,7 @@ function bboss_profile_search_escaped_form_data( $form = false ) {
 
 	$F->action = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
-	if ( defined( 'BBOSS_DOING_AJAX' ) ) {
+	if ( defined( 'DOING_AJAX' ) ) {
 		$http_referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
 		$F->action    = wp_parse_url( $http_referer, PHP_URL_PATH );
 	}

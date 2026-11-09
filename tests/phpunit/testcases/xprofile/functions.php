@@ -1687,7 +1687,7 @@ Bar!';
 
 		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
 
-		$memo = new ReflectionProperty( 'BB_XProfile_Visibility', 'user_data_exists_cache' );
+		$memo = new ReflectionProperty( 'BBoss_XProfile_Visibility', 'user_data_exists_cache' );
 		$memo->setAccessible( true );
 
 		// Matched on the table being READ, not on a particular SELECT list. Keyed to the SQL text

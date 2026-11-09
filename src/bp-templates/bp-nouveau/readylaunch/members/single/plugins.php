@@ -48,7 +48,7 @@ if ( bboss_is_readylaunch_enabled() && class_exists( 'WC4BP_Manager' ) && bboss_
 		// Resolve the template directory through the WC4BP helper so the path
 		// logic lives in a single place. Load the helper if it isn't already.
 		if ( ! class_exists( 'BBoss_Readylaunch_WC4BP_Helper' ) ) {
-			require_once bboss()->compatibility_dir . '/class-bb-readylaunch-wc4bp-helper.php';
+			require_once bboss()->compatibility_dir . '/class-bboss-readylaunch-wc4bp-helper.php';
 		}
 		$readylaunch_template_path = trailingslashit( BBoss_Readylaunch_WC4BP_Helper::bb_rl_wc4bp_get_template_directory() ) . $shop_template_name;
 

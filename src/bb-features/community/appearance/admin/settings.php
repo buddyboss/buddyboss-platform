@@ -443,7 +443,7 @@ function bboss_admin_settings_register_appearance_settings() {
 	);
 
 	// Build Template Pages options dynamically — only show options whose backing
-	// integration is active (matches legacy `class-bp-admin-tab.php` localize logic).
+	// integration is active (matches legacy `class-bboss-admin-tab.php` localize logic).
 	$template_page_options = array();
 
 	if ( function_exists( 'bboss_enable_site_registration' ) && bboss_enable_site_registration() && function_exists( 'bboss_allow_custom_registration' ) && ! bboss_allow_custom_registration() ) {
@@ -1000,7 +1000,7 @@ function bboss_appearance_register_site_seo_pro_placeholder_fields() {
 	// by Platform Pro — so when Sharing is inactive we always want the
 	// row-level "PRO" badge to show, regardless of whether Pro is active.
 	//
-	// `bb_admin_settings_format_field_data` (in `class-bb-admin-settings-ajax.php`)
+	// `bb_admin_settings_format_field_data` (in `class-bboss-admin-settings-ajax.php`)
 	// auto-computes `pro_notice` for any `pro_only` field that doesn't already
 	// have one set, and that auto-compute (`bb_admin_settings_get_pro_notice`)
 	// only returns `show => true` when Pro is inactive or its license is

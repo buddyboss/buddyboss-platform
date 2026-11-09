@@ -48,7 +48,7 @@ function bboss_activity_register_visibility_panel_fields() {
 
 	// FIELD: BuddyBoss Platform activity types (toggle list).
 	// Legacy stores each type in a separate option (bp-feed-platform-{activity_name}). Core AJAX
-	// reads/writes per-option when option_prefix is set (see class-bb-admin-settings-ajax.php).
+	// reads/writes per-option when option_prefix is set (see class-bboss-admin-settings-ajax.php).
 	$platform_activity_types = function_exists( 'bboss_platform_default_activity_types' ) ? bboss_platform_default_activity_types() : array();
 	$platform_type_options   = array();
 

@@ -26,7 +26,7 @@ function bboss_core_install( $active_components = false ) {
 	// If no components passed, get all the active components from the main site.
 	if ( empty( $active_components ) ) {
 
-		/** This filter is documented in bp-core/classes/class-bp-core.php */
+		/** This filter is documented in bp-core/classes/class-bboss-core.php */
 		$active_components = apply_filters( 'bp_active_components', bboss_get_option( 'bp-active-components' ) );
 
 		// check for xprofile is active component in db or not if not then update it.
@@ -736,7 +736,7 @@ function bboss_core_install_blog_tracking() {
  * @since BuddyBoss 1.0.0
  */
 function bboss_core_install_discussion_forums() {
-	require_once bboss()->plugin_dir . 'bp-forums/classes/class-bbpress.php';
+	require_once bboss()->plugin_dir . 'bp-forums/classes/class-bboss-forums.php';
 	bboss_forums();
 
 	bboss_bbp_activation();

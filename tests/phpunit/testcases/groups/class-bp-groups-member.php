@@ -1350,7 +1350,7 @@ class BP_Tests_BP_Groups_Member_TestCases extends BP_UnitTestCase {
 
 		$user_obj = $membership->user;
 
-		$this->assertInstanceOf( 'BP_Core_User', $user_obj );
+		$this->assertInstanceOf( 'BBoss_Core_User', $user_obj );
 		$this->assertEquals( $user, $user_obj->id );
 	}
 

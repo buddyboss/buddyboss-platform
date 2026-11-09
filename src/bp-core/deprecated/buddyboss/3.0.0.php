@@ -1071,7 +1071,7 @@ add_action( 'admin_post_bp_create_group_admin', 'bp_process_create_group_admin' 
 // Note: bp_groups_list_table_get_views is fired via do_action_deprecated() inside
 // BB_Admin_Groups_Ajax::get_groups() each time the admin groups list is loaded.
 // It is deprecated in favour of the 'bb_admin_groups_list_views' filter.
-// See: src/bp-core/admin/classes/class-bb-admin-groups-ajax.php
+// See: src/bp-core/admin/classes/class-bboss-admin-groups-ajax.php
 
 // Note: bp_groups_admin_comment_row_actions is no longer fired.
 // Row actions are now handled natively by the Settings 2.0 React UI.
@@ -3172,7 +3172,7 @@ if ( ! function_exists( 'bboss_core_admin_registration_pages_description' ) ) {
 		_deprecated_function(
 			__FUNCTION__,
 			'BuddyBoss 3.0.0',
-			'bb_appearance_get_registration_section_meta'
+			'bboss_appearance_get_registration_section_meta'
 		);
 	}
 }
@@ -3208,7 +3208,7 @@ if ( ! function_exists( 'bboss_core_admin_maybe_save_pages_settings' ) ) {
 		_deprecated_function(
 			__FUNCTION__,
 			'BuddyBoss 3.0.0',
-			'bb_appearance_pages_save_side_effects'
+			'bboss_appearance_pages_save_side_effects'
 		);
 		return false;
 	}
@@ -4539,7 +4539,7 @@ if ( ! function_exists( 'bboss_deprecated_forum_import_autoload' ) ) {
 		//   - declares no parent (the legacy parent class is itself aliased to the stub)
 		// A class alias can be extended, so third-party `extends` declarations still resolve.
 		if ( ! class_exists( 'BBoss_Deprecated_Forum_Import_Stub', false ) ) {
-			require_once __DIR__ . '/class-bb-deprecated-forum-import-stub.php';
+			require_once __DIR__ . '/class-bboss-deprecated-forum-import-stub.php';
 		}
 		class_alias( 'BBoss_Deprecated_Forum_Import_Stub', $class_name );
 	}

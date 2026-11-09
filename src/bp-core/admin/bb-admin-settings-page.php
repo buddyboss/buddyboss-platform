@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// NOTE: The Settings submenu is registered by BP_Admin in class-bp-admin.php
+// NOTE: The Settings submenu is registered by BP_Admin in class-bboss-admin.php
 // at the legacy bp-settings menu position (now using the bb-settings slug).
 // The standalone add_submenu_page() call that used to live here is removed
 // so Settings appears once in the correct position with label "Settings".

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Load the base Setup Wizard Manager class first.
-require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-setup-wizard-manager.php';
+require_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-setup-wizard-manager.php';
 
 // Legacy ReadyLaunch standalone admin page retired in BuddyBoss 3.0.0
 // (redirects to Settings 2.0 Appearance; folder deleted). Deprecation stubs

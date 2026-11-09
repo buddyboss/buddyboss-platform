@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bboss_activity_media_sideload_attachment( $file ) {
 
-	_deprecated_function( __FUNCTION__, '2.3.60', 'bb_media_sideload_attachment' );
+	_deprecated_function( __FUNCTION__, '2.3.60', 'bboss_bb_media_sideload_attachment' );
 
 	return bboss_bb_media_sideload_attachment( $file );
 }
@@ -38,7 +38,7 @@ function bboss_activity_media_sideload_attachment( $file ) {
  */
 function bboss_activity_media_handle_sideload( $file_array, $post_data = array() ) {
 
-	_deprecated_function( __FUNCTION__, '2.3.60', 'bb_media_handle_sideload' );
+	_deprecated_function( __FUNCTION__, '2.3.60', 'bboss_bb_media_handle_sideload' );
 
 	return bboss_bb_media_handle_sideload( $file_array, $post_data );
 }

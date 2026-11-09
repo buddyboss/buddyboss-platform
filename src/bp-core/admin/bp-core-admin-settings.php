@@ -366,7 +366,7 @@ function bboss_feed_settings_callback_platform( $args ) {
 // Legacy BuddyPress-compatibility save handler removed — it persisted settings
 // from the `bp-integrations&tab=bp-compatibility` tab form, which no longer
 // exists. Compatibility settings live in Settings 2.0 and use the Settings 2.0
-// AJAX save path (class-bb-admin-settings-ajax.php).
+// AJAX save path (class-bboss-admin-settings-ajax.php).
 
 /**
  * Link to Moderation Block tutorial

@@ -1762,18 +1762,18 @@ function bboss_core_get_illegal_names( $value = '', $oldvalue = '' ) {
 
 	// Core constants.
 	$slug_constants = array(
-		'BP_GROUPS_SLUG',
-		'BP_MEMBERS_SLUG',
-		'BP_FORUMS_SLUG',
-		'BP_BLOGS_SLUG',
-		'BP_ACTIVITY_SLUG',
-		'BP_XPROFILE_SLUG',
-		'BP_FRIENDS_SLUG',
-		'BP_SEARCH_SLUG',
-		'BP_SETTINGS_SLUG',
-		'BP_NOTIFICATIONS_SLUG',
-		'BP_REGISTER_SLUG',
-		'BP_ACTIVATION_SLUG',
+		'BBOSS_GROUPS_SLUG',
+		'BBOSS_MEMBERS_SLUG',
+		'BBOSS_FORUMS_SLUG',
+		'BBOSS_BLOGS_SLUG',
+		'BBOSS_ACTIVITY_SLUG',
+		'BBOSS_XPROFILE_SLUG',
+		'BBOSS_FRIENDS_SLUG',
+		'BBOSS_SEARCH_SLUG',
+		'BBOSS_SETTINGS_SLUG',
+		'BBOSS_NOTIFICATIONS_SLUG',
+		'BBOSS_REGISTER_SLUG',
+		'BBOSS_ACTIVATION_SLUG',
 	);
 	foreach ( $slug_constants as $constant ) {
 		if ( defined( $constant ) ) {

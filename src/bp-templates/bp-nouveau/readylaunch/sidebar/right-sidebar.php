@@ -30,18 +30,18 @@ $available_widgets = array();
 if ( bboss_is_user() ) {
 	$bb_rl_member_profile_sidebars = bboss_get_option( 'bb_rl_member_profile_sidebars', array() );
 	if ( ! empty( $bb_rl_member_profile_sidebars['complete_profile'] ) ) {
-		$available_widgets[] = 'BP_Xprofile_Profile_Completion_Widget';
+		$available_widgets[] = 'BBoss_Xprofile_Profile_Completion_Widget';
 	}
 
 	if ( ! empty( $bb_rl_member_profile_sidebars['connections'] ) ) {
 		if ( bboss_is_active( 'friends' ) && ! bboss_is_user_friends() ) {
-			$available_widgets[] = 'BB_Core_Connections_Widget';
+			$available_widgets[] = 'BBoss_Core_Connections_Widget';
 		}
 	}
 
 	if ( ! empty( $bb_rl_member_profile_sidebars['my_network'] ) ) {
 		if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) {
-			$available_widgets[] = 'BB_Core_Follow_My_Network_Widget';
+			$available_widgets[] = 'BBoss_Core_Follow_My_Network_Widget';
 		}
 	}
 }
@@ -49,30 +49,30 @@ if ( bboss_is_user() ) {
 if ( bboss_is_active( 'activity' ) && bboss_is_activity_directory() ) {
 	$bb_rl_activity_sidebars = bboss_get_option( 'bb_rl_activity_sidebars', array() );
 	if ( ! empty( $bb_rl_activity_sidebars['complete_profile'] ) ) {
-		$available_widgets[] = 'BP_Xprofile_Profile_Completion_Widget';
+		$available_widgets[] = 'BBoss_Xprofile_Profile_Completion_Widget';
 	}
 
 	if ( ! empty( $bb_rl_activity_sidebars['latest_updates'] ) ) {
-		$available_widgets[] = 'BP_Latest_Activities';
+		$available_widgets[] = 'BBoss_Latest_Activities';
 	}
 
 	if ( ! empty( $bb_rl_activity_sidebars['recent_blog_posts'] ) ) {
-		$available_widgets[] = 'BB_Recent_Blog_Posts_Widget';
+		$available_widgets[] = 'BBoss_Recent_Blog_Posts_Widget';
 	}
 
 	if ( ! empty( $bb_rl_activity_sidebars['active_members'] ) ) {
-		$available_widgets[] = 'BP_Core_Recently_Active_Widget';
+		$available_widgets[] = 'BBoss_Core_Recently_Active_Widget';
 	}
 }
 
 if ( bboss_is_active( 'groups' ) && bboss_is_group() ) {
 	$bb_rl_groups_sidebars = bboss_get_option( 'bb_rl_groups_sidebars', array() );
 	if ( ! empty( $bb_rl_groups_sidebars['about_group'] ) ) {
-		$available_widgets[] = 'BB_Group_About_Widget';
+		$available_widgets[] = 'BBoss_Group_About_Widget';
 	}
 
 	if ( ! empty( $bb_rl_groups_sidebars['group_members'] ) ) {
-		$available_widgets[] = 'BB_Group_Members_Widget';
+		$available_widgets[] = 'BBoss_Group_Members_Widget';
 	}
 }
 
@@ -89,7 +89,7 @@ if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
 			foreach ( $available_widgets as $widget ) {
 				$args = false;
 
-				if ( 'BP_Xprofile_Profile_Completion_Widget' === $widget ) {
+				if ( 'BBoss_Xprofile_Profile_Completion_Widget' === $widget ) {
 					$args           = array();
 					$steps_options  = bboss_core_profile_completion_steps_options();
 					$profile_groups = $steps_options['profile_groups'];
@@ -110,7 +110,7 @@ if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
 					
 					$args['profile_hide_widget'] = true;
 					$args['title']               = esc_html__( 'Complete your profile', 'buddyboss' );
-				} elseif ( 'BB_Core_Follow_My_Network_Widget' === $widget ) {
+				} elseif ( 'BBoss_Core_Follow_My_Network_Widget' === $widget ) {
 					$widget::enqueue_scripts();
 				}
 

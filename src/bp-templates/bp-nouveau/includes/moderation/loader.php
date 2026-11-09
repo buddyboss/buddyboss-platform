@@ -52,7 +52,7 @@ class BBoss_Nouveau_Moderation {
 
 			// Load AJAX code only on AJAX requests.
 		} else {
-			if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && isset( $_REQUEST['action'] ) && 0 === strpos( $_REQUEST['action'], 'moderation_' ) ) {
+			if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && isset( $_REQUEST['action'] ) && 0 === strpos( $_REQUEST['action'], 'moderation_' ) ) {
 				require $this->dir . 'ajax.php';
 			}
 		}

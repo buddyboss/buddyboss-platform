@@ -20,15 +20,15 @@ defined( 'ABSPATH' ) || exit;
 function bboss_admin_settings_init() {
 
 	if ( ! class_exists( 'BBoss_Feature_Autoloader' ) ) {
-		require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-feature-autoloader.php';
+		require_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-feature-autoloader.php';
 	}
 
 	if ( ! class_exists( 'BBoss_Feature_Registry' ) ) {
-		require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-feature-registry.php';
+		require_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-feature-registry.php';
 	}
 
 	if ( ! class_exists( 'BBoss_Feature_Loader' ) ) {
-		require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-feature-loader.php';
+		require_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-feature-loader.php';
 	}
 
 	BBoss_Feature_Autoloader::bb_register();
@@ -49,8 +49,8 @@ function bboss_admin_settings_init() {
 	// self-boots via BB_Support_Access::instance() at the bottom of its file,
 	// registering the front-end `init` login, the expiry cron, and the admin
 	// AJAX handlers.
-	if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php' ) ) {
-		require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php';
+	if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-support-access.php' ) ) {
+		require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-support-access.php';
 	}
 
 	// Admin/AJAX-only: AJAX handlers, meta field registry, settings page, feature settings
@@ -59,64 +59,64 @@ function bboss_admin_settings_init() {
 	if ( is_admin() || wp_doing_ajax() ) {
 		// Admin Meta Field Registry (component-based).
 		if ( ! class_exists( 'BBoss_Admin_Meta_Field_Registry' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-meta-field-registry.php';
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-meta-field-registry.php';
 		}
 
-		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-settings-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-settings-ajax.php';
 		}
 
-		if ( bboss_is_active( 'activity' ) && file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php';
+		if ( bboss_is_active( 'activity' ) && file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-activity-admin-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-activity-admin-ajax.php';
 		}
 
-		if ( bboss_is_active( 'groups' ) && file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
+		if ( bboss_is_active( 'groups' ) && file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-groups-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-groups-ajax.php';
 		}
 
 		// Email Templates AJAX handlers (emails feature is required — always active).
-		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-email-templates-admin-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-email-templates-admin-ajax.php';
 		}
 
 		// Email Invites AJAX handlers (only when invites component is active).
-		if ( bboss_is_active( 'invites' ) && file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-invites-ajax.php' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-invites-ajax.php';
+		if ( bboss_is_active( 'invites' ) && file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-invites-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-invites-ajax.php';
 		}
 
 		// Forums AJAX handlers (only when forums component is active).
 		if ( bboss_is_active( 'forums' ) ) {
-			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-forums-ajax.php' ) ) {
-				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-forums-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-forums-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-forums-ajax.php';
 			}
-			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topics-ajax.php' ) ) {
-				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topics-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-topics-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-topics-ajax.php';
 			}
-			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php' ) ) {
-				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-topic-tags-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-topic-tags-ajax.php';
 			}
-			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-replies-ajax.php' ) ) {
-				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-replies-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-replies-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-replies-ajax.php';
 			}
 		}
 
 		// Integrations marketplace — plugin activate/deactivate AJAX handlers.
-		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-integrations-ajax.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-integrations-ajax.php';
 		}
 
 		// Profile AJAX handlers (only when xprofile component is active).
 		if ( bboss_is_active( 'xprofile' ) ) {
-			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php' ) ) {
-				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-member-types-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-member-types-ajax.php';
 			}
-			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php' ) ) {
-				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-profile-fields-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-profile-fields-ajax.php';
 			}
 
 			// Also ensure profile search module is loaded — it may not be when the
 			// toggle is OFF because bp_core_load_profile_search() returns early.
-			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-search-ajax.php' ) ) {
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-profile-search-ajax.php' ) ) {
 				$bps_start = bboss()->plugin_dir . 'bp-core/profile-search/bps-start.php';
 				if ( ! function_exists( 'bboss_profile_search_main_form' ) && file_exists( $bps_start ) ) {
 					if ( ! defined( 'BBOSS_BPS_VERSION' ) ) {
@@ -124,19 +124,19 @@ function bboss_admin_settings_init() {
 					}
 					require_once $bps_start;
 				}
-				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-search-ajax.php';
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-profile-search-ajax.php';
 			}
 		}
 
 		if ( bboss_is_active( 'moderation' ) ) {
-			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php' ) ) {
-				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-moderation-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-moderation-ajax.php';
 			}
-			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php' ) ) {
-				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-flagged-members-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-flagged-members-ajax.php';
 			}
-			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php' ) ) {
-				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php';
+			if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-reported-content-ajax.php' ) ) {
+				require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-reported-content-ajax.php';
 			}
 		}
 
@@ -228,8 +228,8 @@ function bboss_admin_settings_init() {
 		}
 
 		// Icon registry.
-		if ( file_exists( bboss()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php';
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/classes/class-bboss-icon-registry.php' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-icon-registry.php';
 		}
 
 		bboss_icon_registry();
@@ -316,7 +316,7 @@ add_action( 'bp_loaded', 'bb_admin_settings_init', 4 );
  * @since BuddyBoss 3.0.0
  */
 function bboss_register_help_content_rest_route() {
-	$controller_file = bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-rest-help-content-endpoint.php';
+	$controller_file = bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-rest-help-content-endpoint.php';
 	if ( ! file_exists( $controller_file ) ) {
 		return;
 	}
@@ -341,7 +341,7 @@ add_action( 'rest_api_init', 'bb_register_help_content_rest_route' );
  * @return void
  */
 function bboss_register_integrations_rest_route() {
-	$controller_file = bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-rest-integrations-endpoint.php';
+	$controller_file = bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-rest-integrations-endpoint.php';
 	if ( ! file_exists( $controller_file ) ) {
 		return;
 	}
@@ -364,7 +364,7 @@ add_action( 'rest_api_init', 'bb_register_integrations_rest_route' );
  */
 function bboss_integration_bridge_early_init() {
 	if ( ! class_exists( 'BBoss_Integration_Bridge' ) ) {
-		require_once bboss()->plugin_dir . 'bp-core/classes/class-bb-integration-bridge.php';
+		require_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-integration-bridge.php';
 	}
 
 	// Initialize the bridge singleton (registers hooks).

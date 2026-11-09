@@ -503,7 +503,7 @@ function bboss_legacy_make_get_value( $box, $name, $type ) {
 /**
  * After the React save populates $_POST via the registry, manually call each
  * registered BBoss_Group_Extension's settings_screen_save() — Platform
- * deliberately removed the auto-call (see class-bp-group-extension.php).
+ * deliberately removed the auto-call (see class-bboss-group-extension.php).
  *
  * Skips extensions whose slug WASN'T bridged (those rely on their own
  * registration via bb_register_groups_meta_fields and don't need this

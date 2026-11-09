@@ -2877,7 +2877,7 @@ function bboss_nav_menu_get_loggedin_pages() {
 
 	// `->members->nav` is populated by `BP_Members_Component::setup_nav()`,
 	// which only runs when the members component is active. Although the
-	// `members` key is in the always-on autoload list (src/class-buddypress.php),
+	// `members` key is in the always-on autoload list (src/class-bboss-platform.php),
 	// the per-component `nav` property is unset when the component is
 	// deactivated via Settings 2.0 — and `null->get_primary()` would fatal
 	// on PHP 8+. Bail when the primary nav is not built.
@@ -3276,11 +3276,11 @@ function bboss_core_get_suggestions( $args ) {
 
 	// Members @name suggestions.
 	if ( 'members' === $args['type'] ) {
-		$class = 'BP_Members_Suggestions';
+		$class = 'BBoss_Members_Suggestions';
 
 		// Members @name suggestions for users in a specific Group.
 		if ( isset( $args['group_id'] ) ) {
-			$class = 'BP_Groups_Member_Suggestions';
+			$class = 'BBoss_Groups_Member_Suggestions';
 		}
 	} else {
 
@@ -3813,7 +3813,7 @@ function bboss_send_email( $email_type, $to, $args = array() ) {
 		 * }
 		 * @since BuddyPress 2.5.0
 		 */
-		$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
+		$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BBoss_PHPMailer', $email_type, $to, $args );
 		if ( ! class_exists( $delivery_class ) ) {
 			return new WP_Error( 'missing_class', 'No class found by that name', $delivery_class );
 		}
@@ -10567,7 +10567,7 @@ function bboss_get_settings_url() {
  *                           Pro-installed + license-valid check.
  *                           Default 'default'.
  *     @type string $context Either 'field' or 'section'. The AJAX-time field
- *                           auto-compute in class-bb-admin-settings-ajax.php
+ *                           auto-compute in class-bboss-admin-settings-ajax.php
  *                           omits this and gets the 'field' default.
  *                           Default 'field'.
  * }

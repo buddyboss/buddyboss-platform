@@ -68,7 +68,7 @@ function bboss_bbp_do_ajax() {
 	}
 
 	// Set WordPress core ajax constant
-	define( 'BBOSS_DOING_AJAX', true );
+	define( 'DOING_AJAX', true );
 
 	// Set the header content type
 	@header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );

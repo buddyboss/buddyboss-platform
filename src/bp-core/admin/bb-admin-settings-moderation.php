@@ -149,7 +149,7 @@ function bboss_admin_settings_register_moderation_feature() {
 			// but uses confirm_off_* prefix so the feature card can stay
 			// independent of any per-field confirms — and so future features
 			// could add a separate confirm_on_* flow without colliding.
-			// Wired up in class-bb-admin-settings-ajax.php (response shape)
+			// Wired up in class-bboss-admin-settings-ajax.php (response shape)
 			// and SettingsScreen.js (toggle handler intercept).
 			// Body mirrors the legacy Moderation deactivation warning shown in
 			// the Components admin screen. wp_kses_post() in

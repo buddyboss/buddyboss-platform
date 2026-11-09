@@ -4514,7 +4514,7 @@ function bboss_migrate_email_type_groups() {
  * The modal defaulted its "Profile Types" dropdown to "All Profile Types"
  * but the save handler routed the empty selection through
  * `$field->set_member_types( array() )` — which stores the `_none` sentinel
- * (see `class-bp-xprofile-field.php:753`) instead of clearing the meta.
+ * (see `class-bboss-xprofile-field.php:753`) instead of clearing the meta.
  * Admins saw "No Profile Type Users" rendered next time they opened the
  * field, and the field was hidden from every profile type.
  *

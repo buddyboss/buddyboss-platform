@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bboss_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 
-	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
+	_deprecated_function( __FUNCTION__, '1.7.0', 'bboss_media_user_can_access' );
 
 	$data = bboss_media_user_can_access( $folder_id, 'folder' );
 
@@ -51,7 +51,7 @@ function bboss_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
  */
 function bboss_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) {
 
-	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
+	_deprecated_function( __FUNCTION__, '1.7.0', 'bboss_media_user_can_access' );
 
 	$data = bboss_media_user_can_access( $document_id, 'document' );
 
@@ -83,7 +83,7 @@ function bboss_document_user_can_manage_document( $document_id = 0, $user_id = 0
  */
 function bboss_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 
-	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
+	_deprecated_function( __FUNCTION__, '1.7.0', 'bboss_media_user_can_access' );
 
 	$data = bboss_media_user_can_access( $album_id, 'album' );
 
@@ -114,7 +114,7 @@ function bboss_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
  */
 function bboss_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 
-	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
+	_deprecated_function( __FUNCTION__, '1.7.0', 'bboss_media_user_can_access' );
 
 	$data = bboss_media_user_can_access( $media_id, 'photo' );
 

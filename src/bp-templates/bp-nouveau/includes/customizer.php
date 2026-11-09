@@ -23,8 +23,8 @@ function bboss_nouveau_customize_register( WP_Customize_Manager $wp_customize ) 
 
 	require_once( trailingslashit( bboss_nouveau()->includes_dir ) . 'customizer-controls.php' );
 	require_once( trailingslashit( bboss_nouveau()->includes_dir ) . 'profile-header-customizer-controls.php' );
-	$wp_customize->register_control_type( 'BP_Nouveau_Nav_Customize_Control' );
-	$wp_customize->register_control_type( 'BP_Nouveau_Profile_Header_Customize_Control' );
+	$wp_customize->register_control_type( 'BBoss_Nouveau_Nav_Customize_Control' );
+	$wp_customize->register_control_type( 'BBoss_Nouveau_Profile_Header_Customize_Control' );
 	$bp_nouveau_options = bboss_nouveau_get_appearance_settings();
 	//@todo is the BuddyBoss Platform really translatable?
 	$wp_customize->add_panel( 'bp_nouveau_panel', array(

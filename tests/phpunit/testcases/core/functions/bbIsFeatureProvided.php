@@ -58,7 +58,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 	/**
 	 * Regression test for PROD-10225.
 	 *
-	 * Reproduces the confirmed fatal at class-bp-activity-notification.php ~line 665:
+	 * Reproduces the confirmed fatal at class-bboss-activity-notification.php ~line 665:
 	 * `bb_load_polls()` (Pro's deprecation shim) returns null, and the formatter used
 	 * to chain `->bb_get_poll( $poll_id )` straight off that null return, producing
 	 * "Call to a member function bb_get_poll() on null". The public method that reaches

@@ -4175,7 +4175,7 @@ function bboss_activity_create_summary( $content, $activity ) {
 	 * @param string $content   The content of the activity item.
 	 * @param array  $activity  The data passed to bboss_activity_add() or the values from an Activity obj.
 	 */
-	$extractor = apply_filters( 'bp_activity_create_summary_extractor_class', 'BP_Media_Extractor', $content, $activity );
+	$extractor = apply_filters( 'bp_activity_create_summary_extractor_class', 'BBoss_Media_Extractor', $content, $activity );
 	$extractor = new $extractor();
 
 	/**

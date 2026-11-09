@@ -1162,7 +1162,7 @@ function bboss_attachments_get_template_part( $slug ) {
 	 * Use bp-legacy attachment template part for older bp-default themes or if in
 	 * admin area.
 	 */
-	if ( ! bboss_use_theme_compat_with_current_theme() || ( is_admin() && ( ! defined( 'BBOSS_DOING_AJAX' ) || ! BBOSS_DOING_AJAX ) ) ) {
+	if ( ! bboss_use_theme_compat_with_current_theme() || ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) ) {
 		$current = bboss_get_theme_compat_id();
 		if ( 'legacy' !== $current ) {
 			$switched = true;

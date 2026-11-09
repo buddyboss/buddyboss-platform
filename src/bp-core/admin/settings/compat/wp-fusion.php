@@ -38,7 +38,7 @@
  * --- Group metabox (`wpf-buddypress-meta`) ----------------------------------
  *
  * WP Fusion's group box (`WPF_BuddyPress::add_meta_box_groups()` /
- * `meta_box_callback_groups()` in `includes/integrations/class-buddypress.php`)
+ * `meta_box_callback_groups()` in `includes/integrations/class-bboss-platform.php`)
  * renders three `<select multiple class="select4-wpf-tags" name="wpf-settings-
  * buddypress[<key>][]">` tag pickers — Apply Tags, Link with Tag, Link with Tag
  * - Group Organizer — all three leaves of ONE groupmeta array stored under the

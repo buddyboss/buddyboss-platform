@@ -84,7 +84,7 @@ function bboss_helper_plugins_loaded_callback() {
 	 * Support WPML Multilingual CMS
 	 */
 	if ( class_exists( 'SitePress' ) && class_exists( 'WPML_Fix_Links_In_Display_As_Translated_Content' ) ) {
-		require bboss()->compatibility_dir . '/class-bb-wpml-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-wpml-helpers.php';
 	}
 
 	/**
@@ -175,7 +175,7 @@ function bboss_helper_plugins_loaded_callback() {
 	 * Support Woocommerce
 	 */
 	if ( class_exists( 'WooCommerce' ) ) {
-		require bboss()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-woocommerce-helpers.php';
 	}
 
 	/**
@@ -184,28 +184,28 @@ function bboss_helper_plugins_loaded_callback() {
 	 * Support The Events Calendar.
 	 */
 	if ( class_exists( 'Tribe__Events__Main' ) ) {
-		require bboss()->compatibility_dir . '/class-bb-the-events-calendar-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-the-events-calendar-helpers.php';
 	}
 
 	/**
 	 * Include Query Monitor compatibility.
 	 */
 	if ( class_exists( 'QueryMonitor' ) ) {
-		require bboss()->compatibility_dir . '/class-bb-qm-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-qm-helpers.php';
 	}
 
 	/**
 	 * Include filters when tutor-pro plugin is activated.
 	 */
 	if ( function_exists( 'tutor_pro' ) ) {
-		require bboss()->compatibility_dir . '/class-bb-tutor-pro-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-tutor-pro-helpers.php';
 	}
 
 	/**
 	 * Include filters to support network search when Paid Membership Pro plugin is activated.
 	 */
 	if ( defined( 'PMPRO_VERSION' ) ) {
-		require bboss()->compatibility_dir . '/class-bb-pmpro-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-pmpro-helpers.php';
 	}
 
 	/**
@@ -281,7 +281,7 @@ function bboss_helper_plugins_loaded_callback() {
 	 * @since BuddyBoss 2.6.10
 	 */
 	if ( in_array( 'cdn-enabler/cdn-enabler.php', $bp_plugins ) && class_exists( 'CDN_Enabler_Engine' ) ) {
-		require bboss()->compatibility_dir . '/class-bb-cdn-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-cdn-helpers.php';
 	}
 
 	/**
@@ -301,7 +301,7 @@ function bboss_helper_plugins_loaded_callback() {
 	 * Tutor plugin is activated.
 	 */
 	if ( function_exists( 'tutor' ) ) {
-		require bboss()->compatibility_dir . '/class-bb-tutor-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-tutor-helpers.php';
 	}
 
 	/**
@@ -323,7 +323,7 @@ function bboss_helper_plugins_loaded_callback() {
 	 *
 	 * @since BuddyBoss 3.5.0
 	 */
-	require bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+	require bboss()->compatibility_dir . '/class-bboss-seo-helpers.php';
 	BBoss_SEO_Helpers::instance();
 
 	if ( class_exists( 'LifterLMS' ) ) {
@@ -427,7 +427,7 @@ function bboss_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 	// Define the WordPress global.
 	global $wp_admin_bar, $bp;
 
-	if ( ! bboss_use_wp_admin_bar() || defined( 'BBOSS_DOING_AJAX' ) ) {
+	if ( ! bboss_use_wp_admin_bar() || defined( 'DOING_AJAX' ) ) {
 		return;
 	}
 
@@ -1226,7 +1226,7 @@ function bboss_readylaunch_middle_content_llms_courses( $args = array() ) {
 function bboss_om_compatibility_helper() {
 
 	if ( defined( 'BB_OFFLOAD_MEDIA_VERSION' ) ) {
-		require bboss()->compatibility_dir . '/class-bb-om-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-om-helpers.php';
 	}
 }
 add_action( 'init', 'bb_om_compatibility_helper', 10 );

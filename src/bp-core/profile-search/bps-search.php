@@ -282,7 +282,7 @@ function bboss_ps_hidden_filters() {
  * @since BuddyBoss 1.0.0
  */
 function bboss_ps_current_page() {
-	 $current = defined( 'BBOSS_DOING_AJAX' ) ?
+	 $current = defined( 'DOING_AJAX' ) ?
 		wp_parse_url( isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '', PHP_URL_PATH ) :
 		wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 

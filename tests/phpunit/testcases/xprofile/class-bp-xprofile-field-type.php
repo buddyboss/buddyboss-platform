@@ -6,7 +6,7 @@
 class BP_Tests_XProfile_Field_Type extends BP_UnitTestCase {
 	public function test_unregistered_field_type_returns_textbox() {
 		$field = bboss_xprofile_create_field_type( 'fakeyfield' );
-		$this->assertEquals( get_class( $field ), 'BP_XProfile_Field_Type_Placeholder' );
+		$this->assertEquals( get_class( $field ), 'BBoss_XProfile_Field_Type_Placeholder' );
 	}
 
 	public function test_textbox_validate_empty_string() {

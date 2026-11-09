@@ -280,7 +280,7 @@ function bboss_activity_register_sharing_pro_placeholder_fields() {
 	// want the row-level "PRO" badge to show, regardless of whether Pro is
 	// active.
 	//
-	// `bb_admin_settings_format_field_data` (in `class-bb-admin-settings-ajax.php`)
+	// `bb_admin_settings_format_field_data` (in `class-bboss-admin-settings-ajax.php`)
 	// auto-computes `pro_notice` for any `pro_only` field that doesn't already
 	// have one set, and that auto-compute (`bb_admin_settings_get_pro_notice`)
 	// only returns `show => true` when Pro is inactive or its license is

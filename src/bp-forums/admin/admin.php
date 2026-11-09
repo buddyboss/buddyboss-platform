@@ -8,10 +8,10 @@
  *
  * // @todo: Remove after 3 release. Legacy admin replaced by Settings 2.0 React UI.
  * // @see src/bp-core/admin/bb-admin-settings-forums.php
- * // @see src/bp-core/admin/classes/class-bb-admin-forums-ajax.php
- * // @see src/bp-core/admin/classes/class-bb-admin-topics-ajax.php
- * // @see src/bp-core/admin/classes/class-bb-admin-replies-ajax.php
- * // @see src/bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php
+ * // @see src/bp-core/admin/classes/class-bboss-admin-forums-ajax.php
+ * // @see src/bp-core/admin/classes/class-bboss-admin-topics-ajax.php
+ * // @see src/bp-core/admin/classes/class-bboss-admin-replies-ajax.php
+ * // @see src/bp-core/admin/classes/class-bboss-admin-topic-tags-ajax.php
  */
 
 // Exit if accessed directly
