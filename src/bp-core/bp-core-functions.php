@@ -2507,7 +2507,13 @@ function bboss__bp_strip_spans_from_title( $title_part = '' ) {
  * @return string
  */
 function bboss_core_get_minified_asset_suffix() {
-	$ext = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	$ext = '.min';
+	// @bbwt-com-start zip-size
+	// The WordPress.org build ships minified assets only (rule zip-size); the sources are on GitHub.
+	if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+		$ext = '';
+	}
+	// @bbwt-com-end zip-size
 	return $ext;
 }
 

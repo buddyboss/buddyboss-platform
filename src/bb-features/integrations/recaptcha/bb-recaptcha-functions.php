@@ -631,7 +631,7 @@ function bboss_recaptcha_display( $action = '' ) {
 				wp_register_script( 'bb-recaptcha-api', $api_url, false, bboss()->version, true );
 			}
 		}
-		$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+		$min     = bboss_core_get_minified_asset_suffix();
 		$rtl_css = is_rtl() ? '-rtl' : '';
 		wp_enqueue_style( 'bb-recaptcha', bboss_recaptcha_integration_url( '/assets/css/bb-recaptcha' . $rtl_css . $min . '.css' ), false, bboss()->version );
 
