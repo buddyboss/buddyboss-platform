@@ -120,7 +120,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * Bug: ReadyLaunch - Fixed a display issue with the radio buttons in the ReadyLaunch onboarding wizard
 
 = 3.7.0 =
-* Enhancement: Core - Moved Videos, Documents, Animated GIFs and Group Subscription to the Addons plugin, with existing customers keeping access
+* Enhancement: Core - Moved Videos, Documents, Animated GIFs and Group Subscription to a separate add-on plugin
 * Bug: Activity - Fixed an issue where the app's "Only Me" activity filter showed posts from other members
 * Bug: Activity - Fixed several issues with activity topics, including required-topic checks, topic links and cleanup when topics are deleted
 * Bug: Core - Fixed an issue where emoji images did not display correctly
@@ -174,7 +174,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 
 = 3.5.0 =
 * New Feature! Notification - Turn a flood of notification emails into a single daily or weekly Email Digest, with each member choosing their own frequency
-* Bug: Core - Fixed an issue that could cause the app to crash when the BuddyBoss Addons plugin was not activated
+* Bug: Core - Fixed an issue that could cause the app to crash when an add-on plugin was not activated
 * Bug: Core - Fixed an issue where clicking "View details" on the BuddyBoss products not showing update details
 * Bug: Core - Fixed inconsistencies where member hover cards were not appearing correctly in some areas like groups, forums, and activity feeds
 * Bug: Core - Updated the BuddyBoss products compatibility version with the latest WordPress version as unknown

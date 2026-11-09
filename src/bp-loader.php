@@ -96,15 +96,68 @@ if ( $bp_is_multisite ) {
 $bp_plugins   = array_merge( $bp_sitewide_plugins, (array) get_option( 'active_plugins', array() ) );
 $bp_plugins[] = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
 
-// check if BuddyPress is activated.
-if ( in_array( $bp_plugin_file, $bp_plugins ) ) {
-	$is_bp_active = true;
+/**
+ * Tell whether an active plugin entry is BuddyPress or bbPress, whatever its folder is called.
+ *
+ * The standard path matches at once. A copy in a renamed folder (`buddypress.bak/`, `bp-old/`)
+ * is recognised by its `Plugin Name` header, read only for entries whose folder or file name
+ * suggests one of the two, so no request pays a header read per installed plugin. Platform's
+ * own entry never matches, whichever folder it is installed in.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $plugin Plugin file relative to the plugins directory, as stored in `active_plugins`.
+ * @param string $name   'BuddyPress' or 'bbPress'.
+ *
+ * @return bool
+ */
+function bboss_core_active_plugin_is( $plugin, $name ) {
+	$standard = array(
+		'BuddyPress' => 'buddypress/bp-loader.php',
+		'bbPress'    => 'bbpress/bbpress.php',
+	);
+	if ( ! is_string( $plugin ) || '' === $plugin || ! isset( $standard[ $name ] ) ) {
+		return false;
+	}
+	if ( $standard[ $name ] === $plugin ) {
+		return true;
+	}
+	$lower = strtolower( $plugin );
+	if ( false === strpos( $lower, 'buddypress' ) && false === strpos( $lower, 'bbpress' ) && 'bp-loader.php' !== basename( $lower ) ) {
+		return false;
+	}
+	$file = WP_PLUGIN_DIR . '/' . $plugin;
+	$own  = dirname( __DIR__ ) . '/bp-loader.php';
+	if ( ! is_file( $file ) || realpath( $file ) === realpath( $own ) ) {
+		return false;
+	}
+	$data = get_file_data( $file, array( 'name' => 'Plugin Name' ) );
+
+	return isset( $data['name'] ) && trim( (string) $data['name'] ) === $name;
 }
 
-// check if bbPress is activated.
-if ( in_array( $bb_plugin_file, $bp_plugins ) ) {
+// Check if BuddyPress or bbPress is activated, by identity rather than by folder name.
+foreach ( $bp_plugins as $bp_active_plugin ) {
+	if ( ! $is_bp_active && bboss_core_active_plugin_is( $bp_active_plugin, 'BuddyPress' ) ) {
+		$is_bp_active = true;
+	}
+	if ( ! $is_bb_active && bboss_core_active_plugin_is( $bp_active_plugin, 'bbPress' ) ) {
+		$is_bb_active = true;
+	}
+}
+unset( $bp_active_plugin );
+
+// A copy that loaded before this file (a folder that sorts first, a must-use plugin, a renamed
+// main file) has already declared its names, whatever it is called. These are the real
+// BuddyPress's and bbPress's symbols on purpose; Platform declares its own only further down.
+// @bbwt-keep-start real BuddyPress / bbPress, not Platform (ROADMAP B4).
+if ( ! $is_bp_active && ( class_exists( 'BuddyPress', false ) || function_exists( 'buddypress' ) ) ) {
+	$is_bp_active = true;
+}
+if ( ! $is_bb_active && ( class_exists( 'bbPress', false ) || function_exists( 'bbpress' ) ) ) {
 	$is_bb_active = true;
 }
+// @bbwt-keep-end.
 
 /**
  * Prevent running BuddyBoss Platform if any incompatible plugins are active.

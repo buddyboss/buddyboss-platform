@@ -364,7 +364,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 					$this->settings_page,
 					'bboss_core_admin_backpat_menu',
 					'none',
-					3
+					58.9
 				);
 			}
 		}
@@ -401,7 +401,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				$this->settings_page,
 				'bboss_core_admin_backpat_menu',
 				'none',
-				3
+				58.9
 			);
 
 			$hooks[] = add_submenu_page(
@@ -426,8 +426,8 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// Add the option pages.
 			$hooks[] = add_submenu_page(
 				$this->child_settings_page,
-				__( 'BuddyPress Settings', 'buddyboss-platform' ),
-				__( 'BuddyPress', 'buddyboss-platform' ),
+				__( 'BuddyBoss Settings', 'buddyboss-platform' ),
+				__( 'BuddyBoss', 'buddyboss-platform' ),
 				$this->capability,
 				'admin.php?page=bb-settings'
 			);
