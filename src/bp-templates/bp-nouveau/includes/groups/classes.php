@@ -455,7 +455,7 @@ class BBoss_Nouveau_Customizer_Group_Nav extends BBoss_Core_Nav {
 				'name'                => __( 'My Groups', 'buddyboss' ),
 				'slug'                => $this->group->slug,
 				'position'            => -1,
-				/** This filter is documented in bp-groups/classes/class-bboss-groups-component.php. */
+				/** This filter is documented in bp-groups/classes/class-bp-groups-component.php. */
 				'default_subnav_slug' => apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : 'home' ),
 			),
 			'members'    => array(
