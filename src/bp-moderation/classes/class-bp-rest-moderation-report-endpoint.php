@@ -600,7 +600,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 				'description'       => __( 'User Notes for the other type of report.', 'buddyboss' ),
 				'type'              => 'string',
 				'default'           => '',
-				'sanitize_callback' => 'sanitize_key',
+				'sanitize_callback' => 'sanitize_textarea_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
