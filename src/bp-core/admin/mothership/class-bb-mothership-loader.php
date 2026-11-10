@@ -307,11 +307,11 @@ class BB_Mothership_Loader {
 			// Boot registers the vendor WordPress hooks.
 			//
 			// The Platform is deliberately NOT registered with the vendor UpdateService
-			// (`UpdateService::plugin( 'buddyboss-platform', ... )`). BuddyBoss Platform ships
-			// without an `Update URI` header, so its `update_plugins_{host}` filter would never
-			// fire, while its `plugins_api` handler would replace BuddyBoss's own "View details"
-			// modal and its `auto_update_plugin` filter would force background updates over the
-			// admin's per-plugin choice. Updates are served by {@see self::inject_platform_update()}.
+			// (`UpdateService::plugin( 'buddyboss-platform', ... )`): its `plugins_api` handler
+			// would replace BuddyBoss's own "View details" modal and its `auto_update_plugin`
+			// filter would force background updates over the admin's per-plugin choice. Nothing
+			// hooks the `update_plugins_buddyboss.com` filter that the `Update URI` header makes
+			// WordPress fire; updates are served by {@see self::inject_platform_update()}.
 			$this->container->boot();
 
 			$this->disable_overwrite_guard_for_per_site_licenses();
@@ -523,8 +523,9 @@ class BB_Mothership_Loader {
 			add_action( 'wp_ajax_bb_reset_license_settings', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_reset_license_settings' ) );
 		}
 
-		// Plugin updates. BuddyBoss Platform ships without an `Update URI` header, so WordPress
-		// never fires `update_plugins_{host}` for it and this injector is the only update path.
+		// Plugin updates. The `Update URI: https://buddyboss.com/` header keeps wordpress.org from
+		// offering this install the WordPress.org edition of Platform (same slug), and nothing hooks
+		// `update_plugins_buddyboss.com`, so this injector is the only update path.
 		// Like the vendor update hooks, the injectors only run where updates are read — never
 		// on anonymous front-end page loads, where a cache miss would block the page on a
 		// remote version check.
@@ -861,11 +862,11 @@ class BB_Mothership_Loader {
 	/**
 	 * Injects the Platform's own plugin update into the update_plugins transient.
 	 *
-	 * This is the only update path. BuddyBoss Platform ships without an `Update URI` header,
-	 * so WordPress never fires `update_plugins_{host}` for it, and the Platform is not
-	 * registered with the vendor UpdateService (see {@see self::register_services()}).
-	 * Dropping the header is safe because `buddyboss-platform` is not a wordpress.org slug,
-	 * so no w.org listing can claim the plugin.
+	 * This is the only update path. The `Update URI: https://buddyboss.com/` header tells
+	 * WordPress not to look for this plugin on wordpress.org (where the WordPress.org edition
+	 * is listed under the same slug), nothing hooks the `update_plugins_buddyboss.com` filter
+	 * it fires, and the Platform is not registered with the vendor UpdateService (see
+	 * {@see self::register_services()}).
 	 *
 	 * It uses the same data source as the vendor ({@see Products::getVersionCheck()}), runs only
 	 * when licensed — leaving wordpress.org updates intact for unlicensed installs — and keys
