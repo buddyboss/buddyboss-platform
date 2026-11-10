@@ -449,7 +449,7 @@ function bboss_nouveau_ajax_messages_send_message() {
  */
 function bboss_nouveau_ajax_messages_send_reply() {
 
-	$hash    = ! empty( $_POST['hash'] ) ? wp_unslash( $_POST['hash'] ) : '';
+	$hash    = ! empty( $_POST['hash'] ) ? sanitize_text_field( wp_unslash( $_POST['hash'] ) ) : '';
 	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
 
 	$response = array(
@@ -2422,10 +2422,10 @@ function bboss_nouveau_get_thread_messages( $thread_id, $post ) {
 				$content = '<p class="joined deleted-message">' . __( 'This message was deleted', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept inside the string to preserve existing translations (msgid unchanged).
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept inside the string to preserve existing translations (msgid unchanged).
 			} elseif ( 'This message was deleted' === wp_strip_all_tags( bboss_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined">' . wp_strip_all_tags( bboss_get_the_thread_message_content() ) . '</p>';
 			} else {
@@ -2501,10 +2501,10 @@ function bboss_nouveau_get_thread_messages( $thread_id, $post ) {
 				$content = '<p class="joined deleted-message">' . __( 'This message was deleted', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept inside the string to preserve existing translations (msgid unchanged).
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss' ), ucwords( $group_name ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept inside the string to preserve existing translations (msgid unchanged).
 			} elseif ( 'This message was deleted' === wp_strip_all_tags( bboss_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined deleted-message">' . wp_strip_all_tags( bboss_get_the_thread_message_content() ) . '</p>';
 			} else {
@@ -2823,7 +2823,7 @@ function bboss_nouveau_get_thread_messages( $thread_id, $post ) {
 									'<div class="more_text_view">%s</div>',
 									sprintf(
 									/* translators: %s: download url */
-										wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+										wp_kses_post( __( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ) ),
 										esc_url( $download_url )
 									)
 								);

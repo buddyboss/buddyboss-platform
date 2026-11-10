@@ -199,7 +199,13 @@ class BBoss_Nouveau extends BBoss_Theme_Compat {
 		add_filter( 'wp_enqueue_scripts', array( $this, 'check_heartbeat_api' ), PHP_INT_MAX );
 		add_filter( 'wp_enqueue_scripts', array( $this, 'presence_localize_scripts' ), PHP_INT_MAX ); // Enqueue theme script localization.
 
-		// Register login and forgot password popup link.
+		// Register login and forgot password popup link. Core registers the handles that
+		// `bp-nouveau` depends on (bp-jquery-query, bp-jquery-cookie, bp-jquery-scroll-to,
+		// bp-widget-members, bp-select2) on `bp_enqueue_scripts`, which wp-login.php never
+		// fires, so register them here first or WordPress 6.4+ logs a _doing_it_wrong notice
+		// about unregistered dependencies on every login and registration page load.
+		add_action( 'login_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
+		add_action( 'login_enqueue_scripts', 'bp_core_register_common_styles', 1 );
 		add_action( 'login_enqueue_scripts', array( $this, 'register_scripts' ), 2 );
 		add_action( 'login_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'login_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -253,7 +259,9 @@ class BBoss_Nouveau extends BBoss_Theme_Compat {
 		}
 
 		// Protocol
-		$url = ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		$http_host   = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		$url         = ( is_ssl() ? 'https' : 'http' ) . '://' . $http_host . $request_uri;
 
 		// Get current URL
 		$current_url = trailingslashit( $url );

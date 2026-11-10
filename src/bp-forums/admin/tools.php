@@ -2155,7 +2155,7 @@ function bboss_bbp_admin_reset_database() {
 function bboss_admin_forum_repair_tools_wrapper_function() {
 
 	$type    = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-	$site_id = isset( $_POST['site_id'] ) ? sanitize_text_field( wp_unslash( $_POST['site_id'] ) ) : 0;
+	$site_id = isset( $_POST['site_id'] ) ? absint( wp_unslash( $_POST['site_id'] ) ) : 0;
 
 	$response = array(
 		'feedback' => sprintf(
