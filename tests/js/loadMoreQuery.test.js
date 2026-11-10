@@ -75,12 +75,23 @@ function boot( bundle, html ) {
 	}
 
 	const posts = [];
+	// A reload answers with the list markup, as the server does, and is injected at once (no fade),
+	// so the Load More clicked afterwards is the one the reload rendered.
+	const listMarkup = document.querySelector( '[data-bp-list]' )
+		? document.querySelector( '[data-bp-list]' ).innerHTML
+		: '';
+	window.jQuery.fx.off = true;
 	window.bp.Nouveau.objectNavParent = '#buddypress';
 	window.bp.Nouveau.ajax = ( postData ) => {
 		posts.push( window.jQuery.extend( {}, postData ) );
 		return window.jQuery
 			.Deferred()
-			.resolve( { success: true, data: { contents: '' } } )
+			.resolve( {
+				success: true,
+				data: {
+					contents: 'reset' === postData.method ? listMarkup : '',
+				},
+			} )
 			.promise();
 	};
 	return posts;
@@ -367,6 +378,172 @@ describeWithLibs.each( BUNDLES )( 'Load More query (%s)', ( label, bundle ) => {
 			clickLoadMore();
 			expect( posts ).toHaveLength( 2 );
 			expect( posts[ 1 ] ).toMatchObject( { page: 2, method: 'append' } );
+		}
+	);
+
+	describe( 'a Load More while the list reloads with a new query', () => {
+		let posts, pending;
+
+		// Start a search reload whose request stays pending until the test settles it.
+		const startReload = () => {
+			window.bp.Nouveau.objectRequest( {
+				object: 'members',
+				scope: 'all',
+				search_terms: 'zed',
+				page: 1,
+				method: 'reset',
+			} );
+		};
+
+		beforeEach( () => {
+			posts = [];
+			pending = [];
+			boot( bundle, LIST( 'members', '?upage=2' ) );
+			window.bp.Nouveau.ajax = ( postData ) => {
+				posts.push( window.jQuery.extend( {}, postData ) );
+				const request = window.jQuery.Deferred();
+				pending.push( request );
+				return request.promise();
+			};
+			startReload();
+		} );
+
+		test( 'is ignored, so the reload is not aborted for the old query\'s next page', () => {
+			clickLoadMore();
+
+			expect( posts ).toHaveLength( 1 );
+			expect( posts[ 0 ] ).toMatchObject( {
+				method: 'reset',
+				search_terms: 'zed',
+			} );
+		} );
+
+		test.each( [
+			[ 'fails', ( request ) => request.reject() ],
+			[
+				'answers with an error',
+				( request ) => request.resolve( { success: false } ),
+			],
+		] )( 'is handed back when the reload %s', ( _case, settle ) => {
+			settle( pending[ 0 ] );
+
+			clickLoadMore();
+
+			expect( posts ).toHaveLength( 2 );
+			expect( posts[ 1 ] ).toMatchObject( { method: 'append', page: 2 } );
+		} );
+
+		test( 'stays parked for a newer reload when an older one is aborted', () => {
+			startReload();
+			// bp.Nouveau.ajax() aborts the first reload when the second starts.
+			pending[ 0 ].reject();
+
+			clickLoadMore();
+
+			expect( posts ).toHaveLength( 2 );
+			expect( posts.map( ( post ) => post.method ) ).toEqual( [
+				'reset',
+				'reset',
+			] );
+		} );
+	} );
+} );
+
+describeWithLibs.each( BUNDLES )( 'Pagination search (%s)', ( label, bundle ) => {
+	// A paginated Members list: no search box when Advanced Profile Search replaces it.
+	const PAGED = ( searchBox ) =>
+		( searchBox
+			? '<div data-bp-search="members"><input type="search" value="' + searchBox + '"></div>'
+			: '' ) +
+		'<div data-bp-list="members"><ul class="bp-list"><li data-bp-item-id="1"></li></ul>' +
+		'<div class="bp-pagination bottom" data-bp-pagination="upage">' +
+		'<a class="page-numbers" href="?upage=2">2</a></div></div>';
+
+	const goToPage2 = () => {
+		const list = document.querySelector( '[data-bp-list="members"]' );
+		window.bp.Nouveau.paginateAction( {
+			preventDefault() {},
+			data: window.bp.Nouveau,
+			currentTarget: list.querySelector( '[data-bp-pagination] a' ),
+			delegateTarget: list,
+		} );
+	};
+
+	test( 'page 2 keeps the search the list was opened with from the URL', () => {
+		const posts = boot( bundle, PAGED() );
+		window.bp.Nouveau.querystring = { members_search: 'QA+9724' };
+
+		goToPage2();
+
+		expect( posts[ 0 ] ).toMatchObject( { page: '2', search_terms: 'QA 9724' } );
+	} );
+
+	test( 'page 2 keeps the search of the list\'s last reload over the URL', () => {
+		const posts = boot( bundle, PAGED() );
+		window.bp.Nouveau.querystring = { members_search: 'QA+9724' };
+		window.bp.Nouveau.objectRequest( {
+			object: 'members',
+			scope: 'all',
+			search_terms: 'zed',
+			page: 1,
+			method: 'reset',
+		} );
+
+		goToPage2();
+
+		expect( posts[ 1 ] ).toMatchObject( { page: '2', search_terms: 'zed' } );
+	} );
+
+	test( 'a search box on the screen still decides the search', () => {
+		const posts = boot( bundle, PAGED( 'box' ) );
+		window.bp.Nouveau.querystring = { members_search: 'QA+9724' };
+
+		goToPage2();
+
+		expect( posts[ 0 ] ).toMatchObject( { page: '2', search_terms: 'box' } );
+	} );
+} );
+
+describeWithLibs.each( BUNDLES )( 'Grid/list save order (%s)', ( label, bundle ) => {
+	let sent, requests, realAjax;
+
+	beforeEach( () => {
+		boot( bundle, LIST( 'members', '?upage=2' ) );
+		window.bbRLAjaxUrl = '/wp-admin/admin-ajax.php';
+		window.bbRlNonce = {};
+		sent = [];
+		requests = [];
+		realAjax = window.jQuery.ajax;
+		window.jQuery.ajax = ( options ) => {
+			sent.push( options.data.object + ':' + options.data.type );
+			const request = window.jQuery.Deferred();
+			requests.push( request );
+			return request.promise();
+		};
+	} );
+
+	afterEach( () => {
+		window.jQuery.ajax = realAjax;
+	} );
+
+	test.each( [
+		[ 'succeeds', ( request ) => request.resolve( { success: true } ) ],
+		[ 'fails', ( request ) => request.reject() ],
+	] )(
+		'clicks during a save send only the latest choice, after the save %s',
+		( _case, settle ) => {
+			window.bp.Nouveau.saveListLayout( 'members', 'list' );
+			window.bp.Nouveau.saveListLayout( 'members', 'grid' );
+			window.bp.Nouveau.saveListLayout( 'members', 'list' );
+
+			// Two saves running together could store the earlier click.
+			expect( sent ).toEqual( [ 'members:list' ] );
+
+			settle( requests[ 0 ] );
+			expect( sent ).toEqual( [ 'members:list', 'members:list' ] );
+
+			requests[ 1 ].resolve( { success: true } );
+			expect( sent ).toHaveLength( 2 );
 		}
 	);
 } );
