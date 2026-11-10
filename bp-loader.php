@@ -6,6 +6,7 @@
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
  * Version:     3.7.1
+ * Update URI:  https://wordpress.org/plugins/buddyboss-platform/
  * Text Domain: buddyboss-platform
  * Domain Path: /src/languages
  * License:     GPLv2 or later
