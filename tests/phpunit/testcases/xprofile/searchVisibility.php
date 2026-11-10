@@ -4393,4 +4393,41 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * The memoized search clause must not carry the rest of the first query's SQL into a later one.
+	 *
+	 * The ReadyLaunch Members directory counts members (per_page=1) before it renders the loop with
+	 * the same search terms. When the whole $sql was memoized, the loop reused the count's
+	 * "LIMIT 0, 1" and listed a single member while paginating as if it had a full page.
+	 */
+	public function test_search_memo_does_not_reuse_an_earlier_querys_limit() {
+		$members = array(
+			$this->create_member_with_hidden_surname( 'public', 'Vellinghast' ),
+			$this->create_member_with_hidden_surname( 'public', 'Vellinghast' ),
+			$this->create_member_with_hidden_surname( 'public', 'Vellinghast' ),
+		);
+
+		foreach ( $members as $member ) {
+			bp_update_user_last_activity( $member, bp_core_current_time() );
+		}
+
+		$this->set_current_user( 0 );
+
+		$count_query = new BP_User_Query(
+			array(
+				'search_terms' => 'Vellinghast',
+				'per_page'     => 1,
+			)
+		);
+
+		$this->assertCount( 1, $count_query->user_ids );
+		$this->assertSame( 3, (int) $count_query->total_users );
+
+		$this->assertEqualSets(
+			$members,
+			$this->search_as( 0, 'Vellinghast' ),
+			'A second search with the same terms reused the first query\'s LIMIT.'
+		);
+	}
+
 }

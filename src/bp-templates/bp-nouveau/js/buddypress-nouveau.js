@@ -586,8 +586,9 @@ window.bp = window.bp || {};
 				data.order_by = $( this.objectNavParent + ' [data-bp-order="' + data.object + '"].selected' ).data( 'bp-orderby' );
 			}
 
-			// Set session's data.
-			if ( null !== data.scope ) {
+			// Set session's data. A Load More only continues the list on screen (continue_list),
+			// so it leaves the query remembered for the object (other lists share it) unchanged.
+			if ( null !== data.scope && ! data.continue_list ) {
 				if( data.object === 'activity' ) {
 					if( ( 'undefined' !== data.user_timeline && true === data.user_timeline ) || $( 'body.my-activity:not(.activity-singular)' ).length ) {
 						this.setStorage( 'bp-user-activity', 'scope', data.scope );
@@ -599,11 +600,11 @@ window.bp = window.bp || {};
 				}
 			}
 
-			if ( null !== data.filter ) {
+			if ( null !== data.filter && ! data.continue_list ) {
 				this.setStorage( 'bp-' + data.object, 'filter', data.filter );
 			}
 
-			if ( null !== data.extras ) {
+			if ( null !== data.extras && ! data.continue_list ) {
 				this.setStorage( 'bp-' + data.object, 'extras', data.extras );
 			}
 
@@ -687,6 +688,19 @@ window.bp = window.bp || {};
 			// $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).show();
 			$( '#buddypress [data-bp-filter="' + data.object + '"] option[value="' + data.filter + '"]' ).prop( 'selected', true );
 
+			// Remember the query a list is (re)loaded with, so its Load More continues that same
+			// list rather than whatever session memory holds for the object. The profile
+			// Connections controls are registered as "friends" while the list is "members".
+			var listObject = 'friends' === data.object ? 'members' : data.object,
+				listQuery  = 'reset' === data.method ? {
+					scope          : data.scope,
+					filter         : data.filter,
+					search_terms   : data.search_terms,
+					extras         : data.extras,
+					member_type_id : data.member_type_id,
+					group_type     : data.group_type
+				} : null;
+
 			if ( 'friends' === data.object || 'group_members' === data.object || 'manage_group_members' === data.object ) {
 				data.template = data.object;
 				data.object   = 'members';
@@ -715,11 +729,34 @@ window.bp = window.bp || {};
 			if( ! _.isUndefined( postdata.user_timeline ) ) {
 				delete postdata.user_timeline;
 			}
+			if ( ! _.isUndefined( postdata.continue_list ) ) {
+				delete postdata.continue_list;
+			}
 
-			return this.ajax( postdata, data.object ).done(
+			var request = this.ajax( postdata, data.object ),
+				// While a list reloads, its Load More still continues the old query: a click or a
+				// scroll autoload would abort the reload (bp.Nouveau.ajax() aborts the pending
+				// request) and append the old query's next page. Park the button until the reload
+				// replaces it, and hand it back if the reload does not (a newer reload re-parks it).
+				$parkedLoadMore = 'reset' === data.method ? $( '#buddypress [data-bp-list="' + listObject + '"] li.load-more' ) : $(),
+				unparkLoadMore  = function () {
+					if ( $parkedLoadMore.data( 'bp-parked-by' ) === request ) {
+						$parkedLoadMore.removeData( 'bp-parked-by' );
+					}
+				};
+
+			$parkedLoadMore.data( 'bp-parked-by', request );
+			request.fail( unparkLoadMore );
+
+			return request.done(
 				function ( response ) {
 					if ( false === response.success || _.isUndefined( response.data ) ) {
+						unparkLoadMore();
 						return;
+					}
+
+					if ( listQuery ) {
+						$( '#buddypress [data-bp-list="' + listObject + '"]' ).data( 'bp-list-query', listQuery );
 					}
 
 					// Control the scheduled posts layout view.
@@ -732,8 +769,12 @@ window.bp = window.bp || {};
 					}
 
 					if ( !_.isUndefined( response.data.layout ) ) {
+						// A layout picked on this page wins over the saved one the server answered
+						// with: the save may still be on its way (see switchGridList).
+						var listLayout = $( data.target ).closest( '.buddypress-wrap' ).data( 'bb-list-layout' ) || response.data.layout;
+
 						$( '.layout-view' ).removeClass( 'active' );
-						$( '.layout-' + response.data.layout + '-view' ).addClass( 'active' );
+						$( '.layout-' + listLayout + '-view' ).addClass( 'active' );
 					}
 
 					if ( $( 'body.group-members.members.buddypress' ).length && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
@@ -832,6 +873,8 @@ window.bp = window.bp || {};
 						self.inject( data.target, response.data.contents, data.method );
 						$( data.target ).trigger( 'bp_ajax_' + data.method, $.extend( data, { response: response.data } ) );
 					} else {
+						// Reset infinite scroll page counter on full list reload.
+						$( '#buddypress [data-bp-list="' + data.object + '"]' ).data( 'bp-current-page', 1 );
 						/* animate to top if called from bottom pagination */
 						if ( data.caller === 'pag-bottom' ) {
 							var top = null, additionalOffset = 0, isMobile = $( 'body.bb-is-mobile' ).length;
@@ -1124,6 +1167,12 @@ window.bp = window.bp || {};
 
 			// Pagination.
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
+
+			// Members/Groups load more (infinite scroll) — only when Members & Groups Loading is set to infinite scroll.
+			if ( BP_Nouveau.directory_autoload && $( this.autoloadLists ).length ) {
+				$( this.autoloadLists ).on( 'click', 'li.load-more a', this, this.loadMoreItems );
+				$( window ).on( 'scroll', this.autoLoadMoreItems );
+			}
 
 			$( document ).on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
@@ -1755,45 +1804,93 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					if ( 'undefined' !== typeof bp.Nouveau.ajax_request && null !== bp.Nouveau.ajax_request && bp.Nouveau.ajax_request != false ) {
-						bp.Nouveau.ajax_request.abort();
+					var layout = $( this ).hasClass( 'layout-list-view' ) ? 'list' : 'grid',
+						$wrap  = $( this ).parents( '.buddypress-wrap' );
 
-						$( '.component-navigation [data-bp-object]' ).each(
-							function () {
-								$( this ).removeClass( 'loading' );
-							}
-						);
+					// Remember the choice so a list (re)loaded before it is saved keeps it (see below).
+					$wrap.data( 'bb-list-layout', layout );
+					bp.Nouveau.setListLayout( $wrap, layout );
+
+					bp.Nouveau.saveListLayout( object, layout );
+				}
+			);
+
+			// The server renders a list in the saved layout, so a page requested while the choice is
+			// still being saved comes back in the previous one. Put the member's choice back.
+			$( document ).on(
+				'bp_ajax_request',
+				function ( event ) {
+					var $wrap  = $( event.target ).closest( '.buddypress-wrap' ),
+						layout = $wrap.data( 'bb-list-layout' );
+
+					if ( layout ) {
+						bp.Nouveau.setListLayout( $wrap, layout );
 					}
+				}
+			);
+		},
 
-					var layout = '';
+		/**
+		 * Show the lists and the grid/list switch of a wrap in the given layout.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} $wrap  The .buddypress-wrap holding the lists.
+		 * @param {string} layout 'grid' or 'list'.
+		 */
+		setListLayout: function ( $wrap, layout ) {
+			$wrap.find( '.grid-filters .layout-view' ).removeClass( 'active' ).filter( '.layout-' + layout + '-view' ).addClass( 'active' );
+			// Server-rendered lists carry 'list' or 'grid', so swap both rather than toggling 'grid'.
+			$wrap.find( '.bp-list' ).removeClass( 'grid list' ).addClass( layout );
+		},
 
-					if ( $( this ).hasClass( 'layout-list-view' ) ) {
-						gridfilters.find( '.layout-grid-view' ).removeClass( 'active' );
-						$( this ).addClass( 'active' );
-						$( this ).parents( '.buddypress-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
-						layout = 'list';
-					} else {
-						gridfilters.find( '.layout-list-view' ).removeClass( 'active' );
-						$( this ).addClass( 'active' );
-						$( this ).parents( '.buddypress-wrap' ).find( '.bp-list' ).addClass( 'grid' );
-						layout = 'grid';
+		/**
+		 * Save the grid/list choice, one request at a time.
+		 *
+		 * The server stores the choice with a read-modify-write of the member's bb_layout_view
+		 * meta (or cookie), so two saves running together can finish in either order and leave the
+		 * earlier click stored; aborting the first one in the browser does not stop it on the server.
+		 * While a save runs, a newer choice waits and only the latest one is sent after it.
+		 * The save also has its own request: sharing bp.Nouveau.ajax_request let a page or Load More
+		 * request abort it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} object Layout object (members, groups...).
+		 * @param {string} layout 'grid' or 'list'.
+		 */
+		saveListLayout: function ( object, layout ) {
+			var self = this;
+
+			self.layout_queue = self.layout_queue || {};
+
+			if ( self.layout_request && 'pending' === self.layout_request.state() ) {
+				self.layout_queue[ object ] = layout;
+				return;
+			}
+
+			self.layout_request = $.ajax(
+				{
+					method: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: {
+						action: 'buddyboss_directory_save_layout',
+						object: object,
+						option: 'bb_layout_view',
+						nonce: BP_Nouveau.nonces[ object ],
+						type: layout
 					}
+				}
+			).always(
+				function () {
+					var next = Object.keys( self.layout_queue )[ 0 ];
 
-					bp.Nouveau.ajax_request = $.ajax(
-						{
-							method: 'POST',
-							url: BP_Nouveau.ajaxurl,
-							data: {
-								action: 'buddyboss_directory_save_layout',
-								object: object,
-								option: 'bb_layout_view',
-								nonce: BP_Nouveau.nonces[ object ],
-								type: layout
-							},
-							success: function () {
-							}
-						}
-					);
+					if ( next ) {
+						var nextLayout = self.layout_queue[ next ];
+
+						delete self.layout_queue[ next ];
+						self.saveListLayout( next, nextLayout );
+					}
 				}
 			);
 		},
@@ -3114,6 +3211,8 @@ window.bp = window.bp || {};
 			// Set the search terms.
 			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
 				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
+			} else {
+				search_terms = self.getListSearchTerms( $( event.delegateTarget ), object, search_terms );
 			}
 
 			var queryData = {
@@ -3143,6 +3242,260 @@ window.bp = window.bp || {};
 			// Request the page.
 			self.objectRequest( queryData );
 		},
+
+		/**
+		 * Members/Groups lists that load with infinite scroll: directories, profile Connections and
+		 * Groups, group Members and Subgroups.
+		 */
+		autoloadLists: '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"], #buddypress [data-bp-list="group_members"], #buddypress [data-bp-list="group_subgroups"]',
+
+		/**
+		 * Handle "Load More" click for Members/Groups infinite scroll.
+		 *
+		 * @param {Object} event Click event.
+		 */
+		loadMoreItems: function ( event ) {
+			event.preventDefault();
+
+			// The list is reloading with a new query (see objectRequest).
+			if ( $( event.currentTarget ).closest( 'li.load-more' ).data( 'bp-parked-by' ) ) {
+				return;
+			}
+
+			var self        = event.data,
+				$loadMore   = $( event.currentTarget ).closest( 'li.load-more' ),
+				$list       = $loadMore.closest( '[data-bp-list]' ),
+				object      = $list.data( 'bp-list' ),
+				// Continue the list that is on screen: reuse the query it was loaded with, or, for a
+				// list the server rendered with the page, read the query from the page itself.
+				// Session memory is shared by every list of the object, so it is not used here.
+				query       = $list.data( 'bp-list-query' ) || self.getListQueryFromScreen( object ),
+				currentPage = $list.data( 'bp-current-page' ) || 1,
+				linkParams  = self.getLinkParams( $loadMore.find( 'a' ).first().attr( 'href' ) ) || {},
+				linkPage    = parseInt( linkParams[ Object.keys( linkParams )[ 0 ] ], 10 ),
+				// The server renders the next page into the button link, so a list opened on a later
+				// page (e.g. a ?upage=3 URL rendered on page load) continues from there.
+				nextPage    = linkPage > 0 ? linkPage : currentPage + 1;
+
+			// Show loading state.
+			$loadMore.find( 'a' ).first().addClass( 'loading' );
+
+			// Put the button back when the request fails or returns an error (e.g. an expired nonce),
+			// so the member can click it to retry instead of facing a spinner. Scroll autoload stays
+			// off for this button (bp-autoloaded is kept), so a lasting error is not re-requested on
+			// every scroll event.
+			var resetLoadMore = function () {
+				var $link = $loadMore.find( 'a' ).first();
+
+				$link.removeClass( 'loading' );
+				if ( $loadMore.data( 'bp-load-more-label' ) ) {
+					$link.text( $loadMore.data( 'bp-load-more-label' ) );
+				}
+			};
+
+			var queryData = {
+				object       : object,
+				scope        : query.scope,
+				filter       : query.filter,
+				search_terms : query.search_terms,
+				extras       : query.extras,
+				page         : nextPage,
+				method       : 'append',
+				target       : '#buddypress [data-bp-list="' + object + '"] ul.bp-list',
+				// Continue this list only: do not change the query remembered for the object.
+				continue_list: true
+			};
+
+			if ( undefined !== query.group_type ) {
+				queryData.group_type = query.group_type;
+			}
+
+			if ( undefined !== query.member_type_id ) {
+				queryData.member_type_id = query.member_type_id;
+			}
+
+			self.objectRequest( queryData ).done(
+				function ( response ) {
+					if ( true === response.success ) {
+						$loadMore.remove();
+
+						// Track current page on the list container.
+						$list.data( 'bp-current-page', nextPage );
+
+						// Pages are fetched by offset, so when the order shifts between two loads (a
+						// member becomes active under "Recently Active") an item can come back on the
+						// next page. Keep only its first card.
+						var shownItems = {};
+						$list.find( 'ul.bp-list > li[data-bp-item-id]' ).each( function () {
+							var itemId = $( this ).attr( 'data-bp-item-id' );
+							if ( shownItems[ itemId ] ) {
+								$( this ).remove();
+							} else {
+								shownItems[ itemId ] = true;
+							}
+						} );
+
+						// Each group members page starts with its role heading (organizers, moderators,
+						// members); drop it when the appended page continues the section already shown.
+						if ( 'group_members' === object ) {
+							var lastHeading = null;
+							$list.find( 'ul.bp-list > li.item-entry-header' ).each( function () {
+								var heading = $.trim( $( this ).text() );
+								if ( heading === lastHeading ) {
+									$( this ).remove();
+								} else {
+									lastHeading = heading;
+								}
+							} );
+						}
+
+						// Trigger lazy load for images.
+						jQuery( window ).scroll();
+					} else {
+						resetLoadMore();
+					}
+				}
+			).fail( resetLoadMore );
+		},
+
+		/**
+		 * Search terms to keep when a list without its own search box changes page.
+		 *
+		 * The list's last (re)load knows its search. A Members/Groups list the server rendered with
+		 * the page was searched from the URL (members_search / groups_search) - e.g. the Members
+		 * directory with Advanced Profile Search, which replaces the search box.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} $list    The [data-bp-list] element.
+		 * @param {string} object   List object (data-bp-list value).
+		 * @param {*}      fallback Returned when the list has no known search.
+		 * @return {*} Search terms.
+		 */
+		getListSearchTerms: function ( $list, object, fallback ) {
+			var query = $list.data( 'bp-list-query' );
+
+			if ( query && undefined !== query.search_terms && null !== query.search_terms ) {
+				return query.search_terms;
+			}
+
+			if ( 'members' === object || 'groups' === object ) {
+				return this.getUrlSearchTerms( object ) || fallback;
+			}
+
+			return fallback;
+		},
+
+		/**
+		 * Search terms a Members/Groups list was opened with from the URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} object List object (data-bp-list value).
+		 * @return {string} Decoded members_search / groups_search, or '' when the URL has none.
+		 */
+		getUrlSearchTerms: function ( object ) {
+			var searchArg = ( 'groups' === object || 'group_subgroups' === object ? 'groups' : 'members' ) + '_search',
+				urlSearch = this.querystring && this.querystring[ searchArg ];
+
+			if ( ! urlSearch ) {
+				return '';
+			}
+
+			try {
+				return decodeURIComponent( urlSearch.replace( /\+/g, ' ' ) );
+			} catch ( e ) {
+				return urlSearch;
+			}
+		},
+
+		/**
+		 * Read the query of a Members/Groups list from the page, for a list that the server
+		 * rendered with the page and that has not been reloaded since.
+		 *
+		 * @param {string} object List object (data-bp-list value).
+		 * @return {Object} Query with scope, filter, search_terms and, when present, the types.
+		 */
+		getListQueryFromScreen: function ( object ) {
+			var $scope  = $( this.objectNavParent + ' .bb-rl-scope-filter select' ).find( ':selected[data-bp-object="' + object + '"]' ),
+				$filter = $( '#buddypress [data-bp-filter="' + object + '"]' ),
+				$search = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ),
+				query   = { scope: null, filter: null, search_terms: '' };
+
+			if ( ! $scope.length ) {
+				$scope = $( this.objectNavParent + ' [data-bp-object="' + object + '"].selected' );
+			}
+			if ( $scope.length && $scope.data( 'bp-scope' ) ) {
+				query.scope = $scope.data( 'bp-scope' );
+			}
+
+			// The profile Connections controls are registered as "friends" while the list is "members".
+			if ( ! $filter.length && 'members' === object ) {
+				$filter = $( '#buddypress [data-bp-filter="friends"]' );
+			}
+			if ( $filter.length && '-1' !== $filter.val() && '0' !== $filter.val() ) {
+				query.filter = $filter.val();
+			}
+
+			if ( ! $search.length && 'members' === object ) {
+				$search = $( '#buddypress [data-bp-search="friends"] input[type=search]' );
+			}
+			if ( ! $search.length ) {
+				$search = $( '#buddypress .dir-search input[type=search]' );
+			}
+			// The search this list was rendered with, not text typed since and not submitted yet.
+			// The server reads it from the URL (members_search / groups_search), and initObjects()
+			// only copies that into the box with .val(), so read the URL first; the box's rendered
+			// value covers a template that prints the search itself.
+			var urlSearch = this.getUrlSearchTerms( object );
+
+			if ( urlSearch ) {
+				query.search_terms = urlSearch;
+			} else if ( $search.length ) {
+				query.search_terms = $search.prop( 'defaultValue' ) || '';
+			}
+
+			if ( $( '#buddypress [data-bp-group-type-filter]' ).length ) {
+				query.group_type = $( '#buddypress [data-bp-group-type-filter]' ).val();
+			}
+			if ( $( '#buddypress [data-bp-member-type-filter]' ).length ) {
+				query.member_type_id = $( '#buddypress [data-bp-member-type-filter]' ).val();
+			}
+
+			return query;
+		},
+
+		/**
+		 * Auto-trigger "Load More" when scrolling near the button (Members/Groups).
+		 */
+		autoLoadMoreItems: function () {
+			// Check on every scroll event, like the activity feed autoload (loadMoreActivities).
+			// Start loading while the Load More button is still up to one screen below the
+			// viewport: a page of member/group cards is heavy, so a 50px trigger would leave
+			// the member waiting on "Loading..." at the bottom of the list.
+			var $loadMoreBtns = $( bp.Nouveau.autoloadLists ).find( 'li.load-more:visible' ),
+				$window       = $( window );
+
+			$loadMoreBtns.each( function () {
+				var $btn = $( this );
+
+				// Already triggered, or parked while the list reloads (see objectRequest).
+				if ( $btn.data( 'bp-autoloaded' ) || $btn.data( 'bp-parked-by' ) ) {
+					return;
+				}
+
+				var pos    = $btn.offset(),
+					offset = pos.top - $window.height();
+
+				if ( $window.scrollTop() + $window.height() > offset ) {
+					$btn.data( 'bp-autoloaded', 1 );
+					$btn.data( 'bp-load-more-label', $btn.find( 'a' ).text() );
+					$btn.find( 'a' ).text( BP_Nouveau.loadingMore );
+					$btn.find( 'a' ).trigger( 'click' );
+				}
+			} );
+		},
+
 		enableSubmitOnLegalAgreement: function () {
 			if ( $( 'body #buddypress #register-page #signup-form #legal_agreement' ).length ) {
 				$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', true );

@@ -626,6 +626,23 @@ function bp_nouveau_get_loop_classes() {
 		}
 	}
 
+	// Members & Groups Loading: a list that loads with infinite scroll has no pagination below it
+	// to keep it off the bottom of the page, so mark it for its own bottom spacing.
+	$autoload_lists = array(
+		'members'         => 'members',
+		'members_friends' => 'members',
+		'groups'          => 'groups',
+		'members_group'   => 'group_members',
+	);
+
+	if (
+		isset( $autoload_lists[ $component ] ) &&
+		function_exists( 'bb_is_list_autoload_active' ) &&
+		bb_is_list_autoload_active( $autoload_lists[ $component ] )
+	) {
+		$classes[] = 'bb-list-autoload';
+	}
+
 	/**
 	 * Filter to edit/add classes.
 	 *
