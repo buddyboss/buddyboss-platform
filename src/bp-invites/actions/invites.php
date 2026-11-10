@@ -315,7 +315,7 @@ add_filter( 'bp_email_set_content_plaintext', 'bboss_invites_member_invite_filte
 function bboss_invites_member_invite_set_email_avatar( $avatar, $data ) {
 
 	if ( isset( $_POST['custom_user_avatar'] ) && '' === $avatar && '' !== $_POST['custom_user_avatar'] ) {
-		$avatar = esc_url( $_POST['custom_user_avatar'] );
+		$avatar = esc_url_raw( wp_unslash( $_POST['custom_user_avatar'] ) );
 	}
 	return apply_filters( 'bp_invites_member_invite_set_email_avatar', $avatar, $data );
 }
@@ -334,7 +334,7 @@ add_filter( 'bp_email_recipient_get_avatar', 'bboss_invites_member_invite_set_em
 function bboss_invites_member_invite_set_email_user_name( $name, $data ) {
 
 	if ( isset( $_POST['custom_user_name'] ) && '' === $name && '' !== $_POST['custom_user_name'] ) {
-		$name = esc_html( $_POST['custom_user_name'] );
+		$name = sanitize_text_field( wp_unslash( $_POST['custom_user_name'] ) );
 	}
 	return apply_filters( 'bp_invites_member_invite_set_email_user_name', $name, $data );
 }

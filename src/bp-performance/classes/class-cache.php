@@ -280,17 +280,19 @@ class Cache {
 		 */
 		$limit = apply_filters( 'bb_cache_purge_limit', 1000 );
 
-		$groups_in = is_array( $group_names ) ? "'" . implode( "','", $group_names ) . "'" : "'" . $group_names . "'";
+		// Bind the group names through a generated placeholder list instead of interpolating them.
+		$group_names  = (array) $group_names;
+		$placeholders = implode( ', ', array_fill( 0, count( $group_names ), '%s' ) );
 
-		//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$count = $wpdb->get_var( "SELECT COUNT(id) FROM {$this->cache_table} WHERE cache_group IN ($groups_in)" );
+		//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- one %s placeholder per group name is generated above.
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$this->cache_table} WHERE cache_group IN ({$placeholders})", $group_names ) );
 
 		if ( $count ) {
 			$round_count = ceil( $count / $limit );
 
 			for ( $i = 0; $i < $round_count; $i++ ) {
-				//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$wpdb->query( "DELETE FROM {$this->cache_table} WHERE cache_group IN ($groups_in) LIMIT {$limit}" );
+				//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- one %s placeholder per group name is generated above.
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_group IN ({$placeholders}) LIMIT %d", array_merge( $group_names, array( (int) $limit ) ) ) );
 			}
 		}
 	}
@@ -361,12 +363,14 @@ class Cache {
 			return;
 		}
 
-		$uid_in = implode( ',', $user_ids );
+		// Force the user ids to integers and bind the group names through a generated placeholder list.
+		$uid_in = implode( ',', array_map( 'absint', (array) $user_ids ) );
 
 		if ( ! empty( $group_names ) ) {
-			$gname_in = "'" . implode( "', '", $group_names ) . "'";
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->query( "DELETE FROM {$this->cache_table} WHERE  user_id IN ({$uid_in}) AND cache_group IN ({$gname_in})" );
+			$group_names  = (array) $group_names;
+			$placeholders = implode( ', ', array_fill( 0, count( $group_names ), '%s' ) );
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- user ids are absint()'d; one %s placeholder per group name is generated above.
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE user_id IN ({$uid_in}) AND cache_group IN ({$placeholders})", $group_names ) );
 		} else {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( "DELETE FROM {$this->cache_table} WHERE  user_id IN ({$uid_in})" );

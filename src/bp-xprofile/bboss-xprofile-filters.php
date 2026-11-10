@@ -1010,12 +1010,12 @@ function bboss_xprofile_validate_nickname_value( $retval, $field_id, $value, $us
 	}
 
 	$where = array(
-		'meta_key = "nickname"',
-		'meta_value = "' . $value . '"',
+		"meta_key = 'nickname'",
+		$wpdb->prepare( 'meta_value = %s', $value ),
 	);
 
 	if ( $user_id ) {
-		$where[] = 'user_id != ' . $user_id;
+		$where[] = $wpdb->prepare( 'user_id != %d', $user_id );
 	}
 
 	$sql = sprintf(

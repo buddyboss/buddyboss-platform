@@ -1128,7 +1128,7 @@ function bboss_bbp_check_for_blacklist( $anonymous_data = false, $author_id = 0,
  * @return string
  */
 function bboss_bbp_get_do_not_reply_address() {
-	$sitename = strtolower( $_SERVER['SERVER_NAME'] );
+	$sitename = strtolower( isset( $_SERVER['SERVER_NAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ) : '' );
 	if ( substr( $sitename, 0, 4 ) === 'www.' ) {
 		$sitename = substr( $sitename, 4 );
 	}
@@ -1957,15 +1957,17 @@ function bboss_bbp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' )
 	/** Requested URL */
 
 	// Maybe include the port, if it's included in home_url().
-	if ( isset( $parsed_home['port'] ) && false === strpos( $_SERVER['HTTP_HOST'], ':' ) ) {
-		$request_host = $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'];
+	$http_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+	if ( isset( $parsed_home['port'] ) && false === strpos( $http_host, ':' ) ) {
+		$request_host = $http_host . ':' . ( isset( $_SERVER['SERVER_PORT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_PORT'] ) ) : '' );
 	} else {
-		$request_host = $_SERVER['HTTP_HOST'];
+		$request_host = $http_host;
 	}
 
 	// Build the currently requested URL
 	$scheme        = bboss_bbp_get_url_scheme();
-	$requested_url = strtolower( $scheme . $request_host . $_SERVER['REQUEST_URI'] );
+	$request_uri   = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$requested_url = strtolower( $scheme . $request_host . $request_uri );
 
 	/** Look for match */
 
@@ -1973,7 +1975,7 @@ function bboss_bbp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' )
 	$matched_url = apply_filters( 'bbp_verify_nonce_request_url', $requested_url );
 
 	// Check the nonce
-	$result = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( $_REQUEST[ $query_arg ], $action ) : false;
+	$result = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ), $action ) : false;
 
 	// Nonce check failed
 	if ( empty( $result ) || empty( $action ) || ( strpos( $matched_url, $home_url ) !== 0 ) ) {

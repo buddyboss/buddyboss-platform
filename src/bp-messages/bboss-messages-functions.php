@@ -2929,7 +2929,7 @@ function bboss_get_message_response_object( $message ) {
 								'<div class="more_text_view">%s</div>',
 								sprintf(
 								/* translators: %s: download url */
-									wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+									wp_kses_post( __( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss-platform' ) ),
 									esc_url( $download_url )
 								)
 							);

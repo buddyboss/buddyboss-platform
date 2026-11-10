@@ -104,7 +104,7 @@ function bboss_ps_show_directory( $attr, $content ) {
 	if ( bboss_get_theme_package_id() == 'nouveau' ) {
 		printf(
 			/* translators: %s: plugin name and version (wrapped in <strong>). */
-			'<p class=\"bp-ps-error\">' . esc_html__( '%s: The shortcode [bp_ps_directory] is not compatible with the Nouveau template pack.', 'buddyboss-platform' ) . '</p>',
+			'<p class="bp-ps-error">' . esc_html__( '%s: The shortcode [bp_ps_directory] is not compatible with the Nouveau template pack.', 'buddyboss-platform' ) . '</p>',
 			'<strong>BP Profile Search ' . esc_html( bboss_get_version() ) . '</strong>'
 		);
 	}

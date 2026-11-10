@@ -30,7 +30,7 @@ function extract_from_phar( $path ) {
 
 	register_shutdown_function(
 		function() use ( $tmp_path ) {
-				@unlink( $tmp_path );
+				@unlink( $tmp_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
 		}
 	);
 
@@ -58,7 +58,7 @@ function load_dependencies() {
 	}
 
 	if ( ! $has_autoload ) {
-		fputs( STDERR, "Internal error: Can't find Composer autoloader.\nTry running: composer install\n" );
+		fputs( STDERR, "Internal error: Can't find Composer autoloader.\nTry running: composer install\n" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fputs -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
 		exit( 3 );
 	}
 }
@@ -362,13 +362,13 @@ function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
 		$tmpfile  = preg_replace( '|\.[^.]*$|', '', $tmpfile );
 		$tmpfile .= '-' . substr( md5( wp_rand() ), 0, 6 );
 		$tmpfile  = $tmpdir . $tmpfile . '.tmp';
-		$fp       = @fopen( $tmpfile, 'x' );
-		if ( ! $fp && is_writable( $tmpdir ) && file_exists( $tmpfile ) ) {
+		$fp       = @fopen( $tmpfile, 'x' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
+		if ( ! $fp && is_writable( $tmpdir ) && file_exists( $tmpfile ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
 			$tmpfile = '';
 			continue;
 		}
 		if ( $fp ) {
-			fclose( $fp );
+			fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
 		}
 	} while ( ! $tmpfile );
 
@@ -389,15 +389,15 @@ function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
 	}
 
 	$descriptorspec = array( STDIN, STDOUT, STDERR );
-	$process        = proc_open( "$editor " . escapeshellarg( $tmpfile ), $descriptorspec, $pipes );
+	$process        = proc_open( "$editor " . escapeshellarg( $tmpfile ), $descriptorspec, $pipes ); // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
 	$r              = proc_close( $process );
 	if ( $r ) {
-		exit( $r );
+		exit( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP-CLI/Behat bootstrap utility (CLI context, not a web request); integer exit code.
 	}
 
 	$output = file_get_contents( $tmpfile );
 
-	unlink( $tmpfile );
+	unlink( $tmpfile ); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
 
 	if ( $output === $input ) {
 		return false;
@@ -438,7 +438,7 @@ function run_mysql_command( $cmd, $assoc_args, $descriptors = null ) {
 	}
 
 	if ( isset( $assoc_args['host'] ) ) {
-		$assoc_args = array_merge( $assoc_args, mysql_host_to_cli_args( $assoc_args['host'] ) ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_host_to_cli_args, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
+		$assoc_args = array_merge( $assoc_args, mysql_host_to_cli_args( $assoc_args['host'] ) ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_host_to_cli_args,WordPress.DB.RestrictedFunctions.mysql_mysql_host_to_cli_args,PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 	}
 
 	$pass = $assoc_args['pass'];
@@ -449,7 +449,7 @@ function run_mysql_command( $cmd, $assoc_args, $descriptors = null ) {
 
 	$final_cmd = force_env_on_nix_systems( $cmd ) . assoc_args_to_str( $assoc_args );
 
-	$proc = proc_open( $final_cmd, $descriptors, $pipes );
+	$proc = proc_open( $final_cmd, $descriptors, $pipes ); // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
 	if ( ! $proc ) {
 		exit( 1 );
 	}
@@ -459,7 +459,7 @@ function run_mysql_command( $cmd, $assoc_args, $descriptors = null ) {
 	putenv( 'MYSQL_PWD=' . $old_pass );
 
 	if ( $r ) {
-		exit( $r );
+		exit( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP-CLI/Behat bootstrap utility (CLI context, not a web request); integer exit code.
 	}
 }
 
@@ -522,7 +522,7 @@ function make_progress_bar( $message, $count ) {
 }
 
 function parse_url( $url ) {
-	$url_parts = \parse_url( $url );
+	$url_parts = \parse_url( $url ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
 
 	if ( ! isset( $url_parts['scheme'] ) ) {
 		$url_parts = wp_parse_url( 'http://' . $url );
@@ -605,7 +605,7 @@ function http_request( $method, $url, $data = null, $headers = array(), $options
 		return $request;
 	} catch ( \Requests_Exception $ex ) {
 		// CURLE_SSL_CACERT_BADFILE only defined for PHP >= 7.
-		if ( 'curlerror' !== $ex->getType() || ! in_array( curl_errno( $ex->getData() ), array( CURLE_SSL_CONNECT_ERROR, CURLE_SSL_CERTPROBLEM, 77 /*CURLE_SSL_CACERT_BADFILE*/ ), true ) ) {
+		if ( 'curlerror' !== $ex->getType() || ! in_array( curl_errno( $ex->getData() ), array( CURLE_SSL_CONNECT_ERROR, CURLE_SSL_CERTPROBLEM, 77 /*CURLE_SSL_CACERT_BADFILE*/ ), true ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_errno -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
 			\WP_CLI::error( sprintf( "Failed to get url '%s': %s.", $url, $ex->getMessage() ) );
 		}
 		// Handle SSL certificate issues gracefully
@@ -781,7 +781,7 @@ function get_temp_dir() {
 		$temp = '/tmp/';
 	}
 
-	if ( ! @is_writable( $temp ) ) {
+	if ( ! @is_writable( $temp ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- WP-CLI/Behat bootstrap utility (CLI context, not a web request).
 		\WP_CLI::warning( "Temp directory isn't writable: {$temp}" );
 	}
 
