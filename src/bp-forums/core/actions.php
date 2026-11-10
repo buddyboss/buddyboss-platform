@@ -1825,7 +1825,7 @@ function bb_forums_save_link_preview_data( $post_id ) {
 	}
 
 	if ( ! empty( $_POST['link_preview_data'] ) ) {
-		$link_preview_data = get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) );
+		$link_preview_data = (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- JSON string, unslashed by stripslashes(); every key read below is validated individually (filter_var() URL/boolean, sanitize_text_field()).
 	} else {
 
 		// Allow Link preview related keys.
@@ -1895,7 +1895,7 @@ function bb_forums_save_link_preview_data( $post_id ) {
 		}
 	}
 
-	$preview_data['link_image_index_save'] = isset( $link_preview_data['link_image_index_save'] ) ? filter_var( $link_preview_data['link_image_index_save'] ) : '';
+	$preview_data['link_image_index_save'] = isset( $link_preview_data['link_image_index_save'] ) ? sanitize_text_field( $link_preview_data['link_image_index_save'] ) : '';
 
 	if ( ! empty( $link_title ) ) {
 		$link_title            = wp_kses_post( $link_title );

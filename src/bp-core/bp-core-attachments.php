@@ -750,8 +750,9 @@ function bp_attachments_get_plupload_default_settings() {
 	);
 
 	// WordPress is not allowing multi selection for iOs 7 device.. See #29602.
-	if ( wp_is_mobile() && isset( $_SERVER['HTTP_USER_AGENT'] ) && strpos( $_SERVER['HTTP_USER_AGENT'], 'OS 7_' ) !== false &&
-		strpos( $_SERVER['HTTP_USER_AGENT'], 'like Mac OS X' ) !== false ) {
+	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+	if ( wp_is_mobile() && '' !== $user_agent && strpos( $user_agent, 'OS 7_' ) !== false &&
+		strpos( $user_agent, 'like Mac OS X' ) !== false ) {
 
 		$defaults['multi_selection'] = false;
 	}

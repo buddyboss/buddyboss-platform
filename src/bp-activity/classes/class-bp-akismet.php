@@ -291,7 +291,7 @@ class BP_Akismet {
 		 * This helps Akismet ensure that the update was a valid form submission.
 		 */
 		if ( ! empty( $_POST['_bp_as_nonce'] ) ) {
-			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( $_POST['_bp_as_nonce'], "_bp_as_nonce_{$userdata->ID}" ) ? 'passed' : 'failed';
+			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_bp_as_nonce'] ) ), "_bp_as_nonce_{$userdata->ID}" ) ? 'passed' : 'failed';
 		}
 
 		/**
@@ -299,7 +299,7 @@ class BP_Akismet {
 		 * This helps Akismet ensure that the update was a valid form submission.
 		 */
 		elseif ( ! empty( $activity->secondary_item_id ) && ! empty( $_POST[ '_bp_as_nonce_' . $activity->secondary_item_id ] ) ) {
-			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( $_POST[ "_bp_as_nonce_{$activity->secondary_item_id}" ], "_bp_as_nonce_{$userdata->ID}_{$activity->secondary_item_id}" ) ? 'passed' : 'failed';
+			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ "_bp_as_nonce_{$activity->secondary_item_id}" ] ) ), "_bp_as_nonce_{$userdata->ID}_{$activity->secondary_item_id}" ) ? 'passed' : 'failed';
 		}
 
 		/**

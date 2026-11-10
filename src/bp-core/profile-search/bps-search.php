@@ -147,12 +147,14 @@ function bp_ps_get_request( $type, $form = 0 ) {
 	if ( empty( $request ) && isset( $_COOKIE[ $cookie ] ) ) {
 		parse_str( stripslashes( $_COOKIE[ $cookie ] ), $request );
 	}
+	$request = map_deep( $request, 'sanitize_text_field' );
 
 	$cookie  = apply_filters( 'bp_ps_cookie_name', 'bp_ps_filters' );
 	$filters = bp_ps_hidden_filters();
 	if ( empty( $filters ) && isset( $_COOKIE[ $cookie ] ) ) {
 		parse_str( stripslashes( $_COOKIE[ $cookie ] ), $filters );
 	}
+	$filters = map_deep( $filters, 'sanitize_text_field' );
 
 	switch ( $type ) {
 		case 'form':

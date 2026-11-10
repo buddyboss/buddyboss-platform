@@ -1559,11 +1559,11 @@ function bp_core_setup_message() {
 	$bp = buddypress();
 
 	if ( empty( $bp->template_message ) && isset( $_COOKIE['bp-message'] ) ) {
-		$bp->template_message = strip_shortcodes( stripslashes( rawurldecode( $_COOKIE['bp-message'] ) ) );
+		$bp->template_message = strip_shortcodes( wp_kses_post( stripslashes( rawurldecode( $_COOKIE['bp-message'] ) ) ) );
 	}
 
 	if ( empty( $bp->template_message_type ) && isset( $_COOKIE['bp-message-type'] ) ) {
-		$bp->template_message_type = stripslashes( rawurldecode( $_COOKIE['bp-message-type'] ) );
+		$bp->template_message_type = sanitize_text_field( stripslashes( rawurldecode( $_COOKIE['bp-message-type'] ) ) );
 	}
 
 	add_action( 'template_notices', 'bp_core_render_message' );
@@ -2320,16 +2320,20 @@ function bp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 
 	/* Requested URL *********************************************************/
 
+	$http_host   = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
 	// Maybe include the port, if it's included in home_url().
-	if ( isset( $parsed_home['port'] ) && false === strpos( $_SERVER['HTTP_HOST'], ':' ) ) {
-		$request_host = $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'];
+	if ( isset( $parsed_home['port'] ) && false === strpos( $http_host, ':' ) ) {
+		$server_port  = isset( $_SERVER['SERVER_PORT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_PORT'] ) ) : '';
+		$request_host = $http_host . ':' . $server_port;
 	} else {
-		$request_host = $_SERVER['HTTP_HOST'];
+		$request_host = $http_host;
 	}
 
 	// Build the currently requested URL.
 	$scheme        = is_ssl() ? 'https://' : 'http://';
-	$requested_url = strtolower( $scheme . $request_host . $_SERVER['REQUEST_URI'] );
+	$requested_url = strtolower( $scheme . $request_host . $request_uri );
 
 	/* Look for match ********************************************************/
 
@@ -2345,7 +2349,7 @@ function bp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 	$matched_url = apply_filters( 'bp_verify_nonce_request_url', $requested_url );
 
 	// Check the nonce.
-	$result = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( $_REQUEST[ $query_arg ], $action ) : false;
+	$result = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ), $action ) : false;
 
 	// Nonce check failed.
 	if ( empty( $result ) || empty( $action ) || ( strpos( $matched_url, $home_url ) !== 0 ) ) {
@@ -2375,7 +2379,7 @@ function bp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
  * @return bool
  */
 function bp_is_post_request() {
-	return (bool) ( 'POST' === strtoupper( $_SERVER['REQUEST_METHOD'] ) );
+	return (bool) ( isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' === strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) );
 }
 
 /**
@@ -2386,7 +2390,7 @@ function bp_is_post_request() {
  * @return bool
  */
 function bp_is_get_request() {
-	return (bool) ( 'GET' === strtoupper( $_SERVER['REQUEST_METHOD'] ) );
+	return (bool) ( isset( $_SERVER['REQUEST_METHOD'] ) && 'GET' === strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) );
 }
 
 
@@ -5160,20 +5164,18 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 		} else {
 			$bytes = '0' . ' bytes';
 		}
+	} elseif ( 'GB' === $type ) {
+		$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '' ) . ' GB';
+	} elseif ( 'MB' === $type ) {
+		$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '' ) . ' MB';
+	} elseif ( 'KB' === $type ) {
+		$bytes = number_format( ( $bytes / 1024 ), 2, '.', '' ) . ' KB';
+	} elseif ( 'bytes' === $type ) {
+		$bytes = $bytes . ' bytes';
+	} elseif ( 1 === $bytes ) {
+		$bytes = $bytes . ' byte';
 	} else {
-		if ( 'GB' === $type ) {
-			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '' ) . ' GB';
-		} elseif ( 'MB' === $type ) {
-			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '' ) . ' MB';
-		} elseif ( 'KB' === $type ) {
-			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '' ) . ' KB';
-		} elseif ( 'bytes' === $type ) {
-			$bytes = $bytes . ' bytes';
-		} elseif ( 1 === $bytes ) {
-			$bytes = $bytes . ' byte';
-		} else {
-			$bytes = '0' . ' bytes';
-		}
+		$bytes = '0' . ' bytes';
 	}
 
 	return $bytes;
@@ -5992,12 +5994,13 @@ function bb_core_scaled_attachment_path( $attachment_id ) {
  */
 function bb_check_ios_device() {
 
-	$is_ios = false;
-	$ipod   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$iphone = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$ipad   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$safari = bb_core_get_browser();
-	$safari = ( isset( $safari['name'] ) ? 'Safari' === $safari['b_name'] : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$is_ios     = false;
+	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+	$ipod       = ( '' !== $user_agent ? stripos( $user_agent, 'iPod' ) : false );
+	$iphone     = ( '' !== $user_agent ? stripos( $user_agent, 'iPhone' ) : false );
+	$ipad       = ( '' !== $user_agent ? stripos( $user_agent, 'iPad' ) : false );
+	$safari     = bb_core_get_browser();
+	$safari     = ( isset( $safari['name'] ) ? 'Safari' === $safari['b_name'] : false );
 
 	if ( $ipod || $iphone || $ipad || $safari ) {
 		$is_ios = true;
@@ -6054,7 +6057,7 @@ function bb_core_upload_dummy_attachment() {
  */
 function bb_core_get_browser() {
 
-	$u_agent  = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+	$u_agent  = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 	$bname    = 'Unknown';
 	$platform = 'Unknown';
 	$version  = '';
@@ -6276,7 +6279,7 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 					}
 				}
 			}
-			$offset ++;
+			++$offset;
 		}
 	}
 
@@ -6405,7 +6408,9 @@ function bb_restricate_rss_feed( $is_feed = false ) {
 		return;
 	}
 
-	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	$http_host   = sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
+	$request_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $http_host . $request_uri;
 	if (
 		! $is_feed &&
 		strpos( $actual_link, '/feed/' ) === false &&
@@ -8329,12 +8334,12 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'activity_access_control_block':
 		case 'messages_access_control_block':
-		case 'media_access_control_block';
+		case 'media_access_control_block':
 		case 'connection_access_control_block':
 			$meta_icon = $bb_icon_bf . ' bb-icon-lock-alt-open';
 			break;
 		case 'bp_zoom_settings_section':
-		case 'bp_zoom_gutenberg_section';
+		case 'bp_zoom_gutenberg_section':
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-zoom';
 			break;
 		case 'bp_notification_settings_automatic':
@@ -8398,7 +8403,7 @@ function bb_validate_gravatar( $email ) {
  */
 function bb_core_get_os() {
 
-	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 
 	$os_platform = '';
 	$os_array    = array(
@@ -8622,7 +8627,7 @@ function bb_autop( $pee, $br = true ) {
 			$pre_tags[ $name ] = substr( $pee_part, $start ) . '</pre>';
 
 			$pee .= substr( $pee_part, 0, $start ) . $name;
-			$i++;
+			++$i;
 		}
 
 		$pee .= $last_pee;
@@ -9112,7 +9117,9 @@ function bb_media_sideload_attachment( $file ) {
 	}
 
 	// Download file to temp location.
-	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
+	$server_protocol        = isset( $_SERVER['SERVER_PROTOCOL'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_PROTOCOL'] ) ) : 'HTTP/1.1';
+	$protocol               = strtolower( substr( $server_protocol, 0, strpos( $server_protocol, '/' ) ) );
+	$file                   = preg_replace( '/^:*?\/\//', $protocol . '://', $file );
 	$file                   = str_replace( '&amp;', '&', $file );
 	$file_array['tmp_name'] = download_url( $file );
 
@@ -9634,7 +9641,8 @@ function bb_get_directory_layout_preference( $action ) {
 	if ( is_user_logged_in() ) {
 		$existing_layouts = get_user_meta( get_current_user_id(), 'bb_layout_view', true );
 	} else {
-		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( $_COOKIE['bb_layout_view'] ), true ) : array();
+		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( wp_unslash( $_COOKIE['bb_layout_view'] ) ), true ) : array();
+		$existing_layouts = is_array( $existing_layouts ) ? map_deep( $existing_layouts, 'sanitize_text_field' ) : array();
 	}
 	$default_value = '';
 	if ( 'members' === $action ) {
@@ -9733,7 +9741,7 @@ function bb_get_predefined_palette() {
 			18 => '#008000',
 			19 => '#006400',
 			20 => '#8b4513',
-			21 => '#a0522d'
+			21 => '#a0522d',
 		)
 	);
 }
@@ -10259,9 +10267,14 @@ function bb_pro_poll_version() {
  */
 function bb_create_jwt( $payload ) {
 	$secret_key        = wp_salt( 'nonce' );
-	$header            = json_encode( [ 'typ' => 'JWT', 'alg' => 'HS256' ] );
+	$header            = wp_json_encode(
+		array(
+			'typ' => 'JWT',
+			'alg' => 'HS256',
+		)
+	);
 	$encoded_header    = base64_encode( $header );
-	$encoded_payload   = base64_encode( json_encode( $payload ) );
+	$encoded_payload   = base64_encode( wp_json_encode( $payload ) );
 	$signature         = hash_hmac( 'sha256', $encoded_header . '.' . $encoded_payload, $secret_key, true );
 	$encoded_signature = base64_encode( $signature );
 
@@ -10323,7 +10336,7 @@ function bb_get_all_headers() {
 	$headers = array();
 	foreach ( $_SERVER as $name => $value ) {
 		if ( 'HTTP_' === substr( $name, 0, 5 ) ) {
-			$headers[ str_replace( ' ', '-', strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ] = $value;
+			$headers[ str_replace( ' ', '-', strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ] = sanitize_text_field( wp_unslash( $value ) );
 		}
 	}
 

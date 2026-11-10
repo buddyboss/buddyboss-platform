@@ -362,7 +362,6 @@ function bp_get_blog_avatar( $args = '' ) {
 			'class'   => 'avatar',
 			'id'      => false,
 			/* translators: %s: site author display name. */
-			/* translators: %s: site author display name. */
 			'alt'     => sprintf( __( 'Profile photo of site author %s', 'buddyboss' ), esc_attr( $author_displayname ) ),
 			'no_grav' => true,
 		)
@@ -420,7 +419,6 @@ function bp_get_blog_avatar( $args = '' ) {
 				esc_url( $site_icon ),
 				esc_attr( "{$r['class']} avatar-{$size}" ),
 				esc_attr( $size ),
-				/* translators: %s: site name. */
 				/* translators: %s: site name. */
 				sprintf( esc_attr__( 'Site icon for %s', 'buddyboss' ), bp_get_blog_name() )
 			);

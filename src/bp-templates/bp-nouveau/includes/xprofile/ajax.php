@@ -60,7 +60,7 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	}
 
 	// Use default nonce
-	$nonce = $_GET['_wpnonce'];
+	$nonce = sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) );
 	$check = 'bp-core-register-page-js';
 
 	// Nonce check!

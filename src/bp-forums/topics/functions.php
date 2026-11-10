@@ -194,7 +194,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? map_deep( (array) json_decode( wp_unslash( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON string decoded then sanitized with map_deep(); only link_url is read.
 
 	// No topic content.
 	if (
@@ -679,7 +679,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_edit_topic_pre_content', $topic_content, $topic_id );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? map_deep( (array) json_decode( wp_unslash( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON string decoded then sanitized with map_deep(); only link_url is read.
 
 	if (
 		empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )

@@ -2687,7 +2687,7 @@ function bp_members_login_resend_activation_email() {
 	}
 
 	// Verify nonce.
-	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'bp-resend-activation' ) ) {
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'bp-resend-activation' ) ) {
 		die( 'Security check' );
 	}
 
@@ -4110,7 +4110,7 @@ function bp_member_switching_clear_olduser_cookie( $clear_all = true ) {
  */
 function bp_member_switching_get_olduser_cookie() {
 	if ( isset( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ) ) {
-		return wp_unslash( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] );
+		return sanitize_text_field( wp_unslash( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ) );
 	} else {
 		return false;
 	}
@@ -4137,7 +4137,7 @@ function bp_member_switching_get_auth_cookie() {
 		$cookie = array();
 	}
 
-	return $cookie;
+	return map_deep( $cookie, 'sanitize_text_field' );
 }
 
 
@@ -5529,12 +5529,12 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 		return;
 	}
 
-	$implode_user_ids = implode( ',', $user_ids );
+	$implode_user_ids = implode( ',', array_map( 'absint', $user_ids ) );
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$wpdb->query(
 		$wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- literal LIKE 'bb_profile_slug_%' prefix wildcard (not a placeholder); $implode_user_ids is an absint()-mapped ID list; table name from $wpdb.
 			"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE 'bb_profile_slug_%' AND LENGTH(meta_key) >= 56 AND user_id IN ({$implode_user_ids})",
 			'bb_profile_slug_',
 			'bb_profile_long_slug_'

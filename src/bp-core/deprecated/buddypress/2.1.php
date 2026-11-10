@@ -67,7 +67,7 @@ function bp_adminbar_blogs_menu() {
 			$alt      = ( 0 == $counter % 2 ) ? ' class="alt"' : '';
 			$site_url = esc_attr( $blog->siteurl );
 
-			echo '<li' . esc_attr( $alt ) . '>';
+			echo '<li' . $alt . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $alt is the static literal ' class="alt"' or ''.
 			echo '<a href="' . esc_url( $site_url ) . '">' . esc_html( $blog->name ) . '</a>';
 			echo '<ul>';
 			echo '<li class="alt"><a href="' . $site_url . 'wp-admin/">' . esc_html__( 'Dashboard', 'buddyboss' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
