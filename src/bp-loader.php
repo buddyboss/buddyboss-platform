@@ -6,6 +6,7 @@
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
  * Version:     3.7.1
+ * Update URI:  https://buddyboss.com/
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later
