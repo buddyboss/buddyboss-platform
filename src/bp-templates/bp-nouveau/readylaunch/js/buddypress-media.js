@@ -2668,6 +2668,11 @@ window.bp = window.bp || {};
 					// init dropzone.
 					self.dropzone_obj = new Dropzone( 'div#bp-group-messages-post-media-uploader', self.options );
 
+					// Convert HEIC/HEIF photos to JPEG before upload.
+					if ( ! _.isUndefined( bp.HeicConverter ) ) {
+						bp.HeicConverter.attach( self.dropzone_obj );
+					}
+
 					self.setupGroupMessageDropzoneEvents(
 						{
 							self              : self,

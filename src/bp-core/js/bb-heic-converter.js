@@ -216,6 +216,24 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Flag a preview as converting and hide its remove link meanwhile, like during an upload,
+		 * so forms never lose track of their busy state.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {File}    file       Dropzone file.
+		 * @param {boolean} converting Whether the conversion is running.
+		 */
+		setConverting: function ( file, converting ) {
+			if ( ! file.previewElement ) {
+				return;
+			}
+
+			file.previewElement.classList.toggle( 'bb-heic-converting', converting );
+			$( file.previewElement ).find( '[data-dz-remove], .dz-remove' ).css( 'visibility', converting ? 'hidden' : '' );
+		},
+
+		/**
 		 * Make a Dropzone convert HEIC/HEIF files before they are queued.
 		 *
 		 * The file stays in the dropzone with its preview while it converts; Dropzone's
@@ -255,22 +273,18 @@ window.bp = window.bp || {};
 					return originalAccept.call( dz, file, done );
 				}
 
-				if ( file.previewElement ) {
-					file.previewElement.classList.add( 'bb-heic-converting' );
-				}
+				self.setConverting( file, true );
 
 				self.convert( file ).then(
 					function ( jpeg ) {
 						var maxSize = dz.options.maxFilesize;
 
-						// Removed while converting: never queue it.
+						// Removed while converting (uploader closed): never queue it.
 						if ( -1 === dz.files.indexOf( file ) ) {
 							return;
 						}
 
-						if ( file.previewElement ) {
-							file.previewElement.classList.remove( 'bb-heic-converting' );
-						}
+						self.setConverting( file, false );
 
 						// The JPEG is usually bigger than the HEIC, so check the limit again.
 						if ( maxSize && jpeg.size > maxSize * 1024 * 1024 ) {
@@ -308,9 +322,7 @@ window.bp = window.bp || {};
 							return;
 						}
 
-						if ( file.previewElement ) {
-							file.previewElement.classList.remove( 'bb-heic-converting' );
-						}
+						self.setConverting( file, false );
 
 						if ( window.console ) {
 							window.console.error( 'HEIC conversion failed:', error );

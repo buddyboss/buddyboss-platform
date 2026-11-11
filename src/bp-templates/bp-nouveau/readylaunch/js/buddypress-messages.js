@@ -2617,6 +2617,31 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-media-uploader', bp.Nouveau.Messages.dropzone_options );
 
+				// Convert HEIC/HEIF photos to JPEG before upload.
+				if ( ! _.isUndefined( bp.HeicConverter ) ) {
+					bp.HeicConverter.attach( bp.Nouveau.Messages.dropzone );
+
+					// Keep Send disabled while a HEIC photo converts to JPEG.
+					bp.Nouveau.Messages.dropzone.on(
+						'addedfile',
+						function ( file ) {
+							if ( bp.HeicConverter.handles( this, file ) ) {
+								Backbone.trigger( 'triggerMediaInProgress' );
+							}
+						}
+					);
+
+					// A HEIC that can't be converted is removed before 'complete'; re-enable Send if nothing is left.
+					bp.Nouveau.Messages.dropzone.on(
+						'complete',
+						function ( file ) {
+							if ( 'error' === file.status && bp.HeicConverter.isHeic( file ) && 0 === this.files.length ) {
+								Backbone.trigger( 'triggerMediaComplete' );
+							}
+						}
+					);
+				}
+
 				bp.Nouveau.Messages.dropzone.on(
 					'addedfile',
 					function () {
@@ -2769,7 +2794,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone.on(
 					'complete',
 					function() {
-						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.getFilesWithStatus( window.Dropzone.ADDED ).length === 0 && this.files.length > 0 ) {
 							this.element.classList.add( 'files-uploaded' );
 							Backbone.trigger( 'triggerMediaComplete' );
 							total_uploaded_file = self.media.length;
