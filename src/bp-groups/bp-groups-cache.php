@@ -303,7 +303,7 @@ add_action( 'groups_member_before_remove', 'bp_groups_clear_user_group_cache_on_
  * @param BP_Invitation object $invitation Characteristics of the invitation just saved.
  */
 function bp_groups_clear_user_group_cache_on_invitation_save( BP_Invitation $invitation ) {
-	if ( sanitize_key( 'BP_Groups_Invitation_Manager' ) !== $invitation->class ) {
+	if ( BP_Groups_Invitation_Manager::CLASS_KEY !== $invitation->class ) {
 		return;
 	}
 
