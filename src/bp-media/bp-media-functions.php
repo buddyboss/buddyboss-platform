@@ -186,15 +186,39 @@ function bp_media_allowed_mimes( $mime_types ) {
 		'bmp'          => 'image/bmp',
 	);
 
-	if (
-		extension_loaded( 'imagick' ) &&
-		count( \Imagick::queryFormats( 'HEIC' ) ) > 0
-	) {
+	// Raw HEIC is accepted only when WordPress can convert it; browsers convert it to JPEG before upload otherwise.
+	if ( bb_media_is_heic_upload_supported() ) {
 		$mime_types['heic'] = 'image/heic';
 		$mime_types['heif'] = 'image/heif';
 	}
 
 	return $mime_types;
+}
+
+/**
+ * Whether the server can turn uploaded HEIC/HEIF images into JPEG.
+ *
+ * WordPress 6.7+ converts HEIC on upload when the image editor (Imagick built with libheif) supports it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_media_is_heic_upload_supported() {
+	static $supported = null;
+
+	if ( null === $supported ) {
+		$supported = function_exists( 'wp_is_heic_image_mime_type' ) && wp_image_editor_supports( array( 'mime_type' => 'image/heic' ) );
+	}
+
+	/**
+	 * Filters whether raw HEIC/HEIF uploads are accepted for media.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $supported Whether the server can convert HEIC to JPEG.
+	 */
+	return (bool) apply_filters( 'bb_media_is_heic_upload_supported', $supported );
 }
 
 /**

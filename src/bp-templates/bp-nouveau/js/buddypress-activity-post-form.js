@@ -4682,28 +4682,19 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-media-uploader', this.dropzone_options );
 
+				// Convert HEIC/HEIF photos to JPEG before upload.
+				if ( ! _.isUndefined( bp.HeicConverter ) ) {
+					bp.HeicConverter.attach( bp.Nouveau.Activity.postForm.dropzone );
+				}
+
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'addedfile',
 					function ( file ) {
-						if (file.type === "image/heic" || file.name.toLowerCase().endsWith(".heic")) {
-							heic2any({
-								blob: file,          // file is already a Blob
-								toType: "image/jpeg",
-								quality: 0.9
-							}).then(converted => {
-								const newFile = new File(
-									[converted],
-									file.name.replace(/\.heic$/i, ".jpg"),
-									{ type: "image/jpeg", lastModified: new Date().getTime() }
-								);
-
-								// Replace the HEIC with JPEG in Dropzone
-								this.removeFile(file);
-								this.addFile(newFile);
-							}).catch(err => {
-								console.error("HEIC conversion error:", err);
-							});
+						// Keep Post disabled while a HEIC photo converts to JPEG.
+						if ( ! _.isUndefined( bp.HeicConverter ) && bp.HeicConverter.handles( this, file ) ) {
+							self.$el.closest( '#whats-new-form' ).addClass( 'media-uploading' );
 						}
+
 						if ( file.media_edit_data ) {
 							self.media.push( file.media_edit_data );
 							self.model.set( 'media', self.media );
@@ -4884,7 +4875,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'complete',
 					function() {
-						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.getFilesWithStatus( window.Dropzone.ADDED ).length === 0 && this.files.length > 0 ) {
 							self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
 						}
 					}

@@ -116,7 +116,12 @@ function bp_core_register_common_scripts() {
 		'bb-heic2any'                   => array(
 			'file'         => "{$url}vendor/heic2any{$min}.js",
 			'dependencies' => array(),
-			'footer'       => false,
+			'footer'       => true,
+		),
+		'bb-heic-converter'             => array(
+			'file'         => "{$url}bb-heic-converter{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => true,
 		),
 		'bp-media-dropzone'             => array(
 			'file'         => "{$url}vendor/dropzone{$min}.js",
@@ -207,6 +212,30 @@ function bp_core_register_common_scripts() {
 	);
 
 	wp_localize_script( 'bp-select2', 'bp_select2', $bp_select2 );
+
+	/**
+	 * Filters the browser-side HEIC to JPEG conversion settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $settings {
+	 *     @type string $library_url heic2any URL, loaded only when a HEIC file is added. Empty disables conversion.
+	 *     @type float  $quality     JPEG quality, 0-1.
+	 *     @type array  $strings     Messages.
+	 * }
+	 */
+	$bb_heic_converter = apply_filters(
+		'bb_heic_converter_settings',
+		array(
+			'library_url' => add_query_arg( 'ver', $version, "{$url}vendor/heic2any{$min}.js" ),
+			'quality'     => 0.9,
+			'strings'     => array(
+				'convert_error' => __( 'This HEIC image could not be converted. Please upload a JPG or PNG instead.', 'buddyboss' ),
+			),
+		)
+	);
+
+	wp_localize_script( 'bb-heic-converter', 'bbHeicConverter', $bb_heic_converter );
 
 	/**
 	 * Translate EmojineArea
