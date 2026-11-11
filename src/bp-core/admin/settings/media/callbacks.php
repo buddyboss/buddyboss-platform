@@ -553,7 +553,7 @@ function bboss_media_ajax_check_direct_access() {
 	// Check each uploaded file for direct HTTP access.
 	$accessible_directories = array();
 	foreach ( $get_sample_local_urls as $dir_id => $url ) {
-		$fetch = wp_remote_get( $url, array( 'sslverify' => false ) );
+		$fetch = wp_remote_get( $url, array( 'sslverify' => apply_filters( 'https_local_ssl_verify', false ) ) );
 		if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 			$accessible_directories[] = $dir_id;
 		}
