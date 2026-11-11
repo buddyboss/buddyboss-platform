@@ -247,7 +247,8 @@ window.bp = window.bp || {};
 			var self = this,
 				options,
 				originalAccept,
-				originalTransformFile;
+				originalTransformFile,
+				originalEnqueueThumbnail;
 
 			if ( ! dropzone || ! dropzone.options || dropzone.bbHeicConverter || ! this.isSupported() ) {
 				return;
@@ -332,6 +333,18 @@ window.bp = window.bp || {};
 					}
 				);
 			};
+
+			// Most browsers can't decode HEIC, and Dropzone's failed decode requests "[object Event]"; the JPEG's thumbnail is shown instead.
+			if ( 'function' === typeof dropzone._enqueueThumbnail ) {
+				originalEnqueueThumbnail   = dropzone._enqueueThumbnail;
+				dropzone._enqueueThumbnail = function ( file ) {
+					if ( self.isHeic( file ) ) {
+						return;
+					}
+
+					return originalEnqueueThumbnail.apply( this, arguments );
+				};
+			}
 
 			options.transformFile = function ( file, done ) {
 				if ( file.bbHeicJpeg ) {
