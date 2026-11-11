@@ -107,6 +107,7 @@ function bp_notifications_get_count_cache_key( $user_id, $sql ) {
  * Clear all notifications cache for a given user ID.
  *
  * @since BuddyPress 2.3.0
+ * @since BuddyBoss [BBVERSION] Invalidates counts by bumping the user's count incrementor instead of deleting $user_id keys.
  *
  * @param int $user_id The user ID's cache to clear.
  */

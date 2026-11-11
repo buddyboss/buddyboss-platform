@@ -495,6 +495,7 @@ function bp_notifications_check_notification_access( $user_id, $notification_id 
  * Get a count of unread notification items for a user.
  *
  * @since BuddyPress 1.9.0
+ * @since BuddyBoss [BBVERSION] No longer keeps its own cache; relies on BP_Notifications_Notification::get_total_count().
  *
  * @param int $user_id ID of the user whose unread notifications are being
  *                     counted.
@@ -505,9 +506,9 @@ function bp_notifications_get_unread_notification_count( $user_id = 0 ) {
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 	}
 
-	// get_total_count() already caches this (keyed on the full args, not
-	// just user_id - see PROD-10344), so it isn't duplicated here to avoid
-	// a second, differently-keyed cache layer for the same value.
+	// get_total_count() already caches this under a hash of the final count 
+	// SQL plus the user's count incrementor (see bp_notifications_get_count_cache_key()),
+	// so a second cache layer isn't needed here.
 	$count = BP_Notifications_Notification::get_total_count(
 		array(
 			'user_id' => $user_id,
