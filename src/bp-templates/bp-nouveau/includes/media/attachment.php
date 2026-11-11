@@ -9,8 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-global $bp, $wpdb;
-
 if ( empty( get_query_var( 'media-attachment-id' ) ) ) {
 	echo '// Silence is golden.';
 	exit();
@@ -27,6 +25,7 @@ $encode_thread_id = base64_decode( get_query_var( 'media-thread-id' ) );
 $thread_arr       = explode( 'thread_', $encode_thread_id );
 
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 ) {
+	global $bp, $wpdb;
 
 	$attachment_id = (int) $explode_arr[1];
 
@@ -43,6 +42,30 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 	) {
 		echo '// Silence is golden.';
 		exit();
+	}
+
+	if ( $media ) {
+		// Saved items follow their own privacy, including message thread participation.
+		$media_access = function_exists( 'bb_media_user_can_access' ) ? bb_media_user_can_access( $media->id, 'photo', $attachment_id ) : array();
+		if ( empty( $media_access['can_view'] ) ) {
+			echo '// Silence is golden.';
+			exit();
+		}
+	} else {
+		$is_bb_media_upload = (bool) get_post_meta( $attachment_id, 'bp_media_upload', true );
+
+		// Unsaved uploads are only previewed by the member who uploaded them.
+		if (
+			! $is_bb_media_upload ||
+			! is_user_logged_in() ||
+			(
+				(int) get_post_field( 'post_author', $attachment_id ) !== bp_loggedin_user_id() &&
+				! bp_current_user_can( 'bp_moderate' )
+			)
+		) {
+			echo '// Silence is golden.';
+			exit();
+		}
 	}
 
 	if ( wp_attachment_is_image( $attachment_id ) ) {

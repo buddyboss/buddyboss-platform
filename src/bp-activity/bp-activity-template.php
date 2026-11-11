@@ -215,16 +215,16 @@ function bp_has_activities( $args = '' ) {
 		: (
 		( ! empty( bp_current_action() ) && ! is_numeric( bp_current_action() ) )
 			? bp_current_action()
-			: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
+			: ( isset( $_REQUEST['scope'] ) ? bb_activity_get_request_scope( wp_unslash( $_REQUEST['scope'] ) ) : 'all' ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Only registered scope names pass.
 		);
 
 	if ( bp_is_user_activity() || bp_is_activity_directory() ) {
 
-		// Scope from the heartbeat passed from the filter dropdown.	
+		// Scope from the heartbeat passed from the filter dropdown.
 		$scope = ! empty( $args['scope'] ) ? $args['scope'] : $scope;
-	}	
+	}
 
-	$scope = bp_activity_default_scope( $scope );	
+	$scope = bp_activity_default_scope( $scope );
 
 	// Group filtering.
 	if ( bp_is_group() ) {
@@ -342,7 +342,7 @@ function bp_has_activities( $args = '' ) {
 			'object' => $_GET['afilter'],
 		);
 	} elseif (
-		( 
+		(
 			'just-me' === $scope &&
 			bp_is_activity_directory()
 		) ||
@@ -359,7 +359,7 @@ function bp_has_activities( $args = '' ) {
 		if ( 'just-me' === $scope && bp_is_activity_directory() ) {
 			$r['user_id'] = bp_loggedin_user_id();
 		}
-	
+
 		$r['filter'] = array(
 			'user_id'      => $r['user_id'],
 			'object'       => $r['object'],
@@ -872,8 +872,9 @@ function bp_activity_member_display_name() {
 function bp_get_activity_member_display_name() {
 	global $activities_template;
 
-	$retval = isset( $activities_template->activity->display_name )
-		? $activities_template->activity->display_name
+	// Resolve for the current viewer (respects last-name visibility); never the raw WP display_name.
+	$retval = isset( $activities_template->activity )
+		? bb_activity_get_item_user_displayname( $activities_template->activity )
 		: '';
 
 	/**
@@ -1096,8 +1097,8 @@ function bp_get_activity_avatar( $args = '' ) {
 	// to current_comment. Otherwise, just use activity.
 	$current_activity_item = isset( $activities_template->activity->current_comment ) ? $activities_template->activity->current_comment : $activities_template->activity;
 
-	// Activity user display name.
-	$dn_default = isset( $current_activity_item->display_name ) ? $current_activity_item->display_name : '';
+	// Activity user display name, as the current viewer may see it (respects last-name visibility).
+	$dn_default = bb_activity_get_item_user_displayname( $current_activity_item );
 
 	// Prepend some descriptive text to alt.
 	$alt_default = ! empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss' ), $dn_default ) : __( 'Profile photo', 'buddyboss' );
@@ -1302,7 +1303,8 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			}
 
 			if ( empty( $alt ) ) {
-				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $activities_template->activity->display_name );
+				/* translators: %s: Member display name. */
+				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_activity_get_item_user_displayname( $activities_template->activity ) );
 			}
 
 			break;
@@ -1742,6 +1744,7 @@ function bp_activity_user_can_delete( $activity = false ) {
  * @global object                    $activities_template {@link BP_Activity_Template}
  *
  * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 3.5.1 Returns false while activity editing is disabled, unless `$privacy_edit`.
  */
 function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
 	global $activities_template;
@@ -1775,14 +1778,19 @@ function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
 
 	if ( $can_edit && ! $privacy_edit ) {
 
-		// Check activity edit time expiration.
-		$activity_edit_time        = (int) bp_get_activity_edit_time(); // for 10 minutes, 600
-		$bp_dd_get_time            = bp_core_current_time( true, 'timestamp' );
-		$activity_edit_expire_time = strtotime( $activity->date_recorded ) + $activity_edit_time;
-
-		// Checking if expire time still greater than current time.
-		if ( - 1 !== $activity_edit_time && $activity_edit_expire_time <= $bp_dd_get_time ) {
+		if ( ! bp_is_activity_edit_enabled() ) {
+			// Editing is switched off; without it there is no edit window at all.
 			$can_edit = false;
+		} else {
+			// Check activity edit time expiration.
+			$activity_edit_time        = (int) bp_get_activity_edit_time(); // for 10 minutes, 600
+			$bp_dd_get_time            = bp_core_current_time( true, 'timestamp' );
+			$activity_edit_expire_time = strtotime( $activity->date_recorded ) + $activity_edit_time;
+
+			// Checking if expire time still greater than current time.
+			if ( - 1 !== $activity_edit_time && $activity_edit_expire_time <= $bp_dd_get_time ) {
+				$can_edit = false;
+			}
 		}
 	}
 
@@ -2288,7 +2296,7 @@ function bp_get_activity_comment_name() {
 
 		$name = apply_filters( 'bp_acomment_name', $activities_template->activity->current_comment->user_fullname, $activities_template->activity->current_comment );  // Backward compatibility.
 	} else {
-		$name = $activities_template->activity->current_comment->display_name;
+		$name = bb_activity_get_item_user_displayname( $activities_template->activity->current_comment );
 	}
 
 	/**
@@ -2930,6 +2938,18 @@ function bp_get_activity_css_class() {
 
 	if ( bb_user_has_mute_notification( bp_get_activity_id(), bp_loggedin_user_id() ) ) {
 		$class .= ' bb-muted';
+	}
+
+	// Check if activity has featured image.
+	if (
+		function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+		bb_pro_activity_post_feature_image_instance() &&
+		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
+	) {
+		$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( bp_get_activity_id() );
+		if ( ! empty( $feature_image_data ) ) {
+			$class .= ' has-featured-image';
+		}
 	}
 
 	if ( 'groups' === $activities_template->activity->component ) {
@@ -4450,6 +4470,7 @@ function bp_get_activity_entry_css_class() {
  * Determine if the current user can edit an activity comment item.
  *
  * @since BuddyBoss 2.4.40
+ * @since BuddyBoss 3.5.1 Returns false while comment editing is disabled, unless `$privacy_edit`.
  *
  * @param false|BP_Activity_Activity $activity_comment Optional. Falls back on the current item in the loop.
  * @param bool                       $privacy_edit     Optional. True if editing privacy.
@@ -4485,14 +4506,19 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 
 	if ( $can_edit && ! $privacy_edit ) {
 
-		// Check activity comment edit time expiration.
-		$activity_comment_edit_time        = (int) bb_get_activity_comment_edit_time(); // for 10 minutes, 600.
-		$bp_dd_get_time                    = bp_core_current_time( true, 'timestamp' );
-		$activity_comment_edit_expire_time = strtotime( $activity_comment->date_recorded ) + $activity_comment_edit_time;
-
-		// Checking if expire time still greater than current time.
-		if ( - 1 !== $activity_comment_edit_time && $activity_comment_edit_expire_time <= $bp_dd_get_time ) {
+		if ( ! bb_is_activity_comment_edit_enabled() ) {
+			// Editing is switched off; without it there is no edit window at all.
 			$can_edit = false;
+		} else {
+			// Check activity comment edit time expiration.
+			$activity_comment_edit_time        = (int) bb_get_activity_comment_edit_time(); // for 10 minutes, 600.
+			$bp_dd_get_time                    = bp_core_current_time( true, 'timestamp' );
+			$activity_comment_edit_expire_time = strtotime( $activity_comment->date_recorded ) + $activity_comment_edit_time;
+
+			// Checking if expire time still greater than current time.
+			if ( - 1 !== $activity_comment_edit_time && $activity_comment_edit_expire_time <= $bp_dd_get_time ) {
+				$can_edit = false;
+			}
 		}
 	}
 
@@ -4545,7 +4571,11 @@ function bb_get_activity_comment_is_favorite() {
 	 *
 	 * @param bool $value Whether the current activity item is in the current user's favorites.
 	 */
-	return (bool) apply_filters( 'bb_get_activity_comment_is_favorite', bb_activity_is_item_favorite( bp_get_activity_comment_id(), 'activity_comment' ) );
+	$is_favorite = function_exists( 'bb_activity_is_item_favorite' )
+		? bb_activity_is_item_favorite( bp_get_activity_comment_id(), 'activity_comment' )
+		: false;
+
+	return (bool) apply_filters( 'bb_get_activity_comment_is_favorite', $is_favorite );
 }
 
 /**
@@ -4599,4 +4629,72 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
+}
+
+/**
+ * Check if the Activity has a title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to check. If null, use current activity in loop.
+ *
+ * @return bool True if the activity has a title, false otherwise.
+ */
+function bb_activity_has_post_title( ?BP_Activity_Activity $activity_object = null ) {
+	$post_title = bb_activity_get_post_title( $activity_object );
+	return ! empty( $post_title );
+}
+
+
+/**
+ * Output the activity post title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
+ */
+function bb_activity_post_title( ?BP_Activity_Activity $activity_object = null ) {
+	echo esc_html( bb_activity_get_post_title( $activity_object ) );
+}
+
+/**
+ * Return the activity post title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The activity post title.
+ */
+function bb_activity_get_post_title( ?BP_Activity_Activity $activity_object = null ) {
+	global $activities_template;
+
+	if ( ! is_object( $activities_template ) ) {
+		$activities_template = new stdClass();
+	}
+
+	if ( ! isset( $activities_template->activity ) ) {
+		$activities_template->activity = $activity_object;
+	}
+
+	$activity_post_title = '';
+	if ( ! empty( $activities_template->activity ) && isset( $activities_template->activity->post_title ) ) {
+		$activity_post_title = $activities_template->activity->post_title;
+	}
+
+	$activity_post_title = apply_filters_ref_array(
+		'bb_activity_get_post_title',
+		array(
+			$activity_post_title,
+			&$activities_template->activity,
+		)
+	);
+
+	if ( ! empty( $activity_post_title ) ) {
+		$activity_post_title = bb_activity_strip_post_title( $activity_post_title );
+	}
+
+	return $activity_post_title;
 }

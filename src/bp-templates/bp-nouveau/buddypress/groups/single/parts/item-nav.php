@@ -15,6 +15,14 @@
 			<?php
 			while ( bp_nouveau_nav_items() ) :
 				bp_nouveau_nav_item();
+
+				$hidden_tabs = bp_nouveau_get_appearance_settings( 'group_nav_hide' );
+				$bp_nouveau  = bp_nouveau();
+				$nav_item    = $bp_nouveau->current_nav_item;
+
+				if ( ! is_admin() && is_array( $hidden_tabs ) && ! empty( $hidden_tabs ) && in_array( $nav_item->slug, $hidden_tabs, true ) ) {
+					continue;
+				}
 				?>
 				<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>">
 					<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>">

@@ -66,7 +66,6 @@ class BP_Activity_Component extends BP_Component {
 			'template',
 			'functions',
 			'cache',
-			'reactions',
 		);
 
 		// Notifications support.
@@ -372,6 +371,7 @@ class BP_Activity_Component extends BP_Component {
 				'bp_activity_follow',
 				'activity_edit_data',
 				'bb_activity_topics',
+				'bb_activity_topic_lists',
 			)
 		);
 

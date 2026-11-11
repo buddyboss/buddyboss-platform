@@ -1,77 +1,77 @@
 /*!
- * BuddyBoss Icon 1.0.8 - https://buddyboss.com
+ * BuddyBoss Icon 1.0.11 - https://buddyboss.com
  * License - MIT
  * Copyright 2022
  */
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/round-lined.eot?1728559670');
-  src: url('../fonts/round-lined.eot?1728559670#iefix') format('embedded-opentype'),
-            url('../fonts/round-lined.woff2?1728559670') format('woff2'),
-            url('../fonts/round-lined.woff?1728559670') format('woff'),
-            url('../fonts/round-lined.ttf?1728559670') format('truetype'),
-            url('../fonts/round-lined.svg?1728559670#round-lined') format('svg');
+  src: url('../fonts/round-lined.eot?1753964645');
+  src: url('../fonts/round-lined.eot?1753964645#iefix') format('embedded-opentype'),
+            url('../fonts/round-lined.woff2?1753964645') format('woff2'),
+            url('../fonts/round-lined.woff?1753964645') format('woff'),
+            url('../fonts/round-lined.ttf?1753964645') format('truetype'),
+            url('../fonts/round-lined.svg?1753964645#round-lined') format('svg');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/round-filled.eot?1728559670');
-  src: url('../fonts/round-filled.eot?1728559670#iefix') format('embedded-opentype'),
-            url('../fonts/round-filled.woff2?1728559670') format('woff2'),
-            url('../fonts/round-filled.woff?1728559670') format('woff'),
-            url('../fonts/round-filled.ttf?1728559670') format('truetype'),
-            url('../fonts/round-filled.svg?1728559670#round-lined') format('svg');
+  src: url('../fonts/round-filled.eot?1753964645');
+  src: url('../fonts/round-filled.eot?1753964645#iefix') format('embedded-opentype'),
+            url('../fonts/round-filled.woff2?1753964645') format('woff2'),
+            url('../fonts/round-filled.woff?1753964645') format('woff'),
+            url('../fonts/round-filled.ttf?1753964645') format('truetype'),
+            url('../fonts/round-filled.svg?1753964645#round-lined') format('svg');
   font-weight: 200;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/filled.eot?1728559670');
-  src: url('../fonts/filled.eot?1728559670#iefix') format('embedded-opentype'),
-            url('../fonts/filled.woff2?1728559670') format('woff2'),
-            url('../fonts/filled.woff?1728559670') format('woff'),
-            url('../fonts/filled.ttf?1728559670') format('truetype'),
-            url('../fonts/filled.svg?1728559670#round-lined') format('svg');
+  src: url('../fonts/filled.eot?1753964645');
+  src: url('../fonts/filled.eot?1753964645#iefix') format('embedded-opentype'),
+            url('../fonts/filled.woff2?1753964645') format('woff2'),
+            url('../fonts/filled.woff?1753964645') format('woff'),
+            url('../fonts/filled.ttf?1753964645') format('truetype'),
+            url('../fonts/filled.svg?1753964645#round-lined') format('svg');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/lined.eot?1728559670');
-  src: url('../fonts/lined.eot?1728559670#iefix') format('embedded-opentype'),
-            url('../fonts/lined.woff2?1728559670') format('woff2'),
-            url('../fonts/lined.woff?1728559670') format('woff'),
-            url('../fonts/lined.ttf?1728559670') format('truetype'),
-            url('../fonts/lined.svg?1728559670#round-lined') format('svg');
+  src: url('../fonts/lined.eot?1753964645');
+  src: url('../fonts/lined.eot?1753964645#iefix') format('embedded-opentype'),
+            url('../fonts/lined.woff2?1753964645') format('woff2'),
+            url('../fonts/lined.woff?1753964645') format('woff'),
+            url('../fonts/lined.ttf?1753964645') format('truetype'),
+            url('../fonts/lined.svg?1753964645#round-lined') format('svg');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/box-lined.eot?1728559670');
-  src: url('../fonts/box-lined.eot?1728559670#iefix') format('embedded-opentype'),
-            url('../fonts/box-lined.woff2?1728559670') format('woff2'),
-            url('../fonts/box-lined.woff?1728559670') format('woff'),
-            url('../fonts/box-lined.ttf?1728559670') format('truetype'),
-            url('../fonts/box-lined.svg?1728559670#round-lined') format('svg');
+  src: url('../fonts/box-lined.eot?1753964645');
+  src: url('../fonts/box-lined.eot?1753964645#iefix') format('embedded-opentype'),
+            url('../fonts/box-lined.woff2?1753964645') format('woff2'),
+            url('../fonts/box-lined.woff?1753964645') format('woff'),
+            url('../fonts/box-lined.ttf?1753964645') format('truetype'),
+            url('../fonts/box-lined.svg?1753964645#round-lined') format('svg');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/box-filled.eot?1728559670');
-  src: url('../fonts/box-filled.eot?1728559670#iefix') format('embedded-opentype'),
-            url('../fonts/box-filled.woff2?1728559670') format('woff2'),
-            url('../fonts/box-filled.woff?1728559670') format('woff'),
-            url('../fonts/box-filled.ttf?1728559670') format('truetype'),
-            url('../fonts/box-filled.svg?1728559670#round-lined') format('svg');
+  src: url('../fonts/box-filled.eot?1753964645');
+  src: url('../fonts/box-filled.eot?1753964645#iefix') format('embedded-opentype'),
+            url('../fonts/box-filled.woff2?1753964645') format('woff2'),
+            url('../fonts/box-filled.woff?1753964645') format('woff'),
+            url('../fonts/box-filled.ttf?1753964645') format('truetype'),
+            url('../fonts/box-filled.svg?1753964645#round-lined') format('svg');
   font-weight: 600;
   font-style: normal;
 }
@@ -811,6 +811,30 @@
 }
 
 /* '' */
+
+.bb-icon-brand-memberpress-app:before {
+  content: '\ea16';
+}
+
+/* '' */
+
+.bb-icon-brand-learndash-app:before {
+  content: '\ea17';
+}
+
+/* '' */
+
+.bb-icon-brand-whitelabel-app:before {
+  content: '\ea18';
+}
+
+/* '' */
+
+.bb-icon-live-stream:before {
+  content: '\ea19';
+}
+
+/* '' */
 
 .bb-icon-activity-slash:before {
   content: '\ed90';

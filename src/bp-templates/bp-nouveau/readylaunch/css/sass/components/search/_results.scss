@@ -111,6 +111,7 @@
 
 			a {
 				color: var(--bb-rl-text-color);
+				word-break: break-word;
 			}
 		}
 
@@ -208,6 +209,12 @@
 				font-weight: 600;
 			}
 		}
+	}
+
+	.bb-activity-search-title h2 {
+		font-size: 16px;
+		font-weight: 500;
+		margin-bottom: var(--bb-rl-space-50);
 	}
 }
 

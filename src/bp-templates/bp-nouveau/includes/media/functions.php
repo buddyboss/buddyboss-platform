@@ -156,6 +156,8 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
 		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
 		'connection_lost_error'              => __( 'Connection lost with the server.', 'buddyboss' ),
+		'upload_server_error'                => __( 'Upload failed. The server rejected the request (HTTP {{statusCode}}). Please try again later.', 'buddyboss' ),
+		'upload_too_large_error'             => __( 'Upload failed. The file is too large for the server to accept (HTTP 413).', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {
@@ -188,18 +190,26 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 	);
 	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
 
+	$params['media']['gif_search_placeholder'] = __( 'Search GIPHY...', 'buddyboss' );
+	$params['media']['gif_no_results']         = __( 'No results found', 'buddyboss' );
+	$params['media']['gif_no_connection']      = __( 'Could not connect to GIPHY', 'buddyboss' );
+
 	$params['media']['i18n_strings'] = array(
 		'select'               => __( 'Select', 'buddyboss' ),
 		'unselect'             => __( 'Unselect', 'buddyboss' ),
 		'selectall'            => __( 'Select All', 'buddyboss' ),
 		'unselectall'          => __( 'Unselect All', 'buddyboss' ),
-		'no_photos_found'      => ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? __( 'Sorry, no photos & videos were found', 'buddyboss' ) : __( 'Sorry, no photos were found', 'buddyboss' ),
+		'no_photos_found'      => ( bp_is_active( 'video' ) && ( ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ) ? __( 'Sorry, no photos & videos were found', 'buddyboss' ) : __( 'Sorry, no photos were found', 'buddyboss' ),
 		'upload'               => __( 'Upload', 'buddyboss' ),
 		'uploading'            => __( 'Uploading', 'buddyboss' ),
 		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
 		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
 		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss' ),
 		'media_delete_confirm' => __( 'Are you sure you want to delete this media?', 'buddyboss' ),
+		'photo'                => __( 'photo', 'buddyboss' ),
+		'photos'               => __( 'photos', 'buddyboss' ),
+		'video'                => __( 'video', 'buddyboss' ),
+		'videos'               => __( 'videos', 'buddyboss' ),
 	);
 
 	$params['dir_labels'] = array_merge(
@@ -314,4 +324,41 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
 	}
 
 	return $buttons;
+}
+
+/**
+ * Get the album-scoped "no media" empty-state markup for the active theme.
+ *
+ * Follows what media/media-loop.php renders when an album has no media left:
+ * ReadyLaunch uses the media/no-media template part, legacy uses the loop-none
+ * user feedback. One deliberate difference: the loop template's un-parenthesized
+ * condition can pick the "photos or videos" wording even when the video
+ * component is inactive (its group branch escapes the bp_is_active check via
+ * operator precedence); this helper requires the video component for both
+ * branches, so it never advertises videos that cannot exist. Shared by the
+ * media delete and activity delete AJAX handlers so the single-album view can
+ * show the empty-state when the album becomes empty.
+ *
+ * @since BuddyBoss 3.6.0
+ *
+ * @return string The album empty-state HTML for the active theme.
+ */
+function bb_nouveau_media_get_album_empty_state() {
+	ob_start();
+	if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() ) {
+		bp_get_template_part( 'media/no-media' );
+	} elseif ( bp_is_active( 'video' ) && ( ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ) {
+		bp_nouveau_user_feedback( 'media-video-loop-none' );
+	} else {
+		bp_nouveau_user_feedback( 'media-loop-none' );
+	}
+
+	/**
+	 * Filters the single-album empty-state markup.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @param string $html The rendered empty-state HTML.
+	 */
+	return apply_filters( 'bb_nouveau_media_album_empty_state', ob_get_clean() );
 }

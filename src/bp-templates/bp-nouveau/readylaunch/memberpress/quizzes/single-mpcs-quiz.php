@@ -40,6 +40,7 @@ $quiz_available = $quiz->is_available();
 				<?php
 			} else {
 				$button_class = 'btn btn-green is-purple';
+				$lesson = $quiz; // Pass quiz as lesson since Quiz extends Lesson
 				require MeprView::file( '/lessons/lesson_locked' );
 			}
 			?>

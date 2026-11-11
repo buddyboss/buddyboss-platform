@@ -99,6 +99,10 @@ window.bp = window.bp || {};
 					dictMaxFilesExceeded         : bbRlVideo.video_dict_file_exceeded,
 					previewTemplate              : ForumVideoTemplate,
 					dictCancelUploadConfirmation : bbRlVideo.dictCancelUploadConfirmation,
+					chunking                     : true,
+					chunkSize                    : 30*1024*1024,
+					retryChunks                  : true,
+					retryChunksLimit             : 3,
 				}
 			);
 
@@ -187,6 +191,152 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Refresh directory filter for select2 dropdowns.
+		 *
+		 * @param {string} componentType The component type (document, media, video).
+		 * @param {string} scope         The scope (personal, all, groups, etc.).
+		 */
+		refreshDirectoryFilter: function( componentType, scope ) {
+			var selectElement, targetOption, optionValue;
+
+			// Find the select element.
+			selectElement = $( document ).find( '#bb-rl-' + componentType + '-scope-options' );
+			if ( ! selectElement.length ) {
+				return;
+			}
+
+			// Find the option with matching data-bp-scope attribute.
+			targetOption = selectElement.find( 'option[data-bp-scope="' + scope + '"]' );
+			if ( targetOption.length ) {
+				// Get the option's value (which is its text content since no value attribute is set).
+				optionValue = targetOption.text().trim();
+				// Set the select value and trigger change.
+				selectElement.val( optionValue ).trigger( 'change' );
+			}
+		},
+
+		/**
+		 * Update album photo and video counts in single album view.
+		 * Works for both Standard and ReadyLaunch modes.
+		 *
+		 * @param {Object} albumCounts - Album count data from server response
+		 * @param {number} albumCounts.album_media_count - Number of photos
+		 * @param {number} albumCounts.album_video_count - Number of videos
+		 */
+		updateAlbumCounts: function ( albumCounts ) {
+			// Check if we're in a single album view.
+			if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+				return;
+			}
+
+			var photoCount = parseInt( albumCounts.album_media_count ) || 0;
+			var videoCount = parseInt( albumCounts.album_video_count ) || 0;
+
+			// Format number with thousands separator.
+			var formatNumber = function( num ) {
+				return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			};
+
+			// Update the photo count display.
+			var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
+			if ( $photoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $photoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$photoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$photoCountSpan.append( formatNumber( photoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var photoLabel = 1 === photoCount ? BP_Nouveau.media.i18n_strings.photo : BP_Nouveau.media.i18n_strings.photos;
+					$photoCountSpan.text( formatNumber( photoCount ) + ' ' + photoLabel );
+				}
+			}
+
+			// Update the video count display.
+			var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
+			if ( $videoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $videoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$videoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$videoCountSpan.append( formatNumber( videoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
+					$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
+				}
+			}
+		},
+
+		/**
+		 * Remove deleted item tiles from the single media album grid.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Array} ids Deleted media/video ids.
+		 */
+		removeAlbumTiles: function ( ids ) {
+			if ( ! ids || ! ids.length ) {
+				return;
+			}
+			$.each(
+				ids,
+				function ( index, value ) {
+					var $albumItem = $( '#media-stream ul.media-list li[data-id="' + value + '"]' );
+					if ( $albumItem.length ) {
+						$albumItem.remove();
+					}
+				}
+			);
+		},
+
+		/**
+		 * Handle a delete on the unified media album view (/media/albums/{id}).
+		 *
+		 * Renders the album empty-state when the mixed album has no items left,
+		 * otherwise removes the deleted tiles and refreshes the header counts.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} data       Server response data with album counts.
+		 * @param {Array}  deletedIds Deleted media/video ids.
+		 * @return {boolean} True when the media album view was handled.
+		 */
+		handleAlbumDelete: function ( data, deletedIds ) {
+			if ( ! $( '#buddypress #bp-media-single-album' ).length || 'undefined' === typeof data.album_id || 0 >= parseInt( data.album_id, 10 ) ) {
+				return false;
+			}
+
+			var albumTotal = parseInt( data.album_total_count, 10 );
+			var $stream    = $( '#media-stream' );
+
+			// A stale out-of-order response (rapid double delete) must not overwrite
+			// an already-rendered empty state with older, non-zero counts.
+			if ( 0 < albumTotal && ! $stream.find( 'ul.media-list' ).length ) {
+				return true;
+			}
+
+			if ( 0 === albumTotal ) {
+				$( '.bb-photos-actions, .bb-videos-actions' ).hide();
+				if ( data.album_empty_html && data.album_empty_html.length ) {
+					$stream.html( data.album_empty_html );
+				} else {
+					// Album is empty but no markup returned - clear the deleted tiles.
+					this.removeAlbumTiles( deletedIds );
+				}
+			} else {
+				this.removeAlbumTiles( deletedIds );
+			}
+
+			this.updateAlbumCounts( data );
+			return true;
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
@@ -220,7 +370,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
 
 			bpNouveau.on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
-			$document.on( 'click', '.bb-rl-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
+			$document.on( 'click', '.bb-rl-media-create-folder-close, .bb-model-close-button', this.closeCreateFolderModal.bind( this ) );
 			$document.on( 'click', '#bp-media-edit-folder-close', this.closeEditFolderModal.bind( this ) );
 			$document.on( 'click', '.open-popup .errorPopup', this.closeErrorPopup.bind( this ) );
 
@@ -240,7 +390,7 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bp-cancel-edit-album-title', this.cancelEditAlbumTitle.bind( this ) );
 			bpNouveau.on( 'click', '#bp-save-album-title', this.saveAlbum.bind( this ) );
 			$document.on( 'click', '#bp-save-folder-title', this.saveFolder.bind( this ) );
-			bpNouveau.on( 'change', '#bp-media-single-album select#bb-rl-album-privacy', this.saveAlbum.bind( this ) );
+			bpNouveau.on( 'change', '#bp-media-single-album select#bb-album-privacy', this.saveAlbum.bind( this ) );
 			bpNouveau.on( 'change', '#media-stream select#bb-rl-folder-privacy', this.savePrivacy.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 			$document.on( 'click', '#bb-delete-folder', this.deleteFolder.bind( this ) );
@@ -260,6 +410,14 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bbpress-forums-activity #whats-new-toolbar .found-media-item', this.selectGif.bind( this ) );
 			$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 			$document.find( 'form #whats-new-toolbar .gif-search-results, .forum form #whats-new-toolbar .gif-search-results' ).scroll( this.loadMoreGif.bind( this ) );
+			// Standalone GIF picker for forum modals.
+			var $standaloneGifPicker = $( '.bb-rl-gif-media-search-dropdown-standalone' );
+			if ( $standaloneGifPicker.length ) {
+				$standaloneGifPicker.on( 'click', '.found-media-item', this.selectGif.bind( this ) );
+				$standaloneGifPicker.on( 'keydown', '.search-query-input', this.searchGif.bind( this ) );
+				// Note: scroll event is bound directly in toggleGifSelector after popup content is created,
+				// because scroll events don't bubble and can't use event delegation.
+			}
 			if ( ! groupMessagesButtonSelector.length ) {
 				$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 			}
@@ -286,12 +444,35 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.activity .bb-rl-media-move-activity, #media-stream .bb-rl-media-move-activity', this.moveMediaIntoAlbum.bind( this ) );
 
 			// Document move option.
-			var $activityElements = $( '#buddypress .bb-rl-activity-list, #buddypress [data-bp-list="activity"], #bb-rl-media-model-container .bb-rl-activity-list, #media-stream' );
-			var $groupMediaStream = $( '.group-media #media-stream' );
-			$activityElements.on( 'click', '.ac-document-move, .ac-folder-move', this.openDocumentMove.bind( this ) );
-			$activityElements.add( $groupMediaStream ).on( 'click', '.ac-media-move', this.openMediaMove.bind( this ) );
-			$activityElements.on( 'click', '.bb-rl-ac-document-close-button, .bb-rl-ac-folder-close-button', this.closeDocumentMove.bind( this ) );
-			$activityElements.on( 'click', '.bb-rl-ac-media-close-button', this.closeMediaMove.bind( this ) );
+			var activityListSelector = '#buddypress .bb-rl-activity-list',
+				activityDataSelector = '#buddypress [data-bp-list="activity"]',
+				modalListSelector = '#bb-rl-media-model-container .bb-rl-activity-list',
+				mediaStreamSelector = '#media-stream';
+			$document.on( 'click',
+				activityListSelector + ' .ac-document-move, ' + activityDataSelector + ' .ac-document-move, ' +
+				activityListSelector + ' .ac-folder-move, ' + activityDataSelector + ' .ac-folder-move, ' +
+				modalListSelector + ' .ac-document-move, ' + modalListSelector + ' .ac-folder-move, ' +
+				mediaStreamSelector + ' .ac-document-move, ' + mediaStreamSelector + ' .ac-folder-move',
+				this.openDocumentMove.bind( this )
+			);
+			$document.on( 'click',
+				activityListSelector + ' .ac-media-move, ' + activityDataSelector + ' .ac-media-move, ' +
+				modalListSelector + ' .ac-media-move, ' + mediaStreamSelector + ' .ac-media-move, ' +
+				'.group-media ' + mediaStreamSelector + ' .ac-media-move',
+				this.openMediaMove.bind( this )
+			);
+			$document.on( 'click',
+				activityListSelector + ' .bb-rl-ac-document-close-button, ' + activityDataSelector + ' .bb-rl-ac-document-close-button, ' +
+				activityListSelector + ' .bb-rl-ac-folder-close-button, ' + activityDataSelector + ' .bb-rl-ac-folder-close-button, ' +
+				modalListSelector + ' .bb-rl-ac-document-close-button, ' + modalListSelector + ' .bb-rl-ac-folder-close-button, ' +
+				mediaStreamSelector + ' .bb-rl-ac-document-close-button, ' + mediaStreamSelector + ' .bb-rl-ac-folder-close-button',
+				this.closeDocumentMove.bind( this )
+			);
+			$document.on( 'click',
+				activityListSelector + ' .bb-rl-ac-media-close-button, ' + activityDataSelector + ' .bb-rl-ac-media-close-button, ' +
+				modalListSelector + ' .bb-rl-ac-media-close-button, ' + mediaStreamSelector + ' .bb-rl-ac-media-close-button',
+				this.closeMediaMove.bind( this )
+			);
 			var mediaStream = $( '#bb-rl-media-model-container .bb-rl-activity-list, #media-stream' );
 			mediaStream.on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-edit', this.editDocument.bind( this ) );
@@ -345,8 +526,59 @@ window.bp = window.bp || {};
 
 			// Gifs autoplay.
 			if ( ! _.isUndefined( bbRlMedia.gif_api_key ) ) {
-				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
-				window.addEventListener( 'resize', this.autoPlayGifVideos, false );
+				window.addEventListener( 'scroll', this.throttledAutoPlayGifVideos.bind( this ), false );
+				window.addEventListener( 'resize', this.throttledAutoPlayGifVideos.bind( this ), false );
+
+				// Add scroll event listener for message thread container
+				var messageThreadList = $( '#bp-message-thread-list' );
+				if ( messageThreadList.length ) {
+					messageThreadList.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
+				// Add scroll event listener for ReadyLaunch activity modal body
+				var activityModalBody = $( '.bb-rl-modal-activity-body' );
+				if ( activityModalBody.length ) {
+					activityModalBody.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
+				// Add scroll event listener for ReadyLaunch media modal activity item
+				var mediaModalInfoSection = $( '.bb-rl-media-model-container .bb-media-info-section' );
+				if ( mediaModalInfoSection.length ) {
+					mediaModalInfoSection.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
+				// Add document-level scroll event delegation as fallback
+				$( document ).on( 'scroll', '#bp-message-thread-list', this.throttledAutoPlayGifVideos.bind( this ) );
+				$( document ).on( 'scroll', '.bb-rl-modal-activity-body', this.throttledAutoPlayGifVideos.bind( this ) );
+				$( document ).on( 'scroll', '.bb-rl-media-model-container .bb-media-info-section', this.throttledAutoPlayGifVideos.bind( this ) );
+
+				// Use addEventListener directly
+				setTimeout( function() {
+					var messageThreadList = document.getElementById( 'bp-message-thread-list' );
+					if ( messageThreadList ) {
+						messageThreadList.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+
+					var activityModalBody = document.querySelector( '.bb-rl-modal-activity-body' );
+					if ( activityModalBody ) {
+						activityModalBody.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+
+					var mediaModalInfoSection = document.querySelector( '.bb-rl-media-model-container .bb-media-info-section' );
+					if ( mediaModalInfoSection ) {
+						mediaModalInfoSection.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+				}, 1000 );
+
+				// Trigger initial GIF autoplay check for server-side rendered activities
+				// This handles the case when activities are loaded on page load (non-AJAX)
+				$( window ).on( 'load', function() {
+					setTimeout( function() {
+						if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+							bp.Nouveau.Media.autoPlayGifVideos();
+						}
+					}, 300 );
+				});
 
 				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
 				$document.on( 'click', _.bind( this.closePickersOnClick, this ) );
@@ -436,7 +668,7 @@ window.bp = window.bp || {};
 				if ( current_privacy === 'grouponly' ) {
 					$editAlbumModal.find( '#bb-album-privacy' ).addClass( 'bp-hide' );
 				} else {
-					$editAlbumModal.find( '#bb-album-privacy' ).val( current_privacy ).change().removeClass( 'bp-hide' );
+					$editAlbumModal.find( '#bb-album-privacy' ).val( current_privacy ).removeClass( 'bp-hide' );
 				}
 			} else if ( $editAlbumModal.find( '#bb-album-privacy' ).length > 0 ) {
 				$editAlbumModal.find( '#bb-album-privacy' ).addClass( 'bp-hide' );
@@ -447,6 +679,11 @@ window.bp = window.bp || {};
 
 			$editAlbumModal.find( '#bb-album-title' ).val( current_name ).focus().select();
 			$editAlbumModal.attr( 'data-id', album_item.attr('data-id') );
+
+			//Trigger select2 initialization
+			if( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $(document) );
+			}
 		},
 
 		closeEditAlbumModal: function ( event ) {
@@ -516,6 +753,9 @@ window.bp = window.bp || {};
 								if ( response.data.document && response.data.document.video_symlink ) {
 									$document.find( 'a.bb-rl-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'data-video-preview', response.data.document.video_symlink );
 								}
+								if ( response.data && response.data.url ) {
+									$document.find( 'a.bb-rl-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'href', response.data.url );
+								}
 							} else {
 								target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).attr( 'selected', 'selected' );
 								target.siblings( 'span' ).text( target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).text() );
@@ -538,6 +778,7 @@ window.bp = window.bp || {};
 				attachment_id         = target.attr( 'data-item-attachment-id' ),
 				preview_attachment_id = target.attr( 'data-item-preview-attachment-id' ),
 				fromWhere             = target.attr( 'data-item-from' ),
+				self                  = this,
 				data                  = [];
 
 			if ( 'activity' !== fromWhere ) {
@@ -612,20 +853,167 @@ window.bp = window.bp || {};
 						data    : data,
 						success : function ( response ) {
 							if ( response.success ) {
-								$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId + ' .bb-rl-document-activity .bb-rl-activity-inner .bb-activity-media-wrap .bb-rl-document-activity.' + id ).remove();
+								$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId + ' .document-activity .bb-rl-activity-inner .bb-activity-media-wrap .bb-rl-document-activity.' + id ).remove();
 								$( 'body #buddypress .bb-rl-activity-list .bb-rl-activity-comments .bb-rl-document-activity.' + id ).remove();
 								if ( true === response.data.delete_activity ) {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).remove();
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).remove();
 									$( 'body .bb-rl-activity-media-elem.bb-rl-document-activity.' + id ).remove();
-									$( 'body .bb-rl-activity-comments li#acomment-' + activityId ).remove();
+									self.removeDeletedActivityComment( activityId );
 								} else {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									self.removeDeletedItemsFromCommentEditData( activityId, 'document', [ id ] );
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
 						}
 					}
 				);
 			}
+		},
+
+		/**
+		 * Remove an activity comment that the server deleted together with its
+		 * last photo, document or video, and take it out of the parent activity's
+		 * comment count first - the same update a direct comment delete makes.
+		 *
+		 * The comment can be rendered more than once (feed, "view more comments"
+		 * modal, media theatre), so every copy updates the counts of its own
+		 * activity. The feed card behind the modal often does not render the
+		 * comment (it shows only the latest comments), so when the comment was
+		 * removed from the modal only, the feed card's count drops by the same
+		 * number, and the modal is flagged as updated so closing it re-syncs the
+		 * feed card from the server - as after a direct comment delete.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId The deleted activity comment ID.
+		 */
+		removeDeletedActivityComment: function ( commentId ) {
+			var activity       = bp.Nouveau.Activity,
+				canUpdateCount = 'undefined' !== typeof activity && 'function' === typeof activity.updateCommentCountOnDelete && 'function' === typeof activity.decreaseActivityCommentCount,
+				modalDeleted   = {},
+				feedHasCopy    = {};
+
+			$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + commentId ).each(
+				function () {
+					var $commentLi    = $( this ),
+						$activityItem = $commentLi.closest( '.activity-item' ),
+						$modal        = $commentLi.closest( '#bb-rl-activity-modal' ),
+						$countScope   = $modal.length ? $modal : $activityItem,
+						activityId    = $activityItem.data( 'bp-activity-id' );
+
+					if ( canUpdateCount && $activityItem.length ) {
+						if ( $modal.length ) {
+							modalDeleted[ activityId ] = activity.getDeletedCommentsCount( $commentLi );
+						} else if ( $commentLi.closest( '#bb-rl-activity-stream' ).length ) {
+							feedHasCopy[ activityId ] = true;
+						}
+
+						activity.updateCommentCountOnDelete( $commentLi, $activityItem, $countScope.find( '.activity-state' ), $countScope.find( '.comments-count' ) );
+					}
+
+					$commentLi.remove();
+				}
+			);
+
+			$.each(
+				modalDeleted,
+				function ( activityId, deletedCount ) {
+					// Re-sync the feed card from the server when the modal closes.
+					activity.activityHasUpdates = true;
+					activity.currentActivityId  = activityId;
+
+					// A feed card that rendered the comment was updated by its own copy above.
+					if ( feedHasCopy[ activityId ] ) {
+						return;
+					}
+
+					$( '#bb-rl-activity-stream li.activity-item[data-bp-activity-id="' + activityId + '"]' ).not( '#bb-rl-activity-modal li' ).each(
+						function () {
+							var $feedItem = $( this );
+
+							activity.decreaseActivityCommentCount( $feedItem, $feedItem.find( '.activity-state' ), $feedItem.find( '.comments-count' ), deletedCount );
+						}
+					);
+				}
+			);
+		},
+
+		/**
+		 * Remove deleted photos, documents or videos from the edit data of an
+		 * activity comment the server kept. Without this, clicking Edit before a
+		 * reload shows the deleted item again and saving sends its ID back.
+		 *
+		 * Every rendered copy of the comment (feed, "view more comments" modal)
+		 * carries its own copy of the edit data, so all of them are updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId The kept activity comment ID.
+		 * @param {string}        type      Edit data key: 'media', 'document' or 'video'.
+		 * @param {Array}         ids       The deleted item IDs.
+		 */
+		removeDeletedItemsFromCommentEditData: function ( commentId, type, ids ) {
+			var deletedIds = $.map(
+				[].concat( ids ),
+				function ( value ) {
+					return parseInt( value, 10 );
+				}
+			);
+
+			$( 'body li[data-bp-activity-comment-id="' + commentId + '"]' ).each(
+				function () {
+					var $commentLi = $( this ),
+						editData   = $commentLi.data( 'bp-activity-comment' );
+
+					if ( ! editData || ! Array.isArray( editData[ type ] ) ) {
+						return;
+					}
+
+					editData[ type ] = editData[ type ].filter(
+						function ( item ) {
+							return -1 === deletedIds.indexOf( parseInt( item.id, 10 ) );
+						}
+					);
+
+					$commentLi.data( 'bp-activity-comment', editData ).attr( 'data-bp-activity-comment', JSON.stringify( editData ) );
+				}
+			);
+		},
+
+		/**
+		 * Re-render the photo or video grid of an activity comment the server
+		 * kept, so its layout classes (`bb-media-length-N`, "+N more") match
+		 * the items that are left. Only the comment's own grid is replaced;
+		 * grids of its replies are not touched.
+		 *
+		 * Photo and document grids share `.bb-activity-media-wrap`, so a
+		 * marker child (the move dialog only the photo grid renders) tells
+		 * them apart.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId    The kept activity comment ID.
+		 * @param {string}        wrapSelector Selector of the grid wrapper.
+		 * @param {string}        marker       Selector of a child only this grid has, or ''.
+		 * @param {string}        content      Fresh grid markup from the server, '' when none is left.
+		 */
+		refreshKeptCommentAttachments: function ( commentId, wrapSelector, marker, content ) {
+			$( 'body li[data-bp-activity-comment-id="' + commentId + '"]' ).each(
+				function () {
+					var $wraps = $( this ).find( '.bb-rl-acomment-content' ).first().children( wrapSelector ).filter(
+						function () {
+							return ! marker || $( this ).children( marker ).length > 0;
+						}
+					);
+
+					if ( content ) {
+						$wraps.first().replaceWith( content );
+						$wraps.slice( 1 ).remove();
+					} else {
+						$wraps.remove();
+					}
+				}
+			);
 		},
 
 		bp_ajax_media_request: function ( event, data ) {
@@ -716,7 +1104,7 @@ window.bp = window.bp || {};
 						media.push( $( this ).val() );
 					}
 				);
-				if ( $media_list.parent().parent().hasClass( 'album-single-view' ) ) {
+				if ( $media_list.parents( '.album-single-view' ).length > 0 ) {
 					$media_list.find( '.bb-video-check-wrap [name="bb-video-select"]:checked' ).each(
 						function () {
 							$( this ).closest( '.bb-item-thumb' ).addClass( 'loading deleting' );
@@ -777,17 +1165,31 @@ window.bp = window.bp || {};
 								$( '#bb-rl-activity-stream ul.bb-rl-activity-list li[data-bp-activity-id="' + activityId + '"] .bb-rl-activity-content .bb-rl-activity-inner .bb-activity-media-wrap' ).remove();
 								$( '#bb-rl-activity-stream ul.bb-rl-activity-list li[data-bp-activity-id="' + activityId + '"] .bb-rl-activity-content .bb-rl-activity-inner' ).append( response.data.media_content );
 
-								var length = $( '#bb-rl-activity-stream ul.bb-rl-activity-list li[data-bp-activity-id="' + activityId + '"] .bb-rl-activity-content .bb-rl-activity-inner .bb-rl-activity-media-elem' ).length;
-								if ( length === 0 ) {
-									$( '#bb-rl-activity-stream ul.bb-rl-activity-list li[data-bp-activity-id="' + activityId + '"]' ).remove();
-								}
 
 								if ( true === response.data.delete_activity ) {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).remove();
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).remove();
 									$( 'body .bb-rl-activity-media-elem.bb-rl-media-activity.' + id ).remove();
-									$( 'body .bb-rl-activity-comments li#acomment-' + activityId ).remove();
+									self.removeDeletedActivityComment( activityId );
+
+									// The selectors above also clear the "view more comments"
+									// modal's copy of the activity, which leaves the modal open
+									// as an empty shell. When the modal's list has been emptied,
+									// close it through its real close button so the close
+									// handler runs; hide the wrapper directly if a theme
+									// override renamed the button.
+									var $activityModal = $( '#bb-rl-activity-modal:visible' );
+									if ( $activityModal.length && 0 === $activityModal.find( '.bb-rl-modal-activity-body .bb-rl-activity-list li' ).length ) {
+										var $modalCloseButton = $activityModal.find( '.bb-rl-modal-activity-header .bb-rl-close-action-popup' );
+										if ( $modalCloseButton.length ) {
+											$modalCloseButton.trigger( 'click' );
+										} else {
+											$activityModal.closest( '.bb-rl-activity-model-wrapper' ).hide();
+										}
+									}
 								} else {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									self.removeDeletedItemsFromCommentEditData( activityId, 'media', media );
+									self.refreshKeptCommentAttachments( activityId, '.bb-activity-media-wrap', '.bb-rl-media-move-photo', response.data.media_content );
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
 						} else if ( fromWhere && fromWhere.length && 'media' === fromWhere ) {
@@ -827,7 +1229,9 @@ window.bp = window.bp || {};
 										}
 									}
 
-									if ( 0 !== response.data.media_html_content.length ) {
+									if ( self.handleAlbumDelete( response.data, media ) ) {
+										// Single-album view handled: empty-state or tile removal + counts.
+									} else if ( 0 !== response.data.media_html_content.length ) {
 										if ( 0 === parseInt( response.data.media_personal_count ) ) {
 											$( '.bb-photos-actions' ).hide();
 											$( '#media-stream' ).html( response.data.media_html_content );
@@ -866,14 +1270,35 @@ window.bp = window.bp || {};
 									'undefined' !== typeof response.data &&
 									'undefined' !== typeof response.data.media_personal_count
 								) {
-									$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== bbRlMedia.is_media_directory ) {
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										(
+											1 === parseInt( response.data.media_personal_count ) ?
+											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_personal_count + '</span> ' + dir_label );
+									} else {
+										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
+									}
 								}
 
 								if (
 									'undefined' !== typeof response.data &&
-									'undefined' !== typeof response.data.media_group_count
+									'undefined' !== typeof response.data.media_group_count &&
+									$( '#buddypress .groups-nav' ).length > 0
 								) {
-									$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== bbRlMedia.is_media_directory ) {
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										(
+											1 === parseInt( response.data.media_group_count ) ?
+											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
+									} else {
+										$( '#buddypress' ).find( '.groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
+									}
 								}
 								var $media_list = buddyPressSelector.find( '.media-list:not(.existing-media-list)' );
 								$media_list.find( '.bb-media-check-wrap [name="bb-media-select"]:checked' ).each(
@@ -890,7 +1315,9 @@ window.bp = window.bp || {};
 								}
 
 								// inject media.
-								if ( 0 !== response.data.media_html_content.length ) {
+								if ( self.handleAlbumDelete( response.data, media ) ) {
+									// Single-album view handled: empty-state or tile removal + counts.
+								} else if ( 0 !== response.data.media_html_content.length ) {
 									if ( 0 === parseInt( response.data.media_personal_count ) ) {
 										$( '.bb-photos-actions' ).hide();
 										$( '#media-stream' ).html( response.data.media_html_content );
@@ -980,6 +1407,7 @@ window.bp = window.bp || {};
 			$( '#bp-media-uploader-modal-title' ).text( bbRlMedia.i18n_strings.upload );
 			$( '#bp-media-uploader-modal-status-text' ).text( '' );
 			$( '#bp-media-post-content' ).val( '' );
+			$( '#bp-dropzone-content .bp-feedback' ).remove();
 			this.dropzone_obj.element ? this.dropzone_obj.destroy() : '';
 			this.dropzone_media = [];
 
@@ -1026,11 +1454,16 @@ window.bp = window.bp || {};
 		loadMoreGif: function ( e ) {
 			var el = e.target, self = this;
 
-			var $forums_gif_container = $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' );
+			var $standalonePopup      = $( e.target ).closest( '.bb-rl-gif-media-search-dropdown-standalone' ),
+				isStandalone          = $standalonePopup.length > 0,
+				$targetForm           = isStandalone ? $standalonePopup.data( 'target-form' ) : $( e.target ).closest( 'form' ),
+				$forums_gif_container = $targetForm ? $targetForm.find( '.forums-attached-gif-container' ) : $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' );
 			var gif_container_key     = $forums_gif_container.data( 'key' );
 			self.gif_container_key    = gif_container_key;
 
-			if ( el.scrollTop + el.offsetHeight >= el.scrollHeight && ! $forums_gif_container.hasClass( 'loading' ) ) {
+			// Use a small threshold (5px) to handle subpixel rendering and browser rounding issues.
+			var scrollThreshold = 5;
+			if ( el.scrollTop + el.offsetHeight + scrollThreshold >= el.scrollHeight && ! $forums_gif_container.hasClass( 'loading' ) ) {
 				if ( self.gif_data[ gif_container_key ].total_count > 0 && self.gif_data[ gif_container_key ].offset <= self.gif_data[ gif_container_key ].total_count ) {
 					var params = {
 						offset: self.gif_data[ gif_container_key ].offset,
@@ -1113,8 +1546,13 @@ window.bp = window.bp || {};
 		},
 
 		loadMoreGifResponse: function ( response ) {
-			var self          = this, i = 0,
-				$gifContainer = $( 'div.forums-attached-gif-container[data-key="' + self.gif_container_key + '"]' );
+			var self             = this, i = 0,
+				$gifContainer    = $( 'div.forums-attached-gif-container[data-key="' + self.gif_container_key + '"]' ),
+				$standalonePopup = $( '.bb-rl-gif-media-search-dropdown-standalone.open' ),
+				$resultsList     = $standalonePopup.length > 0 ?
+					$standalonePopup.find( '.gif-search-results-list' ) :
+					$gifContainer.closest( 'form' ).find( '.gif-search-results-list' );
+
 			$gifContainer.removeClass( 'loading' );
 			if ( typeof response.data !== 'undefined' && response.data.length ) {
 				var li_html = '', responseDataLength = response.data.length;
@@ -1133,7 +1571,7 @@ window.bp = window.bp || {};
 					self.gif_data[ self.gif_container_key ].data.push( response.data[ i ] );
 				}
 
-				$gifContainer.closest( 'form' ).find( '.gif-search-results-list' ).append( li_html );
+				$resultsList.append( li_html );
 			}
 
 			if ( typeof response.pagination !== 'undefined' && typeof response.pagination.total_count !== 'undefined' ) {
@@ -1170,32 +1608,52 @@ window.bp = window.bp || {};
 		},
 
 		selectGif: function ( e ) {
-			var self          = this, i = 0, target = $( e.currentTarget ),
-				gif_container = target.closest( 'form' ).find( '.forums-attached-gif-container' );
+			var self   = this, i = 0, target = $( e.currentTarget ),
+				$standalonePopup = target.closest( '.bb-rl-gif-media-search-dropdown-standalone' ),
+				isStandalone     = $standalonePopup.length > 0,
+				$targetForm, gif_container;
+
+			if ( isStandalone ) {
+				$targetForm = $standalonePopup.data( 'target-form' );
+				if ( ! $targetForm || ! $targetForm.length || ! $.contains( document, $targetForm[ 0 ] ) ) {
+					e.preventDefault();
+					return;
+				}
+			} else {
+				$targetForm = target.closest( 'form' );
+			}
+
+			gif_container = $targetForm.find( '.forums-attached-gif-container' );
 			e.preventDefault();
 
-			gif_container.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
+			// Close the appropriate dropdown.
+			if ( isStandalone ) {
+				$standalonePopup.removeClass( 'open' );
+			} else {
+				gif_container.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
+			}
+
 			var gif_container_key = gif_container.data( 'key' );
 			if ( typeof self.gif_data[ gif_container_key ] !== 'undefined' && typeof self.gif_data[ gif_container_key ].data !== 'undefined' && self.gif_data[ gif_container_key ].data.length ) {
 				var gifDataLength = self.gif_data[ gif_container_key ].data.length;
 				for ( i = 0; i < gifDataLength; i++ ) {
 					if ( self.gif_data[ gif_container_key ].data[ i ].id === e.currentTarget.dataset.id ) {
 
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundImage = 'url(' + self.gif_data[ gif_container_key ].data[ i ].images.fixed_width.url + ')';
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundSize  = 'contain';
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.height          = self.gif_data[ gif_container_key ].data[ i ].images.original.height + 'px';
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.width           = self.gif_data[ gif_container_key ].data[ i ].images.original.width + 'px';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundImage = 'url(' + self.gif_data[ gif_container_key ].data[ i ].images.fixed_width.url + ')';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundSize  = 'contain';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.height          = self.gif_data[ gif_container_key ].data[ i ].images.original.height + 'px';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.width           = self.gif_data[ gif_container_key ].data[ i ].images.original.width + 'px';
 
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' ).find( '.gif-image-container img' ).attr( 'src', self.gif_data[ gif_container_key ].data[ i ].images.original.url );
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' ).removeClass( 'closed' );
-						if ( target.closest( 'form' ).find( '#bbp_media_gif' ).length ) {
-							target.closest( 'form' ).find( '#bbp_media_gif' ).val( JSON.stringify( self.gif_data[ gif_container_key ].data[ i ] ) );
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' ).find( '.gif-image-container img' ).attr( 'src', self.gif_data[ gif_container_key ].data[ i ].images.original.url );
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' ).removeClass( 'closed' );
+						if ( $targetForm.find( '#bbp_media_gif' ).length ) {
+							$targetForm.find( '#bbp_media_gif' ).val( JSON.stringify( self.gif_data[ gif_container_key ].data[ i ] ) );
 						}
 						break;
 					}
 				}
 
-				var tool_box = target.closest( 'form' );
+				var tool_box = $targetForm;
 				tool_box.addClass( 'has-gif' );
 				bp.Nouveau.Media.disableButtonsInToolBox(
 					tool_box,
@@ -1411,11 +1869,15 @@ window.bp = window.bp || {};
 		searchGifRequest: function ( e ) {
 			var self = this, i = 0;
 
-			var $forums_gif_container = $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' );
+			var $standalonePopup      = $( e.target ).closest( '.bb-rl-gif-media-search-dropdown-standalone' ),
+				isStandalone          = $standalonePopup.length > 0,
+				$targetForm           = isStandalone ? $standalonePopup.data( 'target-form' ) : $( e.target ).closest( 'form' ),
+				$forums_gif_container = $targetForm ? $targetForm.find( '.forums-attached-gif-container' ) : $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' ),
+				$pickerContainer      = isStandalone ? $standalonePopup : $( e.target ).closest( 'form' );
 			$forums_gif_container.addClass( 'loading' );
 			var gif_container_key = $forums_gif_container.data( 'key' );
-			$( e.target ).closest( 'form' ).find( '.gif-no-results' ).removeClass( 'show' );
-			$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).removeClass( 'show' );
+			$pickerContainer.find( '.gif-no-results' ).removeClass( 'show' );
+			$pickerContainer.find( '.gif-no-connection' ).removeClass( 'show' );
 
 			self.clearGifRequests( gif_container_key );
 
@@ -1430,11 +1892,11 @@ window.bp = window.bp || {};
 					limit: self.gif_data[ gif_container_key ].limit
 				},
 				function ( response ) {
-					if ( undefined !== response.data.length && 0 === response.data.length ) {
-						$( e.target ).closest( 'form' ).find( '.gif-no-results' ).addClass( 'show' );
+					if ( typeof response.data !== 'undefined' && 0 === response.data.length ) {
+						$pickerContainer.find( '.gif-no-results' ).addClass( 'show' );
 					}
-					if ( undefined !== response.meta.status && 200 !== response.meta.status ) {
-						$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).addClass( 'show' );
+					if ( typeof response.meta !== 'undefined' && 200 !== response.meta.status ) {
+						$pickerContainer.find( '.gif-no-connection' ).addClass( 'show' );
 					}
 					if ( typeof response.data !== 'undefined' && response.data.length ) {
 						var li_html            = '',
@@ -1463,7 +1925,7 @@ window.bp = window.bp || {};
 					$forums_gif_container.removeClass( 'loading' );
 				},
 				function () {
-					$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).addClass( 'show' );
+					$pickerContainer.find( '.gif-no-connection' ).addClass( 'show' );
 				}
 			);
 
@@ -1480,7 +1942,9 @@ window.bp = window.bp || {};
 					self.gif_data[ gif_container_key ].requests[ i ].abort();
 				}
 
+				// Clear results from both inline and standalone popups.
 				$( '[data-key="' + gif_container_key + '"]' ).closest( 'form' ).find( '.gif-search-results-list li' ).remove();
+				$( '.bb-rl-gif-media-search-dropdown-standalone .gif-search-results-list li' ).remove();
 
 				self.gif_data[ gif_container_key ].requests = [];
 				self.gif_data[ gif_container_key ].data     = [];
@@ -1490,8 +1954,37 @@ window.bp = window.bp || {};
 
 		toggleGifSelector: function ( event ) {
 			var self                = this, target = $( event.currentTarget ),
-				gif_search_dropdown = target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ), i = 0;
+				$forumModal         = target.closest( '.bb-rl-forum-modal' ),
+				isInsideForumModal  = $forumModal.length > 0 && ! $forumModal.hasClass( 'bb-rl-forum-modal--static' ),
+				gif_search_dropdown = isInsideForumModal ? $( '.bb-rl-gif-media-search-dropdown-standalone' ) : target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ), i = 0;
 			event.preventDefault();
+
+			// Populate the standalone popup with HTML structure if it's empty.
+			if ( isInsideForumModal && gif_search_dropdown.is( ':empty' ) ) {
+				var gifPickerHtml = '<div class="bb-rl-forums-attached-gif-container">' +
+					'<div class="gif-search-content">' +
+					'<div class="gif-search-query">' +
+					'<input type="search" placeholder="' + ( bbRlMedia.gif_search_placeholder || 'Search GIPHY...' ) + '" class="search-query-input" />' +
+					'<span class="search-icon"></span>' +
+					'</div>' +
+					'<div class="gif-search-results" id="gif-search-results">' +
+					'<ul class="gif-search-results-list"></ul>' +
+					'<div class="gif-alert gif-no-results">' +
+					'<i class="bb-icons-rl-image-broken"></i>' +
+					'<p>' + ( bbRlMedia.gif_no_results || 'No results found' ) + '</p>' +
+					'</div>' +
+					'<div class="gif-alert gif-no-connection">' +
+					'<i class="bb-icons-rl-cloud-slash"></i>' +
+					'<p>' + ( bbRlMedia.gif_no_connection || 'Could not connect to GIPHY' ) + '</p>' +
+					'</div>' +
+					'</div>' +
+					'</div>' +
+					'</div>';
+				gif_search_dropdown.html( gifPickerHtml );
+
+				// Bind scroll event directly to the results element for lazy loading.
+				gif_search_dropdown.find( '.gif-search-results' ).on( 'scroll', self.loadMoreGif.bind( self ) );
+			}
 
 			if ( typeof window.Giphy !== 'undefined' && typeof bbRlMedia.gif_api_key !== 'undefined' ) {
 				self.giphy = new window.Giphy( bbRlMedia.gif_api_key );
@@ -1537,7 +2030,8 @@ window.bp = window.bp || {};
 								self.gif_data[ gif_container_key ].data.push( response.data[ i ] );
 							}
 
-							target.closest( 'form' ).find( '.gif-search-results-list' ).append( li_html );
+							// Append to the correct dropdown (standalone or inline).
+							gif_search_dropdown.find( '.gif-search-results-list' ).append( li_html );
 						}
 
 						if ( typeof response.pagination !== 'undefined' && typeof response.pagination.total_count !== 'undefined' ) {
@@ -1553,6 +2047,31 @@ window.bp = window.bp || {};
 			}
 
 			gif_search_dropdown.toggleClass( 'open' );
+
+			// Position the standalone popup near the button when inside forum modal.
+			if ( isInsideForumModal && gif_search_dropdown.hasClass( 'open' ) ) {
+				var scrollTop      = $( window ).scrollTop(),
+					btnOffset      = target.offset(),
+					topPosition    = Math.round( btnOffset.top ),
+					leftPosition   = Math.round( btnOffset.left ),
+					isRtl          = $( 'body' ).hasClass( 'rtl' ),
+					pickerWidth    = gif_search_dropdown.outerWidth(),
+					pickerXPos, transformValue;
+
+				if ( isRtl ) {
+					// In RTL, position the popup to the right of the button.
+					pickerXPos     = $( window ).width() - leftPosition - target.outerWidth() + pickerWidth - 70;
+					transformValue = 'translate(-' + pickerXPos + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px) translate(0, -100%)';
+				} else {
+					pickerXPos     = leftPosition + pickerWidth - 70;
+					transformValue = 'translate(' + pickerXPos + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px) translate(-100%, -100%)';
+				}
+
+				gif_search_dropdown.css( 'transform', transformValue );
+
+				// Store reference to the form for GIF selection.
+				gif_search_dropdown.data( 'target-form', target.closest( 'form' ) );
+			}
 
 			var gif_box = target.parents( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container img' );
 			if ( gif_box.length > 0 && gif_box.attr( 'src' ) !== '' ) {
@@ -1588,7 +2107,7 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.gif_api_key ) ) {
 					target.find( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
 					if ( $( '.bb-rl-gif-media-search-dropdown-standalone.open' ).length > 0 ) {
-						target.find( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+						$( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
 					}
 					target.find( '#bbpress-forums form' ).each(
 						function () {
@@ -1635,12 +2154,12 @@ window.bp = window.bp || {};
 
 			if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.gif_api_key ) &&
 				! $targetEl.closest( '.bb-rl-post-gif' ).length ) {
-				if ( $targetEl.closest( '.bb-rl-gif-media-search-dropdown' ).length ) {
+				if ( $targetEl.closest( '.bb-rl-gif-media-search-dropdown' ).length || $targetEl.closest( '.bb-rl-gif-media-search-dropdown-standalone' ).length ) {
 					return;
 				}
 				target.find( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
 				if ( $( '.bb-rl-gif-media-search-dropdown-standalone.open' ).length > 0 ) {
-					target.find( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+					$( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
 				}
 				target.find( '#bbpress-forums form' ).each(
 					function () {
@@ -2265,6 +2784,11 @@ window.bp = window.bp || {};
 
 				mediaUploader.addClass( 'open-popup' ).show();
 
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( mediaUploader );
+				}
+
 				if ( $( event.currentTarget ).closest( '#bp-media-single-album' ).length ) {
 					$( '#bb-media-privacy' ).hide();
 				}
@@ -2337,17 +2861,19 @@ window.bp = window.bp || {};
 						if ( $( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-model-footer .bb-rl-media-move' ).hasClass( 'is-disabled' ) ) {
 							return; // return if parent album is same.
 						}
-						$( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-rl-album-selected-id' ).val( $( e.currentTarget ).data( 'id' ) );
+						( $( e.currentTarget ).closest( '.bb-field-wrap' ).length ? $( e.currentTarget ).closest( '.bb-rl-field-wrap' ) : $( e.currentTarget ).closest( '.bb-field-wrap' ) )
+							.find( '.bb-rl-album-selected-id' )
+							.val( $( e.currentTarget ).data( 'id' ) );
 
 						var mediaPrivacy = $( e.currentTarget ).closest( '#bp-media-uploader' ).find( '#bb-media-privacy' );
 
 						if ( Number( $( e.currentTarget ).data( 'id' ) ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( $( e.currentTarget ).parent().data( 'privacy' ) );
+							mediaPrivacy.val( $( e.currentTarget ).parent().data( 'privacy' ) ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -2378,11 +2904,11 @@ window.bp = window.bp || {};
 						var selectedAlbumPrivacy = $( e.currentTarget ).closest( '#bp-media-uploader' ).find( '.location-album-list li.is_active' ).data( 'privacy' );
 						if ( Number( $( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-rl-album-selected-id' ).val() ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy );
+							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 
@@ -2436,6 +2962,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0) ) { // update server error text to user friendly.
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
@@ -2464,7 +2992,7 @@ window.bp = window.bp || {};
 					'success',
 					function ( file, response ) {
 						if ( response.data.id ) {
-							file.id                  = response.id;
+							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.menu_order = self.dropzone_media.length;
 							response.data.album_id   = self.album_id;
@@ -2540,6 +3068,11 @@ window.bp = window.bp || {};
 				mediaUploader.show();
 				mediaUploader.addClass( 'open-popup' );
 
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( mediaUploader );
+				}
+
 				if ( $( '#bp-media-uploader.bp-media-document-uploader' ).find( '.bb-field-steps.bb-field-steps-2' ).length ) {
 					currentTarget = '#bp-media-uploader.bp-media-document-uploader';
 					var parentsOpen;
@@ -2558,6 +3091,7 @@ window.bp = window.bp || {};
 									action: 'document_get_folder_view',
 									id: this.moveToIdPopup,
 									type: this.moveToTypePopup,
+									_wpnonce: bbRlNonce.media,
 								}, success: function ( response ) {
 									$document.find( '.bp-media-document-uploader .bb-rl-location-folder-list-wrap h4 span.bb-rl-where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 									if ( '' === response.data.html ) {
@@ -2704,6 +3238,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0) ) { // update server error text to user friendly.
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							if ( ! jQuery( '.document-error-popup' ).length ) {
@@ -2743,7 +3279,7 @@ window.bp = window.bp || {};
 					'success',
 					function ( file, response ) {
 						if ( response.data.id ) {
-							file.id                  = response.id;
+							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.menu_order = self.dropzone_media.length;
 							response.data.folder_id  = self.current_folder;
@@ -2818,7 +3354,8 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var $document        = $( document ),
 				media_move_popup, media_parent_id, media_id, currentTarget,
-				eventTarget      = $( event.currentTarget );
+				eventTarget      = $( event.currentTarget ),
+				targetMediaWrap  = eventTarget.closest( '.media-action-wrap' ).length ? eventTarget.closest( '.media-action-wrap' ) : eventTarget.closest( '.bb-rl-more_dropdown-wrap' );
 			this.moveToIdPopup   = eventTarget.attr( 'id' );
 			this.moveToTypePopup = eventTarget.attr( 'data-type' );
 
@@ -2831,8 +3368,8 @@ window.bp = window.bp || {};
 			}
 
 			$( media_move_popup ).find( '.bb-rl-media-move-file' ).addClass( 'open' ).show();
-			media_id        = eventTarget.closest( '.media-action-wrap' ).siblings( 'a' ).data( 'id' );
-			media_parent_id = eventTarget.closest( '.media-action-wrap' ).siblings( 'a' ).data( 'album-id' );
+			media_id        = targetMediaWrap.siblings( 'a' ).data( 'id' );
+			media_parent_id = targetMediaWrap.siblings( 'a' ).data( 'album-id' );
 
 			media_move_popup.find( '.bb-rl-media-move' ).attr( 'id', media_id );
 			media_move_popup.find( '.bb-rl-model-footer .bb-rl-media-move' ).addClass( 'is-disabled' );
@@ -2900,6 +3437,7 @@ window.bp = window.bp || {};
 
 							$( currentTarget ).find( '.bb-rl-location-album-list-wrap .location-album-list' ).remove();
 							$( currentTarget ).find( '.bb-rl-location-album-list-wrap' ).append( response.data.html );
+							$( currentTarget ).find( '.bb-rl-model-footer .bb-rl-media-move' ).removeClass( 'loading' );
 							$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
 						}
 					}
@@ -2971,20 +3509,49 @@ window.bp = window.bp || {};
 		openDocumentMove: function ( event ) {
 			event.preventDefault();
 			var $document        = $( document ),
-				currentTarget,
+				$currentTarget   = $(),
 				eventTarget      = $( event.currentTarget );
 			this.moveToIdPopup   = eventTarget.attr( 'id' );
 			this.moveToTypePopup = eventTarget.attr( 'data-type' );
 			var action           = eventTarget.attr( 'data-action' );
 
-			// For Activity Feed.
-			if ( eventTarget.closest( '.bb-rl-conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
-				currentTarget = '#' + eventTarget.closest( '.bb-rl-conflict-activity-ul-li-comment' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bb-rl-media-move-file';
-			} else {
-				currentTarget = '#' + eventTarget.closest( 'li.activity-item' ).attr( 'id' ) + ' > .bb-rl-activity-content .bb-rl-media-move-file';
+			// Hide all other open document move modals first to prevent duplicates
+			$( '.bb-rl-media-move-file.open-popup, .bb-rl-media-move-folder.open-popup' ).hide().removeClass( 'open-popup' );
+
+			// Find the modal within the closest context to avoid duplicates when activity modal is open
+			// First, determine the closest container (activity modal or main page)
+			var $contextContainer = eventTarget.closest( '#bb-rl-activity-modal' );
+			if ( $contextContainer.length === 0 ) {
+				$contextContainer = $( 'body' );
 			}
 
-			$( currentTarget ).find( '.bb-rl-document-move' ).attr( 'id', eventTarget.closest( '.bb-rl-document-activity' ).attr( 'data-id' ) );
+			// For Activity Feed - find modal within the same context
+			if ( eventTarget.closest( '.bb-rl-conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
+				var $commentItem = eventTarget.closest( 'li.comment-item' );
+				// Find modal within the comment item, but only in our context container
+				$currentTarget = $contextContainer.find( '#' + $commentItem.attr( 'id' ) + '.comment-item .bb-rl-media-move-file' ).first();
+			} else {
+				var $activityItem = eventTarget.closest( 'li.activity-item' );
+				if ( $activityItem.length > 0 ) {
+					// Find modal within the activity item, but only in our context container
+					$currentTarget = $contextContainer.find( '#' + $activityItem.attr( 'id' ) + ' > .bb-rl-activity-content .bb-rl-media-move-file' ).first();
+				}
+			}
+
+			// Fallback: if we still didn't find it, use the original selector but scoped to context
+			if ( !$currentTarget || $currentTarget.length === 0 ) {
+				if ( eventTarget.closest( '.bb-rl-conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
+					var commentId = eventTarget.closest( 'li.comment-item' ).attr( 'id' );
+					$currentTarget = $contextContainer.find( '#' + commentId + '.comment-item .bb-rl-media-move-file' ).first();
+				} else {
+					var activityId = eventTarget.closest( 'li.activity-item' ).attr( 'id' );
+					if ( activityId ) {
+						$currentTarget = $contextContainer.find( '#' + activityId + ' > .bb-rl-activity-content .bb-rl-media-move-file' ).first();
+					}
+				}
+			}
+
+			$currentTarget.find( '.bb-rl-document-move' ).attr( 'id', eventTarget.closest( '.bb-rl-document-activity' ).attr( 'data-id' ) );
 			this.currentTargetParent = eventTarget.closest( '.bb-rl-activity-media-elem' ).attr( 'data-parent-id' );
 
 			// Change if this is not from Activity Page.
@@ -2993,28 +3560,37 @@ window.bp = window.bp || {};
 				this.currentTargetParent = eventTarget.closest( '.media-folder_items' ).attr( 'data-parent-id' );
 				/* jshint ignore:end */
 				if ( eventTarget.hasClass( 'ac-document-move' ) ) { // Check if target is file or folder.
-					currentTarget = '.bb-rl-media-move-file';
-					$( currentTarget ).find( '.bb-rl-document-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
+					// Scope to the closest context to avoid finding modals in both page and activity modal
+					$currentTarget = $contextContainer.find( '.bb-rl-media-move-file' ).first();
+					if ( $currentTarget.length > 0 ) {
+						$currentTarget.find( '.bb-rl-document-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
+					}
 				} else {
-					currentTarget = '.bb-rl-media-move-folder';
-					$( currentTarget ).find( '.bb-rl-folder-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
-
+					$currentTarget = $contextContainer.find( '.bb-rl-media-move-folder' ).first();
+					if ( $currentTarget.length > 0 ) {
+						$currentTarget.find( '.bb-rl-folder-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
+					}
 				}
 			}
 
-			$( currentTarget ).find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
-			$( currentTarget ).find( '.bb-rl-location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
-			if ( 'document' === action ) {
-				$( currentTarget ).find( '.bb-rl-modal-header h4 .target_name' ).text( bbRlMedia.move_to_file );
-			} else {
-				$( currentTarget ).find( '.bb-rl-modal-header h4 .target_name' ).text( bbRlMedia.move_to_folder );
+			if ( !$currentTarget || $currentTarget.length === 0 ) {
+				// Last resort: find any modal in the context, but this should rarely happen
+				$currentTarget = $contextContainer.find( '.bb-rl-media-move-file' ).first();
 			}
-			$( currentTarget ).show();
-			$( currentTarget ).addClass( 'open-popup' );
+
+			$currentTarget.find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
+			$currentTarget.find( '.bb-rl-location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
+			if ( 'document' === action ) {
+				$currentTarget.find( '.bb-rl-modal-header h4 .target_name' ).text( bbRlMedia.move_to_file );
+			} else {
+				$currentTarget.find( '.bb-rl-modal-header h4 .target_name' ).text( bbRlMedia.move_to_folder );
+			}
+			$currentTarget.show();
+			$currentTarget.addClass( 'open-popup' );
 
 			if ( 'group' === this.moveToTypePopup ) {
 				$document.find( '.bb-rl-location-folder-list-wrap h4' ).show();
-				$( currentTarget ).addClass( 'move-folder-popup-group' );
+				$currentTarget.addClass( 'move-folder-popup-group' );
 			} else {
 				$document.find( '.bb-rl-location-folder-list-wrap h4' ).hide();
 				$( '.move-folder-popup-group' ).removeClass( 'move-folder-popup-group' );
@@ -3032,27 +3608,44 @@ window.bp = window.bp || {};
 							action: 'document_get_folder_view',
 							id: this.moveToIdPopup,
 							type: this.moveToTypePopup,
+							_wpnonce: bbRlNonce.media,
 						}, success: function ( response ) {
 							$document.find( '.bb-rl-location-folder-list-wrap h4 span.bb-rl-where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 							if ( '' === response.data.html ) {
-								$document.find( '.open-popup .bb-rl-location-folder-list-wrap' ).hide();
-								$document.find( '.open-popup .bb-rl-location-folder-list-wrap-main span.bb-rl-no-folder-exists' ).show();
+								$currentTarget.find( '.bb-rl-location-folder-list-wrap' ).hide();
+								$currentTarget.find( '.bb-rl-location-folder-list-wrap-main span.bb-rl-no-folder-exists' ).show();
 							} else {
-								$document.find( '.open-popup .bb-rl-location-folder-list-wrap-main span.bb-rl-no-folder-exists' ).hide();
-								$document.find( '.open-popup .bb-rl-location-folder-list-wrap' ).show();
+								$currentTarget.find( '.bb-rl-location-folder-list-wrap-main span.bb-rl-no-folder-exists' ).hide();
+								$currentTarget.find( '.bb-rl-location-folder-list-wrap' ).show();
 							}
 							if ( 'group' === getFrom ) {
-								$document.find( '.bb-rl-popup-on-fly-create-folder .bb-rl-privacy-field-wrap-hide-show' ).hide();
-								$document.find( '.open-popup .bb-rl-folder-create-from' ).val( 'group' );
+								$currentTarget.find( '.bb-rl-popup-on-fly-create-folder .bb-rl-privacy-field-wrap-hide-show' ).hide();
+								$currentTarget.find( '.bb-rl-folder-create-from' ).val( 'group' );
 							} else {
-								$document.find( '.bb-rl-popup-on-fly-create-folder .bb-rl-privacy-field-wrap-hide-show' ).show();
-								$document.find( '.open-popup .bb-rl-folder-create-from' ).val( 'profile' );
+								$currentTarget.find( '.bb-rl-popup-on-fly-create-folder .bb-rl-privacy-field-wrap-hide-show' ).show();
+								$currentTarget.find( '.bb-rl-folder-create-from' ).val( 'profile' );
 							}
-							$( currentTarget ).find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
-							$( currentTarget ).find( '.bb-rl-location-folder-list-wrap' ).append( response.data.html );
+							$currentTarget.find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
+							$currentTarget.find( '.bb-rl-location-folder-list-wrap' ).append( response.data.html );
 							if ( bp.Nouveau.Media.folderLocationUI ) {
-								bp.Nouveau.Media.folderLocationUI( currentTarget, parentsOpen );
-								$( currentTarget ).find( 'ul.location-folder-list span#' + parentsOpen ).trigger( 'click' );
+								// Convert jQuery object to selector string for folderLocationUI
+								// folderLocationUI expects a string selector because it does string concatenation
+								var targetSelector = $currentTarget.attr( 'id' );
+								if ( targetSelector ) {
+									targetSelector = '#' + targetSelector;
+								} else {
+									// Fallback: use class selector if no ID
+									var className = $currentTarget.attr( 'class' );
+									if ( className ) {
+										targetSelector = '.' + className.split( ' ' )[0];
+									} else {
+										// Last resort: use a unique selector based on the element
+										// This should rarely happen as the modal should have an ID
+										targetSelector = '.bb-rl-media-move-file';
+									}
+								}
+								bp.Nouveau.Media.folderLocationUI( targetSelector, parentsOpen );
+								$currentTarget.find( 'ul.location-folder-list span#' + parentsOpen ).trigger( 'click' );
 							}
 						}
 					}
@@ -3072,7 +3665,7 @@ window.bp = window.bp || {};
 			if ( eventTarget.closest( '.bb-rl-media-move-file' ).find( '.bb-rl-location-album-list-wrap .breadcrumb .item span:last-child' ).data( 'id' ) !== 0 ) {
 				eventTarget.closest( '.bb-rl-media-move-file' ).find( '.bb-rl-location-album-list-wrap .breadcrumb .item span:last-child' ).remove();
 			}
-			eventTarget.closest( '.bb-rl-media-move-file' ).hide();
+			eventTarget.closest( '.bb-rl-media-move-file' ).hide().removeClass( 'open-popup' );
 
 		},
 
@@ -3086,11 +3679,21 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var eventTarget    = $( event.currentTarget ),
 				closest_parent = jQuery( event.currentTarget ).closest( '.bb-rl-has-folderlocationUI' );
+			var $modalToClose;
+
 			if ( eventTarget.hasClass( 'bb-rl-ac-document-close-button' ) ) {
-				eventTarget.closest( '.bb-rl-media-move-file' ).hide().find( '.bb-rl-document-move' ).attr( 'id', '' );
+				$modalToClose = eventTarget.closest( '.bb-rl-media-move-file' );
+				// Close all visible document move modals to prevent duplicate modals issue
+				$( '.bb-rl-media-move-file.open-popup' ).hide().removeClass( 'open-popup' ).find( '.bb-rl-document-move' ).attr( 'id', '' );
 			} else {
-				eventTarget.closest( '.bb-rl-media-move-folder' ).hide().find( '.bb-rl-folder-move' ).attr( 'id', '' );
+				$modalToClose = eventTarget.closest( '.bb-rl-media-move-folder' );
+				// Close all visible folder move modals to prevent duplicate modals issue
+				$( '.bb-rl-media-move-folder.open-popup' ).hide().removeClass( 'open-popup' ).find( '.bb-rl-folder-move' ).attr( 'id', '' );
 			}
+
+			// Make sure the modal is closed.
+			$( '.bb-rl-media-move-file.open-popup' ).removeClass( 'open-popup' ).hide();
+			$( '.bb-rl-media-move-folder.open-popup' ).removeClass( 'open-popup' ).hide();
 
 			closest_parent.find( '.bb-rl-document-move.loading' ).removeClass( 'loading' );
 
@@ -3155,6 +3758,11 @@ window.bp = window.bp || {};
 
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+
+			//Trigger select2 initialization
+			if( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $(document) );
+			}
 		},
 
 		/**
@@ -3253,8 +3861,9 @@ window.bp = window.bp || {};
 
 			var $modal = $( event.target ).closest( '#bb-rl-media-edit-file' );
 
-			// Reset modal data.
-			$modal.find( '#bb-document-title' ).val( '' );
+			// Reset modal data and clear errors.
+			$modal.find( '#bb-document-title' ).val( '' ).removeClass( 'error' );
+			$modal.find( '.error-box' ).hide();
 			$modal.attr('data-activity-id', '');
     		$modal.attr('data-id', '');
 			$modal.attr('data-attachment-id', '');
@@ -3301,29 +3910,43 @@ window.bp = window.bp || {};
 				attachment_document_id    = $mediaItem.find( '.media-folder_name > i.media-document-attachment-id' ).attr( 'data-item-id' ),
 				documentType              = $mediaItem.find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' ),
 				document_name_val         = document_edit.val().trim(),
-				document_privacy = ( $modal.find( '#bb-rl-folder-privacy-select' ).length > 0 ) ? $modal.find( '#bb-rl-folder-privacy-select' ).val() : '',
+				document_privacy          = ( $modal.find( '#bb-rl-folder-privacy-select' ).length > 0 ) ? $modal.find( '#bb-rl-folder-privacy-select' ).val() : '',
+				originalName              = document_name.text().trim(),
+				originalPrivacy           = $mediaItem.find( '.bb_more_options .ac-document-edit' ).attr( 'data-privacy' ) || '',
+				nameChanged               = ( document_name_val !== originalName ),
+				privacyChanged            = ( document_privacy !== '' && document_privacy !== originalPrivacy ),
 				pattern                   = '';
 
-			if ( $mediaItem.length ) {
+			if ( 'folder' !== documentType ) {
 				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
-			} else if ( eventTarget.closest( '.ac-folder-list' ).length ) {
+			} else {
 				pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 			}
 
 			var matches     = pattern.exec( document_name_val ),
-				matchStatus = Boolean( matches );
+				matchStatus = Boolean( matches ),
+				$errorBox   = $modal.find( '.error-box' );
 
 			if ( ! matchStatus ) { // If any not supported character found add error class.
 				document_edit.removeClass( 'error' );
+				$errorBox.hide();
 			} else {
 				document_edit.addClass( 'error' );
+				// Show appropriate error message based on document type.
+				if ( 'folder' === documentType ) {
+					$errorBox.text( $errorBox.data( 'folder-error' ) || $errorBox.text() ).show();
+				} else {
+					$errorBox.text( $errorBox.data( 'document-error' ) || $errorBox.text() ).show();
+				}
 			}
 
-			if ( $mediaItem.length ) {
+			if ( 'folder' !== documentType && $mediaItem.length ) {
 				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) { // Also check if filename has "\\".
 					document_edit.addClass( 'error' );
+					$errorBox.text( $errorBox.data( 'document-error' ) || $errorBox.text() ).show();
 				} else {
 					document_edit.removeClass( 'error' );
+					$errorBox.hide();
 				}
 			}
 
@@ -3331,48 +3954,70 @@ window.bp = window.bp || {};
 				return; // prevent user to add not supported characters.
 			}
 
+			// If nothing changed, just close the modal.
+			if ( ! nameChanged && ! privacyChanged ) {
+				$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );
+				event.preventDefault();
+				return;
+			}
+
 			eventTarget.addClass( 'saving' );
 
-			// Make ajax call to save new file name here.
-			// use variable 'document_name_val' as a new name while making an ajax call.
+			// Single AJAX call to handle name and/or privacy update.
 			$.ajax(
 				{
 					url: bbRlAjaxUrl,
 					type: 'post',
 					data: {
-						action: 'document_update_file_name',
+						action: 'bb_rl_document_rename_and_privacy_update',
 						document_id: document_id,
 						attachment_document_id: attachment_document_id,
 						document_type: documentType,
-						document_privacy: document_privacy,
 						name: document_name_val,
+						privacy: document_privacy,
+						update_name: nameChanged,
+						update_privacy: privacyChanged,
 						_wpnonce: bbRlNonce.media
 					},
 					success: function ( response ) {
 						if ( response.success ) {
-							if ( 'undefined' !== typeof response.data.document && 0 < $( response.data.document ).length ) {
-								$mediaItem.html( $( response.data.document ).html() );
-								eventTarget.removeClass( 'saving' );
+							// If name was updated, document HTML is returned - use it to update.
+							if ( nameChanged && 'undefined' !== typeof response.data.response.document && 0 < $( response.data.response.document ).length ) {
+								$mediaItem.html( $( response.data.response.document ).html() );
 							} else {
-								document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
-								document_name.html( response.data.response.title );
+								// Privacy-only update or no HTML returned - update fields manually.
 
-								if (
-									'undefined' !== typeof response.data.response.privacy_label &&
-									$mediaItem.find( '.media-folder_details__bottom .bb-rl-privacy-label' ).length > 0
-								) {
-									$mediaItem.find( '.media-folder_details__bottom .bb-rl-privacy-label' ).html( response.data.response.privacy_label );
+								// Update name if changed.
+								if ( nameChanged && response.data.response.name ) {
+									document_name_update_data.attr( 'data-document-title', response.data.response.name + '.' + document_name_update_data.data( 'extension' ) );
+									document_name.html( response.data.response.name );
 								}
 
-								if (
-									'undefined' !== typeof response.data.response.privacy &&
-									$mediaItem.find( '.bb_more_options .ac-document-edit' ).length > 0
-								) {
-									$mediaItem.find( '.bb_more_options .ac-document-edit' ).attr( 'data-privacy', response.data.response.privacy );
+								// Update privacy label if changed.
+								if ( privacyChanged && 'undefined' !== typeof response.data.response.privacy_label ) {
+									var $privacyLabel = $mediaItem.find( '.media-folder_details__bottom .bb-rl-privacy-label' );
+									if ( $privacyLabel.length > 0 ) {
+										$privacyLabel.html( response.data.response.privacy_label );
+									}
 								}
 
-								eventTarget.removeClass( 'saving' );
+								// Update privacy data attribute if changed.
+								if ( privacyChanged && 'undefined' !== typeof response.data.response.privacy ) {
+									var $editBtn = $mediaItem.find( '.bb_more_options .ac-document-edit' );
+									if ( $editBtn.length > 0 ) {
+										$editBtn.attr( 'data-privacy', response.data.response.privacy );
+									}
+								}
+
+								// Update document URL if returned (for privacy-only updates).
+								if ( 'undefined' !== typeof response.data.response.url ) {
+									var $docLink = $mediaItem.find( 'a.bb-rl-open-document-theatre' );
+									if ( $docLink.length > 0 ) {
+										$docLink.attr( 'href', response.data.response.url );
+									}
+								}
 							}
+							eventTarget.removeClass( 'saving' );
 						} else {
 							eventTarget.removeClass( 'saving' );
 							/* jshint ignore:start */
@@ -3380,7 +4025,11 @@ window.bp = window.bp || {};
 							/* jshint ignore:end */
 						}
 
-						// Trigger the close modal function
+						// Trigger the close modal function.
+						$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );
+					},
+					error: function () {
+						eventTarget.removeClass( 'saving' );
 						$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );
 					},
 				}
@@ -3507,7 +4156,21 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			this.openUploader( event );
-			$( '#bp-media-create-album' ).show();
+			var $createAlbum = $( '#bp-media-create-album' );
+			$createAlbum.show();
+
+			// Reinitialize select2 for album privacy select after delay to ensure DOM is ready.
+			// Using 250ms to run after any ajaxComplete handlers (which have 100ms delay).
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Only initialize if not already initialized.
+					var $select = $createAlbum.find( '.bb-rl-filter select' );
+					if ( $select.length && ! $select.hasClass( 'select2-hidden-accessible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $createAlbum );
+					}
+				}, 250 );
+			}
+
 			if ( $( 'body' ).hasClass( 'directory' ) ) {
 				$( '#bp-media-uploader' ).hide();
 			}
@@ -3520,6 +4183,11 @@ window.bp = window.bp || {};
 			$createFolder.addClass( 'open-popup' );
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+
+			// Reinitialize select2 for folder privacy select if not already initialized.
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $createFolder );
+			}
 		},
 
 		openCreateFolderChildModal: function ( event ) {
@@ -3552,6 +4220,7 @@ window.bp = window.bp || {};
 						action: 'document_get_folder_view',
 						id: id,
 						type: type,
+						_wpnonce: bbRlNonce.media,
 					}, success: function ( response ) {
 						$document.find( '.bb-rl-location-folder-list-wrap h4 span.bb-rl-where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 						$( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
@@ -3601,7 +4270,7 @@ window.bp = window.bp || {};
 
 							$this.parents( 'li' ).each(
 								function ( n, li ) {
-									var $a = $( li ).children( 'span' ).clone();
+									var $a = $( li ).children( 'span' ).clone().show();
 									$bc.prepend( '', $a );
 								}
 							);
@@ -3671,14 +4340,14 @@ window.bp = window.bp || {};
 							setTimeout(
 								function () {
 
-									var fileID;
+									var fileID = 0, currentParentId = $( targetPopup ).closest( '.bb-activity-media-wrap' ).find( '.bb-rl-activity-media-elem.bb-rl-document-activity' ).attr( 'data-parent-id' );
 
 									if ( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).hasClass( 'hidden' ) ) {
 											fileID = $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).prev().attr( 'id' );
 									} else {
 										fileID = $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
 									}
-									if ( currentTargetParent === fileID && ( $( targetPopup ).hasClass( 'bb-rl-media-move-file' ) || $( targetPopup ).hasClass( 'bb-rl-media-move-folder' ) ) ) {
+									if ( currentParentId === fileID && ( $( targetPopup ).hasClass( 'bb-rl-media-move-file' ) || $( targetPopup ).hasClass( 'bb-rl-media-move-folder' ) ) ) {
 										$( targetPopup ).find( '.bb-rl-document-move' ).addClass( 'is-disabled' );
 										$( targetPopup ).find( '.bb-rl-folder-move' ).addClass( 'is-disabled' );
 									} else {
@@ -3754,14 +4423,14 @@ window.bp = window.bp || {};
 
 							$this.parents( 'li' ).each(
 								function ( n, li ) {
-									var $a = $( li ).children( 'span' ).clone();
+									var $a = $( li ).children( 'span' ).clone().show();
 									$bc.prepend( '', $a );
 								}
 							);
 							$( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb' ).html( $bc.prepend( '<span data-id="0">' + bbRlMedia.target_text + '</span>' ) );
 
 							if ( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item > span[data-id="' + currentLiID + '"]' ).length === 0 ) {
-								$( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item' ).append( $( targetPopup ).find( '.location-folder-list li[data-id="' + currentLiID + '"]' ).children( 'span' ).clone() );
+								$( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item' ).append( $( targetPopup ).find( '.location-folder-list li[data-id="' + currentLiID + '"]' ).children( 'span' ).clone().show() );
 							}
 
 							if ( ! $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item span.hidden' ).length ) {
@@ -3848,14 +4517,14 @@ window.bp = window.bp || {};
 				setTimeout(
 					function () {
 
-						var fileID;
+						var fileID, currentParentId = $( targetPopup ).closest( '.bb-activity-media-wrap' ).find( '.bb-rl-activity-media-elem.bb-rl-document-activity' ).attr( 'data-parent-id' );
 
 						if ( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).hasClass( 'hidden' ) ) {
 								fileID = $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).prev().attr( 'id' );
 						} else {
 							fileID = $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
 						}
-						if ( currentTargetParent === fileID && ( $( targetPopup ).hasClass( 'bb-rl-media-move-file' ) || $( targetPopup ).hasClass( 'bb-rl-media-move-folder' ) ) ) {
+						if ( currentParentId === fileID && ( $( targetPopup ).hasClass( 'bb-rl-media-move-file' ) || $( targetPopup ).hasClass( 'bb-rl-media-move-folder' ) ) ) {
 							$( targetPopup ).find( '.bb-rl-document-move' ).addClass( 'is-disabled' );
 							$( targetPopup ).find( '.bb-rl-folder-move' ).addClass( 'is-disabled' );
 						} else {
@@ -3872,7 +4541,7 @@ window.bp = window.bp || {};
 
 				$this.parents( 'li' ).each(
 					function ( n, li ) {
-						var $a = $( li ).children( 'span' ).clone();
+						var $a = $( li ).children( 'span' ).clone().show();
 						$bc.prepend( '', $a );
 					}
 				);
@@ -4031,6 +4700,11 @@ window.bp = window.bp || {};
 									$buddypressElem.find( '.media-type-navs ul.media-nav li#media-groups a span.count' ).text( response.data.media_group_count );
 								}
 
+								// Update album counts if uploading to an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
+								}
+
 								var $dropZoneMediaLength = self.dropzone_media.length;
 								for ( var i = 0; i < $dropZoneMediaLength; i++ ) {
 									self.dropzone_media[ i ].saved = true;
@@ -4046,6 +4720,13 @@ window.bp = window.bp || {};
 
 							} else {
 								$( '#bp-dropzone-content' ).prepend( response.data.feedback );
+								var $media_single_album = targetPopup.parents( '#bp-media-single-album' );
+								if ( $media_single_album.length ) {
+									var $media_back_button = $media_single_album.find( '#bp-media-prev.bb-uploader-steps-prev' );
+									if ( $media_back_button.length && $media_back_button.is(':visible') ) {
+										$media_back_button.trigger( 'click' );
+									}
+								}
 							}
 
 							target.removeClass( 'saving' );
@@ -4099,6 +4780,28 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								// Update album counts for both source and destination albums if present.
+								if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+									var $albumContainer = $( '#buddypress #bp-media-single-album' );
+									if ( $albumContainer.length ) {
+										// Determine which album we're currently viewing from the DOM (ReadyLaunch uses data-id).
+										var currentAlbumId = parseInt( $albumContainer.attr( 'data-id' ) || $albumContainer.attr( 'data-album-id' ) ) || 0;
+										var albumCounts = {};
+
+										// If we're viewing the source album, use source counts (item was removed).
+										// If we're viewing the destination album, use dest counts (item was added).
+										if ( currentAlbumId === response.data.source_album_id ) {
+											albumCounts.album_media_count = response.data.source_album_media_count;
+											albumCounts.album_video_count = response.data.source_album_video_count;
+										} else if ( currentAlbumId === response.data.dest_album_id ) {
+											albumCounts.album_media_count = response.data.dest_album_media_count;
+											albumCounts.album_video_count = response.data.dest_album_video_count;
+										}
+
+										self.updateAlbumCounts( albumCounts );
+									}
+								}
 
 								jQuery( window ).scroll();
 
@@ -4590,7 +5293,10 @@ window.bp = window.bp || {};
 				$button     = eventTarget.find( '.gif-play-button' );
 			if ( video.paused === true ) {
 				// Play the video.
-				video.play();
+				video.play().catch( function( error ) {
+					// Silently handle play errors (e.g., user hasn't interacted with page yet)
+					console.debug( 'GIF play failed:', error );
+				});
 
 				// Update the button text to 'Pause'.
 				$button.hide();
@@ -4604,6 +5310,67 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Throttle function to limit how often autoPlayGifVideos runs
+		 */
+		throttledAutoPlayGifVideos: function() {
+			if ( this.throttleTimer ) {
+				return;
+			}
+
+			this.throttleTimer = setTimeout( function() {
+				bp.Nouveau.Media.throttleTimer = null;
+				bp.Nouveau.Media.autoPlayGifVideos();
+			}, 100 ); // Throttle to max 10 times per second
+		},
+
+		/**
+		 * Common function to safely call Media functions
+		 */
+		invokeMediaFn: function( functionName ) {
+			if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media[ functionName ] ) {
+				bp.Nouveau.Media[ functionName ]();
+			}
+		},
+
+		/**
+		 * Check if element is visible within a scrollable container
+		 */
+		isElementInScrollableContainer: function( element ) {
+			var $element = $( element );
+
+			// Find the closest scrollable container
+			var $scrollableContainer = $element.closest( '#bp-message-thread-list' );
+
+			// Check for ReadyLaunch activity modal body
+			if ( !$scrollableContainer.length ) {
+				$scrollableContainer = $element.closest( '.bb-rl-modal-activity-body' );
+			}
+
+			// Check for ReadyLaunch media modal info section
+			if ( !$scrollableContainer.length ) {
+				$scrollableContainer = $element.closest( '.bb-rl-media-model-container .bb-media-info-section' );
+			}
+
+			if ( $scrollableContainer.length ) {
+				var elementRect = element.getBoundingClientRect();
+				var containerRect = $scrollableContainer[0].getBoundingClientRect();
+
+				// Check if element is visible within the container
+				var isVisible = (
+					elementRect.bottom > containerRect.top &&
+					elementRect.top < containerRect.bottom &&
+					elementRect.right > containerRect.left &&
+					elementRect.left < containerRect.right
+				);
+
+				return isVisible;
+			} else {
+				// Fallback to regular viewport check
+				return $element.is( ':in-viewport' );
+			}
+		},
+
+		/**
 		 * When the GIF comes into your screen it should auto play
 		 */
 		autoPlayGifVideos: function () {
@@ -4612,17 +5379,69 @@ window.bp = window.bp || {};
 					var video   = $( this ).find( 'video' ).get( 0 ),
 						$button = $( this ).find( '.gif-play-button' );
 
-					if ( $( this ).is( ':in-viewport' ) ) {
-						video.play(); // Play the video.
+					// Skip if video element doesn't exist
+					if ( !video ) {
+						return;
+					}
+
+					var isVisible = bp.Nouveau.Media.isElementInScrollableContainer( this );
+
+					if ( isVisible ) {
+						// Play the video.
+						video.play().catch( function( error ) {
+							// Silently handle play errors (e.g., user hasn't interacted with page yet)
+							console.debug( 'GIF autoplay failed:', error );
+						});
 
 						$button.hide(); // Update the button text to 'Pause'.
 					} else {
-						video.pause(); // Pause the video.
+						// Pause the video
+						video.pause();
 
 						$button.show(); // Update the button text to 'Play'.
 					}
 				}
 			);
+		},
+
+		/**
+		 * Setup GIF autoplay for media modal when it's opened
+		 */
+		setupMediaModalGifAutoplay: function() {
+			var retryCount = 0;
+			var maxRetries = 10;
+			var setupCompleted = false;
+
+			function attemptSetup() {
+				if ( setupCompleted ) {
+					return;
+				}
+
+				var mediaModalInfoSection = document.querySelector( '.bb-rl-media-model-container .bb-media-info-section' );
+
+				if ( mediaModalInfoSection ) {
+					setupCompleted = true;
+					try {
+						// Remove existing listener to avoid duplicates
+						mediaModalInfoSection.removeEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ) );
+						// Add scroll event listener
+						mediaModalInfoSection.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+
+						// Trigger initial check for GIFs in the modal
+						bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+
+					} catch ( error ) {
+						console.debug( 'Error setting up media modal GIF autoplay:', error );
+					}
+				} else if ( retryCount < maxRetries ) {
+					// Retry after a short delay
+					retryCount++;
+					setTimeout( attemptSetup, 200 );
+				}
+			}
+
+			// Start the setup process
+			setTimeout( attemptSetup, 100 );
 		},
 
 		/**
@@ -4955,6 +5774,8 @@ window.bp = window.bp || {};
 							$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 						} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0) ) { // update server error text to user friendly.
 							$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
+						} else if ( file.status === 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+							$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 						}
 					} else {
 						var subType = 'media' === type ? 'document' : type;
@@ -4996,8 +5817,13 @@ window.bp = window.bp || {};
 						$( file.previewElement ).find( '.dz-progress-count' ).text( '100% ' + bbRlVideo.i18n_strings.video_uploaded_text );
 						$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 					}
-					if ( response.data.id ) {
-						file.id                  = response.id;
+					if ( 'video' === type && true === file.upload.chunked ) {
+						// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+						response = JSON.parse( file.xhr.response );
+					}
+
+					if ( response.data && response.data.id ) {
+						file.id                  = response.data.id;
 						response.data.uuid       = file.upload.uuid;
 						response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 						response.data.group_id   = self.group_id;
@@ -5060,7 +5886,20 @@ window.bp = window.bp || {};
 					if ( true === bp.Nouveau.Media.reply_topic_allow_delete_media ) {
 						if ( dropzoneDataObj.length ) {
 							for ( var i in dropzoneDataObj ) {
-								if ( file.upload.uuid === dropzoneDataObj[ i ].uuid ) {
+								// Compare using media_edit_data.id which contains the actual media ID
+								// that matches dropzoneDataObj[i].id (media attachment ID)
+								var fileMediaId = null;
+								if( file.media_edit_data ) {
+									fileMediaId = file.media_edit_data.id;
+								} else if( file.document_edit_data ) {
+									fileMediaId = file.document_edit_data.id;
+								} else if( file.video_edit_data ) {
+									fileMediaId = file.video_edit_data.id;
+								} else {
+									fileMediaId = file.id;
+								}
+
+								if ( fileMediaId === dropzoneDataObj[ i ].id ) {
 									if ( (
 										! this.bbp_is_reply_edit && ! this.bbp_is_topic_edit && ! this.bbp_is_forum_edit
 										) && typeof dropzoneDataObj[ i ].saved !== 'undefined' && ! dropzoneDataObj[ i ].saved && 'edit' === bp.Nouveau.Media.reply_topic_display_post ) {
@@ -5204,6 +6043,8 @@ window.bp = window.bp || {};
 							$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 						} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0) ) { // update server error text to user friendly.
 							$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
+						} else if ( file.status === 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+							$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 						}
 					} else {
 						var subType = 'media' === type ? 'document' : type;
@@ -5244,8 +6085,13 @@ window.bp = window.bp || {};
 						$( file.previewElement ).find( '.dz-progress-count' ).text( '100% ' + bbRlVideo.i18n_strings.video_uploaded_text );
 						$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 					}
-					if ( response.data.id ) {
-						file.id                  = response.id;
+					if ( 'video' === type && true === file.upload.chunked ) {
+						// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+						response = JSON.parse( file.xhr.response );
+					}
+
+					if ( response.data && response.data.id ) {
+						file.id                  = response.data.id;
 						response.data.uuid       = file.upload.uuid;
 						response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 						response.data.group_id   = self.group_id;
@@ -5429,11 +6275,16 @@ window.bp = window.bp || {};
 								} else {
 									selector = 'li#' + updateActionType + '-all';
 								}
-								$( document ).find( selector ).trigger( 'click' );
-								$( document ).find( selector ).trigger( 'click' );
+
+								if ( $( document ).find( selector ).length > 0 ) {
+									$( document ).find( selector ).trigger( 'click' );
+								} else {
+									// Refresh the directory filter with select2 options.
+									bp.Nouveau.Media.refreshDirectoryFilter( updateActionType, scope );
+								}
 							} else {
 								if ( 'document_folder' !== actionType ) {
-									var currentFolderAlbum, responseContent;
+									var currentFolderAlbum, responseContent, currentType, bbrlAlbumId;
 									if ( 'folder' === folderOrAlbum ) {
 										currentFolderAlbum = bbRlMedia.current_folder;
 										responseContent    = response.data.document_content;
@@ -5441,12 +6292,22 @@ window.bp = window.bp || {};
 										if ( 'media' === actionType ) {
 											currentFolderAlbum = bbRlMedia.current_album;
 											responseContent    = response.data.media_content;
+											currentType        = bbRlMedia.current_type;
+											bbrlAlbumId        = bbRlMedia.album_id;
 										} else if ( 'video' === actionType ) {
 											currentFolderAlbum = bbRlVideo.current_album;
 											responseContent    = response.data.video_content;
+											currentType        = bbRlVideo.current_type;
+											bbrlAlbumId        = bbRlMedia.album_id;
 										}
 									}
-									if ( parseInt( currentFolderAlbum ) > 0 ) {
+									if (
+										parseInt( currentFolderAlbum ) > 0 ||
+										(
+											'group' === currentType &&
+											parseInt( bbrlAlbumId ) > 0
+										)
+									) {
 										$( '#' + updateActionType + '-stream ul.' + nameDocumentAsMedia + '-list li[data-id="' + itemId + '"]' ).remove();
 										if ( 'video' === actionType ) {
 											$( '#media-stream ul.media-list li[data-id="' + itemId + '"]' ).remove();
@@ -5474,10 +6335,41 @@ window.bp = window.bp || {};
 							}
 							if ( 'document_folder' !== actionType ) {
 								target.closest( '.bb-rl-' + nameDocumentAsMedia + '-move-file' ).find( '.bb-rl-ac-' + updateActionType + '-close-button' ).trigger( 'click' );
-								if ( 'media' === actionType ) {
-									$( document ).find( 'a.bb-rl-open-' + nameDocumentAsMedia + '-theatre[data-id="' + itemId + '"]' ).data( 'album-id', destinationId );
+								if ( 'media' === actionType || 'video' === actionType ) {
+									$( document ).find( 'a[class*="open-' + nameDocumentAsMedia + '-theatre"][data-id="' + itemId + '"]' ).data( 'album-id', destinationId );
+
+									// Update album counts for both source and destination albums if present.
+									if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+										var $albumContainer = $( '#buddypress #bp-media-single-album' );
+										if ( $albumContainer.length ) {
+											// Determine which album we're currently viewing from the DOM (ReadyLaunch uses data-id).
+											var currentAlbumId = parseInt( $albumContainer.attr( 'data-id' ) || $albumContainer.attr( 'data-album-id' ) ) || 0;
+											var albumCounts = {};
+
+											// If we're viewing the source album, use source counts (item was removed).
+											// If we're viewing the destination album, use dest counts (item was added).
+											if ( currentAlbumId === response.data.source_album_id ) {
+												albumCounts.album_media_count = response.data.source_album_media_count;
+												albumCounts.album_video_count = response.data.source_album_video_count;
+											} else if ( currentAlbumId === response.data.dest_album_id ) {
+												albumCounts.album_media_count = response.data.dest_album_media_count;
+												albumCounts.album_video_count = response.data.dest_album_video_count;
+											}
+
+											self.updateAlbumCounts( albumCounts );
+										}
+									}
 								}
 							}
+
+							if ( 'document' === actionType || 'document_folder' === actionType ) {
+								target.closest( '.bb-activity-media-wrap' ).find( '.bb-rl-activity-media-elem.bb-rl-document-activity' ).attr( 'data-parent-id', destinationId );
+								var $mediaFolderItem = target.closest( '#media-folder-document-data-table' ).find( '.media-folder_items[data-id="' + itemId + '"]' );
+								if ( $mediaFolderItem.length > 0 ) {
+									$mediaFolderItem.attr( 'data-parent-id', destinationId );
+								}
+							}
+
 						} else {
 							if ( 'document_folder' === actionType ) {
 								$( document ).find( '.open-popup .error' ).show();
@@ -5545,6 +6437,17 @@ window.bp = window.bp || {};
 			$folderLocation.find( '.bb-rl-modal-header' ).append( '<p>' + popupTitle + '</p>' );
 			$( '.bb-rl-modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
 			$document.find( '.open-popup .error' ).hide();
+
+			// Reinitialize select2 for privacy select after a small delay to ensure element is visible.
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Target the visible on-fly create popup wrapper within the open popup.
+					var $targetContainer = $openPopup.find( '.bb-rl-create-popup-' + folderORAlbum + '-wrap' );
+					if ( $targetContainer.length && $targetContainer.is( ':visible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $targetContainer );
+					}
+				}, 150 );
+			}
 		},
 
 		closeCreateFolderAlbumInPopup : function ( event, actionType ) {
@@ -5603,8 +6506,8 @@ window.bp = window.bp || {};
 				privacy = 'grouponly';
 				groupId = this.moveToIdPopup;
 			} else {
-				privacy         = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + ' #bb-rl-' + folderOrAlbum + '-privacy' ).val();
-				privacySelector = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + ' #bb-rl-' + folderOrAlbum + '-privacy' );
+				privacySelector = eventCurrentTarget.closest( '.modal-container, .bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + ' select[id*="-' + folderOrAlbum + '-privacy"]' );
+				privacy         = privacySelector.val();
 			}
 
 			if ( '' === title ) {
@@ -5647,7 +6550,7 @@ window.bp = window.bp || {};
 
 									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap ' + listClass ).remove();
 									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap' ).append( response.data.tree_view );
-									var targetPopupID = 'document' === actionType ? '#' + $( targetPopup ).attr( 'id' ) : targetPopup,
+									var targetPopupID = 'document' === actionType ? '#' + $( targetPopup ).attr( 'id' ) + '.open-popup' : targetPopup,
 									responseDataID    = 'document' === actionType ? response.data.folder_id : response.data.album_id;
 									if ( bp.Nouveau.Media.folderLocationUI ) {
 										bp.Nouveau.Media.folderLocationUI( targetPopupID, responseDataID );
@@ -5906,8 +6809,14 @@ window.bp = window.bp || {};
 				title         = isChildFolder ? $( '#bp-media-create-child-folder #bb-album-child-title' ) : $( '#bb-album-title' ),
 				nonce = BP_Nouveau.nonces.media,
 				privacy;
+
+			// For readuylaunch skip auto save on change of the privacy for edit album.
+			if ( 'change' === event.type && target.parents( '.bb-rl-modal-edit-album.open-popup' ).length > 0 ) {
+				return;
+			}
+
 			if ( isAlbum ) {
-				privacy = $( '#bb-rl-album-privacy' );
+				privacy = $( target ).parent().find( 'select[id*="album-privacy"]' );
 				if ( 'video' === folderOrAlbum ) {
 					nonce = BP_Nouveau.nonces.video;
 				}
@@ -5991,7 +6900,7 @@ window.bp = window.bp || {};
 							if ( isAlbum ) {
 								if ( self.album_id ) {
 									$( '#bp-single-album-title .title-wrap' ).text( title.val() );
-									$( '#bb-rl-album-privacy' ).val( privacy.val() );
+									$( '#bb-album-privacy' ).val( privacy.val() );
 									self.cancelEditAlbumTitle( event );
 									$modal.find( '#bp-media-edit-album-close' ).trigger( 'click' );
 								} else {
@@ -6242,6 +7151,9 @@ window.bp = window.bp || {};
 				$( modalWrapperClass + '.' + action ).show();
 			}
 			self.is_open_media = true;
+
+			// Setup GIF autoplay for the newly shown media modal
+			bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
 		},
 
 		openTheatre: function ( event ) {
@@ -6336,6 +7248,11 @@ window.bp = window.bp || {};
 			}
 			$( '.bb-rl-media-model-wrapper.video' ).hide();
 			self.is_open_document = true;
+
+			// Setup GIF autoplay for the newly shown document modal
+			setTimeout( function() {
+				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
+			}, 500 );
 		},
 
 		resetRemoveActivityCommentsData: function ( action ) {
@@ -6895,6 +7812,11 @@ window.bp = window.bp || {};
 					data.mediaType     = self.medias[ self.current_index ].type || '';
 					self.showMedia( data );
 					self.getMediasDescription( data );
+
+					// Trigger GIF autoplay check when navigating to next media
+					setTimeout( function() {
+						bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+					}, 500 );
 				} else {
 					self.nextLink.hide();
 				}
@@ -6933,6 +7855,11 @@ window.bp = window.bp || {};
 					data.mediaType     = self.medias[ self.current_index ].type || '';
 					self.showMedia( data );
 					self.getMediasDescription( data );
+
+					// Trigger GIF autoplay check when navigating to previous media
+					setTimeout( function() {
+						bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+					}, 500 );
 				} else {
 					self.previousLink.hide();
 				}
@@ -7222,6 +8149,36 @@ window.bp = window.bp || {};
 
 				$deleted_item.closest( 'li' ).remove();
 
+				// The server cascade-deletes every media/video attached to the activity,
+				// not just the item open in the theater - clear all of its tiles and
+				// refresh the single-album empty-state from the server's counts.
+				var respData = ( data.response && data.response.data ) ? data.response.data : false;
+				if ( respData ) {
+					var deletedIds   = [].concat( respData.deleted_media_ids || [], respData.deleted_video_ids || [] );
+					var albumHandled = false;
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete ) {
+						albumHandled = bp.Nouveau.Media.handleAlbumDelete( respData, deletedIds );
+					}
+					if ( ! albumHandled ) {
+						// Directory and other non-album grids render one tile per
+						// cascade-deleted item - remove every sibling tile too, not
+						// just the one open in the theater. Media and video ids are
+						// separate sequences, so target each grid with its own list.
+						$.each(
+							respData.deleted_media_ids || [],
+							function ( index, value ) {
+								$( document ).find( '[data-bp-list="media"] .bb-rl-open-media-theatre[data-id="' + value + '"]' ).closest( 'li' ).remove();
+							}
+						);
+						$.each(
+							respData.deleted_video_ids || [],
+							function ( index, value ) {
+								$( document ).find( '[data-bp-list="video"] .bb-open-video-theatre[data-id="' + value + '"]' ).closest( 'li' ).remove();
+							}
+						);
+					}
+				}
+
 				if ( 0 === $deleted_item_parent_list.find( 'li:not(.load-more)' ).length ) {
 
 					// No item.
@@ -7236,25 +8193,51 @@ window.bp = window.bp || {};
 				}
 				$( document ).find( '[data-bp-list="activity"] .bb-rl-open-media-theatre[data-id="' + self.current_media.id + '"]' ).closest( '.bb-rl-activity-media-elem' ).remove();
 
-				var mediasLength = self.medias.length;
-				for ( i = 0; i < mediasLength; i++ ) {
+				// Remove every slide belonging to the deleted activity - the server
+				// cascade-deletes all of its rows. On current uploads each photo has
+				// its own hidden child activity, so only one slide matches; but data
+				// from older versions (before the per-photo sub-activity system) has
+				// several rows sharing one activity_id, and stopping at the first
+				// match (the old `break`) left sibling slides pointing at deleted
+				// photos - the theater arrows could then open a blank slide.
+				for ( i = self.medias.length - 1; i >= 0; i-- ) {
 					if ( self.medias[ i ].activity_id === data.id ) {
 						self.medias.splice( i, 1 );
-						break;
 					}
 				}
 
+				// Removing several slides can leave the pointer past the end; clamp so
+				// the navigation branches below keep their invariants.
+				if ( self.current_index > self.medias.length ) {
+					self.current_index = self.medias.length;
+				}
+
+				// next()/previous()/closeTheatre() derive the theatre wrapper from
+				// event.currentTarget, and this handler runs on a document-level
+				// custom event where currentTarget is `document` - hand the nav
+				// calls an event anchored to the media theatre wrapper instead.
+				var theatreEvent           = $.Event( 'click' );
+				theatreEvent.currentTarget = $( '.bb-rl-media-model-wrapper.bb-rl-media-theatre' ).get( 0 );
+
 				if ( 0 === self.current_index && self.current_index !== ( self.medias.length ) ) {
 					self.current_index = -1;
-					self.next( event );
+					self.next( theatreEvent );
 				} else if ( 0 === self.current_index && self.current_index === ( self.medias.length ) ) {
 					$( document ).find( '[data-bp-list="activity"] li.activity-item[data-bp-activity-id="' + self.current_media.activity_id + '"]' ).remove();
-					self.closeTheatre( event );
+
+					// Close via the real close button so the target chain resolves
+					// exactly like a user close (verified live in T1-RL).
+					var $closeMediaTheatre = $( '.bb-rl-close-media-theatre:visible' );
+					if ( $closeMediaTheatre.length ) {
+						$closeMediaTheatre.trigger( 'click' );
+					} else {
+						self.closeTheatre( theatreEvent );
+					}
 				} else if ( self.current_index === ( self.medias.length ) ) {
-					self.previous( event );
+					self.previous( theatreEvent );
 				} else {
 					self.current_index = -1;
-					self.next( event );
+					self.next( theatreEvent );
 				}
 			}
 			if ( self.is_open_document && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_document.activity_id === data.id ) {
@@ -7408,6 +8391,11 @@ window.bp = window.bp || {};
 				parent_wrap   = target.parents( '.activity-media-description' ),
 				description   = parent_wrap.find( '#add-activity-description' ).val(),
 				attachment_id = parent_wrap.find( '#bp-attachment-id' ).val();
+
+			// The video script binds the same button; only save descriptions inside the media wrapper.
+			if ( ! parent_wrap.length ) {
+				return;
+			}
 
 			var data = {
 				'action': 'media_description_save',

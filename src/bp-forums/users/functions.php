@@ -1294,14 +1294,18 @@ function bbp_user_maybe_convert_pass() {
 	// Create the admin object
 	bbp_admin();
 
-	// Convert password
-	require_once bbpress()->admin->admin_dir . 'converter.php';
-	require_once bbpress()->admin->admin_dir . 'converters/' . $row->meta_value . '.php';
-
-	// Create the converter
+	// Convert password.
+	// `bbp_new_converter()` is deprecated in BuddyBoss 3.1.0 — the converter
+	// machinery moved to the buddyboss-tools plugin. When Tools is active the
+	// deprecated wrapper in bp-core/deprecated/buddyboss/3.0.0.php delegates to
+	// `bb_tools_bbp_new_converter()`, which loads the vendor class on demand.
+	// When Tools is inactive the wrapper returns null and the is_a() check
+	// below short-circuits the password callback — the legacy `require_once`
+	// calls that used to load Platform's converter.php / converters/*.php are
+	// no longer needed (and would fatal because those files have been deleted).
 	$converter = bbp_new_converter( $row->meta_value );
 
-	// Try to call the conversion method
+	// Try to call the conversion method.
 	if ( is_a( $converter, 'BBP_Converter_Base' ) && method_exists( $converter, 'callback_pass' ) ) {
 		$converter->callback_pass( $username, $_POST['pwd'] );
 	}

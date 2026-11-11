@@ -384,6 +384,33 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 */
 		$css_dependencies = apply_filters( 'bp_nouveau_css_dependencies', array( 'dashicons' ) );
 
+		// Build the base styles array with icon fonts.
+		$styles_array = array(
+			'bp-nouveau-icons-map' => array(
+				'file'         => 'icons/css/icons-map%s.css',
+				'dependencies' => array(),
+				'version'      => $this->version,
+			),
+			'bp-nouveau-bb-icons'  => array(
+				'file'         => 'icons/css/bb-icons%1$s%2$s.css',
+				'dependencies' => array(),
+				'version'      => $bb_icon_version,
+			),
+		);
+
+		/*
+		 * Only include bp-nouveau (buddypress.css) on frontend pages.
+		 *
+		 * @since BuddyBoss 2.20.0
+		 */
+		if ( ! is_admin() ) {
+			$styles_array['bp-nouveau'] = array(
+				'file'         => 'css/buddypress%1$s%2$s.css',
+				'dependencies' => $css_dependencies,
+				'version'      => $this->version,
+			);
+		}
+
 		/**
 		 * Filters the styles to enqueue for BuddyPress Nouveau.
 		 *
@@ -397,23 +424,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 */
 		$styles = apply_filters(
 			'bp_nouveau_enqueue_styles',
-			array(
-				'bp-nouveau-icons-map' => array(
-					'file'         => 'icons/css/icons-map%s.css',
-					'dependencies' => array(),
-					'version'      => $this->version,
-				),
-				'bp-nouveau-bb-icons'  => array(
-					'file'         => 'icons/css/bb-icons%1$s%2$s.css',
-					'dependencies' => array(),
-					'version'      => $bb_icon_version,
-				),
-				'bp-nouveau'           => array(
-					'file'         => 'css/buddypress%1$s%2$s.css',
-					'dependencies' => $css_dependencies,
-					'version'      => $this->version,
-				),
-			)
+			$styles_array
 		);
 
 		if ( $styles ) {
@@ -638,6 +649,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * These localizations require information that may not be loaded even by init.
 	 *
 	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 3.6.2 Adds the `invites_revoke` nonce.
 	 */
 	public function localize_scripts() {
 
@@ -670,10 +682,18 @@ class BP_Nouveau extends BP_Theme_Compat {
 					'plural'   => esc_html__( 'Followers', 'buddyboss' ),
 				),
 			),
-			'rest_url'                   => home_url( 'wp-json/buddyboss/v1' ),
+			'rest_url'                   => untrailingslashit( home_url( 'wp-json/buddyboss/v1' ) ),
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
+			// Shown in a hover pop-up card when its request fails.
+			'card_load_error'            => __( 'Failed to load data.', 'buddyboss' ),
 			'member_label'               => __( 'member', 'buddyboss' ),
 			'members_label'              => __( 'members', 'buddyboss' ),
+			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card.
+			// The cards previously read BP_Nouveau.activity.params.user_id, which carries the
+			// same value but is only registered when the Activity component is enabled — with
+			// Activity off the unguarded property read threw and killed every hover card on
+			// the site. Localizing it on the shared handle makes the guard component-agnostic.
+			'loggedin_user_id'           => bp_loggedin_user_id(),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
@@ -716,6 +736,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 			// Group sub objects nonce.
 			$object_nonces['group_members'] = wp_create_nonce( 'bp_nouveau_group_members' );
+		}
+
+		// Nonce for revoking a sent email invite from the member's Sent Invites screen.
+		if ( bp_is_active( 'invites' ) ) {
+			$object_nonces['invites_revoke'] = wp_create_nonce( 'bb_invites_revoke' );
 		}
 
 		// if ( bp_is_active( 'media' ) ) {
@@ -894,17 +919,17 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		if ( bp_is_members_directory() ) {
 			$nav_items = bp_nouveau_get_members_directory_nav_items();
-		} elseif ( bp_is_activity_directory() ) {
+		} elseif ( bp_is_activity_directory() && function_exists( 'bp_nouveau_get_activity_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_activity_directory_nav_items();
-		} elseif ( bp_is_groups_directory() ) {
+		} elseif ( bp_is_groups_directory() && function_exists( 'bp_nouveau_get_groups_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_groups_directory_nav_items();
 		} elseif ( bp_is_blogs_directory() ) {
 			$nav_items = bp_nouveau_get_blogs_directory_nav_items();
 		} elseif ( bp_is_media_directory() ) {
 			$nav_items = bp_nouveau_get_media_directory_nav_items();
-		} elseif ( bp_is_document_directory() ) {
+		} elseif ( bp_is_document_directory() && function_exists( 'bp_nouveau_get_document_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_document_directory_nav_items();
-		} elseif ( bp_is_video_directory() ) {
+		} elseif ( bp_is_video_directory() && function_exists( 'bp_nouveau_get_video_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_video_directory_nav_items();
 		}
 

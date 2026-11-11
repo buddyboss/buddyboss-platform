@@ -345,7 +345,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$args['show_hidden'] = true;
 		}
 
-		$args['scope'] = $this->bp_rest_activity_default_scope(
+		$args['scope'] = self::bp_rest_activity_default_scope(
 			$args['scope'],
 			( $request['user_id'] ? $request['user_id'] : 0 ),
 			$args['group_id'],
@@ -391,6 +391,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		foreach ( $activities['activities'] as $activity ) {
+			// Comments listed on their own (e.g. `include` or `display_comments=stream`) skip
+			// the feed's group and privacy scope, so check each against its root activity.
+			// The total is left as counted: lowering it per page made later pages report fewer
+			// pages than the first one and cut pagination short.
+			if ( 'activity_comment' === $activity->type && ! $this->user_can_read_activity( $activity ) ) {
+				continue;
+			}
+
 			$retval[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $activity, $request )
 			);
@@ -557,6 +565,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} link The permalink to this activity on the site.
 	 * @apiParam {String=settings,notifications,groups,forums,activity,media,messages,friends,invites,search,members,xprofile,blogs} component The active component the activity relates to.
 	 * @apiParam {String=new_member,new_avatar,updated_profile,activity_update,created_group,joined_group,group_details_updated,bbp_topic_create,bbp_reply_create,activity_comment,friendship_accepted,friendship_created,new_blog_post,new_blog_comment} type The activity type of the activity.
+	 * @apiParam {String} post_title The post title of the activity.
 	 * @apiParam {String} content Allowed HTML content for the activity.
 	 * @apiParam {String} date The date the activity was published, in the site's timezone.
 	 * @apiParam {Boolean=true,false} hidden Whether the activity object should be sitewide hidden or not.
@@ -590,6 +599,19 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		$prepared_activity  = $this->prepare_item_for_database( $request );
 		$request['content'] = isset( $prepared_activity->content ) ? $prepared_activity->content : $request['content'];
+
+		// Validate post title.
+		$validation = bb_validate_activity_post_title( $request['post_title'] );
+		if ( ! $validation['valid'] ) {
+			return new WP_Error(
+				'bp_rest_create_activity_title_validation_failed',
+				$validation['message'],
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
 		if ( true === $this->bp_rest_activity_content_validate( $request ) ) {
 			return new WP_Error(
 				'bp_rest_create_activity_empty_content',
@@ -656,6 +678,48 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		$bb_activity_post_feature_image = $request->get_param( 'bb_activity_post_feature_image_id' );
+		if (
+			! empty( $bb_activity_post_feature_image ) &&
+			function_exists( 'bb_pro_activity_post_feature_image_instance' )
+		) {
+			if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) ) {
+				$object                   = ! empty( $group_id ) ? 'group' : '';
+				$can_upload_feature_image = bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
+					array(
+						'user_id'  => bp_loggedin_user_id(),
+						'group_id' => $group_id,
+						'object'   => $object,
+					)
+				);
+				if ( ! $can_upload_feature_image ) {
+					return new WP_Error(
+						'bb_rest_activity_feature_image_access',
+						__( 'You do not have permission to upload feature image.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			}
+
+			if (
+				! empty( $bb_activity_post_feature_image ) &&
+				method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_validate_attachment_by_id' )
+			) {
+				$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $bb_activity_post_feature_image );
+				if ( ! empty( $validate_attachment ) && is_array( $validate_attachment ) ) {
+					return new WP_Error(
+						$validate_attachment['code'],
+						$validate_attachment['message'],
+						array(
+							'status' => $validate_attachment['status'],
+						)
+					);
+				}
+			}
+		}
+
 		if ( ! isset( $request['hidden'] ) && isset( $prepared_activity->hide_sitewide ) ) {
 			$request['hidden'] = $prepared_activity->hide_sitewide;
 		}
@@ -672,9 +736,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		// Post a regular activity update.
 		if ( 'activity_update' === $type ) {
 			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
-				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+				// Group subscribers are notified below, after the post is complete (BuddyBoss Add-ons).
+				$had_group_subscription_hook = remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11 );
+
 				$activity_id = groups_post_update( $prepared_activity );
-				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+				if ( $had_group_subscription_hook ) {
+					add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+				}
 			} else {
 				remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 				$activity_id = bp_activity_post_update( $prepared_activity );
@@ -743,12 +811,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( 'activity_update' === $type ) {
 			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
 				$group_id = ! empty( $prepared_activity->group_id ) ? $prepared_activity->group_id : ( ! empty( $prepared_activity->item_id ) ? $prepared_activity->item_id : 0 );
-				bb_subscription_send_subscribe_group_notifications(
-					$prepared_activity->content,
-					$prepared_activity->user_id,
-					$group_id,
-					$activity_id
-				);
+				if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+					bb_subscription_send_subscribe_group_notifications(
+						$prepared_activity->content,
+						$prepared_activity->user_id,
+						$group_id,
+						$activity_id
+					);
+				}
 			} else {
 				bb_activity_send_email_to_following_post( $prepared_activity->content, $prepared_activity->user_id, $activity_id );
 			}
@@ -933,6 +1003,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {string} [link] The permalink to this activity on the site.
 	 * @apiParam {String=settings,notifications,groups,forums,activity,media,messages,friends,invites,search,members,xprofile,blogs} [component] The active component the activity relates to.
 	 * @apiParam {String=new_member,new_avatar,updated_profile,activity_update,created_group,joined_group,group_details_updated,bbp_topic_create,bbp_reply_create,activity_comment,friendship_accepted,friendship_created,new_blog_post,new_blog_comment} [type] The activity type of the activity.
+	 * @apiParam {String} [post_title] The post title of the activity.
 	 * @apiParam {String} [content] Allowed HTML content for the activity.
 	 * @apiParam {String} [date] The date the activity was published, in the site's timezone.
 	 * @apiParam {Boolean=true,false} [hidden] Whether the activity object should be sitewide hidden or not.
@@ -951,6 +1022,18 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$old_video_ids    = $activity_metas['bp_video_ids'][0] ?? '';
 		$old_gif_data     = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
 
+		// Validate post title.
+		$validation = bb_validate_activity_post_title( $activity_object->post_title );
+		if ( ! $validation['valid'] ) {
+			return new WP_Error(
+				'bp_rest_update_activity_title_validation_failed',
+				$validation['message'],
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
 		if (
 			(
 				empty( $activity_object->content )
@@ -967,6 +1050,48 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
+		}
+
+		$bb_activity_post_feature_image = $request->get_param( 'bb_activity_post_feature_image_id' );
+		if (
+			! empty( $bb_activity_post_feature_image ) &&
+			function_exists( 'bb_pro_activity_post_feature_image_instance' )
+		) {
+			if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) ) {
+				$object                   = ! empty( $activity_object->item_id ) ? 'group' : '';
+				$can_upload_feature_image = bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
+					array(
+						'user_id'  => bp_loggedin_user_id(),
+						'group_id' => $activity_object->item_id,
+						'object'   => $object,
+					)
+				);
+				if ( ! $can_upload_feature_image ) {
+					return new WP_Error(
+						'bb_rest_activity_feature_image_access',
+						__( 'You do not have permission to upload feature image.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			}
+
+			if (
+				! empty( $bb_activity_post_feature_image ) &&
+				method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_validate_attachment_by_id' )
+			) {
+				$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $bb_activity_post_feature_image );
+				if ( ! empty( $validate_attachment ) && is_array( $validate_attachment ) ) {
+					return new WP_Error(
+						$validate_attachment['code'],
+						$validate_attachment['message'],
+						array(
+							'status' => $validate_attachment['status'],
+						)
+					);
+				}
+			}
 		}
 
 		/**
@@ -1068,15 +1193,17 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 
 			bp_activity_at_name_send_emails( $activity );
-	
+
 			if ( bp_is_active( 'groups' ) && 'groups' === $activity->component ) {
 				$group_id = ! empty( $activity->item_id ) ? $activity->item_id : 0;
-				bb_subscription_send_subscribe_group_notifications(
-					$activity->content,
-					$activity->user_id,
-					$group_id,
-					$activity_id
-				);
+				if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+					bb_subscription_send_subscribe_group_notifications(
+						$activity->content,
+						$activity->user_id,
+						$group_id,
+						$activity_id
+					);
+				}
 			} else {
 				bb_activity_send_email_to_following_post( $activity->content, $activity->user_id, $activity->id );
 			}
@@ -1103,12 +1230,131 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Whether this request changes nothing but the activity privacy.
+	 *
+	 * The web treats a privacy change as exempt from the edit toggle and the edit window:
+	 * bp_nouveau_activity_privacy() renders the selector via bp_activity_user_can_edit( false, true ),
+	 * and bp_nouveau_ajax_activity_update_privacy() authorizes the write on
+	 * bp_activity_user_can_delete() alone. Without this the REST route would deny what the
+	 * website still allows.
+	 *
+	 * Decided by what would change, not by which keys were sent. Every client-controlled source
+	 * is inspected (JSON body, form body and query string, the same sources update_item() reads
+	 * through get_param()), so a field cannot be smuggled in through a source the check ignores.
+	 *
+	 * Which keys carry data is taken from the route's registered arguments, so WordPress's own
+	 * request parameters (_embed, _fields, _locale, _method, _jsonp, _envelope) need no list of
+	 * their own: the server reads them straight from $_GET and never registers them.
+	 *
+	 * The registered set is not quite the whole contract, though — get_param() also returns
+	 * unregistered parameters, and update_item() reads one the editable route never registers
+	 * (see bb_rest_update_read_params()), so that is added back. A registered argument that
+	 * merely echoes the stored value (post_title, content) is not an edit; anything else is.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param WP_REST_Request      $request  Full details about the request.
+	 * @param BP_Activity_Activity $activity The activity being updated.
+	 *
+	 * @return bool True when privacy is the only thing being changed.
+	 */
+	protected function bb_rest_is_privacy_only_update( $request, $activity ) {
+		$attributes = $request->get_attributes();
+		$registered = isset( $attributes['args'] ) && is_array( $attributes['args'] ) ? $attributes['args'] : array();
+		$carries    = array_merge( $registered, array_flip( $this->bb_rest_update_read_params() ) );
+
+		// Only arguments the update can act on; everything else is routing noise.
+		$supplied = array_intersect_key(
+			array_merge(
+				(array) $request->get_query_params(),
+				(array) $request->get_body_params(),
+				(array) $request->get_json_params()
+			),
+			$carries
+		);
+
+		if ( ! array_key_exists( 'privacy', $supplied ) ) {
+			return false;
+		}
+
+		$stored_title   = isset( $activity->post_title ) ? $activity->post_title : '';
+		$stored_content = isset( $activity->content ) ? $activity->content : '';
+
+		foreach ( $supplied as $param => $value ) {
+			// The item being addressed and the response context are not data.
+			if ( in_array( $param, array( 'privacy', 'id', 'context' ), true ) ) {
+				continue;
+			}
+
+			// Required arguments echoed back unchanged are not edits.
+			if ( 'post_title' === $param && $this->bb_rest_same_text( $value, $stored_title ) ) {
+				continue;
+			}
+
+			if ( 'content' === $param && $this->bb_rest_same_text( $value, $stored_content ) ) {
+				continue;
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Parameters update_item() reads through get_param() that the editable route does not register.
+	 *
+	 * Registration is the endpoint's contract, but get_param() does not enforce it, so a value
+	 * read directly still reaches the update while array_intersect_key() against the registered
+	 * arguments would drop it. bb_activity_post_feature_image_id is the current case: Pro adds it
+	 * through bp_rest_activity_create_item_query_arguments only, with no update counterpart, yet
+	 * update_item() reads it.
+	 *
+	 * Keep this in step with the direct get_param() reads in update_item(); anything listed here
+	 * counts as data when deciding whether an update touches more than the privacy.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @return array Parameter names.
+	 */
+	protected function bb_rest_update_read_params() {
+		return array( 'bb_activity_post_feature_image_id' );
+	}
+
+	/**
+	 * Whether two text values are the same once line endings are normalised.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param mixed $supplied Value from the request.
+	 * @param mixed $stored   Value on the activity.
+	 *
+	 * @return bool
+	 */
+	protected function bb_rest_same_text( $supplied, $stored ) {
+		if ( ! is_scalar( $supplied ) || ! is_scalar( $stored ) ) {
+			return false;
+		}
+
+		// Line endings only. prepare_item_for_database() writes the value as supplied, so every
+		// difference this ignores is a difference that still reaches the database — trimming
+		// would let trailing whitespace through, and unslashing (which REST does not apply to
+		// its parameters anyway) would let 'C:\path' match 'C:path' and overwrite the backslash.
+		$normalize = function ( $text ) {
+			return str_replace( "\r\n", "\n", (string) $text );
+		};
+
+		return $normalize( $supplied ) === $normalize( $stored );
+	}
+
+	/**
 	 * Check if a given request has access to update an activity.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
 	 * @since 0.1.0
+	 * @since BuddyBoss 3.5.1 A privacy-only update is exempt from the edit toggle and window.
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -1149,10 +1395,18 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					)
 				);
 			} elseif (
-				function_exists( 'bp_is_activity_edit_enabled' )
-				&& ! bp_is_activity_edit_enabled()
-				&& function_exists( 'bp_activity_user_can_edit' )
-				&& ! bp_activity_user_can_edit( $activity )
+				// A privacy-only change falls through to the bp_activity_user_can_delete() branch
+				// below, which is the same authority the website's privacy handler uses.
+				! $this->bb_rest_is_privacy_only_update( $request, $activity )
+				&& (
+					(
+						function_exists( 'bp_is_activity_edit_enabled' )
+						&& ! bp_is_activity_edit_enabled()
+					) || (
+						function_exists( 'bp_activity_user_can_edit' )
+						&& ! bp_activity_user_can_edit( $activity )
+					)
+				)
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
@@ -1544,7 +1798,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if (
 			! empty( $type ) &&
-			is_user_logged_in() && bb_all_enabled_reactions( $type )
+			is_user_logged_in() && bb_all_enabled_reactions( $type ) &&
+			// The response returns the activity, so the user must be able to read it.
+			// A missing activity is left to the callback, which answers 404 as before.
+			( empty( $activity ) || $this->user_can_read_activity( $activity ) )
 		) {
 			$retval = true;
 		}
@@ -1597,6 +1854,24 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$pin_type = ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) ? 'group' : 'activity';
+
+		// The pin/unpin mutation is provided by the Pinned Posts add-on module.
+		// `function_exists()` alone is not enough: Platform installs a no-op
+		// deprecation shim of the same name at `bp_init:1` (so un-updated external
+		// callers degrade instead of fatalling), and REST runs later. The shim
+		// advertises itself via `bb_activity_pin_unpin_post_is_stub()`.
+		if (
+			! function_exists( 'bb_activity_pin_unpin_post' )
+			|| function_exists( 'bb_activity_pin_unpin_post_is_stub' )
+		) {
+			return new WP_Error(
+				'bp_rest_activity_pinned_posts_unavailable',
+				__( 'Pinned posts are not available on this site.', 'buddyboss' ),
+				array(
+					'status' => 501,
+				)
+			);
+		}
 
 		$result = bb_activity_pin_unpin_post( $args );
 
@@ -2021,6 +2296,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'user_id'           => $activity->user_id,
 			'name'              => bp_core_get_user_displayname( $activity->user_id ),
 			'component'         => $activity->component,
+			'post_title'        => ! empty( $activity->post_title ) ? html_entity_decode( esc_html( $activity->post_title ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '',
 			'content'           => array(
 				'raw'      => bb_rest_raw_content( $activity->content ),
 				'rendered' => $this->render_item( $activity ),
@@ -2050,18 +2326,28 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'link_embed_url'    => '',
 			'is_pinned'         => false,
 			'can_pin'           => false,
-			'reacted_names'     => bb_activity_reaction_names_and_count( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 1 ),
-			'reacted_counts'    => bb_get_activity_most_reactions( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 7 ),
-			'reacted_id'        => bb_load_reaction()->bb_user_reacted_reaction_id(
+			'reacted_names'     => function_exists( 'bb_activity_reaction_names_and_count' ) ? bb_activity_reaction_names_and_count( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 1 ) : '',
+			'reacted_counts'    => function_exists( 'bb_get_activity_most_reactions' ) ? bb_get_activity_most_reactions( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 7 ) : array(),
+			'reacted_id'        => ( function_exists( 'bb_load_reaction' ) && bb_load_reaction() ) ? bb_load_reaction()->bb_user_reacted_reaction_id(
 				array(
 					'item_id'   => $activity->id,
 					'item_type' => 'activity_comment' === $activity->type ? $activity->type : 'activity',
 					'user_id'   => bp_loggedin_user_id(),
 				)
-			),
+			) : 0,
 			'is_comment_closed' => function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled() ? bb_is_activity_comments_closed( $activity->id ) : false,
 			'activity_status'   => $activity->status,
 		);
+
+		$data['bb_activity_post_feature_image'] = array();
+		if ( ! empty( $activity->id ) ) {
+			if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+				$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
+				if ( ! empty( $feature_image_data ) ) {
+					$data['bb_activity_post_feature_image'] = $feature_image_data;
+				}
+			}
+		}
 
 		// Add feature image as separate object which added last in the content.
 		if ( ! empty( $blog_id ) && ! empty( get_post_thumbnail_id( $blog_id ) ) ) {
@@ -2223,12 +2509,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$data['comment_depth'] = $activity->depth;
 		}
 
+		// Commenter's mention name and profile URL to build the auto-mention when replying.
+		$data['mention_name'] = function_exists( 'bp_activity_get_user_mentionname' ) && ! empty( $activity->user_id ) ? bp_activity_get_user_mentionname( $activity->user_id ) : '';
+		$data['user_link']    = function_exists( 'bp_core_get_user_domain' ) && ! empty( $activity->user_id ) ? bp_core_get_user_domain( $activity->user_id ) : '';
+
 		// Get comments (count).
 		if ( ! empty( $activity->children ) ) {
 			$data['comment_count'] = isset( $activity->all_child_count ) ? $activity->all_child_count : bp_activity_recurse_comment_count( $activity );
 			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] && empty( $request->get_param( 'apply_limit' ) ) ) {
 				// First check the comment is disabled from the activity settings for post type.
-				// For more information please check this PROD-2475.
+				// For more information, please check this PROD-2475.
 				if ( 'blogs' === $activity->component && $data['can_comment'] ) {
 					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 					// This is for activity comment to attach the comment in the feed.
@@ -2401,6 +2691,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$prepared_activity->type = $request['type'];
 		}
 
+		// Activity title.
+		if ( ! empty( $schema['properties']['post_title'] ) && isset( $request['post_title'] ) ) {
+			$prepared_activity->post_title = $request['post_title'];
+		}
+
 		// Activity content.
 		if ( ! empty( $schema['properties']['content'] ) && isset( $request['content'] ) ) {
 			if ( is_string( $request['content'] ) ) {
@@ -2542,24 +2837,93 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function can_see( $request ) {
-		// Check if the user can read the activity as per privacy settings.
-		if ( ! empty( $request['id'] ) && function_exists( 'bb_validate_activity_privacy' ) ) {
-			$privacy_check = bb_validate_activity_privacy(
-				array(
-					'activity_id'     => $request['id'],
-					'validate_action' => 'view_activity',
-					'user_id'         => bp_loggedin_user_id(),
-				)
-			);
+		$activity = $this->get_activity_object( $request );
 
-			if ( is_wp_error( $privacy_check ) ) {
+		return ( ! empty( $activity ) ? $this->user_can_read_activity( $activity ) : false );
+	}
+
+	/**
+	 * Can the current user read this activity, and every activity it belongs to?
+	 *
+	 * A comment is stored with component 'activity' and no group of its own, so it is
+	 * readable only when its root activity (item_id, also for nested replies) is. A post
+	 * with several photos, videos or documents gives each one a hidden sub-activity
+	 * (privacy media/video/document), so a comment on one of them is readable only when
+	 * the post or comment the sub-activity belongs to (secondary_item_id) is.
+	 *
+	 * @since BuddyBoss 3.7.1
+	 *
+	 * @param BP_Activity_Activity|object $activity Activity object.
+	 *
+	 * @return bool
+	 */
+	public function user_can_read_activity( $activity ) {
+		if ( empty( $activity ) || empty( $activity->id ) ) {
+			return false;
+		}
+
+		$user_id    = bp_loggedin_user_id();
+		$activities = array( $activity );
+		$current    = $activity;
+
+		// Walk up from a comment to its root, and from a sub-activity to its post or comment.
+		// The longest real chain is comment > sub-activity > comment > post.
+		for ( $hop = 0; $hop <= 4; $hop++ ) {
+			$parent_id = 0;
+
+			if ( isset( $current->type ) && 'activity_comment' === $current->type ) {
+				$parent_id = (int) $current->item_id;
+			} elseif (
+				isset( $current->privacy ) &&
+				in_array( $current->privacy, array( 'media', 'video', 'document' ), true ) &&
+				! empty( $current->secondary_item_id ) &&
+				(int) $current->secondary_item_id !== (int) $current->id
+			) {
+				$parent_id = (int) $current->secondary_item_id;
+			}
+
+			if ( empty( $parent_id ) ) {
+				break;
+			}
+
+			// Fail closed when a parent no longer exists, or the chain is longer than any real one.
+			if ( 4 === $hop ) {
+				return false;
+			}
+
+			$current = new BP_Activity_Activity( $parent_id );
+
+			if ( empty( $current->id ) ) {
+				return false;
+			}
+
+			$activities[] = $current;
+		}
+
+		foreach ( $activities as $item ) {
+			// Check if the user can read the activity as per privacy settings. A comment copies its
+			// root's privacy but keeps the commenter as user_id, so its own check would test
+			// friendship with the commenter. The root on the chain decides.
+			if ( 'activity_comment' !== $item->type && function_exists( 'bb_validate_activity_privacy' ) ) {
+				$privacy_check = bb_validate_activity_privacy(
+					array(
+						'activity_id'     => $item->id,
+						'validate_action' => 'view_activity',
+						'user_id'         => $user_id,
+					)
+				);
+
+				if ( is_wp_error( $privacy_check ) ) {
+					return false;
+				}
+			}
+
+			if ( ! bp_activity_user_can_read( $item, $user_id ) ) {
 				return false;
 			}
 		}
 
-		$activity = $this->get_activity_object( $request );
-
-		return ( ! empty( $activity ) ? bp_activity_user_can_read( $activity, bp_loggedin_user_id() ) : false );
+		return true;
 	}
 
 	/**
@@ -2665,6 +3029,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
+			$args['post_title'] = array(
+				'description'       => __( 'The title of the activity\'s post.', 'buddyboss' ),
+				'type'              => 'string',
+				'required'          => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
+				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+
 		} elseif ( WP_REST_Server::DELETABLE === $method ) {
 			$key = 'delete_item';
 		}
@@ -2689,13 +3061,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function get_favorite_endpoint_schema() {
 		$args = array();
 
+		$reaction = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+
 		$args['reaction_id'] = array(
 			'description'       => __( 'Reaction ID.', 'buddyboss' ),
 			'type'              => 'integer',
 			'required'          => false,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' ),
+			'enum'              => $reaction ? array_column( $reaction->bb_get_reactions( bb_get_reaction_mode() ), 'id' ) : array(),
 		);
 
 		$args['item_type'] = array(
@@ -2704,7 +3078,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'required'          => false,
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => array_keys( bb_load_reaction()->bb_get_registered_reaction_item_types() ),
+			'enum'              => $reaction ? array_keys( $reaction->bb_get_registered_reaction_item_types() ) : array(),
 		);
 
 		/**
@@ -2755,6 +3129,19 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'description' => __( 'User\'s display name for the activity.', 'buddyboss' ),
 					'type'        => 'string',
 				),
+				'mention_name'      => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'User\'s mention name for the activity comment.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+				'user_link'         => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Profile URL of the activity comment author.', 'buddyboss' ),
+					'format'      => 'uri',
+					'type'        => 'string',
+					'readonly'    => true,
+				),
 				'link'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The permalink to this activity on the site.', 'buddyboss' ),
@@ -2784,6 +3171,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'description' => __( 'The description of the activity\'s type (eg: Username posted an update)', 'buddyboss' ),
 					'type'        => 'string',
 					'readonly'    => true,
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'post_title'        => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'The title of the activity\'s post.', 'buddyboss' ),
+					'type'        => 'string',
+					'required'    => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -3104,7 +3500,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$params['scope'] = array(
 			'description'       => __( 'Limit result set to items with a specific scope.', 'buddyboss' ),
 			'type'              => 'string',
-			'enum'              => array( 'just-me', 'friends', 'groups', 'favorites', 'mentions', 'following' ),
+			'enum'              => array( 'just-me', 'friends', 'groups', 'favorites', 'mentions', 'following', 'unanswered' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -3206,7 +3602,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return 0;
 		}
 
-		if ( function_exists( 'bb_load_reaction' ) ) {
+		if ( function_exists( 'bb_load_reaction' ) && bb_load_reaction() ) {
 			$fav_count = bb_load_reaction()->bb_total_item_reactions_count(
 				array(
 					'item_id'   => $activity->id,
@@ -3260,6 +3656,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * Get default scope for the activity
 	 * - from: bp_activity_default_scope();
 	 *
+	 * Only the 'all' or an empty scope is expanded to the 'default' set of scopes.
+	 * Any explicit scope (including 'just-me') is respected as-is.
+	 *
 	 * @param string $scope      Default scope.
 	 * @param int    $user_id    User ID.
 	 * @param int    $group_id   Group ID.
@@ -3268,18 +3667,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return string
 	 */
-	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0, $component = '', $primary_id = 0 ) {
+	public static function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0, $component = '', $primary_id = 0 ) {
 		$new_scope = array();
 
 		if (
 			bp_loggedin_user_id()
 			&& (
 				'all' === $scope ||
-				empty( $scope ) ||
-				(
-					'just-me' === $scope &&
-					empty( $user_id )
-				)
+				empty( $scope )
 			)
 		) {
 			if ( bp_is_active( 'groups' ) && ( ! empty( $group_id ) || ( ! empty( $component ) && 'groups' === $component && ! empty( $primary_id ) ) ) ) {
@@ -3433,7 +3828,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( 'groups' === $activity->component ) {
 			$activity_item_id = $activity->secondary_item_id;
 		}
-		
+
 		// Generate link preview for the forums.
 		if (
 			bp_is_active( 'forums' ) &&
@@ -3618,7 +4013,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( is_user_logged_in() ) {
+		if (
+			is_user_logged_in() &&
+			// The response returns the activity and its comments, so the user must be able to
+			// read it (PROD-10649). A missing activity is left to the callback as before.
+			( empty( $activity->id ) || $this->user_can_read_activity( $activity ) )
+		) {
 			$retval = true;
 		}
 

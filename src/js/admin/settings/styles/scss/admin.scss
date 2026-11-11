@@ -1,0 +1,128 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Main Stylesheet.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+ @import 'utils/variables';	
+ @import 'utils/mixings';
+ @import 'utils/elements';
+
+.buddyboss_page_bb-settings {
+	background-color: $bb-background-color;
+
+	// Override WP admin blue theme color with BuddyBoss brand color.
+	// This affects focus rings, active states, and wp-components accents.
+	--wp-admin-theme-color: #{$bb-background-brand-primary-color};
+	--wp-admin-theme-color--rgb: #{red($bb-background-brand-primary-color)}, #{green($bb-background-brand-primary-color)}, #{blue($bb-background-brand-primary-color)};
+	--wp-components-color-accent: #{$bb-background-brand-primary-color};
+	--wp-components-color-accent-darker-10: #{$bb-background-brand-primary-hover-color};
+	--wp-components-color-accent-darker-20: #{darken($bb-background-brand-primary-color, 15%)};
+}
+
+
+/* Global meta-field description — shared across every BB_Admin_Meta_Field_Registry
+   modal (forums, discussions, replies, emails, groups, activity, etc.).
+   Per-feature SCSS partials may override individual properties when needed. */
+.bb-admin-meta-field__description {
+	color: #666;
+	font-size: 13px;
+	margin: 10px 0 0 !important;
+
+	a {
+		color: $bb-link-color;
+	}
+}
+
+/* Inline links inside meta-field descriptions (e.g. "Learn about email tokens"
+   in the Email template modal). Scoped under `.bb-admin-settings-modal` —
+   the shared wrapper class for every BB_Admin_Meta_Field_Registry modal in
+   Settings 2.0 (forums, discussions, replies, emails, groups, activity) —
+   so the rule cannot leak into any unrelated context that might also use
+   `.bb-admin-meta-field__description` outside a modal. No underline at any
+   state; matches the project convention used in _feature_settings.scss,
+   _email-templates-list.scss, _help-modal.scss, and _flagged-members.scss
+   where descriptive links are styled with `text-decoration: none` without
+   a hover override. */
+.bb-admin-settings-modal .bb-admin-meta-field__description a {
+	text-decoration: none;
+}
+
+
+/* Feature Listing */
+@import 'screens/feature_listing';
+
+/* Feature Settings */
+@import 'screens/feature_settings';
+
+/* Features */
+@import 'screens/features/features';
+
+/* Activities */
+@import 'screens/features/activities';
+
+/* Groups */
+@import 'screens/features/groups';
+
+/* Groups List */
+@import 'screens/features/groups-list';
+
+/* Forums List */
+@import 'screens/features/forums-list';
+
+/* Discussions List */
+@import 'screens/features/discussions-list';
+
+/* Discussion Tags List */
+@import 'screens/features/discussion-tags-list';
+
+/* Replies List */
+@import 'screens/features/replies-list';
+
+/* Group Types */
+@import 'screens/features/group-types';
+
+/* Profile Types */
+@import 'screens/features/profile-types';
+
+/* Profile Fields */
+@import 'screens/features/profile-fields';
+
+/* Email Templates List */
+@import 'screens/features/email-templates-list';
+
+/* Email Invites List */
+@import 'screens/features/invites-list';
+
+/* Email Template Modal */
+@import 'screens/features/email-template-modal';
+
+/* Notification Types */
+@import 'screens/features/notification-types';
+
+/* Registration Restrictions */
+@import 'screens/features/registration-restrictions';
+
+/* Registration SSO Providers */
+@import 'screens/features/registration-sso';
+
+/* Registration Profile Type Redirects */
+@import 'screens/features/registration-redirects';
+
+/* Appearance → General Welcome Banner */
+@import 'screens/features/appearance-welcome';
+
+/* Help Modal */
+@import 'utils/help-modal';
+
+/* Field Components */
+@import 'fields/verify-popup';
+@import 'fields/page-dropdown';
+
+// Knowledge Base modal styles now ship from the shared common stylesheet
+// (loaded via the bb-admin-common-style handle), so Settings no longer imports
+// its own copy — single source for the KB modal CSS across all admin apps.
+
+/* Tools panel (Repair Platform + Activation Required CTA) */
+@import 'screens/features/tools';

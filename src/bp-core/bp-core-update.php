@@ -241,6 +241,11 @@ function bp_version_updater() {
 		bp_core_install_emails();
 		bp_core_install_invitations();
 
+		// Seed media section toggle defaults when media component is active.
+		if ( isset( $default_components['media'] ) ) {
+			bb_seed_media_section_toggle_defaults();
+		}
+
 		do_action( 'bb_core_after_install', $default_components );
 
 		// Upgrades.
@@ -519,6 +524,81 @@ function bp_version_updater() {
 			bb_update_to_2_9_4();
 		}
 
+		if ( $raw_db_version < 23521 ) {
+			bb_update_to_2_9_50();
+		}
+
+		if ( $raw_db_version < 23531 ) {
+			bb_update_to_2_10_1();
+		}
+
+		if (
+			$raw_db_version < 23541 &&
+			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
+			method_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader', 'migrate_legacy_license' )
+		) {
+			\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::migrate_legacy_license();
+		}
+
+		if ( $raw_db_version < 23551 ) {
+			bb_update_to_2_16_1();
+		}
+
+		// DB version 23584 — 3.0.0 release migration block (Settings 2.0
+		// feature activation + ReadyLaunch option-shape canonicalization).
+		if ( $raw_db_version < 23584 ) {
+			bb_update_to_3_0_0();
+			bb_rl_migrate_settings();
+		}
+
+		// DB version 23601 — 3.0.2 release migration. Cleans up `_none`
+		// xprofile `member_type` meta rows that the Settings 2.0 React
+		// modal inadvertently saved when its "Profile Types" dropdown
+		// defaulted to "All". Gated to the 3.0.0/3.0.1 buggy window only —
+		// sites upgrading from pre-3.0.0 used the legacy admin UI where
+		// `_none` is an explicit admin selection ("Users with no profile
+		// type") and must be preserved.
+		if ( $raw_db_version >= 23584 && $raw_db_version < 23601 ) {
+			bb_update_to_3_0_3();
+		}
+
+		// DB version 23604 — install the BuddyBoss Addons bundle for entitled
+		// customers, once, on the upgrade into this release (PROD-10242). Runs on
+		// every update path — Plugins screen, auto-update, or a direct FTP/copy-paste
+		// — because this keys on the stored _bp_db_version vs the code db_version.
+		if ( $raw_db_version < 23604 ) {
+			bb_install_addons_bundle_on_upgrade();
+		}
+
+		// DB version 23605 — the topics and reply REST endpoints now return the
+		// legacy oEmbed for posts without `_link_embed` meta (PROD-10630). Purge
+		// their App API cache so cached empty previews are not served for 30 days.
+		if ( $raw_db_version < 23605 ) {
+			bb_purge_forums_api_cache_for_legacy_embed();
+		}
+
+		// DB version 23631 — install BuddyBoss Add-ons for entitled sites that do not have
+		// it (the 23604 step above already ran on 3.4.2+ sites, so it would not run again),
+		// then queue the update of an active Add-ons to the version this Platform requires
+		// (PROD-9995). Queuing is cheap: the download runs later, on a regular admin page
+		// load by a user who can update plugins.
+		if ( $raw_db_version < 23631 ) {
+			bb_install_addons_bundle_on_upgrade();
+			bb_queue_addons_bundle_update();
+		}
+
+		// DB version 23632 — the activity REST endpoints now refuse comments whose root
+		// activity the user cannot read (PROD-10649). Purge their App API cache so comments
+		// cached before the update are not served for 30 days.
+		// Heal oversized/aggregate-oversized draft usermeta rows and
+		// start the draft retention machinery.
+		// Gated above 23631, the db_version 3.7.0 shipped with, so sites
+		// already on 3.7.0 still run it.
+		if ( $raw_db_version < 23641 ) {
+			bb_drafts_cleanup_on_upgrade();
+			bb_purge_activity_api_cache_for_comment_access();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -612,6 +692,45 @@ function bp_pre_schema_upgrade() {
 			foreach ( $indexes as $index ) {
 				if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
 					$wpdb->query( "ALTER TABLE {$table_name} DROP INDEX {$index}" );
+				}
+			}
+		}
+	}
+
+	// 3.0.0: Drop any malformed `post_title` index on bp_activity that lacks
+	// a prefix length. Some installs upgraded through an intermediate version that
+	// created `KEY post_title (post_title)` without the (191) length specifier
+	// against a TEXT column. When dbDelta later tries to re-spec the column, MySQL
+	// rejects the ALTER with: "BLOB/TEXT column 'post_title' used in key
+	// specification without a key length". Dropping the bad index here lets dbDelta
+	// recreate it correctly via the canonical schema in bp_core_install_activity_streams().
+	$activity_table = $bp_prefix . 'bp_activity';
+	$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $activity_table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	if ( $table_exists ) {
+		// SUB_PART is NULL when an index has no prefix length. For indexes on a
+		// TEXT column, SUB_PART must be a positive integer (e.g. 191). The query
+		// also ignores FULLTEXT indexes (INDEX_TYPE = 'FULLTEXT') because those
+		// legitimately store no SUB_PART value but are valid on TEXT columns.
+		$bad_indexes = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->prepare(
+				"SELECT DISTINCT INDEX_NAME
+				 FROM INFORMATION_SCHEMA.STATISTICS
+				 WHERE TABLE_SCHEMA = DATABASE()
+				   AND TABLE_NAME = %s
+				   AND COLUMN_NAME = 'post_title'
+				   AND SUB_PART IS NULL
+				   AND INDEX_TYPE != 'FULLTEXT'",
+				$activity_table
+			)
+		);
+
+		if ( ! empty( $bad_indexes ) ) {
+			foreach ( $bad_indexes as $index_name ) {
+				// Index name comes from INFORMATION_SCHEMA, not user input — safe to interpolate
+				// inside backticks. Cannot use prepare() for identifiers.
+				$index_name = preg_replace( '/[^A-Za-z0-9_]/', '', $index_name );
+				if ( '' !== $index_name ) {
+					$wpdb->query( "ALTER TABLE `{$activity_table}` DROP INDEX `{$index_name}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				}
 			}
 		}
@@ -1243,17 +1362,6 @@ function bp_add_activation_redirect() {
 
 	// Add the transient to redirect.
 	set_transient( '_bp_activation_redirect', true, 30 );
-}
-
-/**
- * Platform plugin updater
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_platform_plugin_updater() {
-	if ( ! class_exists( 'BB_Platform_Pro' ) && class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) {
-		new BP_BuddyBoss_Platform_Updater( 'https://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ) . '/bp-loader.php', 847 );
-	}
 }
 
 /** Signups *******************************************************************/
@@ -2523,8 +2631,10 @@ function bb_update_to_2_2_8() {
 	// Install new group subscription email templates.
 	bb_migrate_group_subscription_email_templates();
 
-	// Migrate group subscriptions.
-	bb_migrate_group_subscription( true );
+	// Migrate group subscriptions. The migration ships with BuddyBoss Add-ons, which also offers it as a repair tool.
+	if ( function_exists( 'bb_migrate_group_subscription' ) ) {
+		bb_migrate_group_subscription( true );
+	}
 }
 
 /**
@@ -3134,18 +3244,29 @@ function bb_core_update_repair_duplicate_following_notification() {
 	global $wpdb;
 	$bp = buddypress();
 
-	$sql  = "DELETE FROM {$bp->notifications->table_name}";
-	$sql .= ' WHERE id IN (';
-	$sql .= " SELECT * FROM ( SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
+	// Identify the duplicate "following" notifications once (keep the newest per
+	// user + secondary item, mark the older ones for deletion), then remove them in
+	// chunks so a site with many duplicates cannot time out this one-time upgrade.
+	$sql  = "SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
 	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
 	$sql .= ' WHERE n1.secondary_item_id = n2.secondary_item_id';
 	$sql .= ' AND n1.date_notified < n2.date_notified';
 	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
-	$sql .= ' ORDER BY n1.id DESC) AS ids';
-	$sql .= ' )';
+	$sql .= ' ORDER BY n1.id DESC';
 
-	// Remove duplicate notification ids.
-	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
+	$notification_ids = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) ) );
+
+	// Delete the duplicate notifications in chunks (bounded lock time on large sites).
+	foreach ( array_chunk( $notification_ids, 500 ) as $chunk ) {
+		$ids_sql = implode( ',', $chunk );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DELETE FROM {$bp->notifications->table_name} WHERE id IN ({$ids_sql})" );
+	}
+
+	// Clean up the now-orphaned metadata after the notifications are gone.
+	if ( ! empty( $notification_ids ) && function_exists( 'bb_notifications_delete_meta_for_ids' ) ) {
+		bb_notifications_delete_meta_for_ids( $notification_ids );
+	}
 
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
@@ -3995,3 +4116,1015 @@ function bb_update_to_2_9_4() {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-groups' );
 	}
 }
+
+/**
+ * Add index for activity table.
+ *
+ * @since BuddyBoss 2.11.0
+ *
+ * @return void
+ */
+function bb_update_to_2_9_50() {
+	global $wpdb;
+
+	$is_already_run = get_transient( 'bb_update_to_2_9_50' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_9_50', 'yes', HOUR_IN_SECONDS );
+
+	$bp_prefix      = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$activity_table = $bp_prefix . 'bp_activity';
+	$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) ); // phpcs:ignore
+
+	// Check if the activity table exists.
+	if ( $table_exists ) {
+
+		// Check if index activity_type_is_spam exists for the table.
+		$index_exists = $wpdb->get_var( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s AND index_name = %s', $activity_table, 'activity_type_is_spam' ) ); //phpcs:ignore
+
+		// Add index for activity_type_is_spam if it doesn't exist.
+		if ( empty( $index_exists ) ) {
+			$wpdb->query( $wpdb->prepare( "ALTER TABLE {$activity_table} ADD KEY activity_type_is_spam (type,is_spam)" ) ); //phpcs:ignore
+		}
+	}
+}
+
+/**
+ * Migrate for BuddyBoss 2.13.0.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @return void
+ */
+function bb_update_to_2_10_1() {
+	global $wpdb;
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
+	if ( $table_exists ) {
+		// Add 'post_title' column in 'bp_activity' table.
+		$row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= %s AND table_name = %s AND column_name = 'post_title'", DB_NAME, $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `post_title` text DEFAULT NULL AFTER `action`" ); //phpcs:ignore
+
+			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_activity' ) ); //phpcs:ignore
+			if ( ! in_array( 'post_title', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD KEY `post_title` (`post_title`(191))" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_post_title', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_post_title` (`post_title`)" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_content', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_content` (`content`)" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_title_content', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_title_content` (`post_title`, `content`)" ); //phpcs:ignore
+			}
+		}
+	}
+}
+
+/**
+ * Migrate for BuddyBoss 2.17.0.
+ *
+ * @since BuddyBoss 2.17.0
+ *
+ * @return void
+ */
+function bb_update_to_2_16_1() {
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear activity API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
+	}
+}
+
+/**
+ * Migration for BuddyBoss 3.0.0 - Settings 2.0 feature activation.
+ *
+ * Seeds bb-active-features based on existing settings so the new
+ * feature cards reflect the user's prior configuration.
+ *
+ * @since BuddyBoss 3.0.0
+ */
+function bb_update_to_3_0_0() {
+
+	// Seed media section toggle defaults when media component is active.
+	// This runs regardless of reactions migration state.
+	$active_components = bp_get_option( 'bp-active-components', array() );
+	if ( isset( $active_components['media'] ) ) {
+		bb_seed_media_section_toggle_defaults();
+	}
+
+	$active_features = bp_get_option( 'bb-active-features', array() );
+
+	// Reactions migration: only run if not yet migrated.
+	if ( ! isset( $active_features['reactions'] ) ) {
+		// Check the legacy bb_all_reactions option.
+		// Default: array( 'activity' => true, 'activity_comment' => true ).
+		$all_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+
+		// If ANY reaction type was enabled, enable the reactions feature.
+		$any_enabled = false;
+		foreach ( $all_reactions as $value ) {
+			if ( ! empty( $value ) ) {
+				$any_enabled = true;
+				break;
+			}
+		}
+
+		$active_features['reactions'] = $any_enabled ? 1 : 0;
+	}
+
+	// reCAPTCHA migration: auto-enable if already connected.
+	if ( ! isset( $active_features['recaptcha'] ) ) {
+		$recaptcha_settings = bp_get_option( 'bb_recaptcha', array() );
+		$is_connected       = ! empty( $recaptcha_settings['connection_status'] ) && 'connected' === $recaptcha_settings['connection_status'];
+
+		$active_features['recaptcha'] = $is_connected ? 1 : 0;
+	}
+
+	bp_update_option( 'bb-active-features', $active_features );
+
+	// Migrate legacy group avatar type: 'legacy' option removed from Settings 2.0.
+	$avatar_type = bp_get_option( 'bp-default-group-avatar-type', 'buddyboss' );
+	if ( 'legacy' === $avatar_type ) {
+		bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+	}
+
+	// Migrate legacy profile avatar type: 'legacy' option removed from Settings 2.0.
+	$profile_avatar_type = bp_get_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+	if ( 'legacy' === $profile_avatar_type ) {
+		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+	}
+
+	bb_migrate_email_type_groups();
+}
+
+/**
+ * Companion migration for DB version 23584 — canonicalize ReadyLaunch
+ * sidebar/menu/pages option shapes. Runs alongside bb_update_to_3_0_0() as
+ * part of the same 3.0.0 release migration block.
+ *
+ * The legacy ReadyLaunch onboarding wizard persisted these options as sequential
+ * arrays:
+ *   bb_rl_activity_sidebars        [ 'complete_profile', 'latest_updates', ... ]
+ *   bb_rl_member_profile_sidebars  [ 'complete_profile', 'connections', ... ]
+ *   bb_rl_groups_sidebars          [ 'about_group', 'group_members' ]
+ *   bb_rl_enabled_pages            [ 'registration', 'courses' ]
+ *   bb_rl_side_menu                [ { id, enabled, order, icon }, ... ]
+ *
+ * Settings 2.0 expects the associative-map shape:
+ *   { complete_profile: 1, latest_updates: 1, ... }
+ *   { activity_feed: { enabled, order, icon }, ... }
+ *
+ * Reading the legacy shape into the Settings 2.0 React admin renders every
+ * toggle as unchecked because the AJAX layer's `array_map( 'absint', ... )`
+ * coerces the string members to `0`. This one-shot migration reads each
+ * option, normalizes via the same helpers the save-side sanitize callbacks
+ * use, and writes back. Idempotent — values already in canonical shape pass
+ * through unchanged.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return void
+ */
+function bb_rl_migrate_settings() {
+	// Independent idempotency flag — the outer DB-version gate is shared with
+	// `bb_update_to_3_0_0()`. If that partially fails, the gate stays open and
+	// the version updater re-enters on every request until it succeeds. This
+	// migration is self-idempotent (list-to-map conversions no-op on already
+	// canonical data), but an explicit flag still saves five option reads +
+	// two helper calls per request during an incident window.
+	if ( bp_get_option( 'bb_rl_shapes_migrated' ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'bb_appearance_normalize_list_to_map' ) || ! function_exists( 'bb_appearance_normalize_side_menu_shape' ) ) {
+		return;
+	}
+
+	// Sequential list → associative `{ key => 1 }` map.
+	$list_options = array(
+		'bb_rl_activity_sidebars',
+		'bb_rl_member_profile_sidebars',
+		'bb_rl_groups_sidebars',
+		'bb_rl_enabled_pages',
+	);
+	foreach ( $list_options as $option_name ) {
+		$stored = bp_get_option( $option_name, null );
+		if ( null === $stored || ! is_array( $stored ) ) {
+			continue;
+		}
+		$normalized = bb_appearance_normalize_list_to_map( $stored );
+		if ( $normalized !== $stored ) {
+			bp_update_option( $option_name, $normalized );
+		}
+	}
+
+	// Sequential list of item objects → associative map keyed by id.
+	$side_menu = bp_get_option( 'bb_rl_side_menu', null );
+	if ( null !== $side_menu && is_array( $side_menu ) ) {
+		$normalized_menu = bb_appearance_normalize_side_menu_shape( $side_menu );
+		if ( $normalized_menu !== $side_menu ) {
+			bp_update_option( 'bb_rl_side_menu', $normalized_menu );
+		}
+	}
+
+	// Mark as complete so future `bp_version_updater` runs short-circuit even
+	// if the outer DB version bump happens to fail mid-flight.
+	//
+	// @todo: Remove after 3 release. Once every active site has run this
+	// migration the flag and the entire `bb_rl_migrate_settings()` function
+	// can be deleted along with its idempotency short-circuit at the top.
+	bp_update_option( 'bb_rl_shapes_migrated', 1 );
+}
+
+/**
+ * Seed media section toggle defaults into the database.
+ *
+ * Ensures that bb_media_*_support options exist in the DB with a default
+ * value of 1 (enabled) so that frontend/backend code reading them via
+ * get_option() or bp_get_option() gets `1` instead of `false`.
+ *
+ * @since BuddyBoss 3.0.0
+ */
+function bb_seed_media_section_toggle_defaults() {
+	$media_section_toggles = array(
+		'bb_media_photos_support',
+		'bb_media_videos_support',
+		'bb_media_documents_support',
+		'bb_media_emoji_support',
+		'bb_media_gif_support',
+	);
+
+	foreach ( $media_section_toggles as $toggle ) {
+		if ( false === bp_get_option( $toggle, false ) ) {
+			bp_update_option( $toggle, 1 );
+		}
+	}
+}
+
+/**
+ * Seed media section toggle defaults when media feature is activated.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id The feature ID that was activated.
+ */
+function bb_on_media_feature_activated( $feature_id ) {
+	if ( 'media' === $feature_id ) {
+		bb_seed_media_section_toggle_defaults();
+	}
+}
+add_action( 'bb_feature_activated', 'bb_on_media_feature_activated' );
+
+/**
+ * Backfill bb_email_group term meta for all bp_email_type taxonomy terms.
+ *
+ * Email situations in Settings 2.0 are grouped by category (Activity, Groups, etc.).
+ * The group is resolved from the schema 'group' key at runtime, but the schema only
+ * includes email types from ACTIVE components. When a component is disabled, its email
+ * types disappear from the schema and would fall to "Other" group.
+ *
+ * This migration writes the group as term meta so it persists regardless of component state.
+ * Uses a hardcoded map of all known BB email types — safe because these slugs are controlled
+ * by BuddyBoss and never change.
+ *
+ * @since BuddyBoss 3.0.0
+ */
+function bb_migrate_email_type_groups() {
+
+	// One-time migration guard — skip if already completed.
+	if ( bp_get_option( 'bb_email_type_groups_migrated' ) ) {
+		return;
+	}
+
+	$taxonomy = function_exists( 'bp_get_email_tax_type' ) ? bp_get_email_tax_type() : 'bp_email_type';
+	$terms    = get_terms(
+		array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => false,
+		)
+	);
+
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return;
+	}
+
+	// Complete map of all known BB Platform + Pro email type slugs to group keys.
+	// This covers all 34 email types: 8 from core schema, 24 from notification classes, 2 from Pro Zoom.
+	$group_map = array(
+		// Account.
+		'core-user-registration'              => 'account',
+		'core-user-registration-with-blog'    => 'account',
+		'settings-verify-email-change'        => 'account',
+		'invites-member-invite'               => 'account',
+		'content-moderation-email'            => 'account',
+		'user-moderation-email'               => 'account',
+		'settings-password-changed'           => 'account',
+		'zoom-scheduled-meeting-email'        => 'account',
+		'zoom-scheduled-webinar-email'        => 'account',
+
+		// Activity.
+		'activity-at-message'                 => 'activity',
+		'activity-comment'                    => 'activity',
+		'activity-comment-author'             => 'activity',
+		'new-activity-following'              => 'activity',
+		'new-activity-following-poll'         => 'activity',
+		'new-comment-reply'                   => 'activity',
+		'new-mention'                         => 'activity',
+
+		// Groups & Discussions.
+		'groups-at-message'                   => 'groups_discussions',
+		'groups-details-updated'              => 'groups_discussions',
+		'groups-member-promoted'              => 'groups_discussions',
+		'groups-invitation'                   => 'groups_discussions',
+		'groups-membership-request'           => 'groups_discussions',
+		'groups-membership-request-accepted'  => 'groups_discussions',
+		'groups-membership-request-rejected'  => 'groups_discussions',
+		'groups-new-activity'                 => 'groups_discussions',
+		'groups-new-discussion'               => 'groups_discussions',
+		'new-mention-group'                   => 'groups_discussions',
+
+		// Forums (under Groups & Discussions).
+		'bbp-new-forum-reply'                 => 'groups_discussions',
+		'bbp-new-forum-topic'                 => 'groups_discussions',
+
+		// Connections.
+		'new-follower'                        => 'connections',
+		'friends-request'                     => 'connections',
+		'friends-request-accepted'            => 'connections',
+
+		// Messages.
+		'messages-unread'                     => 'messages',
+		'messages-unread-digest'              => 'messages',
+		'group-message-email'                 => 'messages',
+		'group-message-digest'                => 'messages',
+	);
+
+	/**
+	 * Filters the email type group map used during migration.
+	 *
+	 * Pro or third-party plugins can add their email types to the migration
+	 * so they get proper group assignment instead of falling to "Other".
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param array $group_map Email type slug => group key map.
+	 */
+	$group_map = apply_filters( 'bb_email_type_group_migration_map', $group_map );
+
+	foreach ( $terms as $term ) {
+		if ( isset( $group_map[ $term->slug ] ) ) {
+			// Known BB/Pro term — always set the correct group (overwrites stale values).
+			update_term_meta( $term->term_id, 'bb_email_group', sanitize_key( $group_map[ $term->slug ] ) );
+		} else {
+			// Unknown/third-party term — only set if no meta exists (don't overwrite).
+			$existing = get_term_meta( $term->term_id, 'bb_email_group', true );
+			if ( empty( $existing ) ) {
+				update_term_meta( $term->term_id, 'bb_email_group', 'other' );
+			}
+		}
+	}
+
+	// Mark migration as completed so it doesn't run again.
+	bp_update_option( 'bb_email_type_groups_migrated', true );
+}
+
+/**
+ * Migration for DB version 23601 — clean up `_none` member_type meta rows
+ * the Settings 2.0 React profile-field modal saved by mistake on 3.0.0 / 3.0.1.
+ *
+ * The modal defaulted its "Profile Types" dropdown to "All Profile Types"
+ * but the save handler routed the empty selection through
+ * `$field->set_member_types( array() )` — which stores the `_none` sentinel
+ * (see `class-bp-xprofile-field.php:753`) instead of clearing the meta.
+ * Admins saw "No Profile Type Users" rendered next time they opened the
+ * field, and the field was hidden from every profile type.
+ *
+ * This pass deletes every `member_type` meta row whose value is `_none`.
+ * Trade-off: any field an admin intentionally configured for
+ * "No Profile Type Users" only on 3.0.0 / 3.0.1 will also become
+ * unrestricted. The intentional case is rare; the buggy case is the
+ * common one. Caller already gates this on the 3.0.0–3.0.1 upgrade
+ * window so legacy (pre-3.0.0) explicit `_none` selections are
+ * preserved.
+ *
+ * Idempotent — re-running on already-clean data is a no-op.
+ *
+ * @since BuddyBoss 3.0.3
+ *
+ * @return void
+ */
+function bb_update_to_3_0_3() {
+	global $wpdb;
+	$bp = buddypress();
+
+	if ( empty( $bp->profile->table_name_meta ) ) {
+		return;
+	}
+
+	$table = $bp->profile->table_name_meta;
+
+	// One query to find affected field IDs so we can clear per-field caches
+	// after deletion. `_none` is the exact sentinel `set_member_types()`
+	// writes when given an empty input array.
+	$field_ids = $wpdb->get_col(
+		$wpdb->prepare(
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table from $bp->profile->table_name_meta is plugin-controlled.
+			"SELECT object_id FROM {$table} WHERE object_type = %s AND meta_key = %s AND meta_value = %s",
+			'field',
+			'member_type',
+			'_none'
+		)
+	);
+
+	if ( empty( $field_ids ) ) {
+		return;
+	}
+
+	foreach ( $field_ids as $field_id ) {
+		bp_xprofile_delete_meta( (int) $field_id, 'field', 'member_type' );
+	}
+
+	// Mirror the cache invalidation that
+	// `bp_xprofile_clear_member_type_cache` performs — the global
+	// `field_member_types` cache aggregates all fields' member-type
+	// associations, so a bulk delete invalidates it once at the end
+	// rather than per-field.
+	wp_cache_delete( 'field_member_types', 'bp_xprofile' );
+}
+
+/**
+ * Whether the current site is entitled to the BuddyBoss Addons bundle.
+ *
+ * Entitlement = Mothership present AND active license AND the catalog carries
+ * the buddyboss-addons product AND the products API did not error. The plan's
+ * catalog is the single source of truth — plans not entitled to the bundle
+ * simply do not carry the product. Never returns true on an errored catalog
+ * read.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @return bool True when entitled.
+ */
+function bb_is_entitled_to_addons() {
+
+	/**
+	 * Short-circuit the BuddyBoss Addons entitlement decision.
+	 *
+	 * Return a non-null boolean to override the result before any Mothership
+	 * call. This is the seam the test suite and integrators use to force the
+	 * decision without a live license/catalog lookup (the checks below all
+	 * short-circuit to false when the Mothership layer is absent).
+	 *
+	 * @since BuddyBoss 3.4.2
+	 *
+	 * @param bool|null $override Non-null boolean to force the decision, or null to compute it.
+	 */
+	$override = apply_filters( 'bb_pre_is_entitled_to_addons', null );
+	if ( null !== $override ) {
+		return (bool) $override;
+	}
+
+	$has_mothership = class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
+		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
+
+	if ( ! $has_mothership ) {
+		return false;
+	}
+
+	$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
+
+	if ( ! $connector->getLicenseActivationStatus() ) {
+		return false;
+	}
+
+	// Fetch the product first (warms the products transient), then read the
+	// error flag from that same warm cache. An errored read returns false.
+	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+
+	if ( \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored() ) {
+		return false;
+	}
+
+	$entitled = ! empty( $product );
+
+	/**
+	 * Filters the computed BuddyBoss Addons entitlement decision.
+	 *
+	 * Runs only when the decision was computed (not short-circuited by
+	 * `bb_pre_is_entitled_to_addons`); use this to adjust the final value with
+	 * the matched product in hand.
+	 *
+	 * @since BuddyBoss 3.4.2
+	 *
+	 * @param bool        $entitled Whether the site is entitled.
+	 * @param object|null $product  The matched product object, or null.
+	 */
+	return (bool) apply_filters( 'bb_is_entitled_to_addons', $entitled, $product );
+}
+
+/**
+ * Whether the buddyboss-addons plugin is active.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @return bool True when active.
+ */
+function bb_is_addons_plugin_active() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	return is_plugin_active( 'buddyboss-addons/buddyboss-addons.php' );
+}
+
+/**
+ * One-time upgrade migration: install & activate the BuddyBoss Addons bundle
+ * for entitled customers.
+ *
+ * Invoked once from bp_version_updater() (PROD-10242). System-migration style,
+ * like the sibling bb_update_to_* functions: no capability gate (bp_version_updater
+ * is not capability-gated and bumps the stored version on the first admin request,
+ * so a cap gate would let a low-privilege user burn the one-shot). Non-interactive
+ * (Automatic_Upgrader_Skin) — never prompts, never fatals, never loops. Performs
+ * install + activate ONLY; writes no feature settings.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @return void
+ */
+function bb_install_addons_bundle_on_upgrade() {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	// Already active → nothing to do (checked first: no disk/network work, and
+	// keeps the unit test's no-write path hermetic).
+	if ( bb_is_addons_plugin_active() ) {
+		return;
+	}
+
+	if ( ! bb_is_entitled_to_addons() ) {
+		return;
+	}
+
+	$plugin_file = 'buddyboss-addons/buddyboss-addons.php';
+
+	// Install only when the files are absent; never re-install over an existing copy.
+	if ( ! file_exists( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/misc.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+
+		$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
+
+		if ( '' === $download_url ) {
+			return;
+		}
+
+		$skin      = new Automatic_Upgrader_Skin();
+		$upgrader  = new Plugin_Upgrader( $skin );
+		$installed = $upgrader->install( $download_url );
+
+		if ( true !== $installed ) {
+			// Filesystem not writable / download failed. Fail silently for the
+			// user — the admin can install manually from the Add-ons page.
+			if ( function_exists( 'bb_error_log' ) ) {
+				// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces auto-install failures for support.
+				bb_error_log( 'BuddyBoss Addons auto-install: install failed' . ( is_wp_error( $installed ) ? ': ' . $installed->get_error_message() : '.' ) );
+			}
+			return;
+		}
+	}
+
+	// Match Platform's activation scope. On a network-activated Platform,
+	// network-activate the add-on so every subsite community gets it; otherwise
+	// this runs inside switch_to_blog( root ), so a plain activate lands on the
+	// root blog only.
+	$network_wide = function_exists( 'bp_is_network_activated' ) && bp_is_network_activated();
+
+	$activated = activate_plugin( $plugin_file, '', $network_wide );
+
+	// Activation can fail even after a clean install (e.g. the add-on fatals on
+	// include, or its dependency check rejects the running Platform version).
+	// Leave it inactive rather than fatal the request, but log for support.
+	if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
+		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
+		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
+	}
+}
+
+/**
+ * Purge the App API cache of forum topics and replies.
+ *
+ * The topics and reply REST endpoints now return the legacy oEmbed (`preview_data`,
+ * `link_embed_url`) for posts saved without `_link_embed` meta, as the web already shows.
+ * Responses cached before the update still hold the empty preview for up to 30 days, so
+ * clear them once on the upgrade (PROD-10630).
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @return void
+ */
+function bb_purge_forums_api_cache_for_legacy_embed() {
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
+	}
+}
+
+/**
+ * Start the draft cleanup on upgrade.
+ *
+ * Records the epoch that timestamp-less legacy drafts age from, queues the
+ * `bb_draft_oneshot` continuation, and only THEN runs the first healing
+ * slice synchronously (bounded by its time budget) so already-affected
+ * sites - where oversized draft rows poison the per-user meta cache entry -
+ * begin recovering on the upgrade request itself, even on hosts where
+ * loopback requests and cron are unreliable. The continuation is queued
+ * first because this routine runs inside a non-resumable window: see the
+ * inline note. It is unscheduled again when the slice completes, and the
+ * `wp bb drafts cleanup` WP-CLI command can drain it manually.
+ *
+ * Idempotent: the epoch is only recorded once, disposal of an absent row
+ * is a no-op, and the `bb_drafts_cleanup_on_upgrade` option timestamps the
+ * last synchronous slice so the updater firing more than once inside an
+ * upgrade window cannot repeat it.
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @return void
+ */
+function bb_drafts_cleanup_on_upgrade() {
+	if ( ! get_site_option( 'bb_draft_cleanup_epoch' ) ) {
+		update_site_option( 'bb_draft_cleanup_epoch', time() );
+	}
+
+	// Guarded with an autoload-false OPTION rather than a transient, for the
+	// same reason bb_draft_oneshot_done is one: transients live in the very
+	// object cache this routine repairs, so on the installs it exists for the
+	// guard can evaporate and this 10-second synchronous slice would re-run on
+	// every admin request in the upgrade window.
+	$last_started = (int) get_site_option( 'bb_drafts_cleanup_on_upgrade', 0 );
+
+	if ( $last_started && ( time() - $last_started ) < HOUR_IN_SECONDS ) {
+		return;
+	}
+
+	update_site_option( 'bb_drafts_cleanup_on_upgrade', time() );
+
+	// Scheduled BEFORE the first slice runs, not after it. _bp_db_version is
+	// bumped by bp_version_bump() inside bp_is_update() - before this updater
+	// body executes - so bp_setup_updater() never re-enters it. A fatal or a
+	// max_execution_time timeout inside the slice below would therefore skip
+	// both the continuation AND the remaining migrations in this routine, with
+	// no retry. Scheduling first means the healing still finishes on cron even
+	// if this request dies (H1).
+	// Scheduled on the ROOT blog: the healing is network-wide but this updater
+	// runs on whichever subsite's admin loads first after the version bump, and
+	// cron events are per-blog - so a naive schedule here could strand the
+	// continuation on a low-traffic subsite's cron (L10).
+	bb_draft_oneshot_schedule( MINUTE_IN_SECONDS );
+
+	$result = bb_drafts_oneshot_batch( 10 );
+
+	// Finished inside this request after all, so the queued continuation has
+	// nothing left to do.
+	if ( ! empty( $result['complete'] ) ) {
+		bb_draft_oneshot_unschedule();
+	}
+}
+
+/**
+ * Purge the App API cache of activities.
+ *
+ * The activity REST endpoints now refuse an activity comment to users who cannot read
+ * its root activity, such as non-members of a private or hidden group. Responses cached
+ * before the update still hold those comments for up to 30 days, and the cache is read
+ * before the REST permission check, so clear them once on the upgrade (PROD-10649).
+ *
+ * `bp-activity` also matches the per-item `bp-activity_<id>` groups.
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @return void
+ */
+function bb_purge_activity_api_cache_for_comment_access() {
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-activity' );
+	}
+}
+
+/**
+ * Minimum BuddyBoss Add-ons version this Platform needs.
+ *
+ * Reads the floor from the version-compatibility notice so both stay in sync;
+ * that file is admin-only, hence the fallback.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string Minimum Add-ons version.
+ */
+function bb_get_addons_required_version() {
+	if ( ! function_exists( 'bb_platform_3_addons_required_version' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php';
+	}
+
+	return bb_platform_3_addons_required_version();
+}
+
+/**
+ * Get the installed BuddyBoss Add-ons version, read from the plugin header on disk.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string Version, or an empty string when it is not installed or unreadable.
+ */
+function bb_get_installed_addons_version() {
+	static $version = null;
+
+	if ( null === $version ) {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$plugins = get_plugins();
+		$version = isset( $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] ) ? (string) $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] : '';
+	}
+
+	return $version;
+}
+
+/**
+ * Whether a BuddyBoss Add-ons version is below the version this Platform requires.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string|null $version Optional. Version to check. Default: the installed version.
+ *
+ * @return bool False when the version is unknown (not installed or unreadable).
+ */
+function bb_is_addons_below_required_version( $version = null ) {
+	$version = null === $version ? bb_get_installed_addons_version() : (string) $version;
+
+	return '' !== $version && version_compare( $version, bb_get_addons_required_version(), '<' );
+}
+
+/**
+ * Update an active BuddyBoss Add-ons below the required version.
+ *
+ * The package comes from the Mothership catalog of the activated license, so the
+ * plan decides: a plan that carries the buddyboss-addons product gets the latest
+ * build; a plan that does not (e.g. Free or Lite) has nothing to download and is
+ * skipped. Non-interactive (Automatic_Upgrader_Skin); the add-on is re-activated
+ * in its previous scope afterwards, as WordPress does after a manual update.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string Result: 'inactive', 'up_to_date', 'vcs_checkout', 'not_entitled', 'no_package',
+ *                'updated' or 'failed'.
+ */
+function bb_update_addons_bundle_to_required_version() {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	$plugin_file = 'buddyboss-addons/buddyboss-addons.php';
+
+	// Only an active copy is updated; an inactive or missing one is left alone.
+	if ( ! is_plugin_active( $plugin_file ) ) {
+		return 'inactive';
+	}
+
+	$installed = bb_get_installed_addons_version();
+
+	if ( '' !== $installed && ! bb_is_addons_below_required_version( $installed ) ) {
+		return 'up_to_date';
+	}
+
+	// Never overwrite a version-control checkout (a development copy), as WordPress
+	// core's own auto-updater does not.
+	$plugin_dir = trailingslashit( WP_PLUGIN_DIR ) . dirname( $plugin_file );
+	foreach ( array( '.git', '.svn', '.hg', '.bzr' ) as $vcs_dir ) {
+		if ( is_dir( $plugin_dir . '/' . $vcs_dir ) ) {
+			return 'vcs_checkout';
+		}
+	}
+
+	// Plan check: only a license whose plan carries the add-on product can download it.
+	if ( ! bb_is_entitled_to_addons() ) {
+		// For an activated license a catalog outage also reads as "not entitled"; report
+		// it as a failure so it is retried.
+		if (
+			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) &&
+			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) &&
+			( new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector() )->getLicenseActivationStatus() &&
+			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored()
+		) {
+			return 'failed';
+		}
+
+		return 'not_entitled';
+	}
+
+	$product      = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+	$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
+	$latest       = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version( $product );
+	$latest       = ( null !== $latest && ! empty( $latest->number ) ) ? (string) $latest->number : '';
+
+	/**
+	 * Filters the BuddyBoss Add-ons package used for the post-update upgrade.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param array       $package {
+	 *     @type string $url     Package URL (or local zip path).
+	 *     @type string $version Package version.
+	 * }
+	 * @param object|null $product The Mothership product, or null.
+	 */
+	$package      = (array) apply_filters(
+		'bb_addons_bundle_update_package',
+		array(
+			'url'     => $download_url,
+			'version' => $latest,
+		),
+		$product
+	);
+	$download_url = isset( $package['url'] ) ? (string) $package['url'] : '';
+	$latest       = isset( $package['version'] ) ? (string) $package['version'] : '';
+
+	// A build that is newer but still below the required version is not installed: the
+	// queue is kept and retried until Mothership serves the required build.
+	if (
+		'' === $download_url ||
+		'' === $latest ||
+		version_compare( $latest, $installed, '<=' ) ||
+		bb_is_addons_below_required_version( $latest )
+	) {
+		return 'no_package';
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/misc.php';
+	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+	// Plugin_Upgrader::upgrade() reads the package from the update transient.
+	$inject_package = function ( $transient ) use ( $plugin_file, $download_url, $latest ) {
+		if ( ! is_object( $transient ) ) {
+			$transient = new stdClass();
+		}
+		if ( ! isset( $transient->response ) || ! is_array( $transient->response ) ) {
+			$transient->response = array();
+		}
+		$transient->response[ $plugin_file ] = (object) array(
+			'slug'        => 'buddyboss-addons',
+			'plugin'      => $plugin_file,
+			'new_version' => $latest,
+			'package'     => $download_url,
+		);
+
+		return $transient;
+	};
+
+	$network_wide = is_multisite() && is_plugin_active_for_network( $plugin_file );
+
+	add_filter( 'site_transient_update_plugins', $inject_package );
+	$upgrader = new Plugin_Upgrader( new Automatic_Upgrader_Skin() );
+	$result   = $upgrader->upgrade( $plugin_file );
+	remove_filter( 'site_transient_update_plugins', $inject_package );
+
+	// The upgrader deactivates the plugin before replacing it; restore it in the same
+	// scope even when the update failed part-way. Silent, like WordPress's own reactivation.
+	if ( ! is_plugin_active( $plugin_file ) ) {
+		$activated = activate_plugin( $plugin_file, '', $network_wide, true );
+
+		if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
+			bb_error_log( 'BuddyBoss Addons auto-update: re-activation failed: ' . $activated->get_error_message() );
+		}
+	}
+
+	if ( true !== $result ) {
+		if ( function_exists( 'bb_error_log' ) ) {
+			bb_error_log( 'BuddyBoss Addons auto-update: update failed' . ( is_wp_error( $result ) ? ': ' . $result->get_error_message() : '.' ) );
+		}
+
+		return 'failed';
+	}
+
+	return 'updated';
+}
+
+/**
+ * Queue the update of an active BuddyBoss Add-ons below the required version.
+ *
+ * Called once from bp_version_updater() for db version 23631. It only records
+ * that the update is due; {@see bb_maybe_run_queued_addons_bundle_update()}
+ * performs it, so the upgrade request itself (which can be any front-end
+ * admin-ajax call) never downloads or replaces a plugin.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return void
+ */
+function bb_queue_addons_bundle_update() {
+	bp_update_option( 'bb_addons_bundle_update_queued', 1 );
+	bp_delete_option( 'bb_addons_bundle_update_attempts' );
+}
+
+/**
+ * Run the queued BuddyBoss Add-ons update.
+ *
+ * Runs on a regular wp-admin GET page load (not AJAX, cron or REST) by a user
+ * who can update plugins, under a lock so concurrent page loads never run the
+ * upgrader twice. On multisite it runs only on the root blog, where the queue
+ * option lives, so the lock, retry wait and plugin check use the same site and
+ * a subsite page load can neither clear the queue nor spend its attempts.
+ * Final results clear the queue. A failed download, or no
+ * build at the required version being available yet (Mothership not serving
+ * it), is retried at most every 12 hours, up to 10 attempts. An inactive or
+ * not-entitled Add-ons keeps the update queued without spending an attempt; it
+ * is checked again after the same wait, or sooner once Add-ons or a license is
+ * activated ({@see bb_retry_queued_addons_bundle_update_soon()}).
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return void
+ */
+function bb_maybe_run_queued_addons_bundle_update() {
+	if (
+		! bp_get_option( 'bb_addons_bundle_update_queued', false ) ||
+		( is_multisite() && ! bp_is_root_blog() ) ||
+		wp_doing_ajax() ||
+		wp_doing_cron() ||
+		( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
+		! isset( $_SERVER['REQUEST_METHOD'] ) ||
+		'GET' !== $_SERVER['REQUEST_METHOD'] ||
+		! current_user_can( 'update_plugins' ) ||
+		false !== get_transient( 'bb_addons_bundle_update_retry_wait' )
+	) {
+		return;
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+	if ( ! WP_Upgrader::create_lock( 'bb_addons_bundle_update', 15 * MINUTE_IN_SECONDS ) ) {
+		return;
+	}
+
+	// Count the attempt and start the wait before running, so a fatal inside the
+	// upgrader is retried later instead of on every admin page load.
+	$attempts = (int) bp_get_option( 'bb_addons_bundle_update_attempts', 0 ) + 1;
+	bp_update_option( 'bb_addons_bundle_update_attempts', $attempts );
+	set_transient( 'bb_addons_bundle_update_retry_wait', 1, 12 * HOUR_IN_SECONDS );
+
+	$result = bb_update_addons_bundle_to_required_version();
+
+	// Nothing was tried: keep the update queued for when Add-ons is active and entitled.
+	if ( in_array( $result, array( 'inactive', 'not_entitled' ), true ) ) {
+		bp_update_option( 'bb_addons_bundle_update_attempts', $attempts - 1 );
+	} elseif ( ! in_array( $result, array( 'failed', 'no_package' ), true ) || $attempts >= 10 ) {
+		bp_delete_option( 'bb_addons_bundle_update_queued' );
+		bp_delete_option( 'bb_addons_bundle_update_attempts' );
+		delete_transient( 'bb_addons_bundle_update_retry_wait' );
+	}
+
+	WP_Upgrader::release_lock( 'bb_addons_bundle_update' );
+
+	// The old Add-ons build is already loaded in this request; reload so the rest
+	// of the page runs against the new files only.
+	if ( 'updated' === $result && ! headers_sent() && isset( $_SERVER['REQUEST_URI'] ) ) {
+		wp_safe_redirect( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+		exit;
+	}
+}
+add_action( 'admin_init', 'bb_maybe_run_queued_addons_bundle_update', 100 );
+
+/**
+ * Let a queued BuddyBoss Add-ons update run on the next admin page load.
+ *
+ * Ends the retry wait once Add-ons is activated, or a license is activated, so an
+ * update kept queued while Add-ons was inactive or not entitled does not wait up
+ * to 12 hours. Does nothing when no update is queued.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string $plugin Optional. Activated plugin basename; empty for a license activation.
+ *
+ * @return void
+ */
+function bb_retry_queued_addons_bundle_update_soon( $plugin = '' ) {
+	if ( '' !== $plugin && 'buddyboss-addons/buddyboss-addons.php' !== $plugin ) {
+		return;
+	}
+
+	if ( bp_get_option( 'bb_addons_bundle_update_queued', false ) ) {
+		delete_transient( 'bb_addons_bundle_update_retry_wait' );
+	}
+}
+add_action( 'activated_plugin', 'bb_retry_queued_addons_bundle_update_soon' );

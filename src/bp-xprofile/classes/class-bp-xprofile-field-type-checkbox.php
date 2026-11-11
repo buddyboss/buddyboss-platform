@@ -113,7 +113,7 @@ class BP_XProfile_Field_Type_Checkbox extends BP_XProfile_Field_Type {
 	 */
 	public function edit_field_options_html( array $args = array() ) {
 		$options       = $this->field_obj->get_children();
-		$option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) );
+		$option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) ); // Object injection guard.
 
 		/*
 		 * Determine whether to pre-select the default option.

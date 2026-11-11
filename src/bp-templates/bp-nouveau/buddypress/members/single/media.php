@@ -20,25 +20,41 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 		<?php
 		if ( ! $is_send_ajax_request || ( 'albums' === $bp_current_action && ! bp_is_single_album() ) ) {
 			if ( 'my-media' === $bp_current_action ) {
-				$count = $count = bp_media_get_total_media_count();
+				$count = bp_media_get_total_media_count();
 			} elseif ( 'albums' === $bp_current_action && ! bp_is_single_album() ) {
 				$count = bb_media_get_total_album_count();
 			}
 
 			if ( false !== $count ) {
-				printf(
-					wp_kses(
-						/* translators: %d is the count */
-						_n(
-							'<span class="bb-count">%d</span> ' . ( 'albums' === $bp_current_action ? 'Album' : 'Photo' ),
-							'<span class="bb-count">%d</span> ' . ( 'albums' === $bp_current_action ? 'Albums' : 'Photos' ),
-							$count,
-							'buddyboss'
+				if ( 'albums' === $bp_current_action ) {
+					printf(
+						wp_kses(
+							/* translators: %d is the count */
+							_n(
+								'<span class="bb-count">%d</span> Album',
+								'<span class="bb-count">%d</span> Albums',
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
 						),
-						array( 'span' => array( 'class' => true ) )
-					),
-					(int) $count
-				);
+						(int) $count
+					);
+				} else {
+					printf(
+						wp_kses(
+							/* translators: %d is the count */
+							_n(
+								'<span class="bb-count">%d</span> Photo',
+								'<span class="bb-count">%d</span> Photos',
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
+						),
+						(int) $count
+					);
+				}
 			}
 
 			unset( $count );
@@ -51,7 +67,7 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 <div class="bb-media-container member-media">
 	<?php
 	bp_get_template_part( 'media/theatre' );
-	if ( bp_is_profile_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 		bp_get_template_part( 'video/add-video-thumbnail' );
 	}

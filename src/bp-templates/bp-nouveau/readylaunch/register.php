@@ -20,7 +20,9 @@ wp_enqueue_script( 'jquery-magnific-popup' );
 wp_enqueue_style( 'jquery-magnific-popup' );
 wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
+wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
 wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bp_get_version() );
+wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 ?>
 
 <html <?php language_attributes(); ?>>
@@ -34,7 +36,7 @@ wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/
 	<?php bp_get_template_part( 'common/header-register' ); ?>
 	<div class="register-page-main">
 		<?php
-		$bb_rl_light_logo = bp_get_option( 'bb_rl_light_logo', array() );
+		$bb_rl_light_logo = bb_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
 		if ( ! empty( $bb_rl_light_logo ) ) :
 			$logo_url   = esc_url( $bb_rl_light_logo['url'] );
 			$logo_title = ! empty( $bb_rl_light_logo['title'] ) ? $bb_rl_light_logo['title'] : '';
@@ -85,6 +87,7 @@ wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/
 			}
 		} );
 	</script>
+	<?php wp_footer(); ?>
 </body>
 </html>
 

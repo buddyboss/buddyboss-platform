@@ -111,6 +111,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
 				'situation_label'     => __( 'A new reply in a discussion a member is subscribed to', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_forums_subscribed_reply'
 		);
@@ -171,6 +172,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 				'situation_label'     => __( 'A new discussion in a forum a member is subscribed to', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_forums_subscribed_discussion'
 		);
@@ -854,10 +856,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * Send callback function for forum type notification.
 	 *
 	 * @since BuddyBoss 2.2.6
+	 * @since BuddyBoss 3.6.1 Claims the chunk before sending (concurrent re-run guard) and returns false on completion so the background queue row is removed instead of re-queued.
 	 *
 	 * @param array $args Array of arguments.
 	 *
-	 * @return bool|void
+	 * @return false|void
 	 */
 	public function bb_send_forums_subscribed_discussion( $args ) {
 
@@ -874,6 +877,17 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || ! bb_is_enabled_subscription( $r['type'] ) ) {
 			return;
+		}
+
+		// Derive the claim key from the pristine payload once: the author is
+		// removed from user_ids below, and the claim, its refreshes and its
+		// completion marker must all hash the same shape.
+		$chunk_key = bb_subscriptions_get_notification_chunk_key( $r );
+
+		// A queue row re-run by a concurrently dispatched worker must not send
+		// this chunk a second time.
+		if ( ! bb_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
+			return false;
 		}
 
 		$type_key = 'notification_forums_following_topic';
@@ -901,6 +915,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
+			// Keep the chunk claim alive while this (possibly slow) chunk is still sending.
+			bb_subscriptions_touch_notification_chunk_claim( $r, $chunk_key );
 			$send_mail         = true;
 			$send_notification = true;
 
@@ -953,6 +969,15 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 				$email_tokens['tokens']['receiver-user.id'] = $user_id;
 
+				// The poster's name was resolved once, before this fan-out, in the poster's own
+				// request - where nothing of their own name is ever hidden from them. Sent as-is it
+				// would carry a name part into every subscriber's inbox that the site withholds from
+				// them on screen. Re-resolve it for THIS recipient, as the group subscription
+				// fan-out in BP_Groups_Notification already does.
+				if ( isset( $email_tokens['tokens']['poster.name'] ) && ! empty( $author_id ) ) {
+					$email_tokens['tokens']['poster.name'] = bp_core_get_user_displayname( (int) $author_id, $user_id );
+				}
+
 				// Send notification email.
 				bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $email_tokens );
 			}
@@ -974,17 +999,27 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			}
 		}
 
-		return true;
+		// Every recipient is handled: mark the chunk done so a late duplicate
+		// queue row is refused, then release the claim.
+		bb_subscriptions_complete_notification_chunk( $r, $chunk_key );
+
+		// The chunk is fully processed; false removes the queue row. A truthy
+		// return would make BB_Background_Updater::task() re-run the row with
+		// the updater object as its only argument; that pass stops at the array
+		// check in bb_subscriptions_send_notification_chunk() (or, for a row
+		// queued before the chunk runner existed, at the guards above).
+		return false;
 	}
 
 	/**
 	 * Send callback function for topic type notification.
 	 *
 	 * @since BuddyBoss 2.2.6
+	 * @since BuddyBoss 3.6.1 Claims the chunk before sending (concurrent re-run guard) and returns false on completion so the background queue row is removed instead of re-queued.
 	 *
 	 * @param array $args Array of arguments.
 	 *
-	 * @return bool|void
+	 * @return false|void
 	 */
 	public function bb_send_forums_subscribed_reply( $args ) {
 
@@ -1001,6 +1036,17 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || ! bb_is_enabled_subscription( $r['type'] ) ) {
 			return;
+		}
+
+		// Derive the claim key from the pristine payload once: the author is
+		// removed from user_ids below, and the claim, its refreshes and its
+		// completion marker must all hash the same shape.
+		$chunk_key = bb_subscriptions_get_notification_chunk_key( $r );
+
+		// A queue row re-run by a concurrently dispatched worker must not send
+		// this chunk a second time.
+		if ( ! bb_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
+			return false;
 		}
 
 		$type_key = 'notification_forums_following_reply';
@@ -1028,6 +1074,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
+			// Keep the chunk claim alive while this (possibly slow) chunk is still sending.
+			bb_subscriptions_touch_notification_chunk_claim( $r, $chunk_key );
 			$send_mail         = true;
 			$send_notification = true;
 
@@ -1080,6 +1128,15 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 				$email_tokens['tokens']['receiver-user.id'] = $user_id;
 
+				// The poster's name was resolved once, before this fan-out, in the poster's own
+				// request - where nothing of their own name is ever hidden from them. Sent as-is it
+				// would carry a name part into every subscriber's inbox that the site withholds from
+				// them on screen. Re-resolve it for THIS recipient, as the group subscription
+				// fan-out in BP_Groups_Notification already does.
+				if ( isset( $email_tokens['tokens']['poster.name'] ) && ! empty( $author_id ) ) {
+					$email_tokens['tokens']['poster.name'] = bp_core_get_user_displayname( (int) $author_id, $user_id );
+				}
+
 				// Send notification email.
 				bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $email_tokens );
 			}
@@ -1110,7 +1167,16 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			}
 		}
 
-		return true;
+		// Every recipient is handled: mark the chunk done so a late duplicate
+		// queue row is refused, then release the claim.
+		bb_subscriptions_complete_notification_chunk( $r, $chunk_key );
+
+		// The chunk is fully processed; false removes the queue row. A truthy
+		// return would make BB_Background_Updater::task() re-run the row with
+		// the updater object as its only argument; that pass stops at the array
+		// check in bb_subscriptions_send_notification_chunk() (or, for a row
+		// queued before the chunk runner existed, at the guards above).
+		return false;
 	}
 
 }

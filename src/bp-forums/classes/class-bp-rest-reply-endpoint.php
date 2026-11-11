@@ -795,7 +795,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				 * We need to check manually because bbpress updating that caps only on group forum page and
 				 * in API those conditional tag will not work.
 				 */
-				$group_ids = bbp_get_forum_group_ids( $forum_id );
+				if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
+					$group_ids = bb_get_child_forum_group_ids( $forum_id );
+				} else {
+					$group_ids = bbp_get_forum_group_ids( $forum_id );
+				}
 				if ( ! empty( $group_ids ) ) {
 					$is_member = false;
 					foreach ( $group_ids as $group_id ) {
@@ -1399,7 +1403,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				 * We need to check manually because bbpress updating that caps only on group forum page and
 				 * in API those conditional tag will not work.
 				 */
-				$group_ids = bbp_get_forum_group_ids( $forum_id );
+				if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
+					$group_ids = bb_get_child_forum_group_ids( $forum_id );
+				} else {
+					$group_ids = bbp_get_forum_group_ids( $forum_id );
+				}
 				if ( ! empty( $group_ids ) ) {
 					$is_member = false;
 					foreach ( $group_ids as $group_id ) {
@@ -2074,12 +2082,21 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			'rendered' => bbp_get_reply_content( $reply->ID ),
 		);
 
-		add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
-		add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
-		add_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
+		// GIF, media, video and document embeds may be absent (Add-ons module or component inactive); only re-add loaded callbacks.
+		if ( function_exists( 'bp_media_forums_embed_gif' ) ) {
+			add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
+		}
+		if ( function_exists( 'bp_media_forums_embed_attachments' ) ) {
+			add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		}
+		if ( function_exists( 'bp_video_forums_embed_attachments' ) ) {
+			add_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
+		}
 		add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 ); // Restore link preview.
 		add_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 ); // Restore link embed to content
-		add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
+		if ( function_exists( 'bp_document_forums_embed_attachments' ) ) {
+			add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
+		}
 
 		// Don't leave our cookie lying around: https://github.com/WP-API/WP-API/issues/1055.
 		if ( ! empty( $reply->post_password ) ) {
@@ -2106,6 +2123,16 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		} else {
 			$data['preview_data'] = bb_forums_link_preview( '', $reply->ID );
+
+			// No saved preview: fall back to the embed the web shows for the content URL.
+			if ( empty( $data['preview_data'] ) ) {
+				$legacy_embed = $this->forum_endpoint->bb_rest_forums_get_legacy_embed( $reply->ID, $reply->post_content );
+
+				if ( ! empty( $legacy_embed ) ) {
+					$data['link_embed_url'] = $legacy_embed['url'];
+					$data['preview_data']   = $legacy_embed['html'];
+				}
+			}
 		}
 
 		$forum_id = bbp_get_reply_forum_id( $reply->ID );

@@ -1,9 +1,9 @@
 <?php
 /**
- * ReadyLaunch - The template for activity modal.
+ * ReadyLaunch - The template for GIF picker standalone popup.
  *
- * This template handles the emoji picker popup display for activity forms.
- * It provides a container for the emojionearea functionality.
+ * This template handles the GIF picker popup display for modals.
+ * It provides a container for the GIF picker functionality.
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch

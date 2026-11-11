@@ -1,0 +1,545 @@
+$color_1: #717171;
+$color_2: #dc3232;
+$color_3: #46b450;
+$color_4: #23282d;
+$color_5: #dcd41f;
+$color_6: #666;
+$color_7: #fff;
+$font-family_1: dashicons;
+$background-color_1: #fff;
+$background-color_2: #000;
+$background-color_3: hsla(0, 0%, 20%, 0.9);
+$background-color_4: rgba(255, 255, 255, 0.8);
+$border-right-color_1: #fff;
+$border-right-color_2: #ddd;
+
+.buddyboss-mothership-wrap {
+	min-width: 255px;
+	max-width: 1050px;
+}
+
+.buddyboss-mothership-block-container {
+	display: flex;
+	flex-flow: wrap;
+	margin: 20px -10px 0;
+}
+
+.buddyboss-mothership-block {
+	margin: 0 10px 20px;
+	background-color: $background-color_1;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	box-sizing: border-box;
+	flex: 0 0 calc(50% - 20px);
+	min-width: 0;
+
+	.inside {
+		padding: 2.5em;
+	}
+
+	h2 {
+		margin: 0 0 1.5em;
+	}
+
+	.button {
+		line-height: 36px;
+		height: 38px;
+		padding: 0 20px 1px;
+	}
+
+	ul {
+		list-style-type: disc;
+		margin-left: 18px;
+
+		li {
+			line-height: 1.5;
+			margin-bottom: 2em;
+		}
+	}
+}
+
+.buddyboss-mothership-settings {
+	background: #f9f9f9;
+	border: 1px solid #ddd;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	box-sizing: border-box;
+	display: flex;
+	min-width: 255px;
+	max-width: 1050px;
+	border-radius: 5px;
+
+	.setting-wrapper {
+		overflow: initial;
+		width: 100%;
+		padding: 20px;
+		flex-flow: wrap;
+
+		h2 {
+			margin-top: 0;
+		}
+
+		.activated-licence {
+			background: #e7f4e4;
+			border: 1px solid #c6e2c4;
+			padding: 10px 15px;
+			margin: 10px 0 20px;
+			color: #2c662d;
+			font-weight: 600;
+			border-radius: 3px;
+
+			p {
+				margin: 5px 0;
+			}
+		}
+
+		.license-form-wrap {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: flex-start;
+			gap: 10px;
+			margin-bottom: 20px;
+
+			.form-table {
+
+				th {
+					max-width: 120px;
+				}
+
+				[scope="row"] {
+					padding-left: 0 !important;
+				}
+			}
+
+			[name="license_key"] {
+				width: 100%;
+				max-width: 500px;
+			}
+		}
+
+		ul {
+			margin: 0;
+
+			li {
+				margin: 0 -1px 0 0;
+				padding: 0;
+				list-style-type: none;
+				background: #eee;
+				border-bottom: 1px solid #ddd;
+				border-right: 1px solid #ddd;
+
+				&:first-child {
+					border-radius: 5px 0 0 0;
+				}
+
+				&:last-child {
+					margin-bottom: 20px;
+				}
+
+				a {
+					display: block;
+					padding: 14px 20px;
+					line-height: 24px;
+					text-decoration: none;
+					color: $color_1;
+					font-size: 14px;
+					font-weight: 600;
+
+					.dashicons {
+						margin-top: 2px;
+						margin-right: 7px;
+					}
+
+					.dashicons-warning {
+						color: $color_2;
+					}
+
+					.dashicons-yes-alt {
+						color: $color_3;
+					}
+				}
+
+				&:hover {
+					background: #e5e5e5;
+					border-right-color: $border-right-color_2;
+				}
+			}
+
+			li.active {
+				background: #fff;
+				border-right-color: $border-right-color_1;
+
+				a {
+					color: $color_4;
+				}
+			}
+		}
+	}
+
+	.tabs-panel {
+		padding: 13px;
+		background: #fff;
+		border-left: 1px solid #ddd;
+		border-radius: 0 5px 5px 0;
+		-webkit-box-flex: 1;
+		-ms-flex: 1;
+		flex: 1;
+		min-width: 0;
+
+		table.widefat {
+			clear: none;
+		}
+	}
+
+	.tabs-content {
+		padding: 5px 25px;
+	}
+
+	[type="submit"] {
+
+		.dashicons {
+			line-height: inherit;
+		}
+	}
+
+	table.buddyboss-mothership-products {
+		width: 100%;
+		max-width: 600px;
+
+		tr {
+
+			td {
+				padding: 8px 12px;
+				vertical-align: middle;
+				font-size: 14px;
+
+				&:first-child {
+					width: 30%;
+				}
+
+				&:last-child {
+					width: 70%;
+				}
+
+				strong {
+					color: $color_4;
+				}
+			}
+		}
+	}
+}
+
+.bb_indirect_license {
+	background: #fff6d1;
+	border: 1px solid #ffebc7;
+	padding: 20px;
+	margin: 10px 0;
+	position: relative;
+
+	.dashicons-lightbulb {
+		color: $color_5;
+		font-size: 40px;
+		width: 40px;
+		height: 40px;
+		position: absolute;
+		top: 10px;
+		left: 10px;
+	}
+}
+
+.tooltip-persistent-container {
+	position: relative;
+	z-index: 2;
+	display: inline-block;
+	width: 19px;
+
+	.help-tip {
+		color: $color_6;
+		font-size: 1.1em;
+		font-style: normal;
+		height: 16px;
+		line-height: 16px;
+		position: relative;
+		vertical-align: middle;
+		width: 16px;
+		margin-left: 1px;
+
+		&:after {
+			font-family: $font-family_1;
+			font-weight: 400;
+			line-height: 1;
+			text-indent: 0;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			text-align: center;
+			content: "";
+			cursor: help;
+			margin: 0;
+			speak: none;
+			font-variant: normal;
+			text-transform: none;
+			-webkit-font-smoothing: antialiased;
+		}
+	}
+
+	.tooltip-persistent {
+		visibility: hidden;
+		opacity: 0;
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		margin-bottom: 5px;
+		margin-left: -100px;
+		padding: 7px;
+		width: 200px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		background-color: $background-color_2;
+		background-color: $background-color_3;
+		color: $color_7;
+		text-align: center;
+		font-size: 14px;
+		line-height: 1.4;
+
+		a {
+			color: $color_7;
+			text-decoration: underline;
+			cursor: pointer;
+		}
+	}
+
+	&:after {
+		visibility: hidden;
+		opacity: 0;
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		margin-left: -5px;
+		width: 0;
+		border-top: 5px solid #000;
+		border-top: 5px solid hsla(0, 0%, 20%, 0.9);
+		border-right: 5px solid transparent;
+		border-left: 5px solid transparent;
+		content: " ";
+		font-size: 0;
+		line-height: 0;
+	}
+}
+
+.tooltip-persistent-container.hover {
+
+	.tooltip-persistent {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	&:after {
+		visibility: visible;
+		opacity: 1;
+	}
+}
+
+#bb_connector_overlay_wrapper {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1001;
+	background-color: $background-color_4;
+
+	#bb_connector_overlay {
+		position: absolute;
+		top: 50%;
+		margin-top: -20px;
+		left: 50%;
+		margin-left: -20px;
+	}
+}
+
+body.bb_connect_overlay {
+	overflow: hidden;
+}
+
+#btn_bb_connect {
+
+	.dashicons {
+		line-height: inherit;
+	}
+}
+
+@media screen and (max-width: 750px) {
+
+	.buddyboss-mothership-block {
+		flex: 0 0 calc(100% - 20px);
+	}
+}
+
+// Free License Modal Styles
+.bb-license-modal {
+	position: fixed;
+	z-index: 100000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+
+	.bb-modal-content {
+		background-color: #fff;
+		padding: 0;
+		border: 1px solid #ddd;
+		width: 80%;
+		max-width: 600px;
+		border-radius: 4px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		box-sizing: border-box;
+	}
+
+	.bb-modal-header {
+		padding: 20px;
+		border-bottom: 1px solid #ddd;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		h3 {
+			margin: 0;
+		}
+	}
+
+	.bb-modal-close {
+		font-size: 24px;
+		font-weight: 700;
+		cursor: pointer;
+		color: #666;
+
+		&:hover {
+			color: #000;
+		}
+	}
+
+	.bb-modal-body {
+		padding: 20px;
+	}
+
+	.bb-modal-footer {
+		margin-top: 20px;
+		text-align: right;
+
+		.button {
+			margin-left: 10px;
+		}
+	}
+
+	.required {
+		color: #d63638;
+	}
+
+	#license-response {
+		display: none;
+		padding: 10px;
+
+		.bb-free-license-key {
+			display: block;
+			margin: 10px 0;
+			padding: 12px;
+			background: #f0f6fc;
+			border: 1px solid #c3c4c7;
+			border-radius: 4px;
+			font-family: "Consolas, Monaco, 'Courier New', monospace";
+			font-size: 14px;
+			color: #2c3338;
+			word-break: break-all;
+			position: relative;
+			cursor: copy;
+
+			&.copied {
+				background: #00a32a;
+			}
+		}
+	}
+
+	#license-response,
+	#license-response p {
+		text-align: center;
+		color: #000;
+		font-weight: 600;
+		font-size: 16px;
+		line-height: 1.4;
+	}
+
+	#license-response p {
+		margin: 0;
+	}
+}
+
+@media screen and (max-width: 782px) {
+
+	.buddyboss-mothership-settings {
+
+		.setting-tabs-wrapper {
+			-webkit-box-flex: 0;
+			-ms-flex: 0 0 180px;
+			flex: 0 0 180px;
+
+			ul {
+
+				li {
+
+					a {
+						font-size: 13px;
+					}
+				}
+			}
+		}
+
+		table.buddyboss-mothership-products {
+			width: 100%;
+
+			input {
+				width: 100%;
+			}
+		}
+	}
+
+	// Responsive modal styles.
+	.bb-license-modal {
+
+		.bb-modal-content {
+			width: 95%;
+			margin: 10% auto;
+		}
+
+		.bb-modal-header {
+			padding: 15px;
+
+			h3 {
+				font-size: 18px;
+			}
+		}
+
+		.bb-modal-body {
+			padding: 15px;
+		}
+
+		.bb-modal-footer {
+			text-align: center;
+
+			.button {
+				margin: 5px;
+				width: auto;
+			}
+		}
+	}
+}

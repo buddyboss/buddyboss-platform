@@ -95,14 +95,14 @@ class BB_Activity_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	private function setup_hooks() {
-		add_action( 'load-buddyboss_page_bp-activity', array( $this, 'bb_activity_admin_edit_metabox_topic' ) );
+		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
 
 		// Add custom column to activity admin list table.
 		add_filter( 'bp_activity_list_table_get_columns', array( $this, 'bb_add_activity_admin_topic_column' ) );
 		add_filter( 'bp_activity_admin_get_custom_column', array( $this, 'bb_activity_admin_topic_column_content' ), 10, 3 );
-		add_action( 'bp_activity_admin_edit_after', array( $this, 'bb_save_activity_topic_metabox' ), 10, 1 );
 
-		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
+		// Register topic field in the Settings 2.0 Activity Edit Modal.
+		add_action( 'bb_register_activity_meta_fields', array( $this, 'bb_register_activity_edit_field_topic' ) );
 
 		add_action( 'bb_topic_before_added', array( $this, 'bb_validate_activity_topic_before_added' ) );
 		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_directory_set_topic_id' ), 20, 2 );
@@ -145,170 +145,6 @@ class BB_Activity_Topics_Manager {
 
 		// Otherwise return all permission types.
 		return $permission_types;
-	}
-
-	/**
-	 * Load the activity topics metabox in activity admin page.
-	 *
-	 * @since BuddyBoss 2.8.80
-	 */
-	public function bb_activity_admin_edit_metabox_topic() {
-		add_meta_box( 'bp_activity_topic', __( 'Topic', 'buddyboss' ), array( $this, 'bb_activity_admin_edit_metabox_topic_content' ), 'buddyboss_page_bp-activity', 'normal', 'core' );
-	}
-
-	/**
-	 * Display the activity topics metabox in activity admin page.
-	 *
-	 * @since BuddyBoss 2.8.80
-	 *
-	 * @param object $item The activity item.
-	 */
-	public function bb_activity_admin_edit_metabox_topic_content( $item ) {
-
-		if ( ! isset( $item->id ) || ! function_exists( 'bb_topics_manager_instance' ) ) {
-			return;
-		}
-
-		$topics = array();
-		if ( 'groups' === $item->component && function_exists( 'bb_get_group_activity_topics' ) ) {
-			$topics = bb_get_group_activity_topics(
-				array(
-					'item_id'   => $item->item_id,
-					'item_type' => 'groups',
-				)
-			);
-		} else {
-			$topics = $this->bb_get_activity_topics();
-		}
-		$item->id         = (int) $item->id;
-		$current_topic_id = (int) $this->bb_get_activity_topic( $item->id, 'id' );
-		?>
-		<div class="bb-activity-topic-container">
-			<?php
-			if ( ! empty( $topics ) ) {
-				wp_nonce_field( 'save_activity_topic', 'activity_topic_nonce' );
-				?>
-				<select name="activity_topic" id="activity_topic">
-					<?php
-					foreach ( $topics as $topic ) {
-						?>
-							<option value="<?php echo esc_attr( $topic['topic_id'] ); ?>" <?php selected( $current_topic_id, $topic['topic_id'] ); ?>>
-							<?php echo esc_html( $topic['name'] ); ?>
-							</option>
-							<?php
-					}
-					?>
-				</select>
-				<?php
-			} else {
-				?>
-				<p><?php esc_html_e( 'No topics found.', 'buddyboss' ); ?></p>
-				<?php
-			}
-			?>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Save the activity topic metabox.
-	 *
-	 * @since BuddyBoss 2.8.80
-	 *
-	 * @param object $activity The activity object.
-	 */
-	public function bb_save_activity_topic_metabox( $activity ) {
-		if ( ! isset( $activity->id ) || ! isset( $_POST['activity_topic'] ) ) {
-			return;
-		}
-
-		// Check nonce for security.
-		if ( ! isset( $_POST['activity_topic_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['activity_topic_nonce'] ) ), 'save_activity_topic' ) ) {
-			return;
-		}
-
-		/**
-		 * Fires before saving the activity topic metabox.
-		 *
-		 * @since BuddyBoss 2.8.80
-		 *
-		 * @param object $activity The activity object.
-		 */
-		do_action( 'bb_before_save_activity_topic_metabox', $activity );
-
-		// Get the topic ID from the form.
-		$topic_id    = isset( $_POST['activity_topic'] ) ? absint( $_POST['activity_topic'] ) : 0;
-		$activity_id = isset( $activity->id ) ? absint( $activity->id ) : 0;
-
-		if ( $activity_id && $topic_id && function_exists( 'bb_topics_manager_instance' ) ) {
-			// Save or update the activity-topic relationship.
-			$args = array(
-				'topic_id'    => $topic_id,
-				'activity_id' => $activity_id,
-				'component'   => $activity->component,
-				'item_id'     => 0,
-			);
-			if ( 'groups' === $activity->component ) {
-				$args['item_id'] = $activity->item_id;
-			}
-			$this->bb_add_activity_topic_relationship( $args );
-		}
-
-		/**
-		 * Fires after saving the activity topic metabox.
-		 *
-		 * @since BuddyBoss 2.8.80
-		 *
-		 * @param int $activity_id The ID of the activity.
-		 * @param int $topic_id    The ID of the topic.
-		 */
-		do_action( 'bb_after_save_activity_topic_metabox', $activity_id, $topic_id );
-	}
-
-	/**
-	 * Add topic column to activity admin list table.
-	 *
-	 * @since BuddyBoss 2.8.80
-	 *
-	 * @param array $columns Array of column names and labels.
-	 *
-	 * @return array Modified array of column names and labels.
-	 */
-	public function bb_add_activity_admin_topic_column( $columns ) {
-		$new_columns = array();
-		foreach ( $columns as $key => $value ) {
-			$new_columns[ $key ] = $value;
-			if ( 'comment' === $key ) {
-				$new_columns['activity_topic'] = __( 'Topics', 'buddyboss' );
-			}
-		}
-		return $new_columns;
-	}
-
-	/**
-	 * Display topic column content in activity admin list table.
-	 *
-	 * @since BuddyBoss 2.8.80
-	 *
-	 * @param string $content     The column content.
-	 * @param string $column_name Column name.
-	 * @param array  $item        The activity item.
-	 *
-	 * @return string
-	 */
-	public function bb_activity_admin_topic_column_content( $content, $column_name, $item ) {
-
-		if ( 'activity_topic' === $column_name && ! empty( $item['id'] ) ) {
-			return $this->bb_get_activity_topic_url(
-				array(
-					'activity_id' => $item['id'],
-					'html'        => true,
-					'target'      => true,
-				)
-			);
-		}
-
-		return $content;
 	}
 
 	/**
@@ -604,6 +440,42 @@ class BB_Activity_Topics_Manager {
 		do_action( 'bb_after_delete_activity_topic_relationship', $deleted, $get_activity_relationship, $args );
 
 		return $deleted;
+	}
+
+	/**
+	 * Delete one batch of relationship rows whose activity no longer exists.
+	 *
+	 * Idempotent; callers loop until it returns 0 (see the "Activity topics" repair tool).
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param int $limit Rows per batch.
+	 *
+	 * @return int Rows deleted in this batch.
+	 */
+	public function bb_delete_orphan_activity_topic_relationships( $limit = 500 ) {
+		$bp    = buddypress();
+		$limit = max( 1, (int) $limit );
+
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- placeholders built below, table names are internal.
+		$orphan_ids = $this->wpdb->get_col(
+			$this->wpdb->prepare(
+				"SELECT atr.id FROM `{$this->activity_topic_rel_table}` atr LEFT JOIN `{$bp->activity->table_name}` a ON a.id = atr.activity_id WHERE a.id IS NULL ORDER BY atr.id ASC LIMIT %d",
+				$limit
+			)
+		);
+		if ( empty( $orphan_ids ) ) {
+			return 0;
+		}
+
+		$orphan_ids   = wp_parse_id_list( $orphan_ids );
+		$placeholders = implode( ',', array_fill( 0, count( $orphan_ids ), '%d' ) );
+		$result       = $this->wpdb->query(
+			$this->wpdb->prepare( "DELETE FROM `{$this->activity_topic_rel_table}` WHERE id IN ({$placeholders})", $orphan_ids )
+		);
+		// phpcs:enable
+
+		return false === $result ? 0 : (int) $result;
 	}
 
 	/**
@@ -906,7 +778,16 @@ class BB_Activity_Topics_Manager {
 			}
 		}
 
-		$cache_key   = 'bb_activity_topics_' . md5( maybe_serialize( $r ) );
+		$cache_key = 'bb_activity_topics_' . md5( maybe_serialize( $r ) );
+
+		// Include current language in a cache key for WPML compatibility.
+		if ( class_exists( 'SitePress' ) ) {
+			$cache_key .= '_' . apply_filters( 'wpml_current_language', '' );
+		}
+
+		// Versions the cached list, so a reorder can refresh it without flushing the cache group.
+		$cache_key .= '_' . bp_core_get_incrementor( 'bb_activity_topic_lists' );
+
 		$topic_cache = wp_cache_get( $cache_key, $this->activity_topics_cache_key );
 		if ( false !== $topic_cache ) {
 			return $topic_cache;
@@ -1174,5 +1055,169 @@ class BB_Activity_Topics_Manager {
 			}
 		}
 		return $args;
+	}
+
+	/**
+	 * Add the Topic column to the activity admin list table.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 *
+	 * @param array $columns Array of columns.
+	 *
+	 * @return array Modified array of columns.
+	 */
+	public function bb_add_activity_admin_topic_column( $columns ) {
+		$new_columns = array();
+		foreach ( $columns as $key => $value ) {
+			$new_columns[ $key ] = $value;
+			if ( 'comment' === $key ) {
+				$new_columns['activity_topic'] = __( 'Topics', 'buddyboss' );
+			}
+		}
+
+		return $new_columns;
+	}
+
+	/**
+	 * Render the Topic column content in the activity admin list table.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 *
+	 * @param string $content     Column content.
+	 * @param string $column_name Column name.
+	 * @param array  $item        Activity item data.
+	 *
+	 * @return string Modified column content.
+	 */
+	public function bb_activity_admin_topic_column_content( $content, $column_name, $item ) {
+		if ( 'activity_topic' === $column_name && ! empty( $item['id'] ) ) {
+			return $this->bb_get_activity_topic_url(
+				array(
+					'activity_id' => $item['id'],
+					'html'        => true,
+					'target'      => true,
+				)
+			);
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Register the Topic field in the Settings 2.0 Activity Edit Modal.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param BB_Admin_Meta_Field_Registry $registry The registry instance.
+	 * @param string                       $component The component identifier.
+	 */
+	public function bb_register_activity_edit_field_topic( $registry, $component = 'activity' ) {
+		$self = $this;
+
+		$registry->register(
+			$component,
+			'activity_topic',
+			array(
+				'label'             => __( 'Topic', 'buddyboss' ),
+				'type'              => 'select',
+				'order'             => 40,
+				'context'           => 'normal',
+				'get_value'         => function ( $activity ) use ( $self ) {
+					if ( ! method_exists( $self, 'bb_get_activity_topic' ) ) {
+						return 0;
+					}
+
+					return (int) $self->bb_get_activity_topic( $activity->id, 'id' );
+				},
+				'get_options'       => function ( $activity ) {
+					$options = array(
+						array(
+							'label' => __( '--- Select a topic ---', 'buddyboss' ),
+							'value' => '',
+						),
+					);
+
+					$topics = array();
+
+					if ( 'groups' === $activity->component && function_exists( 'bb_get_group_activity_topics' ) ) {
+						$topics = bb_get_group_activity_topics(
+							array(
+								'item_id'   => $activity->item_id,
+								'item_type' => 'groups',
+							)
+						);
+					} else {
+						$activity_topics_manager = bb_activity_topics_manager_instance();
+						if ( $activity_topics_manager && method_exists( $activity_topics_manager, 'bb_get_activity_topics' ) ) {
+							$topics = $activity_topics_manager->bb_get_activity_topics();
+						}
+					}
+
+					if ( ! empty( $topics ) && is_array( $topics ) ) {
+						foreach ( $topics as $topic ) {
+							// Topics may be arrays or objects depending on the source.
+							if ( is_array( $topic ) ) {
+								$tid  = isset( $topic['topic_id'] ) ? $topic['topic_id'] : ( isset( $topic['id'] ) ? $topic['id'] : 0 );
+								$name = isset( $topic['name'] ) ? $topic['name'] : '';
+							} else {
+								$tid  = isset( $topic->topic_id ) ? $topic->topic_id : ( isset( $topic->id ) ? $topic->id : 0 );
+								$name = isset( $topic->name ) ? $topic->name : '';
+							}
+							$options[] = array(
+								'label' => $name,
+								'value' => (string) $tid,
+							);
+						}
+					}
+
+					return $options;
+				},
+				'save_value'        => function ( $activity, $topic_id ) use ( $self ) {
+					if ( ! method_exists( $self, 'bb_add_activity_topic_relationship' ) ) {
+						return;
+					}
+
+					/**
+					 * Fires before saving the activity topic metabox.
+					 * Same hook as legacy bb_save_activity_topic_metabox().
+					 *
+					 * @since BuddyBoss 2.8.80
+					 * @since BuddyBoss 3.0.0 Added to Settings 2.0 field registry save.
+					 *
+					 * @param BP_Activity_Activity $activity The activity object.
+					 */
+					do_action( 'bb_before_save_activity_topic_metabox', $activity );
+
+					if ( $activity->id && $topic_id ) {
+						$topic_args = array(
+							'topic_id'    => $topic_id,
+							'activity_id' => $activity->id,
+							'component'   => $activity->component,
+							'item_id'     => 0,
+						);
+						if ( 'groups' === $activity->component ) {
+							$topic_args['item_id'] = $activity->item_id;
+						}
+						$self->bb_add_activity_topic_relationship( $topic_args );
+					}
+
+					/**
+					 * Fires after saving the activity topic metabox.
+					 * Same hook as legacy bb_save_activity_topic_metabox().
+					 *
+					 * @since BuddyBoss 2.8.80
+					 * @since BuddyBoss 3.0.0 Added to Settings 2.0 field registry save.
+					 *
+					 * @param int $activity_id The ID of the activity.
+					 * @param int $topic_id    The ID of the topic.
+					 */
+					do_action( 'bb_after_save_activity_topic_metabox', $activity->id, $topic_id );
+				},
+				'sanitize_callback' => 'absint',
+				'is_visible'        => function ( $activity ) {
+					return function_exists( 'bb_activity_topics_manager_instance' ) && bb_activity_topics_manager_instance();
+				},
+			)
+		);
 	}
 }

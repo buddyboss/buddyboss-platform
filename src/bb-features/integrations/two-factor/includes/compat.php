@@ -1,0 +1,92 @@
+<?php
+/**
+ * Two Factor plugin compatibility probe.
+ *
+ * Which plugin file this integration looks for, and the oldest release it
+ * supports. Both are filterable so a site can point the integration at a
+ * differently packaged copy.
+ *
+ * Nothing here loads the plugin, depends on it being active, or needs wp-admin
+ * includes, so every helper is front-end safe.
+ *
+ * @since   BuddyBoss 3.6.0
+ * @package BuddyBoss\Features\Integrations\TwoFactor
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Plugin file of the Two Factor plugin, relative to the plugins directory.
+ *
+ * Also the `required_plugin` value passed to BP_Integration.
+ *
+ * @since BuddyBoss 3.6.0
+ */
+if ( ! defined( 'BB_TWO_FACTOR_PLUGIN_BASENAME' ) ) {
+	define( 'BB_TWO_FACTOR_PLUGIN_BASENAME', 'two-factor/two-factor.php' );
+}
+
+/**
+ * Oldest Two Factor release this integration supports.
+ *
+ * 0.16.0 is the floor because the frontend save path depends on
+ * `Two_Factor_Core::action_user_profile_update_errors()`, which is public as of
+ * that release; on 0.15.x the save would fatal.
+ *
+ * @since BuddyBoss 3.6.0
+ */
+if ( ! defined( 'BB_TWO_FACTOR_MIN_VERSION' ) ) {
+	define( 'BB_TWO_FACTOR_MIN_VERSION', '0.16.0' );
+}
+
+/**
+ * Get the Two Factor plugin file, relative to the plugins directory.
+ *
+ * @since BuddyBoss 3.6.0
+ *
+ * @return string Plugin basename, e.g. 'two-factor/two-factor.php'.
+ */
+function bb_two_factor_plugin_basename() {
+
+	/**
+	 * Filters the Two Factor plugin file this integration looks for.
+	 *
+	 * For sites that ship the plugin under a different folder name.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @param string $basename Plugin basename.
+	 */
+	return (string) apply_filters( 'bb_two_factor_plugin_basename', BB_TWO_FACTOR_PLUGIN_BASENAME );
+}
+
+/**
+ * Get the minimum Two Factor version this integration supports.
+ *
+ * The filter can only raise the floor. Lowering it would let the save path
+ * call a plugin method that does not exist on older releases.
+ *
+ * @since BuddyBoss 3.6.0
+ *
+ * @return string Version string.
+ */
+function bb_two_factor_min_plugin_version() {
+
+	/**
+	 * Filters the minimum supported Two Factor version.
+	 *
+	 * Values below the built-in floor are ignored.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @param string $version Minimum supported version.
+	 */
+	$version = (string) apply_filters( 'bb_two_factor_min_plugin_version', BB_TWO_FACTOR_MIN_VERSION );
+
+	if ( '' === $version || version_compare( $version, BB_TWO_FACTOR_MIN_VERSION, '<' ) ) {
+		return BB_TWO_FACTOR_MIN_VERSION;
+	}
+
+	return $version;
+}

@@ -20,8 +20,8 @@ if ( bbp_is_single_forum() ) {
 	$topic_id = bbp_get_reply_topic_id( bbp_get_reply_id() );
 	$forum_id = bbp_get_topic_forum_id( $topic_id );
 }
-$extensions       = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : false;
-$video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() : false;
+$extensions       = bp_is_active( 'document' ) && function_exists( 'bp_document_get_allowed_extension' ) ? bp_document_get_allowed_extension() : false;
+$video_extensions = bp_is_active( 'video' ) && function_exists( 'bp_video_get_allowed_extension' ) ? bp_video_get_allowed_extension() : false;
 ?>
 
 <?php do_action( 'bbp_theme_before_forums_form_attachments' ); ?>
@@ -78,7 +78,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
-		<div class="dropzone closed document-dropzone" id="forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed document-dropzone" id="forums-post-document-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
 		<div class="forum-post-document-template" style="display:none;">
 			<div class="dz-preview dz-file-preview">
@@ -193,7 +193,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
+	if ( bp_is_active( 'media' ) && bb_media_gif_picker_available() && bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">

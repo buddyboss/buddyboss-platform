@@ -1088,8 +1088,18 @@ class BP_Friends_Friendship {
 		// Delete friend request notifications for members who have a
 		// notification from this user.
 		if ( bp_is_active( 'notifications' ) ) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->notifications->table_name} WHERE component_name = 'friends' AND ( component_action = 'friendship_request' OR component_action = 'friendship_accepted' ) AND item_id = %d", $user_id ) );
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->notifications->table_name} WHERE component_name = 'friends' AND ( component_action = 'bb_connections_new_request' OR component_action = 'bb_connections_request_accepted' ) AND item_id = %d", $user_id ) );
+			// Capture the IDs so their metadata can be cleaned up after the notifications are deleted.
+			$notification_ids = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->notifications->table_name} WHERE component_name = 'friends' AND component_action IN ( 'friendship_request', 'friendship_accepted', 'bb_connections_new_request', 'bb_connections_request_accepted' ) AND item_id = %d", $user_id ) ) );
+
+			if ( ! empty( $notification_ids ) ) {
+				$ids_sql = implode( ',', $notification_ids );
+
+				// Delete the notifications first, then their now-orphaned metadata.
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->query( "DELETE FROM {$bp->notifications->table_name} WHERE id IN ({$ids_sql})" );
+
+				bb_notifications_delete_meta_for_ids( $notification_ids );
+			}
 		}
 
 		// Clean up the friendships cache.

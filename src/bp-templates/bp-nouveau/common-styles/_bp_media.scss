@@ -463,6 +463,13 @@
 	color: rgba(17, 49, 80, 0.4);
 }
 
+.bb-modal-header-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-left: auto;
+}
+
 .bb-photos-wrap {
 
 	.bb-title {
@@ -5385,13 +5392,6 @@ body.buddyboss-theme {
 			span {
 				font-size: 14px;
 				font-weight: 500;
-			}
-
-			&[aria-controls="bb-subnav-filter-by"] {
-
-				span {
-					text-transform: lowercase;
-				}
 			}
 		}
 

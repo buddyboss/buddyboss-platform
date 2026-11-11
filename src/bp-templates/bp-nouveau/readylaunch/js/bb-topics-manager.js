@@ -141,11 +141,10 @@ window.bp = window.bp || {};
 							var topicLists = [];
 							var modelTopics = this.model.get( 'topics' );
 
-							// Priority order: model data > draft data > global data.
+							// Priority order: model data > global data. The draft's stored list is not used:
+							// it is a copy from when the draft was saved, and the page list is always current.
 							if ( modelTopics && ! _.isUndefined( modelTopics.topic_lists ) ) {
 								topicLists = modelTopics.topic_lists;
-							} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) && ! _.isUndefined( bp.draft_activity.data.topics.topic_lists ) ) {
-								topicLists = bp.draft_activity.data.topics.topic_lists;
 							} else {
 								topicLists = BBTopicsManager.topicLists;
 							}
@@ -234,20 +233,25 @@ window.bp = window.bp || {};
 
 							var topicId   = $( event.currentTarget ).data( 'topic-id' );
 							var topicName = $( event.currentTarget ).text().trim();
+							var topicsData;
 
 							if ( '' === topicId ) {
-								this.model.set('topics', {
+								topicsData = {
 									topic_id: 0,
 									topic_name: '', // This will trigger the template to show "Select Topic"
 									topic_lists: this.model.get('topics').topic_lists
-								});
+								};
+								this.model.set( 'topics', topicsData, { silent: true } );
+								this.model.trigger( 'change:topics', this.model, topicsData );
 								topicName = this.$el.find( '.bb-rl-topic-selector-button' ).data( 'select-topic-text' );
 							} else {
-								this.model.set('topics', {
+								topicsData = {
 									topic_id: topicId,
 									topic_name: topicName,
 									topic_lists: this.model.get('topics').topic_lists
-								});
+								};
+								this.model.set( 'topics', topicsData, { silent: true } );
+								this.model.trigger( 'change:topics', this.model, topicsData );
 							}
 
 							this.$el.find( '.bb-rl-topic-selector-button' ).text( topicName );
@@ -346,11 +350,19 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * Make the topics sortable.
+		 * Make the topic list sortable.
+		 *
+		 * @since BuddyBoss [BBVERSION] The order request carries the item (group or site-wide list).
 		 */
 		makeTopicsSortable : function () {
 			var self = this;
 			if ( ! this.$topicList.length ) {
+				return;
+			}
+
+			// Only users who can save this list's order (site moderators, or the group's organizers for a group list) get dragging.
+			if ( 'undefined' !== typeof bbTopicsManagerVars && ! bbTopicsManagerVars.can_reorder_topics ) {
+				this.$topicList.find( '.bb-topic-drag' ).remove();
 				return;
 			}
 			this.$topicList.sortable( {
@@ -358,13 +370,19 @@ window.bp = window.bp || {};
 					var $container = $( event.target );
 					$container.addClass( 'is-loading' );
 
-					// Get the sorted topic IDs.
+					// Get the sorted topic IDs, and the list they belong to (group or site-wide).
 					var topicIds = [];
+					var itemId   = 0;
+					var itemType = 'activity';
 					$container.find( '.bb-activity-topic-item' ).find( '.bb-edit-topic' ).each( function () {
 						var $topicData = $( this ).data( 'topic-attr' );
 						var topicId    = $topicData.topic_id;
 						if ( topicId ) {
 							topicIds.push( topicId );
+						}
+						if ( $topicData.item_type ) {
+							itemType = $topicData.item_type;
+							itemId   = $topicData.item_id || 0;
 						}
 					} );
 
@@ -372,6 +390,8 @@ window.bp = window.bp || {};
 					var data = {
 						action    : 'bb_update_topics_order',
 						topic_ids : topicIds,
+						item_id   : itemId,
+						item_type : itemType,
 						nonce     : bbTopicsManagerVars.bb_update_topics_order_nonce
 					};
 
@@ -435,7 +455,7 @@ window.bp = window.bp || {};
 			}
 
 			// Clear form fields.
-			this.$topicName.val( '' );
+			this.$topicName.val( '' ).removeData( 'selected' );
 			this.$topicId.val( '' );
 			this.$topicWhoCanPost.first().prop( 'checked', true );
 
@@ -576,8 +596,8 @@ window.bp = window.bp || {};
 				$( '#bb_existing_topic_id option:not(:first)' ).prop( 'selected', false );
 			}
 
-			// Reset data.
-			this.$topicName.val( '' );
+			// Reset data. Clear the select2 choice too, or the next edit submits this topic's name.
+			this.$topicName.val( '' ).removeData( 'selected' );
 			this.$topicWhoCanPost.prop( 'checked', false );
 			this.$topicId.val( '' );
 			$( '#bb_is_global_activity' ).val( '' );
@@ -621,6 +641,7 @@ window.bp = window.bp || {};
 			this.$modal.show();
 			this.$backdrop.show();
 			this.$topicWhoCanPost.prop( 'checked', false );
+			this.$topicName.removeData( 'selected' );
 
 			$( document ).trigger( 'bb_modal_opened', [this.$modal] );
 
@@ -736,6 +757,10 @@ window.bp = window.bp || {};
 				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).text( bbTopicsManagerVars.delete_topic_text.replace( '%s', topicName ) );
 			}
 
+			// Forget the previous topic, so a submit before this one is loaded can't delete it again.
+			this.$migrateTopicContainerModalSelector.find( '#bb_topic_id, #bb_item_id, #bb_item_type, #bb_topic_nonce' ).val( '' );
+			this.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).remove();
+
 			// Show loader
 			this.$migrateTopicContainerModalSelector.addClass( 'is-loading' );
 
@@ -768,10 +793,13 @@ window.bp = window.bp || {};
 						} );
 					}
 				} else {
-
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-content, .bb-action-popup-content' ).first().prepend( BBTopicsManager.config.errorContainer );
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( response.data && response.data.error ? response.data.error : bbTopicsManagerVars.load_error );
 				}
 			} ).fail( function () {
-
+				BBTopicsManager.$migrateTopicContainerModalSelector.removeClass( 'is-loading' );
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-content, .bb-action-popup-content' ).first().prepend( BBTopicsManager.config.errorContainer );
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( bbTopicsManagerVars.load_error );
 			}.bind(this));
 		},
 
@@ -783,6 +811,11 @@ window.bp = window.bp || {};
 			var newTopicId  = this.$migrateTopicContainerModalSelector.find( '#bb_existing_topic_id' ).val();
 			var $topicItem  = $( '.bb-activity-topics-list .bb-activity-topic-item[data-topic-id="' + oldTopicId + '"]' );
 			var migrateType = $( 'input[name="bb_migrate_existing_topic"]:checked' ).val();
+
+			// The topic is still loading, or it could not be loaded.
+			if ( ! parseInt( oldTopicId, 10 ) ) {
+				return;
+			}
 
 			// Prepare data for AJAX request.
 			var data = {
@@ -902,7 +935,8 @@ window.bp = window.bp || {};
 				if ( BBTopicsManager.isActivityTopicRequired ) {
 					// Add topic tooltip.
 					this.$document.on( 'bb_display_full_form', function () {
-						if ( $( '.bb-rl-activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
+						var activity_form_submit_wrapper = $( '.bb-rl-activity-update-form.modal-popup #bb-rl-activity-form-submit-wrapper' );
+						if ( $( '.bb-rl-activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 && activity_form_submit_wrapper.find( '.whats-new-topic-selector ul' ).length > 0 ) {
 							$( '.bb-rl-activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
 						}
 					} );
@@ -910,9 +944,7 @@ window.bp = window.bp || {};
 
 				this.$document.on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
 
-				if ( undefined !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
-					this.$document.ready( this.handleUrlHashTopic.bind( this ) );
-				}
+				this.$document.ready( this.handleUrlHashTopic.bind( this ) );
 
 				this.$document.on( 'click', '.bb-topic-url', this.topicActivityFilter.bind( this ) );
 
@@ -922,7 +954,23 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * Filter the stream by the clicked topic, or follow the label's link where there is no filter bar.
+		 *
+		 * @since BuddyBoss [BBVERSION] Topic labels on single-activity pages navigate instead of filtering in place.
+		 *
+		 * @param {Event} event - The click event.
+		 */
 		topicActivityFilter : function ( event ) {
+			// A topic label outside a feed page (single-activity permalink pages have no filter bar) is a plain
+			// link to the topic feed; the in-place filter below only makes sense where the bar exists.
+			if (
+				$( event.currentTarget ).hasClass( 'bb-topic-url' ) &&
+				( 0 === $( '.activity-topic-selector' ).length || $( 'body' ).hasClass( 'activity-permalink' ) )
+			) {
+				return;
+			}
+
 			event.preventDefault();
 			event.stopPropagation();
 
@@ -1037,6 +1085,15 @@ window.bp = window.bp || {};
 				} );
 
 				if ( $topicLink.length ) {
+
+					// Store the topic ID in BP's storage.
+					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', $topicLink.data( 'topic-id' ) );
+
+					// Do not trigger the filter when page request setting is not send ajax request.
+					if ( 'undefined' === typeof BP_Nouveau.is_send_ajax_request || '1' !== BP_Nouveau.is_send_ajax_request ) {
+						return;
+					}
+
 					// If we found a matching topic, trigger the filter.
 					$topicLink.trigger( 'click' );
 
@@ -1049,9 +1106,6 @@ window.bp = window.bp || {};
 					// Set selected/active classes.
 					topicFilterATag.removeClass( 'selected active' );
 					$topicLink.addClass( 'selected active' );
-
-					// Store the topic ID in BP's storage.
-					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', $topicLink.data( 'topic-id' ) );
 
 					// Scroll to the feed [data-bp-list="activity"].
 					var $feed = $( '[data-bp-list="activity"]' );

@@ -122,10 +122,37 @@ function bp_media_upload() {
 		$attachment_message_url = $attachment_thumb_url;
 	} else {
 		// Generate document attachment preview link.
-		$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
-		$attachment_url         = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
-		$attachment_thumb_url   = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
-		$attachment_medium      = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image';
+		$attachment_id = base64_encode( 'forbidden_' . $attachment->ID );
+
+		/**
+		 * Filters the attachment URL.
+		 *
+		 * @since BuddyBoss 2.15.0
+		 *
+		 * @param string $attachment_url Attachment URL.
+		 * @param int    $attachment_id  Attachment ID.
+		 */
+		$attachment_url = apply_filters( 'bb_media_attachment_url', home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id, $attachment_id, 'bb-media-photos-popup-image' );
+
+		/**
+		 * Filters the attachment thumb URL.
+		 *
+		 * @since BuddyBoss 2.15.0
+		 *
+		 * @param string $attachment_thumb_url Attachment thumb URL.
+		 * @param int    $attachment_id Attachment ID.
+		 */
+		$attachment_thumb_url = apply_filters( 'bb_media_attachment_thumb_url', home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail', $attachment_id, 'thumbnail' );
+
+		/**
+		 * Filters the attachment medium.
+		 *
+		 * @since BuddyBoss 2.15.0
+		 *
+		 * @param string $attachment_medium Attachment medium.
+		 * @param int    $attachment_id     Attachment ID.
+		 */
+		$attachment_medium      = apply_filters( 'bb_media_attachment_medium', home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image', $attachment_id, 'bb-media-activity-image' );
 		$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
 	}
 
@@ -577,7 +604,11 @@ function bp_media_add( $args = '' ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
-		if ( ! empty( $media->activity_id ) ) {
+		// `BP_Activity_Activity` is loaded by the activity component and is
+		// NOT in the always-on autoload list (src/class-buddypress.php). When
+		// activity is deactivated via Settings, the class is missing and
+		// the unguarded `new` would fatal during a group media upload.
+		if ( ! empty( $media->activity_id ) && bp_is_active( 'activity' ) ) {
 			$activity = new BP_Activity_Activity( $media->activity_id );
 			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
 				$media->privacy = $r['privacy'];
@@ -630,6 +661,7 @@ function bp_media_add( $args = '' ) {
  *
  * @return mixed|void
  * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved media uploads.
  */
 function bp_media_add_handler( $medias = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_media_upload_count, $bp_media_upload_activity_content;
@@ -648,6 +680,10 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 
 		// save  media.
 		foreach ( $medias as $media ) {
+
+			// Reset per item, so an entry that is skipped (deleted, or not the
+			// user's) does not add the previous item's ID again.
+			$media_id = 0;
 
 			// Update media if existing.
 			if ( ! empty( $media['media_id'] ) ) {
@@ -687,6 +723,11 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 
 				// Check if a media is already saved.
 				if ( get_post_meta( $media['id'], 'bp_media_id', true ) ) {
+					continue;
+				}
+
+				// Only the user's own unsaved upload can become a new media.
+				if ( ! bb_user_can_adopt_attachment( $media['id'] ) ) {
 					continue;
 				}
 
@@ -1014,6 +1055,59 @@ function bp_media_get_total_group_album_count( $group_id = 0 ) {
 }
 
 /**
+ * Get album counts including total, media, and video counts.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $album_id Album ID.
+ * @param int $group_id Optional. Group ID if this is a group album.
+ *
+ * @return array Array containing album_total_count, album_media_count, and album_video_count.
+ */
+function bb_media_get_album_counts( $album_id = 0, $group_id = 0 ) {
+	$counts = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+
+	if ( empty( $album_id ) ) {
+		return $counts;
+	}
+
+	// Use bp_media_get to get both photo and video counts efficiently.
+	$media_args = array(
+		'album_id'    => $album_id,
+		'count_total' => true,
+		'video'       => bp_is_active( 'video' ),
+		'per_page'    => 1,
+	);
+
+	if ( ! empty( $group_id ) ) {
+		$media_args['group_id'] = $group_id;
+	}
+
+	$media_data = bp_media_get( $media_args );
+
+	if ( ! empty( $media_data ) ) {
+		$counts['album_media_count'] = isset( $media_data['total'] ) ? (int) $media_data['total'] : 0;
+		$counts['album_video_count'] = isset( $media_data['total_video'] ) ? (int) $media_data['total_video'] : 0;
+		$counts['album_total_count'] = $counts['album_media_count'] + $counts['album_video_count'];
+	}
+
+	/**
+	 * Filters the album counts.
+	 *
+	 * @since BuddyBoss 2.20.0
+	 *
+	 * @param array $counts   Array of counts (album_total_count, album_media_count, album_video_count).
+	 * @param int   $album_id Album ID.
+	 * @param int   $group_id Group ID.
+	 */
+	return apply_filters( 'bb_media_get_album_counts', $counts, $album_id, $group_id );
+}
+
+/**
  * Return the total media count in your BP instance.
  *
  * @return int Media count.
@@ -1053,7 +1147,6 @@ function bp_media_object_results_media_all_scope( $querystring ) {
 
 	return http_build_query( $querystring );
 }
-
 
 /**
  * Object template results media personal scope.
@@ -1710,12 +1803,13 @@ function bp_media_import_buddyboss_media_tables() {
 				if ( bp_is_active( 'activity' ) ) {
 
 					$activity_args = array(
-						'user_id'       => $user_id,
-						'recorded_time' => $date_created,
-						'hide_sitewide' => true,
-						'privacy'       => 'media',
-						'type'          => 'activity_update',
-						'component'     => buddypress()->activity->id,
+						'user_id'        => $user_id,
+						'recorded_time'  => $date_created,
+						'hide_sitewide'  => true,
+						'privacy'        => 'media',
+						'type'           => 'activity_update',
+						'component'      => buddypress()->activity->id,
+						'title_required' => false,
 					);
 
 					if ( ! empty( $activity_id ) ) {
@@ -2582,35 +2676,61 @@ function bp_media_default_scope( $scope = 'all' ) {
 
 }
 
+/**
+ * Return the thread id if media belongs to message.
+ *
+ * @since BuddyBoss 1.4.4
+ * @since BuddyBoss 3.6.2 Matches the exact media ID in the current user's threads.
+ *
+ * @param int|string $media_id Media id to fetch the thread id.
+ *
+ * @return mixed|void
+ */
 function bp_media_get_thread_id( $media_id ) {
 
 	$thread_id = 0;
 
 	if ( bp_is_active( 'messages' ) ) {
-		$meta = array(
-			array(
-				'key'     => 'bp_media_ids',
-				'value'   => $media_id,
-				'compare' => 'LIKE',
-			),
-		);
+		$media_id        = absint( $media_id );
+		$media_object    = new BP_Media( $media_id );
+		$current_user_id = bp_loggedin_user_id();
 
-		// Check if there is already previously individual group thread created.
-		if( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
-			while ( bp_message_threads() ) {
-				bp_message_thread();
-				$thread_id = bp_get_message_thread_id();
-				if ( $thread_id ) {
-					break;
+		// Match the exact ID in the comma-separated ID list of the current user's threads.
+		if ( ! empty( $media_id ) && ! empty( $current_user_id ) ) {
+			$meta = array(
+				array(
+					'key'     => 'bp_media_ids',
+					'value'   => '(^|,)' . $media_id . '(,|$)',
+					'compare' => 'REGEXP',
+				),
+			);
+
+			// Check if there is already previously individual group thread created.
+			if ( bp_has_message_threads( array( 'user_id' => $current_user_id, 'meta_query' => $meta ) ) ) { // phpcs:ignore
+				while ( bp_message_threads() ) {
+					bp_message_thread();
+					$thread_id = bp_get_message_thread_id();
+					if ( $thread_id ) {
+						break;
+					}
 				}
 			}
 		}
 
-		if ( empty( $thread_id ) ) {
-			$media_object = new BP_Media( $media_id );
-			if ( ! empty( $media_object->attachment_id ) ) {
-				$thread_id = get_post_meta( $media_object->attachment_id, 'thread_id', true );
+		// Otherwise use the thread of the message the media is attached to, if the current user can access it.
+		if ( empty( $thread_id ) && ! empty( $media_object->message_id ) && ! empty( $current_user_id ) ) {
+			$message = new BP_Messages_Message( $media_object->message_id );
+			if (
+				! empty( $message->id ) &&
+				! empty( $message->thread_id ) &&
+				messages_check_thread_access( (int) $message->thread_id, $current_user_id )
+			) {
+				$thread_id = (int) $message->thread_id;
 			}
+		}
+
+		if ( empty( $thread_id ) && ! empty( $media_object->attachment_id ) ) {
+			$thread_id = get_post_meta( $media_object->attachment_id, 'thread_id', true );
 		}
 	}
 
@@ -2646,6 +2766,13 @@ function bp_media_download_link( $attachment_id, $media_id ) {
  */
 function bp_media_download_url_file() {
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_media_file'] ) && isset( $_GET['media_file'] ) && isset( $_GET['media_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+
+		// Private Website: send guests to login before any file is streamed.
+		bb_private_network_restrict_download( 'photo' );
+
+		// Folder links have no single file to download.
+		$can_download_btn = false;
+
 		if ( 'folder' !== $_GET['media_type'] ) {
 
 			// Remove action to remove meta query for forums while download check.
@@ -2653,6 +2780,14 @@ function bp_media_download_url_file() {
 
 			$media_privacy    = bb_media_user_can_access( $_GET['media_file'], 'photo', $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
+
+			// Videos share the media table; without the video component they must not
+			// be downloadable through the photo handler.
+			if ( $can_download_btn && ! bp_is_active( 'video' ) ) {
+				global $wpdb;
+				$media_type       = $wpdb->get_var( $wpdb->prepare( 'SELECT type FROM ' . buddypress()->media->table_name . ' WHERE id = %d', absint( $_GET['media_file'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+				$can_download_btn = 'video' !== $media_type;
+			}
 
 			// Add pre_get_posts action hook back.
 			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
@@ -2791,7 +2926,6 @@ function bp_media_get_forum_id( $media_id ) {
 
 }
 
-
 /**
  * Return the breadcrumbs.
  *
@@ -2870,7 +3004,21 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $item['title'] ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		$album_id = isset( $item['id'] ) ? (int) $item['id'] : 0;
+
+		/**
+		 * Filters the album title in the album tree list (move popup).
+		 *
+		 * @since BuddyBoss 2.18.0
+		 *
+		 * @param string $title    The album title.
+		 * @param int    $album_id The album ID.
+		 */
+		$album_title = apply_filters( 'bb_media_album_tree_item_title', $item['title'], $album_id );
+
+		if ( ! empty( $album_title ) ) {
+			$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $album_title ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		}
 	}
 	$output .= '</ul>';
 
@@ -2968,6 +3116,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
+					$activity->title_required    = false;
 					$activity->save();
 				}
 
@@ -3027,7 +3176,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 						bp_activity_delete( array( 'id' => $need_delete ) );
 
 						// Update parent activity privacy to destination privacy.
-						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->privacy        = $destination_privacy;
+						$parent_activity->title_required = false;
 						$parent_activity->save();
 
 					} elseif ( count( $parent_activity_media_ids ) > 1 ) {
@@ -3043,6 +3193,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
+							$activity->title_required    = false;
 							$activity->save();
 
 							bp_activity_update_meta( (int) $child_activity_id, 'bp_media_ids', $media_id );
@@ -3105,7 +3256,12 @@ function bp_media_get_activity_media( $activity_id ) {
 			return;
 		}
 
-		$media_content = bb_media_get_activity_media( $activity_id, array( 'user_id' => false ) );
+		$activity = new BP_Activity_Activity( $activity_id );
+		if ( empty( $activity ) || empty( $activity->id ) ) {
+			return;
+		}
+
+		$media_content = bb_media_get_activity_media( $activity, array( 'user_id' => false ) );
 		if ( empty( $media_content ) ) {
 			return;
 		}
@@ -3501,6 +3657,7 @@ function bp_media_delete_symlinks( $media ) {
  * Return the preview url of the file.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 3.6.2 Uses a signed receiver segment.
  *
  * @param int    $media_id      Media ID.
  * @param int    $attachment_id Attachment ID.
@@ -3578,7 +3735,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				$attachment_url = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
 
 				if ( 0 < $receiver_id ) {
-					$attachment_url = $attachment_url . '/' . base64_encode( 'receiver_' . $receiver_id );
+					$attachment_url = $attachment_url . '/' . bb_media_preview_receiver_segment( $receiver_id, $media_id, $attachment_id );
 				}
 			}
 		}
@@ -3751,6 +3908,26 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
  */
 function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 
+	// Bail with no access when the component for the requested type is not
+	// active (e.g. the video/document components are not present in this build),
+	// since their classes and functions are not loaded.
+	if (
+		( 'video' === $type && ! bp_is_active( 'video' ) ) ||
+		( in_array( $type, array( 'document', 'folder' ), true ) && ! bp_is_active( 'document' ) )
+	) {
+		$data = array(
+			'can_view'     => false,
+			'can_download' => false,
+			'can_add'      => false,
+			'can_edit'     => false,
+			'can_delete'   => false,
+			'can_move'     => false,
+		);
+
+		/** This filter is documented in bp-media/bp-media-functions.php */
+		return apply_filters( 'bb_media_user_can_access', $data, $id, $type, 0 );
+	}
+
 	$can_view        = false;
 	$can_download    = false;
 	$can_add         = false;
@@ -3889,6 +4066,9 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					if ( 'video' === $type && ( $is_admin || 'members' === bp_group_get_video_status( $media_group_id ) ) ) {
 						$can_edit = true;
 					}
+					if ( 'album' === $type && ( $is_admin || 'members' === bp_group_get_album_status( $media_group_id ) ) ) {
+						$can_edit = true;
+					}
 					$can_move = true;
 				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 					$can_view     = true;
@@ -3898,6 +4078,18 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					$can_view     = true;
 					$can_download = true;
 					$can_delete   = true;
+				}
+
+				// Handle edit permission for album seperately.
+				if (
+					'album' === $type &&
+					(
+						bp_current_user_can( 'bp_moderate' ) ||
+						$is_admin ||
+						$media_user_id === $current_user_id
+					)
+				) {
+					$can_edit = true;
 				}
 
 				$the_group = groups_get_group( $media_group_id );
@@ -4034,7 +4226,13 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 			break;
 	}
 
-	if ( ! empty( $attachment_id ) && $attachment_id > 0 && $attach_id > 0 && (int) $attachment_id !== $attach_id ) {
+	// A stored attachment ID that is not positive can never match, so fail closed.
+	if (
+		! empty( $attachment_id ) &&
+		(int) $attachment_id > 0 &&
+		in_array( $type, array( 'photo', 'video', 'document' ), true ) &&
+		( (int) $attach_id <= 0 || (int) $attachment_id !== (int) $attach_id )
+	) {
 		$can_view     = false;
 		$can_download = false;
 		$can_add      = false;
@@ -4073,9 +4271,14 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
  * A simple function that uses mtime to delete files older than a given age (in seconds)
  * Very handy to rotate backup or log files, for example...
  *
- * @return array|void the list of deleted files
+ * Also expires the document and video preview symlinks while the BuddyBoss Add-ons
+ * cleanup for them is not loaded, so their preview URLs do not outlive the usual age.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 3.7.0 Also expires document and video preview symlinks when
+ *                              their Add-ons cleanup is not loaded.
+ *
+ * @return array|void the list of deleted files
  */
 function bb_media_delete_older_symlinks() {
 
@@ -4086,34 +4289,42 @@ function bb_media_delete_older_symlinks() {
 	// Get media previews symlink directory path.
 	$dir     = bp_media_symlink_path();
 	$max_age = apply_filters( 'bb_media_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
-	$list    = array();
-	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
+	$list    = array();
 
-	if ( ! is_dir( $dir ) ) {
-		return;
+	// A missing photo folder skips only the photo sweep, not the preview cleanup below.
+	if ( false !== $dir && is_dir( $dir ) ) {
+		$list = bb_media_delete_older_files_in_dir( $dir, time() - $max_age );
 	}
 
-	$dh = opendir( $dir );
-	if ( false === $dh ) {
-		return;
-	}
+	/*
+	 * Document and video previews are created by BuddyBoss Add-ons, which also schedules
+	 * their cleanup. When that code is not loaded (no entitlement, Add-ons inactive or
+	 * outdated), the symlinks it created earlier would never expire. Expire them here,
+	 * only while the Add-ons cleanup is missing, so the two never run side by side.
+	 */
+	$previews_dir = wp_upload_dir();
+	$previews_dir = $previews_dir['basedir'] . '/bb-platform-previews';
+	$unowned      = array(
+		'bb_document_delete_older_symlinks' => md5( 'bb-documents' ),
+		'bb_video_delete_older_symlinks'    => md5( 'bb-videos' ),
+	);
 
-	while ( ( $file = readdir( $dh ) ) !== false ) {
-		if ( $file === '.' || $file === '..' ) {
+	foreach ( $unowned as $addons_cleanup => $folder ) {
+		if ( function_exists( $addons_cleanup ) ) {
 			continue;
 		}
 
-		$file      = $dir . '/' . $file;
-		$file_time = lstat( $file );
-		$file_time = isset( $file_time['ctime'] ) ? (int) $file_time['ctime'] : filemtime( $file );
-
-		if ( file_exists( $file ) && $file_time < $limit ) {
-			$list[] = $file;
-			unlink( $file );
+		$type_dir = realpath( $previews_dir . '/' . $folder );
+		if ( false === $type_dir || ! is_dir( $type_dir ) ) {
+			continue;
 		}
+
+		/** This filter is documented in BuddyBoss Add-ons, where the matching cleanup lives. */
+		$type_max_age = apply_filters( $addons_cleanup . '_time', 3600 * 24 * 15 );
+
+		$list = array_merge( $list, bb_media_delete_older_files_in_dir( $type_dir, time() - $type_max_age, true ) );
 	}
-	closedir( $dh );
 
 	if ( ! empty( $list ) ) {
 		do_action( 'bb_media_delete_older_symlinks' );
@@ -4123,71 +4334,61 @@ function bb_media_delete_older_symlinks() {
 
 }
 
+/**
+ * Delete the entries of one preview directory that are older than a given time.
+ *
+ * Reads a single directory, without recursion.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string $dir        Absolute directory path.
+ * @param int    $limit      Unix time. Entries changed before it are deleted.
+ * @param bool   $links_only Whether to delete symlinks only and leave real files alone.
+ *                           Dangling symlinks are deleted too.
+ *
+ * @return array The deleted paths.
+ */
+function bb_media_delete_older_files_in_dir( $dir, $limit, $links_only = false ) {
+	$list = array();
+	$dh   = opendir( $dir );
+	if ( false === $dh ) {
+		return $list;
+	}
+
+	while ( ( $file = readdir( $dh ) ) !== false ) {
+		if ( $file === '.' || $file === '..' ) {
+			continue;
+		}
+
+		$file = $dir . '/' . $file;
+
+		if ( $links_only ) {
+			if ( ! is_link( $file ) ) {
+				continue;
+			}
+		} elseif ( ! file_exists( $file ) ) {
+			continue;
+		}
+
+		$file_time = lstat( $file );
+		$file_time = isset( $file_time['ctime'] ) ? (int) $file_time['ctime'] : filemtime( $file );
+
+		if ( $file_time < $limit ) {
+			$list[] = $file;
+			wp_delete_file( $file );
+		}
+	}
+	closedir( $dh );
+
+	return $list;
+}
+
 add_action(
 	'bp_init',
 	function () {
 		bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 	}
 );
-
-
-/**
- * Check the GIPHY key is valid or not.
- *
- * @param boolean $api_key GIPHY api key.
- * @param boolean $message GIPHY api key validation response message.
- *
- * @return mixed Whether the giphy key is valid or error object.
- *
- * @since BuddyBoss 2.1.2
- */
-function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
-
-	static $cache = array();
-	$cache_key    = 'bb_check_valid_giphy_api_key';
-	$saved_key    = bp_media_get_gif_api_key();
-	$use_caching  = false;
-
-	if ( empty( $api_key ) && empty( $cache ) ) {
-
-		// Use caching if not user action.
-		$cache       = get_transient( $cache_key );
-		$use_caching = true;
-
-		// Remove old cache if empty key saved.
-		if ( ! empty( $cache ) && is_array( $cache ) && ! array_key_exists( $saved_key, $cache ) ) {
-			delete_transient( $cache_key );
-		}
-	}
-
-	$api_key = ! empty( $api_key ) ? $api_key : $saved_key;
-	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
-		if ( true === $message ) {
-			return $cache[ $api_key ];
-		}
-		return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
-	}
-
-	if ( empty( $api_key ) ) {
-		return false;
-	}
-
-	$output = wp_remote_get( 'http://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
-	if ( $output ) {
-		$cache[ $api_key ] = $output;
-		if ( $use_caching ) {
-			$cache_expiry = MONTH_IN_SECONDS;
-			if ( 200 !== $cache[ $api_key ]['response']['code'] ) {
-				$cache_expiry = WEEK_IN_SECONDS;
-			}
-			set_transient( $cache_key, array( $api_key => $output ), $cache_expiry );
-		}
-	}
-	if ( true === $message ) {
-		return $cache[ $api_key ];
-	}
-	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
-}
 
 /**
  * Run migration for media and video description from post table to media table.
@@ -4279,9 +4480,26 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 		$media_args['status'] = bb_media_get_scheduled_status();
 	}
 
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+	// Determine if this is a group context.
+	// For activity comments, check the parent activity's component to ensure
+	// media attached to group activity comments inherit group privacy.
+	$is_group_context = false;
+
+	if ( 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+		$parent_activity = new BP_Activity_Activity( $activity->item_id );
+		if ( bp_is_active( 'groups' ) && ! empty( $parent_activity->component ) ) {
+			$is_group_context = 'groups' === $parent_activity->component;
+		}
+	} else {
+		$is_group_context = bp_is_active( 'groups' ) && 'groups' === $activity->component;
+	}
+
+	if ( $is_group_context ) {
 		if ( bp_is_group_media_support_enabled() ) {
 			$media_args['privacy'] = array( 'grouponly' );
+			if ( 'activity_comment' === $activity->type ) {
+				$media_args['privacy'][] = 'comment';
+			}
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$media_args['album_id'] = 'existing-media';
 			}

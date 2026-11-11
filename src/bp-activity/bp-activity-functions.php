@@ -286,8 +286,16 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
 		// account for hyphens + spaces in the same user_login.
 		if ( empty( $userdata ) || ! is_a( $userdata, 'WP_User' ) ) {
 			global $wpdb;
-			$regex   = esc_sql( str_replace( '-', '[ \-]', $mentionname ) );
-			$user_id = $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP '{$regex}'" );
+			// Defense-in-depth: pass the regex through prepare's %s placeholder.
+			// See bp_get_userid_from_mentionname() in bp-core-functions.php for
+			// the canonical implementation — this deprecated copy mirrors it.
+			$regex   = str_replace( '-', '[ \-]', $mentionname );
+			$user_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP %s",
+					$regex
+				)
+			);
 		} else {
 			$user_id = $userdata->ID;
 		}
@@ -931,7 +939,9 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
 	}
 
 	// Get favorites for user.
-	$favs = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
+	$favs = function_exists( 'bb_activity_get_user_reacted_item_ids' )
+		? bb_activity_get_user_reacted_item_ids( $user_id, $activity_type )
+		: array();
 
 	/**
 	 * Filters the favorited activity items for a specified user.
@@ -948,6 +958,7 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  *
  * @since BuddyPress 1.2.0
  * @since BuddyBoss 2.5.20 Added the `$args` parameter.
+ * @since BuddyBoss 3.7.1 Refuses users who cannot view the activity, such as non-members of a private group.
  *
  * @param int   $activity_id ID of the activity item being favorited.
  * @param int   $user_id     ID of the user favoriting the activity item.
@@ -956,18 +967,39 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  * @return WP_Error|object|bool Object on success, WP_Error on failure.
  */
 function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = array() ) {
+	$reaction = bb_load_reaction();
+
 	$r = bp_parse_args(
 		$args,
 		array(
 			'type'        => 'activity',
-			'reaction_id' => bb_load_reaction()->bb_reactions_reaction_id(),
+			'reaction_id' => $reaction ? $reaction->bb_reactions_reaction_id() : 0,
 			'error_type'  => 'bool',
 		)
 	);
 
+	// If reaction system is not loaded, bail.
+	if ( ! $reaction ) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_add_user_favorite_disabled',
+			esc_html__( 'Reactions are not available.', 'buddyboss' )
+		);
+	}
+
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
+	}
+
+	// The reaction privacy check skips groups, so check the user can view the item (PROD-10649).
+	if (
+		in_array( $r['type'], array( 'activity', 'activity_comment' ), true ) &&
+		! bb_activity_user_can_view( (int) $activity_id, $user_id )
+	) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_add_user_favorite_not_allowed',
+			__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss' )
+		);
 	}
 
 	// Check if migration is in progress.
@@ -996,7 +1028,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		}
 	}
 
-	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
+	$reacted = $reaction->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $r['type'],
 			'reaction_id' => $r['reaction_id'],
@@ -1073,6 +1105,15 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		$user_id = bp_loggedin_user_id();
 	}
 
+	// If reaction system is not loaded, bail.
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_remove_user_favorite_disabled',
+			esc_html__( 'Reactions are not available.', 'buddyboss' )
+		);
+	}
+
 	// Check if migration is in progress.
 	if (
 		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
@@ -1089,7 +1130,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 	}
 
 	// Check if user try to un-react but there is no reaction id as per current reaction mode.
-	$reacted_reaction_id = bb_load_reaction()->bb_user_reacted_reaction_id(
+	$reacted_reaction_id = $reaction->bb_user_reacted_reaction_id(
 		array(
 			'item_id'   => $activity_id,
 			'item_type' => $r['type'],
@@ -1108,7 +1149,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		}
 	}
 
-	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
+	$un_reacted = $reaction->bb_remove_user_item_reactions(
 		array(
 			'item_type'  => $r['type'],
 			'item_id'    => $activity_id,
@@ -1155,7 +1196,7 @@ function bp_activity_favorites_upgrade_data() {
 	if ( ! $bp_activity_favorites && bp_is_active( 'activity' ) ) {
 
 		if ( bp_is_large_install() ) {
-			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) );
+			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools', 'panel' => 'repair_platform' ), 'admin.php' ) );
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a> %4$s',
 				__( 'Due to the large size of your users table, you need to manually update user activity favorites data via BuddyBoss > ', 'buddyboss' ),
@@ -1432,11 +1473,14 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
 
 	// Remove user reactions from reactions table.
-	bb_load_reaction()->bb_remove_user_item_reactions(
-		array(
-			'user_id' => $user_id,
-		)
-	);
+	$reaction = bb_load_reaction();
+	if ( $reaction ) {
+		$reaction->bb_remove_user_item_reactions(
+			array(
+				'user_id' => $user_id,
+			)
+		);
+	}
 
 	// Execute additional code
 	do_action( 'bp_activity_remove_data', $user_id ); // Deprecated! Do not use!
@@ -2103,6 +2147,8 @@ function bp_activity_add( $args = '' ) {
 		array(
 			'id'                => false,                              // Pass an existing activity ID to update an existing entry.
 			'action'            => '',                                 // The activity action - e.g. "Jon Doe posted an update"
+			'post_title'        => '',                                 // The activity title.
+			'title_required'    => bb_is_activity_post_title_enabled(),
 			'content'           => '',                                 // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
 			'component'         => false,                              // The name/ID of the component e.g. groups, profile, mycomponent.
 			'type'              => false,                              // The activity type e.g. activity_update, profile_updated.
@@ -2135,6 +2181,8 @@ function bp_activity_add( $args = '' ) {
 	$activity->user_id           = $r['user_id'];
 	$activity->component         = $r['component'];
 	$activity->type              = $r['type'];
+	$activity->post_title        = $r['post_title'];
+	$activity->title_required    = $r['title_required'];
 	$activity->content           = $r['content'];
 	$activity->primary_link      = $r['primary_link'];
 	$activity->item_id           = $r['item_id'];
@@ -2225,17 +2273,19 @@ function bp_activity_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'            => false,
-			'content'       => false,
-			'user_id'       => bp_loggedin_user_id(),
-			'component'     => buddypress()->activity->id,
-			'hide_sitewide' => false,
-			'type'          => 'activity_update',
-			'privacy'       => 'public',
-			'status'        => bb_get_activity_published_status(),
-			'recorded_time' => bp_core_current_time(),
-			'updated_time'  => bp_core_current_time(),
-			'error_type'    => 'bool',
+			'id'             => false,
+			'post_title'     => false,
+			'title_required' => bb_is_activity_post_title_enabled(),
+			'content'        => false,
+			'user_id'        => bp_loggedin_user_id(),
+			'component'      => buddypress()->activity->id,
+			'hide_sitewide'  => false,
+			'type'           => 'activity_update',
+			'privacy'        => 'public',
+			'status'         => bb_get_activity_published_status(),
+			'recorded_time'  => bp_core_current_time(),
+			'updated_time'   => bp_core_current_time(),
+			'error_type'     => 'bool',
 		)
 	);
 
@@ -2279,6 +2329,15 @@ function bp_activity_post_update( $args = '' ) {
 	 */
 	$add_primary_link = apply_filters( 'bp_activity_new_update_primary_link', '' );
 
+	/**
+	 * Filters the new activity post title for current activity item.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param string $activity_post_title Activity post title posted by user.
+	 */
+	$add_post_title = apply_filters( 'bb_activity_new_update_post_title', $r['post_title'] );
+
 	if ( ! empty( $r['id'] ) ) {
 		$activity = new BP_Activity_Activity( $r['id'] );
 
@@ -2290,7 +2349,13 @@ function bp_activity_post_update( $args = '' ) {
 
 			if ( ! bp_activity_user_can_edit( $activity ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'error', __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' ) );
+					// bp_activity_user_can_edit() is false both for an expired window and for a
+					// feature the admin switched off; blaming the timer for the latter is wrong.
+					$edit_error = bp_is_activity_edit_enabled()
+						? __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' )
+						: __( 'Editing activity posts is currently disabled.', 'buddyboss' );
+
+					return new WP_Error( 'error', $edit_error );
 				} else {
 					return false;
 				}
@@ -2300,6 +2365,8 @@ function bp_activity_post_update( $args = '' ) {
 				array(
 					'id'                => $activity->id,
 					'action'            => $activity->action,
+					'post_title'        => $add_post_title,
+					'title_required'    => $r['title_required'],
 					'content'           => $add_content,
 					'component'         => $activity->component,
 					'type'              => $activity->type,
@@ -2331,17 +2398,19 @@ function bp_activity_post_update( $args = '' ) {
 		// Now write the values.
 		$activity_id = bp_activity_add(
 			array(
-				'user_id'       => $r['user_id'],
-				'content'       => $add_content,
-				'primary_link'  => $add_primary_link,
-				'component'     => $r['component'],
-				'type'          => $r['type'],
-				'hide_sitewide' => $r['hide_sitewide'],
-				'privacy'       => $r['privacy'],
-				'recorded_time' => $r['recorded_time'],
-				'updated_time'  => $r['updated_time'],
-				'status'        => $r['status'],
-				'error_type'    => $r['error_type'],
+				'user_id'        => $r['user_id'],
+				'post_title'     => $add_post_title,
+				'title_required' => $r['title_required'],
+				'content'        => $add_content,
+				'primary_link'   => $add_primary_link,
+				'component'      => $r['component'],
+				'type'           => $r['type'],
+				'hide_sitewide'  => $r['hide_sitewide'],
+				'privacy'        => $r['privacy'],
+				'recorded_time'  => $r['recorded_time'],
+				'updated_time'   => $r['updated_time'],
+				'status'         => $r['status'],
+				'error_type'     => $r['error_type'],
 			)
 		);
 	}
@@ -2921,6 +2990,8 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
  * @since BuddyPress 2.5.0 Add a new possible parameter $skip_notification for the array of arguments.
  *              Add the $primary_link parameter for the array of arguments.
  * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
+ * @since BuddyBoss 3.7.1 Refuses a new comment when the user cannot view the root activity or the comment being replied to, or when the parent is not in the root's thread.
+ *              Also refuses a new comment whose $activity_id is itself a comment.
  *
  * @param array|string $args {
  *     An array of arguments.
@@ -2960,6 +3031,19 @@ function bp_activity_new_comment( $args = '' ) {
 			'skip_error'        => true,
 		)
 	);
+
+	/**
+	 * Filters the parsed arguments for a new activity comment before processing.
+	 *
+	 * This filter allows modification of comment arguments before any validation
+	 * or database operations occur. It can be used to redirect replies to different
+	 * parent comments (e.g., for threading depth limits).
+	 *
+	 * @since BuddyBoss 2.20.0
+	 *
+	 * @param array $r Parsed arguments for the new comment.
+	 */
+	$r = apply_filters( 'bb_activity_new_comment_pre_validate', $r );
 
 	// Error type is boolean; need to initialize some variables for backpat.
 	if ( 'bool' === $r['error_type'] ) {
@@ -3020,6 +3104,27 @@ function bp_activity_new_comment( $args = '' ) {
 				return false;
 			}
 		}
+
+		// The parent must be a comment in the same thread. A comment from another thread never
+		// leads back to this root, so the cache walk below would loop forever (PROD-10649).
+		if (
+			(int) $r['parent_id'] !== (int) $r['activity_id'] &&
+			(
+				'activity_comment' !== $comment_activity->type ||
+				(int) $comment_activity->item_id !== (int) $r['activity_id']
+			)
+		) {
+			$error = new WP_Error( 'invalid_parent_activity', $feedback );
+
+			if ( 'wp_error' === $r['error_type'] ) {
+				return $error;
+
+				// Backpat.
+			} else {
+				$bp->activity->errors['new_comment'] = $error;
+				return false;
+			}
+		}
 	}
 
 	// Maybe set current activity ID as the parent.
@@ -3048,6 +3153,45 @@ function bp_activity_new_comment( $args = '' ) {
 	// Bail if the parent activity does not exist.
 	if ( empty( $activity->date_recorded ) ) {
 		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// A new comment must hang off a post, not off another comment. Read checks look one level up
+	// from a comment (its item_id), so a comment-on-comment row would skip the root's group check.
+	if ( empty( $r['id'] ) && 'activity_comment' === $activity->type ) {
+		$error = new WP_Error( 'invalid_parent_activity', $feedback );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// The privacy check above skips groups, so a non-member could still reply in a private or
+	// hidden group. Check the root and the comment being replied to (PROD-10649).
+	if (
+		empty( $r['id'] ) &&
+		(
+			! bb_activity_user_can_view( $activity, (int) $r['user_id'] ) ||
+			(
+				(int) $r['parent_id'] !== (int) $activity_id &&
+				! bb_activity_user_can_view( (int) $r['parent_id'], (int) $r['user_id'] )
+			)
+		)
+	) {
+		$error = new WP_Error( 'bp_activity_comment_not_allowed', __( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss' ) );
 
 		if ( 'wp_error' === $r['error_type'] ) {
 			return $error;
@@ -3089,7 +3233,13 @@ function bp_activity_new_comment( $args = '' ) {
 
 			if ( ! bb_activity_comment_user_can_edit( $activity_comment ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'error', __( 'Allowed time for editing this activity comment is passed already, you can not edit now.', 'buddyboss' ) );
+					// bb_activity_comment_user_can_edit() is false both for an expired window and
+					// for a feature the admin switched off; blaming the timer for the latter is wrong.
+					$comment_edit_error = bb_is_activity_comment_edit_enabled()
+						? __( 'Allowed time for editing this activity comment is passed already, you can not edit now.', 'buddyboss' )
+						: __( 'Editing activity comments is currently disabled.', 'buddyboss' );
+
+					return new WP_Error( 'error', $comment_edit_error );
 				} else {
 					return false;
 				}
@@ -3148,9 +3298,14 @@ function bp_activity_new_comment( $args = '' ) {
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
+	// Clear comment chain cache for the parent comment.
+	if ( ! empty( $r['parent_id'] ) && (int) $r['parent_id'] !== (int) $activity_id ) {
+		wp_cache_delete( 'bb_comment_chain_' . (int) $r['parent_id'] . '_' . (int) $activity_id, 'bp_activity_comments' );
+	}
+
 	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
-	while ( $clear_id != $activity_id ) {
+	while ( ! empty( $clear_id ) && (int) $clear_id !== (int) $activity_id ) {
 		$clear_object = new BP_Activity_Activity( $clear_id );
 		wp_cache_delete( $clear_id, 'bp_activity' );
 		$clear_id = intval( $clear_object->secondary_item_id );
@@ -3551,6 +3706,9 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
+	// Clear comment chain cache for the deleted comment.
+	wp_cache_delete( 'bb_comment_chain_' . (int) $comment_id . '_' . (int) $activity_id, 'bp_activity_comments' );
+
 	// Recalculate the comment tree.
 	BP_Activity_Activity::rebuild_activity_comment_tree( $activity_id );
 
@@ -3565,6 +3723,140 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 	do_action( 'bp_activity_delete_comment', $activity_id, $comment_id );
 
 	return $deleted;
+}
+
+/**
+ * Check whether an activity comment still has anything to show.
+ *
+ * Used when a single photo, video or document is deleted from a comment, to
+ * decide whether the comment itself must go too. The comment is kept while it
+ * still has text, a GIF, or any photo, video or document attached. Placeholder
+ * content (`&#8203;`, `&nbsp;`, whitespace) is not text. The rows
+ * are read from the database (not from the cached helpers or the
+ * `bp_media_ids` meta) so the check reflects the delete that just happened.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param BP_Activity_Activity|int $comment Activity comment object or ID.
+ *
+ * @return bool True when the comment still has text or attachments, false otherwise.
+ */
+function bb_activity_comment_has_remaining_content( $comment ) {
+	global $wpdb;
+
+	if ( ! $comment instanceof BP_Activity_Activity ) {
+		$comment = new BP_Activity_Activity( (int) $comment );
+	}
+
+	if ( empty( $comment->id ) || 'activity_comment' !== $comment->type ) {
+		return false;
+	}
+
+	$bp         = buddypress();
+	$comment_id = (int) $comment->id;
+
+	/*
+	 * Text. The comment forms store `&#8203;` as the content of a comment that
+	 * has a video and no text, and the templates already treat `&nbsp;` and
+	 * `&#8203;` as empty (bp_get_activity_content_body()). Decode entities and
+	 * drop whitespace, no-break and zero-width spaces so these placeholders
+	 * (alone or wrapped in markup) do not count as text. If the pattern fails
+	 * (invalid UTF-8), preg_replace() returns null and the comment is kept.
+	 */
+	$text        = html_entity_decode( wp_strip_all_tags( (string) $comment->content ), ENT_QUOTES, 'UTF-8' );
+	$text        = preg_replace( '/[\s\x{00A0}\x{200B}\x{FEFF}]+/u', '', $text );
+	$has_content = '' !== $text;
+
+	// GIF attached to the comment.
+	if ( ! $has_content && ! empty( bp_activity_get_meta( $comment_id, '_gif_data', true ) ) ) {
+		$has_content = true;
+	}
+
+	// Photos and videos share the media table.
+	$media_table = '';
+	if ( bp_is_active( 'media' ) && ! empty( $bp->media->table_name ) ) {
+		$media_table = $bp->media->table_name;
+	} elseif ( bp_is_active( 'video' ) && ! empty( $bp->video->table_name ) ) {
+		$media_table = $bp->video->table_name;
+	}
+
+	if ( ! $has_content && ! empty( $media_table ) ) {
+		$has_content = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$media_table} WHERE activity_id = %d LIMIT 1", $comment_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+	}
+
+	if ( ! $has_content && bp_is_active( 'document' ) && ! empty( $bp->document->table_name ) ) {
+		$has_content = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE activity_id = %d LIMIT 1", $comment_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+	}
+
+	/**
+	 * Filters whether an activity comment still has content after one of its
+	 * attachments was deleted. Return true to keep the comment.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param bool                 $has_content Whether the comment still has text or attachments.
+	 * @param BP_Activity_Activity $comment     The activity comment.
+	 */
+	return (bool) apply_filters( 'bb_activity_comment_has_remaining_content', $has_content, $comment );
+}
+
+/**
+ * Remove deleted photos, videos or documents from a kept activity comment's meta.
+ *
+ * A comment is kept when one of its attachments is deleted while it still
+ * has text, a GIF or another attachment. Its `bp_{type}_ids`, `bp_{type}_id`
+ * and `bp_{type}_activity` meta would then still point at the deleted rows.
+ *
+ * The deleted IDs are removed from `bp_{type}_ids`, and `bp_{type}_id` is
+ * removed when it is one of them. When no attachment of this type remains,
+ * all three keys are deleted. Meta for the other attachment types is not
+ * touched.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param int    $comment_id  Activity comment ID.
+ * @param string $type        Attachment type: 'media', 'video' or 'document'.
+ * @param array  $deleted_ids IDs of the attachments that were just deleted.
+ */
+function bb_activity_comment_remove_deleted_attachment_meta( $comment_id, $type, $deleted_ids ) {
+	$comment_id  = (int) $comment_id;
+	$deleted_ids = wp_parse_id_list( $deleted_ids );
+
+	if ( empty( $comment_id ) || empty( $deleted_ids ) || ! in_array( $type, array( 'media', 'video', 'document' ), true ) ) {
+		return;
+	}
+
+	$ids_key = 'bp_' . $type . '_ids';
+	$id_key  = 'bp_' . $type . '_id';
+
+	$remaining_ids = array_diff( wp_parse_id_list( bp_activity_get_meta( $comment_id, $ids_key, true ) ), $deleted_ids );
+
+	if ( empty( $remaining_ids ) ) {
+		bp_activity_delete_meta( $comment_id, $ids_key );
+		bp_activity_delete_meta( $comment_id, $id_key );
+		bp_activity_delete_meta( $comment_id, 'bp_' . $type . '_activity' );
+	} else {
+		bp_activity_update_meta( $comment_id, $ids_key, implode( ',', $remaining_ids ) );
+
+		if ( in_array( (int) bp_activity_get_meta( $comment_id, $id_key, true ), $deleted_ids, true ) ) {
+			bp_activity_delete_meta( $comment_id, $id_key );
+		}
+	}
+
+	/**
+	 * Fires after attachments were deleted from an activity comment that was
+	 * kept, once its attachment meta is cleaned. The comment is not deleted,
+	 * so `bp_activity_delete_comment` does not fire for it; use this to
+	 * refresh anything that shows the comment or its thread, such as the
+	 * App API cache.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param int    $comment_id  Activity comment ID.
+	 * @param string $type        Attachment type: 'media', 'video' or 'document'.
+	 * @param array  $deleted_ids IDs of the attachments that were deleted.
+	 */
+	do_action( 'bb_activity_comment_attachment_deleted', $comment_id, $type, $deleted_ids );
 }
 
 	/**
@@ -3664,6 +3956,7 @@ function bp_activity_get_permalink( $activity_id, $activity_obj = false ) {
  * Can a user see a particular activity item?
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss 3.7.1 An activity comment is checked against its root activity.
  *
  * @param  BP_Activity_Activity $activity Activity object.
  * @param  integer              $user_id  User ID.
@@ -3677,10 +3970,22 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
+	// A comment is stored with component 'activity' and no group of its own, so the
+	// group check runs on its root activity (item_id, also for nested replies).
+	$access_activity = $activity;
+	if ( isset( $activity->type ) && 'activity_comment' === $activity->type ) {
+		$access_activity = new BP_Activity_Activity( (int) $activity->item_id );
+
+		// Fail closed when the root no longer exists.
+		if ( empty( $access_activity->id ) ) {
+			$retval = false;
+		}
+	}
+
 	// If activity is from a group, do extra cap checks.
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+	if ( $retval && bp_is_active( 'groups' ) && buddypress()->groups->id === $access_activity->component ) {
 		// Check to see if the user has access to the activity's parent group.
-		$group = groups_get_group( $activity->item_id );
+		$group = groups_get_group( $access_activity->item_id );
 		if ( $group ) {
 			// For logged-in user, we can check against the 'user_has_access' prop.
 			if ( bp_loggedin_user_id() === $user_id ) {
@@ -3689,15 +3994,15 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 				// Manually check status.
 			} elseif ( 'private' === $group->status || 'hidden' === $group->status ) {
 				// Only group members that are not banned can view.
-				if ( ! groups_is_user_member( $user_id, $activity->item_id ) || groups_is_user_banned( $user_id, $activity->item_id ) ) {
+				if ( ! groups_is_user_member( $user_id, $access_activity->item_id ) || groups_is_user_banned( $user_id, $access_activity->item_id ) ) {
 					$retval = false;
 				}
 			}
 		}
 	}
 
-	// Spammed items are not visible to the public.
-	if ( $activity->is_spam ) {
+	// Spammed items are not visible to the public, nor are comments on a spammed root.
+	if ( $activity->is_spam || ! empty( $access_activity->is_spam ) ) {
 		$retval = false;
 	}
 
@@ -5485,6 +5790,39 @@ function bp_activity_default_scope( $scope = 'all' ) {
 }
 
 /**
+ * Keep the parts of a request's activity scope that a component handles.
+ *
+ * A scope name nothing is hooked to adds no condition to the activity query, which then
+ * returns every privacy level. Scopes sent by a visitor (AJAX loops, heartbeat, `?scope=`)
+ * go through here so an unknown name falls back to the default 'all' scope (PROD-10649).
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @param string|array $scope Comma-separated scopes, or a list of them, from the request.
+ *
+ * @return string Comma-separated handled scopes, or 'all' when none is handled.
+ */
+function bb_activity_get_request_scope( $scope ) {
+	$parts = is_array( $scope ) ? $scope : explode( ',', (string) $scope );
+	$kept  = array();
+
+	foreach ( $parts as $part ) {
+		if ( ! is_scalar( $part ) ) {
+			continue;
+		}
+
+		$part = trim( (string) $part );
+		if ( 'all' === $part || ( '' !== $part && has_filter( "bp_activity_set_{$part}_scope_args" ) ) ) {
+			$kept[] = $part;
+		}
+	}
+
+	$kept = array_unique( $kept );
+
+	return empty( $kept ) || in_array( 'all', $kept, true ) ? 'all' : implode( ',', $kept );
+}
+
+/**
  * Get the Activity edit data.
  *
  * @since BuddyBoss 1.5.1
@@ -5561,6 +5899,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'group_id'              => $group_id,
 			'group_name'            => $group_name,
 			'folder_id'             => $folder_id,
+			'post_title'            => $activity->post_title,
 			'content'               => stripslashes( $activity->content ),
 			'item_id'               => $activity->item_id,
 			'object'                => $activity->component,
@@ -6193,7 +6532,12 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 function bb_migrate_activity_like_reaction( $paged = 1 ) {
 	global $wpdb, $bp, $bb_background_updater;
 
-	$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
+	$reaction_id = $reaction->bb_reactions_get_like_reaction_id();
 
 	if ( empty( $paged ) ) {
 		$paged = 1;
@@ -6251,7 +6595,12 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 function bb_activity_like_reaction_background_process_migration( $results, $paged, $reaction_id ) {
 	global $wpdb, $bb_background_updater;
 
-	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
+	$user_reaction_table = $reaction::$user_reaction_table;
 
 	if ( empty( $results ) ) {
 		return;
@@ -6316,8 +6665,13 @@ function bb_activity_like_reaction_background_process_migration( $results, $page
  * @return void
  */
 function bb_update_users_like_reaction( $user_ids, $activity_id, $reaction_id ) {
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
 	foreach ( $user_ids as $user_id ) {
-		bb_load_reaction()->bb_add_user_item_reaction(
+		$reaction->bb_add_user_item_reaction(
 			array(
 				'user_id'     => $user_id,
 				'reaction_id' => $reaction_id,
@@ -6462,102 +6816,6 @@ function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
 }
 
 /**
- * Pin or unpin activity or group feed post.
- *
- * @since BuddyBoss 2.4.60
- *
- * @param array $args Arguments related to pin/unpin activity or group feed post.
- *
- * @return bool|string Update type pinned|pin_updated|unpinned.
- */
-function bb_activity_pin_unpin_post( $args = array() ) {
-	$r = bp_parse_args(
-		$args,
-		array(
-			'action'      => 'pin',
-			'activity_id' => 0,
-			'retval'      => 'bool',
-			'user_id'     => bp_loggedin_user_id(),
-		)
-	);
-
-	$retval    = '';
-	$old_value = '';
-
-	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
-
-	if ( ! empty( $activity->id ) ) {
-
-		if ( 'unpin' === $r['action'] ) {
-			$updated_value = '';
-			$retval        = 'unpinned';
-		} else {
-			$updated_value = $r['activity_id'];
-			$retval        = 'pinned';
-		}
-
-		// Check if group activity or normal activity.
-		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
-			$has_permission = false;
-
-			// First check if user is a site administrator.
-			if ( bp_current_user_can( 'administrator' ) ) {
-				$has_permission = true;
-			} else {
-				// Check group organizer or moderator permissions if not a site admin.
-				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
-				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
-
-				if (
-					( $is_admin || $is_mod ) &&
-					bb_is_active_activity_pinned_posts()
-				) {
-					$has_permission = true;
-				}
-			}
-
-			if ( $has_permission ) {
-				$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
-				groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
-			} else {
-				$retval = 'not_allowed';
-			}
-		} elseif ( bp_current_user_can( 'administrator' ) ) {
-			$old_value = bp_get_option( 'bb_pinned_post' );
-			bp_update_option( 'bb_pinned_post', $updated_value );
-		} else {
-			$retval = 'not_allowed';
-		}
-
-		// Check if already exists and updating new value.
-		if ( ! empty( $updated_value ) && ! empty( $old_value ) && (int) $old_value !== (int) $updated_value ) {
-			$retval = 'pin_updated';
-		}
-
-		/**
-		 * Fires after activity pin/unpin post.
-		 *
-		 * @since BuddyBoss 2.4.60
-		 *
-		 * @param int    $activity_id Activity ID.
-		 * @param string $action      Action type pin/unpin.
-		 */
-		do_action( 'bb_activity_pin_unpin_post', $activity->id, $r['action'] );
-	}
-
-	if ( 'bool' === $r['retval'] ) {
-
-		if ( ! empty( $retval ) ) {
-			$retval = true;
-		} else {
-			$retval = false;
-		}
-	}
-
-	return $retval;
-}
-
-/**
  * Fetch the pin type based on the screen its activity/group.
  *
  * @since BuddyBoss 2.4.60
@@ -6661,8 +6919,19 @@ function bb_activity_get_metadata( $activity_id ) {
 		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
 	}
 
-	// Return the metadata.
-	return $meta_data;
+	/**
+	 * Filters all metadata of an activity as returned by bb_activity_get_metadata().
+	 *
+	 * The metadata can come straight from the `activity_meta` cache group, which
+	 * bypasses the `get_activity_metadata` filter, so code that must hide meta
+	 * keys from every read filters both.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param array|mixed $meta_data   All metadata of the activity.
+	 * @param int         $activity_id Activity ID.
+	 */
+	return apply_filters( 'bb_activity_get_metadata', $meta_data, $activity_id );
 }
 
 /**
@@ -6986,7 +7255,11 @@ function bb_is_activity_comment_threading_enabled( $default = true ) {
 /**
  * Get activity comment threading depth.
  *
+ * The stored value is normalised with bb_activity_normalize_comment_threading_depth(): anything
+ * outside 1-4, including an empty row, resolves to 3 — the same rule the settings control applies.
+ *
  * @since BuddyBoss 2.5.80
+ * @since BuddyBoss 3.5.1 The return value is normalised to a depth the settings control can show.
  *
  * @param int $default Optional. Fallback value if not found in the database.
  *                     Default: 3.
@@ -6995,6 +7268,8 @@ function bb_is_activity_comment_threading_enabled( $default = true ) {
  */
 function bb_get_activity_comment_threading_depth( $default = 3 ) {
 
+	$depth = bb_activity_normalize_comment_threading_depth( bp_get_option( '_bb_activity_comment_threading_depth', $default ) );
+
 	/**
 	 * Apply filter to modify the activity comments threading depth.
 	 *
@@ -7002,7 +7277,7 @@ function bb_get_activity_comment_threading_depth( $default = 3 ) {
 	 *
 	 * @param bool $default Value of activity comments threading depth.
 	 */
-	return (int) apply_filters( 'bb_get_activity_comment_threading_depth', bp_get_option( '_bb_activity_comment_threading_depth', $default ) );
+	return (int) apply_filters( 'bb_get_activity_comment_threading_depth', $depth );
 }
 
 /**
@@ -7047,6 +7322,159 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 	 * @param bool $default Value of activity comments loading.
 	 */
 	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_activity_comment_loading', $default ) );
+}
+
+/**
+ * Get the ancestor chain info for an activity comment.
+ *
+ * Traverses up the comment tree in a single pass to build the full ancestor
+ * chain, compute depth, and allow lookup of ancestors at any depth level.
+ *
+ * Uses optimized single-column queries instead of loading full activity objects.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id  The ID of the comment to check.
+ * @param int $activity_id The ID of the root activity.
+ *
+ * @return array {
+ *     @type int   $depth     The depth of the comment (1 = first level).
+ *     @type int[] $ancestors Array of ancestor IDs from depth 1 to the comment's depth.
+ * }
+ */
+function bb_get_activity_comment_chain_info( $comment_id, $activity_id ) {
+	global $wpdb;
+
+	$comment_id  = (int) $comment_id;
+	$activity_id = (int) $activity_id;
+
+	$cache_key = 'bb_comment_chain_' . $comment_id . '_' . $activity_id;
+	$info      = wp_cache_get( $cache_key, 'bp_activity_comments' );
+
+	if ( false !== $info ) {
+		return $info;
+	}
+
+	$bp             = buddypress();
+	$current_id     = $comment_id;
+	$max_iterations = 50;
+	$iterations     = 0;
+	$ancestors      = array();
+
+	while ( $current_id !== $activity_id && $iterations < $max_iterations ) {
+		$iterations++;
+
+		$parent_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT secondary_item_id FROM {$bp->activity->table_name} WHERE id = %d AND type = 'activity_comment'",
+				$current_id
+			)
+		);
+
+		if ( ! $parent_id || (int) $parent_id === $current_id ) {
+			break;
+		}
+
+		$ancestors[] = $current_id;
+		$current_id  = (int) $parent_id;
+	}
+
+	// Reverse so index 0 = depth 1 (shallowest ancestor).
+	$ancestors = array_reverse( $ancestors );
+
+	$info = array(
+		'depth'     => max( 1, count( $ancestors ) ),
+		'ancestors' => $ancestors,
+	);
+
+	wp_cache_set( $cache_key, $info, 'bp_activity_comments' );
+
+	return $info;
+}
+
+/**
+ * Calculate the depth of an activity comment.
+ *
+ * Wrapper around bb_get_activity_comment_chain_info() for backward compatibility.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id  The ID of the comment to check.
+ * @param int $activity_id The ID of the root activity.
+ *
+ * @return int The depth of the comment (1 = first level, 2 = second level, etc.).
+ */
+function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
+	$info = bb_get_activity_comment_chain_info( $comment_id, $activity_id );
+
+	return $info['depth'];
+}
+
+/**
+ * Find the ancestor comment at a specific depth level.
+ *
+ * Wrapper around bb_get_activity_comment_chain_info() for backward compatibility.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id   The ID of the starting comment.
+ * @param int $activity_id  The ID of the root activity.
+ * @param int $target_depth The depth level to find (1 = first level comment).
+ *
+ * @return int The ID of the ancestor at the target depth, or the activity_id if not found.
+ */
+function bb_get_activity_comment_ancestor_at_depth( $comment_id, $activity_id, $target_depth ) {
+	$info         = bb_get_activity_comment_chain_info( $comment_id, $activity_id );
+	$target_index = $target_depth - 1;
+	$activity_id  = (int) $activity_id;
+
+	if ( isset( $info['ancestors'][ $target_index ] ) ) {
+		return $info['ancestors'][ $target_index ];
+	} elseif ( $target_depth > 0 && ! empty( $info['ancestors'] ) ) {
+		return end( $info['ancestors'] );
+	}
+
+	return $activity_id;
+}
+
+/**
+ * Adjust the parent ID for activity comments at max threading depth.
+ *
+ * When a user replies to a comment that is already at the maximum threading depth,
+ * this function redirects the reply to an ancestor comment so that the new comment
+ * is stored at the maximum depth level instead of exceeding it.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param array $args Arguments for the new activity comment.
+ *
+ * @return array Modified arguments with adjusted parent_id if necessary.
+ */
+function bb_adjust_activity_comment_threading_parent( $args ) {
+
+	if ( ! bb_is_activity_comment_threading_enabled() ) {
+		return $args;
+	}
+
+	$parent_id   = (int) $args['parent_id'];
+	$activity_id = (int) $args['activity_id'];
+
+	if ( empty( $parent_id ) || $parent_id === $activity_id ) {
+		return $args;
+	}
+
+	$max_depth = bb_get_activity_comment_threading_depth();
+	$info      = bb_get_activity_comment_chain_info( $parent_id, $activity_id );
+
+	if ( $info['depth'] >= $max_depth ) {
+		$target_index = $max_depth - 2; // (max_depth - 1) depth, zero-indexed.
+
+		if ( isset( $info['ancestors'][ $target_index ] ) ) {
+			$args['parent_id'] = $info['ancestors'][ $target_index ];
+		}
+	}
+
+	return $args;
 }
 
 /**
@@ -7190,6 +7618,7 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
  * Function to validate activity privacy.
  *
  * @since BuddyBoss 2.6.00
+ * @since BuddyBoss 3.7.1 The `loggedin` check uses the validated user instead of the current request.
  *
  * @param array $args Array for argument.
  *
@@ -7236,7 +7665,8 @@ function bb_validate_activity_privacy( $args ) {
 			if ( 'view_activity' === $args['validate_action'] ) {
 				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to view.', 'buddyboss' ) );
 			}
-		} elseif ( 'loggedin' === $activity->privacy && ! is_user_logged_in() ) {
+		} elseif ( 'loggedin' === $activity->privacy && empty( $args['user_id'] ) ) {
+			// Check the user being validated, not the current request, so CLI and cron callers that pass a member still pass.
 			if ( 'view_activity' === $args['validate_action'] ) {
 				return new WP_Error( 'error', __( 'Sorry, You cannot view on this activity.', 'buddyboss' ) );
 			}
@@ -7244,6 +7674,118 @@ function bb_validate_activity_privacy( $args ) {
 	}
 
 	return true;
+}
+
+if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
+	/**
+	 * Check whether a user may view an activity item, including its group and privacy rules.
+	 *
+	 * AJAX handlers that render an activity by a client-supplied ID must call this first.
+	 * A comment is checked against its root post (item_id), and the hidden
+	 * media/video/document sub-activity of a multi-item post against the post or comment it
+	 * belongs to (secondary_item_id). A comment on one of those sub-activities shares its
+	 * privacy value, so comments are walked first.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 * @since BuddyBoss 3.7.1 Walks a comment to its root before the sub-activity hop and skips the privacy check on comment rows.
+	 * @since BuddyBoss 3.7.1 The moderator bypass checks the given user, not the current one.
+	 *
+	 * @param int|BP_Activity_Activity $activity Activity ID or object.
+	 * @param int                      $user_id  User ID. Default the logged-in user.
+	 *
+	 * @return bool
+	 */
+	function bb_activity_user_can_view( $activity, $user_id = 0 ) {
+		if ( ! $activity instanceof BP_Activity_Activity ) {
+			// Accept an ID, or a row from bp_activity_get() / bp_activity_get_specific().
+			$activity = new BP_Activity_Activity( is_object( $activity ) && isset( $activity->id ) ? (int) $activity->id : absint( $activity ) );
+		}
+
+		if ( empty( $activity->id ) ) {
+			return false;
+		}
+
+		$user_id    = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+		$can_view   = true;
+		$activities = array( $activity );
+		$current    = $activity;
+
+		// Walk up from a comment to its root, and from a sub-activity to its post or comment.
+		// The longest real chain is comment > sub-activity > comment > post.
+		for ( $hop = 0; $hop <= 4; $hop++ ) {
+			$parent_id = 0;
+
+			if ( 'activity_comment' === $current->type ) {
+				$parent_id = (int) $current->item_id;
+			} elseif (
+				in_array( $current->privacy, array( 'media', 'video', 'document' ), true ) &&
+				! empty( $current->secondary_item_id ) &&
+				(int) $current->secondary_item_id !== (int) $current->id
+			) {
+				$parent_id = (int) $current->secondary_item_id;
+			}
+
+			if ( empty( $parent_id ) ) {
+				break;
+			}
+
+			// Fail closed when the chain is longer than any real one, or a parent no longer exists.
+			if ( 4 === $hop ) {
+				$can_view = false;
+				break;
+			}
+
+			$current = new BP_Activity_Activity( $parent_id );
+			if ( empty( $current->id ) ) {
+				$can_view = false;
+				break;
+			}
+
+			$activities[] = $current;
+		}
+
+		// Site moderators may view everything. Ask about the user being checked, which is not the
+		// current user under WP-CLI or cron, or when checking on behalf of someone else.
+		$is_moderator = ( bp_loggedin_user_id() === $user_id ) ? bp_current_user_can( 'bp_moderate' ) : bp_user_can( $user_id, 'bp_moderate' );
+
+		if ( $can_view && ! $is_moderator ) {
+			foreach ( $activities as $item ) {
+				if ( ! bp_activity_user_can_read( $item, $user_id ) ) {
+					$can_view = false;
+					break;
+				}
+
+				// A comment copies its root's privacy but keeps the commenter as user_id, so its
+				// own check would test friendship with the commenter. The root on the chain decides.
+				if ( 'activity_comment' === $item->type ) {
+					continue;
+				}
+
+				$privacy = bb_validate_activity_privacy(
+					array(
+						'activity_id'     => $item->id,
+						'user_id'         => $user_id,
+						'validate_action' => 'view_activity',
+					)
+				);
+				if ( is_wp_error( $privacy ) ) {
+					$can_view = false;
+					break;
+				}
+			}
+		}
+
+		/**
+		 * Filters whether a user may view an activity item.
+		 *
+		 * @since BuddyBoss 3.6.2
+		 *
+		 * @param bool                 $can_view Whether the user may view the activity.
+		 * @param BP_Activity_Activity $activity Activity object.
+		 * @param int                  $user_id  User ID.
+		 */
+		return (bool) apply_filters( 'bb_activity_user_can_view', $can_view, $activity, $user_id );
+	}
 }
 
 /**
@@ -7329,7 +7871,8 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 
 					$media_activity = new BP_Activity_Activity( $media->activity_id );
 					if ( ! empty( $media_activity->id ) ) {
-						$media_activity->status = bb_get_activity_published_status();
+						$media_activity->status         = bb_get_activity_published_status();
+						$media_activity->title_required = false;
 						$media_activity->save();
 					}
 				}
@@ -7380,7 +7923,8 @@ function bb_activity_edit_update_video_status( $video_ids ) {
 
 					$video_activity = new BP_Activity_Activity( $video->activity_id );
 					if ( ! empty( $video_activity->id ) ) {
-						$video_activity->status = bb_get_activity_published_status();
+						$video_activity->status         = bb_get_activity_published_status();
+						$video_activity->title_required = false;
 						$video_activity->save();
 					}
 				}
@@ -7431,7 +7975,8 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 
 					$document_activity = new BP_Activity_Activity( $document->activity_id );
 					if ( ! empty( $document_activity->id ) ) {
-						$document_activity->status = bb_get_activity_published_status();
+						$document_activity->status         = bb_get_activity_published_status();
+						$document_activity->title_required = false;
 						$document_activity->save();
 					}
 				}
@@ -7743,4 +8288,230 @@ function bb_activity_topics_manager_instance() {
 	}
 
 	return null;
+}
+
+/**
+ * Check if activity post title is enabled.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param bool $default_value Default value if option is not set.
+ *
+ * @return bool True if activity post title is enabled, false otherwise.
+ */
+function bb_is_activity_post_title_enabled( $default_value = false ) {
+
+	/**
+	 * Filters whether to enable activity post title.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param bool $is_enabled Whether the activity post title is enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_post_title_enabled', bp_get_option( 'bb_activity_post_title_enabled', $default_value ) );
+}
+
+/**
+ * Get the maximum length for activity post titles.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @return int The maximum length for activity post titles.
+ */
+function bb_activity_post_title_max_length() {
+
+	/**
+	 * Filters the maximum length for activity post titles.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param int $max_length Maximum allowed length for activity post titles.
+	 */
+	return (int) apply_filters( 'bb_activity_post_title_max_length', 80 );
+}
+
+/**
+ * Strip the activity post title if it exceeds the maximum length.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param string $post_title The post title to strip.
+ *
+ * @return string The stripped activity post title.
+ */
+function bb_activity_strip_post_title( $post_title = '' ) {
+	if ( ! empty( $post_title ) ) {
+		$post_title_validation = bb_validate_activity_post_title( $post_title );
+		if ( ! $post_title_validation['valid'] ) {
+			$max_length = bb_activity_post_title_max_length();
+			$post_title = function_exists( 'mb_substr' ) ? mb_substr( $post_title, 0, $max_length ) : substr( $post_title, 0, $max_length );
+		}
+	}
+
+	return $post_title;
+}
+
+/**
+ * Validation for activity post title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param string                    $post_title      The post title to validate.
+ * @param BP_Activity_Activity|null $activity_object The activity object.
+ *
+ * @return array Validation result with 'valid' and 'message' keys.
+ */
+function bb_validate_activity_post_title( $post_title, ?BP_Activity_Activity $activity_object = null ) {
+	$result = array(
+		'valid'   => true,
+		'message' => '',
+	);
+
+	$non_valid_component = isset( $activity_object->component ) && ! in_array( $activity_object->component, array( 'groups', 'activity' ), true );
+
+	/**
+	 * Filter to prevent validation of activity post title based on activity component.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param bool   $non_valid_component Whether to skip validation of activity post title for the component.
+	 * @param object $activity_object     The activity object.
+	 */
+	$non_valid_component = apply_filters( 'bb_activity_post_title_component_skip', $non_valid_component, $activity_object );
+	if ( $non_valid_component ) {
+		return $result;
+	}
+
+	$non_valid_type = isset( $activity_object->type ) && 'activity_update' !== $activity_object->type;
+
+	/**
+	 * Filter to prevent validation of activity post title based on a activity type.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param bool   $non_valid_type  Whether to skip validation of activity post title for the type.
+	 * @param object $activity_object The activity object.
+	 */
+	$non_valid_type = apply_filters( 'bb_activity_post_title_type_skip', $non_valid_type, $activity_object );
+	if ( $non_valid_type ) {
+		return $result;
+	}
+
+	$post_title = sanitize_text_field( wp_unslash( $post_title ) );
+
+	// Check if title is required and empty.
+	if ( bb_is_activity_post_title_enabled() && empty( $post_title ) ) {
+		$result['valid']   = false;
+		$result['message'] = __( 'Please enter a title for your activity.', 'buddyboss' );
+
+		return $result;
+	}
+
+	// Check length if title is not empty.
+	if ( ! empty( $post_title ) ) {
+		$max_length     = bb_activity_post_title_max_length();
+		$current_length = function_exists( 'mb_strlen' ) ? mb_strlen( $post_title ) : strlen( $post_title );
+
+		if ( $current_length > $max_length ) {
+			$result['valid']   = false;
+			$result['message'] = sprintf(
+			/* translators: 1: maximum length of the post title, 2: current length of the post title. */
+				__( 'Title must be less than %1$d characters. You used %2$d characters.', 'buddyboss' ),
+				$max_length,
+				$current_length
+			);
+		}
+	}
+
+	return $result;
+}
+
+/**
+ * Get the display name of an activity item's author as the current viewer may see it.
+ *
+ * Activity and comment objects carry two names: `display_name` (the raw WP users
+ * column, always the full name) and `user_fullname` (resolved per viewer by
+ * bp_core_get_user_displayname(), honouring xprofile field visibility such as a
+ * hidden last name). Public output must never use the raw column — this helper
+ * prefers `user_fullname` and falls back to a per-viewer resolution.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param object $activity_item Activity or activity comment object.
+ * @return string Display name as permitted for the current viewer, or an empty string.
+ */
+function bb_activity_get_item_user_displayname( $activity_item ) {
+	if ( empty( $activity_item ) || ! is_object( $activity_item ) ) {
+		return '';
+	}
+
+	if ( ! empty( $activity_item->user_fullname ) ) {
+		return $activity_item->user_fullname;
+	}
+
+	if ( empty( $activity_item->user_id ) ) {
+		return '';
+	}
+
+	$name = bp_core_get_user_displayname( $activity_item->user_id );
+
+	return is_string( $name ) ? $name : '';
+}
+
+/**
+ * Delete the topic relationship rows of activities that were just deleted.
+ *
+ * Runs on `bp_activity_after_delete`, which every delete path (front end, admin bulk, REST,
+ * group/user cascades) reaches through BP_Activity_Activity::delete(). It is hooked outside the
+ * activity topics manager so it also runs while activity topics are switched off; otherwise those
+ * rows would be left pointing at activities that no longer exist. One DELETE per 500 activity ids.
+ * The per-relationship delete actions are not fired here: deleting the activity already clears the
+ * caches that listen to them, and firing them once per row multiplied those purges on large deletes.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param array $activities Deleted activity objects (or ids).
+ *
+ * @return int Number of relationship rows deleted.
+ */
+function bb_delete_topic_relationships_of_deleted_activities( $activities ) {
+	global $wpdb;
+
+	if (
+		empty( $activities ) ||
+		! is_array( $activities ) ||
+		! function_exists( 'bb_topics_manager_instance' ) ||
+		! bb_topics_manager_instance()
+	) {
+		return 0;
+	}
+
+	$first = reset( $activities );
+	if ( is_object( $first ) || is_array( $first ) ) {
+		$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+	} else {
+		// Plain id lists.
+		$activity_ids = wp_parse_id_list( $activities );
+	}
+	if ( empty( $activity_ids ) ) {
+		return 0;
+	}
+
+	$table   = bb_topics_manager_instance()->activity_topic_rel_table;
+	$deleted = 0;
+	foreach ( array_chunk( $activity_ids, 500 ) as $chunk ) {
+		$placeholders = implode( ',', array_fill( 0, count( $chunk ), '%d' ) );
+
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,WordPress.DB.DirectDatabaseQuery -- placeholders built above, table name is internal.
+		$result = $wpdb->query(
+			$wpdb->prepare( "DELETE FROM `{$table}` WHERE activity_id IN ({$placeholders})", $chunk )
+		);
+		// phpcs:enable
+
+		if ( false !== $result ) {
+			$deleted += (int) $result;
+		}
+	}
+
+	return $deleted;
 }

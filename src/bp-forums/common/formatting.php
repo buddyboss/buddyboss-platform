@@ -560,3 +560,92 @@ function bbp_remove_html_tags( $content ) {
 
 	return $content;
 }
+
+/**
+ * Helper function to encode content if not already encoded.
+ *
+ * @since BuddyBoss 2.12.0
+ *
+ * @param string $content Content to potentially encode.
+ *
+ * @return string Encoded content.
+ */
+function bbp_encode_content_if_needed( $content ) {
+
+	// Check if the content is already encoded (contains any HTML entities).
+	if ( preg_match( '/&[a-zA-Z0-9#]+;/', $content ) ) {
+		return $content;
+	}
+
+	return htmlspecialchars( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+}
+
+/**
+ * Convert <code> tags to <pre> tags when saving from backend editor.
+ * Also apply encoding to the content.
+ * This ensures code snippets maintain their formatting when edited in the backend.
+ *
+ * @since BuddyBoss 2.12.0
+ *
+ * @param string $content Content to filter.
+ *
+ * @return string Content with <code> converted to <pre> when appropriate.
+ */
+function bbp_admin_convert_code_to_pre_and_apply_encoding( $content ) {
+	// Only apply this conversion when saving from the admin area.
+	if ( ! is_admin() || wp_doing_ajax() ) {
+		return $content;
+	}
+
+	// Combined pattern to match both outermost <code> and <pre> tags using recursive regex.
+	// This prevents issues with nested tags and ensures proper tag closure.
+	$combined_pattern = '/(<code\b[^>]*>(?:(?>[^<]+)|(?R)|<(?!\/code\b)[^<]*)*<\/code>)|(<pre\b[^>]*>(?:(?>[^<]+)|(?R)|<(?!\/pre\b)[^<]*)*<\/pre>)/is';
+
+	// Handle both <code> and <pre> tags in a single pass.
+	$content = preg_replace_callback(
+		$combined_pattern,
+		function ( $matches ) {
+
+			// Check if this is a <code> tag match (group 1 will be set).
+			if ( ! empty( $matches[1] ) ) {
+				// This is a <code> tag.
+				$full_match = $matches[1];
+
+				// Extract content between <code> and </code> tags.
+				$code_content = preg_replace( '/^<code\b[^>]*>(.*)<\/code>$/is', '$1', $full_match );
+
+				// Trim the content to remove leading/trailing whitespace.
+				$code_content = trim( $code_content );
+
+				// If the content contains line breaks, treat it as a pre block.
+				// Otherwise, keep it as inline code.
+				if ( false !== strpos( $code_content, "\n" ) || false !== strpos( $code_content, '<br' ) ) {
+					// When converting to <pre>, we need to encode the content to maintain proper formatting, just like regular <pre> tags.
+					$formatted_content = bbp_encode_content_if_needed( $code_content );
+
+					// Ensure the entire content is properly wrapped in <pre> tags.
+					return '<pre>' . $formatted_content . '</pre>';
+				} else {
+					$formatted_content = bbp_encode_content_if_needed( $code_content );
+					// Keep inline code.
+					return '<code>' . $formatted_content . '</code>';
+				}
+			} else {
+				// This is a <pre> tag (group 2 will be set).
+				$full_match = $matches[2];
+
+				// Extract content between <pre> and </pre> tags.
+				$pre_content = preg_replace( '/^<pre\b[^>]*>(.*)<\/pre>$/is', '$1', $full_match );
+
+				// For <pre> tags, we always want to encode the content to prevent.
+				// HTML injection and maintain proper formatting.
+				$formatted_content = bbp_encode_content_if_needed( $pre_content );
+
+				return '<pre>' . $formatted_content . '</pre>';
+			}
+		},
+		$content
+	);
+
+	return $content;
+}

@@ -243,17 +243,73 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+	$group_id = bp_is_active( 'groups' ) ? (int) filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT ) : 0;
 
 	if (
 		( ( bp_is_my_profile() || bp_is_user_media() ) && empty( bb_user_can_create_media() ) ) ||
-		( bp_is_active( 'groups' ) && ! empty( $group_id ) && ! groups_can_user_manage_media( bp_loggedin_user_id(), $group_id ) )
+		( bp_is_active( 'groups' ) && ! empty( $group_id ) && ( ! groups_can_user_manage_media( bp_loggedin_user_id(), $group_id ) || ! bp_is_group_media_support_enabled() ) )
 	) {
 		wp_send_json_error( $response );
 	}
 
-	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$album_id         = (int) filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT );
+	$current_album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
 
+	// Security check like when changing the html with album id.
+	if ( ! empty( $album_id ) && bp_is_single_album() && $current_album_id !== $album_id ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem saving media.', 'buddyboss' )
+		);
+
+		$album = new BP_Media_Album( $album_id );
+
+		// If the album is not found, throw an error.
+		if ( empty( $album ) ) {
+			wp_send_json_error( $response );
+		}
+
+		$album_privacy  = $album->privacy;
+		$album_group_id = (int) $album->group_id;
+		$album_error    = false;
+
+		// If user on my profile or user media then throw error if the album is a group album or vice versa or if the group id is not the same as the album group id.
+		if ( 'grouponly' === $album_privacy && ( bp_is_my_profile() || bp_is_user_media() ) ) {
+			$album_error = true;
+		} elseif ( 'public' === $album_privacy && bp_is_active( 'groups' ) && bp_is_group_albums() ) {
+			$album_error = true;
+		} elseif (
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			bp_is_group_albums() &&
+			(
+				bp_get_current_group_id() !== $album_group_id ||
+				$album_group_id !== $group_id
+			)
+		) {
+			$album_error = true;
+		}
+
+		if ( $album_error ) {
+			wp_send_json_error( $response );
+		}
+
+		// If the album is a group album, check if the user has permission to add media to the album.
+		// If the album is not a group album, check if the user has permission to add media to the album.
+		if ( empty( $group_id ) ) {
+			$album_access = bb_media_user_can_access( $album_id, 'album' );
+			$can_add      = true === (bool) $album_access['can_add'];
+			if ( ! $can_add ) {
+				$response['feedback'] = sprintf(
+					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+					esc_html__( 'You do not have permission to add media to this album.', 'buddyboss' )
+				);
+				wp_send_json_error( $response );
+			}
+		}
+	}
+
+	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	if ( empty( $medias ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -261,6 +317,46 @@ function bp_nouveau_ajax_media_save() {
 		);
 
 		wp_send_json_error( $response );
+	} elseif ( ! empty( $album_id ) && bp_is_single_album() ) {
+		// Check if the album ids have same value as the $album_id.
+		$album_ids = array_map( 'intval', array_column( $medias, 'album_id' ) );
+		if ( ! in_array( $album_id, $album_ids, true ) ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'There was a problem saving media.', 'buddyboss' )
+			);
+			wp_send_json_error( $response );
+		}
+	}
+
+	// A destination album must be one the user can add to, and must belong to the checked group (or none).
+	if ( ! empty( $album_id ) ) {
+		$destination_album = new BP_Media_Album( $album_id );
+		$album_access      = empty( $group_id ) ? bb_media_user_can_access( $album_id, 'album' ) : array();
+
+		if (
+			empty( $destination_album->id ) ||
+			(int) $destination_album->group_id !== $group_id ||
+			( empty( $group_id ) && empty( $album_access['can_add'] ) )
+		) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You do not have permission to add media to this album.', 'buddyboss' )
+			);
+			wp_send_json_error( $response );
+		}
+	}
+
+	// Save every photo into the group and album checked above; never trust the per-item values from the request.
+	foreach ( $medias as $key => $media ) {
+		if ( ! is_array( $media ) ) {
+			unset( $medias[ $key ] );
+			continue;
+		}
+
+		$medias[ $key ]['group_id']   = $group_id;
+		$medias[ $key ]['album_id']   = (int) $album_id;
+		$medias[ $key ]['message_id'] = 0;
 	}
 
 	$privacy = bb_filter_input_string( INPUT_POST, 'privacy' );
@@ -289,7 +385,28 @@ function bp_nouveau_ajax_media_save() {
 		ob_end_clean();
 	}
 
-	if ( empty( $media ) ) {
+	$skip_error = false;
+
+	// Do not send the error if is album page and the current album id is not the same as the album id in the request.
+	// This is scenario when user selects the album from the dropdown and after uploading the media.
+	if ( bp_is_single_album() && $current_album_id !== $album_id && empty( $media ) && ! empty( $media_ids ) && ! empty( $album_id ) ) {
+		$tmp_args = array(
+			'include'  => implode( ',', $media_ids ),
+			'per_page' => 0,
+			'album_id' => $album_id,
+		);
+
+		if ( ! empty( $group_id ) ) {
+			$tmp_args['group_id'] = $group_id;
+		}
+
+		$has_media_in_album = bp_has_media( $tmp_args );
+		if ( $has_media_in_album ) {
+			$skip_error = true;
+		}
+	}
+
+	if ( empty( $media ) && ! $skip_error ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem saving media.', 'buddyboss' )
@@ -300,6 +417,12 @@ function bp_nouveau_ajax_media_save() {
 	$media_personal_count = 0;
 	$media_group_count    = 0;
 	$media_all_count      = 0;
+	$album_counts         = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+
 	if ( bp_is_user_media() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 		bp_has_media( bp_ajax_querystring( 'media' ) );
@@ -329,12 +452,21 @@ function bp_nouveau_ajax_media_save() {
 		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
 
 	}
+
+	// Get album counts if uploading to an album.
+	if ( ! empty( $album_id ) ) {
+		$album_counts = bb_media_get_album_counts( $album_id, $group_id );
+	}
+
 	wp_send_json_success(
 		array(
 			'media'                => $media,
 			'media_personal_count' => $media_personal_count,
 			'media_group_count'    => $media_group_count,
 			'media_all_count'      => $media_all_count,
+			'album_total_count'    => (int) $album_counts['album_total_count'],
+			'album_media_count'    => (int) $album_counts['album_media_count'],
+			'album_video_count'    => (int) $album_counts['album_video_count'],
 		)
 	);
 
@@ -384,6 +516,17 @@ function bp_nouveau_ajax_media_delete() {
 		wp_send_json_error( $response );
 	}
 
+	// Get album ID and group ID before deletion for count updates.
+	$album_id = 0;
+	$group_id = 0;
+	if ( ! empty( $media[0] ) ) {
+		$first_media = new BP_Media( $media[0] );
+		if ( ! empty( $first_media->id ) ) {
+			$album_id = $first_media->album_id;
+			$group_id = $first_media->group_id;
+		}
+	}
+
 	$media_ids = array();
 	foreach ( $media as $media_id ) {
 
@@ -407,6 +550,16 @@ function bp_nouveau_ajax_media_delete() {
 	$response = array();
 	if ( $activity_id ) {
 		$response = bp_media_get_activity_media( $_POST['activity_id'] );
+
+		// A comment kept after the delete shows its grid with the comment
+		// thumbnail limit, so return the markup the comment template renders.
+		$media_activity = new BP_Activity_Activity( (int) $activity_id );
+		if ( ! empty( $media_activity->id ) && 'activity_comment' === $media_activity->type ) {
+			ob_start();
+			bp_media_activity_comment_entry( $media_activity->id );
+			$response            = (array) $response;
+			$response['content'] = ob_get_clean();
+		}
 	}
 
 	$delete_box       = false;
@@ -422,6 +575,7 @@ function bp_nouveau_ajax_media_delete() {
 			if ( bp_has_activities(
 				array(
 					'include' => $activity_id,
+					'scope'   => false,
 				)
 			) ) {
 				while ( bp_activities() ) {
@@ -515,6 +669,25 @@ function bp_nouveau_ajax_media_delete() {
 		wp_cache_flush();
 	}
 
+	// Get album counts after deletion if we were in an album.
+	$album_counts = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+	if ( ! empty( $album_id ) ) {
+		$album_counts = bb_media_get_album_counts( $album_id, $group_id );
+	}
+
+	// When deleting from a single album that is now empty, build the album-scoped
+	// empty-state markup. The personal/group scope rebuild above only renders a
+	// "no media" message when the whole scope is empty, so an album emptied while
+	// the user/group still has media elsewhere would otherwise show no message.
+	$album_empty_html = '';
+	if ( ! empty( $album_id ) && 0 === (int) $album_counts['album_total_count'] && function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
+		$album_empty_html = bb_nouveau_media_get_album_empty_state();
+	}
+
 	wp_send_json_success(
 		array(
 			'media'                    => $media,
@@ -526,6 +699,11 @@ function bp_nouveau_ajax_media_delete() {
 			'media_group_count'        => $media_group_count,
 			'media_html_content'       => $media_html_content,
 			'group_media_html_content' => $group_media_html_content,
+			'album_total_count'        => (int) $album_counts['album_total_count'],
+			'album_media_count'        => (int) $album_counts['album_media_count'],
+			'album_video_count'        => (int) $album_counts['album_video_count'],
+			'album_id'                 => (int) $album_id,
+			'album_empty_html'         => $album_empty_html,
 		)
 	);
 
@@ -584,6 +762,15 @@ function bp_nouveau_ajax_media_move_to_album() {
 
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
+	// Get source album ID before moving (from first media item).
+	$source_album_id = 0;
+	if ( ! empty( $medias[0] ) ) {
+		$first_media = new BP_Media( $medias[0] );
+		if ( ! empty( $first_media->id ) ) {
+			$source_album_id = $first_media->album_id;
+		}
+	}
+
 	// Save media.
 	$media_ids = array();
 	foreach ( $medias as $media_id ) {
@@ -623,6 +810,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 		}
 
 		if (
+			bp_is_active( 'video' ) &&
 			bp_has_video(
 				array(
 					'include'  => implode( ',', $media_ids ),
@@ -639,9 +827,37 @@ function bp_nouveau_ajax_media_move_to_album() {
 		ob_end_clean();
 	}
 
+	// Get album counts for source album (after move - items removed).
+	$source_album_counts = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+	if ( ! empty( $source_album_id ) ) {
+		$source_album_counts = bb_media_get_album_counts( $source_album_id, $group_id );
+	}
+
+	// Get album counts for destination album (after move - items added).
+	$dest_album_counts = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+	if ( ! empty( $album_id ) ) {
+		$dest_album_counts = bb_media_get_album_counts( $album_id, $group_id );
+	}
+
 	wp_send_json_success(
 		array(
-			'media' => $media,
+			'media'                      => $media,
+			'source_album_id'            => (int) $source_album_id,
+			'source_album_total_count'   => (int) $source_album_counts['album_total_count'],
+			'source_album_media_count'   => (int) $source_album_counts['album_media_count'],
+			'source_album_video_count'   => (int) $source_album_counts['album_video_count'],
+			'dest_album_id'              => (int) $album_id,
+			'dest_album_total_count'     => (int) $dest_album_counts['album_total_count'],
+			'dest_album_media_count'     => (int) $dest_album_counts['album_media_count'],
+			'dest_album_video_count'     => (int) $dest_album_counts['album_video_count'],
 		)
 	);
 }
@@ -697,8 +913,17 @@ function bp_nouveau_ajax_media_album_save() {
 
 	$user_id = bp_loggedin_user_id();
 	if ( $id ) {
-		$album   = new BP_Media_Album( $id );
-		$user_id = $album->user_id;
+		if ( ! bp_album_user_can_edit( $id ) ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You don\'t have permission to edit this album.', 'buddyboss' )
+			);
+			wp_send_json_error( $response );
+		}
+
+		$album    = new BP_Media_Album( $id );
+		$user_id  = $album->user_id;
+		$group_id = ! empty( $album->group_id ) ? (int) $album->group_id : false; // An edit never moves the album to another group.
 	}
 
 	if (
@@ -738,9 +963,16 @@ function bp_nouveau_ajax_media_album_save() {
 	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( ! empty( $medias ) ) {
-		// set album id for media.
+		// Save every photo into this album and its group; never trust the per-item values from the request.
 		foreach ( $medias as $key => $media ) {
-			$medias[ $key ]['album_id'] = $album_id;
+			if ( ! is_array( $media ) ) {
+				unset( $medias[ $key ] );
+				continue;
+			}
+
+			$medias[ $key ]['album_id']   = $album_id;
+			$medias[ $key ]['group_id']   = (int) $group_id;
+			$medias[ $key ]['message_id'] = 0;
 		}
 
 		// save all media uploaded.
@@ -871,6 +1103,11 @@ function bp_nouveau_ajax_media_get_activity() {
 	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
+	// The activity is rendered without privacy filters below, so check the viewer first.
+	if ( empty( $post_id ) || ! bb_activity_user_can_view( $post_id ) ) {
+		wp_send_json_error( $response );
+	}
+
 	// check activity is media or not.
 	$media_activity = bp_activity_get_meta( $post_id, 'bp_media_activity', true );
 
@@ -934,9 +1171,13 @@ function bp_nouveau_ajax_media_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss' )
 		),
 	);
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
 
 	// Use default nonce.
 	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
@@ -953,6 +1194,27 @@ function bp_nouveau_ajax_media_delete_attachment() {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// Check if attachment exists.
+	$attachment = get_post( $id );
+	if ( empty( $attachment ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide valid attachment id to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// Check if user has permission to delete this attachment.
+	if ( ! ( bp_current_user_can( 'bp_moderate' ) || (int) $attachment->post_author === bp_loggedin_user_id() ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1040,7 +1302,8 @@ function bp_nouveau_ajax_media_update_privacy() {
 		if ( ! empty( $activity_id ) ) {
 			$activity = new BP_Activity_Activity( $activity_id );
 			if ( ! empty( $activity->id ) ) {
-				$activity->privacy = $privacy;
+				$activity->privacy        = $privacy;
+				$activity->title_required = false;
 				$activity->save();
 			}
 		}
@@ -1053,6 +1316,7 @@ function bp_nouveau_ajax_media_update_privacy() {
  * Update media activity description.
  *
  * @since BuddyBoss 1.3.5
+ * @since BuddyBoss 3.6.2 Requires edit permission on the item that owns the attachment.
  */
 function bp_nouveau_ajax_media_description_save() {
 	$response = array(
@@ -1066,6 +1330,11 @@ function bp_nouveau_ajax_media_description_save() {
 
 	// Nonce check!
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bp_nouveau_media' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Only logged-in owners can edit a description; the logged-out nonce is shared.
+	if ( ! is_user_logged_in() ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1084,10 +1353,64 @@ function bp_nouveau_ajax_media_description_save() {
 
 	$attachment = get_post( $attachment_id );
 
-	if ( empty( $attachment ) && ( 'attachment' !== $attachment->post_type ) ) {
+	if ( empty( $attachment ) || 'attachment' !== $attachment->post_type ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// Check permissions before any updates.
+	$media_id    = get_post_meta( $attachment_id, 'bp_media_id', true );
+	$video_id    = get_post_meta( $attachment_id, 'bp_video_id', true );
+	$document_id = get_post_meta( $attachment_id, 'bp_document_id', true );
+
+	// Items created before the attachment meta existed: resolve the owning item from its table.
+	if ( empty( $media_id ) && empty( $video_id ) && empty( $document_id ) ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		if ( ! empty( $bp->media->table_name ) ) {
+			$owner_row = $wpdb->get_row( $wpdb->prepare( "SELECT id, type FROM {$bp->media->table_name} WHERE attachment_id = %d LIMIT 1", $attachment_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			if ( ! empty( $owner_row->id ) ) {
+				if ( 'video' === $owner_row->type ) {
+					$video_id = (int) $owner_row->id;
+				} else {
+					$media_id = (int) $owner_row->id;
+				}
+			}
+		}
+
+		if ( empty( $media_id ) && empty( $video_id ) && bp_is_active( 'document' ) && ! empty( $bp->document->table_name ) ) {
+			$document_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE attachment_id = %d LIMIT 1", $attachment_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		}
+	}
+
+	// Deny by default: the attachment must belong to an existing media, video or document
+	// item the user can edit. Video and document items are only editable while their
+	// component (provided by BuddyBoss Add-ons) is active and loaded.
+	$can_edit           = false;
+	$permission_message = esc_html__( 'You do not have permission to update this media\'s description.', 'buddyboss' );
+
+	if ( ! empty( $media_id ) ) {
+		$media    = new BP_Media( $media_id );
+		$can_edit = ! empty( $media->id ) && (int) $media->attachment_id === (int) $attachment_id && bp_media_user_can_edit( $media );
+	} elseif ( ! empty( $video_id ) && bp_is_active( 'video' ) && class_exists( 'BP_Video' ) && function_exists( 'bp_video_user_can_edit' ) ) {
+		$video              = new BP_Video( $video_id );
+		$can_edit           = ! empty( $video->id ) && (int) $video->attachment_id === (int) $attachment_id && bp_video_user_can_edit( $video );
+		$permission_message = esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' );
+	} elseif ( ! empty( $document_id ) && bp_is_active( 'document' ) && class_exists( 'BP_Document' ) && function_exists( 'bp_document_user_can_edit' ) ) {
+		$document           = new BP_Document( $document_id );
+		$can_edit           = ! empty( $document->id ) && (int) $document->attachment_id === (int) $attachment_id && bp_document_user_can_edit( $document );
+		$permission_message = esc_html__( 'You do not have permission to update this document\'s description.', 'buddyboss' );
+	}
+
+	if ( ! $can_edit ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			$permission_message
 		);
 
 		wp_send_json_error( $response );
@@ -1098,43 +1421,28 @@ function bp_nouveau_ajax_media_description_save() {
 	$media_post['post_content'] = $description;
 	wp_update_post( $media_post );
 
-	$media_id = get_post_meta( $attachment_id, 'bp_media_id', true );
-	if ( ! empty( $media_id ) ) {
-		$media = new BP_Media( $media_id );
+	if ( ! empty( $media_id ) && ! empty( $media->id ) ) {
+		$media->description = $description;
+		$media->save();
 
-		if ( ! empty( $media->id ) ) {
-			$media->description = $description;
-			$media->save();
-
-			$response['description'] = $description;
-			wp_send_json_success( $response );
-		}
+		$response['description'] = $description;
+		wp_send_json_success( $response );
 	}
 
-	$video_id = get_post_meta( $attachment_id, 'bp_video_id', true );
-	if ( ! empty( $video_id ) ) {
-		$video = new BP_Video( $video_id );
+	if ( ! empty( $video_id ) && ! empty( $video->id ) ) {
+		$video->description = $description;
+		$video->save();
 
-		if ( ! empty( $video->id ) ) {
-			$video->description = $description;
-			$video->save();
-
-			$response['description'] = $description;
-			wp_send_json_success( $response );
-		}
+		$response['description'] = $description;
+		wp_send_json_success( $response );
 	}
 
-	$document_id = get_post_meta( $attachment_id, 'bp_document_id', true );
-	if ( ! empty( $document_id ) ) {
-		$document = new BP_Document( $document_id );
+	if ( ! empty( $document_id ) && ! empty( $document->id ) ) {
+		$document->description = $description;
+		$document->save();
 
-		if ( ! empty( $document->id ) ) {
-			$document->description = $description;
-			$document->save();
-
-			$response['description'] = $description;
-			wp_send_json_success( $response );
-		}
+		$response['description'] = $description;
+		wp_send_json_success( $response );
 	}
 
 	wp_send_json_error( $response );
@@ -1226,7 +1534,17 @@ function bp_nouveau_ajax_media_get_media_description() {
 	}
 
 	$media = new BP_Media( $media_id );
+
+	// The activity is rendered without privacy filters below, so the viewer must be able to see this photo.
+	$media_access = bb_media_user_can_access( $media_id, 'photo', $attachment_id );
+	if ( empty( $media->id ) || empty( $media_access['can_view'] ) ) {
+		wp_send_json_error( $response );
+	}
+
 	if ( bp_is_active( 'activity' ) && ! empty( $media->activity_id ) ) {
+		if ( ! bb_activity_user_can_view( $media->activity_id ) ) {
+			wp_send_json_error( $response );
+		}
 
 		remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
@@ -1491,6 +1809,13 @@ function bp_nouveau_ajax_media_move() {
 		wp_send_json_error( $response );
 	}
 
+	// Get source album ID before moving.
+	$source_album_id = 0;
+	$media_object    = new BP_Media( $media_id );
+	if ( ! empty( $media_object->id ) ) {
+		$source_album_id = $media_object->album_id;
+	}
+
 	if ( (int) $media_id > 0 ) {
 		$has_access = bp_media_user_can_edit( $media_id );
 		if ( ! $has_access ) {
@@ -1515,13 +1840,41 @@ function bp_nouveau_ajax_media_move() {
 	$response = bp_media_get_activity_media( $activity_id );
 
 	if ( $media > 0 ) {
+		// Get album counts for source album (after move - items removed).
+		$source_album_counts = array(
+			'album_total_count' => 0,
+			'album_media_count' => 0,
+			'album_video_count' => 0,
+		);
+		if ( ! empty( $source_album_id ) ) {
+			$source_album_counts = bb_media_get_album_counts( $source_album_id, $group_id );
+		}
+
+		// Get album counts for destination album (after move - items added).
+		$dest_album_counts = array(
+			'album_total_count' => 0,
+			'album_media_count' => 0,
+			'album_video_count' => 0,
+		);
+		if ( ! empty( $album_id ) ) {
+			$dest_album_counts = bb_media_get_album_counts( $album_id, $group_id );
+		}
+
 		$content = '';
 		wp_send_json_success(
 			array(
-				'media_ids'     => $response['media_activity_ids'],
-				'media_content' => $response['content'],
-				'message'       => 'success',
-				'html'          => $content,
+				'media_ids'                  => $response['media_activity_ids'],
+				'media_content'              => $response['content'],
+				'message'                    => 'success',
+				'html'                       => $content,
+				'source_album_id'            => (int) $source_album_id,
+				'source_album_total_count'   => (int) $source_album_counts['album_total_count'],
+				'source_album_media_count'   => (int) $source_album_counts['album_media_count'],
+				'source_album_video_count'   => (int) $source_album_counts['album_video_count'],
+				'dest_album_id'              => (int) $album_id,
+				'dest_album_total_count'     => (int) $dest_album_counts['album_total_count'],
+				'dest_album_media_count'     => (int) $dest_album_counts['album_media_count'],
+				'dest_album_video_count'     => (int) $dest_album_counts['album_video_count'],
 			)
 		);
 	} else {

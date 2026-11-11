@@ -6,6 +6,27 @@ window.bp = window.bp || {};
 
 ( function( exports, $ ) {
 
+	/**
+	 * Paste replacements that keep the text of a pasted table.
+	 *
+	 * Spreadsheet copies (Google Sheets, Excel, Numbers) are an HTML table, and
+	 * the table tags are in this editor's cleanTags, which removes them WITH
+	 * their text: the paste inserted nothing (F-07). Run before MediumEditor's
+	 * own clean-up, these turn each row into a paragraph and separate cells
+	 * with a space, and drop the sheet's inline <style> block.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var bbTablePasteReplacements = [
+		[ new RegExp( /<style[^>]*>[\s\S]*?<\/style>/gi ), '' ],
+		[ new RegExp( /<\/?(?:colgroup|col)\b[^>]*>/gi ), '' ],
+		[ new RegExp( /<\/?(?:table|thead|tbody|tfoot|caption)\b[^>]*>/gi ), '' ],
+		[ new RegExp( /<tr\b[^>]*>/gi ), '<p>' ],
+		[ new RegExp( /<\/tr>/gi ), '</p>' ],
+		[ new RegExp( /<t[dh]\b[^>]*>/gi ), '' ],
+		[ new RegExp( /<\/t[dh]>/gi ), ' ' ]
+	];
+
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
@@ -160,20 +181,24 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_video_options = {
-				url                  		 : bbRlAjaxUrl,
-				timeout              		 : 3 * 60 * 60 * 1000,
-				dictFileTooBig       		 : bbRlVideo.dictFileTooBig,
-				acceptedFiles        		 : bbRlVideo.video_type,
-				createImageThumbnails		 : false,
-				dictDefaultMessage   		 : '',
-				autoProcessQueue     		 : true,
-				addRemoveLinks       		 : true,
-				uploadMultiple       		 : false,
-				maxFiles             		 : typeof bbRlVideo.maxFiles !== 'undefined' ? bbRlVideo.maxFiles : 10,
-				maxFilesize          		 : typeof bbRlVideo.max_upload_size !== 'undefined' ? bbRlVideo.max_upload_size : 2,
-				dictInvalidFileType  		 : bbRlVideo.dictInvalidFileType,
-				dictMaxFilesExceeded 		 : bbRlVideo.video_dict_file_exceeded,
+				url                          : bbRlAjaxUrl,
+				timeout                      : 3 * 60 * 60 * 1000,
+				dictFileTooBig               : bbRlVideo.dictFileTooBig,
+				acceptedFiles                : bbRlVideo.video_type,
+				createImageThumbnails        : false,
+				dictDefaultMessage           : '',
+				autoProcessQueue             : true,
+				addRemoveLinks               : true,
+				uploadMultiple               : false,
+				maxFiles                     : typeof bbRlVideo.maxFiles !== 'undefined' ? bbRlVideo.maxFiles : 10,
+				maxFilesize                  : typeof bbRlVideo.max_upload_size !== 'undefined' ? bbRlVideo.max_upload_size : 2,
+				dictInvalidFileType          : bbRlVideo.dictInvalidFileType,
+				dictMaxFilesExceeded         : bbRlVideo.video_dict_file_exceeded,
 				dictCancelUploadConfirmation : bbRlVideo.dictCancelUploadConfirmation,
+				chunking                     : true,
+				chunkSize                    : 30 * 1024 * 1024,
+				retryChunks                  : true,
+				retryChunksLimit             : 3,
 			};
 
 		},
@@ -667,6 +692,7 @@ window.bp = window.bp || {};
 					data: {
 						action: $this.hasClass( 'view_other_members' ) ? 'messages_left_join_members_list' : 'messages_moderated_recipient_list',
 						post_data: postData,
+						nonce: bbRlNonces.messages,
 					},
 					beforeSend: function () {
 						$( '#message-members-list #members_list' ).empty().removeClass( 'is_not_empty' );
@@ -726,6 +752,7 @@ window.bp = window.bp || {};
 				data: {
 					action: 'messages_recipient_list_for_blocks',
 					post_data: postData,
+					nonce: bbRlNonces.messages,
 				},
 				beforeSend: function () {
 					$( '#load_more_rl' ).addClass( 'loading' );
@@ -978,6 +1005,7 @@ window.bp = window.bp || {};
 					data: {
 						action: 'messages_moderated_recipient_list',
 						post_data: postData,
+						nonce: bbRlNonces.messages,
 					},
 					beforeSend: function () {
 						if ( $( '.mass-block-member' ).length > 0 || $( '.mass-report-member' ).length > 0 ) {
@@ -1463,6 +1491,22 @@ window.bp = window.bp || {};
 				);
 
 				self.createCookie( 'bb-thread-unarchive', '', -1 );
+			}
+
+			var group_messages_disabled = self.readCookie( 'bb-group-messages-disabled' );
+			if ( group_messages_disabled ) {
+				jQuery( document ).trigger(
+					'bb_trigger_toast_message',
+					[
+						'',
+						group_messages_disabled,
+						'warning',
+						null,
+						true
+					]
+				);
+
+				self.createCookie( 'bb-group-messages-disabled', '', -1 );
 			}
 
 			// Show detail page in mobile after un-archived thread.
@@ -2324,6 +2368,7 @@ window.bp = window.bp || {};
 									[new RegExp( /<\/h[1-6]/gi ), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								preCleanReplacements: bbTablePasteReplacements,
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
@@ -2670,6 +2715,8 @@ window.bp = window.bp || {};
 								errorText = response.data.feedback;
 							} else if( 'error' === file.status && ( file.xhr && 0 === file.xhr.status) ) { // update server error text to user friendly
 								errorText = bbRlMedia.connection_lost_error;
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								errorText = ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) );
 							}
 						} else {
 							errorText = bbRlMedia.invalid_media_type + '</br>' + response;
@@ -2910,6 +2957,8 @@ window.bp = window.bp || {};
 								errorText = response.data.feedback;
 							} else if( 'error' === file.status  && ( file.xhr && 0 === file.xhr.status ) ) { // update server error text to user friendly
 								errorText = bbRlMedia.connection_lost_error;
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								errorText = ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) );
 							}
 						} else {
 							// if ( ! jQuery( '.document-error-popup' ).length) {
@@ -3119,7 +3168,12 @@ window.bp = window.bp || {};
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
 
-						if ( response.data.id ) {
+						if ( true === file.upload.chunked ) {
+							// convert file.xhr.response string to object.
+							response = JSON.parse( file.xhr.response );
+						}
+
+						if ( response.data && response.data.id ) {
 							file.id 				 = response.data.id;
 							response.data.uuid 		 = file.upload.uuid;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
@@ -3164,6 +3218,8 @@ window.bp = window.bp || {};
 								errorText = response.data.feedback;
 							} else if( 'error' === file.status && ( file.xhr && 0 === file.xhr.status ) ) { // update server error text to user friendly
 								errorText = bbRlMedia.connection_lost_error;
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								errorText = ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) );
 							}
 						} else {
 							// $( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button closeModalErrorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
@@ -3309,7 +3365,8 @@ window.bp = window.bp || {};
 
 			initialize: function( options ) {
 				this.options = options || {};
-				this.giphy   = new window.Giphy( bbRlMedia.gif_api_key );
+				// The GIPHY library ships with BuddyBoss Add-ons; without it the picker cannot search.
+				this.giphy   = 'undefined' !== typeof window.Giphy ? new window.Giphy( bbRlMedia.gif_api_key ) : null;
 
 				this.gifDataItems = new bp.Collections.GifDatas();
 				this.listenTo( this.gifDataItems, 'add', this.addOne );
@@ -3348,6 +3405,10 @@ window.bp = window.bp || {};
 			},
 
 			searchGif: function( q ) {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self 	= this;
 				self.q 		= q;
 				self.offset = 0;
@@ -3417,6 +3478,10 @@ window.bp = window.bp || {};
 			},
 
 			loadTrending: function() {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self 	= this;
 				self.offset = 0;
 				self.q 		= null;
@@ -5647,6 +5712,14 @@ window.bp = window.bp || {};
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
+
+				// Trigger GIF autoplay check when messages are loaded
+				// Use setTimeout to ensure DOM is updated and video elements are rendered
+				setTimeout( function() {
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+						bp.Nouveau.Media.autoPlayGifVideos();
+					}
+				}, 100 );
 			},
 
 			messages_scrolled: function( event ) {
@@ -5668,6 +5741,22 @@ window.bp = window.bp || {};
 
 			messagesFetchError: function( collection, response ) {
 				var loadMore;
+
+				// Group messages are disabled: refresh the page and show the reason as a toast, like a deleted conversation (PROD-3077).
+				if ( response && response.group_messages_disabled ) {
+					bp.Nouveau.Messages.createCookie( 'bb-group-messages-disabled', response.feedback, 5 );
+
+					// Back to the list the conversation was opened from.
+					var group_messages_disabled_url = 'archived' === bp.Nouveau.Messages.threadType ? bbRlMessageArchivedUrl : bbRlMessageUrl;
+
+					if ( 'undefined' !== typeof group_messages_disabled_url && '' !== group_messages_disabled_url ) {
+						window.location.href = group_messages_disabled_url;
+					} else {
+						window.location.reload();
+					}
+					return;
+				}
+
 				if ( ! response.messages ) {
 					collection.hasMore = false;
 				}
@@ -5838,6 +5927,14 @@ window.bp = window.bp || {};
 				} else {
 					this.$el.removeClass( 'focus-in--scroll' );
 				}
+
+				// Trigger GIF autoplay check for newly added message
+				// Use setTimeout to ensure DOM is updated and video elements are rendered
+				setTimeout( function() {
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+						bp.Nouveau.Media.autoPlayGifVideos();
+					}
+				}, 100 );
 			},
 
 			replyError: function( response ) {

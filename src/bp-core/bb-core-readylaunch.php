@@ -81,17 +81,18 @@ function bb_rl_register_widgets() {
 		$plugin_dir . '/bp-core/classes/class-bb-recent-blog-posts-widget.php'
 	);
 
-	// About Group Widget.
-	bb_rl_register_single_widget(
-		'BB_Group_About_Widget',
-		$plugin_dir . '/bp-core/classes/class-bb-group-about-widget.php'
-	);
+	// About Group / Group Members Widgets — depend on the groups component.
+	if ( bp_is_active( 'groups' ) ) {
+		bb_rl_register_single_widget(
+			'BB_Group_About_Widget',
+			$plugin_dir . '/bp-core/classes/class-bb-group-about-widget.php'
+		);
 
-	// Group Members Widget.
-	bb_rl_register_single_widget(
-		'BB_Group_Members_Widget',
-		$plugin_dir . '/bp-core/classes/class-bb-group-members-widget.php'
-	);
+		bb_rl_register_single_widget(
+			'BB_Group_Members_Widget',
+			$plugin_dir . '/bp-core/classes/class-bb-group-members-widget.php'
+		);
+	}
 
 	// Connections Widget.
 	if ( function_exists( 'friends_get_friend_user_ids' ) ) {

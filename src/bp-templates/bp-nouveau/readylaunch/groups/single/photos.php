@@ -20,7 +20,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 <div class="bb-media-container group-media bb-rl-media-container">
 	<?php
 	bp_get_template_part( 'media/theatre' );
-	if ( bp_is_profile_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 	}
 
@@ -28,6 +28,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 		// Home/Media.
 		case 'photos':
+			/**
+			 * Fires before the display of the media list.
+			 *
+			 * @since BuddyBoss 2.15.2
+			 */
+			bp_nouveau_group_hook( 'before', 'rl_stream_media_content' );
 			?>
 			<div class="bb-rl-media-stream">
 				<?php
@@ -48,6 +54,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			<?php
 			bp_nouveau_group_hook( 'after', 'media_content' );
 
+			/**
+			 * Fires after the display of the media list.
+			 *
+			 * @since BuddyBoss 2.15.2
+			 */
+			bp_nouveau_group_hook( 'after', 'rl_stream_media_content' );
 			break;
 		// Any other.
 		default:

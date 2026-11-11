@@ -307,7 +307,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		$media_args = array(
 			'album_id'    => $request['id'],
 			'count_total' => true,
-			'video'       => true,
+			'video'       => bp_is_active( 'video' ),
 		);
 
 		if ( ! empty( $request['media_page'] ) ) {
@@ -675,44 +675,41 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 						'status' => 404,
 					)
 				);
-			} elseif ( ! bp_album_user_can_delete( $album ) ) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this album.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
+			} else {
+				// album permissions.
+				$album_access = bb_media_user_can_access( $album->id, 'album' );
+				$can_edit     = isset( $album_access['can_edit'] ) && true === (bool) $album_access['can_edit'];
+				if (
+					'grouponly' === $album->privacy &&
+					! empty( $album->group_id ) &&
+					(
+						! bp_is_active( 'groups' )
+						|| ! $can_edit
+						|| ! bp_is_group_albums_support_enabled()
 					)
-				);
-			} elseif (
-				isset( $request['group_id'] ) &&
-				! empty( $request['group_id'] ) &&
-				(
-					! bp_is_active( 'groups' )
-					|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
-					|| ! bp_is_group_albums_support_enabled()
-				)
-			) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to edit an album inside this group.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
-			} elseif (
-				(
-					! isset( $request['group_id'] ) ||
-					empty( $request['group_id'] )
-				) &&
-				! bp_is_profile_albums_support_enabled()
-			) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to update an album.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+				) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_permission',
+						__( 'You don\'t have a permission to edit this album inside this group.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				} elseif (
+					(
+						'grouponly' !== $album->privacy ||
+						empty( $album->group_id )
+					) &&
+					! bp_is_profile_albums_support_enabled()
+				) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_permission',
+						__( 'You don\'t have a permission to update an album.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
 		}
 
@@ -1013,18 +1010,19 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		}
 
 		$data = array(
-			'id'            => $album->id,
-			'user_id'       => $album->user_id,
-			'group_id'      => $album->group_id,
-			'date_created'  => $album->date_created,
-			'title'         => wp_specialchars_decode( $album->title, ENT_QUOTES ),
-			'privacy'       => $album->privacy,
-			'media'         => $medias,
-			'group_name'    => ( isset( $album->group_name ) ? $album->group_name : '' ),
-			'visibility'    => ( isset( $album->visibility ) ? $album->visibility : '' ),
-			'user_nicename' => get_the_author_meta( 'user_nicename', $album->user_id ),
-			'user_login'    => get_the_author_meta( 'user_login', $album->user_id ),
-			'display_name'  => bp_core_get_user_displayname( $album->user_id ),
+			'id'               => $album->id,
+			'user_id'          => $album->user_id,
+			'group_id'         => $album->group_id,
+			'date_created'     => $album->date_created,
+			'title'            => wp_specialchars_decode( $album->title, ENT_QUOTES ),
+			'privacy'          => $album->privacy,
+			'media'            => $medias,
+			'group_name'       => ( isset( $album->group_name ) ? $album->group_name : '' ),
+			'visibility'       => ( isset( $album->visibility ) ? $album->visibility : '' ),
+			'user_nicename'    => get_the_author_meta( 'user_nicename', $album->user_id ),
+			'user_login'       => get_the_author_meta( 'user_login', $album->user_id ),
+			'display_name'     => bp_core_get_user_displayname( $album->user_id ),
+			'user_permissions' => $this->media_endpoint->get_media_current_user_permissions( $album ),
 		);
 
 		$response = rest_ensure_response( $data );

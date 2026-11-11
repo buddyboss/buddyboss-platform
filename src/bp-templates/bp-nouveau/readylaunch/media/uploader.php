@@ -130,7 +130,7 @@ $bp_is_single_album = bp_is_single_album();
 							<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>
-							<div class="bb-dropdown-wrap">
+							<div class="bb-dropdown-wrap bb-rl-filter">
 								<select id="bb-media-privacy">
 									<?php
 									foreach ( bp_media_get_visibility_levels() as $k => $option ) {

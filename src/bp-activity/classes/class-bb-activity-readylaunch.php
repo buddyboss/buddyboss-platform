@@ -111,24 +111,25 @@ class BB_Activity_Readylaunch {
 			$reaction_count_class = 'comment-reactions_count';
 		}
 
-		$most_reactions = bb_get_activity_most_reactions( $activity_id, $item_type );
+		$most_reactions = function_exists( 'bb_get_activity_most_reactions' ) ? bb_get_activity_most_reactions( $activity_id, $item_type ) : array();
 		if ( ! empty( $most_reactions ) ) {
 			$output .= '<div class="activity-state-reactions">';
 
 			foreach ( $most_reactions as $reaction ) {
-				$icon    = bb_activity_prepare_emotion_icon( $reaction['id'] );
+				$icon    = function_exists( 'bb_activity_prepare_emotion_icon' ) ? bb_activity_prepare_emotion_icon( $reaction['id'] ) : '';
 				$output .= sprintf(
 					'<div class="reactions_item">%s</div>',
 					$icon
 				);
 			}
 
-			$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
+			$reaction_obj   = bb_load_reaction();
+			$reaction_count = $reaction_obj ? $reaction_obj->bb_get_user_reactions_count(
 				array(
 					'item_id'   => $activity_id,
 					'item_type' => $item_type,
 				)
-			);
+			) : 0;
 			if ( ! empty( $reaction_count ) ) {
 				$reaction_text = 1 === $reaction_count ?
 					esc_html__( 'reaction', 'buddyboss' ) :
@@ -235,6 +236,7 @@ class BB_Activity_Readylaunch {
 	 * Load more comments for the activity.
 	 *
 	 * @since BuddyBoss 2.9.00
+	 * @since BuddyBoss 3.7.1 The activity and the parent comment must be readable, in their group and thread.
 	 */
 	public function bb_rl_activity_loadmore_comments() {
 		if ( ! bp_is_post_request() ) {
@@ -300,11 +302,24 @@ class BB_Activity_Readylaunch {
 			);
 		}
 
+		// Guests can call this, so the activity and the comment whose replies are loaded must
+		// both be readable, in their group and thread.
+		if (
+			! bb_activity_user_can_view( $activity_id ) ||
+			! bb_activity_user_can_view( $parent_commment )
+		) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
+				)
+			);
+		}
+
 		$last_comment_id = ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0;
 		$offset          = ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
 		$comments        = BP_Activity_Activity::append_comments(
 			array( $parent_commment ),
-			'',
+			'ham_only', // Filter spam comments - include orphaned comments (replies to spam).
 			true,
 			array(
 				'limit'                  => bb_get_activity_comment_loading(),
@@ -368,17 +383,18 @@ class BB_Activity_Readylaunch {
 		$activity_id    = bp_get_activity_id();
 		$comment_count  = $this->bb_rl_get_activity_comment_count( $activity_id );
 		$reactions      = bb_active_reactions();
-		$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
+		$reaction_obj   = bb_load_reaction();
+		$reaction_count = $reaction_obj ? $reaction_obj->bb_get_user_reactions_count(
 			array(
 				'item_id'     => $activity_id,
 				'item_type'   => 'activity',
 				'reaction_id' => array_keys( $reactions ),
 			)
-		);
+		) : 0;
 		?>
 		<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 			<?php
-			if ( bb_is_reaction_activity_posts_enabled() ) {
+			if ( bb_is_reaction_activity_posts_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
 				echo bb_get_activity_post_user_reactions_html( $activity_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 			?>
@@ -421,6 +437,11 @@ class BB_Activity_Readylaunch {
 	 * @return array
 	 */
 	public function bb_rl_activity_sync_from_modal_args( $args ) {
+		// The legacy entry template renders comments inline, so keep them for legacy UIs.
+		if ( BB_Readylaunch::bb_rl_is_legacy_template_ajax() ) {
+			return $args;
+		}
+
 		$args['display_comments'] = false;
 
 		return $args;
@@ -439,7 +460,7 @@ class BB_Activity_Readylaunch {
 		global $wpdb, $bp;
 
 		// phpcs:ignore
-		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d", $activity_id ) );
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND is_spam = 0 AND item_id = %d", $activity_id ) );
 	}
 
 	/**

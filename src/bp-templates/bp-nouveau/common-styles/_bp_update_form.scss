@@ -191,6 +191,48 @@
 	}
 }
 
+// Draft notices belong to the OPEN composer, not the collapsed bar.
+//
+// `#whats-new-form` is always in the page - "collapsed" is the
+// `focus-in--empty` state, not a separate element - so a notice inserted into
+// it renders over the collapsed bar unless it is gated. The rest of the
+// composer chrome (#activity-header, #editor-toolbar, the footer) is hidden by
+// default and shown on `.focus-in`; these follow the same pattern rather than
+// inventing a second mechanism.
+//
+// The node is still created and still carries its text while hidden, so
+// opening the composer reveals it with no JS round trip - a fetch-failure
+// warning raised while the composer was shut is shown the moment the member
+// opens it, which is before they can type.
+#whats-new-form {
+
+	.bb-draft-save-feedback,
+	.bb-draft-retention-note {
+		display: none;
+	}
+
+	&.focus-in {
+
+		.bb-draft-save-feedback,
+		.bb-draft-retention-note {
+			display: flex;
+		}
+
+		// One notice at a time: the retention note always follows a refusal
+		// notice, so it waits until that notice is cleared.
+		.bb-draft-save-feedback ~ .bb-draft-retention-note {
+			display: none;
+		}
+	}
+}
+
+// The same for the forum topic and reply forms. `.bp-feedback` raises this to
+// (0,3,0): at (0,2,0) it tied with `.bp-feedback:not(.custom-homepage-info)`
+// (_bp_info_messages.scss), which compiles later and so showed both notices.
+.bb-draft-save-feedback ~ .bb-draft-retention-note.bp-feedback {
+	display: none;
+}
+
 #whats-new-form.focus-in--privacy {
 
 	#whats-new-privacy-stage {
@@ -435,6 +477,26 @@
 
 	}
 
+	.whats-new-title {
+		display: none;
+		color: $black;
+		font-size: 18px;
+		line-height: 1.3;
+		font-weight: 600;
+		padding: 0 0 12px 0;
+		margin: 0 25px 12px;
+		border: 0;
+		border-bottom: 1px solid $bp-border-color;
+		border-radius: 0;
+		outline: none;
+		width: calc(100% - 50px);
+	}
+
+	input[type="text"].whats-new-title:focus {
+		box-shadow: none;
+		border-color: $bp-border-color;
+	}
+
 	#whats-new-submit #aw-whats-new-reset {
 		display: none;
 	}
@@ -448,6 +510,10 @@
 
 		.bb-model-header {
 			padding: 15px 25px;
+		}
+
+		.whats-new-title {
+			display: block;
 		}
 
 		#whats-new {
@@ -1057,7 +1123,6 @@
 		margin-bottom: 20px;
 	}
 
-
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 9px;
@@ -1128,7 +1193,18 @@
 						display: inline-block;
 						height: auto;
 					}
+				}
 
+				.medium-editor-action-h3,
+				.medium-editor-action-h4 {
+					position: relative;
+
+					&:after {
+						position: absolute;
+						right: 3px;
+						top: 50%;
+						transform: translateY(-50%);
+					}
 				}
 			}
 
@@ -1211,6 +1287,20 @@
 
 		.gif-image-container img {
 			max-width: 100%;
+		}
+	}
+
+	#whats-new {
+
+		h3,
+		h4 {
+			font-size: 17px;
+			font-weight: 500;
+			margin: 0 0 15px;
+		}
+
+		h4 {
+			font-size: 16px;
 		}
 	}
 
@@ -1487,6 +1577,25 @@
 	display: flex;
 	flex-flow: row-reverse;
 	position: relative;
+
+	&:hover:not(:has(#aw-whats-new-reset:hover)) {
+
+		.bb-title-tooltip-wrapper {
+
+			.ac-title-required & {
+				opacity: 1;
+				cursor: default;
+			}
+		}
+
+		.bb-topic-tooltip-wrapper {
+
+			.ac-topic-required & {
+				opacity: 1;
+				cursor: default;
+			}
+		}
+	}
 
 	input {
 
@@ -2089,7 +2198,8 @@ input.search-query-input {
 	display: none;
 }
 
-/* Topic tooltip */
+/* Post title and Topic tooltip */
+.bb-title-tooltip-wrapper,
 .bb-topic-tooltip-wrapper {
 	position: absolute;
 	z-index: 99999;
@@ -2105,6 +2215,7 @@ input.search-query-input {
 		pointer-events: auto;
 	}
 
+	.bb-title-tooltip,
 	.bb-topic-tooltip {
 		background: #1e2132;
 		color: #fff;
@@ -2131,3 +2242,8 @@ input.search-query-input {
 		display: block;
 	}
 }
+
+.bb-title-tooltip-wrapper {
+	z-index: 100000;
+}
+

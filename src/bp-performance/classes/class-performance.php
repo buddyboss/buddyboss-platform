@@ -323,7 +323,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		public function add_sitewide_notice() {
 			$bp_performance_download_nonce = wp_create_nonce( 'bp_performance_mu_download' );
 			$file_location                 = self::$file_location;
-			$download_path                 = admin_url( 'admin.php?page=bp-settings&download_mu_file=' . $bp_performance_download_nonce );
+			$download_path                 = admin_url( 'admin.php?page=bb-settings&download_mu_file=' . $bp_performance_download_nonce );
 
 			if ( strpos( $file_location, 'buddyboss-app' ) !== false ) {
 				$download_path = admin_url( 'admin.php?page=bbapp-settings&setting=cache_support&download_mu_file=' . $bp_performance_download_nonce );
@@ -349,7 +349,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		public function update_sitewide_notice() {
 			$bp_performance_download_nonce = wp_create_nonce( 'bp_performance_mu_download' );
 			$file_location                 = self::$file_location;
-			$download_path                 = admin_url( 'admin.php?page=bp-settings&download_mu_file=' . $bp_performance_download_nonce );
+			$download_path                 = admin_url( 'admin.php?page=bb-settings&download_mu_file=' . $bp_performance_download_nonce );
 
 			if ( strpos( $file_location, 'buddyboss-app' ) !== false ) {
 				$download_path = admin_url( 'admin.php?page=bbapp-settings&setting=cache_support&download_mu_file=' . $bp_performance_download_nonce );
