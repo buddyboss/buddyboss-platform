@@ -1550,6 +1550,11 @@ window.bp = window.bp || {};
 					// init dropzone.
 					self.dropzone_obj = new Dropzone( hasParentModal + '#bb-rl-ac-reply-post-media-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
+					// Convert HEIC/HEIF photos to JPEG before upload.
+					if ( ! _.isUndefined( bp.HeicConverter ) ) {
+						bp.HeicConverter.attach( self.dropzone_obj );
+					}
+
 					self.setupDropzoneEventHandlers( {
 						self            : self,
 						dropzoneObj     : self.dropzone_obj,
@@ -4271,6 +4276,11 @@ window.bp = window.bp || {};
 			dropzoneObj.on(
 				'addedfile',
 				function ( file ) {
+					// Keep submit disabled while a HEIC photo converts to JPEG.
+					if ( ! _.isUndefined( bp.HeicConverter ) && bp.HeicConverter.handles( this, file ) ) {
+						target.closest( '.ac-form' ).addClass( 'media-uploading' );
+					}
+
 					// Set data from edit comment.
 					if ( file[ type + '_edit_data' ] ) {
 						dropzoneDataObj.push( file[ type + '_edit_data' ] );
@@ -4473,7 +4483,7 @@ window.bp = window.bp || {};
 			dropzoneObj.on(
 				'complete',
 				function () {
-					if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+					if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.getFilesWithStatus( Dropzone.ADDED ).length === 0 && this.files.length > 0 ) {
 						var commentForm = target.closest( '.ac-form' );
 						commentForm.removeClass( 'media-uploading' );
 						this.element.classList.add( 'files-uploaded' );
