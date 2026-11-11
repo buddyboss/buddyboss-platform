@@ -667,8 +667,6 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 			// Added those options that are not available in the option table.
 			$bb_telemetry_data['bb_platform_version'] = BBOSS_PLATFORM_VERSION;
 			$bb_telemetry_data['active_integrations'] = $this->bb_active_integrations();
-			$bb_telemetry_data['bb_license']          = $this->bb_get_license_data();
-			$bb_telemetry_data['bb_drm']              = $this->bb_get_drm_data();
 
 			if (
 				function_exists( 'bboss_topics_manager_instance' ) &&

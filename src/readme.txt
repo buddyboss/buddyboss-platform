@@ -42,6 +42,8 @@ To run BuddyBoss Platform, we recommend your host supports:
 3. Upload the file 'buddyboss-platform-plugin.zip'
 4. Activate 'BuddyBoss Platform' from your Plugins page.
 
+**Must-use plugin for presence:** to answer the "who is online" presence requests quickly, BuddyBoss Platform copies a small helper, `buddyboss-performance-api.php`, into `wp-content/mu-plugins/` the first time an administrator opens the dashboard after activation. The helper only loads Platform's presence class for those requests. If the folder is not writable, an admin notice offers the file to download and place there by hand; the plugin works without it, presence requests are just slower.
+
 == Setup ==
 
 1. Visit 'BuddyBoss > Components' and adjust the active components to match your community. (You can always toggle these later.)
@@ -87,7 +89,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 
 = BuddyBoss telemetry (opt-in) =
 
-* **What and when:** telemetry is **off by default**. Only if an administrator turns it on under BuddyBoss > Settings, the site periodically sends technical information to `https://analytics.buddyboss.com/wp-json/wp/v1/bb-telemetry`. The data is the site and admin URLs, the WordPress, PHP and database versions, the server software and operating system, multisite status, the installed plugins and themes with their versions, BuddyBoss component and feature settings, active integrations and admin tool usage, the number of activity topics, the status of earlier telemetry deliveries, and a random site ID. If a BuddyBoss licence was entered on the site, its plan, whether a key is stored and its activation status are included (never the key itself). If a supported e-commerce or course plugin is active (for example WooCommerce, MemberPress, LearnDash or LifterLMS), aggregate totals of its sales are included. Other BuddyBoss products installed on the site, such as the BuddyBoss App, can add their own aggregate counts (for example devices and languages). No member content, member personal data, admin email address or licence key is sent.
+* **What and when:** telemetry is **off by default**. Only if an administrator turns it on under BuddyBoss > Settings, the site periodically sends technical information to `https://analytics.buddyboss.com/wp-json/wp/v1/bb-telemetry`. The data is the site and admin URLs, the WordPress, PHP and database versions, the server software and operating system, multisite status, the installed plugins and themes with their versions, BuddyBoss component and feature settings, active integrations and admin tool usage, the number of activity topics, the status of earlier telemetry deliveries, and a random site ID. If a supported e-commerce or course plugin is active (for example WooCommerce, MemberPress, LearnDash or LifterLMS), aggregate totals of its sales are included. Other BuddyBoss products installed on the site, such as the BuddyBoss App, can add their own aggregate counts (for example devices and languages). No member content, member personal data, admin email address or licence key is sent.
 * **Who provides it:** BuddyBoss. [Terms](https://www.buddyboss.com/terms-and-conditions/), [Privacy Policy](https://www.buddyboss.com/privacy-policy/).
 
 = BuddyBoss help articles and integrations list (admin only) =
