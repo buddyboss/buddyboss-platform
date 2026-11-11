@@ -2924,6 +2924,22 @@ window.bp = window.bp || {};
 
 				self.dropzone_obj = new Dropzone( 'div#media-uploader', self.options );
 
+				// Convert HEIC/HEIF photos to JPEG before upload.
+				if ( ! _.isUndefined( bp.HeicConverter ) ) {
+					bp.HeicConverter.attach( self.dropzone_obj );
+
+					// Hide the submit buttons while a HEIC photo converts.
+					self.dropzone_obj.on(
+						'addedfile',
+						function ( file ) {
+							if ( bp.HeicConverter.handles( this, file ) ) {
+								$( '#bp-media-uploader-modal-title' ).text( bbRlMedia.i18n_strings.uploading + '...' );
+								$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).hide();
+							}
+						}
+					);
+				}
+
 				self.dropzone_obj.on(
 					'sending',
 					function ( file, xhr, formData ) {
@@ -3011,7 +3027,10 @@ window.bp = window.bp || {};
 							this.removeFile( file );
 						}
 
-						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).show();
+						// Keep them hidden while a HEIC photo is still converting.
+						if ( ! this.getFilesWithStatus( Dropzone.ADDED ).length ) {
+							$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).show();
+						}
 						$( '.modal-container' ).addClass( 'modal-container--alert' );
 						$( '.bb-field-steps-1' ).addClass( 'controls-added' );
 						$( '#bp-media-add-more' ).show();

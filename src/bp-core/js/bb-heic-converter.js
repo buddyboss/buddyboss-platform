@@ -71,6 +71,17 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Message shown when a HEIC/HEIF file can't be converted.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {string}
+		 */
+		getErrorMessage: function () {
+			return strings.convert_error || 'This HEIC image could not be converted.';
+		},
+
+		/**
 		 * Load heic2any once, on demand.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -305,7 +316,7 @@ window.bp = window.bp || {};
 							window.console.error( 'HEIC conversion failed:', error );
 						}
 
-						done( strings.convert_error || 'This HEIC image could not be converted.' );
+						done( self.getErrorMessage() );
 					}
 				);
 			};

@@ -62,7 +62,7 @@ function bp_core_register_common_scripts() {
 		// Version 2.3.
 		'bp-plupload'         => array(
 			'file'         => "{$url}bp-plupload{$min}.js",
-			'dependencies' => array( 'plupload', 'jquery', 'json2', 'wp-backbone' ),
+			'dependencies' => array( 'plupload', 'jquery', 'json2', 'wp-backbone', 'bb-heic-converter' ),
 			'footer'       => true,
 		),
 		'bp-avatar'           => array(
