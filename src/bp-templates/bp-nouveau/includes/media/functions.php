@@ -27,7 +27,7 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 		array(
 			'bp-nouveau-media' => array(
 				'file'         => 'js/buddypress-media%s.js',
-				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-codemirror', 'bp-media-dropzone' ),
+				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-codemirror', 'bp-media-dropzone', 'bb-heic-converter' ),
 				'footer'       => true,
 			),
 		)
@@ -72,6 +72,7 @@ function bp_nouveau_media_enqueue_scripts() {
 
 		if ( bp_is_profile_media_support_enabled() || bp_is_group_document_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() || $gif || $emoji || bp_is_group_messages() ) {
 			wp_enqueue_script( 'bp-media-dropzone' );
+			wp_enqueue_script( 'bb-heic-converter' );
 			wp_enqueue_script( 'bp-nouveau-codemirror' );
 			wp_enqueue_script( 'bp-nouveau-codemirror-css' );
 			wp_enqueue_script( 'bp-nouveau-media' );

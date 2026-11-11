@@ -4529,6 +4529,11 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#bb-rl-activity-post-media-uploader', dropzoneOptions );
 
+				// Convert HEIC/HEIF photos to JPEG before upload.
+				if ( ! _.isUndefined( bp.HeicConverter ) ) {
+					bp.HeicConverter.attach( bp.Nouveau.Activity.postForm.dropzone );
+				}
+
 				bp.Readylaunch.Utilities.setupDropzoneEventHandlers(
 					this,
 					bp.Nouveau.Activity.postForm.dropzone,

@@ -48,6 +48,49 @@ function bp_media_upload() {
 		return $attachment;
 	}
 
+	// Refresh attachment object to get updated file info after HEIC conversion.
+	$attachment = get_post( $attachment->ID );
+
+	// Get the actual file path after any conversions (e.g., HEIC to JPG).
+	$actual_file = get_attached_file( $attachment->ID );
+
+	// Check if WordPress converted HEIC to JPG.
+	if ( $actual_file && file_exists( $actual_file ) ) {
+		$actual_ext   = strtolower( pathinfo( $actual_file, PATHINFO_EXTENSION ) );
+		$original_ext = strtolower( pathinfo( $attachment->guid, PATHINFO_EXTENSION ) );
+
+		// If the original was HEIC but the actual is JPG, update the attachment data.
+		if (
+			in_array( $original_ext, array( 'heic', 'heif' ), true ) &&
+			in_array( $actual_ext, array( 'jpg', 'jpeg' ), true )
+		) {
+			// Get the new URL for the converted file.
+			$upload_dir = wp_upload_dir();
+			$actual_url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $actual_file );
+
+			// Update post mime type and GUID if needed.
+			wp_update_post(
+				array(
+					'ID'             => $attachment->ID,
+					'post_mime_type' => 'image/jpeg',
+					'guid'           => $actual_url,
+				)
+			);
+
+			// Update attachment metadata to reflect the converted file.
+			update_post_meta( $attachment->ID, '_wp_attached_file', str_replace( $upload_dir['basedir'] . '/', '', $actual_file ) );
+
+			// Refresh attachment object.
+			$attachment = get_post( $attachment->ID );
+
+			// Force refresh of attachment metadata to ensure conversion is complete.
+			$attachment_metadata = wp_get_attachment_metadata( $attachment->ID );
+			if ( ! $attachment_metadata && $actual_file && file_exists( $actual_file ) ) {
+				bp_media_regenerate_attachment_thumbnails( $attachment->ID );
+			}
+		}
+	}
+
 	/**
 	 * Hook Media upload.
 	 *
@@ -143,7 +186,39 @@ function bp_media_allowed_mimes( $mime_types ) {
 		'bmp'          => 'image/bmp',
 	);
 
+	// Raw HEIC is accepted only when WordPress can convert it; browsers convert it to JPEG before upload otherwise.
+	if ( bb_media_is_heic_upload_supported() ) {
+		$mime_types['heic'] = 'image/heic';
+		$mime_types['heif'] = 'image/heif';
+	}
+
 	return $mime_types;
+}
+
+/**
+ * Whether the server can turn uploaded HEIC/HEIF images into JPEG.
+ *
+ * WordPress 6.7+ converts HEIC on upload when the image editor (Imagick built with libheif) supports it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_media_is_heic_upload_supported() {
+	static $supported = null;
+
+	if ( null === $supported ) {
+		$supported = function_exists( 'wp_is_heic_image_mime_type' ) && wp_image_editor_supports( array( 'mime_type' => 'image/heic' ) );
+	}
+
+	/**
+	 * Filters whether raw HEIC/HEIF uploads are accepted for media.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $supported Whether the server can convert HEIC to JPEG.
+	 */
+	return (bool) apply_filters( 'bb_media_is_heic_upload_supported', $supported );
 }
 
 /**
