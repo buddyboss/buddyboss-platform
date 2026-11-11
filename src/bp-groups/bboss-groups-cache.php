@@ -303,7 +303,7 @@ add_action( 'groups_member_before_remove', 'bboss_groups_clear_user_group_cache_
  * @param BBoss_Invitation object $invitation Characteristics of the invitation just saved.
  */
 function bboss_groups_clear_user_group_cache_on_invitation_save( BBoss_Invitation $invitation ) {
-	if ( sanitize_key( 'BBoss_Groups_Invitation_Manager' ) !== $invitation->class ) {
+	if ( BBoss_Groups_Invitation_Manager::CLASS_KEY !== $invitation->class ) {
 		return;
 	}
 

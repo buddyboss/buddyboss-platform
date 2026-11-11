@@ -22,7 +22,14 @@ defined( 'ABSPATH' ) || exit;
 abstract class BBoss_Invitation_Manager {
 
 	/**
-	 * The name of the related class.
+	 * The key stored in the invitations table's `class` column for this manager.
+	 *
+	 * Defaults to the PHP class name; rows are saved and queried through
+	 * sanitize_key(), so `BBoss_Groups_Invitation_Manager` is stored as
+	 * `BBoss_Groups_Invitation_Manager`. Platform's own managers set a fixed key
+	 * instead (see BBoss_Groups_Invitation_Manager::CLASS_KEY), because the key is
+	 * data: a build whose class names differ must still find the rows every
+	 * earlier build wrote.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 * @access public
