@@ -285,7 +285,7 @@ module.exports = function (grunt) {
 				all: [BUILD_DIR],
 				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/'],
 				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/'],
-				composer: [ BUILD_DIR + 'composer.json', BUILD_DIR + 'composer.lock', BUILD_DIR + 'scoper.inc.php', BUILD_DIR + 'apidoc.json' ],
+				composer: [ BUILD_DIR + 'composer.lock', BUILD_DIR + 'scoper.inc.php', BUILD_DIR + 'apidoc.json' ], // composer.json ships beside vendor/ (wp.org pre-review Jul 21; Plugin Check missing_composer_json_file).
 			},
 			copy: {
 				files: {

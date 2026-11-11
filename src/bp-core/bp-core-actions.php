@@ -351,7 +351,7 @@ function bb_media_symlink_validate( $updated_value ) {
 
 						$fetch = wp_remote_get( $symlink_url );
 						if ( is_wp_error( $fetch ) ) {
-							$fetch = wp_remote_get( $symlink_url, array( 'sslverify' => false ) );
+							$fetch = wp_remote_get( $symlink_url, array( 'sslverify' => apply_filters( 'https_local_ssl_verify', false ) ) );
 						}
 
 						if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
@@ -405,7 +405,7 @@ function bb_media_symlink_validate( $updated_value ) {
 						if ( ! empty( $symlink_url ) ) {
 							$fetch = wp_remote_get( $symlink_url );
 							if ( is_wp_error( $fetch ) ) {
-								$fetch = wp_remote_get( $symlink_url, array( 'sslverify' => false ) );
+								$fetch = wp_remote_get( $symlink_url, array( 'sslverify' => apply_filters( 'https_local_ssl_verify', false ) ) );
 							}
 							if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 								$status     = true;

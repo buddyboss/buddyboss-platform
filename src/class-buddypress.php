@@ -608,9 +608,11 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/3.7.0.php';
 		}
 
+		// @bbwt-com-start wp-cli-namespace
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
 			require $this->plugin_dir . 'cli/wp-cli-bp.php';
 		}
+		// @bbwt-com-end wp-cli-namespace
 
 		if ( bb_is_readylaunch_enabled() ) {
 			require $this->plugin_dir . 'bp-core/bb-core-readylaunch.php';

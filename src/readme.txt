@@ -31,7 +31,7 @@ The full source code, including the uncompressed JavaScript and SCSS sources and
 
 To run BuddyBoss Platform, we recommend your host supports:
 
-* PHP version 7.2 or greater.
+* PHP version 7.4 or greater.
 * MySQL version 5.6 or greater, or, MariaDB version 10.0 or greater.
 * HTTPS support.
 
