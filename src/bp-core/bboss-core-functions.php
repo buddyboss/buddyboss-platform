@@ -5013,7 +5013,7 @@ function bboss_core_parse_url( $url ) {
 					),
 				);
 			}
-			$args['sslverify'] = false;
+			$args['sslverify'] = apply_filters( 'https_local_ssl_verify', false ); // Same-site request (checked above).
 		}
 
 		// safely get URL and response body.
