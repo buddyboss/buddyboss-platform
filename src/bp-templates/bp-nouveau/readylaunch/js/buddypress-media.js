@@ -2361,6 +2361,11 @@ window.bp = window.bp || {};
 					self.dropzone_obj[ dropzone_obj_key ]   = new Dropzone( dropzone_container[ 0 ], self.options );
 					self.dropzone_media[ dropzone_obj_key ] = [];
 
+					// Convert HEIC/HEIF photos to JPEG before upload.
+					if ( ! _.isUndefined( bp.HeicConverter ) ) {
+						bp.HeicConverter.attach( self.dropzone_obj[ dropzone_obj_key ] );
+					}
+
 					self.setupForumDropzoneEvents(
 						{
 							self              : self,
@@ -5701,6 +5706,16 @@ window.bp = window.bp || {};
 				dropzoneDataObj   = args.dropzoneDataObj,
 				dropzoneContainer = args.dropzoneContainer;
 
+			// Keep submit disabled while a HEIC photo converts to JPEG.
+			dropzoneObj.on(
+				'addedfile',
+				function ( file ) {
+					if ( ! _.isUndefined( bp.HeicConverter ) && bp.HeicConverter.handles( this, file ) ) {
+						target.closest( 'form' ).addClass( 'media-uploading' );
+					}
+				}
+			);
+
 			if ( 'video' === type ) {
 				dropzoneObj.on(
 					'addedfile',
@@ -5940,7 +5955,7 @@ window.bp = window.bp || {};
 			dropzoneObj.on(
 				'complete',
 				function ( file ) {
-					if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+					if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.getFilesWithStatus( Dropzone.ADDED ).length === 0 && this.files.length > 0 ) {
 						var formElement = target.closest( 'form' );
 						formElement.removeClass( 'media-uploading' );
 					}
