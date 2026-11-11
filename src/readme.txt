@@ -42,6 +42,8 @@ To run BuddyBoss Platform, we recommend your host supports:
 3. Upload the file 'buddyboss-platform-plugin.zip'
 4. Activate 'BuddyBoss Platform' from your Plugins page.
 
+**Must-use plugin for presence:** to answer the "who is online" presence requests quickly, BuddyBoss Platform copies a small helper, `buddyboss-performance-api.php`, into `wp-content/mu-plugins/` the first time an administrator opens the dashboard after activation. The helper only loads Platform's presence class for those requests. If the folder is not writable, an admin notice offers the file to download and place there by hand; the plugin works without it, presence requests are just slower.
+
 == Setup ==
 
 1. Visit 'BuddyBoss > Components' and adjust the active components to match your community. (You can always toggle these later.)

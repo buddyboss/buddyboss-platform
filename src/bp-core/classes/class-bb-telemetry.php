@@ -687,8 +687,12 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			// Added those options that are not available in the option table.
 			$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
 			$bb_telemetry_data['active_integrations'] = $this->bb_active_integrations();
-			$bb_telemetry_data['bb_license']          = $this->bb_get_license_data();
-			$bb_telemetry_data['bb_drm']              = $this->bb_get_drm_data();
+			// @bbwt-com-start mothership-hub
+			$bb_telemetry_data['bb_license'] = $this->bb_get_license_data();
+			// @bbwt-com-end mothership-hub
+			// @bbwt-com-start drm
+			$bb_telemetry_data['bb_drm'] = $this->bb_get_drm_data();
+			// @bbwt-com-end drm
 
 			if (
 				function_exists( 'bb_topics_manager_instance' ) &&
