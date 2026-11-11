@@ -19,6 +19,19 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.3.5
  */
 class BBoss_Groups_Invitation_Manager extends BBoss_Invitation_Manager {
+
+	/**
+	 * Value of the `class` column for group invitations and membership requests.
+	 *
+	 * Fixed on purpose: every row written since BuddyBoss 1.3.5 carries this key
+	 * (sanitize_key() of the original class name), and the lookups must keep
+	 * matching them whatever the class is called in a given build.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var string
+	 */
+	const CLASS_KEY = 'bp_groups_invitation_manager';
+
 	/**
 	 * Construct parameters.
 	 *
@@ -28,6 +41,7 @@ class BBoss_Groups_Invitation_Manager extends BBoss_Invitation_Manager {
 	 */
 	public function __construct( $args = '' ) {
 		parent::__construct();
+		$this->class_name = self::CLASS_KEY;
 	}
 
 	/**

@@ -4670,7 +4670,7 @@ function bboss_groups_migrate_invitations() {
 			(int) $record->user_id,
 			(int) $record->inviter_id,
 			'',
-			'bp_groups_invitation_manager',
+			BBoss_Groups_Invitation_Manager::CLASS_KEY,
 			(int) $record->group_id,
 			0,
 			( 0 === (int) $record->inviter_id ) ? 'request' : 'invite',
