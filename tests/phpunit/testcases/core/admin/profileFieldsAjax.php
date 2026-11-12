@@ -33,7 +33,7 @@ class BB_Tests_Admin_ProfileFieldsAjax extends BP_UnitTestCase {
 		parent::set_up();
 
 		if ( ! class_exists( 'BBoss_Admin_Profile_Fields_Ajax' ) ) {
-			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-admin-profile-fields-ajax.php';
+			require_once bboss()->plugin_dir . 'bboss-core/admin/classes/class-bboss-admin-profile-fields-ajax.php';
 		}
 
 		$this->ajax = new BBoss_Admin_Profile_Fields_Ajax();

@@ -252,7 +252,7 @@ class BP_Tests_Avatars extends BP_UnitTestCase {
 			'file' => array(
 				'name' => 'profile-avatar-buddyboss.png',
 				'type' => 'image/png',
-				'tmp_name' => $plugin_dir . 'bp-core/images/profile-avatar-buddyboss.png',
+				'tmp_name' => $plugin_dir . 'bboss-core/images/profile-avatar-buddyboss.png',
 			)
 		);
 
@@ -262,7 +262,7 @@ class BP_Tests_Avatars extends BP_UnitTestCase {
 			'file' => array(
 				'name' => 'profile-avatar-buddyboss.png',
 				'type' => 'application/octet-stream',
-				'tmp_name' => $plugin_dir . 'bp-core/images/profile-avatar-buddyboss.png',
+				'tmp_name' => $plugin_dir . 'bboss-core/images/profile-avatar-buddyboss.png',
 			)
 		);
 

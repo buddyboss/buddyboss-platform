@@ -163,7 +163,7 @@ class BB_Tests_Activity_Topics_Delete extends BP_UnitTestCase {
 
 	public function test_repair_tool_is_registered_and_paginates() {
 		if ( ! function_exists( 'bboss_admin_repair_list' ) ) {
-			require_once BBOSS_PLUGIN_DIR . '/bp-core/admin/bboss-core-admin-tools.php';
+			require_once BBOSS_PLUGIN_DIR . '/bboss-core/admin/bboss-core-admin-tools.php';
 		}
 		$slugs = wp_list_pluck( bboss_admin_repair_list(), 0 );
 		$this->assertContains( 'bp-activity-topic-relationships', $slugs );

@@ -25,7 +25,7 @@ class BB_Tests_Readylaunch_Theme_Logo extends BP_UnitTestCase {
 			$this->markTestSkipped( 'ReadyLaunch class is not loaded.' );
 		}
 
-		$this->rl_dir = bboss()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/';
+		$this->rl_dir = bboss()->plugin_dir . 'bboss-templates/bboss-nouveau/readylaunch/';
 	}
 
 	public function tearDown(): void {

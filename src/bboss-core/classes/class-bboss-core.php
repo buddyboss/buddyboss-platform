@@ -1,0 +1,674 @@
+<?php
+/**
+ * BuddyBoss Core Loader.
+ *
+ * Core contains the commonly used functions, classes, and APIs.
+ *
+ * @package BuddyBoss\Core
+ * @since BuddyPress 1.5.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Creates the Core component.
+ *
+ * @since BuddyPress 1.5.0
+ */
+class BBoss_Core extends BBoss_Component {
+
+	/**
+	 * Start the members component creation process.
+	 *
+	 * @since BuddyPress 1.5.0
+	 */
+	public function __construct() {
+		parent::start(
+			'core',
+			'BuddyBoss Core',
+			bboss()->plugin_dir
+		);
+
+		$this->bootstrap();
+	}
+
+	/**
+	 * Populate the global data needed before BuddyPress can continue.
+	 *
+	 * This involves figuring out the currently required, activated, deactivated,
+	 * and optional components.
+	 *
+	 * @since BuddyPress 1.5.0
+	 */
+	private function bootstrap() {
+		/**
+		 * Fires before the loading of individual components and after BuddyBoss Core.
+		 *
+		 * Allows plugins to run code ahead of the other components.
+		 *
+		 * @since BuddyPress 1.2.0
+		 */
+		do_action( 'bp_core_loaded' );
+
+		$this->load_components();
+		$this->load_integrations();
+	}
+
+	/**
+	 * Load components files
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	private function load_components() {
+		$bp = bboss();
+
+		/**
+		 * Filters the included and optional components.
+		 *
+		 * @since BuddyPress 1.5.0
+		 *
+		 * @param array $value Array of included and optional components.
+		 */
+		$bp->optional_components = apply_filters(
+			'bp_optional_components',
+			array(
+				'settings',
+				'notifications',
+				'groups',
+				'forums',
+				'activity',
+				'media',
+				'document',
+				'video',
+				'messages',
+				'friends',
+				'invites',
+				'moderation',
+				'search',
+				'blogs',
+			)
+		);
+
+		/**
+		 * Filters the required components.
+		 *
+		 * @since BuddyPress 1.5.0
+		 *
+		 * @param array $value Array of required components.
+		 */
+		$bp->required_components = apply_filters( 'bp_required_components', array( 'members', 'xprofile' ) );
+
+		// Get a list of activated components.
+		if ( $active_components = bboss_get_option( 'bp-active-components' ) ) {
+
+			/**
+			 * Filters the list of active components.
+			 *
+			 * @since BuddyPress 1.5.0
+			 *
+			 * @param array $value Array of active components.
+			 */
+			$bp->active_components = apply_filters( 'bp_active_components', $active_components );
+
+			/**
+			 * Filters the deactivated components.
+			 *
+			 * @since BuddyPress 1.0.0
+			 *
+			 * @param array $value Array of deactivated components.
+			 */
+			$bp->deactivated_components = apply_filters( 'bp_deactivated_components', array_values( array_diff( array_values( array_merge( $bp->optional_components, $bp->required_components ) ), array_keys( $bp->active_components ) ) ) );
+
+			// Pre 1.5 Backwards compatibility.
+		} elseif ( $deactivated_components = bboss_get_option( 'bp-deactivated-components' ) ) {
+
+			// Trim off namespace and filename.
+			foreach ( array_keys( (array) $deactivated_components ) as $component ) {
+				$trimmed[] = str_replace( '.php', '', str_replace( 'bp-', '', $component ) );
+			}
+
+			/** This filter is documented in bboss-core/bboss-core-loader.php */
+			$bp->deactivated_components = apply_filters( 'bp_deactivated_components', $trimmed );
+
+			// Setup the active components.
+			$active_components = array_fill_keys( array_diff( array_values( array_merge( $bp->optional_components, $bp->required_components ) ), array_values( $bp->deactivated_components ) ), '1' );
+
+			/** This filter is documented in bboss-core/classes/class-bboss-core.php */
+			$bp->active_components = apply_filters( 'bp_active_components', $bp->active_components );
+
+			// Default to all components active.
+		} else {
+
+			// Set globals.
+			$bp->deactivated_components = array();
+
+			// Setup the active components.
+			$active_components = array_fill_keys( array_values( array_merge( $bp->optional_components, $bp->required_components ) ), '1' );
+
+			/** This filter is documented in bboss-core/classes/class-bboss-core.php */
+			$bp->active_components = apply_filters( 'bp_active_components', $bp->active_components );
+		}
+
+		/*
+		 * Defer the unavailable-component scrub to `bp_loaded` priority 1.
+		 *
+		 * This code runs from bp_setup_core() at `bp_loaded` priority 0 —
+		 * BEFORE provider plugins can claim their components via the
+		 * `bb_component_directory_available` filter: BuddyBoss Addons
+		 * registers its video/document claims in bb_addons_init() at
+		 * `bp_loaded` priority 1. Scrubbing inline here would always win
+		 * that race and deactivate provider-supplied components on every
+		 * bootstrap (restore-on-activation would put them back, only for the
+		 * next request to scrub them again).
+		 *
+		 * Hooking at the SAME priority 1 is safe: a provider's `bp_loaded`
+		 * callback is registered at plugin-file load — before `bp_loaded`
+		 * starts firing — so within priority 1 it runs first (WP dispatches
+		 * same-priority callbacks in registration order), and its claims are
+		 * in place when the scrub executes. Providers registering later than
+		 * `bp_loaded` priority 1 cannot claim a component.
+		 *
+		 * The component include loop below is unaffected by the deferral:
+		 * it is guarded by file_exists(), so a still-active component whose
+		 * directory is absent simply does not load this request.
+		 */
+		add_action( 'bp_loaded', array( $this, 'bb_scrub_unavailable_active_components' ), 1 );
+
+		// Loop through optional components.
+		foreach ( $bp->optional_components as $component ) {
+			$loader = bboss_is_active( $component ) ? bb_core_component_loader_file( $component ) : '';
+			if ( '' !== $loader ) {
+				include $loader;
+			}
+		}
+
+		// Loop through required components.
+		foreach ( $bp->required_components as $component ) {
+			$loader = bb_core_component_loader_file( $component );
+			if ( '' !== $loader ) {
+				include $loader;
+			}
+		}
+
+		// Add Core to required components.
+		$bp->required_components[] = 'core';
+
+		/**
+		 * Fires after the loading of individual components.
+		 *
+		 * @since BuddyPress 2.0.0
+		 */
+		do_action( 'bp_core_components_included' );
+	}
+
+	/**
+	 * Drop active components whose code is not present in this build.
+	 *
+	 * Components whose `bp-{component}/` directory is absent (e.g. video and
+	 * document, which moved to the BuddyBoss Addons plugin) are removed from
+	 * the runtime active list AND the stored `bp-active-components` option,
+	 * so that bboss_is_active() and code reading the option directly
+	 * (performance must-use integrations, feature registry migration
+	 * fallback) reflect what is actually loadable. A provider plugin keeps a
+	 * component alive by returning true from the
+	 * `bb_component_directory_available` filter.
+	 *
+	 * Runs on `bp_loaded` priority 1 (queued from load_components()) so
+	 * provider claims registered at the same priority — but earlier, at
+	 * plugin-file load — are honored. See the deferral note in
+	 * load_components().
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @return void
+	 */
+	public function bb_scrub_unavailable_active_components() {
+		$bp = bboss();
+
+		/*
+		 * Self-heal first: components previously scrubbed as unavailable
+		 * (remembered in `bb_scrubbed_unavailable_components`) whose code is
+		 * available again — the Platform build regained the directory, or a
+		 * provider plugin (e.g. BuddyBoss Addons) now claims them — are
+		 * restored to the stored option automatically. Without this, a site
+		 * scrubbed while the provider couldn't claim (provider inactive,
+		 * pre-fix builds that lost the priority race) stays broken until an
+		 * admin happens to re-activate the provider plugin.
+		 *
+		 * Restores write the OPTION only, not the runtime active list: the
+		 * component include loop already ran at `bp_loaded` priority 0, so
+		 * runtime-activating now could expose bp_is_active() = true without
+		 * the component's code loaded for the rest of this request. The
+		 * restored component comes fully alive on the next request.
+		 */
+
+		/*
+		 * Both options live on the root blog (bp_get_option()), but a provider's
+		 * claim depends on the plugins active on the CURRENT site. On multisite,
+		 * only the root blog decides what is persisted; other sites scrub their
+		 * runtime list only, so per-site plugin activation cannot flip the shared
+		 * option back and forth.
+		 */
+		$can_persist = ! is_multisite() || bboss_is_root_blog();
+
+		$scrub_memory = bboss_get_option( 'bb_scrubbed_unavailable_components', false );
+		if ( false === $scrub_memory ) {
+			// Seed it so later reads come from autoloaded options instead of a query per request.
+			$scrub_memory = array();
+			if ( $can_persist ) {
+				bboss_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
+			}
+		}
+
+		$scrub_memory = (array) $scrub_memory;
+		if ( $can_persist && ! empty( $scrub_memory ) ) {
+			$stored_components = (array) bboss_get_option( 'bp-active-components', array() );
+			$restored          = false;
+
+			/*
+			 * Keep Media stored as the string '1' while components are scrubbed.
+			 * Platform 3.6.x and older re-enable video and document on `bp_init`
+			 * only when `'1' === media`, but Settings 2.0 stores the integer 1.
+			 * Without this, rolling back to an older Platform leaves Videos and
+			 * Documents permanently off. Every version reads both values the same.
+			 */
+			if ( ! empty( $stored_components['media'] ) && '1' !== $stored_components['media'] ) {
+				$stored_components['media'] = '1';
+				$restored                   = true;
+			}
+
+			foreach ( $scrub_memory as $scrubbed_component => $stored_value ) {
+				if ( ! bboss_is_component_directory_available( $scrubbed_component ) ) {
+					continue;
+				}
+
+				if ( ! isset( $stored_components[ $scrubbed_component ] ) ) {
+					$stored_components[ $scrubbed_component ] = $stored_value;
+				}
+				unset( $scrub_memory[ $scrubbed_component ] );
+				$restored = true;
+			}
+
+			if ( $restored ) {
+				bboss_update_option( 'bp-active-components', $stored_components );
+				bboss_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
+			}
+		}
+
+		/**
+		 * Filters the optional components whose code moved out of Platform.
+		 *
+		 * Only these are checked by the availability scrub. Components added by
+		 * third parties through `bp_optional_components` keep their own loading
+		 * and are never deactivated here.
+		 *
+		 * @since BuddyBoss 3.7.0
+		 *
+		 * @param string[] $components Component IDs provided by BuddyBoss Add-ons.
+		 */
+		$moved_components = (array) apply_filters( 'bb_moved_optional_components', array( 'video', 'document' ) );
+
+		$unavailable_components = array();
+		foreach ( array_keys( (array) $bp->active_components ) as $component ) {
+			if ( ! in_array( $component, $bp->optional_components, true ) || ! in_array( $component, $moved_components, true ) ) {
+				continue;
+			}
+
+			if ( ! bboss_is_component_directory_available( $component ) ) {
+				$unavailable_components[] = $component;
+				unset( $bp->active_components[ $component ] );
+			}
+		}
+
+		/*
+		 * Video and Document need Media. When Media is off, keep them out of the
+		 * runtime list so a provider (BuddyBoss Add-ons) never boots them without
+		 * bp-media loaded. The stored option is cleaned up by the `bp_init` media
+		 * sync in bboss-core-actions.php; nothing is written here.
+		 */
+		if ( empty( $bp->active_components['media'] ) ) {
+			unset( $bp->active_components['video'], $bp->active_components['document'] );
+		}
+
+		if ( empty( $unavailable_components ) ) {
+			return;
+		}
+
+		$bp->deactivated_components = array_unique( array_merge( (array) $bp->deactivated_components, $unavailable_components ) );
+
+		if ( ! $can_persist ) {
+			return;
+		}
+
+		// Scrub only the unavailable keys from the stored option, leaving
+		// runtime-filtered values out of the database write.
+		$stored_components   = (array) bboss_get_option( 'bp-active-components', array() );
+		$scrubbed_components = array_diff_key( $stored_components, array_flip( $unavailable_components ) );
+		if ( $scrubbed_components !== $stored_components ) {
+			// See the Media note in the self-heal block above.
+			if ( ! empty( $scrubbed_components['media'] ) ) {
+				$scrubbed_components['media'] = '1';
+			}
+
+			bboss_update_option( 'bp-active-components', $scrubbed_components );
+
+			// Remember WHY these were removed (code unavailable, not an admin
+			// choice) so a provider plugin (e.g. BuddyBoss Addons supplying
+			// video/document) can restore them on its (re)activation instead
+			// of the components staying permanently disabled.
+			foreach ( $unavailable_components as $unavailable_component ) {
+				if ( isset( $stored_components[ $unavailable_component ] ) ) {
+					$scrub_memory[ $unavailable_component ] = $stored_components[ $unavailable_component ];
+				}
+			}
+			bboss_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
+		}
+	}
+
+	/**
+	 * Load integrations files
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	private function load_integrations() {
+		$bp = bboss();
+
+		/**
+		 * Filters the included and optional integrations.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param array $value Array of included and optional integrations.
+		 */
+		/*
+		 * LearnDash was removed from this whitelist in BuddyBoss 3.0.0
+		 * when the integration was extracted into the buddyboss-learndash
+		 * addon plugin. Addons register themselves via `bp_setup_integrations`
+		 * / `bb_after_register_features`; Platform no longer needs to list
+		 * their slugs here.
+		 */
+		$bp->available_integrations = apply_filters(
+			'bp_integrations',
+			array(
+				'buddyboss-app',
+				'pusher',
+				'recaptcha',
+				'two-factor',
+				'compatibility',
+			)
+		);
+
+		$integration_dir     = $bp->plugin_dir . '/bboss-integrations/';
+		$feature_integration_dir = $bp->plugin_dir . '/bb-features/integrations/';
+
+		foreach ( $bp->available_integrations as $integration ) {
+			$file = "{$integration_dir}{$integration}/bp-{$integration}-loader.php";
+			if ( file_exists( $file ) ) {
+				include $file;
+				continue;
+			}
+
+			$file = "{$integration_dir}{$integration}/bb-{$integration}-loader.php";
+			if ( file_exists( $file ) ) {
+				include $file;
+				continue;
+			}
+
+			// Check bb-features/integrations/ for migrated integrations.
+			$file = "{$feature_integration_dir}{$integration}/bb-{$integration}-loader.php";
+			if ( file_exists( $file ) ) {
+				include $file;
+			}
+		}
+
+		/**
+		 * Fires after the loading of individual integrations.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
+		do_action( 'bp_core_integrations_included' );
+	}
+
+	/**
+	 * Include bp-core files.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @see BBoss_Component::includes() for description of parameters.
+	 *
+	 * @param array $includes See {@link BBoss_Component::includes()}.
+	 */
+	public function includes( $includes = array() ) {
+
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		$includes = array(
+			'admin',
+		);
+
+		parent::includes( $includes );
+	}
+
+	/**
+	 * Set up bp-core global settings.
+	 *
+	 * Sets up a majority of the BuddyPress globals that require a minimal
+	 * amount of processing, meaning they cannot be set in the BuddyPress class.
+	 *
+	 * @since BuddyPress 1.5.0
+	 *
+	 * @see BBoss_Component::setup_globals() for description of parameters.
+	 *
+	 * @param array $args See {@link BBoss_Component::setup_globals()}.
+	 */
+	public function setup_globals( $args = array() ) {
+		$bp = bboss();
+
+		/** Database *********************************************************
+		 */
+
+		// Get the base database prefix.
+		if ( empty( $bp->table_prefix ) ) {
+			$bp->table_prefix = bboss_core_get_table_prefix();
+		}
+
+		// The domain for the root of the site where the main blog resides.
+		if ( empty( $bp->root_domain ) ) {
+			$bp->root_domain = bboss_core_get_root_domain();
+		}
+
+		// Fetches all of the core BuddyPress settings in one fell swoop.
+		if ( empty( $bp->site_options ) ) {
+			$bp->site_options = bboss_core_get_root_options();
+		}
+
+		// The names of the core WordPress pages used to display BuddyPress content.
+		if ( empty( $bp->pages ) ) {
+			$bp->pages = bboss_core_get_directory_pages();
+		}
+
+		/** Basic current user data ******************************************
+		 */
+
+		// Logged in user is the 'current_user'.
+		$current_user = wp_get_current_user();
+
+		// The user ID of the user who is currently logged in.
+		$bp->loggedin_user     = new stdClass();
+		$bp->loggedin_user->id = isset( $current_user->ID ) ? $current_user->ID : 0;
+
+		/** Avatars **********************************************************
+		 */
+
+		// Fetches the default Gravatar image to use if the user/group/blog has no avatar or gravatar.
+		$bp->grav_default = new stdClass();
+
+		/**
+		 * Filters the default user Gravatar.
+		 *
+		 * @since BuddyPress 1.1.0
+		 *
+		 * @param string $value Default user Gravatar.
+		 */
+		$bp->grav_default->user = apply_filters( 'bp_user_gravatar_default', $bp->site_options['avatar_default'] );
+
+		/**
+		 * Filters the default group Gravatar.
+		 *
+		 * @since BuddyPress 1.1.0
+		 *
+		 * @param string $value Default group Gravatar.
+		 */
+		$bp->grav_default->group = apply_filters( 'bp_group_gravatar_default', $bp->grav_default->user );
+
+		/**
+		 * Filters the default blog Gravatar.
+		 *
+		 * @since BuddyPress 1.1.0
+		 *
+		 * @param string $value Default blog Gravatar.
+		 */
+		$bp->grav_default->blog = apply_filters( 'bp_blog_gravatar_default', $bp->grav_default->user );
+
+		// Notifications table. Included here for legacy purposes. Use
+		// bp-notifications instead.
+		$bp->core->table_name_notifications = $bp->table_prefix . 'bp_notifications';
+
+		// Backward compatibility for plugins modifying the legacy bp_nav and bp_options_nav global properties.
+		$bp->bp_nav         = new BBoss_Core_BP_Nav_BackCompat();
+		$bp->bp_options_nav = new BBoss_Core_BP_Options_Nav_BackCompat();
+
+		/**
+		 * Used to determine if user has admin rights on current content. If the
+		 * logged in user is viewing their own profile and wants to delete
+		 * something, is_item_admin is used. This is a generic variable so it
+		 * can be used by other components. It can also be modified, so when
+		 * viewing a group 'is_item_admin' would be 'true' if they are a group
+		 * admin, and 'false' if they are not.
+		 */
+		bboss_update_is_item_admin( bboss_user_has_access(), 'core' );
+
+		// Is the logged in user is a mod for the current item?
+		bboss_update_is_item_mod( false, 'core' );
+
+		/**
+		 * Fires at the end of the setup of bp-core globals setting.
+		 *
+		 * @since BuddyPress 1.1.0
+		 */
+		do_action( 'bp_core_setup_globals' );
+	}
+
+	/**
+	 * Setup cache groups
+	 *
+	 * @since BuddyPress 2.2.0
+	 */
+	public function setup_cache_groups() {
+
+		// Global groups.
+		wp_cache_add_global_groups(
+			array(
+				'bp',
+				'bp_pages',
+				'bp_invitations',
+				'bb_subscriptions',
+				'bb_reactions',
+				'bb_reaction_data',
+				'bb_topics',
+			)
+		);
+
+		parent::setup_cache_groups();
+	}
+
+	/**
+	 * Set up post types.
+	 *
+	 * @since BuddyPress BuddyPress (2.4.0)
+	 */
+	public function register_post_types() {
+
+		// Emails
+		if ( bboss_is_root_blog() && ! is_network_admin() ) {
+			register_post_type(
+				bboss_get_email_post_type(),
+				apply_filters(
+					'bp_register_email_post_type',
+					array(
+						'description'        => __( 'BuddyBoss emails', 'buddyboss-platform' ),
+						'labels'             => bboss_get_email_post_type_labels(),
+						'menu_icon'          => 'dashicons-email-alt',
+						'public'             => false,
+						'publicly_queryable' => bboss_current_user_can( 'bp_moderate' ),
+						'query_var'          => false,
+						'rewrite'            => false,
+						'show_in_admin_bar'  => false,
+						'show_in_menu'       => false,
+						'show_ui'            => bboss_current_user_can( 'bp_moderate' ),
+						'supports'           => bboss_get_email_post_type_supports(),
+					)
+				)
+			);
+		}
+
+		if ( bboss_is_active( 'groups' ) && true === bboss_disable_group_type_creation() ) {
+			// Register Group Types custom post type.
+			register_post_type(
+				bboss_groups_get_group_type_post_type(),
+				apply_filters(
+					'bp_register_group_type_post_type',
+					array(
+						'description'        => __( 'BuddyBoss group type', 'buddyboss-platform' ),
+						'labels'             => bboss_groups_get_group_type_post_type_labels(),
+						'public'             => false,
+						'publicly_queryable' => false,
+						'query_var'          => false,
+						'rewrite'            => false,
+						'show_in_admin_bar'  => false,
+						'show_in_menu'       => false,
+						'map_meta_cap'       => true,
+						'show_in_rest'       => true,
+						'show_ui'            => bboss_current_user_can( 'bp_moderate' ),
+						'supports'           => bboss_groups_get_group_type_post_type_supports(),
+					)
+				)
+			);
+		}
+
+		parent::register_post_types();
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		$controllers = array(
+			/**
+			 * As the core component is always loaded,
+			 * let's register the Components endpoint here.
+			 */
+			'BBoss_BB_REST_Topics_Endpoint'
+		);
+
+		parent::rest_api_init( $controllers );
+	}
+
+	/**
+	 * Register the BB Core Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
+	}
+}

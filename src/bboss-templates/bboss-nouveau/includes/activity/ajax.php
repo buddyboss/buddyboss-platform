@@ -1,0 +1,2604 @@
+<?php
+/**
+ * Activity Ajax functions
+ *
+ * @since BuddyPress 3.0.0
+ * @version 3.1.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+add_action(
+	'admin_init',
+	function() {
+		$ajax_actions = array(
+			array(
+				'activity_filter' => array(
+					'function' => 'bboss_nouveau_ajax_object_template_loader',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'get_single_activity_content' => array(
+					'function' => 'bboss_nouveau_ajax_get_single_activity_content',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'activity_mark_fav' => array(
+					'function' => 'bboss_nouveau_ajax_mark_activity_favorite',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'activity_mark_unfav' => array(
+					'function' => 'bboss_nouveau_ajax_unmark_activity_favorite',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'activity_clear_new_mentions' => array(
+					'function' => 'bboss_nouveau_ajax_clear_new_mentions',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'delete_activity' => array(
+					'function' => 'bboss_nouveau_ajax_delete_activity',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'new_activity_comment' => array(
+					'function' => 'bboss_nouveau_ajax_new_activity_comment',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'bp_nouveau_get_activity_objects' => array(
+					'function' => 'bboss_nouveau_ajax_get_activity_objects',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'post_update' => array(
+					'function' => 'bboss_nouveau_ajax_post_update',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'bp_spam_activity' => array(
+					'function' => 'bboss_nouveau_ajax_spam_activity',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'activity_update_privacy' => array(
+					'function' => 'bboss_nouveau_ajax_activity_update_privacy',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'post_draft_activity' => array(
+					'function' => 'bboss_nouveau_ajax_post_draft_activity',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'bb_get_draft_activity' => array(
+					'function' => 'bboss_nouveau_ajax_get_draft_activity',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'activity_update_close_comments' => array(
+					'function' => 'bboss_nouveau_ajax_activity_update_close_comments',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'activity_loadmore_comments' => array(
+					'function' => 'bboss_nouveau_ajax_activity_load_more_comments',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'activity_sync_from_modal' => array(
+					'function' => 'bboss_nouveau_ajax_activity_sync_from_modal',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'toggle_activity_notification_status' => array(
+					'function' => 'bboss_nouveau_ajax_toggle_activity_notification_status',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'delete_scheduled_activity' => array(
+					'function' => 'bboss_nouveau_ajax_delete_scheduled_activity',
+					'nopriv'   => false,
+				),
+			),
+		);
+
+		foreach ( $ajax_actions as $ajax_action ) {
+			$action = key( $ajax_action );
+
+			add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
+
+			if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
+				add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			}
+		}
+	},
+	12
+);
+
+/**
+ * Mark an activity as a favourite via a POST request.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return string JSON reply
+ */
+function bboss_nouveau_ajax_mark_activity_favorite() {
+
+	$error_message = esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' );
+
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error( $error_message );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( $error_message );
+	}
+
+	$item_id   = sanitize_text_field( $_POST['item_id'] );
+	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$user_id   = bboss_loggedin_user_id();
+
+	if ( ! bboss_all_enabled_reactions( $item_type ) ) {
+		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-platform' ) );
+	}
+
+	if ( ! empty( $_POST['reaction_id'] ) ) {
+		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
+	} else {
+		$reaction = bboss_load_reaction();
+		$reaction_id = $reaction ? $reaction->bb_reactions_reaction_id() : 0;
+	}
+
+	$reacted = bboss_activity_add_user_favorite(
+		$item_id,
+		$user_id,
+		array(
+			'type'        => $item_type,
+			'reaction_id' => $reaction_id,
+			'error_type'  => 'wp_error',
+		)
+	);
+
+	// If there was an error, return it.
+	if ( is_wp_error( $reacted ) ) {
+		wp_send_json_error( $reacted->get_error_message() );
+	}
+
+	$response = array(
+		'reaction_button' => function_exists( 'bboss_get_activity_post_reaction_button_html' ) ? bboss_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ) : '',
+		'reaction_count'  => function_exists( 'bboss_get_activity_post_user_reactions_html' ) ? bboss_get_activity_post_user_reactions_html( $item_id, $item_type, false ) : '',
+	);
+
+	$fav_count = (int) bboss_get_total_favorite_count_for_user( $user_id );
+
+	if ( 1 === $fav_count ) {
+		$response['directory_tab'] = sprintf(
+			'<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
+				<a href="%1$s"><div class="bb-component-nav-item-point">%2$s</div> </a>
+			</li>',
+			esc_url( bboss_loggedin_user_domain() . bboss_get_activity_slug() . '/favorites/' ),
+			bboss_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss-platform' ) : esc_html__( 'Likes', 'buddyboss-platform' )
+		);
+	}
+
+	wp_send_json_success( $response );
+}
+
+/**
+ * Un-favourite an activity via a POST request.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return string JSON reply
+ */
+function bboss_nouveau_ajax_unmark_activity_favorite() {
+
+	$error_message = esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' );
+
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error( $error_message );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( $error_message );
+	}
+
+	if ( empty( $_POST['item_id'] ) ) {
+		wp_send_json_error( esc_html__( 'No item id', 'buddyboss-platform' ) );
+	}
+
+	$item_id   = sanitize_text_field( $_POST['item_id'] );
+	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$user_id   = bboss_loggedin_user_id();
+
+	if ( ! bboss_all_enabled_reactions( $item_type ) ) {
+		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-platform' ) );
+	}
+
+	$un_reacted = bboss_activity_remove_user_favorite(
+		$item_id,
+		$user_id,
+		array(
+			'type'       => $item_type,
+			'error_type' => 'wp_error',
+		)
+	);
+
+	if ( is_wp_error( $un_reacted ) ) {
+		wp_send_json_error( $un_reacted->get_error_message() );
+	}
+
+	$response = array(
+		'reaction_button' => function_exists( 'bboss_get_activity_post_reaction_button_html' ) ? bboss_get_activity_post_reaction_button_html( $item_id, $item_type ) : '',
+		'reaction_count'  => function_exists( 'bboss_get_activity_post_user_reactions_html' ) ? bboss_get_activity_post_user_reactions_html( $item_id, $item_type, false ) : '',
+	);
+
+	$fav_count = (int) bboss_get_total_favorite_count_for_user( $user_id );
+	if ( 0 === $fav_count && ! bboss_is_single_activity() ) {
+		$response['no_favorite'] = sprintf(
+			'<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p>%s</p>
+			</aside>',
+			esc_html__( 'Sorry, there was no activity found.', 'buddyboss-platform' )
+		);
+	}
+
+	wp_send_json_success( $response );
+}
+
+/**
+ * Clear mentions if the directory tab is clicked
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return string JSON reply.
+ */
+function bboss_nouveau_ajax_clear_new_mentions() {
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	bboss_activity_clear_new_mentions( bboss_loggedin_user_id() );
+	wp_send_json_success();
+}
+
+/**
+ * Deletes an Activity item/Activity comment item received via a POST request.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return string JSON reply.
+ */
+function bboss_nouveau_ajax_delete_activity() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was a problem when deleting. Please try again.', 'buddyboss-platform' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'bp_activity_delete_link' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) || ! is_numeric( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$activity = new BBoss_Activity_Activity( (int) $_POST['id'] );
+
+	// Check access.
+	if ( ! bboss_activity_user_can_delete( $activity ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Capture the album context of this activity's media/videos before deletion,
+	// so a single-album view can refresh its empty-state after the activity (and
+	// its cascade-deleted items) is removed (e.g. deleting the last photo or
+	// video from the theater opened on the album view). The attached ids are
+	// read from activity meta first (usually primed) so the media/video tables
+	// are only queried for the ~1% of deletes that actually carry attachments.
+	$activity_album_id     = 0;
+	$activity_album_group  = 0;
+	$deleted_media_ids     = array();
+	$deleted_video_ids     = array();
+	if ( empty( $_POST['is_comment'] ) && function_exists( 'bboss_nouveau_media_get_album_empty_state' ) ) {
+		$attached_media_meta = bboss_is_active( 'media' ) ? bboss_activity_get_meta( $activity->id, 'bp_media_ids', true ) : '';
+		$attached_video_meta = bboss_is_active( 'video' ) ? bboss_activity_get_meta( $activity->id, 'bp_video_ids', true ) : '';
+
+		// Batch uploads attach each item to its own child activity, which carries
+		// only the bp_media_activity/bp_video_activity marker - never the plural
+		// ids meta - so the marker must also open the capture path.
+		$is_media_activity = '' !== (string) $attached_media_meta
+			|| ( bboss_is_active( 'media' ) && '1' === (string) bboss_activity_get_meta( $activity->id, 'bp_media_activity', true ) );
+		$is_video_activity = '' !== (string) $attached_video_meta
+			|| ( bboss_is_active( 'video' ) && '1' === (string) bboss_activity_get_meta( $activity->id, 'bp_video_activity', true ) );
+
+		// The row lookups below serve two consumers: the album context (only used
+		// by the two single-album screens) and the fallback ids for marker-only
+		// child activities. Skip them when neither applies - i.e. the common feed
+		// delete, whose ids already came from the plural meta.
+		$in_single_album_view = bboss_is_single_album() || bboss_is_single_video_album();
+
+		if ( $is_media_activity && class_exists( 'BBoss_Media' ) ) {
+			if ( '' !== (string) $attached_media_meta ) {
+				$deleted_media_ids = array_map( 'intval', array_filter( explode( ',', $attached_media_meta ) ) );
+			}
+			if ( $in_single_album_view || empty( $deleted_media_ids ) ) {
+				$activity_media = BBoss_Media::get(
+					array(
+						'activity_id' => $activity->id,
+						'per_page'    => 1,
+					)
+				);
+				if ( ! empty( $activity_media['medias'] ) ) {
+					$first_media          = current( $activity_media['medias'] );
+					$activity_album_id    = (int) $first_media->album_id;
+					$activity_album_group = (int) $first_media->group_id;
+
+					// A marker-only child activity owns exactly one media row.
+					if ( empty( $deleted_media_ids ) ) {
+						$deleted_media_ids = array( (int) $first_media->id );
+					}
+				}
+			}
+		}
+
+		// Photos and videos live in separate tables; a video-only activity finds
+		// no BP_Media rows, so fall back to the video table for the album context.
+		if ( $is_video_activity && class_exists( 'BP_Video' ) ) {
+			if ( '' !== (string) $attached_video_meta ) {
+				$deleted_video_ids = array_map( 'intval', array_filter( explode( ',', $attached_video_meta ) ) );
+			}
+			if ( ( $in_single_album_view && empty( $activity_album_id ) ) || empty( $deleted_video_ids ) ) {
+				$activity_video = BP_Video::get(
+					array(
+						'activity_id' => $activity->id,
+						'per_page'    => 1,
+					)
+				);
+				if ( ! empty( $activity_video['videos'] ) ) {
+					$first_video = current( $activity_video['videos'] );
+					if ( empty( $activity_album_id ) ) {
+						$activity_album_id    = (int) $first_video->album_id;
+						$activity_album_group = (int) $first_video->group_id;
+					}
+
+					// A marker-only child activity owns exactly one video row.
+					if ( empty( $deleted_video_ids ) ) {
+						$deleted_video_ids = array( (int) $first_video->id );
+					}
+				}
+			}
+		}
+	}
+
+	/** This action is documented in bboss-activity/bp-activity-actions.php */
+	do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
+
+	// Deleting an activity comment.
+	if ( ! empty( $_POST['is_comment'] ) ) {
+		if ( ! bboss_activity_delete_comment( $activity->item_id, $activity->id ) ) {
+			wp_send_json_error( $response );
+		}
+
+		// Deleting an activity.
+	} else {
+		if ( ! bboss_activity_delete(
+			array(
+				'id'      => $activity->id,
+				'user_id' => $activity->user_id,
+			)
+		) ) {
+			wp_send_json_error( $response );
+		}
+	}
+
+	/** This action is documented in bboss-activity/bp-activity-actions.php */
+	do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+
+	// The activity has been deleted successfully.
+	$response = array( 'deleted' => $activity->id );
+
+	// If on a single activity redirect to user's home.
+	if ( ! empty( $_POST['is_single'] ) ) {
+		$response['redirect'] = bboss_core_get_user_domain( $activity->user_id );
+		bboss_core_add_message( __( 'Activity deleted successfully', 'buddyboss-platform' ) );
+	}
+
+	$activity_html      = '';
+	$parent_activity_id = 0;
+	if ( isset( $activity->secondary_item_id ) && ! empty( $activity->secondary_item_id ) ) {
+		$parent_activity_id = $activity->secondary_item_id;
+		ob_start();
+		if ( bboss_has_activities(
+			array(
+				'include' => $parent_activity_id,
+			)
+		) ) {
+			while ( bboss_activities() ) {
+				bboss_the_activity();
+				bboss_get_template_part( 'activity/entry' );
+			}
+		}
+		$activity_html = ob_get_contents();
+		ob_end_clean();
+		$response['activity']           = $activity_html;
+		$response['parent_activity_id'] = $parent_activity_id;
+	}
+
+	// Refresh the single-album empty-state when this activity's media/videos
+	// emptied the album. The theater delete on the album view removes the whole
+	// activity via this handler, so the album grid needs the album-scoped
+	// empty-state (the media/video delete handlers cannot see this path). The
+	// deleted ids let the client clear every tile of a multi-item activity -
+	// the server cascade-deletes them all, not just the one open in the theater.
+	if ( ! empty( $deleted_media_ids ) || ! empty( $deleted_video_ids ) ) {
+		// Always returned: directory and other non-album grids use these to clear
+		// every tile of a multi-item activity, whatever page the delete came from.
+		$response['deleted_media_ids'] = $deleted_media_ids;
+		$response['deleted_video_ids'] = $deleted_video_ids;
+	}
+
+	if ( ! empty( $activity_album_id ) && function_exists( 'bboss_media_get_album_counts' ) ) {
+		// Counts and empty-state markup are only consumed by the two single-album
+		// screens, so skip their queries/render when the delete came from anywhere
+		// else (feed, directories) - under admin-ajax these route checks resolve
+		// from the referer, i.e. the page the delete request originated on.
+		// bp_is_single_video_album() is also true on the media album screen
+		// (bp_is_video_component() returns true for the media component), so the
+		// video-album branch must additionally rule out the media album route.
+		$in_video_album = bboss_is_single_video_album() && ! bboss_is_single_album();
+		if ( $in_video_album || bboss_is_single_album() ) {
+			$album_counts                  = bboss_media_get_album_counts( $activity_album_id, $activity_album_group );
+			$response['album_id']          = $activity_album_id;
+			$response['album_total_count'] = (int) $album_counts['album_total_count'];
+			$response['album_media_count'] = (int) $album_counts['album_media_count'];
+			$response['album_video_count'] = (int) $album_counts['album_video_count'];
+
+			// The standalone video album screen only lists videos, so it is "empty"
+			// when no videos remain even if the mixed album still holds photos; the
+			// unified media album screen is empty only when everything is gone.
+			$response['album_empty_html'] = '';
+			if ( $in_video_album ) {
+				if ( 0 === (int) $album_counts['album_video_count'] && function_exists( 'bb_nouveau_video_get_album_empty_state' ) ) {
+					$response['album_empty_html'] = bb_nouveau_video_get_album_empty_state();
+				}
+			} elseif ( 0 === (int) $album_counts['album_total_count'] ) {
+				$response['album_empty_html'] = bboss_nouveau_media_get_album_empty_state();
+			}
+		}
+	}
+
+	wp_send_json_success( $response );
+}
+
+/**
+ * Fetches an activity's full, non-excerpted content via a POST request.
+ * Used for the 'Read More' link on long activity items.
+ *
+ * @since BuddyPress 3.0.0
+ * @since BuddyBoss 3.7.1 Only returns content the user can read, in its group and thread.
+ *
+ * @return string JSON reply.
+ */
+function bboss_nouveau_ajax_get_single_activity_content() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss-platform' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Without an ID the lookup would query the whole stream and tie up a worker for a long time.
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$args = array(
+		'activity_ids'     => $_POST['id'],
+		'display_comments' => 'stream',
+	);
+
+	// Check scheduled status.
+	$post_status = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+	if ( ! empty( $post_status ) && sanitize_text_field( wp_unslash( $post_status ) ) === bboss_get_activity_scheduled_status() ) {
+		$args['status'] = $post_status;
+	}
+
+	$activity_array = bboss_activity_get_specific( $args );
+
+	if ( empty( $activity_array['activities'][0] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$activity = $activity_array['activities'][0];
+
+	// Guests can call this, so only return content the user can read, in its group and thread.
+	if ( ! bboss_activity_user_can_view( (int) $activity->id ) ) {
+		wp_send_json_error( $response );
+	}
+
+	/**
+	 * Fires before the return of an activity's full, non-excerpted content via a POST request.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $activity Activity content. Passed by reference.
+	 */
+	do_action_ref_array( 'bp_nouveau_get_single_activity_content', array( &$activity ) );
+
+	// Activity content retrieved through AJAX should run through normal filters, but not be truncated.
+	remove_filter( 'bp_get_activity_content_body', 'bboss_activity_truncate_entry', 5 );
+
+	if ( bboss_is_active( 'media' ) ) {
+		add_filter( 'bp_get_activity_content_body', 'bboss_media_activity_append_media', 20, 2 );
+		// Video and Document ship in the BuddyBoss Add-ons plugin; only re-add when loaded.
+		if ( function_exists( 'bp_video_activity_append_video' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
+		}
+		if ( function_exists( 'bp_document_activity_append_document' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
+		}
+		// The GIF feature ships in the BuddyBoss Add-ons plugin; only re-add when it is loaded.
+		if ( function_exists( 'bp_media_activity_append_gif' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
+		}
+	}
+
+	/** This filter is documented in bboss-activity/bboss-activity-template.php */
+	$content = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
+
+	wp_send_json_success( array( 'contents' => $content ) );
+}
+
+/**
+ * Posts new Activity comments received via a POST request.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @global BBoss_Activity_Template $activities_template
+ *
+ * @return string JSON reply.
+ */
+function bboss_nouveau_ajax_new_activity_comment() {
+	global $activities_template;
+	$bp = bboss();
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was an error posting your reply. Please try again.', 'buddyboss-platform' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce_new_activity_comment'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_new_activity_comment'] ) ), 'new_activity_comment' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Check content empty or not for the media, document and gif.
+	// If content will empty then return true and allow empty content in DB for the media, document and gif.
+	$content = apply_filters( 'bb_is_activity_content_empty', $_POST );
+
+	if ( false === $content ) { // Check if $content will false then content would be empty.
+		wp_send_json_error(
+			array(
+				'feedback' => sprintf(
+					'<div class="bp-feedback bp-messages error">%s</div>',
+					esc_html__( 'Please do not leave the comment area blank.', 'buddyboss-platform' )
+				),
+			)
+		);
+	}
+
+	if ( empty( $_POST['form_id'] ) || empty( $_POST['comment_id'] ) || ! is_numeric( $_POST['form_id'] ) || ! is_numeric( $_POST['comment_id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$edit_comment_id = 0;
+	if ( ! empty( $_POST['edit_comment'] ) ) {
+		$_POST['edit_comment'] = true;
+		$edit_comment_id       = sanitize_text_field( wp_unslash( $_POST['comment_id'] ) );
+	}
+
+	$comment_id = bboss_activity_new_comment(
+		array(
+			'id'          => $edit_comment_id,
+			'activity_id' => $_POST['form_id'],
+			'content'     => $_POST['content'],
+			'parent_id'   => $_POST['comment_id'],
+			'skip_error'  => false === $content ? false : true, // Pass true when $content will be not empty.
+		)
+	);
+
+	if ( ! $comment_id ) {
+		if ( ! empty( $bp->activity->errors['new_comment'] ) && is_wp_error( $bp->activity->errors['new_comment'] ) ) {
+			$response = array(
+				'feedback' => sprintf(
+					'<div class="bp-feedback bp-messages error">%s</div>',
+					esc_html( $bp->activity->errors['new_comment']->get_error_message() )
+				),
+			);
+			unset( $bp->activity->errors['new_comment'] );
+		}
+
+		wp_send_json_error( $response );
+	}
+
+	$activity = new BBoss_Activity_Activity( $comment_id );
+
+	// Load the new activity item into the $activities_template global.
+	bboss_has_activities(
+		array(
+			'display_comments' => 'stream',
+			'hide_spam'        => false,
+			'show_hidden'      => true,
+			'include'          => $comment_id,
+			'privacy'          => (array) $activity->privacy,
+			'scope'            => false,
+		)
+	);
+
+	// Swap the current comment with the activity item we just loaded.
+	if ( isset( $activities_template->activities[0] ) ) {
+		$activities_template->activity                  = new stdClass();
+		$activities_template->activity->id              = $activities_template->activities[0]->item_id;
+		$activities_template->activity->current_comment = $activities_template->activities[0];
+
+		// Because the whole tree has not been loaded, we manually
+		// determine depth.
+		$depth     = 1;
+		$parent_id = (int) $activities_template->activities[0]->secondary_item_id;
+		while ( $parent_id && $parent_id !== (int) $activities_template->activities[0]->item_id ) {
+			$depth++;
+			$p_obj     = new BBoss_Activity_Activity( $parent_id );
+			$parent_id = (int) $p_obj->secondary_item_id;
+		}
+		$activities_template->activity->current_comment->depth = $depth;
+
+		// Set activity related properties to be used in the loop.
+		if ( ! isset( $activities_template->activity->component ) ) {
+			if ( ! isset( $p_obj ) ) {
+				$a_obj = new BBoss_Activity_Activity( $activities_template->activities[0]->item_id );
+			} else {
+				$a_obj = new BBoss_Activity_Activity( $p_obj->item_id );
+			}
+
+			$activities_template->activity->component         = $a_obj->component;
+			$activities_template->activity->item_id           = $a_obj->item_id;
+			$activities_template->activity->secondary_item_id = $a_obj->secondary_item_id;
+		}
+	}
+
+	ob_start();
+
+	$comment_template_args = array();
+	if ( ! empty( $_POST['edit_comment'] ) && ! bboss_is_single_activity() ) {
+		$comment_template_args = array(
+			'show_replies'   => false,
+			'limit_comments' => true,
+		);
+	}
+
+	// Get activity comment template part.
+	add_filter( 'bp_get_activity_comment_css_class', 'bboss_activity_recent_comment_class' );
+	bboss_get_template_part( 'activity/comment', null, $comment_template_args );
+	remove_filter( 'bp_get_activity_comment_css_class', 'bboss_activity_recent_comment_class' );
+
+	$response = array(
+		'contents'  => ob_get_contents(),
+		'parent_id' => (int) $activity->secondary_item_id, // The actual parent (may differ from requested if redirected).
+	);
+	ob_end_clean();
+
+	unset( $activities_template );
+
+	wp_send_json_success( $response );
+}
+
+/**
+ * Get items to attach the activity to.
+ *
+ * This is used within the activity post form autocomplete field.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return string JSON reply
+ */
+function bboss_nouveau_ajax_get_activity_objects() {
+	$response = array();
+
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( 'group' === $_POST['type'] ) {
+		$exclude_groups                     = array();
+		$exclude_groups_args                = array();
+		$exclude_groups_args['user_id']     = bboss_loggedin_user_id();
+		$exclude_groups_args['show_hidden'] = true;
+		$exclude_groups_args['fields']      = 'ids';
+		$exclude_groups_args['per_page']    = - 1;
+		if ( isset( $_POST['search'] ) ) {
+			$exclude_groups_args['search_terms'] = $_POST['search'];
+		}
+
+		$exclude_groups_query = bboss_groups_get_groups( $exclude_groups_args );
+
+		if ( ! empty( $exclude_groups_query['groups'] ) ) {
+			foreach ( $exclude_groups_query['groups'] as $exclude_group ) {
+				if ( false === groups_is_user_allowed_posting( bboss_loggedin_user_id(), $exclude_group ) ) {
+					$exclude_groups[] = $exclude_group;
+				}
+			}
+		}
+		$args                = array();
+		$args['user_id']     = bboss_loggedin_user_id();
+		$args['show_hidden'] = true;
+		$args['per_page']    = bboss_activity_post_form_groups_per_page();
+		$args['orderby']     = 'name';
+		$args['order']       = 'ASC';
+		if ( isset( $_POST['page'] ) ) {
+			$args['page'] = $_POST['page'];
+		}
+		if ( isset( $_POST['search'] ) ) {
+			$args['search_terms'] = $_POST['search'];
+		}
+		if ( ! empty( $exclude_groups ) ) {
+			$args['exclude'] = $exclude_groups;
+		}
+
+		$groups = bboss_groups_get_groups( $args );
+
+		wp_send_json_success( array_map( 'bboss_nouveau_prepare_group_for_js', $groups['groups'] ) );
+	} else {
+
+		/**
+		 * Filters the response for custom activity objects.
+		 *
+		 * @since BuddyPress 3.0.0
+		 *
+		 * @param array $response Array of custom response objects to send to AJAX return.
+		 * @param array $value    Activity object type from $_POST global.
+		 */
+		$response = apply_filters( 'bp_nouveau_get_activity_custom_objects', $response, $_POST['type'] );
+	}
+
+	if ( empty( $response ) ) {
+		wp_send_json_error( array( 'error' => __( 'No activities were found.', 'buddyboss-platform' ) ) );
+	} else {
+		wp_send_json_success( $response );
+	}
+}
+
+/**
+ * Processes Activity updates received via a POST request.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return string JSON reply.
+ */
+function bboss_nouveau_ajax_post_update() {
+	$bp = bboss();
+
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_update'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_update'] ) ), 'post_update' ) ) {
+		wp_send_json_error();
+	}
+
+	$activity_id = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
+	// A chosen topic is checked even when a topic is not required. Nothing is checked or saved while topics are off.
+	$topics_enabled = bboss_is_enabled_activity_topics();
+	$topic_id       = $topics_enabled && isset( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
+	if ( $topics_enabled && bboss_is_activity_topic_required() && isset( $_POST['topic_id'] ) && empty( $topic_id ) ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss-platform' ) ) );
+	}
+	if ( ! empty( $topic_id ) ) {
+		$existing_topic_id = bboss_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
+		if (
+			empty( $existing_topic_id ) ||
+			(int) $existing_topic_id !== (int) $topic_id
+		) {
+			// Resolve the object the same way the posting code below does, so the topic is checked for the feed it is saved to.
+			$object  = ! empty( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
+			$item_id = ! empty( $_POST['item_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : 0;
+			if ( empty( $object ) && bboss_is_group() ) {
+				$object  = 'group';
+				$item_id = bboss_get_current_group_id();
+			}
+
+			$args = array(
+				'topic_id'  => $topic_id,
+				'item_type' => 'activity',
+				'fields'    => 'id',
+			);
+			if ( 'group' === $object ) {
+				$args['item_type'] = 'groups';
+				$args['item_id']   = $item_id;
+			}
+			$topic_exists = function_exists( 'bboss_topics_manager_instance' ) ? bboss_topics_manager_instance()->bb_get_topics( $args ) : false;
+			if ( empty( $topic_exists ) || empty( $topic_exists['topics'] ) ) {
+				wp_send_json_error( array( 'message' => esc_html__( 'The topic does not exist.', 'buddyboss-platform' ) ) );
+			} elseif (
+				'user' === $object &&
+				function_exists( 'bboss_activity_topics_manager_instance' ) &&
+				! bboss_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $topic_id )
+			) {
+				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss-platform' ) ) );
+			} elseif (
+				'group' === $object &&
+				bboss_is_active( 'groups' ) &&
+				! empty( $item_id ) &&
+				function_exists( 'bb_can_user_post_to_group_activity_topic' ) &&
+				! bb_can_user_post_to_group_activity_topic( bboss_loggedin_user_id(), $item_id, $topic_id )
+			) {
+				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss-platform' ) ) );
+			}
+		}
+	}
+
+	$post_feature_image = ! empty( $_POST['bb_activity_post_feature_image_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['bb_activity_post_feature_image_id'] ) ) ) : 0;
+	if (
+		! empty( $post_feature_image ) &&
+		function_exists( 'bb_pro_activity_post_feature_image_instance' )
+	) {
+		$existing_feature_image_id = bboss_activity_get_meta( $activity_id, '_bb_activity_post_feature_image', true );
+		if (
+			empty( $existing_feature_image_id ) ||
+			(int) $existing_feature_image_id !== (int) $post_feature_image
+		) {
+			if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) ) {
+				$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+				$item_id = ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : ( function_exists( 'bboss_get_current_group_id' ) ? bboss_get_current_group_id() : 0 );
+
+				$can_upload_feature_image = bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
+					array(
+						'user_id'  => bboss_loggedin_user_id(),
+						'group_id' => $item_id,
+						'object'   => $object,
+					)
+				);
+				if ( ! $can_upload_feature_image ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'You do not have permission to upload feature image.', 'buddyboss-platform' ),
+						)
+					);
+				}
+			}
+
+			if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_validate_attachment_by_id' ) ) {
+				if ( ! empty( $post_feature_image ) ) {
+					$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $post_feature_image, $activity_id );
+					if ( ! empty( $validate_attachment ) && is_array( $validate_attachment ) ) {
+						wp_send_json_error( $validate_attachment );
+					}
+				}
+			}
+		}
+	}
+
+	if ( isset( $_POST['post_title'] ) ) {
+		$post_title = sanitize_text_field( wp_unslash( $_POST['post_title'] ) );
+	} elseif ( isset( $_POST['whats-new-title'] ) ) {
+		// Backward compatibility: older/cached scripts (and some third-party forms) submit the raw "whats-new-title" field instead of "post_title".
+		$post_title = sanitize_text_field( wp_unslash( $_POST['whats-new-title'] ) );
+	} else {
+		$post_title = '';
+	}
+
+	// On edit, an explicit "cleared" flag forces an empty title so it is not reinserted from the stored value.
+	if ( ! empty( $_POST['id'] ) && ! empty( $_POST['post_title_cleared'] ) ) {
+		$post_title = '';
+	}
+	$validation = bboss_validate_activity_post_title( $post_title );
+	if ( ! $validation['valid'] ) {
+		wp_send_json_error(
+			array(
+				'message' => $validation['message'],
+			)
+		);
+	}
+
+	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
+
+		// check activity toolbar options if one of them is set, activity can be empty.
+		$toolbar_option = false;
+		if ( bboss_is_active( 'media' ) && ! empty( $_POST['document'] ) ) {
+			$toolbar_option = true;
+		} elseif ( bboss_is_active( 'media' ) && ! empty( $_POST['media'] ) ) {
+			$toolbar_option = true;
+		} elseif ( bboss_is_activity_link_preview_active() && ! empty( $_POST['link_url'] ) ) {
+			$toolbar_option = true;
+		} elseif ( bboss_is_active( 'media' ) && ! empty( $_POST['gif_data'] ) ) {
+			$toolbar_option = true;
+		} elseif ( bboss_is_active( 'video' ) && ! empty( $_POST['video'] ) ) {
+			$toolbar_option = true;
+		} elseif ( ! empty( sanitize_text_field( wp_unslash( (int) $_POST['poll_id'] ) ) ) ) {
+			$toolbar_option = true;
+		}
+
+		if ( ! $toolbar_option ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Please enter some content to post.', 'buddyboss-platform' ),
+				)
+			);
+		}
+	}
+
+	$activity_id = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+	$item_id     = 0;
+	$object      = '';
+	$is_private  = false;
+
+	// Check if the activity comments closed.
+	if ( ! empty( $activity_id ) && bboss_is_close_activity_comments_enabled() && bboss_is_activity_comments_closed( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'The comments are closed for the activity. The activity cannot be edited.', 'buddyboss-platform' )
+			)
+		);
+	}
+
+	// Try to get the item id from posted variables.
+	if ( ! empty( $_POST['item_id'] ) ) {
+		$item_id = (int) $_POST['item_id'];
+	}
+
+	// Try to get the object from posted variables.
+	if ( ! empty( $_POST['object'] ) ) {
+		$object = sanitize_key( $_POST['object'] );
+
+		// If the object is not set and we're in a group, set the item id and the object.
+	} elseif ( bboss_is_group() ) {
+		$item_id = bboss_get_current_group_id();
+		$object  = 'group';
+		$status  = bboss_groups_get_current_group()->status;
+	}
+
+	$draft_activity_meta_key = 'draft_' . $object;
+
+	$activity_metas = bboss_activity_get_metadata( $activity_id );
+
+	if (
+		bboss_is_active( 'media' ) &&
+		! empty( $_POST['media'] )
+	) {
+		$group_id = ( 'group' === $object ) ? $item_id : 0;
+
+		$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
+		$existing_media = ( ! empty( $media_ids ) ) ? explode( ',', $media_ids ) : array();
+		$posted_media   = array_column( $_POST['media'], 'media_id' );
+		$posted_media   = wp_parse_id_list( $posted_media );
+		$is_same_media  = ( count( $existing_media ) === count( $posted_media ) && ! array_diff( $existing_media, $posted_media ) );
+
+		if ( ! bboss_media_user_can_upload( bboss_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
+			$message = sprintf(
+			/* translators: 1: string or media and medias. 2: group text. */
+				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss-platform' ),
+				_n( 'media', 'medias', count( $_POST['media'] ), 'buddyboss-platform' ),
+				( ! empty( $group_id ) ? __( ' inside group', 'buddyboss-platform' ) : '' )
+			);
+			wp_send_json_error( array( 'message' => $message ) );
+		}
+	}
+
+	if (
+		bboss_is_active( 'document' ) &&
+		! empty( $_POST['document'] )
+	) {
+		$group_id = ( 'group' === $object ) ? $item_id : 0;
+
+		$document_ids      = $activity_metas['bp_document_ids'][0] ?? '';
+		$existing_document = ( ! empty( $document_ids ) ) ? explode( ',', $document_ids ) : array();
+		$posted_document   = array_column( $_POST['document'], 'document_id' );
+		$posted_document   = wp_parse_id_list( $posted_document );
+		$is_same_document  = ( count( $existing_document ) === count( $posted_document ) && ! array_diff( $existing_document, $posted_document ) );
+
+		if ( ! bb_document_user_can_upload( bboss_loggedin_user_id(), $group_id ) && ! $is_same_document ) {
+			$message = sprintf(
+			/* translators: 1: string or media and medias. 2: group text. */
+				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss-platform' ),
+				_n( 'document', 'documents', count( $_POST['document'] ), 'buddyboss-platform' ),
+				( ! empty( $group_id ) ? __( ' inside group', 'buddyboss-platform' ) : '' )
+			);
+
+			wp_send_json_error( array( 'message' => $message ) );
+		}
+	}
+
+	$privacy = 'public';
+	if ( ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array( 'public', 'onlyme', 'loggedin', 'friends' ), true ) ) {
+		$privacy = $_POST['privacy']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	}
+
+	$activity_status      = bboss_get_activity_published_status();
+	$schedule_date_time   = '';
+	$is_scheduled         = false;
+	$activity_action_type = bboss_filter_input_string( INPUT_POST, 'activity_action_type' );
+	if ( ! empty( $activity_action_type ) && 'scheduled' === $activity_action_type ) {
+		$activity_status = bboss_get_activity_scheduled_status();
+
+		$activity_schedule_date_raw = bboss_filter_input_string( INPUT_POST, 'activity_schedule_date_raw' );
+		$activity_schedule_time     = bboss_filter_input_string( INPUT_POST, 'activity_schedule_time' );
+		$activity_schedule_meridiem = bboss_filter_input_string( INPUT_POST, 'activity_schedule_meridiem' );
+		if ( ! empty( $activity_schedule_date_raw ) && ! empty( $activity_schedule_time ) && ! empty( $activity_schedule_meridiem ) ) {
+			$is_scheduled = true;
+
+			$activity_schedule_date_raw = sanitize_text_field( $activity_schedule_date_raw );
+			$activity_schedule_meridiem = sanitize_text_field( $activity_schedule_meridiem ); // 'pm' or 'am'
+			$activity_schedule_time     = sanitize_text_field( $activity_schedule_time );
+
+			// Convert 12-hour time format to 24-hour time format.
+			$activity_schedule_time_24hr = gmdate( 'H:i', strtotime( $activity_schedule_time . ' ' . $activity_schedule_meridiem ) );
+
+			// Combine date and time.
+			$activity_datetime = $activity_schedule_date_raw . ' ' . $activity_schedule_time_24hr;
+
+			// Convert to MySQL datetime format.
+			$schedule_date_time = get_gmt_from_date( $activity_datetime );
+
+			// Get current GMT timestamp.
+			$current_timestamp = gmdate( 'U' );
+
+			// Add 1 hour to the timestamp (in seconds).
+			$next_hour_timestamp = $current_timestamp + 3600;
+
+			// Add 3 months to the timestamp (in seconds).
+			$three_months_ago_timestamp = strtotime( '+3 months', $current_timestamp );
+			$scheduled_timestamp        = strtotime( $schedule_date_time );
+			if ( empty( $activity_id ) ) {
+				// Check if the scheduled date is within the next hour.
+				if ( $scheduled_timestamp < $next_hour_timestamp ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss-platform' ),
+						)
+					);
+				}
+
+				// Check if the scheduled date is more than three months ago.
+				if ( $scheduled_timestamp > $three_months_ago_timestamp ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Please set a schedule date between next three months.', 'buddyboss-platform' ),
+						)
+					);
+				}
+			} elseif ( ! empty( $activity_id ) ) {
+
+				// Check if the scheduled time is changed.
+				$obj_activity = new BBoss_Activity_Activity( $activity_id );
+				if ( strtotime( $obj_activity->date_recorded ) !== $scheduled_timestamp && $scheduled_timestamp < $next_hour_timestamp ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss-platform' ),
+						)
+					);
+				}
+			}
+		}
+	}
+
+	if ( $is_scheduled && ! bboss_is_enabled_activity_schedule_posts() ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Schedule activity settings disabled.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	if ( 'user' === $object && bboss_is_active( 'activity' ) ) {
+
+		if ( ! bboss_user_can_create_activity() ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You don\'t have access to do a activity.', 'buddyboss-platform' ),
+				)
+			);
+		}
+		if (
+			$is_scheduled &&
+			(
+				! function_exists( 'bb_can_user_schedule_activity' ) ||
+				! bb_can_user_schedule_activity()
+			)
+		) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You don\'t have access to schedule the activity.', 'buddyboss-platform' ),
+				)
+			);
+		}
+
+		$content = $_POST['content'];
+
+		if ( ! empty( $_POST['user_id'] ) && bboss_get_displayed_user() && $_POST['user_id'] != bboss_get_displayed_user()->id ) {
+			$content = sprintf( '@%s %s', bboss_get_displayed_user_mentionname(), $content );
+
+			// Draft activity meta key.
+			$draft_activity_meta_key .= '_' . bboss_get_displayed_user()->id;
+		}
+
+		// A cleared title is already an empty string here (see the post_title_cleared handling above), and
+		// bp_activity_post_update()/bp_activity_add() persist it verbatim with no stored-title fallback, so the
+		// non-group path needs no explicit post_title_cleared flag. If a stored-title fallback is ever added there
+		// (as groups_record_activity() has), propagate 'post_title_cleared' into $post_array like the group path below.
+		$post_array = array(
+			'id'         => $activity_id,
+			'post_title' => $post_title,
+			'content'    => $content,
+			'privacy'    => $privacy,
+			'error_type' => 'wp_error',
+		);
+
+		if ( $is_scheduled ) {
+			$post_array['recorded_time'] = $schedule_date_time;
+			$post_array['status']        = $activity_status;
+		}
+		$activity_id = bboss_activity_post_update( $post_array );
+
+	} elseif ( 'group' === $object ) {
+		if ( $item_id && bboss_is_active( 'groups' ) ) {
+
+			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components.
+
+			if (
+				$is_scheduled &&
+				(
+					! function_exists( 'bb_can_user_schedule_activity' ) ||
+					! bb_can_user_schedule_activity(
+						array(
+							'object'   => 'group',
+							'group_id' => $item_id,
+						)
+					)
+				)
+			) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You don\'t have permission to schedule activity in particular group.', 'buddyboss-platform' ),
+					)
+				);
+			}
+
+			$post_array = array(
+				'id'         => $activity_id,
+				'post_title' => $post_title,
+				'content'    => $_POST['content'],
+				'group_id'   => $item_id,
+			);
+
+			if ( ! empty( $_POST['post_title_cleared'] ) ) {
+				$post_array['post_title_cleared'] = true;
+			}
+
+			if ( $is_scheduled ) {
+				$post_array['recorded_time'] = $schedule_date_time;
+				$post_array['status']        = $activity_status;
+			}
+
+			// This function is setting the current group!
+			$activity_id = bboss_groups_post_update( $post_array );
+
+			if ( empty( $status ) ) {
+				if ( ! empty( $bp->groups->current_group->status ) ) {
+					$status = $bp->groups->current_group->status;
+				} else {
+					$group  = bboss_groups_get_group( array( 'group_id' => $group_id ) );
+					$status = $group->status;
+				}
+
+				$is_private = 'public' !== $status;
+			}
+
+			// Draft activity meta key.
+			$draft_activity_meta_key .= '_' . $item_id;
+		}
+	} else {
+		/** This filter is documented in bboss-activity/bp-activity-actions.php */
+		$activity_id = apply_filters( 'bp_activity_custom_update', false, $object, $item_id, $_POST['content'] );
+	}
+
+	if ( empty( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'There was a problem posting your update. Please try again.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	if ( is_wp_error( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => $activity_id->get_error_message(),
+			)
+		);
+	}
+
+	// Delete draft activity - only the composer's own draft, and only a version it showed.
+	$draft_activity_meta_key = bboss_draft_activity_publish_key( $draft_activity_meta_key, bboss_loggedin_user_id() );
+
+	if ( '' !== $draft_activity_meta_key ) {
+		delete_user_meta( bboss_loggedin_user_id(), $draft_activity_meta_key );
+	}
+
+	$activity_args = array(
+		'include'     => $activity_id,
+		'show_hidden' => $is_private,
+	);
+
+	/*
+	 * In ReadyLaunch, activity comments are displayed only inside the activity modal
+	 * (or on the single activity screen), never inline in the feed. The feed loop
+	 * enforces this with 'display_comments=false' (see readylaunch/activity/activity-loop.php).
+	 *
+	 * Mirror that here so a re-rendered (newly posted or edited) activity injected back
+	 * into the stream stays consistent and doesn't render a comment thread whose reply
+	 * form is absent in this context, which would leave the "Comment"/"Reply" buttons dead.
+	 */
+	if ( bboss_is_readylaunch_enabled() && ! bboss_is_single_activity() ) {
+		$activity_args['display_comments'] = false;
+	}
+
+	ob_start();
+	if ( bboss_has_activities( $activity_args ) ) {
+		while ( bboss_activities() ) {
+			bboss_the_activity();
+			bboss_get_template_part( 'activity/entry' );
+		}
+	}
+	$activity = ob_get_contents();
+	ob_end_clean();
+
+	wp_send_json_success(
+		array(
+			'id'               => $activity_id,
+			'message'          => esc_html__( 'Update posted.', 'buddyboss-platform' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bboss_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss-platform' ) ),
+			'activity'         => $activity,
+
+			/**
+			 * Filters whether or not an AJAX post update is private.
+			 *
+			 * @since BuddyPress 3.0.0
+			 *
+			 * @param bool $is_private Privacy status for the update.
+			 */
+			'is_private'       => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
+			'is_directory'     => bboss_is_activity_directory(),
+			'is_user_activity' => bboss_is_user_activity(),
+			'draft_kept'       => '' === $draft_activity_meta_key,
+		)
+	);
+}
+
+/**
+ * Save activity draft data.
+ *
+ * Responds with `draft_activity` (the accepted entry, or one whose `data` is
+ * false after a discard) plus `evicted_draft_keys` — the draft keys the
+ * per-user budget removed to make room — and `evicted_drafts`, those drafts'
+ * stored entries keyed the same way, which the client keeps in localStorage so
+ * an eviction never loses a draft.
+ *
+ * Refuses with a `message` when the entry exceeds the per-draft cap or when
+ * the member's total user meta would pass the platform budget, and with an
+ * empty error when the nonce or the draft key does not validate.
+ *
+ * @since BuddyBoss 2.0.4
+ * @since BuddyBoss 3.6.1 Only flags or deletes the user's own unsaved draft attachments.
+ * @since BuddyBoss 3.7.1 Added the size caps, the key validation and
+ *                              the `evicted_draft_keys` response field.
+ */
+function bboss_nouveau_ajax_post_draft_activity() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_draft'] ) ), 'post_draft_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_activity = $_REQUEST['draft_activity'] ?? '';
+
+	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
+		// The composer posts two ways and they arrive in different slash
+		// states. The in-page XHR sends an object, which jQuery serializes to
+		// draft_activity[data][content] and PHP rebuilds as a nested array
+		// whose leaves WordPress has already slashed. The unload beacon sends
+		// one JSON.stringify() string, and the decode here UNSLASHES
+		// everything - after which update_metadata() unslashes once more on
+		// write and eats the member's backslashes.
+		//
+		// So the same keystrokes were stored differently depending on whether
+		// the save came from the autosave tick or from closing the tab:
+		// `path C:\temp\notes` survived the XHR and became
+		// `path C:tempnotes` through the beacon. Re-slash so both transports
+		// hand this handler one state (S4).
+		$draft_activity = wp_slash( json_decode( stripslashes( $draft_activity ), true ) );
+	}
+
+	$evicted_draft_keys = array();
+	$evicted_drafts     = array();
+
+	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
+		/*
+		 * The client's data_key names the usermeta row this handler writes or deletes, so it
+		 * must never reach bp_update_user_meta()/bp_delete_user_meta() unchecked - an arbitrary
+		 * key (e.g. wp_capabilities) would let a member overwrite any of their own meta,
+		 * including their role. Only the keys the composers actually use are allowed:
+		 * draft_user, draft_user_{id} and draft_group_{id}. A non-scalar key (a crafted array)
+		 * becomes '' and is rejected cleanly rather than emitting an "Array to string" notice.
+		 *
+		 * @since BuddyBoss 3.6.1
+		 */
+		$submitted_data_key = is_scalar( $draft_activity['data_key'] ) ? (string) $draft_activity['data_key'] : '';
+		if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $submitted_data_key ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' ),
+				)
+			);
+		}
+
+		$draft_user_id = bboss_loggedin_user_id();
+
+		// The client's data_key decides which usermeta row is written; accept it
+		// only when it matches the server-derived shape for its object and, for
+		// SAVES, the user passes that object's posting rules. Deletes validate
+		// shape only ('manage'): the slim discard payload carries no data member
+		// to resolve a group ID from, and a member who lost posting rights must
+		// still be able to discard their own stored draft (hardening).
+		$draft_context = ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) ? 'save' : 'manage';
+
+		// Coerce only scalars. A crafted request can submit data_key/object as
+		// arrays, and casting an array to string emits an "Array to string
+		// conversion" notice before the validation below rejects it; a
+		// non-scalar becomes '' and fails validation cleanly (GH review C2).
+		$submitted_data_key = is_scalar( $draft_activity['data_key'] ) ? (string) $draft_activity['data_key'] : '';
+		$submitted_object   = is_scalar( $draft_activity['object'] ) ? (string) $draft_activity['object'] : '';
+		$submitted_item_id  = ( isset( $draft_activity['data'] ) && is_array( $draft_activity['data'] ) && isset( $draft_activity['data']['item_id'] ) ) ? $draft_activity['data']['item_id'] : 0;
+
+		if ( ! bboss_draft_validate_activity_data_key( $submitted_data_key, $submitted_object, $submitted_item_id, $draft_user_id, $draft_context ) ) {
+			// Reached by a member who lost posting rights mid-session, so it
+			// carries the same approved save-failed text as the composers.
+			wp_send_json_error(
+				array(
+					'message' => __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' ),
+				)
+			);
+		}
+
+		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
+
+			// Protect the member's uploads BEFORE any cap can refuse this draft.
+			// The caps judge the draft's text; they must not decide whether a file
+			// the member already uploaded survives the orphan cron
+			// ({@see bb_draft_protect_payload_attachments()}, BLOCKER-1).
+			bboss_draft_protect_payload_attachments(
+				array(
+					'media'    => $draft_activity['data']['media'] ?? array(),
+					'document' => $draft_activity['data']['document'] ?? array(),
+					'video'    => $draft_activity['data']['video'] ?? array(),
+				),
+				$draft_user_id
+			);
+
+			// Never replace a stored version this composer did not show: a
+			// lazy fetch that had not landed, a handed-back copy older than a
+			// save from another device, a second tab behind the first. The
+			// uploads above stay protected; the stored draft is returned so the
+			// browser can keep it (bb_draft_base_matches()).
+			$stored_draft_entry = bboss_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
+
+			if ( ! bboss_draft_base_matches( $stored_draft_entry, bboss_draft_request_base() ) ) {
+				/**
+				 * Fires when a draft save is refused because a newer version is stored.
+				 *
+				 * @since BuddyBoss 3.7.1
+				 *
+				 * @param int    $user_id  User ID.
+				 * @param string $data_key Draft key ("meta_key" or "meta_key:inner_key").
+				 */
+				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
+
+				wp_send_json_error(
+					array(
+						'message'        => bboss_draft_conflict_message(),
+						'conflict'       => true,
+						'draft_activity' => $stored_draft_entry,
+						'evicted_drafts' => bboss_draft_handback( $draft_user_id ),
+					)
+				);
+			}
+
+			// A held draft of this key that this browser has not received yet
+			// would be dropped unseen by this save. Hand it back instead: the
+			// browser merges it with the member's text and saves again.
+			if ( bboss_draft_save_waits_for_handback( $draft_user_id, $draft_activity['data_key'] ) ) {
+				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
+
+				wp_send_json_error(
+					array(
+						'message'        => bboss_draft_conflict_message(),
+						'conflict'       => true,
+						'held'           => true,
+						'evicted_drafts' => bboss_draft_handback_for_key( $draft_user_id, $draft_activity['data_key'] ),
+					)
+				);
+			}
+
+			// The client attachment lists arrive as JSON and each entry costs a
+			// per-ID ownership lookup, so they must be bounded. This REFUSES an
+			// over-bound list instead of silently storing a truncated one: the
+			// slice this replaces mutated the very array that gets stored, so
+			// entries past the bound were dropped from the draft the member
+			// would restore AND never stamped - and unstamped is exactly what
+			// bp_media_delete_orphaned_attachments() hard-deletes. On a site
+			// whose Upload Limit is 60, a member attaching 60 photos kept 50
+			// and lost 10 files six hours later (H4).
+			//
+			// Ordered AFTER the protection pass on purpose: a refusal must not
+			// decide whether files the member already uploaded survive the
+			// orphan cron (BLOCKER-1).
+			foreach ( array( 'media', 'document', 'video' ) as $bounded_type ) {
+				if (
+					isset( $draft_activity['data'][ $bounded_type ] ) &&
+					is_array( $draft_activity['data'][ $bounded_type ] ) &&
+					bboss_draft_max_attachments_per_type( $bounded_type ) < count( $draft_activity['data'][ $bounded_type ] )
+				) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss-platform' ),
+						)
+					);
+				}
+			}
+
+			// Owner-gate the feature image before the caps run, mirroring the
+			// BLOCKER-1 ordering the media/document/video lists use. When Pro is
+			// present its richer per-object check runs in the block below, which
+			// errors on an image the member may not edit and drops one they may
+			// edit but do not own; a verified owner is merely protected early here. When Pro is ABSENT that block is
+			// skipped entirely, so a foreign attachment id used to be stored
+			// straight into the member's own draft row - here it is dropped the
+			// same way an unowned media id is (GH review C1).
+			if ( ! empty( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ) {
+				$feature_image_id = (int) $draft_activity['data']['bb_activity_post_feature_image']['id'];
+
+				if ( bboss_user_can_manage_draft_attachment( $feature_image_id, false, $draft_user_id ) ) {
+					update_post_meta( $feature_image_id, 'bb_activity_post_feature_image_draft', '1' );
+				} elseif ( ! function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+					// Core-only: no Pro per-object check will run, so a foreign
+					// or unknown id must not be stored.
+					unset( $draft_activity['data']['bb_activity_post_feature_image'] );
+				}
+			}
+
+			// Collected again during validation and re-applied after the caps.
+			// Idempotent, and it covers IDs the normalisation below resolves.
+			$stamp_attachment_ids   = array();
+			$stamp_feature_image_id = 0;
+
+			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
+				foreach ( $draft_activity['data']['media'] as $media_key => $new_media_attachment ) {
+					// Attachment IDs arrive as client JSON - only the owner may stamp them.
+					if ( empty( $new_media_attachment['id'] ) || ! bboss_user_can_manage_draft_attachment( $new_media_attachment['id'], false, $draft_user_id ) ) {
+						unset( $draft_activity['data']['media'][ $media_key ] );
+						continue;
+					}
+					// Stamp EVERY owned attachment the draft keeps, not only the
+					// ones whose payload lacks the flag: a restored draft echoes
+					// the stored JSON back with bb_media_draft already set, so a
+					// flag-gated queue stays empty and the post-write cache
+					// invalidation never fires, while the attachment is still
+					// referenced - the orphan-stamp sweep then releases it and the
+					// cron reaps a file the draft points at (F7, matching forums).
+					if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
+						$draft_activity['data']['media'][ $media_key ]['bb_media_draft'] = 1;
+					}
+
+					$stamp_attachment_ids[] = (int) $new_media_attachment['id'];
+				}
+				$draft_activity['data']['media'] = array_values( $draft_activity['data']['media'] );
+			}
+
+			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_activity['data']['document'] ) && ! empty( $draft_activity['data']['document'] ) ) {
+				foreach ( $draft_activity['data']['document'] as $document_key => $new_document_attachment ) {
+					// Attachment IDs arrive as client JSON - only the owner may stamp them.
+					if ( empty( $new_document_attachment['id'] ) || ! bboss_user_can_manage_draft_attachment( $new_document_attachment['id'], false, $draft_user_id ) ) {
+						unset( $draft_activity['data']['document'][ $document_key ] );
+						continue;
+					}
+					// Stamp EVERY owned attachment the draft keeps, not only the
+					// ones whose payload lacks the flag: a restored draft echoes
+					// the stored JSON back with bb_media_draft already set, so a
+					// flag-gated queue stays empty and the post-write cache
+					// invalidation never fires, while the attachment is still
+					// referenced - the orphan-stamp sweep then releases it and the
+					// cron reaps a file the draft points at (F7, matching forums).
+					if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
+						$draft_activity['data']['document'][ $document_key ]['bb_media_draft'] = 1;
+					}
+
+					$stamp_attachment_ids[] = (int) $new_document_attachment['id'];
+				}
+				$draft_activity['data']['document'] = array_values( $draft_activity['data']['document'] );
+			}
+
+			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
+			if ( isset( $draft_activity['data']['video'] ) && ! empty( $draft_activity['data']['video'] ) ) {
+				foreach ( $draft_activity['data']['video'] as $video_key => $new_video_attachment ) {
+					// Attachment IDs arrive as client JSON - only the owner may stamp them.
+					if ( empty( $new_video_attachment['id'] ) || ! bboss_user_can_manage_draft_attachment( $new_video_attachment['id'], false, $draft_user_id ) ) {
+						unset( $draft_activity['data']['video'][ $video_key ] );
+						continue;
+					}
+					// Stamp EVERY owned attachment the draft keeps, not only the
+					// ones whose payload lacks the flag: a restored draft echoes
+					// the stored JSON back with bb_media_draft already set, so a
+					// flag-gated queue stays empty and the post-write cache
+					// invalidation never fires, while the attachment is still
+					// referenced - the orphan-stamp sweep then releases it and the
+					// cron reaps a file the draft points at (F7, matching forums).
+					if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
+						$draft_activity['data']['video'][ $video_key ]['bb_media_draft'] = 1;
+					}
+
+					$stamp_attachment_ids[] = (int) $new_video_attachment['id'];
+				}
+				$draft_activity['data']['video'] = array_values( $draft_activity['data']['video'] );
+			}
+
+			// Set feature image draft meta key to avoid delete from cron job 'bb_activity_post_feature_image_delete_orphaned_attachments_hook'.
+			if ( isset( $draft_activity['data']['bb_activity_post_feature_image'] ) && ! empty( $draft_activity['data']['bb_activity_post_feature_image'] ) ) {
+				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
+				if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+					$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_user_can_perform_feature_image_action(
+						array(
+							'action'        => 'edit',
+							'attachment_id' => $attachment_id,
+							// The permission SUBJECT and CONTEXT are the authenticated,
+							// server-validated draft, never the raw client payload.
+							// The Pro callee feeds all three into
+							// bb_check_{group,activity,attachment}_permissions() as
+							// "who/what is asking", so a crafted value would evaluate
+							// the edit right under a different identity or context.
+							// user_id is bp_loggedin_user_id(); object/group_id use
+							// $submitted_object / $submitted_item_id - the top-level
+							// fields bb_draft_validate_activity_data_key() already
+							// authorized above - not the sibling data.object /
+							// data.item_id fields, which are never validated for a
+							// 'user'-object draft and could be crafted to an
+							// arbitrary group in the same POST (GH review).
+							'user_id'       => $draft_user_id,
+							'object'        => $submitted_object,
+							'group_id'      => ( 'group' === $submitted_object ) ? (int) $submitted_item_id : 0,
+						)
+					);
+					if (
+						! empty( $validate_attachment ) &&
+						is_array( $validate_attachment ) &&
+						! isset( $validate_attachment['can_edit'] )
+					) {
+						wp_send_json_error(
+							array(
+								'message' => $validate_attachment['message'],
+							)
+						);
+					}
+					// Only the owner's attachment may be flagged as drafted (PROD-10561).
+					// Pro's check answers "may this member edit it?", which a
+					// moderator passes for someone else's PUBLISHED image, so a
+					// draft would otherwise store - and later publish with - a
+					// file that is not theirs. Drop it from the draft (V23).
+					if ( bboss_user_can_manage_draft_attachment( $attachment_id, false, $draft_user_id ) ) {
+						$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
+						$stamp_feature_image_id = (int) $attachment_id;
+					} else {
+						unset( $draft_activity['data']['bb_activity_post_feature_image'] );
+					}
+				}
+			}
+
+			/**
+			 * Filters which draft data members carry member-authored HTML content.
+			 *
+			 * Extension keys registered through the composer's draft events (for
+			 * example the Pro feature image or polls data) are intentionally NOT
+			 * listed - only content fields are stripped and sanitized.
+			 *
+			 * @since BuddyBoss 3.7.1
+			 *
+			 * @param string[] $content_keys Draft data keys holding HTML content.
+			 */
+			$draft_content_keys = apply_filters( 'bb_draft_activity_content_keys', array( 'content' ) );
+
+			// Reject on RAW width before sanitizing. bp_activity_filter_kses() is
+			// the expensive step (measured ~1.5s on 4MB of plain HTML) and it ran
+			// on the full client payload before any cap could refuse it - a CPU
+			// amplifier on an endpoint every open composer hits every 20s. Data
+			// URLs are stripped first, so the pasted-bitmap case stays cheap and
+			// is still judged on its post-strip width (M4).
+			foreach ( $draft_content_keys as $draft_content_key ) {
+				if ( isset( $draft_activity['data'][ $draft_content_key ] ) && is_string( $draft_activity['data'][ $draft_content_key ] ) ) {
+					// Unslash across the call, then re-slash. This handler keeps the
+					// payload SLASHED for its whole length, but the forum caller
+					// hands the same helper UNSLASHED content - and two of the
+					// helper's three rules match on `=\s*"`, which a backslash
+					// between the `=` and the quote defeats. So on this path the
+					// base64 rule fired while the non-base64 data: rule and the
+					// empty-<img> cleanup silently did not, and an SVG or
+					// percent-encoded data URI over the cap was refused on every
+					// 20-second autosave while the identical content saved fine in
+					// the forum composer. One predicate, two slash states, opposite
+					// outcomes. The round trip is byte-lossless, and re-slashing
+					// before returning keeps this function's all-slashed invariant
+					// (and update_metadata()'s own wp_unslash()) exactly as it was.
+					$draft_activity['data'][ $draft_content_key ] = wp_slash(
+						bboss_draft_strip_data_urls( wp_unslash( $draft_activity['data'][ $draft_content_key ] ) )
+					);
+				}
+			}
+
+			// Document preview text is never restored; it must not count
+			// toward the cap or be stored.
+			$draft_activity = bboss_draft_strip_document_render_fields( $draft_activity );
+
+			// Measured unslashed: this handler keeps the payload slashed, but
+			// update_metadata() stores it unslashed, and the forum handler
+			// measures that same stored width (V21).
+			$raw_draft_size = strlen( maybe_serialize( wp_unslash( $draft_activity ) ) );
+
+			if ( $raw_draft_size > bboss_draft_max_size() ) {
+				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $raw_draft_size, 'per_draft' );
+
+				wp_send_json_error(
+					array(
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss-platform' ),
+					)
+				);
+			}
+
+			foreach ( $draft_content_keys as $draft_content_key ) {
+				if ( isset( $draft_activity['data'][ $draft_content_key ] ) && is_string( $draft_activity['data'][ $draft_content_key ] ) ) {
+					// Same allowed tags as the publish path (bp_activity_content_before_save).
+					$draft_activity['data'][ $draft_content_key ] = bboss_activity_filter_kses( $draft_activity['data'][ $draft_content_key ] );
+				}
+			}
+
+			/**
+			 * Free-text draft fields sanitized as PLAIN text, mirroring the publish
+			 * path which runs sanitize_text_field() on post_title. The content field
+			 * is HTML and handled by the kses pass above; these are short single-line
+			 * values that went to storage unsanitized before - harmless while a draft
+			 * is only ever read back to its owner, but the public draft-loaded /
+			 * draft-collect events hand them to third-party listeners that may render
+			 * them without escaping (M17).
+			 *
+			 * @since BuddyBoss 3.7.1
+			 *
+			 * @param string[] $text_keys Draft data keys holding plain text.
+			 */
+			$draft_text_keys = apply_filters(
+				'bb_draft_activity_text_keys',
+				array( 'post_title', 'link_title', 'link_description', 'item_name' )
+			);
+
+			foreach ( $draft_text_keys as $draft_text_key ) {
+				if ( isset( $draft_activity['data'][ $draft_text_key ] ) && is_string( $draft_activity['data'][ $draft_text_key ] ) ) {
+					$draft_activity['data'][ $draft_text_key ] = sanitize_text_field( $draft_activity['data'][ $draft_text_key ] );
+				}
+			}
+
+			$draft_activity['_draft_saved_at'] = time();
+			$draft_activity['_draft_rev']      = bboss_draft_sanitize_rev( $draft_activity['_draft_rev'] ?? '' );
+
+			// Browser-side bookkeeping is never stored with the draft.
+			unset( $draft_activity['bb_draft_pending_sync'], $draft_activity['_draft_base'] );
+
+			$draft_size = strlen( maybe_serialize( wp_unslash( $draft_activity ) ) );
+
+			if ( $draft_size > bboss_draft_max_size() ) {
+
+				/**
+				 * Fires when a draft save is rejected by a size cap.
+				 *
+				 * @since BuddyBoss 3.7.1
+				 *
+				 * @param int    $user_id  User whose draft was rejected.
+				 * @param string $data_key Draft key: the usermeta key for an activity draft,
+				 *                         "bb_user_topic_reply_draft:{inner key}" for a forum
+				 *                         draft - the same shape `evicted_draft_keys` uses.
+				 * @param int    $size     Serialized draft size in bytes.
+				 * @param string $reason   Which cap rejected it, and why it cannot be
+				 *                         resolved by the member where relevant:
+				 *                         'per_draft'      - the single-draft size cap;
+				 *                         'drafts_over_cap' - their own drafts are over
+				 *                         budget and eviction could not recover enough;
+				 *                         'meta_budget'    - their NON-draft stored meta
+				 *                         leaves no room, which discarding drafts cannot fix.
+				 */
+				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $draft_size, 'per_draft' );
+
+				wp_send_json_error(
+					array(
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss-platform' ),
+					)
+				);
+			}
+
+			$draft_budget = bboss_draft_enforce_user_budget( $draft_user_id, $draft_activity['data_key'], $draft_size, bboss_draft_is_beacon_request() ? 'beacon' : 'save' );
+
+			if ( empty( $draft_budget['allowed'] ) ) {
+				$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
+
+				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $draft_size, $budget_reason );
+
+				// Two different refusals, and telling them apart matters. When the
+				// member's NON-draft stored data is what leaves no room, discarding
+				// drafts cannot help - the eviction loop only ever deletes drafts -
+				// so sending them to do that is advice that cannot work and reads as
+				// blame for something they did not do. Members cannot see or fix
+				// that stored data either, so the message only tells them what they
+				// can do: keep their text. bb_draft_cap_rejected above still logs it.
+				$budget_message = 'meta_budget' === $budget_reason
+					? __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' )
+					: __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss-platform' );
+
+				wp_send_json_error(
+					array(
+						'message' => $budget_message,
+						// A refusal after a mid-loop eviction race may have deleted
+						// some drafts; hand the keys back so the client can drop them
+						// from its localStorage/UI rather than list drafts that are
+						// gone (H1).
+						'evicted_draft_keys' => $draft_budget['evicted'],
+						'evicted_drafts'     => bboss_draft_handback( $draft_user_id, $draft_budget['entries'] ),
+					)
+				);
+			}
+
+			$evicted_draft_keys = $draft_budget['evicted'];
+			$evicted_drafts     = $draft_budget['entries'];
+
+			// Every cap accepted the save - apply the deferred protection stamps now.
+			foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
+				update_post_meta( $stamp_attachment_id, 'bb_media_draft', '1' );
+			}
+			if ( $stamp_feature_image_id ) {
+				update_post_meta( $stamp_feature_image_id, 'bb_activity_post_feature_image_draft', '1' );
+			}
+
+			// Strip the OTHER shape's attachment keys before storing. This handler
+			// validates, caps and ownership-checks only its own shape (media /
+			// document / video), so a foreign bbp_* key would be stored
+			// uninspected - and the global reference scan
+			// (bb_draft_collect_attachment_ids()) reads BOTH shapes, so a member
+			// could pin another member's stamped attachment against cleanup forever
+			// by referencing its id from a forum-shape key in their own activity
+			// draft (L6). The two shapes are mutually exclusive, so this only ever
+			// drops injected keys.
+			if ( isset( $draft_activity['data'] ) && is_array( $draft_activity['data'] ) ) {
+				unset(
+					$draft_activity['data']['bbp_media'],
+					$draft_activity['data']['bbp_document'],
+					$draft_activity['data']['bbp_video']
+				);
+			}
+
+			bboss_update_user_meta( $draft_user_id, $draft_activity['data_key'], $draft_activity );
+			bboss_draft_flush_user_meta_sizes( $draft_user_id );
+
+			// These deferred stamps add references the orphan-stamp sweep's
+			// cached referenced-set must not miss (H3): bb_draft_protect_payload_
+			// attachments() only invalidates when IT stamps something, and a
+			// text-only primary leaves that empty while these sibling stamps
+			// still add references. Drop the cache AFTER the draft write above -
+			// the reference only exists once the draft is stored, so invalidating
+			// before it let a sweep rebuild the set without the new reference and
+			// pin it for the TTL (F3). Matches the forum handler's order.
+			// Keyed on every attachment the STORED draft keeps, resolved through
+			// the same collector the sweep's scan uses, so the two agree by
+			// construction (F7). Handing it over lets the helper skip the token
+			// bump when the cached set already covers all of them, so an ordinary
+			// autosave of an unchanged attachment list no longer aborts a running
+			// sweep (H-4).
+			// No separate append for the feature image: bb_draft_collect_attachment_ids()
+			// already returns it when the draft carries one, and the sweep builds
+			// its cached referenced-set through that SAME collector
+			// ({@see bb_drafts_collect_referenced_attachment_ids()}), so both sides
+			// of the superset comparison agree by construction. Appending it again
+			// would only duplicate an id already in the list.
+			//
+			// The sweep DOES cover a feature image that carries only
+			// `bb_activity_post_feature_image_draft`: its candidate query selects
+			// `d.meta_key IN ( 'bb_media_draft', 'bb_activity_post_feature_image_draft' )`
+			// and pairs each marker with its own "saved" flag
+			// ({@see bb_drafts_release_orphaned_draft_stamps()}). This comment used
+			// to claim the opposite, which mattered because the coupled Platform
+			// Pro reaper change depends on exactly that coverage - a stale note
+			// denying it is how a correct fix gets reverted in a later round.
+			if ( ! empty( $stamp_attachment_ids ) || $stamp_feature_image_id ) {
+				bboss_draft_invalidate_referenced_cache( bboss_draft_collect_attachment_ids( $draft_activity ) );
+			}
+
+			// The replaced draft's attachment stamps are deliberately NOT released.
+			// A replace is not proof the file is unused: a second tab or device
+			// still drafting with it saves a list without it, and releasing the
+			// stamp then let the orphan cron delete a photo that tab still showed.
+			// Stamps a draft no longer references are released by the
+			// orphan-stamp sweep after retention, as in 3.6.1.
+		} else {
+			// Dispose strictly from the STORED draft - the client payload's
+			// attachment lists are never used for deletion, so a crafted request
+			// cannot delete attachments the draft never referenced.
+			$stored_draft = bboss_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
+
+			// A discard only removes the version the composer showed. A composer
+			// that never loaded the stored draft (a failed fetch, a stale tab)
+			// must not delete it, or its attachments, on the member's behalf.
+			if ( ! bboss_draft_base_matches( $stored_draft, bboss_draft_request_base() ) ) {
+				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
+
+				wp_send_json_error(
+					array(
+						'message'        => bboss_draft_conflict_message(),
+						'conflict'       => true,
+						'draft_activity' => $stored_draft,
+						'evicted_drafts' => bboss_draft_handback( $draft_user_id ),
+					)
+				);
+			}
+
+			if ( is_array( $stored_draft ) && ! empty( $stored_draft['data'] ) && is_array( $stored_draft['data'] ) ) {
+
+				// Never hard-delete an attachment a DIFFERENT stored draft row of this
+				// member still references. Ownership alone is not enough - the member owns
+				// the file, but another of their drafts may still need it, and this is a
+				// PERMANENT wp_delete_attachment(). Matches the cross-row retain every
+				// stamp-release path applies (L7/L11). The same goes for a file an
+				// evicted draft, handed back to the browser, still uses.
+				$discard_retained_ids = bboss_draft_collect_other_row_referenced_ids( $draft_user_id, $draft_activity['data_key'] );
+
+				// Delete media when discard the activity.
+				if ( isset( $draft_activity['delete_media'] ) && 'true' === $draft_activity['delete_media'] ) {
+					foreach ( array( 'media', 'document', 'video' ) as $stored_type ) {
+						if ( empty( $stored_draft['data'][ $stored_type ] ) || ! is_array( $stored_draft['data'][ $stored_type ] ) ) {
+							continue;
+						}
+						foreach ( $stored_draft['data'][ $stored_type ] as $stored_attachment ) {
+							if (
+								! empty( $stored_attachment['id'] ) &&
+								! in_array( (int) $stored_attachment['id'], $discard_retained_ids, true ) &&
+								! bboss_draft_attachment_is_eviction_protected( $stored_attachment['id'] ) &&
+								bboss_user_can_manage_draft_attachment( $stored_attachment['id'], true, $draft_user_id )
+							) {
+								wp_delete_attachment( (int) $stored_attachment['id'], true );
+							}
+						}
+					}
+				}
+
+				// Delete feature image when discard the activity.
+				if (
+					! empty( $stored_draft['data']['bb_activity_post_feature_image']['id'] ) &&
+					! in_array( (int) $stored_draft['data']['bb_activity_post_feature_image']['id'], $discard_retained_ids, true ) &&
+					! bboss_draft_attachment_is_eviction_protected( $stored_draft['data']['bb_activity_post_feature_image']['id'] ) &&
+					isset( $draft_activity['allow_delete_post_feature_image'] ) &&
+					true === (bool) $draft_activity['allow_delete_post_feature_image'] &&
+					bboss_user_can_manage_draft_attachment( $stored_draft['data']['bb_activity_post_feature_image']['id'], true, $draft_user_id )
+				) {
+					wp_delete_attachment( (int) $stored_draft['data']['bb_activity_post_feature_image']['id'], true );
+				}
+			}
+
+			// Removal goes through the shared disposal path, which releases the
+			// draft stamps from any attachments NOT hard-deleted above (already
+			// deleted ones are skipped by its ownership check), deletes the row,
+			// and invalidates the memoized meta sizes. Hand-rolling those three
+			// steps here is what let this path drift from the maintenance ones
+			//.
+			bboss_draft_dispose( $draft_user_id, $draft_activity['data_key'] );
+
+			$draft_activity['data'] = false;
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'draft_activity'     => $draft_activity,
+			'evicted_draft_keys' => $evicted_draft_keys,
+			'evicted_drafts'     => bboss_draft_handback( $draft_user_id ?? bboss_loggedin_user_id(), $evicted_drafts ),
+		)
+	);
+}
+
+/**
+ * Fetch the logged-in member's stored activity draft for one draft key.
+ *
+ * Used by the composer's lazy restore: the draft is no longer echoed into
+ * page HTML, so when localStorage is empty and `has_draft` is localized as
+ * true the JS requests the server copy through this endpoint. The key is
+ * validated with the same key-shape rules as the save path; posting
+ * capability is deliberately NOT required - a member who lost posting
+ * rights must still be able to read their own stored draft.
+ *
+ * @since BuddyBoss 3.7.1
+ */
+function bboss_nouveau_ajax_get_draft_activity() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_draft'] ) ), 'post_draft_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	$user_id  = bboss_loggedin_user_id();
+	$data_key = isset( $_POST['data_key'] ) ? sanitize_text_field( wp_unslash( $_POST['data_key'] ) ) : '';
+	$object   = isset( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
+	$item_id  = isset( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0;
+
+	if ( ! bboss_draft_validate_activity_data_key( $data_key, $object, $item_id, $user_id, 'manage' ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_activity = bboss_get_user_meta( $user_id, $data_key, true );
+	$owed           = bboss_draft_handback( $user_id );
+
+	// A held draft of this key may still wait in the overflow (F-03).
+	if ( ! isset( $owed[ $data_key ] ) ) {
+		$owed = array_merge(
+			$owed,
+			bboss_draft_promote_evicted(
+				$user_id,
+				function ( $key ) use ( $data_key ) {
+					return $key === $data_key;
+				}
+			)
+		);
+	}
+
+	// Nothing stored, but this key was evicted and its hand-back never reached
+	// the browser: restore the held copy (V06).
+	if ( ( empty( $draft_activity ) || ! is_array( $draft_activity ) ) && isset( $owed[ $data_key ] ) && is_array( $owed[ $data_key ] ) ) {
+		$draft_activity = $owed[ $data_key ];
+	} elseif ( ! is_array( $draft_activity ) || empty( $draft_activity ) ) {
+		// A row that is not a draft (corrupt, or a legacy empty value) can never
+		// be restored, but its presence makes every page view fetch it again.
+		// Read again first, bypassing the cache: a save to this key from another
+		// tab may have just replaced it with a real draft.
+		$fresh_draft = bboss_draft_fresh_value( $user_id, $data_key );
+
+		if ( null !== $fresh_draft && ( ! is_array( $fresh_draft ) || empty( $fresh_draft ) ) ) {
+			bboss_draft_dispose( $user_id, $data_key );
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'draft_activity' => ( ! empty( $draft_activity ) && is_array( $draft_activity ) ) ? $draft_activity : false,
+			// Evictions whose hand-back never reached this browser.
+			'evicted_drafts' => $owed,
+		)
+	);
+}
+
+/**
+ * AJAX spam an activity item or comment.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return string JSON reply.
+ */
+function bboss_nouveau_ajax_spam_activity() {
+	$bp = bboss();
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was a problem marking this activity as spam. Please try again.', 'buddyboss-platform' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() || ! bboss_is_active( 'activity' ) || empty( $bp->activity->akismet ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) || ! is_numeric( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Is the current user allowed to spam items?
+	if ( ! bboss_activity_user_can_mark_spam() ) {
+		wp_send_json_error( $response );
+	}
+
+	$activity = new BBoss_Activity_Activity( (int) $_POST['id'] );
+
+	if ( empty( $activity->component ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'bp_activity_akismet_spam_' . $activity->id ) ) {
+		wp_send_json_error( $response );
+	}
+
+	/** This action is documented in bboss-activity/bp-activity-actions.php */
+	do_action( 'bp_activity_before_action_spam_activity', $activity->id, $activity );
+
+	// Mark as spam.
+	bboss_activity_mark_as_spam( $activity );
+	$activity->title_required = false;
+	$activity->save();
+
+	/** This action is documented in bboss-activity/bp-activity-actions.php */
+	do_action( 'bp_activity_action_spam_activity', $activity->id, $activity->user_id );
+
+	// Prepare the successfull reply.
+	$response = array( 'spammed' => $activity->id );
+
+	// If on a single activity redirect to user's home.
+	if ( ! empty( $_POST['is_single'] ) ) {
+		$response['redirect'] = bboss_core_get_user_domain( $activity->user_id );
+		bboss_core_add_message( __( 'This activity has been marked as spam and is no longer visible.', 'buddyboss-platform' ) );
+	}
+
+	// Send the json reply.
+	wp_send_json_success( $response );
+}
+
+/**
+ * Update activity privacy via a POST request.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @return string JSON reply
+ */
+function bboss_nouveau_ajax_activity_update_privacy() {
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	if ( empty( $_POST['privacy'] ) ) {
+		wp_send_json_error();
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error();
+	}
+
+	if ( ! in_array( $_POST['privacy'], array( 'public', 'loggedin', 'onlyme', 'friends' ) ) ) {
+		wp_send_json_error();
+	}
+
+	$activity = new BBoss_Activity_Activity( (int) $_POST['id'] );
+
+	if ( bboss_activity_user_can_delete( $activity ) ) {
+		remove_action( 'bp_activity_before_save', 'bboss_activity_check_moderation_keys', 2 );
+		$activity->privacy        = sanitize_text_field( wp_unslash( $_POST['privacy'] ) );
+		$activity->title_required = false;
+		$activity->save();
+
+		if ( function_exists( 'bboss_activity_update_meta' ) ) {	
+			// Add meta to ensure that this activity has been edited.
+			bboss_activity_update_meta( $activity->id, '_is_edited', bboss_core_current_time() );
+		}
+
+		$data_response = array();
+		if ( function_exists( 'bboss_nouveau_activity_is_edited' ) ) {
+			$edited_text = bboss_nouveau_activity_is_edited( $activity->id, false );
+			if ( $edited_text ) {
+				$data_response = array( 'edited_text' => $edited_text );
+			}
+		}
+
+		add_action( 'bp_activity_before_save', 'bboss_activity_check_moderation_keys', 2 );
+
+		$response = apply_filters( 'bb_ajax_activity_update_privacy', $data_response, $_POST );
+
+		wp_send_json_success( $response );
+	} else {
+		wp_send_json_error();
+	}
+}
+
+/**
+ * Update close activity comments.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return void
+ */
+function bboss_nouveau_ajax_activity_update_close_comments() {
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+	);
+
+	if ( ! bboss_is_close_activity_comments_enabled() ) {
+		wp_send_json_error(
+			array(
+				'feedback' => esc_html__( 'There was a problem marking this operation. Close comments setting is disabled.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	if (
+		! bboss_is_post_request() ||
+		! is_user_logged_in() ||
+		empty( $_POST['nonce'] ) ||
+		! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' )
+	) {
+		wp_send_json_error( $response );
+	}
+
+	if (
+		empty( $_POST['id'] ) ||
+		empty( $_POST['close_comments_action'] ) ||
+		! in_array( $_POST['close_comments_action'], array( 'close_comments', 'unclose_comments' ), true )
+	) {
+		wp_send_json_error( $response );
+	}
+
+	$args = array(
+		'action'      => $_POST['close_comments_action'],
+		'activity_id' => (int) $_POST['id'],
+		'user_id'     => bboss_loggedin_user_id(),
+		'retval'      => 'string',
+	);
+
+	$retval = bboss_activity_close_unclose_comments( $args );
+	if ( ! empty( $retval ) ) {
+
+		if ( 'unclosed_comments' === $retval ) {
+			$response['feedback'] = esc_html__( 'You turned on commenting for this post', 'buddyboss-platform' );
+		} elseif ( 'closed_comments' === $retval ) {
+			$response['feedback'] = esc_html__( 'You turned off commenting for this post', 'buddyboss-platform' );
+		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
+			$response['feedback'] = esc_html__( 'You are not permitted with the requested operation', 'buddyboss-platform' );
+		}
+
+		/**
+		 * Filters the response before updating activity close comments via AJAX.
+		 * This filter allows modification of the response data before it's used to update activity close comments via AJAX.
+		 *
+		 * @since BuddyBoss 2.5.80
+		 *
+		 * @param mixed $response The response data. Can be of any type.
+		 * @param array $_POST    The $_POST data received via AJAX request.
+		 */
+		$response = apply_filters( 'bb_ajax_activity_update_close_comments', $response, $_POST );
+	}
+
+	if ( ! empty( $retval ) && in_array( $retval, array( 'unclosed_comments', 'closed_comments' ), true ) ) {
+		wp_send_json_success( $response );
+	} else {
+		wp_send_json_error( $response );
+	}
+}
+
+/**
+ * Get more comments.
+ *
+ * @since BuddyBoss 2.5.80
+ * @since BuddyBoss 3.7.1 The activity and the parent comment must be readable, in their group and thread.
+ *
+ * @return void
+ */
+function bboss_nouveau_ajax_activity_load_more_comments() {
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	if ( empty( $_POST['activity_id'] ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Activity id cannot be empty.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	if ( empty( $_POST['parent_comment_id'] ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Parent comment id cannot be empty.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	global $activities_template;
+	$activity_id       = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+	$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
+
+	$privacy_check = bboss_validate_activity_privacy(
+		array(
+			'activity_id'     => $activity_id,
+			'validate_action' => 'view_activity',
+		)
+	);
+
+	// Bail if activity privacy restrict.
+	if ( is_wp_error( $privacy_check ) ) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	$activities_template = new stdClass();
+	$parent_commment     = new BBoss_Activity_Activity( $parent_comment_id );
+	if ( empty( $parent_commment ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	// Guests can call this, so the activity and the comment whose replies are loaded must
+	// both be readable, in their group and thread.
+	if (
+		! bboss_activity_user_can_view( $activity_id ) ||
+		! bboss_activity_user_can_view( $parent_commment )
+	) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss-platform' ),
+			)
+		);
+	}
+	$comments = BBoss_Activity_Activity::append_comments(
+		array( $parent_commment ),
+		'ham_only', // Filter spam comments - include orphaned comments (replies to spam).
+		true,
+		array(
+			'limit'                  => bboss_get_activity_comment_loading(),
+			'offset'                 => ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : 0,
+			'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+			'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
+			'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
+		)
+	);
+
+	if ( empty( $comments[0] ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'No more items to load.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	$activities_template->activity = $comments[0];
+	// We have all comments and replies just loop through.
+	ob_start();
+
+	$args = array(
+		'limit_comments'         => true,
+		'comment_load_limit'     => bboss_get_activity_comment_loading(),
+		'parent_comment_id'      => $parent_comment_id,
+		'main_activity_id'       => $activity_id,
+		'is_ajax_load_more'      => true,
+		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+		'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
+	);
+
+	// Check if parent is the main activity.
+	if ( isset( $activities_template->activity ) ) {
+		// No current comment.
+		bboss_activity_recurse_comments( $activities_template->activity, $args );
+	} else {
+		wp_send_json_error(
+			array(
+				'message' => __( 'No more items to load.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	wp_send_json_success(
+		array(
+			'comments' => ob_get_clean(),
+		)
+	);
+}
+
+/**
+ * Get particular activity to sync when activity modal is closed.
+ *
+ * @since BuddyBoss 2.5.80
+ * @since BuddyBoss 3.7.1 Refuses activities the current user cannot view.
+ *
+ * @return void
+ */
+function bboss_nouveau_ajax_activity_sync_from_modal() {
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	// Nonce verification.
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	if ( empty( $_POST['activity_id'] ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Activity id cannot be empty.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+
+	// Guests can call this, so check the activity and its root post before rendering it (PROD-10649).
+	if ( ! bboss_activity_user_can_view( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
+			)
+		);
+	}
+
+	$args = array(
+		'in'               => $activity_id,
+		'display_comments' => true,
+	);
+	/**
+	 * Filters the arguments for the activity sync from modal.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $args The arguments for the activity sync from modal.
+	 */
+	$args = apply_filters( 'bb_ajax_activity_sync_from_modal_args', $args );
+
+	ob_start();
+	if ( bboss_has_activities( $args ) ) {
+		while ( bboss_activities() ) {
+			bboss_the_activity();
+			bboss_get_template_part( 'activity/entry' );
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'activity' => ob_get_clean(),
+		)
+	);
+}
+
+/**
+ * Mute/Unmute Activity Notification.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return void
+ */
+function bboss_nouveau_ajax_toggle_activity_notification_status() {
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+	);
+
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['notification_toggle_action'] ) || ! in_array( $_POST['notification_toggle_action'], array( 'mute', 'unmute' ), true ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$args = array(
+		'action'      => $_POST['notification_toggle_action'],
+		'activity_id' => (int) $_POST['id'],
+		'user_id'     => bboss_loggedin_user_id(),
+	);
+
+	$retval = bboss_toggle_activity_notification_status( $args );
+
+	if ( 'unmute' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss-platform' );
+	} elseif ( 'mute' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity have been muted.', 'buddyboss-platform' );
+	} elseif ( 'already_muted' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity already been muted.', 'buddyboss-platform' );
+	}
+
+	if ( ! empty( $retval ) && in_array( $retval, array( 'unmute', 'mute', 'already_muted' ), true ) ) {
+		wp_send_json_success( $response );
+	} else {
+		wp_send_json_error( $response );
+	}
+}
+
+/**
+ * Deletes the scheduled Activity item received via a POST request.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return void JSON reply.
+ */
+function bboss_nouveau_ajax_delete_scheduled_activity() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was a problem when deleting. Please try again.', 'buddyboss-platform' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bboss_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	$nonce = bboss_filter_input_string( INPUT_POST, '_wpnonce' );
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'scheduled_post_nonce' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) || ! is_numeric( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$activity = new BBoss_Activity_Activity( (int) $_POST['id'] );
+
+	// Check access.
+	if ( ! bboss_activity_user_can_delete( $activity ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if (
+		(
+			// Check for non admin member to delete scheduled post which they scheduled when they have permission to moderate.
+			! bboss_current_user_can( 'bp_moderate' ) && 'groups' !== $activity->component
+		) ||
+		(
+			// If Groups allow to schedule post then check user can delete schedule post or not;
+			'groups' === $activity->component && bboss_is_active( 'groups' ) && bb_is_enabled_activity_schedule_posts_filter()
+		)
+	) {
+		$is_admin = bboss_groups_is_user_admin( $activity->user_id, $activity->item_id );
+		$is_mod   = bboss_groups_is_user_mod( $activity->user_id, $activity->item_id );
+		if ( ! $is_admin && ! $is_mod ) {
+			wp_send_json_error(
+				array(
+					'feedback' => __( 'You don\'t have permission to delete scheduled activity.', 'buddyboss-platform' ),
+				)
+			);
+		}
+	}
+
+	do_action( 'bb_activity_before_action_delete_scheduled_activity', $activity->id, $activity->user_id );
+
+	if (
+		! bboss_activity_delete(
+			array(
+				'id'      => $activity->id,
+				'user_id' => $activity->user_id,
+			)
+		)
+	) {
+		wp_send_json_error( $response );
+	}
+
+	do_action( 'bb_activity_action_delete_scheduled_activity', $activity->id, $activity->user_id );
+
+	// The activity has been deleted successfully.
+	$response = array( 'deleted' => $activity->id );
+
+	// If on a single activity redirect to user's home.
+	if ( ! empty( $_POST['is_single'] ) ) {
+		$response['redirect'] = bboss_core_get_user_domain( $activity->user_id );
+		bboss_core_add_message( __( 'Activity deleted successfully', 'buddyboss-platform' ) );
+	}
+
+	wp_send_json_success( $response );
+}

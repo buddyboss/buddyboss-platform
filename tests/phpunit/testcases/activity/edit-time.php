@@ -60,7 +60,7 @@ class BP_Tests_Activity_Edit_Time extends BP_UnitTestCase {
 	 * @dataProvider provider_stored_values
 	 */
 	public function test_sanitizer_matches_normalizer( $stored, $expected ) {
-		$callbacks = bboss()->plugin_dir . 'bp-core/admin/settings/activity/callbacks.php';
+		$callbacks = bboss()->plugin_dir . 'bboss-core/admin/settings/activity/callbacks.php';
 		if ( ! function_exists( 'bboss_activity_sanitize_edit_time' ) && file_exists( $callbacks ) ) {
 			require_once $callbacks;
 		}

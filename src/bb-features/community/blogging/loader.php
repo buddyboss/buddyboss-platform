@@ -185,7 +185,7 @@ function bboss_blog_enqueue_member_blog_assets() {
 
 	wp_enqueue_style(
 		'bb-member-blog',
-		bboss()->plugin_url . 'bp-templates/bp-nouveau/buddypress/css/member-blog.css',
+		bboss()->plugin_url . 'bboss-templates/bboss-nouveau/buddypress/css/member-blog.css',
 		array(),
 		bboss_get_version()
 	);
