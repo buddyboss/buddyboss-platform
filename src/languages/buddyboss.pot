@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 3.7.1\n"
+"Project-Id-Version: BuddyBoss Platform 3.7.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-11-10 06:07:41+00:00\n"
+"POT-Creation-Date: 2026-11-12 11:19:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -31448,7 +31448,7 @@ msgstr ""
 msgid "Cache Purge Successfully"
 msgstr ""
 
-#: bp-performance/classes/integrations/class-integration-abstract.php:431
+#: bp-performance/classes/integrations/class-integration-abstract.php:440
 msgid "Sorry, something went wrong. Please try again later."
 msgstr ""
 
@@ -32221,7 +32221,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/search-form.php:20
 #: bp-templates/bp-nouveau/readylaunch/common/search/profile-search.php:31
 #: bp-templates/bp-nouveau/readylaunch/common/search/search-form.php:34
-#: bp-templates/bp-nouveau/readylaunch/groups/single/admin/manage-members.php:203
+#: bp-templates/bp-nouveau/readylaunch/groups/single/admin/manage-members.php:202
 #: bp-templates/bp-nouveau/readylaunch/groups/single/invite/pending-invites.php:39
 #: bp-templates/bp-nouveau/readylaunch/groups/single/invite/send-invites.php:42
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/private-message.php:89
