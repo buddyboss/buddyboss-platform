@@ -214,8 +214,21 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		}
 		$user_reactions = $reaction_instance->bb_get_user_reactions( $args );
 
-		$retval = array();
+		$retval   = array();
+		$readable = array();
 		foreach ( $user_reactions['reactions'] as $user_reaction ) {
+			// Leave out reactions on activities the user cannot read (PROD-10649).
+			$item_key = $user_reaction->item_type . ':' . $user_reaction->item_id;
+			if ( ! isset( $readable[ $item_key ] ) ) {
+				$readable[ $item_key ] = $this->user_can_read_reaction_item( $user_reaction->item_type, $user_reaction->item_id );
+			}
+
+			// The total is left as counted: lowering it per page made later pages report fewer
+			// pages than the first one and cut pagination short.
+			if ( ! $readable[ $item_key ] ) {
+				continue;
+			}
+
 			$retval[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $user_reaction, $request )
 			);
@@ -295,7 +308,11 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		$id            = (int) $request->get_param( 'id' );
 		$user_reaction = $reaction_instance->bb_get_user_reaction( $id );
 
-		if ( empty( $user_reaction->id ) ) {
+		// A reaction on an activity the user cannot read is answered like a missing one (PROD-10649).
+		if (
+			empty( $user_reaction->id ) ||
+			! $this->user_can_read_reaction_item( $user_reaction->item_type, $user_reaction->item_id )
+		) {
 			return new WP_Error(
 				'bp_rest_user_reaction_invalid_id',
 				__( 'Invalid user reaction ID.', 'buddyboss' ),
@@ -450,6 +467,21 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			}
 
 			$retval = $this->validate_request_item( $request );
+
+			// The reaction privacy check skips groups, so a non-member could react in a private
+			// or hidden group (PROD-10649).
+			if (
+				true === $retval &&
+				! $this->user_can_read_reaction_item( $request->get_param( 'item_type' ), (int) $request->get_param( 'item_id' ) )
+			) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -966,6 +998,37 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		 * @param array $schema The endpoint schema.
 		 */
 		return apply_filters( 'bb_rest_user_reactions_schema', $this->add_additional_fields_schema( $schema ) );
+	}
+
+	/**
+	 * Check whether the current user can read the activity a reaction belongs to.
+	 *
+	 * A reaction exposes who reacted to which activity, and reacting returns that activity's
+	 * reaction data, so both follow the activity's group and privacy rules. Item types other
+	 * than activity posts and comments are left to their own checks.
+	 *
+	 * @since BuddyBoss 3.7.1
+	 *
+	 * @param string $item_type Reaction item type.
+	 * @param int    $item_id   Reaction item ID.
+	 *
+	 * @return bool
+	 */
+	public function user_can_read_reaction_item( $item_type, $item_id ) {
+		if ( ! in_array( $item_type, array( 'activity', 'activity_comment' ), true ) ) {
+			return true;
+		}
+
+		if ( ! bp_is_active( 'activity' ) || ! class_exists( 'BP_REST_Activity_Endpoint' ) ) {
+			return false;
+		}
+
+		static $activity_endpoint = null;
+		if ( null === $activity_endpoint ) {
+			$activity_endpoint = new BP_REST_Activity_Endpoint();
+		}
+
+		return $activity_endpoint->user_can_read_activity( new BP_Activity_Activity( (int) $item_id ) );
 	}
 
 	/**
