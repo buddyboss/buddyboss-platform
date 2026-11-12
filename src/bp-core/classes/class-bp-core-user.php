@@ -219,7 +219,7 @@ class BP_Core_User {
 
 		if ( bp_is_active( 'groups' ) ) {
 			$this->total_groups = BP_Groups_Member::total_group_count( $this->id );
-			/* translators: %s: number. */
+			/* translators: %d: number of groups. */
 			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddyboss' ), $this->total_groups );
 		}
 	}

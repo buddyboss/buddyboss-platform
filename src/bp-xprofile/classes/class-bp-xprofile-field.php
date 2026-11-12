@@ -1242,7 +1242,7 @@ class BP_XProfile_Field {
 		// Check that field is of valid type.
 		if ( ! in_array( $_POST['fieldtype'], array_keys( bp_xprofile_get_field_types() ), true ) ) {
 			/* translators: %s: field type (wrapped in <code>). */
-			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddyboss' ), '<code>' . esc_attr( $_POST['fieldtype'] ) . '</code>' );
+			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddyboss' ), '<code>' . esc_html( sanitize_text_field( wp_unslash( $_POST['fieldtype'] ) ) ) . '</code>' );
 
 			return false;
 		}
