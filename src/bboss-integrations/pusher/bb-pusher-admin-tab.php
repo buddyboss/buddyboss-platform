@@ -245,15 +245,15 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 		// Builds without upsell links (the wordpress.org edition) name the plugin without a link.
 		$pro_link = esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' );
 
-		echo '<p class="description notification-information bb-lab-notice">' .
+		echo wp_kses_post(
+			'<p class="description notification-information bb-lab-notice">' .
 			sprintf(
-				wp_kses_post(
-					/* translators: BuddyBoss Pro purchase link */
-					__( 'Please install %1$s to use Pusher on your site.', 'buddyboss-platform' )
-				),
+				/* translators: BuddyBoss Pro purchase link */
+				__( 'Please install %1$s to use Pusher on your site.', 'buddyboss-platform' ),
 				$pro_link
 			) .
-		'</p>';
+			'</p>'
+		);
 	}
 
 	/**
@@ -265,16 +265,16 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 		// Builds without upsell links (the wordpress.org edition) name the plugin without a link.
 		$pro_link = esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' );
 
-		echo '<p class="description notification-information bb-lab-notice">' .
+		echo wp_kses_post(
+			'<p class="description notification-information bb-lab-notice">' .
 			sprintf(
-				wp_kses_post(
-					/* translators: BuddyBoss Pro purchase link */
-					__( 'Please update %1$s to version %2$s to use Pusher on your site.', 'buddyboss-platform' )
-				),
+				/* translators: 1: BuddyBoss Pro purchase link, 2: required version */
+				__( 'Please update %1$s to version %2$s to use Pusher on your site.', 'buddyboss-platform' ),
 				$pro_link,
 				esc_html( bboss_pro_pusher_version() )
 			) .
-			'</p>';
+			'</p>'
+		);
 	}
 
 	/**
