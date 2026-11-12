@@ -1,34 +1,6 @@
 <?php
-/**
- * Activity: User's "Activity" screen handler
- *
- * @package BuddyBoss\Activity\Screens
- * @since BuddyPress 3.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Load the 'My Activity' page.
- *
- * @since BuddyPress 1.0.0
- */
-function bboss_activity_screen_my_activity() {
-
-	/**
-	 * Fires right before the loading of the "My Activity" screen template file.
-	 *
-	 * @since BuddyPress 1.0.0
-	 */
-	do_action( 'bp_activity_screen_my_activity' );
-
-	/**
-	 * Filters the template to load for the "My Activity" screen.
-	 *
-	 * @since BuddyPress 1.0.0
-	 *
-	 * @param string $template Path to the activity template to load.
-	 */
-	bboss_core_load_template( apply_filters( 'bp_activity_template_my_activity', 'members/single/home' ) );
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-activity/screens/just-me.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../bboss-activity/screens/just-me.php';
+// @bbwt-com-end compat-layer

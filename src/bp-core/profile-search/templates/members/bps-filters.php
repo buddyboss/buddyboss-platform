@@ -1,41 +1,6 @@
 <?php
-/**
- * BP Profile Search - filters template
- *
- * @since BuddyBoss 1.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-	$F = bboss_profile_search_escaped_form_data();
-if ( empty( $F->fields ) ) {
-	return false;
-}
-?>
-	<p class='bp_ps_filters'>
-
-<?php
-foreach ( $F->fields as $f ) {
-	if ( 'hidden' == $f->display ) {
-		continue;
-	}
-
-	$filter = bboss_ps_print_filter( $f );
-	$filter = apply_filters( 'bp_ps_print_filter', $filter, $f );
-
-	?>
-		<strong><?php echo esc_html( $f->label ); ?></strong> <span><?php echo esc_html( $filter ); ?></span><br>
-	<?php
-}
-
-if ( ! empty( $F->action ) ) {
-	?>
-		<a href='<?php echo esc_url( $F->action ); ?>'><?php esc_html_e( 'Clear', 'buddyboss' ); ?></a>
-	<?php
-}
-?>
-	</p>
-<?php
-
-// BP Profile Search - end of template.
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/profile-search/templates/members/bps-filters.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../../bboss-core/profile-search/templates/members/bps-filters.php';
+// @bbwt-com-end compat-layer

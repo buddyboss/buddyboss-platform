@@ -1,27 +1,6 @@
 <?php
-/**
- * Groups: Single group "Manage" screen handler
- *
- * @package BuddyBoss\Groups\Screens
- * @since BuddyPress 3.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Handle the display of a group's Admin pages.
- *
- * @since BuddyPress 1.0.0
- */
-function bboss_groups_screen_group_admin() {
-	if ( ! bboss_is_groups_component() || ! bboss_is_current_action( 'admin' ) ) {
-		return false;
-	}
-
-	if ( bboss_action_variables() ) {
-		return false;
-	}
-
-	bboss_core_redirect( bboss_get_group_permalink( bboss_groups_get_current_group() ) . 'admin/edit-details/' );
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-groups/screens/single/admin.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-groups/screens/single/admin.php';
+// @bbwt-com-end compat-layer

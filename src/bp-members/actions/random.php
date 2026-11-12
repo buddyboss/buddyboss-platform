@@ -1,30 +1,6 @@
 <?php
-/**
- * Members: Random member action handler
- *
- * @package BuddyBoss\Members\Actions
- * @since BuddyPress 3.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Redirect to a random member page when visiting a ?random-member URL.
- *
- * @since BuddyPress 1.0.0
- */
-function bboss_core_get_random_member() {
-	if ( ! isset( $_GET['random-member'] ) ) {
-		return;
-	}
-
-	$user = bboss_core_get_users(
-		array(
-			'type'     => 'random',
-			'per_page' => 1,
-		)
-	);
-	bboss_core_redirect( bboss_core_get_user_domain( $user['users'][0]->id ) );
-}
-add_action( 'bp_actions', 'bp_core_get_random_member' );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-members/actions/random.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../bboss-members/actions/random.php';
+// @bbwt-com-end compat-layer

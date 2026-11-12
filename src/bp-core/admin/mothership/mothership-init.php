@@ -1,63 +1,6 @@
 <?php
-/**
- * BuddyBoss Mothership Initialization
- *
- * This file should be included from the main BuddyBoss plugin file to initialize
- * the license activation and add-ons functionality.
- *
- * @package BuddyBoss
- * @since BuddyBoss 2.14.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Initialize BuddyBoss Mothership functionality.
- */
-function buddyboss_init_mothership() {
-	// The vendor autoloader should already be loaded from bp-loader.php
-	// Setup namespace aliases to allow using BuddyBossPlatform namespace consistently.
-	require_once __DIR__ . '/autoload-aliases.php';
-
-	// Include BuddyBoss specific files.
-	require_once __DIR__ . '/class-bb-plugin-connector.php';
-	require_once __DIR__ . '/class-bb-license-manager.php';
-	require_once __DIR__ . '/class-bb-addons-manager.php';
-	require_once __DIR__ . '/class-bb-license-page.php';
-	require_once __DIR__ . '/class-bb-addons-page.php';
-
-	if ( ! class_exists( 'BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) ) {
-		// Include the main loader class.
-		require_once __DIR__ . '/class-bb-mothership-loader.php';
-	}
-
-	// Initialize the mothership functionality (singleton pattern prevents duplicate hooks).
-	BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance();
-
-	// Initialize DRM (Digital Rights Management) functionality.
-	buddyboss_init_drm();
-}
-
-/**
- * Initialize BuddyBoss DRM functionality.
- */
-function buddyboss_init_drm() {
-	// Include DRM autoloader.
-	require_once dirname( __DIR__ ) . '/drm/autoload.php';
-
-	// Initialize DRM controller.
-	BuddyBoss\Core\Admin\DRM\BB_DRM_Controller::init();
-}
-
-// Initialize mothership immediately on include (this file is required during
-// BuddyBoss's includes() at bp_loaded priority 4). The singleton in
-// BB_Mothership_Loader::instance() prevents duplicate hook registration.
-buddyboss_init_mothership();
-
-/**
- * For local development, you can define these constants in wp-config.php:
- *
- * define( 'BUDDYBOSS_MOTHERSHIP_API_BASE_URL', 'https://your-local-api.test/v1/' );
- * define( 'BUDDYBOSS_DISABLE_SSL_VERIFY', true );
- */
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/admin/mothership/mothership-init.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-core/admin/mothership/mothership-init.php';
+// @bbwt-com-end compat-layer

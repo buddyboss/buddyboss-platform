@@ -1,45 +1,6 @@
 <?php
-/**
- * Sent Invites: User's "Invites > Invite by Email" screen handler
- *
- * @package BuddyBoss\Invite\Screens
- * @since BuddyBoss 1.0.0
- *
- * @todo how is this page different from send-invites?
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Handle the loading of a user's Invites > Invite by Email page.
- *
- * @since BuddyBoss 1.0.0
- */
-function bboss_invites_screen_sent_invite() {
-
-	if ( bboss_action_variables() ) {
-		bboss_do_404();
-		return;
-	}
-
-	add_action( 'bp_template_content', 'bp_invites_sent_invite_screen' );
-
-	/**
-	 * Filters the template to load for a users Invites > Invite by Email page.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param string $value Path to a users Invites > Invite by Email page template.
-	 */
-	bboss_core_load_template( apply_filters( 'bp_invites_screen_sent_invite', 'members/single/plugins' ) );
-}
-
-/**
- * Output members's Invites > Email Invite page.
- *
- * @since BuddyBoss 1.0.0
- */
-function bboss_invites_sent_invite_screen() {
-	bboss_get_template_part( 'members/single/invites' );
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-invites/screens/sent-invites.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../bboss-invites/screens/sent-invites.php';
+// @bbwt-com-end compat-layer

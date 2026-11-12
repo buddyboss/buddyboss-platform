@@ -1,38 +1,6 @@
 <?php
-/**
- * Groups: Single group "Home" screen handler
- *
- * @package BuddyBoss\Groups\Screens
- * @since BuddyPress 3.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Handle the loading of a single group's page.
- *
- * @since BuddyPress 1.0.0
- */
-function bboss_groups_screen_group_home() {
-
-	if ( ! bboss_is_single_item() ) {
-		return false;
-	}
-
-	/**
-	 * Fires before the loading of a single group's page.
-	 *
-	 * @since BuddyPress 1.0.0
-	 */
-	do_action( 'groups_screen_group_home' );
-
-	/**
-	 * Filters the template to load for a single group's page.
-	 *
-	 * @since BuddyPress 1.0.0
-	 *
-	 * @param string $value Path to a single group's template to load.
-	 */
-	bboss_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-groups/screens/single/home.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-groups/screens/single/home.php';
+// @bbwt-com-end compat-layer

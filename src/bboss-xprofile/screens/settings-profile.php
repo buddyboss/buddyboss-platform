@@ -1,0 +1,127 @@
+<?php
+/**
+ * XProfile: User's "Settings > Profile Visibility" screen handler
+ *
+ * @package BuddyBoss\XProfileScreens
+ * @since BuddyPress 3.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Show the xprofile settings template.
+ *
+ * @since BuddyPress 2.0.0
+ */
+function bboss_xprofile_screen_settings() {
+
+	// Redirect if no privacy settings page is accessible.
+	if ( bboss_action_variables() || ! bboss_is_active( 'xprofile' ) ) {
+		bboss_do_404();
+		return;
+	}
+
+	/**
+	 * Filters the template to load for the XProfile settings screen.
+	 *
+	 * @since BuddyPress 2.0.0
+	 *
+	 * @param string $template Path to the XProfile change avatar template to load.
+	 */
+	bboss_core_load_template( apply_filters( 'bp_settings_screen_xprofile', '/members/single/settings/profile' ) );
+}
+
+/**
+ * Handles the saving of xprofile field visibilities.
+ *
+ * @since BuddyPress 1.9.0
+ */
+function bboss_xprofile_action_settings() {
+
+	// Bail if not a POST action.
+	if ( ! bboss_is_post_request() ) {
+		return;
+	}
+
+	// Bail if no submit action.
+	if ( ! isset( $_POST['xprofile-settings-submit'] ) ) {
+		return;
+	}
+
+	// Bail if not in settings.
+	if ( ! bboss_is_user_settings_profile() ) {
+		return;
+	}
+
+	// 404 if there are any additional action variables attached
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
+		return;
+	}
+
+	// Nonce check.
+	check_admin_referer( 'bp_xprofile_settings' );
+
+	/**
+	 * Fires before saving xprofile field visibilities.
+	 *
+	 * @since BuddyPress 2.0.0
+	 */
+	do_action( 'bp_xprofile_settings_before_save' );
+
+	/* Save ******************************************************************/
+
+	// Only save if there are field ID's being posted.
+	if ( ! empty( $_POST['field_ids'] ) ) {
+
+		// Get the POST'ed field ID's.
+		$posted_field_ids = explode( ',', $_POST['field_ids'] );
+
+		// Backward compatibility: a bug in BP 2.0 caused only a single
+		// group's field IDs to be submitted. Look for values submitted
+		// in the POST request that may not appear in 'field_ids', and
+		// add them to the list of IDs to save.
+		foreach ( $_POST as $posted_key => $posted_value ) {
+			preg_match( '/^field_([0-9]+)_visibility$/', $posted_key, $matches );
+			if ( ! empty( $matches[1] ) && ! in_array( $matches[1], $posted_field_ids ) ) {
+				$posted_field_ids[] = $matches[1];
+			}
+		}
+
+		// The visibility gate below reads allow_custom_visibility field meta per field.
+		// Prime the whole posted set in one query rather than one lookup per field.
+		bboss_xprofile_update_meta_cache( array( 'field' => wp_parse_id_list( $posted_field_ids ) ) );
+
+		// Save the visibility settings.
+		foreach ( $posted_field_ids as $field_id ) {
+
+			// Locked fields (enforced visibility or display-name format) never render a control;
+			// writing the 'public' fallback for them would replace the admin default once the lock is lifted.
+			if ( ! bboss_xprofile_can_change_field_visibility( $field_id ) ) {
+				continue;
+			}
+
+			$visibility_level = 'public';
+
+			if ( ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ) {
+				$visibility_level = $_POST[ 'field_' . $field_id . '_visibility' ];
+			}
+
+			bboss_xprofile_set_field_visibility_level( $field_id, bboss_displayed_user_id(), $visibility_level );
+		}
+	}
+
+	/* Other *****************************************************************/
+
+	/**
+	 * Fires after saving xprofile field visibilities.
+	 *
+	 * @since BuddyPress 2.0.0
+	 */
+	do_action( 'bp_xprofile_settings_after_save' );
+
+	// Redirect to the root domain.
+	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/profile' );
+}
+add_action( 'bp_actions', 'bp_xprofile_action_settings' );

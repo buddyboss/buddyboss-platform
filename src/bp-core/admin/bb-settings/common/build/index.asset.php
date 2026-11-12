@@ -1,1 +1,6 @@
-<?php return array('dependencies' => array('react', 'wp-element', 'wp-hooks', 'wp-html-entities', 'wp-i18n'), 'version' => '5be168853353a43114ef');
+<?php
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/admin/bb-settings/common/build/index.asset.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../../../bboss-core/admin/bb-settings/common/build/index.asset.php';
+// @bbwt-com-end compat-layer

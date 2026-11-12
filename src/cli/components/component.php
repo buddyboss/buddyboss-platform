@@ -82,7 +82,7 @@ class Components extends BuddypressCommand {
 		}
 
 		// Run the setup, in case tables have to be created.
-		require_once \BBOSS_PLUGIN_DIR . 'bp-core/admin/bboss-core-admin-schema.php';
+		require_once \BBOSS_PLUGIN_DIR . 'bboss-core/admin/bboss-core-admin-schema.php';
 		bboss_core_install( $active_components );
 		bboss_core_add_page_mappings( $active_components );
 

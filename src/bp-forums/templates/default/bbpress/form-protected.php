@@ -1,21 +1,6 @@
 <?php
-
-/**
- * Password Protected
- *
- * @package BuddyBoss\Theme
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-?>
-
-<div id="bbpress-forums">
-	<fieldset class="bbp-form" id="bbp-protected">
-		<Legend><?php esc_html_e( 'Protected', 'buddyboss' ); ?></legend>
-
-		<?php echo get_the_password_form(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_the_password_form() is a WordPress core function returning the password <form> HTML; wp_kses_post would strip its form controls. */ ?>
-
-	</fieldset>
-</div>
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/bbpress/form-protected.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../../bboss-forums/templates/default/bbpress/form-protected.php';
+// @bbwt-com-end compat-layer

@@ -1,57 +1,6 @@
 <?php
-/**
- * Deprecated functions.
- *
- * @since BuddyBoss 3.7.0
- * @deprecated BuddyBoss 3.7.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-if ( ! function_exists( 'bboss_enable_group_subscriptions' ) ) {
-	/**
-	 * Is group subscription turned off?
-	 *
-	 * Group subscriptions moved to BuddyBoss Add-ons, which calls this function too.
-	 * This copy loads first, so it keeps working for both.
-	 *
-	 * @since BuddyBoss 2.2.8
-	 * @deprecated BuddyBoss 3.7.0 Group subscriptions moved to BuddyBoss Add-ons.
-	 *
-	 * @param bool $default Optional. Fallback value if not found in the database.
-	 *                      Default: true.
-	 *
-	 * @return bool True if group subscription is enabled, otherwise false.
-	 */
-	function bboss_enable_group_subscriptions( $default = true ) {
-		// Only a call without the Add-ons module is a deprecated one.
-		if ( ! function_exists( 'bb_addons_group_subscription_init' ) ) {
-			_deprecated_function( __FUNCTION__, 'BuddyBoss 3.7.0', 'BuddyBoss Add-ons' );
-		}
-
-		/**
-		 * Filters whether group subscription is turned off.
-		 *
-		 * @since BuddyBoss 2.2.8
-		 *
-		 * @param bool $value Whether group subscription is turned off.
-		 */
-		return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bboss_get_option( 'bb_enable_group_subscriptions', $default ) );
-	}
-}
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
-if ( function_exists( 'bboss_enable_group_subscriptions' ) && ! function_exists( 'bb_enable_group_subscriptions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_enable_group_subscriptions()} (also declared by another BuddyBoss product).
-	 *
-	 * @deprecated Use bboss_enable_group_subscriptions() instead.
-	 */
-	function bb_enable_group_subscriptions( $default = true ) {
-		return bboss_enable_group_subscriptions( $default );
-	}
-}
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/deprecated/buddyboss/3.7.0.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-core/deprecated/buddyboss/3.7.0.php';
 // @bbwt-com-end compat-layer

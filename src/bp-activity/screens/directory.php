@@ -1,38 +1,6 @@
 <?php
-/**
- * Activity: Directory screen handler
- *
- * @package BuddyBoss\Activity\Screens
- * @since BuddyPress 3.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Load the Activity directory.
- *
- * @since BuddyPress 1.5.0
- */
-function bboss_activity_screen_index() {
-	if ( bboss_is_activity_directory() ) {
-		bboss_update_is_directory( true, 'activity' );
-
-		/**
-		 * Fires right before the loading of the Activity directory screen template file.
-		 *
-		 * @since BuddyPress 1.5.0
-		 */
-		do_action( 'bp_activity_screen_index' );
-
-		/**
-		 * Filters the template to load for the Activity directory screen.
-		 *
-		 * @since BuddyPress 1.5.0
-		 *
-		 * @param string $template Path to the activity template to load.
-		 */
-		bboss_core_load_template( apply_filters( 'bp_activity_screen_index', 'activity/index' ) );
-	}
-}
-add_action( 'bp_screens', 'bp_activity_screen_index' );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-activity/screens/directory.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../bboss-activity/screens/directory.php';
+// @bbwt-com-end compat-layer

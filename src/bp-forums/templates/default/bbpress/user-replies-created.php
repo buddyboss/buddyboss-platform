@@ -1,40 +1,6 @@
 <?php
-
-/**
- * User Replies Created
- *
- * @package BuddyBoss\Theme
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-?>
-
-	<?php do_action( 'bbp_template_before_user_replies' ); ?>
-
-	<div id="bbp-user-replies-created" class="bbp-user-replies-created">
-		<h2 class="screen-heading forum-replies-screen"><?php esc_html_e( 'Forum Replies Created', 'buddyboss' ); ?></h2>
-		<div class="bbp-user-section">
-
-			<?php if ( bboss_bbp_get_user_replies_created() ) : ?>
-
-				<?php bboss_bbp_get_template_part( 'pagination', 'replies' ); ?>
-
-				<?php bboss_bbp_get_template_part( 'loop', 'replies' ); ?>
-
-				<?php bboss_bbp_get_template_part( 'pagination', 'replies' ); ?>
-
-			<?php else : ?>
-
-				<aside class="bp-feedback bp-messages info">
-					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php bboss_bbp_is_user_home() ? esc_html_e( 'You have not replied to any discussions.', 'buddyboss' ) : esc_html_e( 'This user has not replied to any topics.', 'buddyboss' ); ?></p>
-				</aside>
-
-			<?php endif; ?>
-
-		</div>
-	</div><!-- #bbp-user-replies-created -->
-
-	<?php do_action( 'bbp_template_after_user_replies' ); ?>
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/bbpress/user-replies-created.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../../bboss-forums/templates/default/bbpress/user-replies-created.php';
+// @bbwt-com-end compat-layer

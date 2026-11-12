@@ -1,39 +1,6 @@
 <?php
-
-/**
- * Forums Extentions
- *
- * There's a world of really cool plugins out there, and Forums comes with
- * support for some of the most popular ones.
- *
- * @package BuddyBoss\Extend
- */
-
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Loads Akismet inside the Forums global class
- *
- * @since bbPress (r3277)
- *
- * @return If Forums is not active
- */
-function bboss_bbp_setup_akismet() {
-
-	// Bail if no akismet
-	if ( ! defined( 'AKISMET_VERSION' ) ) {
-		return;
-	}
-
-	// Bail if Akismet is turned off
-	if ( ! bboss_bbp_is_akismet_active() ) {
-		return;
-	}
-
-	// Include the Akismet Component
-	require bboss_forums()->includes_dir . 'extend/akismet.php';
-
-	// Instantiate Akismet for Forums
-	bboss_forums()->extend->akismet = new BBoss_BBP_Akismet();
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-forums/core/extend.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../bboss-forums/core/extend.php';
+// @bbwt-com-end compat-layer

@@ -1,6 +1,6 @@
 <?php
 // @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file was renamed to bboss-activity-loader.php (decision 0009); kept so code that
-// requires the old name keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/bboss-activity-loader.php';
+// bbwt-rename:file-stub — this file now lives at src/bboss-activity/bboss-activity-loader.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../bboss-activity/bboss-activity-loader.php';
 // @bbwt-com-end compat-layer

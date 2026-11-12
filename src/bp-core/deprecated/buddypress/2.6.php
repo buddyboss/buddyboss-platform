@@ -1,50 +1,6 @@
 <?php
-/**
- * Deprecated functions.
- *
- * @deprecated BuddyPress 2.6.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Print the generation time in the footer of the site.
- *
- * @since BuddyPress 1.0.0
- * @deprecated BuddyPress 2.6.0
- */
-function bboss_core_print_generation_time() {
-	?>
-
-<!-- Generated in <?php timer_stop( 1 ); ?> seconds. (<?php echo esc_html( get_num_queries() ); ?> q) -->
-
-	<?php
-}
-
-/**
- * Sort the navigation menu items.
- *
- * The sorting is split into a separate function because it can only happen
- * after all plugins have had a chance to register their navigation items.
- *
- * @since BuddyPress 1.0.0
- * @deprecated BuddyPress 2.6.0
- *
- * @return bool|null Returns false on failure.
- */
-function bboss_core_sort_nav_items() {
-	_deprecated_function( __FUNCTION__, '2.6' );
-}
-
-/**
- * Sort all subnavigation arrays.
- *
- * @since BuddyPress 1.1.0
- * @deprecated BuddyPress 2.6.0
- *
- * @return bool|null Returns false on failure.
- */
-function bboss_core_sort_subnav_items() {
-	_deprecated_function( __FUNCTION__, '2.6' );
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/deprecated/buddypress/2.6.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-core/deprecated/buddypress/2.6.php';
+// @bbwt-com-end compat-layer

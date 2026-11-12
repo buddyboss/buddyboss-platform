@@ -1,22 +1,6 @@
 <?php
-/**
- * BuddyBoss Core React Admin Settings
- *
- * @package BuddyBoss
- * @subpackage Core
- * @since BuddyBoss 2.9.00
- */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-// Load the base Setup Wizard Manager class first.
-require_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-setup-wizard-manager.php';
-
-// Legacy ReadyLaunch standalone admin page retired in BuddyBoss 3.0.0
-// (redirects to Settings 2.0 Appearance; folder deleted). Deprecation stubs
-// for its public helpers live in `deprecated/buddyboss/3.0.0.php`.
-
-// Load the ReadyLaunch onboarding system.
-require_once __DIR__ . '/rl-onboarding/index.php';
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/admin/bb-settings/index.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-core/admin/bb-settings/index.php';
+// @bbwt-com-end compat-layer

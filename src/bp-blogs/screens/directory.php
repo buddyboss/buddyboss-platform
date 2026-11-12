@@ -1,31 +1,6 @@
 <?php
-/**
- * Blogs: Directory screen handler
- *
- * @package BuddyBoss\Blogs\Screens
- * @since BuddyPress 3.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Load the top-level Blogs directory.
- *
- * @since BuddyPress 1.5-beta-1
- */
-function bboss_blogs_screen_index() {
-	if ( bboss_is_blogs_directory() ) {
-		bboss_update_is_directory( true, 'blogs' );
-
-		/**
-		 * Fires right before the loading of the top-level Blogs screen template file.
-		 *
-		 * @since BuddyPress 1.0.0
-		 */
-		do_action( 'bp_blogs_screen_index' );
-
-		bboss_core_load_template( apply_filters( 'bp_blogs_screen_index', 'blogs/index' ) );
-	}
-}
-add_action( 'bp_screens', 'bp_blogs_screen_index', 2 );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-blogs/screens/directory.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../bboss-blogs/screens/directory.php';
+// @bbwt-com-end compat-layer

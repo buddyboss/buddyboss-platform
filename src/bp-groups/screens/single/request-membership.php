@@ -1,62 +1,6 @@
 <?php
-/**
- * Groups: Single group "Request Membership" screen handler
- *
- * @package BuddyBoss\Groups\Screens
- * @since BuddyPress 3.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Handle the display of a group's Request Membership page.
- *
- * @since BuddyPress 1.0.0
- */
-function bboss_groups_screen_group_request_membership() {
-
-	if ( ! is_user_logged_in() ) {
-		return false;
-	}
-
-	$bp = bboss();
-
-	if ( 'private' != $bp->groups->current_group->status ) {
-		return false;
-	}
-
-	// If the user has submitted a request, send it.
-	if ( isset( $_POST['group-request-send'] ) ) {
-
-		// Check the nonce.
-		if ( ! check_admin_referer( 'groups_request_membership' ) ) {
-			return false;
-		}
-
-		if ( ! bboss_groups_send_membership_request( array( 'user_id' => bboss_loggedin_user_id(), 'group_id' => $bp->groups->current_group->id, 'content' => $_POST['group-request-membership-comments'] ) ) ) {
-			bboss_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss' ), 'error' );
-		} else {
-			bboss_core_add_message( __( 'Your membership request was sent to the group organizer successfully. You will be notified when the group organizer responds to your request.', 'buddyboss' ) );
-		}
-		bboss_core_redirect( bboss_get_group_permalink( $bp->groups->current_group ) );
-	}
-
-	/**
-	 * Fires before the loading of a group's Request Memebership page.
-	 *
-	 * @since BuddyPress 1.0.0
-	 *
-	 * @param int $id ID of the group currently being displayed.
-	 */
-	do_action( 'groups_screen_group_request_membership', $bp->groups->current_group->id );
-
-	/**
-	 * Filters the template to load for a group's Request Membership page.
-	 *
-	 * @since BuddyPress 1.0.0
-	 *
-	 * @param string $value Path to a group's Request Membership template.
-	 */
-	bboss_core_load_template( apply_filters( 'groups_template_group_request_membership', 'groups/single/home' ) );
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-groups/screens/single/request-membership.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-groups/screens/single/request-membership.php';
+// @bbwt-com-end compat-layer

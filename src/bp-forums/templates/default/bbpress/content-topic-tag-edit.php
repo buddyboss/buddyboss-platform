@@ -1,26 +1,6 @@
 <?php
-
-/**
- * Topic Tag Edit Content Part
- *
- * @package BuddyBoss\Theme
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-?>
-
-<div id="bbpress-forums">
-
-	<?php bboss_bbp_breadcrumb(); ?>
-
-	<?php bboss_bbp_topic_tag_description(); ?>
-
-	<?php do_action( 'bbp_template_before_topic_tag_edit' ); ?>
-
-	<?php bboss_bbp_get_template_part( 'form', 'topic-tag' ); ?>
-
-	<?php do_action( 'bbp_template_after_topic_tag_edit' ); ?>
-
-</div>
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/bbpress/content-topic-tag-edit.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../../bboss-forums/templates/default/bbpress/content-topic-tag-edit.php';
+// @bbwt-com-end compat-layer

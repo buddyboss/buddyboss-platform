@@ -1,64 +1,6 @@
 <?php
-
-/**
- * Template Name: Forums - Statistics
- *
- * @package BuddyBoss\Theme
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-get_header(); ?>
-
-	<?php do_action( 'bbp_before_main_content' ); ?>
-
-	<?php do_action( 'bbp_template_notices' ); ?>
-
-	<?php
-	while ( have_posts() ) :
-		the_post();
-		?>
-
-		<div id="bbp-statistics" class="bbp-statistics">
-			<h1 class="entry-title"><?php the_title(); ?></h1>
-			<div class="entry-content">
-
-				<?php get_the_content() ? the_content() : print( wp_kses_post( __( '<p>Here are the statistics and popular discussions of our forums.</p>', 'buddyboss' ) ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept to preserve existing translations (msgid unchanged). ?>
-
-				<div id="bbpress-forums">
-
-					<?php bboss_bbp_get_template_part( 'content', 'statistics' ); ?>
-
-					<?php do_action( 'bbp_before_popular_topics' ); ?>
-
-					<?php bboss_bbp_set_query_name( 'bbp_popular_topics' ); ?>
-
-					<?php if ( bboss_bbp_view_query( 'popular' ) ) : ?>
-
-						<h2 class="entry-title"><?php esc_html_e( 'Popular Discussions', 'buddyboss' ); ?></h2>
-
-						<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
-
-						<?php bboss_bbp_get_template_part( 'loop', 'topics' ); ?>
-
-						<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
-
-					<?php endif; ?>
-
-					<?php bboss_bbp_reset_query_name(); ?>
-
-					<?php do_action( 'bbp_after_popular_topics' ); ?>
-
-				</div>
-			</div>
-		</div><!-- #bbp-statistics -->
-
-	<?php endwhile; ?>
-
-	<?php do_action( 'bbp_after_main_content' ); ?>
-
-<?php get_sidebar(); ?>
-
-<?php
-get_footer();
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/extras/page-forum-statistics.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../../bboss-forums/templates/default/extras/page-forum-statistics.php';
+// @bbwt-com-end compat-layer

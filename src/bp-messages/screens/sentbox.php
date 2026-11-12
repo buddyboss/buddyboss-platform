@@ -1,7 +1,6 @@
 <?php
-/**
- * Messages: User's "Messages > Sent" screen handler
- *
- * @package BuddyBoss\Message\Screens
- * @since BuddyPress 3.0.0
- */
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-messages/screens/sentbox.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../bboss-messages/screens/sentbox.php';
+// @bbwt-com-end compat-layer

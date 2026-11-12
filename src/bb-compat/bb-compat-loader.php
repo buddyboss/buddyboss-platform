@@ -144,24 +144,24 @@ function bb_compat_load_functions() {
 	}
 	$done = true;
 	require_once __DIR__ . '/bb-compat-functions-bb-features.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-activity.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-blogs.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-core.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-forums.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-friends.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-groups.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-integrations.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-invites.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-media.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-members.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-messages.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-moderation.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-notifications.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-performance.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-search.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-settings.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-templates.php';
-	require_once __DIR__ . '/bb-compat-functions-bp-xprofile.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-activity.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-blogs.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-core.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-forums.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-friends.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-groups.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-integrations.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-invites.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-media.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-members.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-messages.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-moderation.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-notifications.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-performance.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-search.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-settings.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-templates.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-xprofile.php';
 	require_once __DIR__ . '/bb-compat-functions-root.php';
 }
 

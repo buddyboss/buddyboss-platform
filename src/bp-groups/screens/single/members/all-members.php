@@ -1,51 +1,6 @@
 <?php
-/**
- * Groups: Single group "Members > All Members" screen handler
- *
- * @package BuddyBoss\Groups\Screens
- * @since BuddyBoss 1.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Handle the display of a group's members/all-members page.
- *
- * @since BuddyBoss 1.0.0
- */
-function groups_screen_group_members_all_members() {
-
-	// should also not accessible if members slug is removed
-	$members_menu_removed = true;
-	foreach ( bboss_get_nav_menu_items('groups') as $nav_item ) {
-		if( 'members' === $nav_item->css_id ) {
-			$members_menu_removed = false;
-		}
-	}
-
-	if ( 'all-members' !== bboss_get_group_current_members_tab() || $members_menu_removed ) {
-		return false;
-	}
-
-	$bp = bboss();
-
-	/**
-	 * Fires before the loading of the group members/all-members page template.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param int $id ID of the group that is being displayed.
-	 */
-	do_action( 'groups_screen_group_members_all_members', $bp->groups->current_group->id );
-
-	/**
-	 * Filters the template to load for a group's members/all-members page.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param string $value Path to a group's members/all-members template.
-	 */
-	bboss_core_load_template( apply_filters( 'groups_template_group_members', 'groups/single/home' ) );
-}
-add_action( 'bp_screens', 'groups_screen_group_members_all_members' );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-groups/screens/single/members/all-members.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../../bboss-groups/screens/single/members/all-members.php';
+// @bbwt-com-end compat-layer

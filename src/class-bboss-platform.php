@@ -415,8 +415,8 @@ class BBoss_Platform {
 		$this->integration_url = $this->plugin_url . 'bp-integrations';
 
 		// Path to add support for third party plugin.
-		$this->compatibility_dir = $this->plugin_dir . 'bp-core/compatibility/';
-		$this->compatibility_url = $this->plugin_url . 'bp-core/compatibility/';
+		$this->compatibility_dir = $this->plugin_dir . 'bboss-core/compatibility/';
+		$this->compatibility_url = $this->plugin_url . 'bboss-core/compatibility/';
 
 		/** Theme Compat */
 		$this->theme_compat = new stdClass(); // Base theme compatibility class.
@@ -516,14 +516,14 @@ class BBoss_Platform {
 
 		// @bbwt-com-start mothership-hub
 		// Initialize BuddyBoss Mothership (License & Add-ons).
-		require $this->plugin_dir . 'bp-core/admin/mothership/mothership-init.php';
+		require $this->plugin_dir . 'bboss-core/admin/mothership/mothership-init.php';
 		// @bbwt-com-end mothership-hub
 
 		// Load the compatibility helpers for third party plugins.
 		require $this->compatibility_dir . '/bboss-incompatible-plugins-helper.php';
 
 		// Load the WP abstraction file so BuddyPress can run on all WordPress setups.
-		require $this->plugin_dir . 'bp-core/bboss-core-wpabstraction.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-wpabstraction.php';
 
 		// Setup the versions (after we include multisite abstraction above).
 		$this->versions();
@@ -531,81 +531,81 @@ class BBoss_Platform {
 		/** Update/Install */
 
 		// Theme compatibility.
-		require $this->plugin_dir . 'bp-core/bboss-core-template-loader.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-theme-compatibility.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-template-loader.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-theme-compatibility.php';
 
 		// Require all of the BuddyPress core libraries.
-		require $this->plugin_dir . 'bp-core/bboss-core-dependency.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-actions.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-caps.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-cache.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-cssjs.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-update.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-options.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-taxonomy.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-filters.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-attachments.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-avatars.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-widgets.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-template.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-adminbar.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-buddybar.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-catchuri.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-functions.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-moderation.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-cron.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-loader.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-customizer-email.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-emails.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-wp-emails.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-profile-search.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-gdpr.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-rest-api.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-notification.php';
-		require $this->plugin_dir . 'bp-core/bboss-core-invitation.php';
-		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
-		require $this->plugin_dir . 'bp-core/bb-core-bookmarks.php';
-		require $this->plugin_dir . 'bp-core/bb-core-drafts.php';
-		require $this->plugin_dir . 'bp-core/bb-core-blocks.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-dependency.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-actions.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-caps.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-cache.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-cssjs.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-update.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-options.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-taxonomy.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-filters.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-attachments.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-avatars.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-widgets.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-template.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-adminbar.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-buddybar.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-catchuri.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-functions.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-moderation.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-cron.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-loader.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-customizer-email.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-emails.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-wp-emails.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-profile-search.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-gdpr.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-rest-api.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-notification.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-invitation.php';
+		require $this->plugin_dir . 'bboss-core/bb-core-subscriptions.php';
+		require $this->plugin_dir . 'bboss-core/bb-core-bookmarks.php';
+		require $this->plugin_dir . 'bboss-core/bb-core-drafts.php';
+		require $this->plugin_dir . 'bboss-core/bb-core-blocks.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
 		if ( ! bboss_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
 
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/1.2.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/1.5.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/1.6.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/1.7.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/1.9.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/2.0.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/2.1.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/2.2.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/2.3.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/2.4.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/2.5.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/2.6.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/2.7.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/2.8.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/2.9.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddypress/3.0.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/1.2.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/1.5.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/1.6.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/1.7.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/1.9.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/2.0.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/2.1.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/2.2.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/2.3.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/2.4.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/2.5.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/2.6.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/2.7.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/2.8.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/2.9.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddypress/3.0.php';
 
 			// Maybe load deprecated buddyboss functionality (this double negative is proof positive!).
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.5.3.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.6.4.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.7.0.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.8.6.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.1.4.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.2.6.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.3.5.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.3.6.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.3.71.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.4.90.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.5.10.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/3.0.0.php';
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/3.7.0.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/1.0.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/1.1.8.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/1.2.2.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/1.2.9.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/1.5.3.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/1.6.4.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/1.7.0.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/1.8.6.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/2.1.4.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/2.2.6.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/2.3.5.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/2.3.6.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/2.3.71.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/2.4.90.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/2.5.10.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/3.0.0.php';
+			require $this->plugin_dir . 'bboss-core/deprecated/buddyboss/3.7.0.php';
 		}
 
 		// @bbwt-com-start wp-cli-namespace
@@ -615,7 +615,7 @@ class BBoss_Platform {
 		// @bbwt-com-end wp-cli-namespace
 
 		if ( bboss_is_readylaunch_enabled() ) {
-			require $this->plugin_dir . 'bp-core/bb-core-readylaunch.php';
+			require $this->plugin_dir . 'bboss-core/bb-core-readylaunch.php';
 		}
 	}
 
@@ -828,9 +828,9 @@ class BBoss_Platform {
 		if ( 'bboss-rest-attachments' === $class ) { // bbwt-rename:autoload-trait
 			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-bboss-rest-attachments.php";
 		} elseif ( 'gdpr' === $component ) {
-			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
+			$path = dirname( __FILE__ ) . "/bboss-core/gdpr/class-{$class}.php";
 		} elseif ( 'suspend' === $component ) {
-			$path = dirname( __FILE__ ) . "/bp-moderation/classes/suspend/class-{$class}.php";
+			$path = dirname( __FILE__ ) . "/bboss-moderation/classes/suspend/class-{$class}.php";
 		} elseif ( 'bboss-phpmailer' === $class ) { // bbwt-rename:autoload-mailer
 			// File deliberately named without the "phpmailer.php" suffix so it is not mistaken
 			// for the bundled PHPMailer library; the class name BP_PHPMailer is unchanged.
@@ -958,8 +958,8 @@ class BBoss_Platform {
 				'id'      => 'nouveau',
 				'name'    => 'BuddyPress Nouveau',
 				'version' => bboss_get_version(),
-				'dir'     => trailingslashit( $this->themes_dir . '/bp-nouveau' ),
-				'url'     => trailingslashit( $this->themes_url . '/bp-nouveau' ),
+				'dir'     => trailingslashit( $this->themes_dir . '/bboss-nouveau' ),
+				'url'     => trailingslashit( $this->themes_url . '/bboss-nouveau' ),
 			)
 		);
 

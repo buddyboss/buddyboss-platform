@@ -1,29 +1,6 @@
 <?php
-/**
- * Deprecated functions.
- *
- * @deprecated BuddyPress 2.4.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * bboss_group_avatar_edit_form()
- *
- * @deprecated BuddyPress 2.4.0
- */
-function bboss_group_avatar_edit_form() {
-	_deprecated_function( __FUNCTION__, '2.4' );
-}
-
-/**
- * bboss_groups_avatar_upload()
- *
- * @deprecated BuddyPress 2.4.0
- *
- * @param bool $deprecated Param deprecated 1.1.0
- */
-function bboss_groups_avatar_upload( $deprecated = true ) {
-	_deprecated_function( __FUNCTION__, '2.4' );
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/deprecated/buddypress/2.4.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-core/deprecated/buddypress/2.4.php';
+// @bbwt-com-end compat-layer
