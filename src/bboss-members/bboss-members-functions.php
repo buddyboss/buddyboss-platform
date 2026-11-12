@@ -5870,7 +5870,7 @@ function bboss_is_member_type_allowed_on_registration( $member_type_id ) {
  * Check whether a profile type may be selected for an invitee on the Send Invites form.
  *
  * Mirrors the set the send-invites Profile Type dropdown itself offers (see
- * bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php): the
+ * bboss-templates/bboss-nouveau/buddypress/members/single/invites/send-invites.php): the
  * inviter's own type must be permitted to choose invitee types, and the submitted
  * type must be in that inviter's `_bp_member_type_allowed_member_type_invite`
  * allowlist, or — when no allowlist is configured — an active member type.

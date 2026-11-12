@@ -60,7 +60,7 @@ function bboss_nouveau_plugin_hook( $suffix = '' ) {
 /**
  * Fire friend hooks
  *
- * @todo Move this into bp-nouveau/includes/friends/template-tags.php
+ * @todo Move this into bboss-nouveau/includes/friends/template-tags.php
  *       once we'll need other friends template tags.
  *
  * @since BuddyPress 3.0.0

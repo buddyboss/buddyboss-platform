@@ -123,39 +123,39 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			global $bp;
 
 			// load the helper type parent class.
-			require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-types.php';
+			require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-types.php';
 
 			// load and associate helpers one by one.
 			if ( bboss_is_search_post_type_enable( 'post' ) ) {
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-posts.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-posts.php';
 				$this->search_helpers['posts'] = new BBoss_Search_Posts( 'post', 'posts' );
 				$this->searchable_items[]      = 'posts';
 			}
 
 			if ( bboss_is_search_post_type_enable( 'page' ) ) {
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-posts.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-posts.php';
 				$this->search_helpers['pages'] = new BBoss_Search_Posts( 'page', 'pages' );
 				$this->searchable_items[]      = 'pages';
 			}
 
 			if ( bboss_is_active( 'forums' ) && bboss_is_search_post_type_enable( bboss_bbp_get_forum_post_type() ) ) {
 
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-bbpress.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-bbpress.php';
 
 				if ( bboss_is_search_post_type_enable( bboss_bbp_get_forum_post_type() ) ) {
-					require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-bbpress-forums.php';
+					require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-bbpress-forums.php';
 					$this->search_helpers['forum'] = BBoss_Search_bbPress_Forums::instance();
 					$this->searchable_items[]      = 'forum';
 				}
 
 				if ( bboss_is_search_post_type_enable( bboss_bbp_get_topic_post_type() ) ) {
-					require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-bbpress-forums-topics.php';
+					require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-bbpress-forums-topics.php';
 					$this->search_helpers['topic'] = BBoss_Search_bbPress_Topics::instance();
 					$this->searchable_items[]      = 'topic';
 				}
 
 				if ( bboss_is_search_post_type_enable( bboss_bbp_get_reply_post_type() ) ) {
-					require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-bbpress-forums-replies.php';
+					require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-bbpress-forums-replies.php';
 					$this->search_helpers['reply'] = BBoss_Search_bbPress_Replies::instance();
 					$this->searchable_items[]      = 'reply';
 				}
@@ -163,54 +163,54 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 			// Check BuddyPress is active.
 			if ( bboss_is_search_members_enable() ) {
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-members.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-members.php';
 				$this->search_helpers['members'] = BBoss_Search_Members::instance();
 				$this->searchable_items[]        = 'members';
 			}
 
 			if ( bboss_is_active( 'groups' ) && bboss_is_search_groups_enable() ) {
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-groups.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-groups.php';
 				$this->search_helpers['groups'] = BBoss_Search_Groups::instance();
 				$this->searchable_items[]       = 'groups';
 			}
 
 			if ( bboss_is_active( 'media' ) && bboss_is_search_photos_enable() ) {
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-media.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-media.php';
 				$this->search_helpers['photos'] = BBoss_Search_Media::instance();
 				$this->searchable_items[]       = 'photos';
 			}
 
 			if ( bboss_is_active( 'media' ) && bboss_is_search_albums_enable() ) {
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-albums.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-albums.php';
 				$this->search_helpers['albums'] = BBoss_Search_Albums::instance();
 				$this->searchable_items[]       = 'albums';
 			}
 
 			if ( bboss_is_active( 'media' ) && bboss_is_active( 'document' ) && bboss_is_search_documents_enable() && ( bboss_is_group_document_support_enabled() || bboss_is_profile_document_support_enabled() ) ) {
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-documents.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-documents.php';
 				$this->search_helpers['documents'] = BBoss_Search_Documents::instance();
 				$this->searchable_items[]          = 'documents';
 			}
 
 			if ( bboss_is_active( 'media' ) && bboss_is_active( 'video' ) && bboss_is_search_videos_enable() && ( bboss_is_group_video_support_enabled() || bboss_is_profile_video_support_enabled() ) ) {
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-video.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-video.php';
 				$this->search_helpers['videos'] = BBoss_Search_Video::instance();
 				$this->searchable_items[]       = 'videos';
 			}
 
 			if ( bboss_is_active( 'media' ) && bboss_is_active( 'document' ) && bboss_is_search_folders_enable() && ( bboss_is_group_document_support_enabled() || bboss_is_profile_document_support_enabled() ) ) {
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-folders.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-folders.php';
 				$this->search_helpers['folders'] = BBoss_Search_Folders::instance();
 				$this->searchable_items[]        = 'folders';
 			}
 
 			if ( bboss_is_active( 'activity' ) && bboss_is_search_activity_enable() ) {
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-activities.php';
+				require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-activities.php';
 				$this->search_helpers['activity'] = BBoss_Search_Activities::instance();
 				$this->searchable_items[]         = 'activity';
 
 				if ( bboss_is_search_activity_comments_enable() ) {
-					require_once $bp->plugin_dir . 'bp-search/classes/class-bboss-search-activity-comments.php';
+					require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-activity-comments.php';
 					$this->search_helpers['activity_comment'] = BBoss_Search_Activity_Comment::instance();
 					$this->searchable_items[]                 = 'activity_comment';
 

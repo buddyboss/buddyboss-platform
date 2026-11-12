@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * Single User
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+get_header(); ?>
+
+	<?php do_action( 'bbp_before_main_content' ); ?>
+
+	<div id="bbp-user-<?php bboss_bbp_current_user_id(); ?>" class="bbp-single-user">
+		<div class="entry-content">
+
+			<?php bboss_bbp_get_template_part( 'content', 'single-user' ); ?>
+
+		</div><!-- .entry-content -->
+	</div><!-- #bbp-user-<?php bboss_bbp_current_user_id(); ?> -->
+
+	<?php do_action( 'bbp_after_main_content' ); ?>
+
+<?php get_sidebar(); ?>
+<?php get_footer(); ?>

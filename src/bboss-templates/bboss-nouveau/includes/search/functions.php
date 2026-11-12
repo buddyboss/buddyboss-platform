@@ -221,7 +221,7 @@ function bboss_rl_search_enqueue_scripts() {
 	$min = bboss_core_get_minified_asset_suffix();
 
 	wp_enqueue_script( 'jquery-ui-autocomplete' );
-	wp_enqueue_script( 'bb-rl-nouveau-search', trailingslashit( $bp->plugin_url ) . "bp-templates/bp-nouveau/readylaunch/js/buddypress-search{$min}.js", array( 'bp-nouveau' ), bboss_get_version(), true );
+	wp_enqueue_script( 'bb-rl-nouveau-search', trailingslashit( $bp->plugin_url ) . "bboss-templates/bboss-nouveau/readylaunch/js/buddypress-search{$min}.js", array( 'bp-nouveau' ), bboss_get_version(), true );
 
 	wp_localize_script( 'bb-rl-nouveau-search', 'BP_SEARCH', apply_filters( 'bp_search_js_settings', $data ) );
 }

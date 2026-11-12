@@ -130,7 +130,7 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 
 			<?php
 
-			/** This action is documented in bp-xprofile/bp-xprofile-classes */
+			/** This action is documented in bboss-xprofile/bp-xprofile-classes */
 			do_action( bboss_get_the_profile_field_errors_action() );
 
 			?>
@@ -227,7 +227,7 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 	 * let a crafted signup/profile payload store an unrelated post ID in this
 	 * field. Whether that member type may be self-selected at registration is
 	 * enforced separately at registration input (see the member-type check in
-	 * bboss_core_screen_signup(), src/bp-members/screens/register.php) and, as a
+	 * bboss_core_screen_signup(), src/bboss-members/screens/register.php) and, as a
 	 * backstop, at activation
 	 * (see bboss_assign_default_member_type_to_activate_user()), so this check
 	 * stays context-free and does not break profile edits that keep a member's

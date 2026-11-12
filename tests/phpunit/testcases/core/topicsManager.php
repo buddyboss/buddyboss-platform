@@ -1164,7 +1164,7 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 	 */
 	protected function post_update( $user_id, $post ) {
 		if ( ! function_exists( 'bboss_nouveau_ajax_post_update' ) ) {
-			require_once BBOSS_PLUGIN_DIR . 'bp-templates/bp-nouveau/includes/activity/ajax.php';
+			require_once BBOSS_PLUGIN_DIR . 'bboss-templates/bboss-nouveau/includes/activity/ajax.php';
 		}
 
 		self::set_current_user( $user_id );

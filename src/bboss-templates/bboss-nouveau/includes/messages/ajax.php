@@ -1953,7 +1953,7 @@ function bboss_nouveau_get_thread_messages( $thread_id, $post ) {
 	$is_group_message_thread   = bboss_messages_is_group_thread( $bp_get_the_thread_id );
 	$group_status              = '';
 	$group_last_active         = '';
-	$group_cover_image         = esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
+	$group_cover_image         = esc_url( bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/images/group_cover_image.jpeg' );
 
 	if ( ! $is_group_message_thread ) {
 		$thread = bboss_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );

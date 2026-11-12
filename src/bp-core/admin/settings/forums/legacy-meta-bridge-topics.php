@@ -1,27 +1,6 @@
 <?php
-/**
- * Legacy Meta-Box Bridge for the Topic / Discussion edit modal.
- *
- * Auto-detects third-party plugins that register `add_meta_box()` calls
- * against the legacy `topic` CPT edit screen and surfaces their fields
- * as native React fields in the Settings 2.0 Topic edit modal.
- *
- * Note: the Settings 2.0 component name for topics is `discussions`,
- * not `topics` — third-party fields are registered via the
- * `bb_register_discussions_meta_fields` hook.
- *
- * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss 3.0.0
- */
-
-defined( 'ABSPATH' ) || exit;
-
-require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
-
-bboss_legacy_register_cpt_meta_bridge(
-	array(
-		'component'    => 'discussions',
-		'post_type'    => 'topic',
-		'screen_match' => 'topic',
-	)
-);
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/admin/settings/forums/legacy-meta-bridge-topics.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../../bboss-core/admin/settings/forums/legacy-meta-bridge-topics.php';
+// @bbwt-com-end compat-layer

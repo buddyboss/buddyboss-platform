@@ -1,22 +1,6 @@
 <?php
-
-/**
- * Deprecated functions.
- *
- * @deprecated BuddyBoss 2.3.41
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Setup the user profile hash to the user meta.
- *
- * @since BuddyBoss 2.3.1
- *
- * @param array $user_ids User IDs.
- */
-function bboss_set_bluk_user_profile_slug( $user_ids ) {
-	_deprecated_function( __FUNCTION__, '2.3.41', 'bboss_set_bulk_user_profile_slug' );
-	bboss_set_bulk_user_profile_slug( $user_ids );
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/deprecated/buddyboss/2.3.5.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-core/deprecated/buddyboss/2.3.5.php';
+// @bbwt-com-end compat-layer

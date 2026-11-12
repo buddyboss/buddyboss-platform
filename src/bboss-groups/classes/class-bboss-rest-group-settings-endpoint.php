@@ -1077,7 +1077,7 @@ class BBoss_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_status = apply_filters( 'groups_allowed_status', array( 'public', 'private', 'hidden' ) );
 		$status         = ( array_key_exists( 'group-status', (array) $post_fields ) && ! empty( $post_fields['group-status'] ) ) ? $post_fields['group-status'] : ( ! bboss_get_new_group_status() ? 'public' : bboss_get_new_group_status() );
 
@@ -1090,7 +1090,7 @@ class BBoss_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_invite_status = bboss_groups_get_settings_status( 'invite' );
 		$invite_status         = ( array_key_exists( 'group-invite-status', (array) $post_fields ) && ! empty( $post_fields['group-invite-status'] ) ) ? $post_fields['group-invite-status'] : bboss_group_get_invite_status( $group->id );
 
@@ -1099,7 +1099,7 @@ class BBoss_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_activity_feed_status = bboss_groups_get_settings_status( 'activity_feed' );
 		$activity_feed_status         = ( array_key_exists( 'group-activity-feed-status', (array) $post_fields ) && ! empty( $post_fields['group-activity-feed-status'] ) ) ? $post_fields['group-activity-feed-status'] : bboss_group_get_activity_feed_status( $group->id );
 
@@ -1108,7 +1108,7 @@ class BBoss_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_media_status = bboss_groups_get_settings_status( 'media' );
 		$media_status         = ( array_key_exists( 'group-media-status', (array) $post_fields ) && ! empty( $post_fields['group-media-status'] ) ) ? $post_fields['group-media-status'] : bboss_group_get_media_status( $group->id );
 
@@ -1117,7 +1117,7 @@ class BBoss_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_document_status = bboss_groups_get_settings_status( 'document' );
 		$document_status         = ( array_key_exists( 'group-document-status', (array) $post_fields ) && ! empty( $post_fields['group-document-status'] ) ) ? $post_fields['group-document-status'] : bboss_group_get_document_status( $group->id );
 
@@ -1126,7 +1126,7 @@ class BBoss_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_album_status = bboss_groups_get_settings_status( 'album' );
 		$album_status         = ( array_key_exists( 'group-album-status', (array) $post_fields ) && ! empty( $post_fields['group-album-status'] ) ) ? $post_fields['group-album-status'] : bboss_group_get_album_status( $group->id );
 
@@ -1135,7 +1135,7 @@ class BBoss_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_video_status = bboss_groups_get_settings_status( 'video' );
 		$video_status         = ( array_key_exists( 'group-video-status', (array) $post_fields ) && ! empty( $post_fields['group-video-status'] ) ) ? $post_fields['group-video-status'] : bboss_group_get_video_status( $group->id );
 
@@ -1144,7 +1144,7 @@ class BBoss_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_message_status = bboss_groups_get_settings_status( 'message' );
 		$message_status         = ( array_key_exists( 'group-message-status', (array) $post_fields ) && ! empty( $post_fields['group-message-status'] ) ) ? $post_fields['group-message-status'] : bboss_group_get_message_status( $group->id );
 
@@ -1536,3 +1536,10 @@ class BBoss_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 }
 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Group_Settings_Endpoint', false ) || interface_exists( 'BBoss_REST_Group_Settings_Endpoint', false ) || trait_exists( 'BBoss_REST_Group_Settings_Endpoint', false ) ) && ! class_exists( 'BP_REST_Group_Settings_Endpoint', false ) && ! interface_exists( 'BP_REST_Group_Settings_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Group_Settings_Endpoint', 'BP_REST_Group_Settings_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

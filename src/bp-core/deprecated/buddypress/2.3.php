@@ -1,24 +1,6 @@
 <?php
-/**
- * Deprecated functions.
- *
- * @deprecated BuddyPress 2.3.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Return the referrer URL without the http(s)://
- *
- * @deprecated BuddyPress 2.3.0
- *
- * @return string The referrer URL.
- */
-function bboss_core_referrer() {
-	_deprecated_function( __FUNCTION__, '2.3.0', 'bp_get_referer_path()' );
-	$referer = explode( '/', wp_get_referer() );
-	unset( $referer[0], $referer[1], $referer[2] );
-	return implode( '/', $referer );
-}
-
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/deprecated/buddypress/2.3.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-core/deprecated/buddypress/2.3.php';
+// @bbwt-com-end compat-layer

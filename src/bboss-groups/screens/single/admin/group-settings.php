@@ -32,27 +32,27 @@ function bboss_groups_screen_group_admin_settings() {
 		$parent_id    = ( isset( $_POST['bp-groups-parent'] ) ) ? $_POST['bp-groups-parent'] : 0;
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_status = apply_filters( 'groups_allowed_status', array( 'public', 'private', 'hidden' ) );
 		$status         = ( in_array( $_POST['group-status'], (array) $allowed_status ) ) ? $_POST['group-status'] : 'public';
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_invite_status = bboss_groups_get_settings_status( 'invite' );
 		$invite_status         = isset( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : bboss_groups_settings_default_fallback( 'invite', current( $allowed_invite_status ) );
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_activity_feed_status = bboss_groups_get_settings_status( 'activity_feed' );
 		$activity_feed_status         = isset( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : bboss_groups_settings_default_fallback( 'activity_feed', current( $allowed_activity_feed_status ) );
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_media_status = bboss_groups_get_settings_status( 'media' );
 		$media_status         = isset( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : bboss_groups_settings_default_fallback( 'media', current( $allowed_media_status ) );
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_document_status = bboss_groups_get_settings_status( 'document' );
 		$document_status         = isset( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : bboss_groups_settings_default_fallback( 'document', current( $allowed_document_status ) );
 
@@ -63,7 +63,7 @@ function bboss_groups_screen_group_admin_settings() {
 		}
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_video_status    = bboss_groups_get_settings_status( 'video' );
 		$post_group_video_status = bboss_filter_input_string( INPUT_POST, 'group-video-status' );
 		$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : bboss_groups_settings_default_fallback( 'video', current( $allowed_video_status ) );
@@ -72,12 +72,12 @@ function bboss_groups_screen_group_admin_settings() {
 		}
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_album_status = bboss_groups_get_settings_status( 'album' );
 		$album_status         = isset( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : bboss_groups_settings_default_fallback( 'album', current( $allowed_album_status ) );
 
 		// Checked against a whitelist for security.
-		/** This filter is documented in bp-groups/bboss-groups-admin.php */
+		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_message_status = bboss_groups_get_settings_status( 'message' );
 		$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : bboss_groups_settings_default_fallback( 'message', current( $allowed_message_status ) );
 

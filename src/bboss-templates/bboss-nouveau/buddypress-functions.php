@@ -152,7 +152,7 @@ class BBoss_Nouveau extends BBoss_Theme_Compat {
 		$width      = 1178;
 		$top_offset = 200;
 
-		/** This filter is documented in bp-core/bboss-core-avatars.php. */
+		/** This filter is documented in bboss-core/bboss-core-avatars.php. */
 		$avatar_height = apply_filters( 'bp_core_avatar_full_height', $top_offset );
 
 		if ( $avatar_height > $top_offset ) {
@@ -535,7 +535,7 @@ JS;
 		}
 
 		$scripts['bp-nouveau-magnific-popup'] = array(
-			'file'         => bboss()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
+			'file'         => bboss()->plugin_url . 'bboss-core/js/vendor/magnific-popup.js',
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
 		);
@@ -543,13 +543,13 @@ JS;
 		if ( bboss_is_active( 'media' ) ) {
 
 			$scripts['bp-nouveau-codemirror'] = array(
-				'file'         => bboss()->plugin_url . 'bp-core/js/vendor/codemirror%s.js',
+				'file'         => bboss()->plugin_url . 'bboss-core/js/vendor/codemirror%s.js',
 				'dependencies' => array(),
 				'footer'       => true,
 			);
 
 			$scripts['bp-nouveau-codemirror-css'] = array(
-				'file'         => bboss()->plugin_url . 'bp-core/js/vendor/css%s.js',
+				'file'         => bboss()->plugin_url . 'bboss-core/js/vendor/css%s.js',
 				'dependencies' => array(),
 				'footer'       => true,
 			);
@@ -810,7 +810,7 @@ JS;
 			'idle_inactive_span'        => bboss_idle_inactive_span(),
 			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
 			'native_presence'           => (bool) bboss_get_option( 'bb_use_core_native_presence', false ),
-			'native_presence_url'       => bboss()->plugin_url . 'bp-core/bb-core-native-presence.php',
+			'native_presence_url'       => bboss()->plugin_url . 'bboss-core/bb-core-native-presence.php',
 			'presence_rest_url'         => home_url( 'wp-json/buddyboss/v1/members/presence' ),
 		);
 

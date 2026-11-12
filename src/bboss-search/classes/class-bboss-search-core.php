@@ -314,7 +314,7 @@ if ( ! class_exists( 'BBoss_Search_Core' ) ) :
 			global $bp;
 
 			foreach ( (array) $includes as $include ) {
-				require_once $bp->plugin_dir . '/bp-search/' . $include . '.php';
+				require_once $bp->plugin_dir . '/bboss-search/' . $include . '.php';
 			}
 		}
 

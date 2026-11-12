@@ -120,7 +120,7 @@ function bboss_friends_format_notifications( $action, $item_id, $secondary_item_
 		 */
 		$return = apply_filters( 'bp_friends_' . $amount . '_friendship_' . $action . '_notification', '<a href="' . esc_url( $link ) . '">' . esc_html( $text ) . '</a>', (int) $total_items, $item_id, $secondary_item_id );
 	} else {
-		/** This filter is documented in bp-friends/bboss-friends-notifications.php */
+		/** This filter is documented in bboss-friends/bboss-friends-notifications.php */
 		$return = apply_filters(
 			'bp_friends_' . $amount . '_friendship_' . $action . '_notification',
 			array(

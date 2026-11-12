@@ -107,7 +107,7 @@ $more_media     = $media_count > $max_length;
 		data-can-edit="<?php echo esc_attr( bboss_media_user_can_edit( $bp_get_media_id ) ); ?>"
 	>
 		<?php $size = 1 === $media_count ? 'bb-media-activity-image' : 'bb-media-photos-album-directory-image-medium'; ?>
-		<img src="<?php echo esc_url( bboss()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo 1 === $media_count ? esc_url( bboss_get_media_attachment_image_activity_thumbnail() ) : esc_url( bboss_get_media_photos_directory_image_thumbnail() ); ?>" class="no-round photo lazy" alt="<?php bboss_media_title(); ?>" />
+		<img src="<?php echo esc_url( bboss()->plugin_url ); ?>bboss-templates/bboss-nouveau/images/placeholder.png" data-src="<?php echo 1 === $media_count ? esc_url( bboss_get_media_attachment_image_activity_thumbnail() ) : esc_url( bboss_get_media_photos_directory_image_thumbnail() ); ?>" class="no-round photo lazy" alt="<?php bboss_media_title(); ?>" />
 
 		<?php
 		if ( $media_count > $max_length && ( $max_length - 1 ) === $media_template->current_media ) {

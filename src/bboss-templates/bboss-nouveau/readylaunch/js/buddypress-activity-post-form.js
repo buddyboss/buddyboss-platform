@@ -219,7 +219,7 @@ window.bp = window.bp || {};
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
 			// Guarded — `bp-media-dropzone` (which loads the Dropzone library) is only
 			// enqueued when at least one media feature is active (see
-			// bp-templates/bp-nouveau/includes/media/functions.php). When all of
+			// bboss-templates/bboss-nouveau/includes/media/functions.php). When all of
 			// profile/group/messages media + group docs/albums + GIF + emoji are off,
 			// Dropzone is undefined and the unguarded assignment throws TypeError,
 			// halting `start()` so the post form composer never renders. Mirrors

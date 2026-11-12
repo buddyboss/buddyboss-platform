@@ -1775,3 +1775,11 @@ class BBoss_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		return BBoss_REST_XProfile_Fields_Endpoint::bb_rest_get_field_visibility_state( $field_object );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Account_Settings_Options_Endpoint', false ) || interface_exists( 'BBoss_REST_Account_Settings_Options_Endpoint', false ) || trait_exists( 'BBoss_REST_Account_Settings_Options_Endpoint', false ) ) && ! class_exists( 'BP_REST_Account_Settings_Options_Endpoint', false ) && ! interface_exists( 'BP_REST_Account_Settings_Options_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Account_Settings_Options_Endpoint', 'BP_REST_Account_Settings_Options_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

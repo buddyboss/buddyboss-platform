@@ -1,0 +1,133 @@
+<?php
+
+/**
+ * Split Topic
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?>
+
+<div id="bbpress-forums">
+
+	<?php bboss_bbp_breadcrumb(); ?>
+
+	<?php if ( is_user_logged_in() && current_user_can( 'edit_topic', bboss_bbp_get_topic_id() ) ) : ?>
+
+		<div id="split-topic-<?php bboss_bbp_topic_id(); ?>" class="bbp-topic-split">
+
+			<form id="split_topic" name="split_topic" method="post" action="<?php the_permalink(); ?>">
+
+				<fieldset class="bbp-form">
+
+					<legend><?php /* translators: %s: discussion title. */ printf( esc_html__( 'Split discussion "%s"', 'buddyboss' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping (filtered). ?></legend>
+
+					<div>
+
+						<div class="bp-feedback info">
+							<span class="bp-icon" aria-hidden="true"></span>
+							<p><?php esc_html_e( 'When you split a discussion, you are slicing it in half starting with the reply you just selected. Choose to use that reply as a new discussion with a new title, or merge those replies into an existing discussion.', 'buddyboss' ); ?></p>
+						</div>
+
+						<div class="bp-feedback info">
+							<span class="bp-icon" aria-hidden="true"></span>
+							<p><?php esc_html_e( 'If you use the existing discussion option, replies within both discussions will be merged chronologically. The order of the merged replies is based on the time and date they were posted.', 'buddyboss' ); ?></p>
+						</div>
+
+						<fieldset class="bbp-form">
+							<legend><?php esc_html_e( 'Split Method', 'buddyboss' ); ?></legend>
+
+							<div>
+								<div class="bp-radio-wrap">
+									<input name="bbp_topic_split_option" id="bbp_topic_split_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="reply" tabindex="<?php bboss_bbp_tab_index(); ?>" />
+									<label for="bbp_topic_split_option_reply"><?php /* translators: %s: forum title. */ echo wp_kses_post( sprintf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss' ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_topic_forum_id( bboss_bbp_get_topic_id() ) ) ) ) ); ?></label>
+								</div>
+								<input type="text" id="bbp_topic_split_destination_title" value="<?php /* translators: %s: discussion title. */ printf( esc_html__( 'Split: %s', 'buddyboss' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping (filtered). ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
+							</div>
+
+							<?php
+							if ( bboss_bbp_has_topics(
+								array(
+									'show_stickies' => false,
+									'post_parent'   => bboss_bbp_get_topic_forum_id( bboss_bbp_get_topic_id() ),
+									'post__not_in'  => array( bboss_bbp_get_topic_id() ),
+								)
+							) ) :
+								?>
+
+								<div>
+									<div class="bp-radio-wrap">
+										<input name="bbp_topic_split_option" id="bbp_topic_split_option_existing" class="bs-styled-radio" type="radio" value="existing" tabindex="<?php bboss_bbp_tab_index(); ?>" />
+										<label for="bbp_topic_split_option_existing"><?php esc_html_e( 'Use an existing discussion in this forum:', 'buddyboss' ); ?></label>
+									</div>
+
+									<?php
+									bboss_bbp_dropdown(
+										array(
+											'post_type'   => bboss_bbp_get_topic_post_type(),
+											'post_parent' => bboss_bbp_get_topic_forum_id( bboss_bbp_get_topic_id() ),
+											'selected'    => -1,
+											'exclude'     => bboss_bbp_get_topic_id(),
+											'select_id'   => 'bbp_destination_topic',
+										)
+									);
+									?>
+								</div>
+
+							<?php endif; ?>
+
+						</fieldset>
+
+						<fieldset class="bbp-form">
+							<legend><?php esc_html_e( 'Discussion Extras', 'buddyboss' ); ?></legend>
+
+							<div>
+								<?php if ( bboss_is_enabled_subscription( 'topic' ) ) : ?>
+									<div class="bp-checkbox-wrap">
+										<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
+										<label for="bbp_topic_subscribers"><?php esc_html_e( 'Copy subscribers to the new discussion', 'buddyboss' ); ?></label>
+									</div>
+								<?php endif; ?>
+
+								<div class="bp-checkbox-wrap">
+									<input name="bbp_topic_favoriters" id="bbp_topic_favoriters" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
+									<label for="bbp_topic_favoriters"><?php esc_html_e( 'Copy favoriters to the new discussion', 'buddyboss' ); ?></label>
+								</div>
+
+								<?php if ( bboss_bbp_allow_topic_tags() ) : ?>
+									<div class="bp-checkbox-wrap">
+										<input name="bbp_topic_tags" id="bbp_topic_tags" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
+										<label for="bbp_topic_tags"><?php esc_html_e( 'Copy discussion tags to the new discussion', 'buddyboss' ); ?></label>
+									</div>
+								<?php endif; ?>
+							</div>
+						</fieldset>
+
+						<div class="bp-feedback error">
+							<span class="bp-icon" aria-hidden="true"></span>
+							<p><?php echo wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss' ) ); ?></p>
+						</div>
+
+						<div class="bbp-submit-wrapper">
+							<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_merge_topic_submit" name="bbp_merge_topic_submit" class="button submit"><?php esc_html_e( 'Submit', 'buddyboss' ); ?></button>
+						</div>
+					</div>
+
+					<?php bboss_bbp_split_topic_form_fields(); ?>
+
+				</fieldset>
+			</form>
+		</div>
+
+	<?php else : ?>
+
+		<div id="no-topic-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-topic">
+			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this discussion!', 'buddyboss' ) : esc_html_e( 'You cannot edit this discussion.', 'buddyboss' ); ?></div>
+		</div>
+
+	<?php endif; ?>
+
+</div>

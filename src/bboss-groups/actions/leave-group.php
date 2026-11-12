@@ -57,7 +57,7 @@ function bboss_groups_action_leave_group() {
 		bboss_core_redirect( $redirect );
 	}
 
-	/** This filter is documented in bp-groups/bp-groups-actions.php */
+	/** This filter is documented in bboss-groups/bp-groups-actions.php */
 	bboss_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
 }
 add_action( 'bp_actions', 'groups_action_leave_group' );

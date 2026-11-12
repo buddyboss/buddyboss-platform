@@ -265,7 +265,7 @@ function bboss_get_member_total_friend_count() {
 		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connection', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
 	} else {
 
-		/** This filter is documented in bp-friends/bboss-friends-template.php */
+		/** This filter is documented in bboss-friends/bboss-friends-template.php */
 		/* translators: %d: total friend count. */
 		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connections', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
 	}

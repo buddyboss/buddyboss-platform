@@ -1,20 +1,6 @@
 <?php
-/**
- * BuddyBoss Header Template.
- *
- * @package BuddyBoss
- *
- * @since 2.14.0
- */
-
-defined( 'ABSPATH' ) || exit;
-
-?>
-<div class="bb-tab-header">
-	<div class="bb-branding-header">
-		<img alt="" class="bb-branding-logo" src="<?php echo esc_url( bboss()->plugin_url . 'bp-core/images/admin/BBLogo.png' ); ?>" />
-	</div>
-	<div class="bb-header-actions">
-		<?php do_action( 'bb_admin_header_actions' ); ?>
-	</div>
-</div>
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/admin/templates/header.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-core/admin/templates/header.php';
+// @bbwt-com-end compat-layer

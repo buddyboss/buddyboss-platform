@@ -5724,3 +5724,18 @@ function bboss_groups_record_subscription_gap( $group_id, $user_id, $action, $is
 
 	bboss_update_option( 'bb_group_subscription_gap_count', (int) bboss_get_option( 'bb_group_subscription_gap_count', 0 ) + 1 );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( function_exists( 'bboss_group_single_header_actions' ) && ! function_exists( 'bb_group_single_header_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_single_header_actions()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_group_single_header_actions() instead.
+	 */
+	function bb_group_single_header_actions() {
+		return bboss_group_single_header_actions();
+	}
+}
+// @bbwt-com-end compat-layer

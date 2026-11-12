@@ -83,17 +83,17 @@ class BBoss_Friends_Component extends BBoss_Component {
 			if ( is_user_logged_in() &&
 				in_array( bboss_current_action(), array( 'add-friend', 'remove-friend' ), true )
 			) {
-				require $this->path . 'bp-friends/actions/' . bboss_current_action() . '.php';
+				require $this->path . 'bboss-friends/actions/' . bboss_current_action() . '.php';
 			}
 
 			// User nav.
-			require $this->path . 'bp-friends/screens/my-friends.php';
+			require $this->path . 'bboss-friends/screens/my-friends.php';
 			if ( is_user_logged_in() && bboss_is_user_friend_requests() ) {
-				require $this->path . 'bp-friends/screens/requests.php';
+				require $this->path . 'bboss-friends/screens/requests.php';
 			}
 
 			if ( is_user_logged_in() ) {
-				require $this->path . 'bp-friends/screens/mutual-friends.php';
+				require $this->path . 'bboss-friends/screens/mutual-friends.php';
 			}
 		}
 	}

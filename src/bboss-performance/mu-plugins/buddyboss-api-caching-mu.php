@@ -24,10 +24,10 @@ if ( ! function_exists( 'is_plugin_active' ) ) {
 $buddyboss_platform_api = WP_PLUGIN_DIR . '/buddyboss-platform-api/buddyboss-api-mu-loader.php';
 
 // File from the build version.
-$buddyboss_performance = WP_PLUGIN_DIR . '/buddyboss-platform/bp-performance/bp-performance-mu-loader.php';
+$buddyboss_performance = WP_PLUGIN_DIR . '/buddyboss-platform/bboss-performance/bp-performance-mu-loader.php';
 
 // File from the development version.
-$buddyboss_performance_dev = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-performance/bp-performance-mu-loader.php';
+$buddyboss_performance_dev = WP_PLUGIN_DIR . '/buddyboss-platform/src/bboss-performance/bp-performance-mu-loader.php';
 
 // Cache [ performance ].
 if ( file_exists( $buddyboss_platform_api ) && is_plugin_active( 'buddyboss-platform-api/bp-rest.php' ) ) {

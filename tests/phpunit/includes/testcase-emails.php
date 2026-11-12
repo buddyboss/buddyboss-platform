@@ -6,7 +6,7 @@ class BP_UnitTestCase_Emails extends BP_UnitTestCase {
 	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 
-		require_once( bboss()->plugin_dir . '/bp-core/admin/bboss-core-admin-schema.php' );
+		require_once( bboss()->plugin_dir . '/bboss-core/admin/bboss-core-admin-schema.php' );
 
 		/*
 		 * WP's test suite wipes out BP's email posts.

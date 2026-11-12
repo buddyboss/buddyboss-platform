@@ -114,7 +114,7 @@ class BBoss_Media_Component extends BBoss_Component {
 
 		if ( ! class_exists( 'BBoss_Media_Stream' ) ) {
 			// Include Media Streamline.
-			require $this->path . 'bp-media/classes/class-bboss-media-stream.php';
+			require $this->path . 'bboss-media/classes/class-bboss-media-stream.php';
 		}
 
 		// Bail if PHPUnit is running.
@@ -126,12 +126,12 @@ class BBoss_Media_Component extends BBoss_Component {
 
 			// Screens - Directory.
 			if ( bboss_is_media_directory() ) {
-				require $this->path . 'bp-media/screens/directory.php';
+				require $this->path . 'bboss-media/screens/directory.php';
 			}
 
 			// Screens - User profile integration.
 			if ( bboss_is_user() ) {
-				require $this->path . 'bp-media/screens/media.php';
+				require $this->path . 'bboss-media/screens/media.php';
 
 				/*
 				 * Nav items.
@@ -139,7 +139,7 @@ class BBoss_Media_Component extends BBoss_Component {
 				 * 'album' is not a registered nav item, but we add a screen handler manually.
 				 */
 				if ( bboss_is_user_media() && in_array( bboss_current_action(), array( 'albums' ), true ) ) {
-					require $this->path . 'bp-media/screens/' . bboss_current_action() . '.php';
+					require $this->path . 'bboss-media/screens/' . bboss_current_action() . '.php';
 				}
 			}
 

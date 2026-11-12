@@ -1485,7 +1485,7 @@ class BBoss_REST_Messages_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		/** This action is documented in bp-messages/classes/class-bboss-messages-thread.php (fires so media, document and GIF cleanup runs like the other delete paths). */
+		/** This action is documented in bboss-messages/classes/class-bboss-messages-thread.php (fires so media, document and GIF cleanup runs like the other delete paths). */
 		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, bboss_loggedin_user_id(), true );
 
 		foreach ( $attachment_cleanup_callbacks as $callback ) {
@@ -3086,8 +3086,8 @@ class BBoss_REST_Messages_Endpoint extends WP_REST_Controller {
 						);
 					} else {
 						$group_avatar = array(
-							'thumb' => function_exists( 'bboss_get_buddyboss_group_avatar' ) ? bboss_get_buddyboss_group_avatar( 'thumb' ) : bboss()->plugin_url . 'bp-core/images/group-avatar-buddyboss-50.png',
-							'full'  => function_exists( 'bboss_get_buddyboss_group_avatar' ) ? bboss_get_buddyboss_group_avatar() : bboss()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png',
+							'thumb' => function_exists( 'bboss_get_buddyboss_group_avatar' ) ? bboss_get_buddyboss_group_avatar( 'thumb' ) : bboss()->plugin_url . 'bboss-core/images/group-avatar-buddyboss-50.png',
+							'full'  => function_exists( 'bboss_get_buddyboss_group_avatar' ) ? bboss_get_buddyboss_group_avatar() : bboss()->plugin_url . 'bboss-core/images/group-avatar-buddyboss.png',
 						);
 					}
 				} else {
@@ -3334,3 +3334,11 @@ class BBoss_REST_Messages_Endpoint extends WP_REST_Controller {
 		return true;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Messages_Endpoint', false ) || interface_exists( 'BBoss_REST_Messages_Endpoint', false ) || trait_exists( 'BBoss_REST_Messages_Endpoint', false ) ) && ! class_exists( 'BP_REST_Messages_Endpoint', false ) && ! interface_exists( 'BP_REST_Messages_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Messages_Endpoint', 'BP_REST_Messages_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

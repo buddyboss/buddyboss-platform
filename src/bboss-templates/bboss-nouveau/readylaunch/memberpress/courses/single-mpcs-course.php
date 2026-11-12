@@ -154,7 +154,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 							<img src="<?php echo esc_url( models\Lesson::get_thumbnail( $post ) ); ?>" alt="">
 						</a>
 					<?php } else { ?>
-						<img src="<?php echo esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
+						<img src="<?php echo esc_url( bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
 					<?php } ?>
 				</div>
 			</div>

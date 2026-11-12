@@ -7384,7 +7384,7 @@ function bboss_get_group_invite_pagination_count() {
 	/* translators: 1: number, 2: number, 3: number. */
 	$message = sprintf( _n( 'Viewing 1 invitation', 'Viewing %1$s - %2$s of %3$s invitations', $invites_template->total_invite_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
-	/** This filter is documented in bp-groups/bboss-groups-template.php */
+	/** This filter is documented in bboss-groups/bboss-groups-template.php */
 	return apply_filters( 'bp_get_groups_pagination_count', $message, $from_num, $to_num, $total );
 }
 

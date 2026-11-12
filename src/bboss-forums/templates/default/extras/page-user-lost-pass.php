@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * Template Name: Forums - User Lost Password
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+// No logged in users
+bboss_bbp_logged_in_redirect();
+
+// Begin Template
+get_header(); ?>
+
+	<?php do_action( 'bbp_before_main_content' ); ?>
+
+	<?php do_action( 'bbp_template_notices' ); ?>
+
+	<?php
+	while ( have_posts() ) :
+		the_post();
+		?>
+
+		<div id="bbp-lost-pass" class="bbp-lost-pass">
+			<h1 class="entry-title"><?php the_title(); ?></h1>
+			<div class="entry-content">
+
+				<?php the_content(); ?>
+
+				<div id="bbpress-forums">
+
+					<?php bboss_bbp_breadcrumb(); ?>
+
+					<?php bboss_bbp_get_template_part( 'form', 'user-lost-pass' ); ?>
+
+				</div>
+			</div>
+		</div><!-- #bbp-lost-pass -->
+
+	<?php endwhile; ?>
+
+	<?php do_action( 'bbp_after_main_content' ); ?>
+
+<?php get_sidebar(); ?>
+<?php get_footer(); ?>

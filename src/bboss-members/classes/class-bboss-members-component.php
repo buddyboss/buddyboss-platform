@@ -94,18 +94,18 @@ class BBoss_Members_Component extends BBoss_Component {
 		if ( bboss_is_members_component() ) {
 			// Actions - Random member handler.
 			if ( isset( $_GET['random-member'] ) ) {
-				require $this->path . 'bp-members/actions/random.php';
+				require $this->path . 'bboss-members/actions/random.php';
 			}
 
 			// Screens - Directory.
 			if ( bboss_is_members_directory() ) {
-				require $this->path . 'bp-members/screens/directory.php';
+				require $this->path . 'bboss-members/screens/directory.php';
 			}
 		}
 
 		// Members - User main nav screen.
 		if ( bboss_is_user() ) {
-			require $this->path . 'bp-members/screens/profile.php';
+			require $this->path . 'bboss-members/screens/profile.php';
 		}
 
 		// Members - Theme compatibility.
@@ -116,9 +116,9 @@ class BBoss_Members_Component extends BBoss_Component {
 		// Registration / Activation.
 		if ( bboss_is_register_page() || bboss_is_activation_page() ) {
 			if ( bboss_is_register_page() ) {
-				require $this->path . 'bp-members/screens/register.php';
+				require $this->path . 'bboss-members/screens/register.php';
 			} else {
-				require $this->path . 'bp-members/screens/activate.php';
+				require $this->path . 'bboss-members/screens/activate.php';
 			}
 
 			// Theme compatibility.

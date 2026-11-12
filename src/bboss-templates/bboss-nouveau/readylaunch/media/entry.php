@@ -317,7 +317,7 @@ if ( 'video' === $media_template->media->type ) {
 			data-can-edit="<?php echo esc_attr( bboss_media_user_can_edit( $bp_media_id ) ); ?>"
 			aria-label="<?php esc_attr_e( 'Open image in media theatre', 'buddyboss' ); ?>"
 			href="#">
-			<img src="<?php echo esc_url( bboss()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bboss_media_photos_directory_image_thumbnail(); ?>" alt="<?php bboss_media_title(); ?>" class="lazy"/>
+			<img src="<?php echo esc_url( bboss()->plugin_url ); ?>bboss-templates/bboss-nouveau/images/placeholder.png" data-src="<?php bboss_media_photos_directory_image_thumbnail(); ?>" alt="<?php bboss_media_title(); ?>" class="lazy"/>
 		</a>
 		<?php
 		if (

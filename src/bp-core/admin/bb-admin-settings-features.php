@@ -1,11 +1,6 @@
 <?php
-/**
- * BuddyBoss Admin Settings - All Features Registration.
- *
- * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/admin/bb-admin-settings-features.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../bboss-core/admin/bb-admin-settings-features.php';
+// @bbwt-com-end compat-layer

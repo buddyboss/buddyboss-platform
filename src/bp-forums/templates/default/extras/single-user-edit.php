@@ -1,27 +1,6 @@
 <?php
-
-/**
- * Forums User Profile Edit
- *
- * @package BuddyBoss\Theme
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-get_header(); ?>
-
-	<?php do_action( 'bbp_before_main_content' ); ?>
-
-	<div id="bbp-user-<?php bboss_bbp_current_user_id(); ?>" class="bbp-single-user">
-		<div class="entry-content">
-
-			<?php bboss_bbp_get_template_part( 'content', 'single-user' ); ?>
-
-		</div><!-- .entry-content -->
-	</div><!-- #bbp-user-<?php bboss_bbp_current_user_id(); ?> -->
-
-	<?php do_action( 'bbp_after_main_content' ); ?>
-
-<?php get_sidebar(); ?>
-<?php get_footer(); ?>
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/extras/single-user-edit.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../../bboss-forums/templates/default/extras/single-user-edit.php';
+// @bbwt-com-end compat-layer

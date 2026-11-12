@@ -93,3 +93,11 @@ class BBoss_Pusher_Integration extends BBoss_Integration {
 		);
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_Pusher_Integration', false ) || interface_exists( 'BBoss_Pusher_Integration', false ) || trait_exists( 'BBoss_Pusher_Integration', false ) ) && ! class_exists( 'BB_Pusher_Integration', false ) && ! interface_exists( 'BB_Pusher_Integration', false ) ) {
+	class_alias( 'BBoss_Pusher_Integration', 'BB_Pusher_Integration' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

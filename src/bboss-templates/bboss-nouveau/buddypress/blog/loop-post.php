@@ -64,13 +64,13 @@ if ( '' === trim( (string) $bb_blog_author_name ) ) {
 						</a>
 						<ul class="bb_more_options_list">
 							<?php
-							/** This filter is documented in bp-templates/bp-nouveau/readylaunch/blog/loop-post.php */
+							/** This filter is documented in bboss-templates/bboss-nouveau/readylaunch/blog/loop-post.php */
 							if ( apply_filters( 'bb_blog_card_show_view_post_menu_item', true, get_the_ID() ) ) :
 								?>
 								<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></li>
 								<?php
 							endif;
-							/** This action is documented in bp-templates/bp-nouveau/readylaunch/blog/loop-post.php */
+							/** This action is documented in bboss-templates/bboss-nouveau/readylaunch/blog/loop-post.php */
 							do_action( 'bb_blog_card_menu_items', get_the_ID() );
 							?>
 						</ul>

@@ -1251,13 +1251,13 @@ class BBoss_Media {
 						continue;
 					}
 
-					/** This action is documented in bp-activity/bp-activity-actions.php */
+					/** This action is documented in bboss-activity/bp-activity-actions.php */
 					do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 					// Deleting an activity comment.
 					if ( 'activity_comment' == $activity->type ) {
 						if ( bboss_activity_delete_comment( $activity->item_id, $activity->id ) ) {
-							/** This action is documented in bp-activity/bp-activity-actions.php */
+							/** This action is documented in bboss-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 
@@ -1284,7 +1284,7 @@ class BBoss_Media {
 								)
 							)
 						) {
-							/** This action is documented in bp-activity/bp-activity-actions.php */
+							/** This action is documented in bboss-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 					}

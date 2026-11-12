@@ -1882,7 +1882,7 @@ class BBoss_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 *
 	 *  - `includes/functions.php` is required from bp-rest.php only AFTER an early return on
 	 *    `function_exists( 'bp_rest_namespace' )`, and Platform always defines that
-	 *    (bp-core/bboss-core-rest-api.php). Verified at runtime: actions.php and filters.php are in
+	 *    (bboss-core/bboss-core-rest-api.php). Verified at runtime: actions.php and filters.php are in
 	 *    get_included_files() on a booted site, functions.php is not. It is exactly the
 	 *    older-Platform window this fallback exists for, so a shared symbol there would be missing
 	 *    precisely when it is needed.
@@ -1893,7 +1893,7 @@ class BBoss_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 *    one trait by a hard-coded path (`trait-bboss-rest-attachments.php`); a second one needs an
 	 *    entry added to that map - an edit in another repo, which a refactor with no runtime effect
 	 *    does not justify.
-	 *  - A `BB_Core_*` class at the top of includes/ would sync into src/bp-core/classes/ and
+	 *  - A `BB_Core_*` class at the top of includes/ would sync into src/bboss-core/classes/ and
 	 *    autoload, but it would then exist twice on a paired install (here and in Platform) with no
 	 *    guard against a redeclaration fatal - a new failure mode traded for no behaviour change.
 	 *
@@ -2037,3 +2037,11 @@ class BBoss_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		return $old_avatar_url;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Members_Endpoint', false ) || interface_exists( 'BBoss_REST_Members_Endpoint', false ) || trait_exists( 'BBoss_REST_Members_Endpoint', false ) ) && ! class_exists( 'BP_REST_Members_Endpoint', false ) && ! interface_exists( 'BP_REST_Members_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Members_Endpoint', 'BP_REST_Members_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

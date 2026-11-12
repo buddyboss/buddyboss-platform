@@ -1,0 +1,158 @@
+<?php
+/**
+ * BuddyBoss Admin Settings - Advanced Feature Registration.
+ *
+ * Registers the Advanced feature in the Feature Registry and loads
+ * all Advanced settings (side panels, sections, fields).
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Register the Advanced feature and its settings.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return void
+ */
+function bboss_admin_settings_register_advanced_feature() {
+
+	// =========================================================================
+	// REGISTER FEATURE
+	// =========================================================================
+
+	bboss_register_feature(
+		'advanced',
+		array(
+			'label'              => __( 'Advanced', 'buddyboss' ),
+			'description'        => __( 'Find your site extended performance and privacy settings.', 'buddyboss' ),
+			'icon'               => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
+			),
+			'license_tier'       => 'free',
+			'category'           => 'community',
+			'standalone'         => true,
+			'required'           => true,
+			'is_active_callback' => '__return_true',
+			'settings_route'     => '/settings/advanced',
+			'order'              => 150,
+		)
+	);
+
+	// Load settings sub-files.
+	require_once __DIR__ . '/settings/advanced/callbacks.php';
+	require_once __DIR__ . '/settings/advanced/settings-general.php';
+	require_once __DIR__ . '/settings/advanced/settings-privacy.php';
+	require_once __DIR__ . '/settings/advanced/settings-telemetry.php';
+
+	// =========================================================================
+	// SIDE PANELS
+	// =========================================================================
+
+	// Side Panel 1: General (default).
+	bboss_register_side_panel(
+		'advanced',
+		'general',
+		array(
+			'title'      => __( 'General', 'buddyboss' ),
+			'icon'       => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-gear',
+			),
+			'help_url'   => bboss_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127427,
+					),
+					'admin.php'
+				)
+			),
+			'order'      => 10,
+			'is_default' => true,
+		)
+	);
+
+	// Side Panel 2: Privacy.
+	bboss_register_side_panel(
+		'advanced',
+		'privacy',
+		array(
+			'title'    => __( 'Privacy', 'buddyboss' ),
+			'icon'     => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-lock-simple',
+			),
+			'help_url' => bboss_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62793,
+					),
+					'admin.php'
+				)
+			),
+			'order'    => 20,
+		)
+	);
+
+	/*
+	 * Side Panel 3: Telemetry.
+	 *
+	 * Builds without "complete" reporting (the WordPress.org edition) force
+	 * nothing, so they always show it.
+	 */
+	$bb_show_telemetry = true;
+	// @bbwt-com-start telemetry-complete
+	// Unlicensed sites only. Paid sites are forced to "complete" reporting by
+	// bb_force_telemetry_for_licensed_sites(), so showing the control there
+	// would offer a choice that has no effect.
+	$bb_show_telemetry = ! bboss_has_paid_product();
+	// @bbwt-com-end telemetry-complete
+	if ( $bb_show_telemetry ) {
+		bboss_register_side_panel(
+			'advanced',
+			'telemetry',
+			array(
+				'title'    => __( 'Telemetry', 'buddyboss' ),
+				'icon'     => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-cylinder',
+				),
+				'help_url' => 'https://www.buddyboss.com/usage-tracking/?utm_source=product&utm_medium=platform&utm_campaign=telemetry',
+				'order'    => 30,
+			)
+		);
+	}
+
+	// =========================================================================
+	// REGISTER FIELDS (delegated to sub-files)
+	// =========================================================================
+
+	bboss_advanced_register_general_fields();
+	bboss_advanced_register_privacy_fields();
+
+	// @bbwt-com-start telemetry-complete
+	$bb_show_telemetry = ! bboss_has_paid_product();
+
+	// @bbwt-com-end telemetry-complete
+	// Telemetry fields only where the panel above was registered.
+	if ( $bb_show_telemetry ) {
+		bboss_advanced_register_telemetry_fields();
+	}
+
+	/**
+	 * Fires after all Advanced settings panels are registered.
+	 * Allows third-party extensions to add more panels or fields.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	do_action( 'bb_advanced_after_register_settings_fields' );
+}
+
+add_action( 'bb_register_features', 'bb_admin_settings_register_advanced_feature', 25 );

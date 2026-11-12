@@ -1665,3 +1665,11 @@ class BBoss_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		return ! $has_uploaded;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Members_Details_Endpoint', false ) || interface_exists( 'BBoss_REST_Members_Details_Endpoint', false ) || trait_exists( 'BBoss_REST_Members_Details_Endpoint', false ) ) && ! class_exists( 'BP_REST_Members_Details_Endpoint', false ) && ! interface_exists( 'BP_REST_Members_Details_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Members_Details_Endpoint', 'BP_REST_Members_Details_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

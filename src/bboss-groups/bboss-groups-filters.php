@@ -1503,3 +1503,38 @@ function bboss_readylaunch_middle_content_my_groups( $args = array() ) {
 
 	return $args;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( function_exists( 'bboss_group_single_center_header_actions' ) && ! function_exists( 'bb_group_single_center_header_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_single_center_header_actions()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_group_single_center_header_actions() instead.
+	 */
+	function bb_group_single_center_header_actions() {
+		return bboss_group_single_center_header_actions();
+	}
+}
+if ( function_exists( 'bboss_group_single_left_header_actions' ) && ! function_exists( 'bb_group_single_left_header_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_single_left_header_actions()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_group_single_left_header_actions() instead.
+	 */
+	function bb_group_single_left_header_actions() {
+		return bboss_group_single_left_header_actions();
+	}
+}
+if ( function_exists( 'bboss_groups_unsubscribe_group_forums_topic' ) && ! function_exists( 'bb_groups_unsubscribe_group_forums_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_unsubscribe_group_forums_topic()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_groups_unsubscribe_group_forums_topic() instead.
+	 */
+	function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
+		return bboss_groups_unsubscribe_group_forums_topic( $group_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
