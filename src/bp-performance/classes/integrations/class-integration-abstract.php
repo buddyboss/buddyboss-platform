@@ -130,7 +130,16 @@ abstract class Integration_Abstract {
 		 * add headers into path key.
 		 * order query var as alfa order to keep things clean.
 		 */
-		return $this->get_current_path();
+
+		/**
+		 * Filters the cache key of the current endpoint.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $cache_key        Cache key, the current request path.
+		 * @param string $integration_name Integration name.
+		 */
+		return apply_filters( 'bb_performance_endpoint_cache_key', $this->get_current_path(), $this->integration_name );
 	}
 
 	/**
