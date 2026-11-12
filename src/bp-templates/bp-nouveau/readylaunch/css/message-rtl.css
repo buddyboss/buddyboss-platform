@@ -540,6 +540,11 @@ body.messages .bb-rl-content-wrapper {
   margin-top: 7px;
 }
 
+.bb-rl-message-lists .bb-rl-thread-item.unread .bb-rl-thread-content .bb-rl-thread-excerpt {
+  color: var(--bb-rl-text-color);
+  font-weight: 500;
+}
+
 .bb-rl-message-lists .bb-rl-thread-item:has(.message_action__list.is_visible), .bb-rl-message-lists .bb-rl-thread-item:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
