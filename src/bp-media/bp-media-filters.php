@@ -456,6 +456,15 @@ function bp_media_update_media_privacy( $album ) {
 				$main_activity_id       = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
 				$video_main_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 
+				// Media moved into this album from a multi-media post must not change that post's privacy.
+				if (
+					! empty( $main_activity_id ) &&
+					bb_media_get_multi_media_parent_activity( $media_obj ) &&
+					(int) bp_activity_get_meta( $main_activity_id, 'bp_media_album_activity', true ) !== (int) $album->id
+				) {
+					$main_activity_id = 0;
+				}
+
 				if ( ! empty( $main_activity_id ) ) {
 					$activity_ids[] = $main_activity_id;
 				}
