@@ -96,12 +96,6 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 
-		'giphy'                         => array(
-			'file'         => "{$url}vendor/giphy{$min}.js",
-			'dependencies' => array( 'jquery' ),
-			'footer'       => true,
-		),
-
 		// Cropper.js for image cropping functionality
 		'bb-cropper-js'                 => array(
 			'file'         => "{$url}vendor/cropper{$min}.js",
@@ -144,26 +138,6 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array( 'jquery' ),
 			'footer'       => true,
 		),
-		'bp-media-videojs'              => array(
-			'file'         => "{$url}vendor/video{$min}.js",
-			'dependencies' => array(),
-			'footer'       => false,
-		),
-		'bp-media-videojs-seek-buttons' => array(
-			'file'         => "{$url}vendor/videojs-seek-buttons.min.js",
-			'dependencies' => array(),
-			'footer'       => false,
-		),
-		'bp-media-videojs-flv'          => array(
-			'file'         => "{$url}vendor/flv.js",
-			'dependencies' => array(),
-			'footer'       => false,
-		),
-		'bp-media-videojs-flash'        => array(
-			'file'         => "{$url}vendor/videojs-flash.js",
-			'dependencies' => array(),
-			'footer'       => false,
-		),
 		'bb-twemoji'                    => array(
 			'file'         => includes_url( "js/twemoji{$min}.js" ),
 			'dependencies' => array(),
@@ -205,7 +179,9 @@ function bp_core_register_common_scripts() {
 	foreach ( $scripts as $id => $script ) {
 		$dependencies = isset( $script['dependencies'] ) ? $script['dependencies'] : array();
 		$footer       = isset( $script['footer'] ) ? $script['footer'] : false;
-		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
+		// Scripts added by another plugin (e.g. BuddyBoss Add-ons) may carry their own version.
+		$script_version = isset( $script['version'] ) ? $script['version'] : $version;
+		wp_register_script( $id, $script['file'], $dependencies, $script_version, $footer );
 	}
 
 	/**
@@ -326,10 +302,6 @@ function bp_core_register_common_styles() {
 				'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
 				'dependencies' => array(),
 			),
-			'bp-media-videojs-css'    => array(
-				'file'         => "{$url}vendor/video-js{$min}.css",
-				'dependencies' => array(),
-			),
 			'bb-cropper-css'          => array(
 				'file'         => "{$url}vendor/cropper{$min}.css",
 				'dependencies' => array(),
@@ -338,7 +310,8 @@ function bp_core_register_common_styles() {
 	);
 
 	foreach ( $styles as $id => $style ) {
-		wp_register_style( $id, $style['file'], $style['dependencies'], bp_get_version() );
+		// Styles added by another plugin (e.g. BuddyBoss Add-ons) may carry their own version.
+		wp_register_style( $id, $style['file'], $style['dependencies'], isset( $style['version'] ) ? $style['version'] : bp_get_version() );
 
 		wp_style_add_data( $id, 'rtl', true );
 		if ( $min ) {
@@ -951,15 +924,26 @@ function bb_load_emoji_detection_script() {
 	// Check if the WordPress version is above 6.0.
 	if ( version_compare( $wp_version, '6.0', '>' ) ) {
 
+		// Pinned to the emoji set in WP core's _print_emoji_detection_script(); bump it when core bumps twemoji.
+		$emoji_cdn_url = 'https://s.w.org/images/core/emoji/17.0.2/';
+
+		// Respect core's emoji filters, but ignore the falsey values that "disable emojis" options return to drop the DNS prefetch.
+		$emoji_url     = apply_filters( 'emoji_url', $emoji_cdn_url . '72x72/' );
+		$emoji_url     = ( ! empty( $emoji_url ) && is_string( $emoji_url ) ) ? $emoji_url : $emoji_cdn_url . '72x72/';
+		$emoji_svg_url = apply_filters( 'emoji_svg_url', $emoji_cdn_url . 'svg/' );
+		$emoji_svg_url = ( ! empty( $emoji_svg_url ) && is_string( $emoji_svg_url ) ) ? $emoji_svg_url : $emoji_cdn_url . 'svg/';
+
 		$settings = array(
 			/**
 			 * Filters the URL where emoji png images are hosted.
+			 *
+			 * Defaults to the value of WordPress core's `emoji_url` filter.
 			 *
 			 * @since BuddyBoss 2.4.40
 			 *
 			 * @param string $url The emoji base URL for png images.
 			 */
-			'baseUrl' => apply_filters( 'bb_emoji_url', 'https://s.w.org/images/core/emoji/14.0.0/72x72/' ),
+			'baseUrl' => apply_filters( 'bb_emoji_url', $emoji_url ),
 
 			/**
 			 * Filters the extension of the emoji png files.
@@ -973,11 +957,13 @@ function bb_load_emoji_detection_script() {
 			/**
 			 * Filters the URL where emoji SVG images are hosted.
 			 *
+			 * Defaults to the value of WordPress core's `emoji_svg_url` filter.
+			 *
 			 * @since BuddyBoss 2.4.40
 			 *
 			 * @param string $url The emoji base URL for svg images.
 			 */
-			'svgUrl'  => apply_filters( 'bb_emoji_svg_url', 'https://s.w.org/images/core/emoji/14.0.0/svg/' ),
+			'svgUrl'  => apply_filters( 'bb_emoji_svg_url', $emoji_svg_url ),
 
 			/**
 			 * Filters the extension of the emoji SVG files.

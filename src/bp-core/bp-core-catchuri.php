@@ -1208,8 +1208,9 @@ function bp_private_network_template_redirect() {
 		$server_http_host    = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
 		$server_request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 		$actual_link         = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
-		// If feed then return.
-		if ( strpos( $actual_link, '/feed/' ) !== false || strpos( $actual_link, 'feed=' ) !== false ) { // if permalink has ? then need to check with feed=.
+		// Feeds are restricted by the "Private RSS Feeds" setting instead. Ask the parsed main query,
+		// never the URL, so a query parameter that merely contains "feed" cannot skip this redirect.
+		if ( is_feed() ) {
 			return;
 		}
 		/**
