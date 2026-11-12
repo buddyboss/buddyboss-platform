@@ -67,7 +67,7 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 	 * @return array Item HTML keyed by thread ID.
 	 */
 	protected function render( $user_id ) {
-		$template = BBOSS_PLUGIN_DIR . 'bp-templates/bp-nouveau/readylaunch/header/unread-messages.php';
+		$template = BBOSS_PLUGIN_DIR . 'bboss-templates/bboss-nouveau/readylaunch/header/unread-messages.php';
 		$this->assertFileExists( $template );
 
 		$this->set_current_user( $user_id );

@@ -18,8 +18,8 @@ defined( 'ABSPATH' ) || exit;
 <div class="bb-rl-create-popup-album-wrap bb-rl-popup-on-fly-create-album" style="display: none;">
 
 	<div class="bb-rl-field-wrap">
-		<label for="bb_rl_new_album_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss' ); ?></label>
-		<input id="bb_rl_new_album_name_input" class="bb-rl-popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter album title', 'buddyboss' ); ?>">
+		<label for="bb_rl_new_album_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss-platform' ); ?></label>
+		<input id="bb_rl_new_album_name_input" class="bb-rl-popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter album title', 'buddyboss-platform' ); ?>">
 	</div>
 	<div class="bb-rl-footer-alt">
 		<?php
@@ -28,8 +28,8 @@ defined( 'ABSPATH' ) || exit;
 		endif;
 		?>
 		<div class="db-modal-buttons">
-			<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-			<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-media-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss' ); ?></a>
+			<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+			<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-media-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss-platform' ); ?></a>
 		</div>
 	</div>
 </div>

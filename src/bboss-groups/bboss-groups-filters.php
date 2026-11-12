@@ -1466,8 +1466,8 @@ function bboss_readylaunch_middle_content_my_groups( $args = array() ) {
 	);
 
 	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_groups'] ) {
-		$group_data['heading']    = __( 'My Groups', 'buddyboss' );
-		$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss' );
+		$group_data['heading']    = __( 'My Groups', 'buddyboss-platform' );
+		$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss-platform' );
 
 		$user_id    = bboss_loggedin_user_id();
 		$group_args = array(

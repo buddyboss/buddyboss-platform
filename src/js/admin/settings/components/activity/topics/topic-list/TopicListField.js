@@ -148,11 +148,11 @@ export function TopicListField( { field, value, values, onChange } ) {
 				setIsAddModalOpen( false );
 				setError( '' );
 			} else {
-				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to add topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to add topic.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
-			setError( __( 'An error occurred while adding the topic.', 'buddyboss' ) );
+			setError( __( 'An error occurred while adding the topic.', 'buddyboss-platform' ) );
 		} );
 	}, [ topics, nonces, field.name, onChange ] );
 
@@ -188,11 +188,11 @@ export function TopicListField( { field, value, values, onChange } ) {
 				setEditingTopic( null );
 				setError( '' );
 			} else {
-				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to update topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to update topic.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
-			setError( __( 'An error occurred while updating the topic.', 'buddyboss' ) );
+			setError( __( 'An error occurred while updating the topic.', 'buddyboss-platform' ) );
 		} );
 	}, [ topics, nonces, field.name, onChange ] );
 
@@ -215,11 +215,11 @@ export function TopicListField( { field, value, values, onChange } ) {
 				setIsDeleteModalOpen( true );
 				setError( '' );
 			} else {
-				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to initiate topic deletion.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to initiate topic deletion.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			setIsDeleteLoading( false );
-			setError( __( 'An error occurred while initiating topic deletion.', 'buddyboss' ) );
+			setError( __( 'An error occurred while initiating topic deletion.', 'buddyboss-platform' ) );
 		} );
 	}, [ nonces ] );
 
@@ -247,11 +247,11 @@ export function TopicListField( { field, value, values, onChange } ) {
 				setDeletingTopic( null );
 				setError( '' );
 			} else {
-				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to delete topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to delete topic.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
-			setError( __( 'An error occurred while deleting the topic.', 'buddyboss' ) );
+			setError( __( 'An error occurred while deleting the topic.', 'buddyboss-platform' ) );
 		} );
 	}, [ topics, field.name, onChange ] );
 
@@ -295,12 +295,12 @@ export function TopicListField( { field, value, values, onChange } ) {
 				if ( ! response.success ) {
 					setTopics( previousTopics );
 					onChange( field.name, previousTopics );
-					setError( __( 'Failed to save topic order.', 'buddyboss' ) );
+					setError( __( 'Failed to save topic order.', 'buddyboss-platform' ) );
 				}
 			} ).catch( function () {
 				setTopics( previousTopics );
 				onChange( field.name, previousTopics );
-				setError( __( 'Failed to save topic order.', 'buddyboss' ) );
+				setError( __( 'Failed to save topic order.', 'buddyboss-platform' ) );
 			} );
 		}
 		setDragIndex( null );
@@ -368,7 +368,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 						} }
 					>
 						<span className="bb-icons-rl-plus"></span>
-						{ __( 'Add New Topic', 'buddyboss' ) }
+						{ __( 'Add New Topic', 'buddyboss-platform' ) }
 					</Button>
 				) }
 			</div>

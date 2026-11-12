@@ -162,21 +162,21 @@ function normalizeMemberTypes( value ) {
  * @since BuddyBoss [BBVERSION]
  */
 var ROLE_LABELS_MAP = {
-	organizer: __( 'Organizers', 'buddyboss' ),
-	moderator: __( 'Moderators', 'buddyboss' ),
-	member: __( 'Members', 'buddyboss' ),
+	organizer: __( 'Organizers', 'buddyboss-platform' ),
+	moderator: __( 'Moderators', 'buddyboss-platform' ),
+	member: __( 'Members', 'buddyboss-platform' ),
 };
 
 var SINGULAR_PLACEHOLDERS = {
-	organizer: __( 'e.g. Organizer', 'buddyboss' ),
-	moderator: __( 'e.g. Moderator', 'buddyboss' ),
-	member: __( 'e.g. Member', 'buddyboss' ),
+	organizer: __( 'e.g. Organizer', 'buddyboss-platform' ),
+	moderator: __( 'e.g. Moderator', 'buddyboss-platform' ),
+	member: __( 'e.g. Member', 'buddyboss-platform' ),
 };
 
 var PLURAL_PLACEHOLDERS = {
-	organizer: __( 'e.g. Organizers', 'buddyboss' ),
-	moderator: __( 'e.g. Moderators', 'buddyboss' ),
-	member: __( 'e.g. Members', 'buddyboss' ),
+	organizer: __( 'e.g. Organizers', 'buddyboss-platform' ),
+	moderator: __( 'e.g. Moderators', 'buddyboss-platform' ),
+	member: __( 'e.g. Members', 'buddyboss-platform' ),
 };
 
 export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberTypes } ) {
@@ -311,7 +311,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 		}
 
 		if ( ! formData.name.trim() ) {
-			setError( __( 'Group type name is required.', 'buddyboss' ) );
+			setError( __( 'Group type name is required.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -405,12 +405,12 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 						onSave();
 					}
 				} else {
-					setError( ( response.data && response.data.message ) || __( 'Failed to save group type.', 'buddyboss' ) );
+					setError( ( response.data && response.data.message ) || __( 'Failed to save group type.', 'buddyboss-platform' ) );
 				}
 			} )
 			.catch( function () {
 				setIsSaving( false );
-				setError( __( 'Failed to save group type.', 'buddyboss' ) );
+				setError( __( 'Failed to save group type.', 'buddyboss-platform' ) );
 			} );
 	}, [ formData, groupType, onSave, isSaving ] );
 
@@ -425,8 +425,8 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 		? '[group type="' + groupType.name + '"]'
 		: '';
 	var modalTitle = isEditing
-		? __( 'Edit Group Type', 'buddyboss' )
-		: __( 'Add New Group Type', 'buddyboss' );
+		? __( 'Edit Group Type', 'buddyboss-platform' )
+		: __( 'Add New Group Type', 'buddyboss-platform' );
 
 	return (
 		<Modal
@@ -449,7 +449,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Name */}
 					<div className="bb-admin-group-type-modal__section">
 						<TextControl
-							label={ __( 'Name', 'buddyboss' ) }
+							label={ __( 'Name', 'buddyboss-platform' ) }
 							value={ formData.name }
 							onChange={ function ( val ) { updateField( 'name', val ); } }
 							required
@@ -460,12 +460,12 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					<div className="bb-admin-group-type-modal__section">
 						<div className="bb-admin-group-type-modal__row">
 							<TextControl
-								label={ __( 'Singular Label', 'buddyboss' ) }
+								label={ __( 'Singular Label', 'buddyboss-platform' ) }
 								value={ formData.singular_label }
 								onChange={ function ( val ) { updateField( 'singular_label', val ); } }
 							/>
 							<TextControl
-								label={ __( 'Plural Label', 'buddyboss' ) }
+								label={ __( 'Plural Label', 'buddyboss-platform' ) }
 								value={ formData.plural_label }
 								onChange={ function ( val ) { updateField( 'plural_label', val ); } }
 							/>
@@ -475,7 +475,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Group Roles (Optional) */}
 					<div className="bb-admin-group-type-modal__section">
 						<h4 className="bb-admin-group-type-modal__section-title">
-							{ __( 'Group Roles (Optional)', 'buddyboss' ) }
+							{ __( 'Group Roles (Optional)', 'buddyboss-platform' ) }
 						</h4>
 
 						{ [ 'organizer', 'moderator', 'member' ].map( function ( role ) {
@@ -484,13 +484,13 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 									<span className="bb-admin-group-type-modal__role-label">{ ROLE_LABELS_MAP[ role ] }</span>
 									<div className="bb-admin-group-type-modal__row">
 										<TextControl
-											label={ __( 'Singular Label', 'buddyboss' ) }
+											label={ __( 'Singular Label', 'buddyboss-platform' ) }
 											value={ formData.role_labels[ role ].singular }
 											onChange={ function ( val ) { updateRoleLabel( role, 'singular', val ); } }
 											placeholder={ SINGULAR_PLACEHOLDERS[ role ] }
 										/>
 										<TextControl
-											label={ __( 'Plural Label', 'buddyboss' ) }
+											label={ __( 'Plural Label', 'buddyboss-platform' ) }
 											value={ formData.role_labels[ role ].plural }
 											onChange={ function ( val ) { updateRoleLabel( role, 'plural', val ); } }
 											placeholder={ PLURAL_PLACEHOLDERS[ role ] }
@@ -504,15 +504,15 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Groups Directory Permissions */}
 					<div className="bb-admin-group-type-modal__section">
 						<h4 className="bb-admin-group-type-modal__section-title">
-							{ __( 'Groups Directory Permissions', 'buddyboss' ) }
+							{ __( 'Groups Directory Permissions', 'buddyboss-platform' ) }
 						</h4>
 						<CheckboxControl
-							label={ __( 'Display this group type in "Types" filter in Groups Directory', 'buddyboss' ) }
+							label={ __( 'Display this group type in "Types" filter in Groups Directory', 'buddyboss-platform' ) }
 							checked={ !! formData.enable_filter }
 							onChange={ function ( val ) { updateField( 'enable_filter', val ? 1 : 0 ); } }
 						/>
 						<CheckboxControl
-							label={ __( 'Hide all groups of this type from Groups Directory', 'buddyboss' ) }
+							label={ __( 'Hide all groups of this type from Groups Directory', 'buddyboss-platform' ) }
 							checked={ !! formData.enable_remove }
 							onChange={ function ( val ) { updateField( 'enable_remove', val ? 1 : 0 ); } }
 						/>
@@ -521,10 +521,10 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Group Type Invites */}
 					<div className="bb-admin-group-type-modal__section">
 						<h4 className="bb-admin-group-type-modal__section-title">
-							{ __( 'Group Type Invites', 'buddyboss' ) }
+							{ __( 'Group Type Invites', 'buddyboss-platform' ) }
 						</h4>
 						<CheckboxControl
-							label={ __( "Members already in a group of this type can't be invited to another", 'buddyboss' ) }
+							label={ __( "Members already in a group of this type can't be invited to another", 'buddyboss-platform' ) }
 							checked={ !! formData.restrict_invites }
 							onChange={ function ( val ) { updateField( 'restrict_invites', val ? 1 : 0 ); } }
 						/>
@@ -534,20 +534,20 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{ availableMemberTypes.length > 0 && (
 						<div className="bb-admin-group-type-modal__section">
 							<h4 className="bb-admin-group-type-modal__section-title">
-								{ __( 'Profile Type Invites', 'buddyboss' ) }
+								{ __( 'Profile Type Invites', 'buddyboss-platform' ) }
 							</h4>
 							<SelectControl
 								value={ formData.member_type_invites_mode }
 								options={ [
-									{ label: __( 'All Profile Types', 'buddyboss' ), value: 'all' },
-									{ label: __( 'Selected Profile Types', 'buddyboss' ), value: 'selected' },
-									{ label: __( 'None', 'buddyboss' ), value: 'none' },
+									{ label: __( 'All Profile Types', 'buddyboss-platform' ), value: 'all' },
+									{ label: __( 'Selected Profile Types', 'buddyboss-platform' ), value: 'selected' },
+									{ label: __( 'None', 'buddyboss-platform' ), value: 'none' },
 								] }
 								onChange={ function ( val ) { updateField( 'member_type_invites_mode', val ); } }
 							/>
 							<p
 								className="bb-admin-group-type-modal__section-description"
-								dangerouslySetInnerHTML={ { __html: sanitizeHtml( __( 'Select which profile types are allowed to send a request to join this group. Members restricted by <a href="admin.php?page=bb-settings&tab=groups&panel=access_controls">Group Access</a> settings cannot send a request, even if their profile type is allowed above.', 'buddyboss' ) ) } }
+								dangerouslySetInnerHTML={ { __html: sanitizeHtml( __( 'Select which profile types are allowed to send a request to join this group. Members restricted by <a href="admin.php?page=bb-settings&tab=groups&panel=access_controls">Group Access</a> settings cannot send a request, even if their profile type is allowed above.', 'buddyboss-platform' ) ) } }
 							/>
 							{ 'selected' === formData.member_type_invites_mode && (
 								<div className="bb-admin-group-type-modal__member-types-grid">
@@ -573,20 +573,20 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{ availableMemberTypes.length > 0 && (
 						<div className="bb-admin-group-type-modal__section">
 							<h4 className="bb-admin-group-type-modal__section-title">
-								{ __( 'Profile Type Joining', 'buddyboss' ) }
+								{ __( 'Profile Type Joining', 'buddyboss-platform' ) }
 							</h4>
 							<SelectControl
 								value={ formData.member_type_join_mode }
 								options={ [
-									{ label: __( 'All Profile Types', 'buddyboss' ), value: 'all' },
-									{ label: __( 'Selected Profile Types', 'buddyboss' ), value: 'selected' },
-									{ label: __( 'None', 'buddyboss' ), value: 'none' },
+									{ label: __( 'All Profile Types', 'buddyboss-platform' ), value: 'all' },
+									{ label: __( 'Selected Profile Types', 'buddyboss-platform' ), value: 'selected' },
+									{ label: __( 'None', 'buddyboss-platform' ), value: 'none' },
 								] }
 								onChange={ function ( val ) { updateField( 'member_type_join_mode', val ); } }
 							/>
 							<p
 								className="bb-admin-group-type-modal__section-description"
-								dangerouslySetInnerHTML={ { __html: sanitizeHtml( __( 'Select which profile types can join private groups with this group type without approval. Members restricted by <a href="admin.php?page=bb-settings&tab=groups&panel=access_controls">Group Access</a> settings cannot join, even if their profile type is allowed above.', 'buddyboss' ) ) } }
+								dangerouslySetInnerHTML={ { __html: sanitizeHtml( __( 'Select which profile types can join private groups with this group type without approval. Members restricted by <a href="admin.php?page=bb-settings&tab=groups&panel=access_controls">Group Access</a> settings cannot join, even if their profile type is allowed above.', 'buddyboss-platform' ) ) } }
 							/>
 							{ 'selected' === formData.member_type_join_mode && (
 								<div className="bb-admin-group-type-modal__member-types-grid">
@@ -611,11 +611,11 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Visibility */}
 					<div className="bb-admin-group-type-modal__section">
 						<SelectControl
-							label={ __( 'Visibility', 'buddyboss' ) }
+							label={ __( 'Visibility', 'buddyboss-platform' ) }
 							value={ formData.visibility }
 							options={ [
-								{ label: __( 'Public', 'buddyboss' ), value: 'public' },
-								{ label: __( 'Private', 'buddyboss' ), value: 'private' },
+								{ label: __( 'Public', 'buddyboss-platform' ), value: 'public' },
+								{ label: __( 'Private', 'buddyboss-platform' ), value: 'private' },
 							] }
 							onChange={ function ( val ) { updateField( 'visibility', val ); } }
 						/>
@@ -624,11 +624,11 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Label Color */}
 					<div className="bb-admin-group-type-modal__section">
 						<SelectControl
-							label={ __( 'Label Color', 'buddyboss' ) }
+							label={ __( 'Label Color', 'buddyboss-platform' ) }
 							value={ formData.label_color.type }
 							options={ [
-								{ label: __( 'Default', 'buddyboss' ), value: 'default' },
-								{ label: __( 'Custom', 'buddyboss' ), value: 'custom' },
+								{ label: __( 'Default', 'buddyboss-platform' ), value: 'default' },
+								{ label: __( 'Custom', 'buddyboss-platform' ), value: 'custom' },
 							] }
 							onChange={ function ( val ) { updateLabelColor( 'type', val ); } }
 						/>
@@ -637,7 +637,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 							<div className="bb-admin-group-type-modal__color-pickers">
 								<div className="bb-admin-group-type-modal__color-field">
 									<label className="bb-admin-group-type-modal__color-label">
-										{ __( 'Background Color', 'buddyboss' ) }
+										{ __( 'Background Color', 'buddyboss-platform' ) }
 									</label>
 									<div className="bb-admin-group-type-modal__color-input-row">
 										<input
@@ -645,7 +645,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											value={ formData.label_color.background_color || '#000000' }
 											onChange={ function ( e ) { updateLabelColor( 'background_color', e.target.value ); } }
 											className="bb-admin-group-type-modal__color-swatch"
-											aria-label={ __( 'Background Color', 'buddyboss' ) }
+											aria-label={ __( 'Background Color', 'buddyboss-platform' ) }
 										/>
 										<input
 											type="text"
@@ -656,13 +656,13 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											} }
 											className="bb-admin-group-type-modal__color-hex"
 											maxLength="6"
-											aria-label={ __( 'Background Color hex value', 'buddyboss' ) }
+											aria-label={ __( 'Background Color hex value', 'buddyboss-platform' ) }
 										/>
 									</div>
 								</div>
 								<div className="bb-admin-group-type-modal__color-field">
 									<label className="bb-admin-group-type-modal__color-label">
-										{ __( 'Text Color', 'buddyboss' ) }
+										{ __( 'Text Color', 'buddyboss-platform' ) }
 									</label>
 									<div className="bb-admin-group-type-modal__color-input-row">
 										<input
@@ -670,7 +670,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											value={ formData.label_color.text_color || '#ffffff' }
 											onChange={ function ( e ) { updateLabelColor( 'text_color', e.target.value ); } }
 											className="bb-admin-group-type-modal__color-swatch"
-											aria-label={ __( 'Text Color', 'buddyboss' ) }
+											aria-label={ __( 'Text Color', 'buddyboss-platform' ) }
 										/>
 										<input
 											type="text"
@@ -681,7 +681,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											} }
 											className="bb-admin-group-type-modal__color-hex"
 											maxLength="6"
-											aria-label={ __( 'Text Color hex value', 'buddyboss' ) }
+											aria-label={ __( 'Text Color hex value', 'buddyboss-platform' ) }
 										/>
 									</div>
 								</div>
@@ -693,7 +693,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{ groupTypeShortcode && (
 						<div className="bb-admin-group-type-modal__section">
 							<h4 className="bb-admin-group-type-modal__section-title">
-								{ __( 'Shortcode', 'buddyboss' ) }
+								{ __( 'Shortcode', 'buddyboss-platform' ) }
 							</h4>
 							<div className="bb-admin-group-type-modal__shortcode-row">
 								<input
@@ -712,21 +712,21 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 										}
 										navigator.clipboard.writeText( groupTypeShortcode ).then( function () {
 											window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
-												detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss' ) },
+												detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss-platform' ) },
 											} ) );
 										} ).catch( function () {
 											window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
-												detail: { status: 'error', message: __( 'Failed to copy to clipboard.', 'buddyboss' ) },
+												detail: { status: 'error', message: __( 'Failed to copy to clipboard.', 'buddyboss-platform' ) },
 											} ) );
 										} );
 									} }
-									aria-label={ __( 'Copy shortcode', 'buddyboss' ) }
+									aria-label={ __( 'Copy shortcode', 'buddyboss-platform' ) }
 								>
 									<i className="bb-icons-rl bb-icons-rl-copy"></i>
 								</button>
 							</div>
 							<p className="bb-admin-group-type-modal__section-description">
-								{ __( 'Add this shortcode to any WordPress page to display all groups of this type on a dedicated page.', 'buddyboss' ) }
+								{ __( 'Add this shortcode to any WordPress page to display all groups of this type on a dedicated page.', 'buddyboss-platform' ) }
 							</p>
 						</div>
 					) }
@@ -738,7 +738,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -746,7 +746,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					isBusy={ isSaving }
 					disabled={ isSaving || ! formData.name.trim() }
 				>
-					{ isSaving ? __( 'Saving...', 'buddyboss' ) : ( isEditing ? __( 'Update', 'buddyboss' ) : __( 'Save', 'buddyboss' ) ) }
+					{ isSaving ? __( 'Saving...', 'buddyboss-platform' ) : ( isEditing ? __( 'Update', 'buddyboss-platform' ) : __( 'Save', 'buddyboss-platform' ) ) }
 				</Button>
 			</div>
 		</Modal>

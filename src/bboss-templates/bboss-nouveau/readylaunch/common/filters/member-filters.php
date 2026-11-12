@@ -42,11 +42,11 @@ if ( $is_member_type_enabled ) {
 		<div id="bb-rl-member-type-filters" class="component-filters clearfix">
 			<div id="bb-rl-member-type-select" class="last filter bb-rl-filter">
 				<label class="bb-rl-filter-label" for="bb-rl-member-type-order-by">
-					<span><?php esc_html_e( 'Type', 'buddyboss' ); ?></span>
+					<span><?php esc_html_e( 'Type', 'buddyboss-platform' ); ?></span>
 				</label>
 				<div class="select-wrap">
 					<select id="bb-rl-member-type-order-by" data-bp-member-type-filter="members">
-						<option value=""><?php esc_html_e( 'All', 'buddyboss' ); ?></option>
+						<option value=""><?php esc_html_e( 'All', 'buddyboss-platform' ); ?></option>
 						<?php
 						foreach ( $member_types as $member_type_id ) {
 							$type_name        = bboss_get_member_type_key( $member_type_id );
@@ -76,7 +76,7 @@ if ( bboss_nouveau_has_nav( array( 'object' => 'directory' ) ) ) {
 	<div id="bb-rl-members-scope-filters" class="component-filters clearfix">
 		<div id="bb-rl-members-scope-select" class="last filter bb-rl-scope-filter bb-rl-filter">
 			<label class="bb-rl-filter-label" for="bb-rl-members-scope-options">
-				<span><?php esc_html_e( 'Filter', 'buddyboss' ); ?></span>
+				<span><?php esc_html_e( 'Filter', 'buddyboss-platform' ); ?></span>
 			</label>
 			<div class="select-wrap">
 				<select id="bb-rl-members-scope-options" data-bp-members-scope-filter="members" data-dropdown-align="true">
@@ -90,7 +90,7 @@ if ( bboss_nouveau_has_nav( array( 'object' => 'directory' ) ) ) {
 						<option id="<?php bboss_nouveau_nav_id(); ?>" <?php bboss_nouveau_nav_scope(); ?> data-bp-object="<?php bboss_nouveau_directory_nav_object(); ?>" <?php selected( $is_selected, true ); ?>>
 							<?php
 							if ( 'bb-rl-members-all' === bboss_nouveau_get_nav_id() ) {
-								esc_html_e( 'All', 'buddyboss' );
+								esc_html_e( 'All', 'buddyboss-platform' );
 							} else {
 								bboss_nouveau_nav_link_text();
 							}

@@ -55,7 +55,7 @@ function bboss_nouveau_search_enqueue_scripts() {
 		'debug'                 => true, // set it to false on production
 		'ajaxurl'               => admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ),
 		// 'search_url'    => home_url( '/' ), Now we are using form[role='search'] selector
-		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss' ),
+		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss-platform' ),
 		'enable_ajax_search'    => function_exists( 'bboss_is_search_autocomplete_enable' ) && bboss_is_search_autocomplete_enable(),
 		'per_page'              => $per_page,
 		'autocomplete_selector' => "form[role='search']:not(.bp-dir-search-form), form.search-form:not(.bp-dir-search-form), form.searchform:not(.bp-dir-search-form), form#adminbarsearch:not(.bp-dir-search-form), .bp-search-form>#search-form:not(.bp-dir-search-form)",
@@ -206,7 +206,7 @@ function bboss_rl_search_enqueue_scripts() {
 		'action'                => 'bp_search_ajax',
 		'debug'                 => true, // set it to false on production.
 		'ajaxurl'               => admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ),
-		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss' ),
+		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss-platform' ),
 		'enable_ajax_search'    => function_exists( 'bboss_is_search_autocomplete_enable' ) && bboss_is_search_autocomplete_enable(),
 		'per_page'              => $per_page,
 		'autocomplete_selector' => '.bb-rl-network-search-modal .search-form',
@@ -221,7 +221,7 @@ function bboss_rl_search_enqueue_scripts() {
 	$min = bboss_core_get_minified_asset_suffix();
 
 	wp_enqueue_script( 'jquery-ui-autocomplete' );
-	wp_enqueue_script( 'bb-rl-nouveau-search', trailingslashit( $bp->plugin_url ) . "bp-templates/bp-nouveau/readylaunch/js/buddypress-search{$min}.js", array( 'bp-nouveau' ), bboss_get_version(), true );
+	wp_enqueue_script( 'bb-rl-nouveau-search', trailingslashit( $bp->plugin_url ) . "bboss-templates/bboss-nouveau/readylaunch/js/buddypress-search{$min}.js", array( 'bp-nouveau' ), bboss_get_version(), true );
 
 	wp_localize_script( 'bb-rl-nouveau-search', 'BP_SEARCH', apply_filters( 'bp_search_js_settings', $data ) );
 }

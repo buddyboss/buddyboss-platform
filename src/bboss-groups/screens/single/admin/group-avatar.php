@@ -39,9 +39,9 @@ function bboss_groups_screen_group_admin_avatar() {
 				'object'  => 'group',
 			)
 		) ) {
-			bboss_core_add_message( __( 'The group profile photo was deleted successfully!', 'buddyboss' ) );
+			bboss_core_add_message( __( 'The group profile photo was deleted successfully!', 'buddyboss-platform' ) );
 		} else {
-			bboss_core_add_message( __( 'There was a problem deleting the group profile photo. Please try again.', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'There was a problem deleting the group profile photo. Please try again.', 'buddyboss-platform' ), 'error' );
 		}
 	}
 
@@ -83,7 +83,7 @@ function bboss_groups_screen_group_admin_avatar() {
 		);
 
 		if ( ! bboss_core_avatar_handle_crop( $args ) ) {
-			bboss_core_add_message( __( 'There was a problem cropping the group profile photo.', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'There was a problem cropping the group profile photo.', 'buddyboss-platform' ), 'error' );
 		} else {
 			/**
 			 * Fires after a group avatar is uploaded.
@@ -95,7 +95,7 @@ function bboss_groups_screen_group_admin_avatar() {
 			 * @param array  $args     Array of parameters passed to the avatar handler.
 			 */
 			do_action( 'groups_avatar_uploaded', bboss_get_current_group_id(), 'crop', $args );
-			bboss_core_add_message( __( 'The new group profile photo was uploaded successfully.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'The new group profile photo was uploaded successfully.', 'buddyboss-platform' ) );
 		}
 	}
 

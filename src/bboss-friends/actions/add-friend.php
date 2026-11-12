@@ -36,14 +36,14 @@ function bboss_friends_action_add_friend() {
 		}
 
 		if ( ! bboss_friends_add_friend( bboss_loggedin_user_id(), $potential_friend_id ) ) {
-			bboss_core_add_message( __( 'Connection could not be requested.', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'Connection could not be requested.', 'buddyboss-platform' ), 'error' );
 		} else {
-			bboss_core_add_message( __( 'Connection requested', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Connection requested', 'buddyboss-platform' ) );
 		}
 	} elseif ( 'is_friend' == $friendship_status ) {
-		bboss_core_add_message( __( 'You are already connected with this user', 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( 'You are already connected with this user', 'buddyboss-platform' ), 'error' );
 	} else {
-		bboss_core_add_message( __( 'You already have a pending connection request with this user', 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( 'You already have a pending connection request with this user', 'buddyboss-platform' ), 'error' );
 	}
 
 	bboss_core_redirect( wp_get_referer() );

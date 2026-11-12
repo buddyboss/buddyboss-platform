@@ -17,11 +17,11 @@ bboss_nouveau_wp_profile_hooks( 'before' ); ?>
 	<h2 class="screen-heading wp-profile-screen">
 		<?php
 		if ( bboss_is_my_profile() ) {
-			esc_html_e( 'My Profile', 'buddyboss' );
+			esc_html_e( 'My Profile', 'buddyboss-platform' );
 		} else {
 			printf(
 				/* Translators: a member's profile, e.g. "Paul's profile". */
-				esc_html__( "%s's Profile", 'buddyboss' ),
+				esc_html__( "%s's Profile", 'buddyboss-platform' ),
 				esc_html( bboss_get_displayed_user_fullname() )
 			);
 		}

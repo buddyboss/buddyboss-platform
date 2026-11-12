@@ -50,11 +50,11 @@ if ( false !== bboss_disable_group_type_creation() ) {
 		<div id="group-type-filters" class="component-filters clearfix bb-rl-filter">
 			<div id="group-type-select" class="last filter">
 				<label class="bb-rl-filter-label" for="group-type-order-by">
-					<span><?php esc_html_e( 'Type', 'buddyboss' ); ?></span>
+					<span><?php esc_html_e( 'Type', 'buddyboss-platform' ); ?></span>
 				</label>
 				<div class="select-wrap">
 					<select id="group-type-order-by" data-bp-group-type-filter="<?php bboss_nouveau_search_object_data_attr(); ?>">
-						<option value=""><?php esc_html_e( 'All', 'buddyboss' ); ?></option>
+						<option value=""><?php esc_html_e( 'All', 'buddyboss-platform' ); ?></option>
 						<?php
 						foreach ( $group_types as $group_type_id ) {
 							$group_type_key   = bboss_group_get_group_type_key( $group_type_id );
@@ -79,7 +79,7 @@ if ( bboss_nouveau_has_nav( array( 'object' => 'directory' ) ) ) {
 	<div id="bb-rl-groups-scope-filters" class="component-filters clearfix">
 		<div id="bb-rl-groups-scope-select" class="last filter bb-rl-scope-filter bb-rl-filter">
 			<label class="bb-rl-filter-label" for="bb-rl-groups-scope-options">
-				<span><?php esc_html_e( 'Filter', 'buddyboss' ); ?></span>
+				<span><?php esc_html_e( 'Filter', 'buddyboss-platform' ); ?></span>
 			</label>
 			<div class="select-wrap">
 				<select id="bb-rl-groups-scope-options" data-bp-groups-scope-filter="groups" data-dropdown-align="true">
@@ -93,7 +93,7 @@ if ( bboss_nouveau_has_nav( array( 'object' => 'directory' ) ) ) {
 						<option id="<?php bboss_nouveau_nav_id(); ?>" <?php bboss_nouveau_nav_scope(); ?> data-bp-object="<?php bboss_nouveau_directory_nav_object(); ?>">
 							<?php
 							if ( 'bb-rl-groups-all' === bboss_nouveau_get_nav_id() ) {
-								esc_html_e( 'All', 'buddyboss' );
+								esc_html_e( 'All', 'buddyboss-platform' );
 							} else {
 								bboss_nouveau_nav_link_text();
 							}

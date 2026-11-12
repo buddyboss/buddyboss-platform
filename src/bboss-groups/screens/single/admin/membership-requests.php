@@ -39,9 +39,9 @@ function bboss_groups_screen_group_admin_requests() {
 
 			// Accept the membership request.
 			if ( ! bboss_groups_accept_membership_request( false, $user_id, $group_id ) ) {
-				bboss_core_add_message( __( 'There was an error accepting the membership request. Please try again.', 'buddyboss' ), 'error' );
+				bboss_core_add_message( __( 'There was an error accepting the membership request. Please try again.', 'buddyboss-platform' ), 'error' );
 			} else {
-				bboss_core_add_message( __( 'Group membership request accepted', 'buddyboss' ) );
+				bboss_core_add_message( __( 'Group membership request accepted', 'buddyboss-platform' ) );
 			}
 
 		} elseif ( 'reject' === $request_action ) {
@@ -52,9 +52,9 @@ function bboss_groups_screen_group_admin_requests() {
 
 			// Reject the membership request.
 			if ( ! bboss_groups_reject_membership_request( false, $user_id, $group_id ) ) {
-				bboss_core_add_message( __( 'There was an error rejecting the membership request. Please try again.', 'buddyboss' ), 'error' );
+				bboss_core_add_message( __( 'There was an error rejecting the membership request. Please try again.', 'buddyboss-platform' ), 'error' );
 			} else {
-				bboss_core_add_message( __( 'Group membership request rejected', 'buddyboss' ) );
+				bboss_core_add_message( __( 'Group membership request rejected', 'buddyboss-platform' ) );
 			}
 		}
 

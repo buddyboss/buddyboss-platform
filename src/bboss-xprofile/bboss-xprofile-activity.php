@@ -24,17 +24,17 @@ function bboss_xprofile_register_activity_actions() {
 		// Older avatar activity items use 'profile' for component. See r4273.
 		'profile',
 		'new_avatar',
-		__( 'Member changed profile photo', 'buddyboss' ),
+		__( 'Member changed profile photo', 'buddyboss-platform' ),
 		'bboss_xprofile_format_activity_action_new_avatar',
-		__( 'Updated Profile Photos', 'buddyboss' )
+		__( 'Updated Profile Photos', 'buddyboss-platform' )
 	);
 
 	bboss_activity_set_action(
 		bboss()->profile->id,
 		'updated_profile',
-		__( 'Updated Profile', 'buddyboss' ),
+		__( 'Updated Profile', 'buddyboss-platform' ),
 		'bboss_xprofile_format_activity_action_updated_profile',
-		__( 'Profile Updates', 'buddyboss' ),
+		__( 'Profile Updates', 'buddyboss-platform' ),
 		array( 'activity' )
 	);
 
@@ -59,7 +59,7 @@ add_action( 'bp_register_activity_actions', 'bboss_xprofile_register_activity_ac
 function bboss_xprofile_format_activity_action_new_avatar( $action, $activity ) {
 	$userlink = bboss_core_get_userlink( $activity->user_id );
 	/* translators: 1: user link, 2: gender pronoun (e.g. his/her/their). */
-	$action   = sprintf( __( '%1$s changed %2$s profile photo', 'buddyboss' ), $userlink, bboss_get_user_gender_pronoun_type( $activity->user_id ) );
+	$action   = sprintf( __( '%1$s changed %2$s profile photo', 'buddyboss-platform' ), $userlink, bboss_get_user_gender_pronoun_type( $activity->user_id ) );
 
 	// Legacy filter - pass $user_id instead of $activity.
 	if ( has_filter( 'bp_xprofile_new_avatar_action' ) ) {
@@ -94,7 +94,7 @@ function bboss_xprofile_format_activity_action_updated_profile( $action, $activi
 	// natural translation.
 	$profile_link = trailingslashit( bboss_core_get_user_domain( $activity->user_id ) . bboss_get_profile_slug() );
 	/* translators: 1: user profile link, 2: gender pronoun (e.g. his/her/their). */
-	$action       = sprintf( __( '%1$s updated %2$s profile', 'buddyboss' ), '<a href="' . $profile_link . '" data-bb-hp-profile="' . esc_attr( $activity->user_id ) . '">' . bboss_core_get_user_displayname( $activity->user_id ) . '</a>', bboss_get_user_gender_pronoun_type( $activity->user_id ) );
+	$action       = sprintf( __( '%1$s updated %2$s profile', 'buddyboss-platform' ), '<a href="' . $profile_link . '" data-bb-hp-profile="' . esc_attr( $activity->user_id ) . '">' . bboss_core_get_user_displayname( $activity->user_id ) . '</a>', bboss_get_user_gender_pronoun_type( $activity->user_id ) );
 
 	/**
 	 * Filters the formatted 'updated_profile' activity feed action.
@@ -346,7 +346,7 @@ add_action( 'xprofile_updated_profile', 'bboss_xprofile_updated_profile_activity
 function bboss_xprofile_activity_filter_options() {
 	?>
 
-	<option value="updated_profile"><?php esc_html_e( 'Profile Updates', 'buddyboss' ); ?></option>
+	<option value="updated_profile"><?php esc_html_e( 'Profile Updates', 'buddyboss-platform' ); ?></option>
 
 	<?php
 }

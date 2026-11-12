@@ -47,12 +47,12 @@ class BBoss_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id'     => array(
-						'description' => __( 'ID of the Messages Thread.', 'buddyboss' ),
+						'description' => __( 'ID of the Messages Thread.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'action' => array(
-						'description'       => __( 'Action name to perform on the message thread.', 'buddyboss' ),
+						'description'       => __( 'Action name to perform on the message thread.', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'required'          => true,
 						'enum'              => array(
@@ -64,7 +64,7 @@ class BBoss_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'value'  => array(
-						'description'       => __( 'Value for the action on message thread.', 'buddyboss' ),
+						'description'       => __( 'Value for the action on message thread.', 'buddyboss-platform' ),
 						'type'              => 'boolean',
 						'sanitize_callback' => 'rest_sanitize_boolean',
 						'validate_callback' => 'rest_validate_request_arg',
@@ -174,7 +174,7 @@ class BBoss_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 	public function action_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to perform action on messages.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to perform action on messages.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -193,7 +193,7 @@ class BBoss_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			if ( true === $retval && is_null( $id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to see this thread.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to see this thread.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -209,7 +209,7 @@ class BBoss_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && function_exists( 'bboss_messages_is_disabled_group_thread' ) && bboss_messages_is_disabled_group_thread( $thread->thread_id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Group messages have been disabled by a site administrator.', 'buddyboss' ),
+				__( 'Group messages have been disabled by a site administrator.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)

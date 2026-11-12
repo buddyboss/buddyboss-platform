@@ -149,7 +149,7 @@ add_filter( 'edit_profile_url', 'bboss_members_edit_profile_url', 10, 3 );
  * @since BuddyBoss 1.0.0
  */
 function bboss_overwrite_login_form_email_field_label( $defaults ) {
-	$defaults['label_username'] = __( 'Email Address', 'buddyboss' );
+	$defaults['label_username'] = __( 'Email Address', 'buddyboss-platform' );
 
 	return $defaults;
 }
@@ -163,7 +163,7 @@ add_filter( 'login_form_defaults', 'bboss_overwrite_login_form_email_field_label
 function bboss_overwrite_login_email_field_label( $translated_text, $text, $domain ) {
 	if ( 'Username or Email Address' == $text && 'default' == $domain ) {
 		remove_filter( 'gettext', 'bboss_overwrite_login_email_field_label' );
-		return __( 'Email Address', 'buddyboss' );
+		return __( 'Email Address', 'buddyboss-platform' );
 	}
 
 	return $translated_text;
@@ -694,7 +694,7 @@ function bboss_get_member_last_active_within_minutes( $last_activity, $user_id )
 		$online_default_time = apply_filters( 'bb_default_online_presence_time', bboss_presence_interval() + bboss_presence_time_span() );
 
 		if ( $online_default_time >= $since_diff ) {
-			return esc_html__( 'Active now', 'buddyboss' );
+			return esc_html__( 'Active now', 'buddyboss-platform' );
 		}
 	}
 
@@ -837,7 +837,7 @@ add_action( 'delete_user', 'bboss_delete_user_subscriptions' );
 function bboss_repair_member_profile_links( $repair_list ) {
 	$repair_list[] = array(
 		'bb-member-repair-profile-links',
-		__( 'Repair member profile links', 'buddyboss' ),
+		__( 'Repair member profile links', 'buddyboss-platform' ),
 		'bb_repair_member_profile_links_callback',
 	);
 
@@ -879,7 +879,7 @@ function bboss_repair_member_profile_links_callback() {
 		$total           = $offset + count( $user_ids );
 		$records_updated = sprintf(
 		/* translators: total user */
-			_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', $total, 'buddyboss' ),
+			_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', $total, 'buddyboss-platform' ),
 			$total
 		);
 
@@ -890,12 +890,12 @@ function bboss_repair_member_profile_links_callback() {
 		);
 	} else {
 		/* translators: Status of current action. */
-		$statement = __( 'Profile unique identifier generated for all users; %s', 'buddyboss' );
+		$statement = __( 'Profile unique identifier generated for all users; %s', 'buddyboss-platform' );
 
 		// All done!
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }

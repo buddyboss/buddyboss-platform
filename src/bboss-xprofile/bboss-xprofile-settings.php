@@ -48,11 +48,11 @@ function bboss_xprofile_settings_add_feedback_message() {
 
 	// Default message type is success.
 	$type    = 'success';
-	$message = __( 'Your profile settings have been saved.', 'buddyboss' );
+	$message = __( 'Your profile settings have been saved.', 'buddyboss-platform' );
 
 	// Community moderator editing another user's settings.
 	if ( ! bboss_is_my_profile() && bboss_core_can_edit_settings() ) {
-		$message = __( "This member's profile settings have been saved.", 'buddyboss' );
+		$message = __( "This member's profile settings have been saved.", 'buddyboss-platform' );
 	}
 
 	// Add the message.

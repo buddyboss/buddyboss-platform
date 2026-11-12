@@ -294,7 +294,7 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 
 		// Emulate being in the admin area.
 		if ( ! class_exists( 'BBoss_Members_Admin', false ) ) {
-			require BBOSS_PLUGIN_DIR . 'bp-members/classes/class-bboss-members-admin.php';
+			require BBOSS_PLUGIN_DIR . 'bboss-members/classes/class-bboss-members-admin.php';
 		}
 		$admin = new BBoss_Members_Admin;
 		add_action( 'update_option_users_can_register', array( $admin, 'single_site_registration_on' ), 10, 2 );
@@ -321,7 +321,7 @@ class BP_Tests_Core_Functions_BpCoreGetDirectoryPageIds extends BP_UnitTestCase 
 
 		// Emulate being in the network admin area.
 		if ( ! class_exists( 'BBoss_Members_Admin', false ) ) {
-			require BBOSS_PLUGIN_DIR . 'bp-members/classes/class-bboss-members-admin.php';
+			require BBOSS_PLUGIN_DIR . 'bboss-members/classes/class-bboss-members-admin.php';
 		}
 		$admin = new BBoss_Members_Admin;
 		add_action( 'update_site_option_registration', array( $admin, 'multisite_registration_on' ), 10, 2 );

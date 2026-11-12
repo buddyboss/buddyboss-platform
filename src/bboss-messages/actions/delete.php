@@ -31,9 +31,9 @@ function bboss_messages_action_delete_message() {
 
 		// Delete message.
 		if ( ! bboss_messages_delete_thread( $thread_id ) ) {
-			bboss_core_add_message( __( 'There was an error deleting that message.', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'There was an error deleting that message.', 'buddyboss-platform' ), 'error' );
 		} else {
-			bboss_core_add_message( __( 'Message deleted.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Message deleted.', 'buddyboss-platform' ) );
 		}
 		bboss_core_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() ) );
 	}

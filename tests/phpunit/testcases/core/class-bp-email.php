@@ -252,7 +252,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_sending_email() {
-		require_once( BBOSS_PLUGIN_DIR . '/bp-core/admin/bboss-core-admin-schema.php' );
+		require_once( BBOSS_PLUGIN_DIR . '/bboss-core/admin/bboss-core-admin-schema.php' );
 		bboss_core_install_emails();
 
 		$user1  = get_user_by( 'id', $this->u1 );

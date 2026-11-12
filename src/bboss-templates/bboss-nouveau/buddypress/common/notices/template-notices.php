@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<?php if ( bboss_nouveau_has_dismiss_button() ) : ?>
 
-		<button type="button" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Close this notice', 'buddyboss' ); ?>" data-bp-close="<?php bboss_nouveau_dismiss_button_type(); ?>"><span class="dashicons dashicons-dismiss" aria-hidden="true"></span></button>
+		<button type="button" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Close this notice', 'buddyboss-platform' ); ?>" data-bp-close="<?php bboss_nouveau_dismiss_button_type(); ?>"><span class="dashicons dashicons-dismiss" aria-hidden="true"></span></button>
 
 	<?php endif; ?>
 </aside>

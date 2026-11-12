@@ -35,7 +35,7 @@ function bboss_messages_screen_conversation() {
 		// Inbox, or compose for members with no listed threads: straight to the final page, so the notice is shown there.
 		$redirect = bboss_messages_get_disabled_group_thread_redirect_url( $thread_id );
 
-		bboss_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
+		bboss_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss-platform' ), 'warning' );
 		bboss_core_redirect( $redirect );
 	}
 
@@ -60,7 +60,7 @@ function bboss_messages_screen_conversation() {
 
 	if ( empty( $thread_id ) || ! bboss_messages_is_valid_thread( $thread_id ) ) {
 		if ( is_user_logged_in() ) {
-			bboss_core_add_message( __( 'The conversation you tried to access is no longer available', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'The conversation you tried to access is no longer available', 'buddyboss-platform' ), 'error' );
 		}
 
 		bboss_core_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() ) );
@@ -75,7 +75,7 @@ function bboss_messages_screen_conversation() {
 
 			// Redirect away.
 		} else {
-			bboss_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss-platform' ), 'error' );
 			bboss_core_redirect( trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() ) );
 		}
 	}
@@ -87,7 +87,7 @@ function bboss_messages_screen_conversation() {
 	$count    = bboss_get_total_unread_messages_count();
 	$class    = ( 0 === $count ) ? 'no-count' : 'count';
 	/* translators: 1: CSS class, 2: unread message count. */
-	$nav_name = sprintf( __( 'Messages <span class="%1$s">%2$s</span>', 'buddyboss' ), esc_attr( $class ), bboss_core_number_format( $count ) );
+	$nav_name = sprintf( __( 'Messages <span class="%1$s">%2$s</span>', 'buddyboss-platform' ), esc_attr( $class ), bboss_core_number_format( $count ) );
 
 	// Edit the Navigation name.
 	$bp->members->nav->edit_nav(

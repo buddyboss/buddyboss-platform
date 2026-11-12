@@ -1,0 +1,45 @@
+<?php
+/**
+ * Reported content popup.
+ *
+ * @since   BuddyBoss 1.7.3
+ * @package BuddyBoss
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?>
+
+<div id="reported-content" class="content-report-popup moderation-popup mfp-hide">
+	<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+		<div class="modal-wrapper">
+			<div class="modal-container">
+				<header class="bb-model-header">
+					<h4>
+						<?php
+						printf(
+							/* translators: %s: reported content type. */
+							esc_html__( 'Report %s', 'buddyboss-platform' ),
+							'<span class="bp-reported-type"></span>'
+						);
+						?>
+					</h4>
+					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close">
+						<span class="bb-icon-l bb-icon-times"></span>
+					</button>
+				</header>
+
+				<div class="bb-report-type-wrp">
+					<?php
+					printf(
+						/* translators: %s: reported content type (e.g. Post, Comment, Member). */
+						esc_html__( 'You have already reported this %s.', 'buddyboss-platform' ),
+						'<span class="bp-reported-type"></span>'
+					);
+					?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

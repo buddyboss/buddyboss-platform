@@ -64,7 +64,7 @@ function bboss_groups_group_access_protection() {
 			// User doesn't have access, so set up redirect args.
 		} elseif ( is_user_logged_in() ) {
 			$no_access_args = array(
-				'message'  => __( 'You do not have access to this group.', 'buddyboss' ),
+				'message'  => __( 'You do not have access to this group.', 'buddyboss-platform' ),
 				'root'     => bboss_get_group_permalink( $current_group ) . 'home/',
 				'redirect' => false,
 			);
@@ -75,7 +75,7 @@ function bboss_groups_group_access_protection() {
 	if ( bboss_is_current_action( 'admin' ) && ! bboss_is_item_admin() ) {
 		$user_has_access = false;
 		$no_access_args  = array(
-			'message'  => __( 'You are not an organizer or moderator of this group.', 'buddyboss' ),
+			'message'  => __( 'You are not an organizer or moderator of this group.', 'buddyboss-platform' ),
 			'root'     => bboss_get_group_permalink( $current_group ),
 			'redirect' => false,
 		);

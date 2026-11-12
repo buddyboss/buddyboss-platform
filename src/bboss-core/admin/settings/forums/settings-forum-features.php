@@ -1,0 +1,236 @@
+<?php
+/**
+ * BuddyBoss Admin Settings - Forum Features Panel.
+ *
+ * Registers sections and fields for the Forum Features side panel.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Register Forum Features panel sections and fields.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return void
+ */
+function bboss_forums_register_features_panel_fields() {
+
+	// -------------------------------------------------------------------------
+	// SECTION: Forum Features
+	// -------------------------------------------------------------------------
+	bboss_register_feature_section(
+		'forums',
+		'forum_features',
+		'forum_features_section',
+		array(
+			'title'       => __( 'Forum Features', 'buddyboss-platform' ),
+			'description' => '',
+			'order'       => 10,
+			'help_url'    => '636166',
+		)
+	);
+
+	// FIELD: Revisions.
+	bboss_register_feature_field(
+		'forums',
+		'forum_features',
+		'forum_features_section',
+		array(
+			'name'              => '_bbp_allow_revisions',
+			'label'             => __( 'Revisions', 'buddyboss-platform' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Allow discussion and reply revision logging', 'buddyboss-platform' ),
+			'default'           => bboss_bbp_allow_revisions(),
+			'sanitize_callback' => 'absint',
+			'order'             => 10,
+		)
+	);
+
+	// FIELD: Favorites.
+	bboss_register_feature_field(
+		'forums',
+		'forum_features',
+		'forum_features_section',
+		array(
+			'name'              => '_bbp_enable_favorites',
+			'label'             => __( 'Favorites', 'buddyboss-platform' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Allow members to mark discussions as favorites', 'buddyboss-platform' ),
+			'default'           => bboss_bbp_is_favorites_active(),
+			'sanitize_callback' => 'absint',
+			'order'             => 20,
+		)
+	);
+
+	// FIELD: Subscriptions.
+	bboss_register_feature_field(
+		'forums',
+		'forum_features',
+		'forum_features_section',
+		array(
+			'name'              => '_bbp_enable_subscriptions',
+			'label'             => __( 'Subscriptions', 'buddyboss-platform' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Allow members to subscribe to discussions and standalone forums', 'buddyboss-platform' ),
+			'default'           => bboss_bbp_is_subscriptions_active(),
+			'sanitize_callback' => 'absint',
+			'order'             => 30,
+		)
+	);
+
+	// FIELD: Discussion Tags.
+	bboss_register_feature_field(
+		'forums',
+		'forum_features',
+		'forum_features_section',
+		array(
+			'name'              => '_bbp_allow_topic_tags',
+			'label'             => __( 'Discussion Tags', 'buddyboss-platform' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Allow discussions to have tags', 'buddyboss-platform' ),
+			'default'           => bboss_bbp_allow_topic_tags(),
+			'sanitize_callback' => 'absint',
+			'refresh_panels'    => true,
+			'order'             => 40,
+		)
+	);
+
+	// FIELD: Search.
+	bboss_register_feature_field(
+		'forums',
+		'forum_features',
+		'forum_features_section',
+		array(
+			'name'              => '_bbp_allow_search',
+			'label'             => __( 'Search', 'buddyboss-platform' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Allow forum-wide search', 'buddyboss-platform' ),
+			'default'           => bboss_bbp_allow_search(),
+			'sanitize_callback' => 'absint',
+			'order'             => 50,
+		)
+	);
+
+	// FIELD: Post Formatting.
+	bboss_register_feature_field(
+		'forums',
+		'forum_features',
+		'forum_features_section',
+		array(
+			'name'              => '_bbp_use_wp_editor',
+			'label'             => __( 'Post Formatting', 'buddyboss-platform' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Add toolbar & buttons to text areas to help with HTML formatting', 'buddyboss-platform' ),
+			'default'           => bboss_bbp_use_wp_editor(),
+			'sanitize_callback' => 'absint',
+			'order'             => 60,
+		)
+	);
+
+	// FIELD: Link Previews.
+	bboss_register_feature_field(
+		'forums',
+		'forum_features',
+		'forum_features_section',
+		array(
+			'name'              => '_bbp_use_autoembed',
+			'label'             => __( 'Link Previews', 'buddyboss-platform' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Embed media (YouTube, Twitter, Vimeo, etc...) directly into discussions and replies', 'buddyboss-platform' ),
+			'default'           => bboss_bbp_use_autoembed(),
+			'sanitize_callback' => 'absint',
+			'order'             => 70,
+		)
+	);
+
+	// FIELD: Anonymous Posting.
+	bboss_register_feature_field(
+		'forums',
+		'forum_features',
+		'forum_features_section',
+		array(
+			'name'              => '_bbp_allow_anonymous',
+			'label'             => __( 'Anonymous Posting', 'buddyboss-platform' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Allow guest users without accounts to create discussions and replies', 'buddyboss-platform' ),
+			'default'           => bboss_bbp_allow_anonymous(),
+			'sanitize_callback' => 'absint',
+			'order'             => 80,
+		)
+	);
+
+	// FIELD: Akismet Spam Protection (conditional on Akismet plugin being active).
+	if ( class_exists( 'Akismet' ) ) {
+		bboss_register_feature_field(
+			'forums',
+			'forum_features',
+			'forum_features_section',
+			array(
+				'name'              => '_bbp_enable_akismet',
+				'label'             => __( 'Akismet Spam Protection', 'buddyboss-platform' ),
+				'type'              => 'toggle',
+				'description'       => __( 'Allow Akismet spam filtering to actively prevent forum spam.', 'buddyboss-platform' ),
+				'help_text'         => sprintf(
+					/* translators: %s: Akismet link. */
+					__( 'Learn more about %s.', 'buddyboss-platform' ),
+					'<a href="https://akismet.com/" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Akismet', 'buddyboss-platform' ) . '</a>'
+				),
+				'default'           => bboss_bbp_is_akismet_active(),
+				'sanitize_callback' => 'absint',
+				'order'             => 90,
+			)
+		);
+	}
+
+	/**
+	 * Fires after Forum Features section fields are registered.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	do_action( 'bb_forums_settings_after_features_fields' );
+
+	// -------------------------------------------------------------------------
+	// SECTION: Group Forums (conditional on groups active)
+	// -------------------------------------------------------------------------
+	if ( bboss_is_active( 'groups' ) ) {
+
+		bboss_register_feature_section(
+			'forums',
+			'forum_features',
+			'group_forums_section',
+			array(
+				'title'       => __( 'Group Forums', 'buddyboss-platform' ),
+				'description' => '',
+				'order'       => 20,
+				'help_url'    => '636168',
+			)
+		);
+
+		// FIELD: Group Forums.
+		bboss_register_feature_field(
+			'forums',
+			'forum_features',
+			'group_forums_section',
+			array(
+				'name'              => '_bbp_enable_group_forums',
+				'label'             => __( 'Group Forums', 'buddyboss-platform' ),
+				'type'              => 'toggle',
+				'description'       => __( 'Allow social groups to have their own forums', 'buddyboss-platform' ),
+				'default'           => bboss_bbp_is_group_forums_active(),
+				'sanitize_callback' => 'absint',
+				'order'             => 10,
+			)
+		);
+		/**
+		 * Fires after Group Forums section fields are registered.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 */
+		do_action( 'bb_forums_settings_after_group_forums_fields' );
+	}
+}

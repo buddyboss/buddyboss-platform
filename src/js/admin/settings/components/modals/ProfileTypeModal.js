@@ -32,8 +32,8 @@ import { AsyncSelectField } from '../fields/AsyncSelectField';
 // `var` to match the surrounding file's ES5-style declarations (DEFAULT_FORM_DATA
 // etc.) per the project's WP JS coding-standards convention.
 var REDIRECT_STATIC_OPTIONS = [
-	{ value: '', label: __( 'Default', 'buddyboss' ) },
-	{ value: '0', label: __( 'Custom URL', 'buddyboss' ) },
+	{ value: '', label: __( 'Default', 'buddyboss-platform' ) },
+	{ value: '0', label: __( 'Custom URL', 'buddyboss-platform' ) },
 ];
 
 /**
@@ -266,7 +266,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 	// Handle save.
 	var handleSave = useCallback( function () {
 		if ( ! formData.name.trim() ) {
-			setError( __( 'Profile type name is required.', 'buddyboss' ) );
+			setError( __( 'Profile type name is required.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -372,12 +372,12 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 						onSave();
 					}
 				} else {
-					setError( ( response.data && response.data.message ) || __( 'Failed to save profile type.', 'buddyboss' ) );
+					setError( ( response.data && response.data.message ) || __( 'Failed to save profile type.', 'buddyboss-platform' ) );
 				}
 			} )
 			.catch( function () {
 				setIsSaving( false );
-				setError( __( 'Failed to save profile type.', 'buddyboss' ) );
+				setError( __( 'Failed to save profile type.', 'buddyboss-platform' ) );
 			} );
 	}, [ formData, memberType, onSave ] );
 
@@ -387,8 +387,8 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 
 	var isEditing = !! ( memberType && memberType.id );
 	var modalTitle = isEditing
-		? __( 'Edit Profile Type', 'buddyboss' )
-		: __( 'Add New Profile Type', 'buddyboss' );
+		? __( 'Edit Profile Type', 'buddyboss-platform' )
+		: __( 'Add New Profile Type', 'buddyboss-platform' );
 
 	return (
 		<Modal
@@ -407,7 +407,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{/* Name */}
 				<div className="bb-admin-profile-type-modal__section">
 					<TextControl
-						label={ __( 'Name', 'buddyboss' ) }
+						label={ __( 'Name', 'buddyboss-platform' ) }
 						value={ formData.name }
 						onChange={ function ( val ) { updateField( 'name', val ); } }
 						required
@@ -417,12 +417,12 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{/* Labels — Singular first, Plural second (matching Figma) */}
 				<div className="bb-admin-profile-type-modal__section">
 					<TextControl
-						label={ __( 'Singular Label', 'buddyboss' ) }
+						label={ __( 'Singular Label', 'buddyboss-platform' ) }
 						value={ formData.singular_label }
 						onChange={ function ( val ) { updateField( 'singular_label', val ); } }
 					/>
 					<TextControl
-						label={ __( 'Plural Label', 'buddyboss' ) }
+						label={ __( 'Plural Label', 'buddyboss-platform' ) }
 						value={ formData.plural_label }
 						onChange={ function ( val ) { updateField( 'plural_label', val ); } }
 					/>
@@ -431,22 +431,22 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{/* Members Directory Permissions */}
 				<div className="bb-admin-profile-type-modal__section">
 					<h4 className="bb-admin-profile-type-modal__section-title">
-						{ __( 'Members Directory Permissions', 'buddyboss' ) }
+						{ __( 'Members Directory Permissions', 'buddyboss-platform' ) }
 					</h4>
 					<div className="bb-admin-profile-type-modal__checkbox-group">
 						<CheckboxControl
-							label={ __( 'Display this profile type in "Types" filter in Members Directory', 'buddyboss' ) }
+							label={ __( 'Display this profile type in "Types" filter in Members Directory', 'buddyboss-platform' ) }
 							checked={ !! formData.enable_filter }
 							onChange={ function ( val ) { updateField( 'enable_filter', val ? 1 : 0 ); } }
 						/>
 						<CheckboxControl
-							label={ __( 'Hide all members of this type from Members Directory', 'buddyboss' ) }
+							label={ __( 'Hide all members of this type from Members Directory', 'buddyboss-platform' ) }
 							checked={ !! formData.enable_remove }
 							onChange={ function ( val ) { updateField( 'enable_remove', val ? 1 : 0 ); } }
 						/>
 						{ !! ( window.bbAdminData && window.bbAdminData.isSearchActive ) && (
 							<CheckboxControl
-								label={ __( 'Hide all members of this type from Network Search results', 'buddyboss' ) }
+								label={ __( 'Hide all members of this type from Network Search results', 'buddyboss-platform' ) }
 								checked={ !! formData.enable_search_remove }
 								onChange={ function ( val ) { updateField( 'enable_search_remove', val ? 1 : 0 ); } }
 							/>
@@ -458,10 +458,10 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{ !! ( window.bbAdminData && window.bbAdminData.showMessagingWithoutConnectionFlag ) && (
 					<div className="bb-admin-profile-type-modal__section">
 						<h4 className="bb-admin-profile-type-modal__section-title">
-							{ __( 'Messaging', 'buddyboss' ) }
+							{ __( 'Messaging', 'buddyboss-platform' ) }
 						</h4>
 						<CheckboxControl
-							label={ __( 'Allow this profile type to send and receive messages without being connected', 'buddyboss' ) }
+							label={ __( 'Allow this profile type to send and receive messages without being connected', 'buddyboss-platform' ) }
 							checked={ !! formData.allow_messaging_without_connection }
 							onChange={ function ( val ) { updateField( 'allow_messaging_without_connection', val ? 1 : 0 ); } }
 						/>
@@ -471,10 +471,10 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{/* Profile Field */}
 				<div className="bb-admin-profile-type-modal__section">
 					<h4 className="bb-admin-profile-type-modal__section-title">
-						{ __( 'Profile Field', 'buddyboss' ) }
+						{ __( 'Profile Field', 'buddyboss-platform' ) }
 					</h4>
 					<CheckboxControl
-						label={ __( 'Allow users to select this profile type from the "Profile Type" dropdown', 'buddyboss' ) }
+						label={ __( 'Allow users to select this profile type from the "Profile Type" dropdown', 'buddyboss-platform' ) }
 						checked={ !! formData.enable_profile_field }
 						onChange={ function ( val ) { updateField( 'enable_profile_field', val ? 1 : 0 ); } }
 					/>
@@ -484,20 +484,20 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{ availableGroupTypes.length > 0 && !! ( window.bbAdminData && window.bbAdminData.isGroupCreationAllowed ) && !! ( window.bbAdminData && window.bbAdminData.isGroupTypeCreationEnabled ) && (
 					<div className="bb-admin-profile-type-modal__section">
 						<h4 className="bb-admin-profile-type-modal__section-title">
-							{ __( 'Group Creation Permissions', 'buddyboss' ) }
+							{ __( 'Group Creation Permissions', 'buddyboss-platform' ) }
 						</h4>
 						<RadioControl
 							selected={ formData.group_type_create_mode }
 							options={ [
-								{ label: __( 'None', 'buddyboss' ), value: 'none' },
-								{ label: __( 'All Group Types', 'buddyboss' ), value: 'all' },
-								{ label: __( 'Specific Group Types', 'buddyboss' ), value: 'specific' },
+								{ label: __( 'None', 'buddyboss-platform' ), value: 'none' },
+								{ label: __( 'All Group Types', 'buddyboss-platform' ), value: 'all' },
+								{ label: __( 'Specific Group Types', 'buddyboss-platform' ), value: 'specific' },
 							] }
 							onChange={ function ( val ) { updateField( 'group_type_create_mode', val ); } }
 						/>
 						{ 'specific' === formData.group_type_create_mode && (
 							<div className="bb-admin-profile-type-modal__checkbox-grid">
-								<p className="bb-admin-profile-type-modal__checkbox-desc">{ __('Select the group types this profile type can create.', 'buddyboss') }</p>
+								<p className="bb-admin-profile-type-modal__checkbox-desc">{ __('Select the group types this profile type can create.', 'buddyboss-platform') }</p>
 								{ availableGroupTypes.map( function ( gt ) {
 									var isChecked = -1 !== formData.group_type_create.indexOf( String( gt.id ) );
 									return (
@@ -520,7 +520,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{ availableGroupTypes.length > 0 && !! ( window.bbAdminData && window.bbAdminData.isGroupAutoJoinEnabled ) && (
 					<div className="bb-admin-profile-type-modal__section">
 						<h4 className="bb-admin-profile-type-modal__section-title">
-							{ __( 'Group Type Membership Approval', 'buddyboss' ) }
+							{ __( 'Group Type Membership Approval', 'buddyboss-platform' ) }
 						</h4>
 						<div className="bb-admin-profile-type-modal__checkbox-grid">
 							{ availableGroupTypes.map( function ( gt ) {
@@ -538,7 +538,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 							} ) }
 						</div>
 						<p className="bb-admin-profile-type-modal__section-description" style={ { marginTop: 16, marginBottom: 0 } }>
-							{ __( 'Automatically add members of this profile type to these group types after account activation. Hidden groups are excluded.', 'buddyboss' ) }
+							{ __( 'Automatically add members of this profile type to these group types after account activation. Hidden groups are excluded.', 'buddyboss-platform' ) }
 						</p>
 					</div>
 				) }
@@ -547,7 +547,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{ ( allMemberTypes || [] ).length > 0 && !! ( window.bbAdminData && window.bbAdminData.isEmailInviteEnabled ) && (
 					<div className="bb-admin-profile-type-modal__section">
 						<h4 className="bb-admin-profile-type-modal__section-title">
-							{ __( 'Email Invites', 'buddyboss' ) }
+							{ __( 'Email Invites', 'buddyboss-platform' ) }
 						</h4>
 						<div className="bb-admin-profile-type-modal__checkbox-grid">
 							{ ( allMemberTypes || [] ).map( function ( mt ) {
@@ -565,7 +565,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 							} ) }
 						</div>
 						<p className="bb-admin-profile-type-modal__section-description" style={ { marginTop: 16, marginBottom: 0 } }>
-							{ __( 'Select which profile types can be assigned when members choose a profile type for invited users.', 'buddyboss' ) }
+							{ __( 'Select which profile types can be assigned when members choose a profile type for invited users.', 'buddyboss-platform' ) }
 						</p>
 					</div>
 				) }
@@ -573,12 +573,12 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{/* WordPress Role */}
 				<div className="bb-admin-profile-type-modal__section">
 					<h4 className="bb-admin-profile-type-modal__section-title">
-						{ __( 'WordPress Role', 'buddyboss' ) }
+						{ __( 'WordPress Role', 'buddyboss-platform' ) }
 					</h4>
 					<div className="bb-admin-profile-type-modal__radio-grid">
 						<RadioControl
 							selected={ formData.wp_roles.length ? formData.wp_roles[ 0 ] : 'subscriber' }
-							options={ [ { value: 'none', label: __( 'None', 'buddyboss' ) } ].concat( availableWpRoles ).map( function ( role ) {
+							options={ [ { value: 'none', label: __( 'None', 'buddyboss-platform' ) } ].concat( availableWpRoles ).map( function ( role ) {
 								return {
 									value: role.value,
 									label: decodeEntities( role.label ),
@@ -599,21 +599,21 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 						/>
 					</div>
 					<p className="bb-admin-profile-type-modal__section-description" style={ { marginTop: 16, marginBottom: 0 } }>
-						{ __( 'Auto-assign these WordPress roles to this profile type (includes existing users).', 'buddyboss' ) }
+						{ __( 'Auto-assign these WordPress roles to this profile type (includes existing users).', 'buddyboss-platform' ) }
 					</p>
 				</div>
 
 				{/* After Login Redirection */}
 				<div className="bb-admin-profile-type-modal__section bb-admin-profile-type-modal__section--no-border">
 					<label className="components-base-control__label">
-						{ __( 'After Login Redirection', 'buddyboss' ) }
+						{ __( 'After Login Redirection', 'buddyboss-platform' ) }
 					</label>
 					<AsyncSelectField
 						key={ 'login-redirect-' + loginKey }
 						value={ formData.login_redirection || '' }
 						onChange={ function ( val ) { updateField( 'login_redirection', val ); } }
 						asyncAction="bb_admin_search_published_pages"
-						placeholder={ __( 'Select a page', 'buddyboss' ) }
+						placeholder={ __( 'Select a page', 'buddyboss-platform' ) }
 						// Pin "Custom URL" (legacy value '0') at the top of the
 						// dropdown so users can switch into custom-URL mode the
 						// same way the legacy <select> allowed. The component
@@ -628,11 +628,11 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 							// announcing "Custom URL" to assistive tech — the parent
 							// <label> has no htmlFor binding so screen readers would
 							// otherwise read this input as just "url".
-							label={ __( 'Custom URL', 'buddyboss' ) }
+							label={ __( 'Custom URL', 'buddyboss-platform' ) }
 							hideLabelFromVision
 							value={ formData.custom_login_redirection }
 							onChange={ function ( val ) { updateField( 'custom_login_redirection', val ); } }
-							placeholder={ __( 'Paste URL', 'buddyboss' ) }
+							placeholder={ __( 'Paste URL', 'buddyboss-platform' ) }
 							type="url"
 							__nextHasNoMarginBottom
 						/>
@@ -642,14 +642,14 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				<div className="bb-admin-profile-type-modal__section">
 					{/* After Logout Redirection */}
 					<label className="components-base-control__label">
-						{ __( 'After Logout Redirection', 'buddyboss' ) }
+						{ __( 'After Logout Redirection', 'buddyboss-platform' ) }
 					</label>
 					<AsyncSelectField
 						key={ 'logout-redirect-' + logoutKey }
 						value={ formData.logout_redirection || '' }
 						onChange={ function ( val ) { updateField( 'logout_redirection', val ); } }
 						asyncAction="bb_admin_search_published_pages"
-						placeholder={ __( 'Select a page', 'buddyboss' ) }
+						placeholder={ __( 'Select a page', 'buddyboss-platform' ) }
 						staticOptions={ REDIRECT_STATIC_OPTIONS }
 					/>
 					{ '0' === formData.logout_redirection && (
@@ -659,20 +659,20 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 							// announcing "Custom URL" to assistive tech — the parent
 							// <label> has no htmlFor binding so screen readers would
 							// otherwise read this input as just "url".
-							label={ __( 'Custom URL', 'buddyboss' ) }
+							label={ __( 'Custom URL', 'buddyboss-platform' ) }
 							hideLabelFromVision
 							value={ formData.custom_logout_redirection }
 							onChange={ function ( val ) { updateField( 'custom_logout_redirection', val ); } }
-							placeholder={ __( 'Paste URL', 'buddyboss' ) }
+							placeholder={ __( 'Paste URL', 'buddyboss-platform' ) }
 							type="url"
 							__nextHasNoMarginBottom
 						/>
 					) }
 					<p className="bb-admin-profile-type-modal__section-description">
-						{ __( 'Redirect this profile type. When you change the redirection settings in a profile type this will then take priority and override redirection global settings in', 'buddyboss' ) }
+						{ __( 'Redirect this profile type. When you change the redirection settings in a profile type this will then take priority and override redirection global settings in', 'buddyboss-platform' ) }
 						{ ' ' }
 						<a href={ safeUrl( ( window.bbAdminData && window.bbAdminData.adminUrl ? window.bbAdminData.adminUrl : 'admin.php' ) + '?page=bb-settings&tab=registration&panel=login_redirects' ) } target="_blank" rel="noopener noreferrer">
-							{ __( 'Settings - Login & Registration - Login Redirects', 'buddyboss' ) }
+							{ __( 'Settings - Login & Registration - Login Redirects', 'buddyboss-platform' ) }
 						</a>
 						{ '.' }
 					</p>
@@ -681,23 +681,23 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{/* Visibility */}
 				<div className="bb-admin-profile-type-modal__section">
 					<SelectControl
-						label={ __( 'Visibility', 'buddyboss' ) }
+						label={ __( 'Visibility', 'buddyboss-platform' ) }
 						value={ formData.visibility }
 						options={ [
-							{ label: __( 'Public', 'buddyboss' ), value: 'publish' },
-							{ label: __( 'Private', 'buddyboss' ), value: 'private' },
-							{ label: __( 'Draft', 'buddyboss' ), value: 'draft' },
-							{ label: __( 'Password Protected', 'buddyboss' ), value: 'password_protected' },
+							{ label: __( 'Public', 'buddyboss-platform' ), value: 'publish' },
+							{ label: __( 'Private', 'buddyboss-platform' ), value: 'private' },
+							{ label: __( 'Draft', 'buddyboss-platform' ), value: 'draft' },
+							{ label: __( 'Password Protected', 'buddyboss-platform' ), value: 'password_protected' },
 						] }
 						onChange={ function ( val ) { updateField( 'visibility', val ); } }
 					/>
 					{ 'password_protected' === formData.visibility && (
 						<TextControl
-							label={ __( 'Password', 'buddyboss' ) }
+							label={ __( 'Password', 'buddyboss-platform' ) }
 							value={ formData.post_password }
 							onChange={ function ( val ) { updateField( 'post_password', val ); } }
 							type="text"
-							placeholder={ formData.has_password ? __( 'Leave blank to keep current password', 'buddyboss' ) : '' }
+							placeholder={ formData.has_password ? __( 'Leave blank to keep current password', 'buddyboss-platform' ) : '' }
 						/>
 					) }
 				</div>
@@ -705,11 +705,11 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{/* Label Color */}
 				<div className="bb-admin-profile-type-modal__section">
 					<SelectControl
-						label={ __( 'Label Color', 'buddyboss' ) }
+						label={ __( 'Label Color', 'buddyboss-platform' ) }
 						value={ formData.label_color.type }
 						options={ [
-							{ label: __( 'Default', 'buddyboss' ), value: 'default' },
-							{ label: __( 'Custom', 'buddyboss' ), value: 'custom' },
+							{ label: __( 'Default', 'buddyboss-platform' ), value: 'default' },
+							{ label: __( 'Custom', 'buddyboss-platform' ), value: 'custom' },
 						] }
 						onChange={ function ( val ) { updateLabelColor( 'type', val ); } }
 					/>
@@ -718,7 +718,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 						<div className="bb-admin-profile-type-modal__color-pickers">
 							<div className="bb-admin-profile-type-modal__color-field">
 								<label className="bb-admin-profile-type-modal__color-label">
-									{ __( 'Background Color', 'buddyboss' ) }
+									{ __( 'Background Color', 'buddyboss-platform' ) }
 								</label>
 								<div className="bb-admin-profile-type-modal__color-input-row">
 									<input
@@ -741,7 +741,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 							</div>
 							<div className="bb-admin-profile-type-modal__color-field">
 								<label className="bb-admin-profile-type-modal__color-label">
-									{ __( 'Text Color', 'buddyboss' ) }
+									{ __( 'Text Color', 'buddyboss-platform' ) }
 								</label>
 								<div className="bb-admin-profile-type-modal__color-input-row">
 									<input
@@ -770,7 +770,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 				{ isEditing && memberType && memberType.key && (
 					<div className="bb-admin-profile-type-modal__section">
 						<h4 className="bb-admin-profile-type-modal__section-title">
-							{ __( 'Shortcode', 'buddyboss' ) }
+							{ __( 'Shortcode', 'buddyboss-platform' ) }
 						</h4>
 						<div className="bb-admin-profile-type-modal__shortcode-row">
 							<input
@@ -788,13 +788,13 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 										navigator.clipboard.writeText( '[profile type="' + memberType.key + '"]' );
 									}
 								} }
-								aria-label={ __( 'Copy shortcode', 'buddyboss' ) }
+								aria-label={ __( 'Copy shortcode', 'buddyboss-platform' ) }
 							>
 								<i className="bb-icons-rl bb-icons-rl-copy"></i>
 							</button>
 						</div>
 						<p className="bb-admin-profile-type-modal__section-description">
-							{ __( 'To list all users of this profile type, add the shortcode below to any WordPress page.', 'buddyboss' ) }
+							{ __( 'To list all users of this profile type, add the shortcode below to any WordPress page.', 'buddyboss-platform' ) }
 						</p>
 					</div>
 				) }
@@ -806,7 +806,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -814,7 +814,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 					isBusy={ isSaving }
 					disabled={ isSaving || ! formData.name.trim() }
 				>
-					{ isSaving ? __( 'Saving...', 'buddyboss' ) : ( isEditing ? __( 'Update', 'buddyboss' ) : __( 'Save', 'buddyboss' ) ) }
+					{ isSaving ? __( 'Saving...', 'buddyboss-platform' ) : ( isEditing ? __( 'Update', 'buddyboss-platform' ) : __( 'Save', 'buddyboss-platform' ) ) }
 				</Button>
 			</div>
 		</Modal>

@@ -16,7 +16,7 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 		parent::setUp();
 
 		if ( ! class_exists( 'BBoss_Nouveau_Group_Invite_Query' ) ) {
-			require_once bboss()->plugin_dir . 'bp-templates/bp-nouveau/includes/groups/classes.php';
+			require_once bboss()->plugin_dir . 'bboss-templates/bboss-nouveau/includes/groups/classes.php';
 		}
 	}
 

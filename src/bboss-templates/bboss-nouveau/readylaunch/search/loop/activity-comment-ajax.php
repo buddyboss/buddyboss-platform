@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 	<div class="item">
 		<h3 class="entry-title item-title">
 			<a href="<?php bboss_activity_user_link(); ?>"><?php echo wp_kses_post( bboss_core_get_user_displayname( bboss_get_activity_user_id() ) ); ?></a>
-			<a href='<?php echo esc_url( bboss_get_activity_thread_permalink() ); ?>'><?php esc_html_e( 'replied to a post', 'buddyboss' ); ?></a>
+			<a href='<?php echo esc_url( bboss_get_activity_thread_permalink() ); ?>'><?php esc_html_e( 'replied to a post', 'buddyboss-platform' ); ?></a>
 		</h3>
 		<?php if ( bboss_activity_has_content() ) : ?>
 			<div class="item-desc">

@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 
-<h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddyboss' ); ?></h2>
+<h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddyboss-platform' ); ?></h2>
 <?php
 bboss_nouveau_group_hook( 'before', 'invites_content' );
 
@@ -48,7 +48,7 @@ if ( bboss_has_groups( 'type=invites&user_id=' . $bp_displayed_user_id ) ) {
 								echo wp_kses_post(
 									sprintf(
 										/* translators: 1: inviter profile link, 2: time since the invitation. */
-										__( 'Invited by %1$s &middot; %2$s.', 'buddyboss' ),
+										__( 'Invited by %1$s &middot; %2$s.', 'buddyboss-platform' ),
 										sprintf(
 											'<a href="%s">%s</a>',
 											esc_url( $inviter['url'] ),

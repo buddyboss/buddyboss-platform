@@ -277,7 +277,7 @@ export function CustomSelectControl( {
 				<span className="bb-custom-select__trigger-content">
 					{ renderOptionIcon( selectedOpt ) }
 					<span className="bb-custom-select__trigger-text">
-						{ selectedOpt ? selectedOpt.label : ( placeholder || __( 'Select…', 'buddyboss' ) ) }
+						{ selectedOpt ? selectedOpt.label : ( placeholder || __( 'Select…', 'buddyboss-platform' ) ) }
 					</span>
 				</span>
 				<i className="bb-icons-rl bb-icons-rl-caret-down bb-custom-select__arrow" aria-hidden="true"></i>

@@ -62,13 +62,13 @@ if ( bboss_has_groups( bboss_ajax_querystring( 'groups' ) ) ) {
 						$has_default_cover     = function_exists( 'bboss_attachment_get_cover_image_class' ) ? bboss_attachment_get_cover_image_class( $bp_group_id, 'group' ) : '';
 
 						if ( empty( $group_cover_image_url ) ) {
-							$group_cover_image_url = esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
+							$group_cover_image_url = esc_url( bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/images/group_cover_image.jpeg' );
 						}
 						?>
 						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' cover-' . $group_cover_height ); ?>">
-							<a href="<?php bboss_group_permalink(); ?>" aria-label="<?php esc_attr_e( 'View group', 'buddyboss' ); ?>">
+							<a href="<?php bboss_group_permalink(); ?>" aria-label="<?php esc_attr_e( 'View group', 'buddyboss-platform' ); ?>">
 								<?php if ( ! empty( $group_cover_image_url ) ) { ?>
-									<img src="<?php echo esc_url( $group_cover_image_url ); ?>" alt="<?php esc_attr_e( 'Group cover image', 'buddyboss' ); ?>">
+									<img src="<?php echo esc_url( $group_cover_image_url ); ?>" alt="<?php esc_attr_e( 'Group cover image', 'buddyboss-platform' ); ?>">
 								<?php } ?>
 							</a>
 						</div>
@@ -103,7 +103,7 @@ if ( bboss_has_groups( bboss_ajax_querystring( 'groups' ) ) ) {
 										echo '<p class="last-activity item-meta">' .
 										sprintf(
 												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-											esc_attr__( 'Active %s', 'buddyboss' ),
+											esc_attr__( 'Active %s', 'buddyboss-platform' ),
 											wp_kses_post( bboss_get_group_last_active() )
 										) .
 										'</p>';
@@ -145,17 +145,17 @@ if ( bboss_has_groups( bboss_ajax_querystring( 'groups' ) ) ) {
 				<div class="bb-rl-modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
-							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss-platform' ); ?></span></h4>
 							<a class="bb-close-leave-group bb-model-close-button" href="#">
 								<span class="bb-icon-l bb-icon-times"></span>
 							</a>
 						</header>
 						<div class="bb-leave-group-content bb-action-popup-content">
-							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
+							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss-platform' ); ?><span class="bb-group-name"></span>?</p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+							<a class="bb-close-leave-group bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php esc_html_e( 'Confirm', 'buddyboss-platform' ); ?></a>
 						</footer>
 					</div>
 				</div>
@@ -170,18 +170,18 @@ if ( bboss_has_groups( bboss_ajax_querystring( 'groups' ) ) ) {
 				<div class="bb-rl-modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
-							<h4><span class="target_name"><?php esc_html_e( 'Cancel Request?', 'buddyboss' ); ?></span></h4>
+							<h4><span class="target_name"><?php esc_html_e( 'Cancel Request?', 'buddyboss-platform' ); ?></span></h4>
 							<a class="bb-close-cancel-request-group bb-model-close-button" href="#">
 								<span class="bb-icon-l bb-icon-times"></span>
 							</a>
 						</header>
 						<div class="bb-cancel-request-group-content bb-action-popup-content">
-							<p><?php esc_html_e( 'You\'re about to cancel your request to join the group', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( 'You\'re about to cancel your request to join the group', 'buddyboss-platform' ); ?></p>
 							<span class="bb-rl-modal-group-name"></span>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-cancel-request-group bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-cancel-request-group bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+							<a class="bb-close-cancel-request-group bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+							<a class="button push-right bb-confirm-cancel-request-group bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php esc_html_e( 'Confirm', 'buddyboss-platform' ); ?></a>
 						</footer>
 					</div>
 				</div>

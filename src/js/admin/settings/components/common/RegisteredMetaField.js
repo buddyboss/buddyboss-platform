@@ -319,7 +319,7 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 			value:    trimmedQuery,
 			label:    createLabelTpl
 				? createLabelTpl.replace( '%s', trimmedQuery )
-				: ( trimmedQuery + ' ' + __( '(Add new)', 'buddyboss' ) ),
+				: ( trimmedQuery + ' ' + __( '(Add new)', 'buddyboss-platform' ) ),
 			__create: true,
 		}
 		: null;
@@ -429,7 +429,7 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 										handleRemove( id );
 									} }
 									disabled={ disabled }
-									aria-label={ __( 'Remove', 'buddyboss' ) }
+									aria-label={ __( 'Remove', 'buddyboss-platform' ) }
 								>
 									<i className="bb-icons-rl-x"></i>
 								</button>
@@ -718,7 +718,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 				<div className={ 'bb-admin-meta-field__toggle-list-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 					<label className="bb-admin-meta-field__label">{ field.label }</label>
 					<p className="bb-admin-meta-field__empty">
-						{ field.placeholder || __( 'No options available yet.', 'buddyboss' ) }
+						{ field.placeholder || __( 'No options available yet.', 'buddyboss-platform' ) }
 					</p>
 					{ field.description && (
 						<p className="bb-admin-meta-field__description">{ field.description }</p>

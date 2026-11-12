@@ -115,13 +115,13 @@ function bboss_nouveau_activity_localize_scripts( $params = array() ) {
 		'is_activity_edit'                => bboss_is_activity_edit() ? (int) bboss_current_action() : false,
 		'displayed_user_id'               => bboss_displayed_user_id(),
 		'errors'                          => array(
-			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
-			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
-			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
+			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss-platform' ),
+			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss-platform' ),
+			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss-platform' ),
 		),
 		'is_activity_post_title_required' => $is_activity_post_title_required,
 		'activity_post_title_maxlength'   => bboss_activity_post_title_max_length(),
-		'post_title_tooltip_error'        => esc_html__( 'Please enter a title', 'buddyboss' ),
+		'post_title_tooltip_error'        => esc_html__( 'Please enter a title', 'buddyboss-platform' ),
 	);
 
 	$user_displayname = bboss_get_loggedin_user_fullname();
@@ -141,7 +141,7 @@ function bboss_nouveau_activity_localize_scripts( $params = array() ) {
 			'user_domain'       => bboss_loggedin_user_domain(),
 			'avatar_alt'        => sprintf(
 			/* translators: %s = member name */
-				__( 'Profile photo of %s', 'buddyboss' ),
+				__( 'Profile photo of %s', 'buddyboss-platform' ),
 				$user_displayname
 			),
 		) );
@@ -196,7 +196,7 @@ function bboss_nouveau_activity_localize_scripts( $params = array() ) {
 	if ( ! bboss_is_single_item() && ! bboss_is_user() ) {
 		$activity_objects = array(
 			'profile' => array(
-				'text'                     => __( 'Post in: Profile', 'buddyboss' ),
+				'text'                     => __( 'Post in: Profile', 'buddyboss-platform' ),
 				'autocomplete_placeholder' => '',
 				'priority'                 => 5,
 			),
@@ -205,12 +205,12 @@ function bboss_nouveau_activity_localize_scripts( $params = array() ) {
 		// the groups component is active & the current user is at least a member of 1 group
 		if ( bboss_is_active( 'groups' ) && bboss_has_groups( array( 'user_id' => bboss_loggedin_user_id(), 'max' => 1, 'search_terms' => false ) ) ) {
 			$activity_objects['group'] = array(
-				'text'                      => esc_html__( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss' ),
+				'text'                      => esc_html__( 'Post in: Group', 'buddyboss-platform' ),
+				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss-platform' ),
 				'priority'                  => 10,
-				'loading_group_placeholder' => esc_html__( 'Loading groups...', 'buddyboss' ),
-				'finding_group_placeholder' => esc_html__( 'Finding groups...', 'buddyboss' ),
-				'no_groups_found'           => esc_html__( 'No groups found.', 'buddyboss' ),
+				'loading_group_placeholder' => esc_html__( 'Loading groups...', 'buddyboss-platform' ),
+				'finding_group_placeholder' => esc_html__( 'Finding groups...', 'buddyboss-platform' ),
+				'no_groups_found'           => esc_html__( 'No groups found.', 'buddyboss-platform' ),
 			);
 			$group_args = array(
 				'user_id'     => bboss_loggedin_user_id(),
@@ -250,40 +250,40 @@ function bboss_nouveau_activity_localize_scripts( $params = array() ) {
 
 	$activity_strings = array(
 		/* translators: %s: logged-in user display name. */
-		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss' ), bboss_core_get_user_displayname( bboss_loggedin_user_id() ) ),
-		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss' ),
-		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss' ),
-		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss' ),
-		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss' ),
-		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss' ),
+		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss-platform' ), bboss_core_get_user_displayname( bboss_loggedin_user_id() ) ),
+		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss-platform' ),
+		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss-platform' ),
+		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss-platform' ),
+		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss-platform' ),
+		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss-platform' ),
 		/* translators: %d: number of comments (singular). */
-		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
+		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss-platform' ),
 		/* translators: %d: number of comments (plural). */
-		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
-		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
-		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),
-		'pinPost'             => esc_html__( 'Pin to Feed', 'buddyboss' ),
-		'unpinPost'           => esc_html__( 'Unpin from Feed', 'buddyboss' ),
-		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss' ),
-		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
-		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss' ),
-		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss' ),
-		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
-		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
-		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
-		'whatsNewTitle'       => $is_activity_post_title_required ? esc_attr__( 'Title', 'buddyboss' ) : esc_attr__( 'Title (optional)', 'buddyboss' ),
+		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss-platform' ),
+		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss-platform' ),
+		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss-platform' ),
+		'pinPost'             => esc_html__( 'Pin to Feed', 'buddyboss-platform' ),
+		'unpinPost'           => esc_html__( 'Unpin from Feed', 'buddyboss-platform' ),
+		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss-platform' ),
+		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss-platform' ),
+		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss-platform' ),
+		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss-platform' ),
+		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss-platform' ),
+		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss-platform' ),
+		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss-platform' ),
+		'whatsNewTitle'       => $is_activity_post_title_required ? esc_attr__( 'Title', 'buddyboss-platform' ) : esc_attr__( 'Title (optional)', 'buddyboss-platform' ),
 	);
 
 	if ( bboss_get_displayed_user() && ! bboss_is_my_profile() ) {
 		/* translators: %s = user name */
-		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bboss_get_user_firstname( bboss_get_displayed_user_fullname() ) );
+		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss-platform' ), bboss_get_user_firstname( bboss_get_displayed_user_fullname() ) );
 	}
 
 	if ( bboss_is_group() ) {
-		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss' );
+		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss-platform' );
 
 		$activity_params = array_merge(
 			$activity_params,
@@ -331,29 +331,29 @@ function bboss_nouveau_activity_localize_scripts( $params = array() ) {
 	// a pasted bitmap becomes a multi-megabyte inline base64 image, which the
 	// draft and publish pipelines strip - blocking at paste is honest feedback
 	// instead of silently losing the member's image.
-	$activity_params['paste_image_blocked_message'] = __( 'Pasting images isn\'t supported. Please use the photo button to attach images.', 'buddyboss' );
+	$activity_params['paste_image_blocked_message'] = __( 'Pasting images isn\'t supported. Please use the photo button to attach images.', 'buddyboss-platform' );
 
 	// The draft is fetched lazily now, so a failed read leaves the composer
 	// empty over a draft that still exists on the server. Without a message the
 	// member assumes nothing was saved, retypes, and the next autosave replaces
 	// the draft the fetch could not read. Mirrors the forum packs'
 	// draft_fetch_failed_message.
-	$activity_params['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
+	$activity_params['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss-platform' );
 
 	// A save/discard refused with no specific server message (an expired nonce,
 	// or a moderator removing posting rights mid-session) must not surface as
 	// success. The forum packs already fall back to these strings; the activity
 	// packs surfaced only a server-provided message and were silent otherwise
 	// (M3 parity).
-	$activity_params['draft_save_failed_message']    = __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' );
-	$activity_params['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss' );
+	$activity_params['draft_save_failed_message']    = __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' );
+	$activity_params['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss-platform' );
 
 	// The lazy restore is suppressed when the member has already started typing
 	// while the fetch was in flight - overwriting their text would be the real
 	// bug. The forum packs tell the member the stored draft is intact but was
 	// not loaded; the activity packs took the same branch silently, which reads
 	// as a lost draft (M11 parity).
-	$activity_params['draft_not_restored_message'] = __( 'You have a saved draft. It was not loaded because you had already started writing here.', 'buddyboss' );
+	$activity_params['draft_not_restored_message'] = __( 'You have a saved draft. It was not loaded because you had already started writing here.', 'buddyboss-platform' );
 
 	// Members must be told the draft has a lifetime, or the expiry cron reads
 	// as unexplained data loss when a draft is gone after a few weeks away.
@@ -364,13 +364,13 @@ function bboss_nouveau_activity_localize_scripts( $params = array() ) {
 
 	$activity_params['draft_retention_message'] = $draft_retention_days ? sprintf(
 		/* translators: %s: Number of days a draft is kept. */
-		_n( 'Drafts are kept for %s day.', 'Drafts are kept for %s days.', $draft_retention_days, 'buddyboss' ),
+		_n( 'Drafts are kept for %s day.', 'Drafts are kept for %s days.', $draft_retention_days, 'buddyboss-platform' ),
 		number_format_i18n( $draft_retention_days )
 	) : '';
 
 	// Budget eviction removes an OLDER draft to make room for this save. The
 	// member must be told, or drafts appear to vanish at random.
-	$activity_params['draft_evicted_message'] = __( 'You had too many saved drafts, so your oldest draft is now saved only in this browser.', 'buddyboss' );
+	$activity_params['draft_evicted_message'] = __( 'You had too many saved drafts, so your oldest draft is now saved only in this browser.', 'buddyboss-platform' );
 
 	// The per-draft cap, so the composer can decide what to drop from an
 	// oversized payload instead of guessing at a threshold.
@@ -411,7 +411,7 @@ function bboss_nouveau_get_activity_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array( 'dynamic', 'selected' ),
 		'link'      => bboss_get_activity_directory_permalink(),
-		'text'      => __( 'All Updates', 'buddyboss' ),
+		'text'      => __( 'All Updates', 'buddyboss-platform' ),
 		'count'     => false,
 		'position'  => 5,
 	);
@@ -652,17 +652,17 @@ function bboss_nouveau_activity_notification_filters() {
 	$notifications = array(
 		array(
 			'id'       => 'new_at_mention',
-			'label'    => __( 'New mentions', 'buddyboss' ),
+			'label'    => __( 'New mentions', 'buddyboss-platform' ),
 			'position' => 5,
 		),
 		array(
 			'id'       => 'update_reply',
-			'label'    => __( 'New update replies', 'buddyboss' ),
+			'label'    => __( 'New update replies', 'buddyboss-platform' ),
 			'position' => 15,
 		),
 		array(
 			'id'       => 'comment_reply',
-			'label'    => __( 'New update comment replies', 'buddyboss' ),
+			'label'    => __( 'New update comment replies', 'buddyboss-platform' ),
 			'position' => 25,
 		),
 	);

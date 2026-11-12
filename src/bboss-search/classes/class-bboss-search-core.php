@@ -124,7 +124,7 @@ if ( ! class_exists( 'BBoss_Search_Core' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -133,7 +133,7 @@ if ( ! class_exists( 'BBoss_Search_Core' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -314,7 +314,7 @@ if ( ! class_exists( 'BBoss_Search_Core' ) ) :
 			global $bp;
 
 			foreach ( (array) $includes as $include ) {
-				require_once $bp->plugin_dir . '/bp-search/' . $include . '.php';
+				require_once $bp->plugin_dir . '/bboss-search/' . $include . '.php';
 			}
 		}
 

@@ -16,7 +16,7 @@ class BP_Tests_Blogs_Template extends BP_UnitTestCase {
 		$blogs_template->blog = new stdClass;
 		$blogs_template->blog->last_activity = $time;
 
-		$this->assertEquals( bboss_core_get_last_activity( $time, __( 'active %s', 'buddyboss' ) ), bboss_get_blog_last_active() );
+		$this->assertEquals( bboss_core_get_last_activity( $time, __( 'active %s', 'buddyboss-platform' ) ), bboss_get_blog_last_active() );
 
 		$blogs_template->blog = null;
 	}
@@ -33,7 +33,7 @@ class BP_Tests_Blogs_Template extends BP_UnitTestCase {
 		$blogs_template->blog = new stdClass;
 		$blogs_template->blog->last_activity = $time;
 
-		$this->assertEquals( bboss_core_get_last_activity( $time, __( 'active %s', 'buddyboss' ) ), bboss_get_blog_last_active( array( 'active_format' => true, ) ) );
+		$this->assertEquals( bboss_core_get_last_activity( $time, __( 'active %s', 'buddyboss-platform' ) ), bboss_get_blog_last_active( array( 'active_format' => true, ) ) );
 
 		$blogs_template->blog = null;
 	}
@@ -59,7 +59,7 @@ class BP_Tests_Blogs_Template extends BP_UnitTestCase {
 	 * @group bp_get_blog_last_active
 	 */
 	public function test_bp_get_blog_last_active_active_no_last_activity() {
-		$this->assertEquals( __( 'Never active', 'buddyboss' ), bboss_get_blog_last_active() );
+		$this->assertEquals( __( 'Never active', 'buddyboss-platform' ), bboss_get_blog_last_active() );
 	}
 
 	/**
@@ -75,7 +75,7 @@ class BP_Tests_Blogs_Template extends BP_UnitTestCase {
 		$blogs_template->blog->latest_post->guid = 'foo';
 		$blogs_template->blog->latest_post->post_title = 'bar';
 
-		$this->assertSame( sprintf( __( 'Latest Post: %s', 'buddyboss' ), '<a href="foo">bar</a>' ), bboss_get_blog_latest_post() );
+		$this->assertSame( sprintf( __( 'Latest Post: %s', 'buddyboss-platform' ), '<a href="foo">bar</a>' ), bboss_get_blog_latest_post() );
 
 		$blogs_template->blog = null;
 	}
@@ -93,7 +93,7 @@ class BP_Tests_Blogs_Template extends BP_UnitTestCase {
 		$blogs_template->blog->latest_post->guid = 'foo';
 		$blogs_template->blog->latest_post->post_title = 'bar';
 
-		$this->assertSame( sprintf( __( 'Latest Post: %s', 'buddyboss' ), '<a href="foo">bar</a>' ), bboss_get_blog_latest_post( array( 'latest_format' => true, ) ) );
+		$this->assertSame( sprintf( __( 'Latest Post: %s', 'buddyboss-platform' ), '<a href="foo">bar</a>' ), bboss_get_blog_latest_post( array( 'latest_format' => true, ) ) );
 
 		$blogs_template->blog = null;
 	}

@@ -111,17 +111,17 @@ class BBoss_Invites_Component extends BBoss_Component {
 		// Authenticated actions.
 		if ( is_user_logged_in() ) {
 			if ( ! bboss_current_action() || bboss_is_current_action( 'invites' ) ) {
-				require $this->path . 'bp-invites/actions/invites.php';
+				require $this->path . 'bboss-invites/actions/invites.php';
 
 				// Specific to post requests.
-			} elseif ( bboss_is_post_request() && in_array( bboss_current_action(), $actions, true ) && file_exists( $this->path . 'bp-invites/actions/' . bboss_current_action() . '.php' ) ) {
-				require $this->path . 'bp-invites/actions/' . bboss_current_action() . '.php';
+			} elseif ( bboss_is_post_request() && in_array( bboss_current_action(), $actions, true ) && file_exists( $this->path . 'bboss-invites/actions/' . bboss_current_action() . '.php' ) ) {
+				require $this->path . 'bboss-invites/actions/' . bboss_current_action() . '.php';
 			}
 
 			if ( is_user_logged_in() &&
 				 in_array( bboss_current_action(), array( 'revoke-invite' ), true )
 			) {
-				require $this->path . 'bp-invites/actions/' . bboss_current_action() . '.php';
+				require $this->path . 'bboss-invites/actions/' . bboss_current_action() . '.php';
 			}
 		} else {
 			bboss_core_no_access();
@@ -130,11 +130,11 @@ class BBoss_Invites_Component extends BBoss_Component {
 
 		// Screens - User profile integration.
 		if ( bboss_is_user() ) {
-			require_once $this->path . 'bp-invites/screens/send-invites.php';
+			require_once $this->path . 'bboss-invites/screens/send-invites.php';
 
 			// Sub-nav items.
 			if ( in_array( bboss_current_action(), $actions, true ) ) {
-				require_once $this->path . 'bp-invites/screens/' . bboss_current_action() . '.php';
+				require_once $this->path . 'bboss-invites/screens/' . bboss_current_action() . '.php';
 			}
 		}
 
@@ -208,7 +208,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 				return;
 			}
 
-			$nav_name     = __( 'Email Invites', 'buddyboss' );
+			$nav_name     = __( 'Email Invites', 'buddyboss-platform' );
 			$slug         = bboss_get_invites_slug();
 			$access       = bboss_core_can_edit_settings();
 			$invites_link = trailingslashit( $user_domain . $slug );
@@ -228,7 +228,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 
 				// Add the Invite by Email nav item.
 				$sub_nav[] = array(
-					'name'            => __( 'Send Invites', 'buddyboss' ),
+					'name'            => __( 'Send Invites', 'buddyboss-platform' ),
 					'slug'            => 'send-invites',
 					'parent_url'      => $invites_link,
 					'parent_slug'     => $slug,
@@ -240,7 +240,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 
 				// Add the Sent Invites nav item.
 				$sub_nav[] = array(
-					'name'            => __( 'Sent Invites', 'buddyboss' ),
+					'name'            => __( 'Sent Invites', 'buddyboss-platform' ),
 					'slug'            => 'sent-invites',
 					'parent_url'      => $invites_link,
 					'parent_slug'     => $slug,
@@ -275,7 +275,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 				// Setup the logged in user variables.
 				$invites_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_invites_slug() );
 
-				$title = __( 'Email Invites', 'buddyboss' );
+				$title = __( 'Email Invites', 'buddyboss-platform' );
 
 				// Add the "My Account" sub menus.
 				$wp_admin_nav[] = array(
@@ -289,7 +289,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-invites',
-					'title'    => __( 'Send Invites', 'buddyboss' ),
+					'title'    => __( 'Send Invites', 'buddyboss-platform' ),
 					'href'     => $invites_link,
 					'position' => 10,
 				);
@@ -298,7 +298,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-sent',
-					'title'    => __( 'Sent Invites', 'buddyboss' ),
+					'title'    => __( 'Sent Invites', 'buddyboss-platform' ),
 					'href'     => $invites_link . 'sent-invites',
 					'position' => 20,
 				);
@@ -331,7 +331,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 			apply_filters(
 				'bp_invite_post_type',
 				array(
-					'description'        => __( 'BuddyBoss Invites', 'buddyboss' ),
+					'description'        => __( 'BuddyBoss Invites', 'buddyboss-platform' ),
 					'labels'             => bboss_get_invite_post_type_labels(),
 					'public'             => false,
 					'publicly_queryable' => bboss_current_user_can( 'bp_moderate' ),

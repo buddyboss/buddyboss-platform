@@ -24,13 +24,13 @@ function bboss_groups_screen_group_invites() {
 		}
 
 		if ( ! bboss_groups_accept_invite( bboss_loggedin_user_id(), $group_id ) ) {
-			bboss_core_add_message( __( 'Group invite could not be accepted', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'Group invite could not be accepted', 'buddyboss-platform' ), 'error' );
 		} else {
 			// Record this in activity feeds.
 			$group = bboss_groups_get_group( $group_id );
 
 			/* translators: %s: group link. */
-			bboss_core_add_message( sprintf( __( 'Group invite accepted. Visit %s.', 'buddyboss' ), bboss_get_group_link( $group ) ) );
+			bboss_core_add_message( sprintf( __( 'Group invite accepted. Visit %s.', 'buddyboss-platform' ), bboss_get_group_link( $group ) ) );
 
 			if ( bboss_is_active( 'activity' ) ) {
 				bboss_groups_record_activity(
@@ -57,9 +57,9 @@ function bboss_groups_screen_group_invites() {
 		}
 
 		if ( ! bboss_groups_reject_invite( bboss_loggedin_user_id(), $group_id ) ) {
-			bboss_core_add_message( __( 'Group invite could not be rejected', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'Group invite could not be rejected', 'buddyboss-platform' ), 'error' );
 		} else {
-			bboss_core_add_message( __( 'Group invite rejected', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Group invite rejected', 'buddyboss-platform' ) );
 		}
 
 		if ( isset( $_GET['redirect_to'] ) ) {

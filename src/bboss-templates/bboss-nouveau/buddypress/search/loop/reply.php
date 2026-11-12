@@ -53,7 +53,7 @@ $topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 				}
 				?>
 
-				<a href="<?php bboss_bbp_reply_url( $reply_id ); ?>"><?php esc_html_e( 'replied to a discussion', 'buddyboss' ); ?></a>
+				<a href="<?php bboss_bbp_reply_url( $reply_id ); ?>"><?php esc_html_e( 'replied to a discussion', 'buddyboss-platform' ); ?></a>
 			</div>
 			<div class="entry-content entry-summary">
 				<?php echo wp_kses_post( wp_trim_words( bboss_bbp_get_reply_content( $reply_id ), 30, '...' ) ); ?>

@@ -283,7 +283,7 @@ function bboss_appearance_apply_configuration( $settings ) {
 	if ( ! empty( $newly_activated ) ) {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		if ( defined( 'BBOSS_PLUGIN_DIR' ) ) {
-			$schema_path = BBOSS_PLUGIN_DIR . '/bp-core/admin/bboss-core-admin-schema.php';
+			$schema_path = BBOSS_PLUGIN_DIR . '/bboss-core/admin/bboss-core-admin-schema.php';
 			if ( file_exists( $schema_path ) ) {
 				require_once $schema_path;
 			}
@@ -440,7 +440,7 @@ function bboss_appearance_ajax_activate_buddyboss_theme() {
 		wp_send_json_error(
 			array(
 				'error_code' => 'cannot_switch_themes',
-				'message'    => __( 'You do not have permission to switch themes.', 'buddyboss' ),
+				'message'    => __( 'You do not have permission to switch themes.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -452,7 +452,7 @@ function bboss_appearance_ajax_activate_buddyboss_theme() {
 		wp_send_json_error(
 			array(
 				'error_code' => 'not_installed',
-				'message'    => __( 'BuddyBoss Theme is not installed.', 'buddyboss' ),
+				'message'    => __( 'BuddyBoss Theme is not installed.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -467,7 +467,7 @@ function bboss_appearance_ajax_activate_buddyboss_theme() {
 				'error_code' => 'theme_errors',
 				'message'    => sprintf(
 					/* translators: %s: theme error message. */
-					__( 'BuddyBoss Theme cannot be activated: %s', 'buddyboss' ),
+					__( 'BuddyBoss Theme cannot be activated: %s', 'buddyboss-platform' ),
 					$theme_errors->get_error_message()
 				),
 			)
@@ -479,7 +479,7 @@ function bboss_appearance_ajax_activate_buddyboss_theme() {
 			array(
 				'active_theme'   => $stylesheet,
 				'already_active' => true,
-				'message'        => __( 'BuddyBoss Theme is already active.', 'buddyboss' ),
+				'message'        => __( 'BuddyBoss Theme is already active.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -495,7 +495,7 @@ function bboss_appearance_ajax_activate_buddyboss_theme() {
 		array(
 			'active_theme'   => $stylesheet,
 			'already_active' => false,
-			'message'        => __( 'BuddyBoss Theme activated.', 'buddyboss' ),
+			'message'        => __( 'BuddyBoss Theme activated.', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -654,15 +654,15 @@ function bboss_appearance_get_sidebar_description_template( $field_name ) {
 	switch ( $field_name ) {
 		case 'bb_rl_activity_sidebars':
 			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
-			return __( 'Enable or disable widgets to appear on the %1$sactivity feed%2$s.', 'buddyboss' );
+			return __( 'Enable or disable widgets to appear on the %1$sactivity feed%2$s.', 'buddyboss-platform' );
 
 		case 'bb_rl_member_profile_sidebars':
 			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
-			return __( 'Enable or disable widgets to appear on the %1$smember profile%2$s.', 'buddyboss' );
+			return __( 'Enable or disable widgets to appear on the %1$smember profile%2$s.', 'buddyboss-platform' );
 
 		case 'bb_rl_groups_sidebars':
 			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
-			return __( 'Enable or disable widgets to appear on the %1$sgroup single%2$s page.', 'buddyboss' );
+			return __( 'Enable or disable widgets to appear on the %1$sgroup single%2$s page.', 'buddyboss-platform' );
 	}
 
 	return '';

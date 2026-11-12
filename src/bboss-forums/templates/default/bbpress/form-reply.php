@@ -1,0 +1,253 @@
+<?php
+
+/**
+ * New/Edit Reply
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?>
+
+<?php if ( bboss_bbp_is_reply_edit() ) : ?>
+
+<div id="bbpress-forums">
+
+	<?php bboss_bbp_breadcrumb(); ?>
+
+<?php endif; ?>
+
+<?php if ( bboss_bbp_current_user_can_access_create_reply_form() ) : ?>
+
+	<div id="new-reply-<?php bboss_bbp_topic_id(); ?>" class="bbp-reply-form">
+
+		<form id="new-post" name="new-post" method="post" action="<?php bboss_bbp_is_reply_edit() ? bboss_bbp_reply_edit_url() : the_permalink(); ?>">
+
+			<?php do_action( 'bbp_theme_before_reply_form' ); ?>
+
+			<fieldset class="bbp-form">
+				<legend>
+					<?php
+					/* translators: %s: topic title or reply reference. */
+					printf( esc_html__( 'Reply To: %s', 'buddyboss-platform' ), ( bboss_bbp_get_form_reply_to() ) ? /* translators: 1: reply ID, 2: topic title. */ sprintf( esc_html__( 'Reply #%1$s in %2$s', 'buddyboss-platform' ), bboss_bbp_get_form_reply_to(), bboss_bbp_get_topic_title() ) : bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_reply_to() returns an int; bbp_get_topic_title() self-escapes via its filter.
+					?>
+				</legend>
+
+				<?php do_action( 'bbp_theme_before_reply_form_notices' ); ?>
+
+				<?php if ( ! bboss_bbp_is_topic_open() && ! bboss_bbp_is_reply_edit() ) : ?>
+
+					<div class="bp-feedback info">
+						<span class="bp-icon" aria-hidden="true"></span>
+						<p><?php esc_html_e( 'This discussion is marked as closed to new replies, however your posting capabilities still allow you to do so.', 'buddyboss-platform' ); ?></p>
+					</div>
+
+				<?php endif; ?>
+
+				<?php do_action( 'bbp_template_notices' ); ?>
+
+				<div>
+
+					<?php bboss_bbp_get_template_part( 'form', 'anonymous' ); ?>
+
+					<?php do_action( 'bbp_theme_before_reply_form_content' ); ?>
+
+					<?php bboss_bbp_the_content( array( 'context' => 'reply' ) ); ?>
+
+					<?php do_action( 'bbp_theme_after_reply_form_content' ); ?>
+
+					<?php bboss_bbp_get_template_part( 'form', 'attachments' ); ?>
+
+					<?php if ( ! ( bboss_bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
+
+						<p class="form-allowed-tags">
+							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ) ); ?></label><br />
+							<code><?php bboss_bbp_allowed_tags(); ?></code>
+						</p>
+
+					<?php endif; ?>
+
+					<?php if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) : ?>
+
+						<?php do_action( 'bbp_theme_before_reply_form_tags' ); ?>
+
+						<?php
+						$get_topic_id = bboss_bbp_get_topic_id();
+						$get_the_tags = isset( $get_topic_id ) && ! empty( $get_topic_id ) ? bboss_bbp_get_topic_tag_names( $get_topic_id ) : array();
+						?>
+
+						<p>
+							<input type="hidden" value="<?php echo ( ! empty( $get_the_tags ) ) ? esc_attr( $get_the_tags ) : ''; ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
+							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tags, comma separated', 'buddyboss-platform' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bboss_bbp_tab_index(); ?>">
+								<?php
+								if ( ! empty( $get_the_tags ) ) {
+									$get_the_tags = explode( ',', $get_the_tags );
+									foreach ( $get_the_tags as $single_tag ) {
+										$single_tag = trim( $single_tag );
+										?>
+										<option selected="selected" value="<?php echo esc_attr( $single_tag ); ?>"><?php echo esc_html( $single_tag ); ?></option>
+										<?php
+									}
+								}
+								?>
+							</select>
+						</p>
+
+						<?php do_action( 'bbp_theme_after_reply_form_tags' ); ?>
+
+					<?php endif; ?>
+
+					<?php if ( bboss_is_enabled_subscription( 'topic' ) && ! bboss_bbp_is_anonymous() && ( ! bboss_bbp_is_reply_edit() || ( bboss_bbp_is_reply_edit() && ! bboss_bbp_is_reply_anonymous() ) ) ) : ?>
+
+						<?php
+						if (
+							bboss_enabled_legacy_email_preference() ||
+							( ! bboss_enabled_legacy_email_preference() && bboss_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) )
+						) {
+							?>
+
+							<?php do_action( 'bbp_theme_before_reply_form_subscription' ); ?>
+
+							<p class="checkbox bp-checkbox-wrap">
+
+								<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe"<?php bboss_bbp_form_topic_subscribed(); ?> tabindex="<?php bboss_bbp_tab_index(); ?>" />
+
+								<?php
+								if ( bboss_bbp_is_reply_edit() && ( bboss_bbp_get_reply_author_id() !== bboss_bbp_get_current_user_id() ) ) :
+
+									if (
+										(
+											function_exists( 'bboss_enabled_legacy_email_preference' ) && bboss_enabled_legacy_email_preference()
+										) ||
+										(
+											function_exists( 'bboss_is_active' ) &&
+											! bboss_is_active( 'notifications' )
+										)
+									) {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss-platform' ); ?></label>
+										<?php
+									} else {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies', 'buddyboss-platform' ); ?></label>
+										<?php
+									}
+								else :
+									if (
+										(
+											function_exists( 'bboss_enabled_legacy_email_preference' ) && bboss_enabled_legacy_email_preference()
+										) ||
+										(
+											function_exists( 'bboss_is_active' ) &&
+											! bboss_is_active( 'notifications' )
+										)
+									) {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies by email', 'buddyboss-platform' ); ?></label>
+										<?php
+									} else {
+										?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies', 'buddyboss-platform' ); ?></label>
+										<?php
+									}
+								endif;
+								?>
+
+							</p>
+
+							<?php do_action( 'bbp_theme_after_reply_form_subscription' ); ?>
+
+						<?php } ?>
+
+					<?php endif; ?>
+
+					<?php if ( bboss_bbp_allow_revisions() && bboss_bbp_is_reply_edit() ) : ?>
+
+						<?php do_action( 'bbp_theme_before_reply_form_revisions' ); ?>
+
+						<fieldset class="bbp-form">
+							<div class="bp-checkbox-wrap">
+								<input name="bbp_log_reply_edit" id="bbp_log_reply_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bboss_bbp_form_reply_log_edit(); ?> tabindex="<?php bboss_bbp_tab_index(); ?>" />
+								<label for="bbp_log_reply_edit"><?php esc_html_e( 'Keep a log of this edit:', 'buddyboss-platform' ); ?></label>
+							</div>
+
+							<div>
+								<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), esc_html( bboss_bbp_get_current_user_name() ) ); ?></label><br />
+								<input type="text" value="<?php bboss_bbp_form_reply_edit_reason(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="40" name="bbp_reply_edit_reason" id="bbp_reply_edit_reason" />
+							</div>
+						</fieldset>
+
+						<?php do_action( 'bbp_theme_after_reply_form_revisions' ); ?>
+
+					<?php endif; ?>
+
+					<?php do_action( 'bbp_theme_before_reply_form_submit_wrapper' ); ?>
+
+					<div class="bbp-submit-wrapper">
+
+						<?php do_action( 'bbp_theme_before_reply_form_submit_button' ); ?>
+
+						<?php bboss_bbp_cancel_reply_to_link(); ?>
+
+						<button type="button" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bb_reply_discard_draft" name="bb_reply_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss-platform' ); ?></button>
+
+						<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="button submit"><?php esc_html_e( 'Post', 'buddyboss-platform' ); ?></button>
+
+						<?php do_action( 'bbp_theme_after_reply_form_submit_button' ); ?>
+
+					</div>
+
+					<?php do_action( 'bbp_theme_after_reply_form_submit_wrapper' ); ?>
+
+				</div>
+
+				<?php bboss_bbp_reply_form_fields(); ?>
+
+			</fieldset>
+
+			<?php do_action( 'bbp_theme_after_reply_form' ); ?>
+
+		</form>
+	</div>
+
+<?php elseif ( bboss_bbp_is_topic_closed() ) : ?>
+
+	<div id="no-reply-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-reply">
+		<div class="bp-feedback info">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p>
+				<?php
+				/* translators: %s: discussion title. */
+				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss-platform' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() self-escapes via its filter.
+				?>
+			</p>
+		</div>
+	</div>
+
+<?php elseif ( bboss_bbp_is_forum_closed( bboss_bbp_get_topic_forum_id() ) ) : ?>
+
+	<div id="no-reply-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-reply">
+		<div class="bp-feedback info">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_topic_forum_id() ) ) ); ?></p>
+		</div>
+	</div>
+
+<?php else : ?>
+
+	<div id="no-reply-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-reply">
+		<div class="bp-feedback info">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot reply to this discussion.', 'buddyboss-platform' ) : esc_html_e( 'Log in  to reply.', 'buddyboss-platform' ); ?></p>
+		</div>
+	</div>
+
+<?php endif; ?>
+
+<?php if ( bboss_bbp_is_reply_edit() ) : ?>
+
+</div>
+
+<?php endif; ?>

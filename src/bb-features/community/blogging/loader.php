@@ -86,8 +86,8 @@ function bboss_blog_rl_archive_close() {
 	the_posts_pagination(
 		array(
 			'mid_size'  => 2,
-			'prev_text' => esc_html__( 'Previous', 'buddyboss' ),
-			'next_text' => esc_html__( 'Next', 'buddyboss' ),
+			'prev_text' => esc_html__( 'Previous', 'buddyboss-platform' ),
+			'next_text' => esc_html__( 'Next', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -120,7 +120,7 @@ function bboss_blog_setup_profile_nav() {
 
 	bboss_core_new_nav_item(
 		array(
-			'name'                    => __( 'Blogs', 'buddyboss' ),
+			'name'                    => __( 'Blogs', 'buddyboss-platform' ),
 			'slug'                    => 'blog',
 			'position'                => 90,
 			'screen_function'         => 'bboss_blog_screen_member_posts',
@@ -185,7 +185,7 @@ function bboss_blog_enqueue_member_blog_assets() {
 
 	wp_enqueue_style(
 		'bb-member-blog',
-		bboss()->plugin_url . 'bp-templates/bp-nouveau/buddypress/css/member-blog.css',
+		bboss()->plugin_url . 'bboss-templates/bboss-nouveau/buddypress/css/member-blog.css',
 		array(),
 		bboss_get_version()
 	);

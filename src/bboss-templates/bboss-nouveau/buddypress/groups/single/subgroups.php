@@ -32,7 +32,7 @@ if ( 'subgroups' === bboss_current_action() && bboss_enable_content_counts() ) {
 						'<span class="bb-count">%d</span> Group',
 						'<span class="bb-count">%d</span> Groups',
 						$count,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					array( 'span' => array( 'class' => true ) )
 				),

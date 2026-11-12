@@ -186,7 +186,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 		} );
 
 		if ( isDuplicate ) {
-			setModalError( __( 'This extension already exists.', 'buddyboss' ) );
+			setModalError( __( 'This extension already exists.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -208,7 +208,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 
 		// MIME type is required.
 		if ( ! mimeType ) {
-			setModalError( __( 'MIME type is required.', 'buddyboss' ) );
+			setModalError( __( 'MIME type is required.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -353,7 +353,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 										handleRemoveExtension( option.value );
 									} }
 									disabled={ disabled }
-									aria-label={ __( 'Remove extension', 'buddyboss' ) }
+									aria-label={ __( 'Remove extension', 'buddyboss-platform' ) }
 								>
 									<i className="bb-icons-rl bb-icons-rl-x-circle" />
 								</button>
@@ -380,13 +380,13 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 					disabled={ disabled }
 				>
 					<i className="bb-icons-rl bb-icons-rl-plus" />
-					<span>{ field.add_button_label || __( 'Add Extension', 'buddyboss' ) }</span>
+					<span>{ field.add_button_label || __( 'Add Extension', 'buddyboss-platform' ) }</span>
 				</button>
 			) }
 
 			{ isModalOpen && (
 				<Modal
-					title={ __( 'Add New Extension', 'buddyboss' ) }
+					title={ __( 'Add New Extension', 'buddyboss-platform' ) }
 					onRequestClose={ handleCloseModal }
 					className="bb-extension-modal bb-admin-settings-modal"
 					overlayClassName="bb-extension-modal-overlay"
@@ -400,7 +400,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 						) }
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'Extension', 'buddyboss' ) }
+								{ __( 'Extension', 'buddyboss-platform' ) }
 							</label>
 							<TextControl
 								value={ newExtension }
@@ -408,24 +408,24 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 									setNewExtension( val );
 									setModalError( '' );
 								} }
-								placeholder={ __( 'Enter an extension (e.g., .extension)', 'buddyboss' ) }
+								placeholder={ __( 'Enter an extension (e.g., .extension)', 'buddyboss-platform' ) }
 								__nextHasNoMarginBottom
 							/>
 						</div>
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'Description', 'buddyboss' ) }
+								{ __( 'Description', 'buddyboss-platform' ) }
 							</label>
 							<TextareaControl
 								value={ newDescription }
 								onChange={ setNewDescription }
-								placeholder={ __( 'Enter a short description', 'buddyboss' ) }
+								placeholder={ __( 'Enter a short description', 'buddyboss-platform' ) }
 								__nextHasNoMarginBottom
 							/>
 						</div>
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'MIME Type', 'buddyboss' ) }
+								{ __( 'MIME Type', 'buddyboss-platform' ) }
 							</label>
 							<div className="bb-extension-modal__mime-row">
 								<TextControl
@@ -434,7 +434,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 										setNewMimeType( val );
 										setModalError( '' );
 									} }
-									placeholder={ __( 'Enter MIME type', 'buddyboss' ) }
+									placeholder={ __( 'Enter MIME type', 'buddyboss-platform' ) }
 									__nextHasNoMarginBottom
 								/>
 								<Button
@@ -445,12 +445,12 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 										mimeChecker.setMimeCheckerResult( '' );
 									} }
 								>
-									{ __( 'MIME Checker', 'buddyboss' ) }
+									{ __( 'MIME Checker', 'buddyboss-platform' ) }
 								</Button>
 							</div>
 							{ ! mimeChecker.isMimeCheckerOpen && ! newMimeType.trim() && (
 								<p className="bb-extension-modal__field-hint">
-									{ __( 'Not sure? Click "MIME Checker" to detect the correct type from a sample file.', 'buddyboss' ) }
+									{ __( 'Not sure? Click "MIME Checker" to detect the correct type from a sample file.', 'buddyboss-platform' ) }
 								</p>
 							) }
 						</div>
@@ -467,14 +467,14 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 							variant="secondary"
 							onClick={ handleCloseModal }
 						>
-							{ __( 'Cancel', 'buddyboss' ) }
+							{ __( 'Cancel', 'buddyboss-platform' ) }
 						</Button>
 						<Button
 							variant="primary"
 							onClick={ handleSaveExtension }
 							disabled={ ! newExtension.trim() || ! newMimeType.trim() }
 						>
-							{ __( 'Save', 'buddyboss' ) }
+							{ __( 'Save', 'buddyboss-platform' ) }
 						</Button>
 					</div>
 				</Modal>

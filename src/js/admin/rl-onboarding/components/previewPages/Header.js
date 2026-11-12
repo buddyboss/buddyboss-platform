@@ -9,9 +9,9 @@ export const Header = ({ formData = {}, previewMode = 'light' }) => {
         <div className="bb-rl-preview-page-header">
             <div className="bb-rl-preview-site-title">
                 {previewMode === 'dark' && darkLogo ? (
-                    <img src={darkLogo} alt={__('Site Logo Dark', 'buddyboss')} />
+                    <img src={darkLogo} alt={__('Site Logo Dark', 'buddyboss-platform')} />
                 ) : previewMode === 'light' && lightLogo ? (
-                    <img src={lightLogo} alt={__('Site Logo', 'buddyboss')} />
+                    <img src={lightLogo} alt={__('Site Logo', 'buddyboss-platform')} />
                 ) : (
                     <div className="bb-rl-preview-logo-placeholder">
                         {blogname}

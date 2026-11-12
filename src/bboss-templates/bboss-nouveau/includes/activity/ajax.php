@@ -145,7 +145,7 @@ add_action(
  */
 function bboss_nouveau_ajax_mark_activity_favorite() {
 
-	$error_message = esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' );
+	$error_message = esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' );
 
 	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $error_message );
@@ -161,7 +161,7 @@ function bboss_nouveau_ajax_mark_activity_favorite() {
 	$user_id   = bboss_loggedin_user_id();
 
 	if ( ! bboss_all_enabled_reactions( $item_type ) ) {
-		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' ) );
+		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-platform' ) );
 	}
 
 	if ( ! empty( $_POST['reaction_id'] ) ) {
@@ -199,7 +199,7 @@ function bboss_nouveau_ajax_mark_activity_favorite() {
 				<a href="%1$s"><div class="bb-component-nav-item-point">%2$s</div> </a>
 			</li>',
 			esc_url( bboss_loggedin_user_domain() . bboss_get_activity_slug() . '/favorites/' ),
-			bboss_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
+			bboss_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss-platform' ) : esc_html__( 'Likes', 'buddyboss-platform' )
 		);
 	}
 
@@ -215,7 +215,7 @@ function bboss_nouveau_ajax_mark_activity_favorite() {
  */
 function bboss_nouveau_ajax_unmark_activity_favorite() {
 
-	$error_message = esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' );
+	$error_message = esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' );
 
 	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $error_message );
@@ -227,7 +227,7 @@ function bboss_nouveau_ajax_unmark_activity_favorite() {
 	}
 
 	if ( empty( $_POST['item_id'] ) ) {
-		wp_send_json_error( esc_html__( 'No item id', 'buddyboss' ) );
+		wp_send_json_error( esc_html__( 'No item id', 'buddyboss-platform' ) );
 	}
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
@@ -235,7 +235,7 @@ function bboss_nouveau_ajax_unmark_activity_favorite() {
 	$user_id   = bboss_loggedin_user_id();
 
 	if ( ! bboss_all_enabled_reactions( $item_type ) ) {
-		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' ) );
+		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-platform' ) );
 	}
 
 	$un_reacted = bboss_activity_remove_user_favorite(
@@ -263,7 +263,7 @@ function bboss_nouveau_ajax_unmark_activity_favorite() {
 				<span class="bp-icon" aria-hidden="true"></span>
 				<p>%s</p>
 			</aside>',
-			esc_html__( 'Sorry, there was no activity found.', 'buddyboss' )
+			esc_html__( 'Sorry, there was no activity found.', 'buddyboss-platform' )
 		);
 	}
 
@@ -302,7 +302,7 @@ function bboss_nouveau_ajax_delete_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'There was a problem when deleting. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem when deleting. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -412,7 +412,7 @@ function bboss_nouveau_ajax_delete_activity() {
 		}
 	}
 
-	/** This action is documented in bp-activity/bp-activity-actions.php */
+	/** This action is documented in bboss-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 	// Deleting an activity comment.
@@ -433,7 +433,7 @@ function bboss_nouveau_ajax_delete_activity() {
 		}
 	}
 
-	/** This action is documented in bp-activity/bp-activity-actions.php */
+	/** This action is documented in bboss-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 
 	// The activity has been deleted successfully.
@@ -442,7 +442,7 @@ function bboss_nouveau_ajax_delete_activity() {
 	// If on a single activity redirect to user's home.
 	if ( ! empty( $_POST['is_single'] ) ) {
 		$response['redirect'] = bboss_core_get_user_domain( $activity->user_id );
-		bboss_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
+		bboss_core_add_message( __( 'Activity deleted successfully', 'buddyboss-platform' ) );
 	}
 
 	$activity_html      = '';
@@ -525,7 +525,7 @@ function bboss_nouveau_ajax_get_single_activity_content() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -595,7 +595,7 @@ function bboss_nouveau_ajax_get_single_activity_content() {
 		}
 	}
 
-	/** This filter is documented in bp-activity/bboss-activity-template.php */
+	/** This filter is documented in bboss-activity/bboss-activity-template.php */
 	$content = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
 
 	wp_send_json_success( array( 'contents' => $content ) );
@@ -617,7 +617,7 @@ function bboss_nouveau_ajax_new_activity_comment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'There was an error posting your reply. Please try again.', 'buddyboss' )
+			esc_html__( 'There was an error posting your reply. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -644,7 +644,7 @@ function bboss_nouveau_ajax_new_activity_comment() {
 			array(
 				'feedback' => sprintf(
 					'<div class="bp-feedback bp-messages error">%s</div>',
-					esc_html__( 'Please do not leave the comment area blank.', 'buddyboss' )
+					esc_html__( 'Please do not leave the comment area blank.', 'buddyboss-platform' )
 				),
 			)
 		);
@@ -824,7 +824,7 @@ function bboss_nouveau_ajax_get_activity_objects() {
 	}
 
 	if ( empty( $response ) ) {
-		wp_send_json_error( array( 'error' => __( 'No activities were found.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'error' => __( 'No activities were found.', 'buddyboss-platform' ) ) );
 	} else {
 		wp_send_json_success( $response );
 	}
@@ -849,7 +849,7 @@ function bboss_nouveau_ajax_post_update() {
 	$topics_enabled = bboss_is_enabled_activity_topics();
 	$topic_id       = $topics_enabled && isset( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
 	if ( $topics_enabled && bboss_is_activity_topic_required() && isset( $_POST['topic_id'] ) && empty( $topic_id ) ) {
-		wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss-platform' ) ) );
 	}
 	if ( ! empty( $topic_id ) ) {
 		$existing_topic_id = bboss_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
@@ -876,13 +876,13 @@ function bboss_nouveau_ajax_post_update() {
 			}
 			$topic_exists = function_exists( 'bboss_topics_manager_instance' ) ? bboss_topics_manager_instance()->bb_get_topics( $args ) : false;
 			if ( empty( $topic_exists ) || empty( $topic_exists['topics'] ) ) {
-				wp_send_json_error( array( 'message' => esc_html__( 'The topic does not exist.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => esc_html__( 'The topic does not exist.', 'buddyboss-platform' ) ) );
 			} elseif (
 				'user' === $object &&
 				function_exists( 'bboss_activity_topics_manager_instance' ) &&
 				! bboss_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $topic_id )
 			) {
-				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss-platform' ) ) );
 			} elseif (
 				'group' === $object &&
 				bboss_is_active( 'groups' ) &&
@@ -890,7 +890,7 @@ function bboss_nouveau_ajax_post_update() {
 				function_exists( 'bb_can_user_post_to_group_activity_topic' ) &&
 				! bb_can_user_post_to_group_activity_topic( bboss_loggedin_user_id(), $item_id, $topic_id )
 			) {
-				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss-platform' ) ) );
 			}
 		}
 	}
@@ -919,7 +919,7 @@ function bboss_nouveau_ajax_post_update() {
 				if ( ! $can_upload_feature_image ) {
 					wp_send_json_error(
 						array(
-							'message' => __( 'You do not have permission to upload feature image.', 'buddyboss' ),
+							'message' => __( 'You do not have permission to upload feature image.', 'buddyboss-platform' ),
 						)
 					);
 				}
@@ -979,7 +979,7 @@ function bboss_nouveau_ajax_post_update() {
 		if ( ! $toolbar_option ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Please enter some content to post.', 'buddyboss' ),
+					'message' => __( 'Please enter some content to post.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -994,7 +994,7 @@ function bboss_nouveau_ajax_post_update() {
 	if ( ! empty( $activity_id ) && bboss_is_close_activity_comments_enabled() && bboss_is_activity_comments_closed( $activity_id ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'The comments are closed for the activity. The activity cannot be edited.', 'buddyboss' )
+				'message' => __( 'The comments are closed for the activity. The activity cannot be edited.', 'buddyboss-platform' )
 			)
 		);
 	}
@@ -1034,9 +1034,9 @@ function bboss_nouveau_ajax_post_update() {
 		if ( ! bboss_media_user_can_upload( bboss_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
 			$message = sprintf(
 			/* translators: 1: string or media and medias. 2: group text. */
-				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),
-				_n( 'media', 'medias', count( $_POST['media'] ), 'buddyboss' ),
-				( ! empty( $group_id ) ? __( ' inside group', 'buddyboss' ) : '' )
+				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss-platform' ),
+				_n( 'media', 'medias', count( $_POST['media'] ), 'buddyboss-platform' ),
+				( ! empty( $group_id ) ? __( ' inside group', 'buddyboss-platform' ) : '' )
 			);
 			wp_send_json_error( array( 'message' => $message ) );
 		}
@@ -1057,9 +1057,9 @@ function bboss_nouveau_ajax_post_update() {
 		if ( ! bb_document_user_can_upload( bboss_loggedin_user_id(), $group_id ) && ! $is_same_document ) {
 			$message = sprintf(
 			/* translators: 1: string or media and medias. 2: group text. */
-				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),
-				_n( 'document', 'documents', count( $_POST['document'] ), 'buddyboss' ),
-				( ! empty( $group_id ) ? __( ' inside group', 'buddyboss' ) : '' )
+				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss-platform' ),
+				_n( 'document', 'documents', count( $_POST['document'] ), 'buddyboss-platform' ),
+				( ! empty( $group_id ) ? __( ' inside group', 'buddyboss-platform' ) : '' )
 			);
 
 			wp_send_json_error( array( 'message' => $message ) );
@@ -1111,7 +1111,7 @@ function bboss_nouveau_ajax_post_update() {
 				if ( $scheduled_timestamp < $next_hour_timestamp ) {
 					wp_send_json_error(
 						array(
-							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss-platform' ),
 						)
 					);
 				}
@@ -1120,7 +1120,7 @@ function bboss_nouveau_ajax_post_update() {
 				if ( $scheduled_timestamp > $three_months_ago_timestamp ) {
 					wp_send_json_error(
 						array(
-							'message' => __( 'Please set a schedule date between next three months.', 'buddyboss' ),
+							'message' => __( 'Please set a schedule date between next three months.', 'buddyboss-platform' ),
 						)
 					);
 				}
@@ -1131,7 +1131,7 @@ function bboss_nouveau_ajax_post_update() {
 				if ( strtotime( $obj_activity->date_recorded ) !== $scheduled_timestamp && $scheduled_timestamp < $next_hour_timestamp ) {
 					wp_send_json_error(
 						array(
-							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss-platform' ),
 						)
 					);
 				}
@@ -1142,7 +1142,7 @@ function bboss_nouveau_ajax_post_update() {
 	if ( $is_scheduled && ! bboss_is_enabled_activity_schedule_posts() ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Schedule activity settings disabled.', 'buddyboss' ),
+				'message' => __( 'Schedule activity settings disabled.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -1152,7 +1152,7 @@ function bboss_nouveau_ajax_post_update() {
 		if ( ! bboss_user_can_create_activity() ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You don\'t have access to do a activity.', 'buddyboss' ),
+					'message' => __( 'You don\'t have access to do a activity.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -1165,7 +1165,7 @@ function bboss_nouveau_ajax_post_update() {
 		) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You don\'t have access to schedule the activity.', 'buddyboss' ),
+					'message' => __( 'You don\'t have access to schedule the activity.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -1216,7 +1216,7 @@ function bboss_nouveau_ajax_post_update() {
 			) {
 				wp_send_json_error(
 					array(
-						'message' => __( 'You don\'t have permission to schedule activity in particular group.', 'buddyboss' ),
+						'message' => __( 'You don\'t have permission to schedule activity in particular group.', 'buddyboss-platform' ),
 					)
 				);
 			}
@@ -1255,14 +1255,14 @@ function bboss_nouveau_ajax_post_update() {
 			$draft_activity_meta_key .= '_' . $item_id;
 		}
 	} else {
-		/** This filter is documented in bp-activity/bp-activity-actions.php */
+		/** This filter is documented in bboss-activity/bp-activity-actions.php */
 		$activity_id = apply_filters( 'bp_activity_custom_update', false, $object, $item_id, $_POST['content'] );
 	}
 
 	if ( empty( $activity_id ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'There was a problem posting your update. Please try again.', 'buddyboss' ),
+				'message' => __( 'There was a problem posting your update. Please try again.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -1313,7 +1313,7 @@ function bboss_nouveau_ajax_post_update() {
 	wp_send_json_success(
 		array(
 			'id'               => $activity_id,
-			'message'          => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bboss_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
+			'message'          => esc_html__( 'Update posted.', 'buddyboss-platform' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bboss_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss-platform' ) ),
 			'activity'         => $activity,
 
 			/**
@@ -1391,7 +1391,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 		if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $submitted_data_key ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' ),
+					'message' => __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -1419,7 +1419,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 			// carries the same approved save-failed text as the composers.
 			wp_send_json_error(
 				array(
-					'message' => __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' ),
+					'message' => __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -1471,7 +1471,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 			// would be dropped unseen by this save. Hand it back instead: the
 			// browser merges it with the member's text and saves again.
 			if ( bboss_draft_save_waits_for_handback( $draft_user_id, $draft_activity['data_key'] ) ) {
-				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
 
 				wp_send_json_error(
@@ -1505,7 +1505,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 				) {
 					wp_send_json_error(
 						array(
-							'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss' ),
+							'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss-platform' ),
 						)
 					);
 				}
@@ -1709,12 +1709,12 @@ function bboss_nouveau_ajax_post_draft_activity() {
 			$raw_draft_size = strlen( maybe_serialize( wp_unslash( $draft_activity ) ) );
 
 			if ( $raw_draft_size > bboss_draft_max_size() ) {
-				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $raw_draft_size, 'per_draft' );
 
 				wp_send_json_error(
 					array(
-						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss-platform' ),
 					)
 				);
 			}
@@ -1782,7 +1782,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 
 				wp_send_json_error(
 					array(
-						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss-platform' ),
 					)
 				);
 			}
@@ -1792,7 +1792,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 			if ( empty( $draft_budget['allowed'] ) ) {
 				$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
 
-				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $draft_size, $budget_reason );
 
 				// Two different refusals, and telling them apart matters. When the
@@ -1803,8 +1803,8 @@ function bboss_nouveau_ajax_post_draft_activity() {
 				// that stored data either, so the message only tells them what they
 				// can do: keep their text. bb_draft_cap_rejected above still logs it.
 				$budget_message = 'meta_budget' === $budget_reason
-					? __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' )
-					: __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' );
+					? __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' )
+					: __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss-platform' );
 
 				wp_send_json_error(
 					array(
@@ -1899,7 +1899,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 			// that never loaded the stored draft (a failed fetch, a stale tab)
 			// must not delete it, or its attachments, on the member's behalf.
 			if ( ! bboss_draft_base_matches( $stored_draft, bboss_draft_request_base() ) ) {
-				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
 
 				wp_send_json_error(
@@ -2055,7 +2055,7 @@ function bboss_nouveau_ajax_spam_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'There was a problem marking this activity as spam. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem marking this activity as spam. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -2088,7 +2088,7 @@ function bboss_nouveau_ajax_spam_activity() {
 		wp_send_json_error( $response );
 	}
 
-	/** This action is documented in bp-activity/bp-activity-actions.php */
+	/** This action is documented in bboss-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_before_action_spam_activity', $activity->id, $activity );
 
 	// Mark as spam.
@@ -2096,7 +2096,7 @@ function bboss_nouveau_ajax_spam_activity() {
 	$activity->title_required = false;
 	$activity->save();
 
-	/** This action is documented in bp-activity/bp-activity-actions.php */
+	/** This action is documented in bboss-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_action_spam_activity', $activity->id, $activity->user_id );
 
 	// Prepare the successfull reply.
@@ -2105,7 +2105,7 @@ function bboss_nouveau_ajax_spam_activity() {
 	// If on a single activity redirect to user's home.
 	if ( ! empty( $_POST['is_single'] ) ) {
 		$response['redirect'] = bboss_core_get_user_domain( $activity->user_id );
-		bboss_core_add_message( __( 'This activity has been marked as spam and is no longer visible.', 'buddyboss' ) );
+		bboss_core_add_message( __( 'This activity has been marked as spam and is no longer visible.', 'buddyboss-platform' ) );
 	}
 
 	// Send the json reply.
@@ -2181,13 +2181,13 @@ function bboss_nouveau_ajax_activity_update_privacy() {
  */
 function bboss_nouveau_ajax_activity_update_close_comments() {
 	$response = array(
-		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
 	);
 
 	if ( ! bboss_is_close_activity_comments_enabled() ) {
 		wp_send_json_error(
 			array(
-				'feedback' => esc_html__( 'There was a problem marking this operation. Close comments setting is disabled.', 'buddyboss' ),
+				'feedback' => esc_html__( 'There was a problem marking this operation. Close comments setting is disabled.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2220,11 +2220,11 @@ function bboss_nouveau_ajax_activity_update_close_comments() {
 	if ( ! empty( $retval ) ) {
 
 		if ( 'unclosed_comments' === $retval ) {
-			$response['feedback'] = esc_html__( 'You turned on commenting for this post', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'You turned on commenting for this post', 'buddyboss-platform' );
 		} elseif ( 'closed_comments' === $retval ) {
-			$response['feedback'] = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'You turned off commenting for this post', 'buddyboss-platform' );
 		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
-			$response['feedback'] = esc_html__( 'You are not permitted with the requested operation', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'You are not permitted with the requested operation', 'buddyboss-platform' );
 		}
 
 		/**
@@ -2258,7 +2258,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Invalid request.', 'buddyboss' ),
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2267,7 +2267,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Invalid request.', 'buddyboss' ),
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2275,7 +2275,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 	if ( empty( $_POST['activity_id'] ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Activity id cannot be empty.', 'buddyboss' ),
+				'message' => __( 'Activity id cannot be empty.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2283,7 +2283,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 	if ( empty( $_POST['parent_comment_id'] ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Parent comment id cannot be empty.', 'buddyboss' ),
+				'message' => __( 'Parent comment id cannot be empty.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2303,7 +2303,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 	if ( is_wp_error( $privacy_check ) ) {
 		wp_send_json_error(
 			array(
-				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
+				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2313,7 +2313,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 	if ( empty( $parent_commment ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Invalid request.', 'buddyboss' ),
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2326,7 +2326,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 	) {
 		wp_send_json_error(
 			array(
-				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
+				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2346,7 +2346,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 	if ( empty( $comments[0] ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'No more items to load.', 'buddyboss' ),
+				'message' => __( 'No more items to load.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2372,7 +2372,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 	} else {
 		wp_send_json_error(
 			array(
-				'message' => __( 'No more items to load.', 'buddyboss' ),
+				'message' => __( 'No more items to load.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2396,7 +2396,7 @@ function bboss_nouveau_ajax_activity_sync_from_modal() {
 	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Invalid request.', 'buddyboss' ),
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2405,7 +2405,7 @@ function bboss_nouveau_ajax_activity_sync_from_modal() {
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Invalid request.', 'buddyboss' ),
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2413,7 +2413,7 @@ function bboss_nouveau_ajax_activity_sync_from_modal() {
 	if ( empty( $_POST['activity_id'] ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Activity id cannot be empty.', 'buddyboss' ),
+				'message' => __( 'Activity id cannot be empty.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2424,7 +2424,7 @@ function bboss_nouveau_ajax_activity_sync_from_modal() {
 	if ( ! bboss_activity_user_can_view( $activity_id ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Invalid request.', 'buddyboss' ),
+				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2466,7 +2466,7 @@ function bboss_nouveau_ajax_activity_sync_from_modal() {
  */
 function bboss_nouveau_ajax_toggle_activity_notification_status() {
 	$response = array(
-		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
 	);
 
 	if ( ! bboss_is_post_request() ) {
@@ -2499,11 +2499,11 @@ function bboss_nouveau_ajax_toggle_activity_notification_status() {
 	$retval = bboss_toggle_activity_notification_status( $args );
 
 	if ( 'unmute' === $retval ) {
-		$response['feedback'] = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss' );
+		$response['feedback'] = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss-platform' );
 	} elseif ( 'mute' === $retval ) {
-		$response['feedback'] = esc_html__( 'Notifications for this activity have been muted.', 'buddyboss' );
+		$response['feedback'] = esc_html__( 'Notifications for this activity have been muted.', 'buddyboss-platform' );
 	} elseif ( 'already_muted' === $retval ) {
-		$response['feedback'] = esc_html__( 'Notifications for this activity already been muted.', 'buddyboss' );
+		$response['feedback'] = esc_html__( 'Notifications for this activity already been muted.', 'buddyboss-platform' );
 	}
 
 	if ( ! empty( $retval ) && in_array( $retval, array( 'unmute', 'mute', 'already_muted' ), true ) ) {
@@ -2524,7 +2524,7 @@ function bboss_nouveau_ajax_delete_scheduled_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'There was a problem when deleting. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem when deleting. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -2570,7 +2570,7 @@ function bboss_nouveau_ajax_delete_scheduled_activity() {
 		if ( ! $is_admin && ! $is_mod ) {
 			wp_send_json_error(
 				array(
-					'feedback' => __( 'You don\'t have permission to delete scheduled activity.', 'buddyboss' ),
+					'feedback' => __( 'You don\'t have permission to delete scheduled activity.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -2597,7 +2597,7 @@ function bboss_nouveau_ajax_delete_scheduled_activity() {
 	// If on a single activity redirect to user's home.
 	if ( ! empty( $_POST['is_single'] ) ) {
 		$response['redirect'] = bboss_core_get_user_domain( $activity->user_id );
-		bboss_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
+		bboss_core_add_message( __( 'Activity deleted successfully', 'buddyboss-platform' ) );
 	}
 
 	wp_send_json_success( $response );

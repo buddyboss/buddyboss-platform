@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_track_body' ); ?>
 
-	<h3><?php esc_html_e( 'Track your order', 'buddyboss' ); ?></h3>
+	<h3><?php esc_html_e( 'Track your order', 'buddyboss-platform' ); ?></h3>
 
 	<?php do_action( 'wc4bp_after_track_heading' ); ?>
 

@@ -37,7 +37,7 @@ function bboss_messages_action_conversation() {
 		if ( bboss_messages_is_disabled_group_thread( $thread_id ) ) {
 			$redirect = bboss_messages_get_disabled_group_thread_redirect_url( $thread_id );
 
-			bboss_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
+			bboss_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss-platform' ), 'warning' );
 			bboss_core_redirect( $redirect );
 		}
 
@@ -51,9 +51,9 @@ function bboss_messages_action_conversation() {
 
 		// Send the reply.
 		if ( ! empty( $new_reply ) ) {
-			bboss_core_add_message( __( 'Your reply was sent successfully', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Your reply was sent successfully', 'buddyboss-platform' ) );
 		} else {
-			bboss_core_add_message( __( 'There was a problem sending your reply. Please try again.', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'There was a problem sending your reply. Please try again.', 'buddyboss-platform' ), 'error' );
 		}
 
 		bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/view/' . $thread_id . '/' );

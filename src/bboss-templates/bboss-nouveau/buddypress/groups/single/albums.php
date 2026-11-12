@@ -25,7 +25,7 @@ if ( bboss_enable_content_counts() && 'albums' === bboss_current_action() && ! b
 					'<span class="bb-count">%d</span> Album',
 					'<span class="bb-count">%d</span> Albums',
 					$count,
-					'buddyboss'
+					'buddyboss-platform'
 				),
 				array( 'span' => array( 'class' => true ) )
 			),

@@ -19,13 +19,13 @@ defined( 'ABSPATH' ) || exit;
 $post_title = '';
 
 if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
-	$post_title = __( 'No results found', "buddyboss" );
+	$post_title = __( 'No results found', "buddyboss-platform" );
 } elseif ( BBoss_Search::instance()->has_search_results() ) {
 	/* translators: %s: search query. */
-	$post_title = sprintf( __( 'Showing results for \'%s\'', "buddyboss" ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
+	$post_title = sprintf( __( 'Showing results for \'%s\'', "buddyboss-platform" ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
 } else {
 	/* translators: %s: search query. */
-	$post_title = sprintf( __( 'No results for \'%s\'', "buddyboss" ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
+	$post_title = sprintf( __( 'No results for \'%s\'', "buddyboss-platform" ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
 }
 ?>
 <header class="entry-header">

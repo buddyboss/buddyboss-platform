@@ -19,9 +19,9 @@ defined( 'ABSPATH' ) || exit;
 			<div class="dz-image">
 				<img data-dz-thumbnail />
 			</div>
-			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 			<div class="dz-details">
-				<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss' ); ?></div>
+				<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss-platform' ); ?></div>
 				<div class="dz-filename" data-dz-name></div>
 			</div>
 			<div class="dz-progress-ring-wrap">

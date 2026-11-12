@@ -253,14 +253,14 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				setIsAddModalOpen( false );
 				setError( '' );
 				if ( setNotice ) {
-					setNotice( { type: 'success', message: __( 'Topic created successfully.', 'buddyboss' ) } );
+					setNotice( { type: 'success', message: __( 'Topic created successfully.', 'buddyboss-platform' ) } );
 				}
 			} else {
-				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to add topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to add topic.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
-			setError( __( 'An error occurred while adding the topic.', 'buddyboss' ) );
+			setError( __( 'An error occurred while adding the topic.', 'buddyboss-platform' ) );
 		} );
 	}, [ groupId ] );
 
@@ -299,14 +299,14 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				setEditingTopic( null );
 				setError( '' );
 				if ( setNotice ) {
-					setNotice( { type: 'success', message: __( 'Topic updated successfully.', 'buddyboss' ) } );
+					setNotice( { type: 'success', message: __( 'Topic updated successfully.', 'buddyboss-platform' ) } );
 				}
 			} else {
-				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to update topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to update topic.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
-			setError( __( 'An error occurred while updating the topic.', 'buddyboss' ) );
+			setError( __( 'An error occurred while updating the topic.', 'buddyboss-platform' ) );
 		} );
 	}, [ groupId ] );
 
@@ -332,11 +332,11 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				setIsDeleteModalOpen( true );
 				setError( '' );
 			} else {
-				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to initiate topic deletion.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to initiate topic deletion.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			setIsDeleteLoading( false );
-			setError( __( 'An error occurred while initiating topic deletion.', 'buddyboss' ) );
+			setError( __( 'An error occurred while initiating topic deletion.', 'buddyboss-platform' ) );
 		} );
 	}, [ groupId ] );
 
@@ -367,14 +367,14 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				setDeletingTopic( null );
 				setError( '' );
 				if ( setNotice ) {
-					setNotice( { type: 'success', message: __( 'Topic deleted successfully.', 'buddyboss' ) } );
+					setNotice( { type: 'success', message: __( 'Topic deleted successfully.', 'buddyboss-platform' ) } );
 				}
 			} else {
-				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to delete topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to delete topic.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
-			setError( __( 'An error occurred while deleting the topic.', 'buddyboss' ) );
+			setError( __( 'An error occurred while deleting the topic.', 'buddyboss-platform' ) );
 		} );
 	}, [ groupId ] );
 
@@ -418,11 +418,11 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			}, noncesRef.current.reorder || '' ).then( function ( response ) {
 				if ( ! response.success ) {
 					setTopics( previousTopics );
-					setError( __( 'Failed to save topic order.', 'buddyboss' ) );
+					setError( __( 'Failed to save topic order.', 'buddyboss-platform' ) );
 				}
 			} ).catch( function () {
 				setTopics( previousTopics );
-				setError( __( 'Failed to save topic order.', 'buddyboss' ) );
+				setError( __( 'Failed to save topic order.', 'buddyboss-platform' ) );
 			} );
 		}
 		// Note: drag state (dragIndex/dragOverIndex) is reset by the onDragEnd handler on the element.
@@ -497,7 +497,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 									{ ( topic.is_global || topic.is_global_activity ) && (
 										<span
 											className="bb-topic-list__global-icon"
-											title={ __( 'Global', 'buddyboss' ) }
+											title={ __( 'Global', 'buddyboss-platform' ) }
 										>
 											<i className="bb-icons-rl-globe-simple"></i>
 										</span>
@@ -507,7 +507,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 								<div className="bb-topic-list__actions">
 									<DropdownMenu
 										icon={ <i className="bb-icons-rl-dots-three"></i> }
-										label={ __( 'More options', 'buddyboss' ) }
+										label={ __( 'More options', 'buddyboss-platform' ) }
 										className="bb-topic-list__menu-btn"
 									>
 										{ function ( dropdownProps ) {
@@ -523,7 +523,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 															setIsEditModalOpen( true );
 														} }
 													>
-														{ __( 'Edit', 'buddyboss' ) }
+														{ __( 'Edit', 'buddyboss-platform' ) }
 													</MenuItem>
 													<MenuItem
 														icon={ <BBIcon name="trash" /> }
@@ -534,7 +534,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 															handleInitiateDelete( topic );
 														} }
 													>
-														{ __( 'Delete', 'buddyboss' ) }
+														{ __( 'Delete', 'buddyboss-platform' ) }
 													</MenuItem>
 												</MenuGroup>
 											);
@@ -555,7 +555,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 						} }
 					>
 						<span className="bb-icons-rl-plus"></span>
-						{ __( 'Add New Topic', 'buddyboss' ) }
+						{ __( 'Add New Topic', 'buddyboss-platform' ) }
 					</Button>
 				) }
 			</div>
@@ -563,7 +563,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			<p className="bb-topic-list__description">
 				{ /* translators: %d: maximum number of topics allowed. */
 					sprintf(
-						__( 'Maximum of %d topics can be added.', 'buddyboss' ),
+						__( 'Maximum of %d topics can be added.', 'buddyboss-platform' ),
 						maxTopics
 					)
 				}
@@ -684,7 +684,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 	var dropdownRef = useRef( null );
 
 	// Build options for SelectControl (only_from_activity_topics mode).
-	var selectOptions = [ { label: __( 'Select a topic', 'buddyboss' ), value: '' } ];
+	var selectOptions = [ { label: __( 'Select a topic', 'buddyboss-platform' ), value: '' } ];
 	if ( globalTopics && globalTopics.length > 0 ) {
 		globalTopics.forEach( function ( gt ) {
 			selectOptions.push( { label: gt.name, value: gt.slug } );
@@ -746,7 +746,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 		if ( 'only_from_activity_topics' === topicMode ) {
 			// Must select from dropdown — always a global topic.
 			if ( ! selectedSlug ) {
-				setModalError( __( 'Please select a topic.', 'buddyboss' ) );
+				setModalError( __( 'Please select a topic.', 'buddyboss-platform' ) );
 				return;
 			}
 			// Find the name from the selected slug.
@@ -759,7 +759,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 			// 'create_own_topics' or 'allow_both' - use the name field.
 			topicName = name.trim();
 			if ( ! topicName ) {
-				setModalError( __( 'Topic name is required.', 'buddyboss' ) );
+				setModalError( __( 'Topic name is required.', 'buddyboss-platform' ) );
 				return;
 			}
 
@@ -819,7 +819,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 			return (
 				<div className="bb-topic-modal__searchable-select" ref={ dropdownRef }>
 					<label className="components-base-control__label">
-						{ __( 'Topic Name', 'buddyboss' ) }
+						{ __( 'Topic Name', 'buddyboss-platform' ) }
 					</label>
 					<div className="bb-topic-modal__search-input-wrap">
 						<input
@@ -827,7 +827,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 							className="bb-topic-modal__search-input components-text-control__input"
 							value={ searchText }
 							disabled={ isGlobalLocked }
-							placeholder={ __( 'Select a topic', 'buddyboss' ) }
+							placeholder={ __( 'Select a topic', 'buddyboss-platform' ) }
 							onChange={ function ( e ) {
 								var val = e.target.value;
 								setSearchText( val );
@@ -865,7 +865,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 							} ) }
 							{ 0 === filteredSelectTopics.length && (
 								<li className="bb-topic-modal__dropdown-item bb-topic-modal__dropdown-item--empty">
-									{ __( 'No topics found', 'buddyboss' ) }
+									{ __( 'No topics found', 'buddyboss-platform' ) }
 								</li>
 							) }
 						</ul>
@@ -892,7 +892,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 			return (
 				<div className="bb-topic-modal__searchable-select" ref={ dropdownRef }>
 					<label className="components-base-control__label">
-						{ __( 'Topic Name', 'buddyboss' ) }
+						{ __( 'Topic Name', 'buddyboss-platform' ) }
 					</label>
 					<div className="bb-topic-modal__search-input-wrap">
 						<input
@@ -900,7 +900,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 							className="bb-topic-modal__search-input components-text-control__input"
 							value={ searchText }
 							disabled={ isGlobalLocked }
-							placeholder={ __( 'Select a topic', 'buddyboss' ) }
+							placeholder={ __( 'Select a topic', 'buddyboss-platform' ) }
 							onChange={ function ( e ) {
 								var val = e.target.value;
 								setSearchText( val );
@@ -942,14 +942,14 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 									<span className="bb-topic-modal__create-icon">+</span>
 									{ /* translators: %s: Topic name entered by user. */ }
 									{ sprintf(
-										__( 'Create "%s" New Topic', 'buddyboss' ),
+										__( 'Create "%s" New Topic', 'buddyboss-platform' ),
 										trimmedSearch
 									) }
 								</li>
 							) }
 							{ 0 === filteredTopics.length && ( ! trimmedSearch || hasExactMatch ) && (
 								<li className="bb-topic-modal__dropdown-item bb-topic-modal__dropdown-item--empty">
-									{ __( 'No topics found', 'buddyboss' ) }
+									{ __( 'No topics found', 'buddyboss-platform' ) }
 								</li>
 							) }
 						</ul>
@@ -961,7 +961,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 		// Default: 'create_own_topics' - text input only.
 		return (
 			<TextControl
-				label={ __( 'Topic Name', 'buddyboss' ) }
+				label={ __( 'Topic Name', 'buddyboss-platform' ) }
 				value={ name }
 				disabled={ isGlobalLocked }
 				onChange={ function ( val ) {
@@ -970,7 +970,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 						setModalError( '' );
 					}
 				} }
-				placeholder={ __( 'Enter topic name', 'buddyboss' ) }
+				placeholder={ __( 'Enter topic name', 'buddyboss-platform' ) }
 				__nextHasNoMarginBottom
 			/>
 		);
@@ -978,7 +978,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 
 	return (
 		<Modal
-			title={ isEditing ? __( 'Edit Topic', 'buddyboss' ) : __( 'Add New Topic', 'buddyboss' ) }
+			title={ isEditing ? __( 'Edit Topic', 'buddyboss-platform' ) : __( 'Add New Topic', 'buddyboss-platform' ) }
 			onRequestClose={ onClose }
 			className="bb-topic-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -992,7 +992,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 				{ permissionTypes && permissionTypes.length > 0 && (
 					<div className="bb-topic-modal__permission">
 						<label className="bb-topic-modal__permission-label">
-							{ __( 'Posting Permissions', 'buddyboss' ) }
+							{ __( 'Posting Permissions', 'buddyboss-platform' ) }
 						</label>
 						<RadioControl
 							selected={ permission }
@@ -1011,7 +1011,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -1019,7 +1019,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 					isBusy={ isSaving }
 					disabled={ isSaving }
 				>
-					{ isEditing ? __( 'Save', 'buddyboss' ) : __( 'Add Topic', 'buddyboss' ) }
+					{ isEditing ? __( 'Save', 'buddyboss-platform' ) : __( 'Add Topic', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>
@@ -1073,7 +1073,7 @@ function GroupTopicDeleteModal( { isOpen, onClose, onConfirm, topic, availableTo
 
 	// Add a default empty option.
 	topicOptions.unshift( {
-		label: __( 'Select topic', 'buddyboss' ),
+		label: __( 'Select topic', 'buddyboss-platform' ),
 		value: '',
 	} );
 
@@ -1093,7 +1093,7 @@ function GroupTopicDeleteModal( { isOpen, onClose, onConfirm, topic, availableTo
 			title={
 				/* translators: %s: Topic name. */
 				sprintf(
-					__( 'Deleting "%s"?', 'buddyboss' ),
+					__( 'Deleting "%s"?', 'buddyboss-platform' ),
 					topic.name
 				)
 			}
@@ -1103,18 +1103,18 @@ function GroupTopicDeleteModal( { isOpen, onClose, onConfirm, topic, availableTo
 		>
 			<div className="bb-topic-delete-modal__body">
 				<p className="bb-topic-delete-modal__warning">
-					{ __( 'Deleting this topic will remove it from all posts it is assigned to and cannot be undone. Those posts will have no topic unless you assign a new one using the options below.', 'buddyboss' ) }
+					{ __( 'Deleting this topic will remove it from all posts it is assigned to and cannot be undone. Those posts will have no topic unless you assign a new one using the options below.', 'buddyboss-platform' ) }
 				</p>
 
 				<RadioControl
 					selected={ migrateType }
 					options={ [
 						{
-							label: __( 'Move posts to another topic', 'buddyboss' ),
+							label: __( 'Move posts to another topic', 'buddyboss-platform' ),
 							value: 'migrate',
 						},
 						{
-							label: __( 'Delete the topic', 'buddyboss' ),
+							label: __( 'Delete the topic', 'buddyboss-platform' ),
 							value: 'delete',
 						},
 					] }
@@ -1139,7 +1139,7 @@ function GroupTopicDeleteModal( { isOpen, onClose, onConfirm, topic, availableTo
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -1148,7 +1148,7 @@ function GroupTopicDeleteModal( { isOpen, onClose, onConfirm, topic, availableTo
 					isBusy={ isSaving }
 					disabled={ isConfirmDisabled }
 				>
-					{ __( 'Confirm & Delete', 'buddyboss' ) }
+					{ __( 'Confirm & Delete', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

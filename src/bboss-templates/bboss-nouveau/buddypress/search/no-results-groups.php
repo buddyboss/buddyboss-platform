@@ -12,4 +12,4 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-esc_html_e( 'No groups found!', 'buddyboss' );
+esc_html_e( 'No groups found!', 'buddyboss-platform' );

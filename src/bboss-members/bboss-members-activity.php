@@ -19,9 +19,9 @@ function bboss_members_register_activity_actions() {
 	bboss_activity_set_action(
 		bboss()->members->id,
 		'new_member',
-		__( 'New member registered', 'buddyboss' ),
+		__( 'New member registered', 'buddyboss-platform' ),
 		'bboss_members_format_activity_action_new_member',
-		__( 'New Members', 'buddyboss' ),
+		__( 'New Members', 'buddyboss-platform' ),
 		array( 'activity' )
 	);
 
@@ -46,7 +46,7 @@ add_action( 'bp_register_activity_actions', 'bboss_members_register_activity_act
 function bboss_members_format_activity_action_new_member( $action, $activity ) {
 	$userlink = bboss_core_get_userlink( $activity->user_id );
 	/* translators: %s: member display name link. */
-	$action   = sprintf( __( '%s became a registered member', 'buddyboss' ), $userlink );
+	$action   = sprintf( __( '%s became a registered member', 'buddyboss-platform' ), $userlink );
 
 	// Legacy filter - pass $user_id instead of $activity.
 	if ( has_filter( 'bp_core_activity_registered_member_action' ) ) {

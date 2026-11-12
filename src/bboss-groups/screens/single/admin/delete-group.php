@@ -52,9 +52,9 @@ function bboss_groups_screen_group_admin_delete_group() {
 
 		// Group admin has deleted the group, now do it.
 		if ( ! bboss_groups_delete_group( $bp->groups->current_group->id ) ) {
-			bboss_core_add_message( __( 'There was an error deleting the group. Please try again.', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'There was an error deleting the group. Please try again.', 'buddyboss-platform' ), 'error' );
 		} else {
-			bboss_core_add_message( __( 'The group was deleted successfully.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'The group was deleted successfully.', 'buddyboss-platform' ) );
 
 			/**
 			 * Fires after the deletion of a group from the Delete Group page.

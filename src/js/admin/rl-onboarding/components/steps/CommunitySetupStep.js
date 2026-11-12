@@ -37,8 +37,8 @@ export const CommunitySetupStep = ({
         Object.entries(stepOptions).forEach(([key, config]) => {
             if (config.required && (!formData[key] || formData[key].trim() === '')) {
                 newErrors[key] = config.label
-                    ? __(`${config.label} is required`, 'buddyboss')
-                    : __('This field is required', 'buddyboss');
+                    ? __(`${config.label} is required`, 'buddyboss-platform')
+                    : __('This field is required', 'buddyboss-platform');
             }
         });
 

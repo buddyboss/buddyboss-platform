@@ -42,7 +42,7 @@ function bboss_messages_action_bulk_manage() {
 	// Make sure the user has access to all notifications before managing them.
 	foreach ( $messages as $message ) {
 		if ( ! bboss_messages_check_thread_access( $message ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
-			bboss_core_add_message( __( 'There was a problem managing your messages.', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'There was a problem managing your messages.', 'buddyboss-platform' ), 'error' );
 			bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() . '/' );
 		}
 	}
@@ -53,21 +53,21 @@ function bboss_messages_action_bulk_manage() {
 			foreach ( $messages as $message ) {
 				bboss_messages_delete_thread( $message );
 			}
-			bboss_core_add_message( __( 'Messages deleted.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Messages deleted.', 'buddyboss-platform' ) );
 			break;
 
 		case 'read':
 			foreach ( $messages as $message ) {
 				bboss_messages_mark_thread_read( $message );
 			}
-			bboss_core_add_message( __( 'Messages marked as read', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Messages marked as read', 'buddyboss-platform' ) );
 			break;
 
 		case 'unread':
 			foreach ( $messages as $message ) {
 				bboss_messages_mark_thread_unread( $message );
 			}
-			bboss_core_add_message( __( 'Messages marked as unread.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Messages marked as unread.', 'buddyboss-platform' ) );
 			break;
 	}
 

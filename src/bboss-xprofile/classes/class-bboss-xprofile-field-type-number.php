@@ -24,8 +24,8 @@ class BBoss_XProfile_Field_Type_Number extends BBoss_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Single Fields', 'buddyboss' );
-		$this->name     = __( 'Number', 'buddyboss' );
+		$this->category = __( 'Single Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Number', 'buddyboss-platform' );
 
 		$this->set_format( '/^\d+|-\d+$/', 'replace' );
 
@@ -82,7 +82,7 @@ class BBoss_XProfile_Field_Type_Number extends BBoss_XProfile_Field_Type {
 
 		<?php
 
-		/** This action is documented in bp-xprofile/bp-xprofile-classes */
+		/** This action is documented in bboss-xprofile/bp-xprofile-classes */
 		do_action( bboss_get_the_profile_field_errors_action() );
 		?>
 
@@ -112,7 +112,7 @@ class BBoss_XProfile_Field_Type_Number extends BBoss_XProfile_Field_Type {
 		<label for="<?php bboss_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Number field', 'buddyboss' );
+																esc_html_e( 'Number field', 'buddyboss-platform' );
 																?>
 		</label>
 		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes() esc_attr()s each value. ?>>

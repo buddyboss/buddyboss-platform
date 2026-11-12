@@ -17,12 +17,12 @@ defined( 'ABSPATH' ) || exit;
 
 		<# if ( data.link_loading ) { #>
 			<span class="activity-url-scrapper-loading activity-ajax-loader"><i class="bb-rl-loader"></i>
-				<?php esc_html_e( 'Loading preview...', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Loading preview...', 'buddyboss-platform' ); ?>
 			</span>
 		<# } #>
 
 		<# if ( data.link_success || data.link_error ) { #>
-			<a title="<?php esc_html_e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion"><?php esc_html_e( 'Remove preview', 'buddyboss' ); ?></i></a>
+			<a title="<?php esc_html_e( 'Cancel Preview', 'buddyboss-platform' ); ?>" href="#" id="activity-close-link-suggestion"><?php esc_html_e( 'Remove preview', 'buddyboss-platform' ); ?></i></a>
 			<div class="activity-link-preview-container">
 
 				<# if ( data.link_images && data.link_images.length && data.link_success && ! data.link_error && '' !== data.link_image_index ) { #>
@@ -33,12 +33,12 @@ defined( 'ABSPATH' ) || exit;
 							</div>
 							<div class="activity-link-preview-icons">
 								<# if ( data.link_images.length > 1 ) { #>
-									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Change image', 'buddyboss' ); ?>" href="#" class="icon-exchange bb-rl-toolbar-button bp-tooltip" id="icon-exchange"><i class="bb-icons-rl-arrows-left-right"></i></a>
+									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Change image', 'buddyboss-platform' ); ?>" href="#" class="icon-exchange bb-rl-toolbar-button bp-tooltip" id="icon-exchange"><i class="bb-icons-rl-arrows-left-right"></i></a>
 								<# } #>
 								<# if ( data.link_images.length ) { #>
-									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Remove image', 'buddyboss' ); ?>" href="#" class="icon-image-slash bb-rl-toolbar-button bp-tooltip" id="activity-link-preview-remove-image"><i class="bb-icons-rl-camera-slash"></i></a>
+									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Remove image', 'buddyboss-platform' ); ?>" href="#" class="icon-image-slash bb-rl-toolbar-button bp-tooltip" id="activity-link-preview-remove-image"><i class="bb-icons-rl-camera-slash"></i></a>
 								<# } #>
-								<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Confirm', 'buddyboss' ); ?>" class="bb-rl-toolbar-button bp-tooltip" href="#" id="activity-link-preview-select-image">
+								<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Confirm', 'buddyboss-platform' ); ?>" class="bb-rl-toolbar-button bp-tooltip" href="#" id="activity-link-preview-select-image">
 									<i class="bb-icons-rl-check"></i>
 								</a>
 							</div>
@@ -48,7 +48,7 @@ defined( 'ABSPATH' ) || exit;
 								<button type="button" id="activity-url-prevPicButton"><span class="bb-icons-rl-caret-left"></span></button>
 								<button type="button" id="activity-url-nextPicButton"><span class="bb-icons-rl-caret-right"></span></button>
 								<div id="activity-url-scrapper-img-count">
-									<?php esc_html_e( 'Image', 'buddyboss' ); ?> <# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ); ?>&nbsp;<# print(data.link_images.length) #>
+									<?php esc_html_e( 'Image', 'buddyboss-platform' ); ?> <# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss-platform' ); ?>&nbsp;<# print(data.link_images.length) #>
 								</div>
 							</div>
 						<# } #>

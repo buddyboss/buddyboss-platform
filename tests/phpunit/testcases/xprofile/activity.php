@@ -284,7 +284,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			'user_id' => $u,
 		) );
 
-		$expected = sprintf( __( '%s changed their profile photo', 'buddyboss' ), bboss_core_get_userlink( $u ) );
+		$expected = sprintf( __( '%s changed their profile photo', 'buddyboss-platform' ), bboss_core_get_userlink( $u ) );
 
 		$a_obj = new BBoss_Activity_Activity( $a );
 
@@ -303,7 +303,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			'user_id' => $u,
 		) );
 
-		$expected = sprintf( __( "%s updated their profile", 'buddyboss' ), '<a href="' . bboss_core_get_user_domain( $u ) . bboss_get_profile_slug() . '/">' . bboss_core_get_user_displayname( $u ) . '</a>' );
+		$expected = sprintf( __( "%s updated their profile", 'buddyboss-platform' ), '<a href="' . bboss_core_get_user_domain( $u ) . bboss_get_profile_slug() . '/">' . bboss_core_get_user_displayname( $u ) . '</a>' );
 
 		$a_obj = new BBoss_Activity_Activity( $a );
 

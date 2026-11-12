@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 if ( bboss_group_has_membership_requests( bboss_ajax_querystring( 'membership_requests' ) ) ) {
 	?>
 	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Manage Membership Requests', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Manage Membership Requests', 'buddyboss-platform' ); ?>
 	</h2>
 
 	<?php bboss_nouveau_pagination( 'top' ); ?>

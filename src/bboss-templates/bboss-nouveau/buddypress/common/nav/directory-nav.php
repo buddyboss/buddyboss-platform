@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 
-<nav class="<?php bboss_nouveau_directory_type_navs_class(); ?>" role="navigation" aria-label="<?php esc_attr_e( 'Directory menu', 'buddyboss' ); ?>">
+<nav class="<?php bboss_nouveau_directory_type_navs_class(); ?>" role="navigation" aria-label="<?php esc_attr_e( 'Directory menu', 'buddyboss-platform' ); ?>">
 
 	<?php if ( bboss_nouveau_has_nav( array( 'object' => 'directory' ) ) ) : ?>
 

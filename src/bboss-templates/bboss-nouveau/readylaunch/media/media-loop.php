@@ -42,7 +42,7 @@ if ( bboss_has_media( bboss_ajax_querystring( 'media' ) ) ) :
 	if ( bboss_media_has_more_items() ) :
 		?>
 		<li class="load-more">
-			<a class="button outline full" href="<?php bboss_media_load_more_link(); ?>"><?php esc_html_e( 'Show More', 'buddyboss' ); ?><i class="bb-icons-rl-caret-down"></i></a>
+			<a class="button outline full" href="<?php bboss_media_load_more_link(); ?>"><?php esc_html_e( 'Show More', 'buddyboss-platform' ); ?><i class="bb-icons-rl-caret-down"></i></a>
 		</li>
 		<?php
 	endif;

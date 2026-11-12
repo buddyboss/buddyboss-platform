@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 
-<nav class="<?php bboss_nouveau_single_item_nav_classes(); ?>" id="object-nav" role="navigation" aria-label="<?php esc_attr_e( 'Group menu', 'buddyboss' ); ?>">
+<nav class="<?php bboss_nouveau_single_item_nav_classes(); ?>" id="object-nav" role="navigation" aria-label="<?php esc_attr_e( 'Group menu', 'buddyboss-platform' ); ?>">
 	<?php if ( bboss_nouveau_has_nav( array( 'object' => 'groups' ) ) ) : ?>
 		<ul>
 			<?php

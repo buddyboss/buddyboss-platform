@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 
-<h2 class="screen-heading friendship-requests-screen"><?php esc_html_e( 'Requests to Connect', 'buddyboss' ); ?></h2>
+<h2 class="screen-heading friendship-requests-screen"><?php esc_html_e( 'Requests to Connect', 'buddyboss-platform' ); ?></h2>
 
 <?php
 bboss_nouveau_member_hook( 'before', 'friend_requests_content' );

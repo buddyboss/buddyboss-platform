@@ -519,7 +519,7 @@ class BBoss_Media_Album {
 				$group_name = bboss_get_group_name( $group );
 				$status     = bboss_get_group_status( $group );
 				if ( 'hidden' === $status || 'private' === $status ) {
-					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+					$visibility = esc_html__( 'Group Members', 'buddyboss-platform' );
 				} else {
 					$visibility = ucfirst( $status );
 				}

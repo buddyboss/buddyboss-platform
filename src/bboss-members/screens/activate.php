@@ -105,7 +105,7 @@ function bboss_members_action_activate_account() {
 		bboss_core_redirect( trailingslashit( bboss_get_root_domain() . '/' . $bp->pages->activate->slug ) );
 	}
 
-	bboss_core_add_message( __( 'Your account is now active!', 'buddyboss' ) );
+	bboss_core_add_message( __( 'Your account is now active!', 'buddyboss-platform' ) );
 	bboss_core_redirect( add_query_arg( 'activated', '1', bboss_get_activation_page() ) );
 
 }

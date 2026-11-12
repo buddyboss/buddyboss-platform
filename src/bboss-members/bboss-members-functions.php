@@ -711,7 +711,7 @@ function bboss_core_get_user_displayname( $user_id_or_username, $current_user_id
 	}
 
 	if ( empty( $full_name ) && empty( $user_data ) ) {
-		$full_name = __( 'Deleted User', 'buddyboss' );
+		$full_name = __( 'Deleted User', 'buddyboss-platform' );
 	}
 
 	/**
@@ -1371,7 +1371,7 @@ function bboss__bp_get_user_meta_last_activity_warning( $retval, $object_id, $me
 	if ( 'last_activity' === $meta_key ) {
 		// Don't send the warning more than once per pageload.
 		if ( false === $warned ) {
-			_doing_it_wrong( 'get_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_get_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
+			_doing_it_wrong( 'get_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_get_user_last_activity() instead.', 'buddyboss-platform' ), '2.0.0' );
 			$warned = true;
 		}
 
@@ -1406,7 +1406,7 @@ add_filter( 'get_user_metadata', 'bboss__bp_get_user_meta_last_activity_warning'
  */
 function bboss__bp_update_user_meta_last_activity_warning( $meta_id, $object_id, $meta_key, $meta_value ) {
 	if ( 'last_activity' === $meta_key ) {
-		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
+		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss-platform' ), '2.0.0' );
 		bboss_update_user_last_activity( $object_id, $meta_value );
 	}
 }
@@ -1654,7 +1654,7 @@ function bboss_core_boot_spammer( $user ) {
 	// The user exists; now do a check to see if the user is a spammer
 	// if the user is a spammer, stop them in their tracks!
 	if ( is_a( $user, 'WP_User' ) && ( ( is_multisite() && (int) $user->spam ) || 1 == $user->user_status ) ) {
-		return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been marked as a spammer.', 'buddyboss' ) );
+		return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been marked as a spammer.', 'buddyboss-platform' ) );
 	}
 
 	// User is good to go!
@@ -1892,23 +1892,23 @@ function bboss_core_validate_email_address( $user_email ) {
  */
 function bboss_core_add_validation_error_messages( WP_Error $errors, $validation_results ) {
 	if ( ! empty( $validation_results['invalid'] ) ) {
-		$errors->add( 'user_email', __( 'Please enter a valid email address.', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'Please enter a valid email address.', 'buddyboss-platform' ) );
 	}
 
 	if ( ! empty( $validation_results['domain_banned'] ) ) {
-		$errors->add( 'user_email', __( 'Sorry, that email address is not allowed!', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'Sorry, that email address is not allowed!', 'buddyboss-platform' ) );
 	}
 
 	if ( ! empty( $validation_results['domain_not_allowed'] ) ) {
-		$errors->add( 'user_email', __( 'Sorry, that email address is not allowed!', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'Sorry, that email address is not allowed!', 'buddyboss-platform' ) );
 	}
 
 	if ( ! empty( $validation_results['in_use'] ) ) {
-		$errors->add( 'user_email', __( 'Sorry, that email address is already used!', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'Sorry, that email address is already used!', 'buddyboss-platform' ) );
 	}
 
 	if ( ! empty( $validation_results['bb_restricted_email'] ) ) {
-		$errors->add( 'user_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss-platform' ) );
 	}
 }
 
@@ -1948,25 +1948,25 @@ function bboss_core_validate_user_signup( $user_name, $user_email ) {
 
 		// User name can't be empty.
 		if ( empty( $user_name ) ) {
-			$errors->add( 'user_name', __( 'Please enter a username', 'buddyboss' ) );
+			$errors->add( 'user_name', __( 'Please enter a username', 'buddyboss-platform' ) );
 		}
 
 		// User name can't be on the blacklist.
 		$illegal_names = get_site_option( 'illegal_names' );
 		if ( in_array( $user_name, (array) $illegal_names ) ) {
-			$errors->add( 'user_name', __( 'That username is not allowed', 'buddyboss' ) );
+			$errors->add( 'user_name', __( 'That username is not allowed', 'buddyboss-platform' ) );
 		}
 
 		// User name must pass WP's validity check.
 		if ( ! validate_username( $user_name ) ) {
 			$field_name = bboss_xprofile_get_field( bboss_xprofile_nickname_field_id() )->name;
 			/* translators: %s: nickname field name. */
-			$errors->add( 'user_name', sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name ) );
+			$errors->add( 'user_name', sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss-platform' ), $field_name ) );
 		}
 
 		// Minimum of 4 characters.
 		if ( strlen( $user_name ) < 3 ) {
-			$errors->add( 'user_name', __( 'Username must be at least 3 characters', 'buddyboss' ) );
+			$errors->add( 'user_name', __( 'Username must be at least 3 characters', 'buddyboss-platform' ) );
 		}
 
 		// Check into signups.
@@ -1980,7 +1980,7 @@ function bboss_core_validate_user_signup( $user_name, $user_email ) {
 
 		// Check if the username has been used already.
 		if ( username_exists( $user_name ) || ! empty( $signup ) ) {
-			$errors->add( 'user_name', __( 'Sorry, that username already exists!', 'buddyboss' ) );
+			$errors->add( 'user_name', __( 'Sorry, that username already exists!', 'buddyboss-platform' ) );
 		}
 
 		// Validate the email address and process the validation results into
@@ -2209,16 +2209,16 @@ function bboss_core_activate_signup( $key ) {
 		);
 
 		if ( empty( $signups['signups'] ) ) {
-			return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss' ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss-platform' ) );
 		}
 
 		$signup = $signups['signups'][0];
 
 		if ( $signup->active ) {
 			if ( empty( $signup->domain ) ) {
-				return new WP_Error( 'already_active', __( 'The user is already active.', 'buddyboss' ), $signup );
+				return new WP_Error( 'already_active', __( 'The user is already active.', 'buddyboss-platform' ), $signup );
 			} else {
-				return new WP_Error( 'already_active', __( 'The site is already active.', 'buddyboss' ), $signup );
+				return new WP_Error( 'already_active', __( 'The site is already active.', 'buddyboss-platform' ), $signup );
 			}
 		}
 
@@ -2236,7 +2236,7 @@ function bboss_core_activate_signup( $key ) {
 
 			// Change the user's status so they become active.
 			if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->users} SET user_status = 0 WHERE ID = %d", $user_id ) ) ) {
-				return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss' ) );
+				return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss-platform' ) );
 			}
 
 			bboss_delete_user_meta( $user_id, 'activation_key' );
@@ -2248,7 +2248,7 @@ function bboss_core_activate_signup( $key ) {
 		}
 
 		if ( ! $user_id ) {
-			return new WP_Error( 'create_user', __( 'Could not create user', 'buddyboss' ), $signup );
+			return new WP_Error( 'create_user', __( 'Could not create user', 'buddyboss-platform' ), $signup );
 		}
 
 		// Fetch the signup so we have the data later on.
@@ -2264,7 +2264,7 @@ function bboss_core_activate_signup( $key ) {
 		BBoss_Signup::validate( $key );
 
 		if ( isset( $user_already_exists ) ) {
-			return new WP_Error( 'user_already_exists', __( 'That username is already activated.', 'buddyboss' ), $signup );
+			return new WP_Error( 'user_already_exists', __( 'That username is already activated.', 'buddyboss-platform' ), $signup );
 		}
 
 		// Set up data to pass to the legacy filter.
@@ -2666,9 +2666,9 @@ function bboss_core_signup_disable_inactive( $user = null, $username = '', $pass
 	);
 
 	/* translators: %s: URL to resend the activation email. */
-	$resend_string = '<br /><br />' . sprintf( __( 'If you have not received an email yet, <a href="%s">click here to resend it</a>.', 'buddyboss' ), esc_url( $resend_url ) );
+	$resend_string = '<br /><br />' . sprintf( __( 'If you have not received an email yet, <a href="%s">click here to resend it</a>.', 'buddyboss-platform' ), esc_url( $resend_url ) );
 
-	return new WP_Error( 'bp_account_not_activated', __( '<strong>ERROR</strong>: Your account has not been activated. Check your email for the activation link.', 'buddyboss' ) . $resend_string );
+	return new WP_Error( 'bp_account_not_activated', __( '<strong>ERROR</strong>: Your account has not been activated. Check your email for the activation link.', 'buddyboss-platform' ) . $resend_string );
 }
 add_filter( 'authenticate', 'bboss_core_signup_disable_inactive', 30, 3 );
 
@@ -2699,9 +2699,9 @@ function bboss_members_login_resend_activation_email() {
 
 	// Add feedback message.
 	if ( ! empty( $resend['errors'] ) ) {
-		$error = __( '<strong>ERROR</strong>: Your account has already been activated.', 'buddyboss' );
+		$error = __( '<strong>ERROR</strong>: Your account has already been activated.', 'buddyboss-platform' );
 	} else {
-		$error = __( 'Activation email resent! Please check your inbox or spam folder.', 'buddyboss' );
+		$error = __( 'Activation email resent! Please check your inbox or spam folder.', 'buddyboss-platform' );
 	}
 }
 add_action( 'login_form_bp-resend-activation', 'bboss_members_login_resend_activation_email' );
@@ -2821,7 +2821,7 @@ add_action( 'bp_init', 'bboss_stop_live_spammer', 5 );
 function bboss_live_spammer_login_error() {
 	global $error;
 
-	$error = __( '<strong>ERROR</strong>: Your account has been marked as a spammer.', 'buddyboss' );
+	$error = __( '<strong>ERROR</strong>: Your account has been marked as a spammer.', 'buddyboss-platform' );
 
 	// Shake shake shake!
 	add_action( 'login_head', 'wp_shake_js', 12 );
@@ -2908,7 +2908,7 @@ function bboss_register_member_type( $member_type, $args = array() ) {
 	$bp = bboss();
 
 	if ( isset( $bp->members->types[ $member_type ] ) ) {
-		return new WP_Error( 'bp_member_type_exists', __( 'Profile type already exists.', 'buddyboss' ), $member_type );
+		return new WP_Error( 'bp_member_type_exists', __( 'Profile type already exists.', 'buddyboss-platform' ), $member_type );
 	}
 
 	$r = bboss_parse_args(
@@ -2935,7 +2935,7 @@ function bboss_register_member_type( $member_type, $args = array() ) {
 	 */
 	$illegal_names = apply_filters( 'bp_member_type_illegal_names', array( 'any', 'null', '_none' ) );
 	if ( in_array( $member_type, $illegal_names, true ) ) {
-		return new WP_Error( 'bp_member_type_illegal_name', __( 'You may not register a profile type with this name.', 'buddyboss' ), $member_type );
+		return new WP_Error( 'bp_member_type_illegal_name', __( 'You may not register a profile type with this name.', 'buddyboss-platform' ), $member_type );
 	}
 
 	// Store the post type name as data in the object (not just as the array key).
@@ -3255,7 +3255,7 @@ function bboss_register_member_type_section() {
 		apply_filters(
 			'bp_register_member_type_post_type',
 			array(
-				'description'        => __( 'BuddyBoss profile type', 'buddyboss' ),
+				'description'        => __( 'BuddyBoss profile type', 'buddyboss-platform' ),
 				'labels'             => bboss_get_member_type_post_type_labels(),
 				'public'             => false,
 				'publicly_queryable' => false,
@@ -3340,18 +3340,18 @@ function bboss_get_member_type_post_type_labels() {
 	return apply_filters(
 		'bp_get_member_type_post_type_labels',
 		array(
-			'add_new'            => __( 'Add New', 'buddyboss' ),
-			'add_new_item'       => __( 'New Profile Type', 'buddyboss' ),
-			'all_items'          => __( 'Profile Types', 'buddyboss' ),
-			'edit_item'          => __( 'Edit Profile Type', 'buddyboss' ),
-			'menu_name'          => __( 'Users', 'buddyboss' ),
-			'name'               => __( 'Profile Types', 'buddyboss' ),
-			'new_item'           => __( 'New Profile Type', 'buddyboss' ),
-			'not_found'          => __( 'No Profile Types found', 'buddyboss' ),
-			'not_found_in_trash' => __( 'No Profile Types found in trash', 'buddyboss' ),
-			'search_items'       => __( 'Search Profile Types', 'buddyboss' ),
-			'singular_name'      => __( 'Profile Type', 'buddyboss' ),
-			'attributes'         => __( 'Dropdown Order', 'buddyboss' ),
+			'add_new'            => __( 'Add New', 'buddyboss-platform' ),
+			'add_new_item'       => __( 'New Profile Type', 'buddyboss-platform' ),
+			'all_items'          => __( 'Profile Types', 'buddyboss-platform' ),
+			'edit_item'          => __( 'Edit Profile Type', 'buddyboss-platform' ),
+			'menu_name'          => __( 'Users', 'buddyboss-platform' ),
+			'name'               => __( 'Profile Types', 'buddyboss-platform' ),
+			'new_item'           => __( 'New Profile Type', 'buddyboss-platform' ),
+			'not_found'          => __( 'No Profile Types found', 'buddyboss-platform' ),
+			'not_found_in_trash' => __( 'No Profile Types found in trash', 'buddyboss-platform' ),
+			'search_items'       => __( 'Search Profile Types', 'buddyboss-platform' ),
+			'singular_name'      => __( 'Profile Type', 'buddyboss-platform' ),
+			'attributes'         => __( 'Dropdown Order', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -3949,7 +3949,7 @@ function bboss_get_user_member_type( $user_id ) {
 		$user_id = bboss_displayed_user_id();
 	}
 
-	$member_type = __( 'Member', 'buddyboss' );
+	$member_type = __( 'Member', 'buddyboss-platform' );
 
 	if (
 		true === bboss_member_type_enable_disable() &&
@@ -3987,7 +3987,7 @@ function bboss_get_user_gender_pronoun_type( $user_id = '' ) {
 	static $static_cache = '';
 
 	if ( '' === $user_id ) {
-		$gender_pronoun = esc_html__( 'their', 'buddyboss' );
+		$gender_pronoun = esc_html__( 'their', 'buddyboss-platform' );
 	} else {
 		if ( empty( $static_cache ) ) {
 			$table         = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
@@ -4001,19 +4001,19 @@ function bboss_get_user_gender_pronoun_type( $user_id = '' ) {
 			$field_id = $exists_gender[0]->id;
 			$gender   = bboss_xprofile_get_field_data( $field_id, $user_id );
 			if ( empty( $gender ) ) {
-				$gender_pronoun = esc_html__( 'their', 'buddyboss' );
+				$gender_pronoun = esc_html__( 'their', 'buddyboss-platform' );
 			} else {
 				$split_value = explode( '_', $gender );
 				if ( 'his' === $split_value[0] ) {
-					$gender_pronoun = esc_html__( 'his', 'buddyboss' );
+					$gender_pronoun = esc_html__( 'his', 'buddyboss-platform' );
 				} elseif ( 'her' === $split_value[0] ) {
-					$gender_pronoun = esc_html__( 'her', 'buddyboss' );
+					$gender_pronoun = esc_html__( 'her', 'buddyboss-platform' );
 				} else {
-					$gender_pronoun = esc_html__( 'their', 'buddyboss' );
+					$gender_pronoun = esc_html__( 'their', 'buddyboss-platform' );
 				}
 			}
 		} else {
-			$gender_pronoun = esc_html__( 'their', 'buddyboss' );
+			$gender_pronoun = esc_html__( 'their', 'buddyboss-platform' );
 		}
 	}
 	return $gender_pronoun;
@@ -5305,7 +5305,7 @@ function bboss_profile_drop_down_order_metabox_translate_order_text( $translated
 	}
 
 	if ( 'Order' === $untranslated_text ) {
-		return __( 'Number', 'buddyboss' );
+		return __( 'Number', 'buddyboss-platform' );
 	}
 
 	return $translated_text;
@@ -5870,7 +5870,7 @@ function bboss_is_member_type_allowed_on_registration( $member_type_id ) {
  * Check whether a profile type may be selected for an invitee on the Send Invites form.
  *
  * Mirrors the set the send-invites Profile Type dropdown itself offers (see
- * bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php): the
+ * bboss-templates/bboss-nouveau/buddypress/members/single/invites/send-invites.php): the
  * inviter's own type must be permitted to choose invitee types, and the submitted
  * type must be in that inviter's `_bp_member_type_allowed_member_type_invite`
  * allowlist, or — when no allowlist is configured — an active member type.

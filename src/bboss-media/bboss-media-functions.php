@@ -25,7 +25,7 @@ function bboss_media_upload() {
 	 * Make sure user is logged in
 	 */
 	if ( ! is_user_logged_in() ) {
-		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
+		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 	}
 
 	/**
@@ -206,13 +206,13 @@ function bboss_media_upload_handler( $file_id = 'file' ) {
 			'upload_error_strings' => array(
 				false,
 				/* translators: %d: maximum upload size in MB. */
-				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss' ), bboss_media_file_upload_max_size() ),
-				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
-				__( 'No file was uploaded.', 'buddyboss' ),
+				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss-platform' ), bboss_media_file_upload_max_size() ),
+				__( 'The uploaded file was only partially uploaded.', 'buddyboss-platform' ),
+				__( 'No file was uploaded.', 'buddyboss-platform' ),
 				'',
-				__( 'Missing a temporary folder.', 'buddyboss' ),
-				__( 'Failed to write file to disk.', 'buddyboss' ),
-				__( 'File upload stopped by extension.', 'buddyboss' ),
+				__( 'Missing a temporary folder.', 'buddyboss-platform' ),
+				__( 'Failed to write file to disk.', 'buddyboss-platform' ),
+				__( 'File upload stopped by extension.', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -240,7 +240,7 @@ function bboss_media_upload_handler( $file_id = 'file' ) {
 		return $attachment;
 	}
 
-	return new WP_Error( 'error_uploading', __( 'Error while uploading media.', 'buddyboss' ), array( 'status' => 500 ) );
+	return new WP_Error( 'error_uploading', __( 'Error while uploading media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 
 }
 
@@ -2124,13 +2124,13 @@ function bboss_media_import_reset_media_albums() {
 						if ( ! empty( $media_obj->activity_id ) && bboss_is_active( 'activity' ) ) {
 							$activity = new BBoss_Activity_Activity( (int) $media_obj->activity_id );
 
-							/** This action is documented in bp-activity/bp-activity-actions.php */
+							/** This action is documented in bboss-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 							// Deleting an activity comment.
 							if ( 'activity_comment' === $activity->type ) {
 								if ( bboss_activity_delete_comment( $activity->item_id, $activity->id ) ) {
-									/** This action is documented in bp-activity/bp-activity-actions.php */
+									/** This action is documented in bboss-activity/bp-activity-actions.php */
 									do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 								}
 
@@ -2142,7 +2142,7 @@ function bboss_media_import_reset_media_albums() {
 										'user_id' => $activity->user_id,
 									)
 								) ) {
-									/** This action is documented in bp-activity/bp-activity-actions.php */
+									/** This action is documented in bboss-activity/bp-activity-actions.php */
 									do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 								}
 							}
@@ -2193,13 +2193,13 @@ function bboss_media_import_reset_media() {
 			if ( ! empty( $media_obj->activity_id ) && bboss_is_active( 'activity' ) ) {
 				$activity = new BBoss_Activity_Activity( (int) $media_obj->activity_id );
 
-				/** This action is documented in bp-activity/bp-activity-actions.php */
+				/** This action is documented in bboss-activity/bp-activity-actions.php */
 				do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 				// Deleting an activity comment.
 				if ( 'activity_comment' === $activity->type ) {
 					if ( bboss_activity_delete_comment( $activity->item_id, $activity->id ) ) {
-						/** This action is documented in bp-activity/bp-activity-actions.php */
+						/** This action is documented in bboss-activity/bp-activity-actions.php */
 						do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 					}
 
@@ -2211,7 +2211,7 @@ function bboss_media_import_reset_media() {
 							'user_id' => $activity->user_id,
 						)
 					) ) {
-						/** This action is documented in bp-activity/bp-activity-actions.php */
+						/** This action is documented in bboss-activity/bp-activity-actions.php */
 						do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 					}
 				}
@@ -2333,7 +2333,7 @@ function bboss_media_import_status_request() {
 
 	// Runs site-wide media import/reset operations: restrict to moderators.
 	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to do that.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to do that.', 'buddyboss-platform' ) ) );
 	}
 
 	$import_status = get_option( 'bp_media_import_status' );
@@ -2426,8 +2426,8 @@ function bboss_media_import_status_request() {
 			'topics_total'  => $topics_total,
 			'replies_total' => $replies_total,
 			'import_status' => $import_status,
-			'success_msg'   => __( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ),
-			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss' ),
+			'success_msg'   => __( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss-platform' ),
+			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -3883,7 +3883,7 @@ function bboss_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 			'can_move'     => false,
 		);
 
-		/** This filter is documented in bp-media/bboss-media-functions.php */
+		/** This filter is documented in bboss-media/bboss-media-functions.php */
 		return apply_filters( 'bb_media_user_can_access', $data, $id, $type, 0 );
 	}
 

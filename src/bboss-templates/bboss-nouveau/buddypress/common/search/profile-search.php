@@ -72,14 +72,14 @@ $F = bboss_profile_search_escaped_form_data( $form_id );
 
 						case 'date_range':
 							?>
-							<span class="date-from date-label"><?php esc_html_e( 'From', 'buddyboss' ); ?></span>
+							<span class="date-from date-label"><?php esc_html_e( 'From', 'buddyboss-platform' ); ?></span>
 							<div class="date-wrapper">
 								<select name="<?php echo esc_attr( $name . '[min][day]' ); ?>">
 										<?php
 										printf(
 											'<option value="" %1$s>%2$s</option>',
 											selected( $value['min']['day'], 0, false ),
-											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss' )
+											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss-platform' )
 										);
 
 										for ( $i = 1; $i < 32; ++ $i ) {
@@ -97,25 +97,25 @@ $F = bboss_profile_search_escaped_form_data( $form_id );
 								<select name="<?php echo esc_attr( $name . '[min][month]' ); ?>">
 									<?php
 									$months = array(
-										__( 'January', 'buddyboss' ),
-										__( 'February', 'buddyboss' ),
-										__( 'March', 'buddyboss' ),
-										__( 'April', 'buddyboss' ),
-										__( 'May', 'buddyboss' ),
-										__( 'June', 'buddyboss' ),
-										__( 'July', 'buddyboss' ),
-										__( 'August', 'buddyboss' ),
-										__( 'September', 'buddyboss' ),
-										__( 'October', 'buddyboss' ),
-										__( 'November', 'buddyboss' ),
-										__( 'December', 'buddyboss' ),
+										__( 'January', 'buddyboss-platform' ),
+										__( 'February', 'buddyboss-platform' ),
+										__( 'March', 'buddyboss-platform' ),
+										__( 'April', 'buddyboss-platform' ),
+										__( 'May', 'buddyboss-platform' ),
+										__( 'June', 'buddyboss-platform' ),
+										__( 'July', 'buddyboss-platform' ),
+										__( 'August', 'buddyboss-platform' ),
+										__( 'September', 'buddyboss-platform' ),
+										__( 'October', 'buddyboss-platform' ),
+										__( 'November', 'buddyboss-platform' ),
+										__( 'December', 'buddyboss-platform' ),
 									);
 
 									printf(
 										'<option value="" %1$s>%2$s</option>',
 										selected( $value['min']['month'], 0, false ),
 										/* translators: no option picked in select box */
-										esc_html__( 'Select Month', 'buddyboss' )
+										esc_html__( 'Select Month', 'buddyboss-platform' )
 									);
 
 									for ( $i = 0; $i < 12; ++ $i ) {
@@ -137,7 +137,7 @@ $F = bboss_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $value['min']['year'], 0, false ),
 										/* translators: no option picked in select box */
-										esc_html__( 'Select Year', 'buddyboss' )
+										esc_html__( 'Select Year', 'buddyboss-platform' )
 									);
 
 										$date_range_type = bboss_xprofile_get_meta( $f->id, 'field', 'range_type', true );
@@ -167,14 +167,14 @@ $F = bboss_profile_search_escaped_form_data( $form_id );
 								</select>
 							</div>
 
-							<span class="date-to date-label"><?php esc_html_e( 'To', 'buddyboss' ); ?></span>
+							<span class="date-to date-label"><?php esc_html_e( 'To', 'buddyboss-platform' ); ?></span>
 							<div class="date-wrapper">
 								<select name="<?php echo esc_attr( $name . '[max][day]' ); ?>">
 										<?php
 										printf(
 											'<option value="" %1$s>%2$s</option>',
 											selected( $value['max']['day'], 0, false ),
-											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss' )
+											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss-platform' )
 										);
 
 										for ( $i = 1; $i < 32; ++ $i ) {
@@ -195,7 +195,7 @@ $F = bboss_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $value['max']['month'], 0, false ),
 										/* translators: no option picked in select box */
-										esc_html__( 'Select Month', 'buddyboss' )
+										esc_html__( 'Select Month', 'buddyboss-platform' )
 									);
 
 									for ( $i = 0; $i < 12; ++ $i ) {
@@ -217,7 +217,7 @@ $F = bboss_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $value['max']['year'], 0, false ),
 										/* translators: no option picked in select box */
-										esc_html__( 'Select Year', 'buddyboss' )
+										esc_html__( 'Select Year', 'buddyboss-platform' )
 									);
 									for ( $i = $end; $i >= $start; $i -- ) {
 										printf(
@@ -262,12 +262,12 @@ $F = bboss_profile_search_escaped_form_data( $form_id );
 							break;
 
 						case 'distance':
-							$of          = __( 'of', 'buddyboss' );
-							$km          = __( 'km', 'buddyboss' );
-							$miles       = __( 'miles', 'buddyboss' );
-							$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
-							$icon_url    = bboss()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
-							$icon_title  = __( 'get current location', 'buddyboss' );
+							$of          = __( 'of', 'buddyboss-platform' );
+							$km          = __( 'km', 'buddyboss-platform' );
+							$miles       = __( 'miles', 'buddyboss-platform' );
+							$placeholder = __( 'Start typing, then select a location', 'buddyboss-platform' );
+							$icon_url    = bboss()->plugin_url . 'bboss-core/profile-search/templates/members/locator.png';
+							$icon_title  = __( 'get current location', 'buddyboss-platform' );
 							?>
 
 							<input type="number" min="1" name="<?php echo esc_attr( $name . '[distance]' ); ?>" value="<?php echo esc_attr( $value['distance'] ); ?>"/>
@@ -387,17 +387,17 @@ $F = bboss_profile_search_escaped_form_data( $form_id );
 			<div class="submit-wrapper">
 				<p class="clear-from-wrap">
 					<a href='javascript:void(0);' onclick="return bp_ps_clear_form_elements(this);">
-					    <?php esc_html_e( 'Reset', 'buddyboss' ); ?>
+					    <?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?>
 					</a>
 				</p>
-				<input type="submit" class="submit" value="<?php esc_html_e( 'Search', 'buddyboss' ); ?>"/>
+				<input type="submit" class="submit" value="<?php esc_html_e( 'Search', 'buddyboss-platform' ); ?>"/>
 			</div>
 
 			<?php
 		} else {
 			?>
 			<div class="submit-wrapper">
-				<span class="no-field"><?php esc_html_e( 'Please add fields to search members.', 'buddyboss' ); ?></span>
+				<span class="no-field"><?php esc_html_e( 'Please add fields to search members.', 'buddyboss-platform' ); ?></span>
 			</div>
 			<?php
 		}

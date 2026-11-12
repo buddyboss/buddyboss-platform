@@ -48,17 +48,17 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					<?php
 					if ( $can_edit ) :
 						?>
-						<input type="text" value="<?php bboss_album_title(); ?>" placeholder="<?php esc_attr_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
-						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
-						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
-						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+						<input type="text" value="<?php bboss_album_title(); ?>" placeholder="<?php esc_attr_e( 'Title', 'buddyboss-platform' ); ?>" id="bb-album-title" style="display: none;" />
+						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></a>
+						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'Save', 'buddyboss-platform' ); ?></a>
+						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
 					<?php endif; ?>
 					<p>
 						<span><?php bboss_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span>
-						<span class="bb-album-photo-count"><?php /* translators: %s: number. */ printf( esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ) ), esc_html( bboss_core_number_format( $media_album_template->album->media['total'] ) ) ); ?></span>
+						<span class="bb-album-photo-count"><?php /* translators: %s: number. */ printf( esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss-platform' ) ), esc_html( bboss_core_number_format( $media_album_template->album->media['total'] ) ) ); ?></span>
 						<?php if ( $bp_album_shows_videos ) : ?>
 						<span class="bb-sep">&middot;</span>
-						<span class="bb-album-video-count"><?php /* translators: %s: number. */ printf( esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ) ), esc_html( bboss_core_number_format( $media_album_template->album->media['total_video'] ) ) ); ?></span>
+						<span class="bb-album-video-count"><?php /* translators: %s: number. */ printf( esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss-platform' ) ), esc_html( bboss_core_number_format( $media_album_template->album->media['total_video'] ) ) ); ?></span>
 						<?php endif; ?>
 					</p>
 				</div>
@@ -71,7 +71,7 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						if ( $can_delete ) {
 							?>
 							<a class="bb-delete button small outline error" id="bb-delete-album" href="#">
-								<?php esc_html_e( 'Delete Album', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Delete Album', 'buddyboss-platform' ); ?>
 							</a>
 							<?php
 						}
@@ -79,7 +79,7 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						if ( ( $bp_is_my_profile || $bp_is_user_media ) && bboss_user_can_create_media() && $can_edit ) {
 							?>
 							<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-								<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?>
 							</a>
 							<?php
 						} elseif ( $bp_is_group_active && $bp_is_group ) {
@@ -87,7 +87,7 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							if ( $manage ) {
 								?>
 								<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-									<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?>
 								</a>
 								<?php
 							}
@@ -95,13 +95,13 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 
 						if ( ( $bp_is_my_profile || $bp_is_user_media ) && $bp_is_profile_video_support_enabled && $can_edit && bboss_user_can_create_video() ) {
 							?>
-							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?></a>
 							<?php
 						} elseif ( $bp_is_group_active && $bp_is_group && $bp_is_group_video_support_enabled ) {
 							$manage = groups_can_user_manage_video( $bp_loggedin_user_id, $bp_get_current_group_id );
 							if ( $manage ) {
 								?>
-								<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+								<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?></a>
 								<?php
 							}
 						}

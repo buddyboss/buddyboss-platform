@@ -41,11 +41,11 @@ function bboss_friends_format_notifications( $action, $item_id, $secondary_item_
 			// Set up the string and the filter.
 			if ( (int) $total_items > 1 ) {
 				/* translators: %d: number of members who accepted connection requests. */
-				$text   = sprintf( __( '%d members accepted your connection requests', 'buddyboss' ), (int) $total_items );
+				$text   = sprintf( __( '%d members accepted your connection requests', 'buddyboss-platform' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				/* translators: %s: member display name. */
-				$text   = sprintf( __( '%s accepted your request to connect', 'buddyboss' ), bboss_core_get_user_displayname( $item_id ) );
+				$text   = sprintf( __( '%s accepted your request to connect', 'buddyboss-platform' ), bboss_core_get_user_displayname( $item_id ) );
 				$amount = 'single';
 			}
 
@@ -59,11 +59,11 @@ function bboss_friends_format_notifications( $action, $item_id, $secondary_item_
 			// Set up the string and the filter.
 			if ( (int) $total_items > 1 ) {
 				/* translators: %d: number of pending connection requests. */
-				$text   = sprintf( __( 'You have %d pending requests to connect', 'buddyboss' ), (int) $total_items );
+				$text   = sprintf( __( 'You have %d pending requests to connect', 'buddyboss-platform' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				/* translators: %s: member display name. */
-				$text   = sprintf( __( '%s sent you an invitation to connect', 'buddyboss' ), bboss_core_get_user_displayname( $item_id ) );
+				$text   = sprintf( __( '%s sent you an invitation to connect', 'buddyboss-platform' ), bboss_core_get_user_displayname( $item_id ) );
 				$amount = 'single';
 			}
 
@@ -120,7 +120,7 @@ function bboss_friends_format_notifications( $action, $item_id, $secondary_item_
 		 */
 		$return = apply_filters( 'bp_friends_' . $amount . '_friendship_' . $action . '_notification', '<a href="' . esc_url( $link ) . '">' . esc_html( $text ) . '</a>', (int) $total_items, $item_id, $secondary_item_id );
 	} else {
-		/** This filter is documented in bp-friends/bboss-friends-notifications.php */
+		/** This filter is documented in bboss-friends/bboss-friends-notifications.php */
 		$return = apply_filters(
 			'bp_friends_' . $amount . '_friendship_' . $action . '_notification',
 			array(

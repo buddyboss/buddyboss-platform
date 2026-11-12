@@ -343,7 +343,7 @@ function bboss_search_pagination_page_counts( $total_items, $items_per_page, $cu
 		<div class="pag-data">
 			<?php
 			/* translators: 1: starting result number, 2: ending result number, 3: total number of results. */
-			printf( esc_html__( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss' ), (int) $from_num, (int) min( $total_items, $to_num ), (int) $total_items );
+			printf( esc_html__( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss-platform' ), (int) $from_num, (int) min( $total_items, $to_num ), (int) $total_items );
 			?>
 		</div>
 	</div>
@@ -361,23 +361,23 @@ function bboss_search_pagination_page_counts( $total_items, $items_per_page, $cu
 function bboss_search_items() {
 
 	$items = array(
-		'posts'          => __( 'Blog Posts', 'buddyboss' ),
-		'pages'          => __( 'Pages', 'buddyboss' ),
-		'posts_comments' => __( 'Post Comments', 'buddyboss' ),
-		'members'        => __( 'Members', 'buddyboss' ),
+		'posts'          => __( 'Blog Posts', 'buddyboss-platform' ),
+		'pages'          => __( 'Pages', 'buddyboss-platform' ),
+		'posts_comments' => __( 'Post Comments', 'buddyboss-platform' ),
+		'members'        => __( 'Members', 'buddyboss-platform' ),
 	);
 
 	// forums?
 
-	$items['forum'] = __( 'Forums', 'buddyboss' );
-	$items['topic'] = __( 'Forum Discussions', 'buddyboss' );
-	$items['reply'] = __( 'Forum Replies', 'buddyboss' );
+	$items['forum'] = __( 'Forums', 'buddyboss-platform' );
+	$items['topic'] = __( 'Forum Discussions', 'buddyboss-platform' );
+	$items['reply'] = __( 'Forum Replies', 'buddyboss-platform' );
 
 	// other buddypress components
 	$bp_components = array(
-		'groups'   => __( 'Groups', 'buddyboss' ),
-		'activity' => __( 'Activity', 'buddyboss' ),
-		'messages' => __( 'Messages', 'buddyboss' ),
+		'groups'   => __( 'Groups', 'buddyboss-platform' ),
+		'activity' => __( 'Activity', 'buddyboss-platform' ),
+		'messages' => __( 'Messages', 'buddyboss-platform' ),
 		/*
 		 should we search notifications as well?
 		'notifications'	=> __( 'Notifications', 'buddyboss' ), */
@@ -389,7 +389,7 @@ function bboss_search_items() {
 			$items[ $component ] = $label;
 
 			if ( 'activity' === $component ) {
-				$items['activity_comment'] = __( 'Activity Comments', 'buddyboss' );
+				$items['activity_comment'] = __( 'Activity Comments', 'buddyboss-platform' );
 			}
 		}
 	}
@@ -507,10 +507,10 @@ function bboss_search_body_class( $wp_classes ) {
  */
 function bboss_get_search_user_fields() {
 	return array(
-		'user_meta'    => __( 'User Meta', 'buddyboss' ),
-		'display_name' => __( 'Display Name', 'buddyboss' ),
-		'user_email'   => __( 'User Email', 'buddyboss' ),
-		'user_login'   => __( 'Username', 'buddyboss' ),
+		'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
+		'display_name' => __( 'Display Name', 'buddyboss-platform' ),
+		'user_email'   => __( 'User Email', 'buddyboss-platform' ),
+		'user_login'   => __( 'Username', 'buddyboss-platform' ),
 	);
 }
 
@@ -522,23 +522,23 @@ function bboss_get_search_user_fields() {
 function bboss_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) {
 
 	$default = array(
-		'product'             => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/product.svg' : 'bb-icon-shopping-cart',
-		'post'                => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/blog-post.svg' : 'bb-icon-article',
-		'forum'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comments-square',
-		'topic'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comment-square-dots',
-		'reply'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-reply',
-		'bp-member-type'      => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
-		'memberpressproduct'  => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
-		'wp-parser-function'  => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'wp-parser-class'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'wp-parser-hook'      => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'wp-parser-method'    => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'command'             => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'llms_membership'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
-		'llms_assignment'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
-		'llms_certificate'    => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
-		'llms_my_certificate' => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
-		'llms_quiz'           => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/quiz.svg' : 'bb-icon-quiz',
+		'product'             => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/product.svg' : 'bb-icon-shopping-cart',
+		'post'                => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/blog-post.svg' : 'bb-icon-article',
+		'forum'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/forum.svg' : 'bb-icon-comments-square',
+		'topic'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/forum.svg' : 'bb-icon-comment-square-dots',
+		'reply'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/forum.svg' : 'bb-icon-reply',
+		'bp-member-type'      => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/membership.svg' : 'bb-icon-user',
+		'memberpressproduct'  => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/membership.svg' : 'bb-icon-user',
+		'wp-parser-function'  => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-class'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-hook'      => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-method'    => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/code.svg' : 'bb-icon-code',
+		'command'             => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/code.svg' : 'bb-icon-code',
+		'llms_membership'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/membership.svg' : 'bb-icon-user',
+		'llms_assignment'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
+		'llms_certificate'    => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/course-content.svg' : 'bb-icon-certificate',
+		'llms_my_certificate' => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/course-content.svg' : 'bb-icon-certificate',
+		'llms_quiz'           => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/quiz.svg' : 'bb-icon-quiz',
 	);
 
 	/**
@@ -559,7 +559,7 @@ function bboss_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg'
 		return $default[ $post_type ];
 	}
 
-	return ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/default.svg' : 'bb-icon-f bb-icon-file-doc';
+	return ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/default.svg' : 'bb-icon-f bb-icon-file-doc';
 
 }
 
@@ -818,7 +818,7 @@ function bboss_search_get_search_stopwords() {
 		_x(
 			'about,an,are,as,at,be,by,com,for,from,how,in,is,it,of,on,or,that,the,this,to,was,what,when,where,who,will,with,www',
 			'Comma-separated list of search stopwords in your language',
-			'buddyboss'
+			'buddyboss-platform'
 		)
 	);
 

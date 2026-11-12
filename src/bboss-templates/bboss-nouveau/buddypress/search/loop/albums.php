@@ -42,7 +42,7 @@ $albums_link = bboss_get_album_link();
 				<div class="media-album_modified">
 					<div class="media-album_details__bottom">
 						<span class="media-album_author">
-							<?php esc_html_e( 'By ', 'buddyboss' ); ?>
+							<?php esc_html_e( 'By ', 'buddyboss-platform' ); ?>
 							<a href="<?php echo esc_url( $albums_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bboss_get_album_user_id() ); ?>"><?php bboss_album_author(); ?></a>
 						</span>
 						<span class="middot">&middot;</span>
@@ -55,7 +55,7 @@ $albums_link = bboss_get_album_link();
 					<?php
 					printf(
 					// translators: Photos count.
-						esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ) ),
+						esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss-platform' ) ),
 						esc_attr( bboss_core_number_format( $media_album_template->album->media['total'] ) )
 					);
 					?>
@@ -68,7 +68,7 @@ $albums_link = bboss_get_album_link();
 						<?php
 						printf(
 						// translators: Photos count.
-							esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ) ),
+							esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss-platform' ) ),
 							esc_attr( bboss_core_number_format( $media_album_template->album->media['total_video'] ) )
 						);
 						?>
@@ -85,7 +85,7 @@ $albums_link = bboss_get_album_link();
 							if ( $group_id > 0 ) {
 								?>
 								<span class="middot">&middot;</span>
-								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss-platform' ); ?>">
 									<?php bboss_album_visibility(); ?>
 								</span>
 								<?php

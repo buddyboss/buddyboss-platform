@@ -599,16 +599,16 @@ export function HelpScreen( { onNavigate } ) {
 			<section className="bb-admin-help-hero" aria-labelledby="bb-admin-help-hero-title">
 				<div className="bb-admin-help-hero__intro">
 					<h1 id="bb-admin-help-hero-title" className="bb-admin-help-hero__title">
-						{ __( 'Need Help?', 'buddyboss' ) }
+						{ __( 'Need Help?', 'buddyboss-platform' ) }
 					</h1>
 					<p className="bb-admin-help-hero__subtitle">
-						{ __( 'Search our help guides, chat with us, or send us a message.', 'buddyboss' ) }
+						{ __( 'Search our help guides, chat with us, or send us a message.', 'buddyboss-platform' ) }
 					</p>
 				</div>
 
 				<div className="bb-admin-help-hero__search" role="search" ref={ searchRef }>
 					<label htmlFor="bb-admin-help-hero-search" className="screen-reader-text">
-						{ __( 'Search help guides', 'buddyboss' ) }
+						{ __( 'Search help guides', 'buddyboss-platform' ) }
 					</label>
 					<i
 						className="bb-icons-rl bb-icons-rl-magnifying-glass bb-admin-help-hero__search-icon"
@@ -618,7 +618,7 @@ export function HelpScreen( { onNavigate } ) {
 						id="bb-admin-help-hero-search"
 						type="search"
 						className="bb-admin-help-hero__search-input"
-						placeholder={ __( 'Describe your issue', 'buddyboss' ) }
+						placeholder={ __( 'Describe your issue', 'buddyboss-platform' ) }
 						value={ searchQuery }
 						autoComplete="off"
 						role="combobox"
@@ -648,7 +648,7 @@ export function HelpScreen( { onNavigate } ) {
 
 							{ ! isLoading && 0 === results.length && (
 								<p className="bb-admin-help-hero__results-status">
-									{ __( 'No results found.', 'buddyboss' ) }
+									{ __( 'No results found.', 'buddyboss-platform' ) }
 								</p>
 							) }
 
@@ -696,10 +696,10 @@ export function HelpScreen( { onNavigate } ) {
 						></i>
 						<div className="bb-admin-help-card__body">
 							<h2 className="bb-admin-help-card__title">
-								{ __( 'Support Ticket', 'buddyboss' ) }
+								{ __( 'Support Ticket', 'buddyboss-platform' ) }
 							</h2>
 							<p className="bb-admin-help-card__description">
-								{ __( 'Send your request directly to our technical support team – we’re ready to help troubleshoot and guide you.', 'buddyboss' ) }
+								{ __( 'Send your request directly to our technical support team – we’re ready to help troubleshoot and guide you.', 'buddyboss-platform' ) }
 							</p>
 						</div>
 						<a
@@ -708,7 +708,7 @@ export function HelpScreen( { onNavigate } ) {
 							target="_blank"
 							rel="nofollow noopener noreferrer"
 						>
-							{ __( 'Submit a Ticket', 'buddyboss' ) }
+							{ __( 'Submit a Ticket', 'buddyboss-platform' ) }
 						</a>
 					</article>
 					) }
@@ -722,7 +722,7 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-card__body">
 							<div className="bb-admin-help-card__title-row">
 								<h2 className="bb-admin-help-card__title">
-									{ __( 'Support Access', 'buddyboss' ) }
+									{ __( 'Support Access', 'buddyboss-platform' ) }
 								</h2>
 								{ supportAccessLoaded && (
 									supportAccessEnabled ? (
@@ -731,7 +731,7 @@ export function HelpScreen( { onNavigate } ) {
 												className="bb-icons-rl bb-icons-rl-check-circle"
 												aria-hidden="true"
 											></i>
-											{ __( 'Enabled', 'buddyboss' ) }
+											{ __( 'Enabled', 'buddyboss-platform' ) }
 										</span>
 									) : (
 										<span className="bb-admin-help-card__status bb-admin-help-card__status--neutral">
@@ -739,13 +739,13 @@ export function HelpScreen( { onNavigate } ) {
 												className="bb-icons-rl bb-icons-rl-x-circle"
 												aria-hidden="true"
 											></i>
-											{ __( 'Disabled', 'buddyboss' ) }
+											{ __( 'Disabled', 'buddyboss-platform' ) }
 										</span>
 									)
 								) }
 							</div>
 							<p className="bb-admin-help-card__description">
-								{ __( 'Allow our support team to securely access your site using temporary credentials to troubleshoot issues.', 'buddyboss' ) }
+								{ __( 'Allow our support team to securely access your site using temporary credentials to troubleshoot issues.', 'buddyboss-platform' ) }
 							</p>
 						</div>
 						<Button
@@ -757,7 +757,7 @@ export function HelpScreen( { onNavigate } ) {
 								}
 							} }
 						>
-							{ __( 'Open Access', 'buddyboss' ) }
+							{ __( 'Open Access', 'buddyboss-platform' ) }
 						</Button>
 					</article>
 					) }
@@ -771,7 +771,7 @@ export function HelpScreen( { onNavigate } ) {
 						id="bb-admin-help-resources-title"
 						className="bb-admin-help-resources__title"
 					>
-						{ __( 'BuddyBoss Knowledge Base', 'buddyboss' ) }
+						{ __( 'BuddyBoss Knowledge Base', 'buddyboss-platform' ) }
 					</h2>
 					{ 'loading' === kbStatus && (
 						<div className="bb-admin-help-resources__loading" aria-busy="true" aria-live="polite">
@@ -781,7 +781,7 @@ export function HelpScreen( { onNavigate } ) {
 
 					{ 'error' === kbStatus && (
 						<div className="bb-admin-help-resources__error" role="alert">
-							<p>{ __( 'Couldn’t load the knowledge base.', 'buddyboss' ) }</p>
+							<p>{ __( 'Couldn’t load the knowledge base.', 'buddyboss-platform' ) }</p>
 							<Button
 								variant="secondary"
 								onClick={ function () {
@@ -793,7 +793,7 @@ export function HelpScreen( { onNavigate } ) {
 									} );
 								} }
 							>
-								{ __( 'Retry', 'buddyboss' ) }
+								{ __( 'Retry', 'buddyboss-platform' ) }
 							</Button>
 						</div>
 					) }
@@ -828,7 +828,7 @@ export function HelpScreen( { onNavigate } ) {
 											<span className="bb-admin-help-resource-card__count">
 												{
 													/* translators: %d is the number of articles in this resource category. */
-													sprintf( _n( '%d article', '%d articles', card.count, 'buddyboss' ), card.count )
+													sprintf( _n( '%d article', '%d articles', card.count, 'buddyboss-platform' ), card.count )
 												}
 											</span>
 										) }
@@ -847,7 +847,7 @@ export function HelpScreen( { onNavigate } ) {
 						id="bb-admin-help-cta-title"
 						className="bb-admin-help-cta__title"
 					>
-						{ __( 'Can’t find the Answer?', 'buddyboss' ) }
+						{ __( 'Can’t find the Answer?', 'buddyboss-platform' ) }
 					</h2>
 					<Button
 						variant="primary"
@@ -859,7 +859,7 @@ export function HelpScreen( { onNavigate } ) {
 							aria-hidden="true"
 						></i>
 						<span className="bb-admin-help-cta__action-label">
-							{ __( 'Ask Buddy', 'buddyboss' ) }
+							{ __( 'Ask Buddy', 'buddyboss-platform' ) }
 						</span>
 						<i
 							className="bb-icons-rl bb-icons-rl-arrow-right bb-admin-help-cta__action-icon"
@@ -879,7 +879,7 @@ export function HelpScreen( { onNavigate } ) {
 									<div className="bb-admin-help-promo__media">
 										<img
 											src={ helpPromoImages.app }
-											alt={ __( 'App 3.0', 'buddyboss' ) }
+											alt={ __( 'App 3.0', 'buddyboss-platform' ) }
 											className="bb-admin-help-promo__image"
 										/>
 									</div>
@@ -887,19 +887,19 @@ export function HelpScreen( { onNavigate } ) {
 								<div className="bb-admin-help-promo__body">
 									<div className="bb-admin-help-promo__text">
 										<p className="bb-admin-help-promo__eyebrow">
-											{ __( 'App 3.0', 'buddyboss' ) }
+											{ __( 'App 3.0', 'buddyboss-platform' ) }
 										</p>
 										<h2
 											id="bb-admin-help-app-promo-title"
 											className="bb-admin-help-promo__title bb-admin-help-promo__title-app-3"
 										>
-											{ __( 'New BuddyBoss App Next Gen Built on Flutter', 'buddyboss' ) }
+											{ __( 'New BuddyBoss App Next Gen Built on Flutter', 'buddyboss-platform' ) }
 										</h2>
-										<p className="bb-admin-help-promo__description">{ __( 'Say goodbye to React Native. We have completely rebuilt the BuddyBoss App using Flutter for blazing-fast performance, smoother animations, and a truly unified experience.', 'buddyboss' ) }</p>
+										<p className="bb-admin-help-promo__description">{ __( 'Say goodbye to React Native. We have completely rebuilt the BuddyBoss App using Flutter for blazing-fast performance, smoother animations, and a truly unified experience.', 'buddyboss-platform' ) }</p>
 									</div>
 									<a target="_blank" rel="noopener noreferrer" href={ pricingUrls.helpPlusToApp } className="bb-admin-help-promo__action bb-admin-help-promo__action-app-3 is-primary">
 										<span className="bb-admin-help-promo__action-label">
-											{ __( 'Get Next Gen App', 'buddyboss' ) }
+											{ __( 'Get Next Gen App', 'buddyboss-platform' ) }
 										</span>
 									</a>
 								</div>
@@ -918,7 +918,7 @@ export function HelpScreen( { onNavigate } ) {
 							<div className="bb-admin-help-promo__media">
 								<img
 									src={ helpPromoImages.upgradePlus }
-									alt={ __( 'Upgrade to scale preview', 'buddyboss' ) }
+									alt={ __( 'Upgrade to scale preview', 'buddyboss-platform' ) }
 									className="bb-admin-help-promo__image"
 								/>
 							</div>
@@ -926,29 +926,29 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-promo__body">
 							<div className="bb-admin-help-promo__text">
 								<p className="bb-admin-help-promo__eyebrow">
-									{ __( 'BuddyBoss Scale', 'buddyboss' ) }
+									{ __( 'BuddyBoss Scale', 'buddyboss-platform' ) }
 								</p>
 								<h2
 									id="bb-admin-help-plus-promo-title"
 									className="bb-admin-help-promo__title"
 								>
-									{ __( 'Unlock Advanced Scale Features Without Paying More Than the Launch Plan', 'buddyboss' ) }
+									{ __( 'Unlock Advanced Scale Features Without Paying More Than the Launch Plan', 'buddyboss-platform' ) }
 								</h2>
 								<ul className="bb-admin-help-promo__list">
-									<li><i className="bb-icons-rl-check"></i> { __( 'Gamification (Save $199/y)', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Point Types & Triggers', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Ranks & Leaderboards', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Achievements', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Competitions', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Offload Media (Save $199/y)', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Domain Restriction', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Premium Top-Rated Support', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Gamification (Save $199/y)', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Point Types & Triggers', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Ranks & Leaderboards', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Achievements', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Competitions', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Offload Media (Save $199/y)', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Domain Restriction', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Premium Top-Rated Support', 'buddyboss-platform' ) }</li>
 								</ul>
 							</div>
 							<a target="_blank" rel="noopener noreferrer" href={ pricingUrls.helpProToPlus } className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
 								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
-									{ __( 'Upgrade Scale', 'buddyboss' ) }
+									{ __( 'Upgrade Scale', 'buddyboss-platform' ) }
 								</span>
 							</a>
 						</div>
@@ -966,7 +966,7 @@ export function HelpScreen( { onNavigate } ) {
 							<div className="bb-admin-help-promo__media">
 								<img
 									src={ helpPromoImages.upgradePro }
-									alt={ __( 'Upgrade to launch preview', 'buddyboss' ) }
+									alt={ __( 'Upgrade to launch preview', 'buddyboss-platform' ) }
 									className="bb-admin-help-promo__image"
 								/>
 							</div>
@@ -974,29 +974,29 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-promo__body">
 							<div className="bb-admin-help-promo__text">
 								<p className="bb-admin-help-promo__eyebrow">
-									{ __( 'BuddyBoss Launch', 'buddyboss' ) }
+									{ __( 'BuddyBoss Launch', 'buddyboss-platform' ) }
 								</p>
 								<h2
 									id="bb-admin-help-pro-promo-title"
 									className="bb-admin-help-promo__title"
 								>
-									{ __( 'Take Your Community Beyond Basics with BuddyBoss Launch Features', 'buddyboss' ) }
+									{ __( 'Take Your Community Beyond Basics with BuddyBoss Launch Features', 'buddyboss-platform' ) }
 								</h2>
 								<ul className="bb-admin-help-promo__list">
-									<li><i className="bb-icons-rl-check"></i> { __( 'Premium BuddyBoss Theme', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Unlimited Members, Admins & Moderators', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'LearnDash, MemberPress Courses, TutorLMS, LifterLMS Integration', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Zoom Integration for Meetings', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Image, Video & Document Uploads', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Social Login & Access Controls', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Polls, Custom Reactions & Topics', 'buddyboss' ) }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Activity Sharing', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Premium BuddyBoss Theme', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Unlimited Members, Admins & Moderators', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'LearnDash, MemberPress Courses, TutorLMS, LifterLMS Integration', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Zoom Integration for Meetings', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Image, Video & Document Uploads', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Social Login & Access Controls', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Polls, Custom Reactions & Topics', 'buddyboss-platform' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Activity Sharing', 'buddyboss-platform' ) }</li>
 								</ul>
 							</div>
 							<a target="_blank" rel="noopener noreferrer" href={ pricingUrls.helpFreeToPro } className="bb-admin-help-promo__action bb-admin-help-promo__action-pro is-primary">
 								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
-									{ __( 'Upgrade Launch', 'buddyboss' ) }
+									{ __( 'Upgrade Launch', 'buddyboss-platform' ) }
 								</span>
 							</a>
 						</div>
@@ -1008,7 +1008,7 @@ export function HelpScreen( { onNavigate } ) {
 			<footer
 				ref={ footerRef }
 				className="bb-admin-help-footer"
-				aria-label={ __( 'Chat with Buddy', 'buddyboss' ) }
+				aria-label={ __( 'Chat with Buddy', 'buddyboss-platform' ) }
 			>
 				<Button
 					variant="primary"
@@ -1025,8 +1025,8 @@ export function HelpScreen( { onNavigate } ) {
 					></i>
 					<span className="bb-admin-help-footer__action-label">
 						{ chatOpen
-							? __( 'Need Help', 'buddyboss' )
-							: __( 'Chat with Buddy', 'buddyboss' ) }
+							? __( 'Need Help', 'buddyboss-platform' )
+							: __( 'Chat with Buddy', 'buddyboss-platform' ) }
 					</span>
 				</Button>
 			</footer>

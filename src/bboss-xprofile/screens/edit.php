@@ -78,7 +78,7 @@ function bboss_xprofile_screen_edit_profile() {
 				$field                                 = new BBoss_XProfile_Field( $field_id );
 				$is_required_fields_error[]            = $field->name;
 				/* translators: %s: field name. */
-				$social_fields_validation[ $field_id ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field->name );
+				$social_fields_validation[ $field_id ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss-platform' ), $field->name );
 			}
 
 			$field = new BBoss_XProfile_Field( $field_id );
@@ -113,7 +113,7 @@ function bboss_xprofile_screen_edit_profile() {
 					 */
 					if ( '' !== $enabled && '1' !== $enabled ) {
 						$errors        = true;
-						$validations[] = __( 'Invalid option selected. Please try again', 'buddyboss' );
+						$validations[] = __( 'Invalid option selected. Please try again', 'buddyboss-platform' );
 						continue;
 					}
 				}
@@ -138,7 +138,7 @@ function bboss_xprofile_screen_edit_profile() {
 						! isset( $selected_member_type_wp_roles[0] )
 					) {
 						$errors                  = true;
-						$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
+						$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss-platform' );
 						$validations[]           = $bp_error_message_string;
 					}
 				} elseif ( bboss_current_user_can( 'editor' ) ) {
@@ -156,7 +156,7 @@ function bboss_xprofile_screen_edit_profile() {
 						! isset( $selected_member_type_wp_roles[0] )
 					) {
 						$errors                  = true;
-						$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss' );
+						$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss-platform' );
 						$validations[]           = $bp_error_message_string;
 					}
 				} else {
@@ -253,10 +253,10 @@ function bboss_xprofile_screen_edit_profile() {
 		// Required fields error.
 		if ( ! empty( $errors ) && ! empty( $is_required_fields_error ) ) {
 			if ( count( $is_required_fields_error ) > 1 ) {
-				$validations[] = __( 'Please fill in all required fields, and save your changes again.', 'buddyboss' );
+				$validations[] = __( 'Please fill in all required fields, and save your changes again.', 'buddyboss-platform' );
 			} else {
 				/* translators: %s: comma-separated list of required field names. */
-				$validations[] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode( ', ', $is_required_fields_error ) );
+				$validations[] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss-platform' ), implode( ', ', $is_required_fields_error ) );
 			}
 		}
 
@@ -272,9 +272,9 @@ function bboss_xprofile_screen_edit_profile() {
 
 			// Set the feedback messages.
 			if ( ! empty( $errors ) ) {
-				bboss_core_add_message( __( 'There was a problem updating some of your profile information. Please try again.', 'buddyboss' ), 'error' );
+				bboss_core_add_message( __( 'There was a problem updating some of your profile information. Please try again.', 'buddyboss-platform' ), 'error' );
 			} else {
-				bboss_core_add_message( __( 'Changes saved.', 'buddyboss' ) );
+				bboss_core_add_message( __( 'Changes saved.', 'buddyboss-platform' ) );
 			}
 		}
 

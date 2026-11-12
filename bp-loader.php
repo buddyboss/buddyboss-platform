@@ -6,7 +6,7 @@
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
  * Version:     3.7.1
- * Text Domain: buddyboss
+ * Text Domain: buddyboss-platform
  * Domain Path: /src/languages
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html

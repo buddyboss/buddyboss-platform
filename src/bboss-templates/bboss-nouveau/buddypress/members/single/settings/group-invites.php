@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <h2 class="screen-heading group-invites-screen">
-	<?php esc_html_e( 'Group Invites', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Group Invites', 'buddyboss-platform' ); ?>
 </h2>
 
 <?php
@@ -29,7 +29,7 @@ if ( 1 === $group_invites_setting ) {
 <form action="<?php echo esc_url( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/invites/' ); ?>" name="account-group-invites-form" id="account-group-invites-form" class="standard-form" method="post">
 	<div class="bp-checkbox-wrap">
 		<input type="checkbox" name="account-group-invites-preferences" id="account-group-invites-preferences" class="bs-styled-checkbox" value="1" <?php checked( 1, $group_invites_setting ); ?> />
-		<label for="account-group-invites-preferences"><?php esc_html_e( 'Restrict Group invites to members who are connected.', 'buddyboss' ); ?></label>
+		<label for="account-group-invites-preferences"><?php esc_html_e( 'Restrict Group invites to members who are connected.', 'buddyboss-platform' ); ?></label>
 	</div>
 	<?php bboss_nouveau_submit_button( 'member-group-invites' ); ?>
 </form>

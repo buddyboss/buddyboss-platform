@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="screen-content groups-directory-content bb-rl-groups">
 
 			<h2 class="screen-heading group-invites-screen bb-screen-reader-text">
-				<?php esc_html_e( 'Group Invites', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Group Invites', 'buddyboss-platform' ); ?>
 			</h2>
 			<?php
 			bboss_nouveau_group_hook( 'before', 'invites_content' );
@@ -57,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
 													echo wp_kses_post(
 														sprintf(
 															/* translators: 1: inviter profile link, 2: time since the invitation. */
-															__( 'Invited by %1$s &middot; %2$s.', 'buddyboss' ),
+															__( 'Invited by %1$s &middot; %2$s.', 'buddyboss-platform' ),
 															sprintf(
 																'<a href="%s">%s</a>',
 																esc_url( $inviter['url'] ),

@@ -37,7 +37,7 @@ function messages_screen_archived() {
 
 			// Redirect away.
 		} else {
-			bboss_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss-platform' ), 'error' );
 			$is_redirect = true;
 		}
 	}
@@ -47,7 +47,7 @@ function messages_screen_archived() {
 	if ( ! $is_redirect && bboss_messages_is_disabled_group_thread( $thread_id ) ) {
 		$redirect = bboss_messages_get_disabled_group_thread_redirect_url( $thread_id, true );
 
-		bboss_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
+		bboss_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss-platform' ), 'warning' );
 		bboss_core_redirect( $redirect );
 	}
 

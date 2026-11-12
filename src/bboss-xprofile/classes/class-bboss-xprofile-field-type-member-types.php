@@ -24,8 +24,8 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss' );
-		$this->name     = __( 'Profile Type', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Profile Type', 'buddyboss-platform' );
 
 		$this->supports_options = false;
 
@@ -71,7 +71,7 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 							/* translators: %s: URL to the profile types admin screen. */
 							__(
 								'Please make sure to add some <a href="%s">profile types</a> first.',
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							esc_url(
 								add_query_arg(
@@ -130,7 +130,7 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 
 			<?php
 
-			/** This action is documented in bp-xprofile/bp-xprofile-classes */
+			/** This action is documented in bboss-xprofile/bp-xprofile-classes */
 			do_action( bboss_get_the_profile_field_errors_action() );
 
 			?>
@@ -182,7 +182,7 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 
 		if ( ! empty( $bp_active_member_types ) ) {
 
-			$html .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
+			$html .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss-platform' ) . '</option>';
 
 			foreach ( $bp_active_member_types as $bp_active_member_type ) {
 				$enabled = get_post_meta( $bp_active_member_type, '_bp_member_type_enable_profile_field', true );
@@ -227,7 +227,7 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 	 * let a crafted signup/profile payload store an unrelated post ID in this
 	 * field. Whether that member type may be self-selected at registration is
 	 * enforced separately at registration input (see the member-type check in
-	 * bboss_core_screen_signup(), src/bp-members/screens/register.php) and, as a
+	 * bboss_core_screen_signup(), src/bboss-members/screens/register.php) and, as a
 	 * backstop, at activation
 	 * (see bboss_assign_default_member_type_to_activate_user()), so this check
 	 * stays context-free and does not break profile edits that keep a member's
@@ -277,7 +277,7 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 		$member_type_name = get_post_meta( $field_value, '_bp_member_type_label_singular_name', true );
 
 		if ( '' === $member_type_name || false === $member_type_name ) {
-			return esc_html__( '---', 'buddyboss' );
+			return esc_html__( '---', 'buddyboss-platform' );
 		}
 
 		return $member_type_name;

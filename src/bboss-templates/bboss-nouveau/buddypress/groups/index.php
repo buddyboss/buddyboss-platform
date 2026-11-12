@@ -35,7 +35,7 @@ if ( ! bboss_nouveau_is_object_nav_in_sidebar() ) {
 							'<span class="bb-count">%d</span> Group',
 							'<span class="bb-count">%d</span> Groups',
 							$count,
-							'buddyboss'
+							'buddyboss-platform'
 						),
 						array( 'span' => array( 'class' => true ) )
 					),
