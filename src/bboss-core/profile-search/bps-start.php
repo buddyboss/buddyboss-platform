@@ -13,7 +13,7 @@ define( 'BBOSS_PS_FORM', 'bp_profile_search' );
 
 // Legacy admin metabox UI removed — now managed via Settings 2.0.
 require 'bps-directory.php';
-require 'bps-fields.php';
+require 'class-bboss-ps-fields.php';
 require 'bps-form.php';
 require 'bps-search.php';
 require 'bps-templates47.php';

@@ -844,8 +844,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			}
 		}
 
-		if ( ! class_exists( 'BBoss_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bboss-search-types.php' ) ) {
-			require_once $search_dir . 'classes/class-bboss-search-types.php';
+		if ( ! class_exists( 'BBoss_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bboss-search-type.php' ) ) {
+			require_once $search_dir . 'classes/class-bboss-search-type.php';
 		}
 
 		if ( ! class_exists( 'BBoss_Search_Type', false ) ) {
@@ -2934,8 +2934,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			}
 		}
 
-		if ( ! class_exists( 'BBoss_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bboss-search-types.php' ) ) {
-			require_once $search_dir . 'classes/class-bboss-search-types.php';
+		if ( ! class_exists( 'BBoss_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bboss-search-type.php' ) ) {
+			require_once $search_dir . 'classes/class-bboss-search-type.php';
 		}
 
 		if ( ! class_exists( 'BBoss_Search_Type', false ) ) {

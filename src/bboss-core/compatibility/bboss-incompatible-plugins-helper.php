@@ -40,7 +40,7 @@ function bboss_helper_plugins_loaded_callback() {
 	 * Support Rank Math SEO
 	 */
 	if ( class_exists( 'RankMath' ) && interface_exists( 'RankMath\Paper\IPaper' ) && ! is_admin() ) {
-		require bboss()->compatibility_dir . '/bboss-rankmath-plugin-helpers.php';
+		require bboss()->compatibility_dir . '/class-bp-rankmath-title.php';
 	}
 
 	/**
@@ -49,7 +49,7 @@ function bboss_helper_plugins_loaded_callback() {
 	 * Support Elementor
 	 */
 	if ( class_exists( '\Elementor\Plugin' ) ) {
-		require bboss()->compatibility_dir . '/bboss-elementor-plugin-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-elementor-plugin-compatibility.php';
 	}
 
 	/**
@@ -184,7 +184,7 @@ function bboss_helper_plugins_loaded_callback() {
 	 * Support The Events Calendar.
 	 */
 	if ( class_exists( 'Tribe__Events__Main' ) ) {
-		require bboss()->compatibility_dir . '/class-bboss-the-events-calendar-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-the-event-calendar-helpers.php';
 	}
 
 	/**
@@ -198,7 +198,7 @@ function bboss_helper_plugins_loaded_callback() {
 	 * Include filters when tutor-pro plugin is activated.
 	 */
 	if ( function_exists( 'tutor_pro' ) ) {
-		require bboss()->compatibility_dir . '/class-bboss-tutor-pro-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-tutor-pro-plugin-compatibility.php';
 	}
 
 	/**
@@ -301,7 +301,7 @@ function bboss_helper_plugins_loaded_callback() {
 	 * Tutor plugin is activated.
 	 */
 	if ( function_exists( 'tutor' ) ) {
-		require bboss()->compatibility_dir . '/class-bboss-tutor-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-tutor-plugin-compatibility.php';
 	}
 
 	/**
@@ -352,7 +352,7 @@ add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 function bboss_wp_offload_media_compatibility_helper() {
 
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		require bboss()->compatibility_dir . '/bboss-wp-offload-media-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-as3cf-plugin-compatibility.php';
 	}
 
 }
@@ -1068,7 +1068,7 @@ add_action( 'bp_loaded', 'bb_elementor_library_template' );
 function bboss_wp_gravity_forms_compatibility_helper() {
 
 	if ( class_exists( 'GFForms' ) ) {
-		require bboss()->compatibility_dir . '/bboss-wp-gravity-forms-helpers.php';
+		require bboss()->compatibility_dir . '/class-bboss-gfforms-plugin-compatibility.php';
 	}
 
 }

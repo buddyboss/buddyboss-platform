@@ -123,7 +123,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			global $bp;
 
 			// load the helper type parent class.
-			require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-types.php';
+			require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-type.php';
 
 			// load and associate helpers one by one.
 			if ( bboss_is_search_post_type_enable( 'post' ) ) {
@@ -149,13 +149,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				if ( bboss_is_search_post_type_enable( bboss_bbp_get_topic_post_type() ) ) {
-					require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-bbpress-forums-topics.php';
+					require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-bbpress-topics.php';
 					$this->search_helpers['topic'] = BBoss_Search_bbPress_Topics::instance();
 					$this->searchable_items[]      = 'topic';
 				}
 
 				if ( bboss_is_search_post_type_enable( bboss_bbp_get_reply_post_type() ) ) {
-					require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-bbpress-forums-replies.php';
+					require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-bbpress-replies.php';
 					$this->search_helpers['reply'] = BBoss_Search_bbPress_Replies::instance();
 					$this->searchable_items[]      = 'reply';
 				}
@@ -210,7 +210,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$this->searchable_items[]         = 'activity';
 
 				if ( bboss_is_search_activity_comments_enable() ) {
-					require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-activity-comments.php';
+					require_once $bp->plugin_dir . 'bboss-search/classes/class-bboss-search-activity-comment.php';
 					$this->search_helpers['activity_comment'] = BBoss_Search_Activity_Comment::instance();
 					$this->searchable_items[]                 = 'activity_comment';
 
