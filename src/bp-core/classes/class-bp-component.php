@@ -394,21 +394,29 @@ if ( ! class_exists( 'BP_Component' ) ) :
 				// Loop through files to be included.
 				foreach ( (array) $includes as $file ) {
 
-					$paths = array(
-
+					// A build may carry the component directory and its files under the original
+					// `bp-` names or the prefixed `bboss-` names of a generated edition; a provider
+					// plugin that keeps the original names (BuddyBoss Addons) must be found either way.
+					$paths = array();
+					foreach ( array( 'bboss-', 'bp-' ) as $dir_prefix ) {
 						// Passed with no extension.
-						'bp-' . $this->id . '/bp-' . $this->id . '-' . $file . '.php',
-						'bp-' . $this->id . '/bb-' . $this->id . '-' . $file . '.php',
-						'bp-' . $this->id . '-' . $file . '.php',
-						'bb-' . $this->id . '-' . $file . '.php',
-						'bp-' . $this->id . '/' . $file . '.php',
+						foreach ( array( 'bboss-', 'bp-', 'bb-' ) as $file_prefix ) {
+							$paths[] = $dir_prefix . $this->id . '/' . $file_prefix . $this->id . '-' . $file . '.php';
+						}
+						$paths[] = $dir_prefix . $this->id . '/' . $file . '.php';
+					}
+					foreach ( array( 'bboss-', 'bp-', 'bb-' ) as $file_prefix ) {
+						$paths[] = $file_prefix . $this->id . '-' . $file . '.php';
+					}
 
-						// Passed with extension.
-						$file,
-						'bp-' . $this->id . '-' . $file,
-						'bb-' . $this->id . '-' . $file,
-						'bp-' . $this->id . '/' . $file,
-					);
+					// Passed with extension.
+					$paths[] = $file;
+					foreach ( array( 'bboss-', 'bp-', 'bb-' ) as $file_prefix ) {
+						$paths[] = $file_prefix . $this->id . '-' . $file;
+					}
+					foreach ( array( 'bboss-', 'bp-' ) as $dir_prefix ) {
+						$paths[] = $dir_prefix . $this->id . '/' . $file;
+					}
 
 					foreach ( $paths as $path ) {
 						if ( @is_file( $slashed_path . $path ) ) {

@@ -2522,6 +2522,31 @@ function bp_core_get_minified_asset_suffix() {
 }
 
 /**
+ * Path of a component's loader file in this build, or '' when the build has no such component.
+ *
+ * A build may carry the component under its original names (`bp-{id}/bp-{id}-loader.php`) or
+ * under the prefixed names a generated edition uses (`bboss-{id}/bboss-{id}-loader.php`); a
+ * provider plugin that keeps the original names (BuddyBoss Addons) is found either way.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component Component id, e.g. 'activity'.
+ * @return string Absolute path, or '' when none of the candidates exists.
+ */
+function bb_core_component_loader_file( $component ) {
+	$base = buddypress()->plugin_dir;
+	foreach ( array( 'bboss-', 'bp-' ) as $dir_prefix ) {
+		foreach ( array( 'bboss-', 'bp-' ) as $file_prefix ) {
+			$path = $base . $dir_prefix . $component . '/' . $file_prefix . $component . '-loader.php';
+			if ( file_exists( $path ) ) {
+				return $path;
+			}
+		}
+	}
+	return '';
+}
+
+/**
  * Check whether a component's directory is present in this build.
  *
  * Optional components can be stripped from a distribution (e.g. the video and
@@ -2543,7 +2568,7 @@ function bb_is_component_directory_available( $component ) {
 		return $available[ $component ];
 	}
 
-	$exists = file_exists( buddypress()->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+	$exists = '' !== bb_core_component_loader_file( $component );
 
 	/**
 	 * Filters whether a component's code is available to load.

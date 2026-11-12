@@ -132,18 +132,28 @@ class BP_Integration {
 		// Loop through files to be included.
 		foreach ( (array) $includes as $file ) {
 
-			$paths = array(
-
+			// Same candidate set as BP_Component::includes(): original `bp-` names or the prefixed
+			// `bboss-` names of a generated edition, whichever this build carries.
+			$paths = array();
+			foreach ( array( 'bboss-', 'bp-' ) as $dir_prefix ) {
 				// Passed with no extension.
-				'bp-' . $this->id . '/bp-' . $this->id . '-' . $file . '.php',
-				'bp-' . $this->id . '-' . $file . '.php',
-				'bp-' . $this->id . '/' . $file . '.php',
+				foreach ( array( 'bboss-', 'bp-' ) as $file_prefix ) {
+					$paths[] = $dir_prefix . $this->id . '/' . $file_prefix . $this->id . '-' . $file . '.php';
+				}
+				$paths[] = $dir_prefix . $this->id . '/' . $file . '.php';
+			}
+			foreach ( array( 'bboss-', 'bp-' ) as $file_prefix ) {
+				$paths[] = $file_prefix . $this->id . '-' . $file . '.php';
+			}
 
-				// Passed with extension.
-				$file,
-				'bp-' . $this->id . '-' . $file,
-				'bp-' . $this->id . '/' . $file,
-			);
+			// Passed with extension.
+			$paths[] = $file;
+			foreach ( array( 'bboss-', 'bp-' ) as $file_prefix ) {
+				$paths[] = $file_prefix . $this->id . '-' . $file;
+			}
+			foreach ( array( 'bboss-', 'bp-' ) as $dir_prefix ) {
+				$paths[] = $dir_prefix . $this->id . '/' . $file;
+			}
 
 			foreach ( $paths as $path ) {
 				if ( @is_file( $slashed_path . $path ) ) {

@@ -177,15 +177,17 @@ class BP_Core extends BP_Component {
 
 		// Loop through optional components.
 		foreach ( $bp->optional_components as $component ) {
-			if ( bp_is_active( $component ) && file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' ) ) {
-				include $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php';
+			$loader = bp_is_active( $component ) ? bb_core_component_loader_file( $component ) : '';
+			if ( '' !== $loader ) {
+				include $loader;
 			}
 		}
 
 		// Loop through required components.
 		foreach ( $bp->required_components as $component ) {
-			if ( file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' ) ) {
-				include $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php';
+			$loader = bb_core_component_loader_file( $component );
+			if ( '' !== $loader ) {
+				include $loader;
 			}
 		}
 
