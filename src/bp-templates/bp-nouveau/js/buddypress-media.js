@@ -5200,6 +5200,13 @@ window.bp = window.bp || {};
 			var documentType = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' );
 			var document_name_val = document_edit.val().trim(); // trim to remove whitespace around name.
 			var pattern = '';
+			var errorBox = document_edit.siblings( '.error-box' );
+
+			// Keep the template's characters message so it can be restored after the empty-title message.
+			if ( 'undefined' === typeof errorBox.data( 'chars-error' ) ) {
+				errorBox.data( 'chars-error', errorBox.html() );
+			}
+			errorBox.html( errorBox.data( 'chars-error' ) );
 
 			if ( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
 				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}
@@ -5237,6 +5244,14 @@ window.bp = window.bp || {};
 
 				if ( matchStatus ) {
 					return; // prevent user to add not supported characters.
+				}
+
+				// Block an empty title and keep the field open with a message.
+				if ( '' === document_name_val ) {
+					errorBox.text( BP_Nouveau.media.i18n_strings.title_required );
+					document_edit.addClass( 'error' );
+					event.preventDefault();
+					return;
 				}
 
 				document_edit.parent().addClass( 'submitting' ).append( '<i class="animate-spin bb-icon-l bb-icon-spinner"></i>' );
