@@ -1849,7 +1849,8 @@ window.bp = window.bp || {};
 									url: action,
 									type: 'post',
 									data: {
-										item_id: id
+										item_id: id,
+										_wpnonce: BP_Nouveau.nonces.invites_revoke
 									}, success: function () {
 										window.location.reload( true );
 									}

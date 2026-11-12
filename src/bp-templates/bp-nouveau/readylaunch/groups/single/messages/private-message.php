@@ -281,7 +281,7 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( $is_media_active && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
+							if ( $is_media_active && bb_media_gif_picker_available() && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
 								?>
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">

@@ -39,6 +39,10 @@ window.bp = window.bp || {};
 		 */
 		setupGlobals: function () {
 
+			// Document and video settings are only localized when those components are active.
+			var documentSettings = BP_Nouveau.document || {};
+			var videoSettings    = BP_Nouveau.video || {};
+
 			var bodySelector = $( 'body' );
 
 			// Init current page.
@@ -72,9 +76,9 @@ window.bp = window.bp || {};
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
-				maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-				maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-				dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
+				maxFiles: typeof documentSettings.maxFiles !== 'undefined' ? documentSettings.maxFiles : 10,
+				maxFilesize: typeof documentSettings.max_upload_size !== 'undefined' ? documentSettings.max_upload_size : 2,
+				dictInvalidFileType: documentSettings.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 				previewTemplate: ForumDocumentTemplates,
 				dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
@@ -84,19 +88,23 @@ window.bp = window.bp || {};
 			this.videoOptions = {
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
-				dictFileTooBig: BP_Nouveau.video.dictFileTooBig,
-				acceptedFiles: BP_Nouveau.video.video_type,
+				dictFileTooBig: videoSettings.dictFileTooBig,
+				acceptedFiles: videoSettings.video_type,
 				createImageThumbnails: false,
-				dictDefaultMessage: BP_Nouveau.video.dropzone_video_message,
+				dictDefaultMessage: videoSettings.dropzone_video_message,
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
-				maxFiles: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
-				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
-				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
-				dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
+				maxFiles: typeof videoSettings.maxFiles !== 'undefined' ? videoSettings.maxFiles : 10,
+				maxFilesize: typeof videoSettings.max_upload_size !== 'undefined' ? videoSettings.max_upload_size : 2,
+				dictInvalidFileType: videoSettings.dictInvalidFileType,
+				dictMaxFilesExceeded: videoSettings.video_dict_file_exceeded,
 				previewTemplate: ForumVideoTemplate,
-				dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
+				dictCancelUploadConfirmation: videoSettings.dictCancelUploadConfirmation,
+				chunking: true,
+				chunkSize: 30*1024*1024,
+				retryChunks: true,
+				retryChunksLimit: 3,
 			};
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
@@ -111,8 +119,8 @@ window.bp = window.bp || {};
 					autoProcessQueue: true,
 					addRemoveLinks: true,
 					uploadMultiple: false,
-					maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-					maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+					maxFiles: typeof documentSettings.maxFiles !== 'undefined' ? documentSettings.maxFiles : 10,
+					maxFilesize: typeof documentSettings.max_upload_size !== 'undefined' ? documentSettings.max_upload_size : 2,
 					dictInvalidFileType: bp_media_dropzone.dictInvalidFileType,
 					dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 					previewTemplate: ForumDocumentTemplate,
@@ -1057,7 +1065,7 @@ window.bp = window.bp || {};
 		},
 
 		deleteDocument: function ( event ) {
-			var target = $( event.currentTarget );
+			var target = $( event.currentTarget ), self = this;
 			event.preventDefault();
 
 			var type = target.attr( 'data-type' );
@@ -1130,6 +1138,7 @@ window.bp = window.bp || {};
 					'activity_id': activityId,
 					'attachment_id': attachment_id,
 					'_wpnonce': BP_Nouveau.nonces.media,
+					'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				};
 
 				$.ajax(
@@ -1144,8 +1153,9 @@ window.bp = window.bp || {};
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-media-elem.document-activity.' + id ).remove();
-									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+									self.removeDeletedActivityComment( activityId );
 								} else {
+									self.removeDeletedItemsFromCommentEditData( activityId, 'document', [ id ] );
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
@@ -1153,6 +1163,152 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+
+		/**
+		 * Remove an activity comment that the server deleted together with its
+		 * last photo, document or video, and take it out of the parent activity's
+		 * comment count first - the same update a direct comment delete makes.
+		 *
+		 * The comment can be rendered more than once (feed, "view more comments"
+		 * modal, media theatre), so every copy updates the counts of its own
+		 * activity. The feed card behind the modal often does not render the
+		 * comment (it shows only the latest comments), so when the comment was
+		 * removed from the modal only, the feed card's count drops by the same
+		 * number, and the modal is flagged as updated so closing it re-syncs the
+		 * feed card from the server - as after a direct comment delete.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId The deleted activity comment ID.
+		 */
+		removeDeletedActivityComment: function ( commentId ) {
+			var activity       = bp.Nouveau.Activity,
+				canUpdateCount = 'undefined' !== typeof activity && 'function' === typeof activity.updateCommentCountOnDelete && 'function' === typeof activity.decreaseActivityCommentCount,
+				modalDeleted   = {},
+				feedHasCopy    = {};
+
+			$( 'body .activity-comments li#acomment-' + commentId ).each(
+				function () {
+					var $commentLi    = $( this ),
+						$activityItem = $commentLi.closest( '.activity-item' ),
+						$modal        = $commentLi.closest( '#activity-modal' ),
+						$countScope   = $modal.length ? $modal : $activityItem,
+						activityId    = $activityItem.data( 'bp-activity-id' );
+
+					if ( canUpdateCount && $activityItem.length ) {
+						if ( $modal.length ) {
+							modalDeleted[ activityId ] = activity.getDeletedCommentsCount( $commentLi );
+						} else if ( $commentLi.closest( '#activity-stream' ).length ) {
+							feedHasCopy[ activityId ] = true;
+						}
+
+						activity.updateCommentCountOnDelete( $commentLi, $activityItem, $countScope.find( '.activity-state' ), $countScope.find( '.comments-count' ) );
+					}
+
+					$commentLi.remove();
+				}
+			);
+
+			$.each(
+				modalDeleted,
+				function ( activityId, deletedCount ) {
+					// Re-sync the feed card from the server when the modal closes.
+					activity.activityHasUpdates = true;
+					activity.currentActivityId  = activityId;
+
+					// A feed card that rendered the comment was updated by its own copy above.
+					if ( feedHasCopy[ activityId ] ) {
+						return;
+					}
+
+					$( '#activity-stream li.activity-item[data-bp-activity-id="' + activityId + '"]' ).not( '#activity-modal li' ).each(
+						function () {
+							var $feedItem = $( this );
+
+							activity.decreaseActivityCommentCount( $feedItem, $feedItem.find( '.activity-state' ), $feedItem.find( '.comments-count' ), deletedCount );
+						}
+					);
+				}
+			);
+		},
+
+		/**
+		 * Remove deleted photos, documents or videos from the edit data of an
+		 * activity comment the server kept. Without this, clicking Edit before a
+		 * reload shows the deleted item again and saving sends its ID back.
+		 *
+		 * Every rendered copy of the comment (feed, "view more comments" modal)
+		 * carries its own copy of the edit data, so all of them are updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId The kept activity comment ID.
+		 * @param {string}        type      Edit data key: 'media', 'document' or 'video'.
+		 * @param {Array}         ids       The deleted item IDs.
+		 */
+		removeDeletedItemsFromCommentEditData: function ( commentId, type, ids ) {
+			var deletedIds = $.map(
+				[].concat( ids ),
+				function ( value ) {
+					return parseInt( value, 10 );
+				}
+			);
+
+			$( 'body li[data-bp-activity-comment-id="' + commentId + '"]' ).each(
+				function () {
+					var $commentLi = $( this ),
+						editData   = $commentLi.data( 'bp-activity-comment' );
+
+					if ( ! editData || ! Array.isArray( editData[ type ] ) ) {
+						return;
+					}
+
+					editData[ type ] = editData[ type ].filter(
+						function ( item ) {
+							return -1 === deletedIds.indexOf( parseInt( item.id, 10 ) );
+						}
+					);
+
+					$commentLi.data( 'bp-activity-comment', editData ).attr( 'data-bp-activity-comment', JSON.stringify( editData ) );
+				}
+			);
+		},
+
+		/**
+		 * Re-render the photo or video grid of an activity comment the server
+		 * kept, so its layout classes (`bb-media-length-N`, "+N more") match
+		 * the items that are left. Only the comment's own grid is replaced;
+		 * grids of its replies are not touched.
+		 *
+		 * Photo and document grids share `.bb-activity-media-wrap`, so a
+		 * marker child (the move dialog only the photo grid renders) tells
+		 * them apart.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId    The kept activity comment ID.
+		 * @param {string}        wrapSelector Selector of the grid wrapper.
+		 * @param {string}        marker       Selector of a child only this grid has, or ''.
+		 * @param {string}        content      Fresh grid markup from the server, '' when none is left.
+		 */
+		refreshKeptCommentAttachments: function ( commentId, wrapSelector, marker, content ) {
+			$( 'body li[data-bp-activity-comment-id="' + commentId + '"]' ).each(
+				function () {
+					var $wraps = $( this ).find( '.acomment-content' ).first().children( wrapSelector ).filter(
+						function () {
+							return ! marker || $( this ).children( marker ).length > 0;
+						}
+					);
+
+					if ( content ) {
+						$wraps.first().replaceWith( content );
+						$wraps.slice( 1 ).remove();
+					} else {
+						$wraps.remove();
+					}
+				}
+			);
 		},
 
 		bp_ajax_media_request: function ( event, data ) {
@@ -1214,6 +1370,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				'action': 'document_move',
+				'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'document_id': document_id,
 				'folder_id': folder_id,
@@ -1298,6 +1455,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				'action': 'media_move',
+				'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'media_id': media_id,
 				'album_id': album_id,
@@ -1449,6 +1607,7 @@ window.bp = window.bp || {};
 				'media': media,
 				'activity_id': activityId,
 				'from_where': fromWhere,
+				'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 			};
 
 			$.ajax(
@@ -1476,7 +1635,7 @@ window.bp = window.bp || {};
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-media-elem.media-activity.' + id ).remove();
-									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+									self.removeDeletedActivityComment( activityId );
 
 									// The selectors above also clear the "view more comments"
 									// modal's copy of the activity, which leaves the modal open
@@ -1501,6 +1660,8 @@ window.bp = window.bp || {};
 										}
 									}
 								} else {
+									self.removeDeletedItemsFromCommentEditData( activityId, 'media', media );
+									self.refreshKeptCommentAttachments( activityId, '.bb-activity-media-wrap', '.bp-media-move-photo', response.data.media_content );
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
@@ -2718,6 +2879,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								if ( !jQuery( '.forum-document-error-popup' ).length ) {
@@ -2734,7 +2897,7 @@ window.bp = window.bp || {};
 						'success',
 						function ( file, response ) {
 							if ( response.data.id ) {
-								file.id = response.id;
+								file.id = response.data.id;
 								response.data.uuid = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = self.album_id;
@@ -2949,6 +3112,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								if ( !jQuery( '.group-media-error-popup' ).length ) {
@@ -2963,7 +3128,7 @@ window.bp = window.bp || {};
 						'success',
 						function ( file, response ) {
 							if ( response.data.id ) {
-								file.id = response.id;
+								file.id = response.data.id;
 								response.data.uuid = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = self.album_id;
@@ -3093,6 +3258,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								if ( !jQuery( '.group-document-error-popup' ).length ) {
@@ -3118,7 +3285,7 @@ window.bp = window.bp || {};
 						'success',
 						function ( file, response ) {
 							if ( response.data.id ) {
-								file.id = response.id;
+								file.id = response.data.id;
 								response.data.uuid = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.folder_id = self.current_folder;
@@ -3245,6 +3412,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
@@ -3312,8 +3481,13 @@ window.bp = window.bp || {};
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
 
-							if ( response.data.id ) {
-								file.id = response.id;
+							if ( true === file.upload.chunked ) {
+								// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+								response = JSON.parse( file.xhr.response );
+							}
+
+							if ( response.data && response.data.id ) {
+								file.id = response.data.id;
 								response.data.uuid = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = self.album_id;
@@ -3478,6 +3652,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								if ( !jQuery( '.forum-document-error-popup' ).length ) {
@@ -3505,7 +3681,7 @@ window.bp = window.bp || {};
 						'success',
 						function ( file, response ) {
 							if ( response.data.id ) {
-								file.id = response.id;
+								file.id = response.data.id;
 								response.data.uuid = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.folder_id = self.current_folder;
@@ -3763,6 +3939,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								if ( !jQuery( '.forum-video-error-popup' ).length ) {
@@ -3835,8 +4013,13 @@ window.bp = window.bp || {};
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
 
-							if ( response.data.id ) {
-								file.id                = response.id;
+							if ( true === file.upload.chunked ) {
+								// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+								response = JSON.parse( file.xhr.response );
+							}
+
+							if ( response.data && response.data.id ) {
+								file.id                = response.data.id;
 								response.data.uuid     = file.upload.uuid;
 								response.data.album_id = self.album_id;
 								response.data.group_id = self.group_id;
@@ -4227,6 +4410,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							if ( !jQuery( '.media-error-popup' ).length ) {
@@ -4257,7 +4442,7 @@ window.bp = window.bp || {};
 					'success',
 					function ( file, response ) {
 						if ( response.data.id ) {
-							file.id = response.id;
+							file.id = response.data.id;
 							response.data.uuid = file.upload.uuid;
 							response.data.menu_order = self.dropzone_media.length;
 							response.data.album_id = self.album_id;
@@ -4490,6 +4675,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							if ( !jQuery( '.document-error-popup' ).length ) {
@@ -4531,7 +4718,7 @@ window.bp = window.bp || {};
 					'success',
 					function ( file, response ) {
 						if ( response.data.id ) {
-							file.id = response.id;
+							file.id = response.data.id;
 							response.data.uuid = file.upload.uuid;
 							response.data.menu_order = self.dropzone_media.length;
 							response.data.folder_id = self.current_folder;
@@ -7300,6 +7487,7 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: {
 						action: 'media_get_media_description',
+						bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						id: self.current_media.id,
 						attachment_id: self.current_media.attachment_id,
 						nonce: BP_Nouveau.nonces.media
@@ -7925,6 +8113,7 @@ window.bp = window.bp || {};
 						url: BP_Nouveau.ajaxurl,
 						data: {
 							action: 'media_get_activity',
+							bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 							id: self.current_media.activity_id,
 							group_id: !_.isUndefined( self.current_media.group_id ) ? self.current_media.group_id : 0,
 							nonce: BP_Nouveau.nonces.media
@@ -7981,6 +8170,7 @@ window.bp = window.bp || {};
 						url: BP_Nouveau.ajaxurl,
 						data: {
 							action: 'document_get_activity',
+							bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 							id: self.current_document.activity_id,
 							group_id: !_.isUndefined( self.current_document.group_id ) ? self.current_document.group_id : 0,
 							nonce: BP_Nouveau.nonces.media
@@ -8033,6 +8223,7 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: {
 						action: 'document_get_document_description',
+						bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						id: self.current_document.id,
 						attachment_id: self.current_document.attachment_id,
 						nonce: BP_Nouveau.nonces.media
@@ -8293,6 +8484,11 @@ window.bp = window.bp || {};
 				parent_wrap = target.parents( '.activity-media-description' ),
 				description = parent_wrap.find( '#add-activity-description' ).val(),
 				attachment_id = parent_wrap.find( '#bp-attachment-id' ).val();
+
+			// The video script binds the same button; only save descriptions inside the media wrapper.
+			if ( ! parent_wrap.length ) {
+				return;
+			}
 
 			var data = {
 				'action': 'media_description_save',

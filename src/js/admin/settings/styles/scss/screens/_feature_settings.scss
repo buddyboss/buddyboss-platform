@@ -2179,6 +2179,15 @@
     margin: 0;
     font-family: inherit;
 
+    // START tier — features in the BuddyBoss Add-ons plan. Same look as the
+    // field-level `.bb-pro-badge--start`: white fill with a gradient border.
+    &--start {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(#fff, #fff) padding-box,
+            linear-gradient(114.36deg, #E0623D 4.86%, #3E34FF 91.52%) border-box;
+    }
+
     // Button reset — applies only when the badge is rendered as a <button>.
     &:is(button) {
         // Neutralize default button chrome so the <button> variant looks
@@ -2193,11 +2202,13 @@
         color: $bb-text-secondary-color;
     }
 
+    // Explicit color: in the <a> variant the icon would otherwise inherit the admin link color.
     [class*="bb-icon"] {
         font-size: 16px;
         line-height: 1;
         font-weight: 400;
         margin-right: 4px;
+        color: $bb-text-secondary-color;
     }
 
     &:focus {
