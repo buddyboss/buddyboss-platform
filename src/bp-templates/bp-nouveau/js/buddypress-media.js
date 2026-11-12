@@ -990,7 +990,7 @@ window.bp = window.bp || {};
 									$( document ).find( 'a.bb-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'href', response.data.url );
 								}
 							} else {
-								target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).attr( 'selected', 'selected' );
+								target.val( target.attr( 'data-privacy' ) );
 								target.siblings( 'span' ).text( target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).text() );
 								/* jshint ignore:start */
 								alert( response.data.feedback.replace( '&#039;', '\'' ) );
@@ -8561,6 +8561,10 @@ window.bp = window.bp || {};
 						type    : 'document',
 					},
 					success: function ( response ) {
+						if ( ! response || ! response.success ) {
+							self.revertDocumentPrivacy( target, older_privacy, response );
+							return;
+						}
 						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading').removeClass(older_privacy);
 						target.closest('.bb-document-privacy-wrap').find('.privacy').addClass(privacy);
 						target.closest('.bb-document-privacy-wrap').find('.bp-tooltip').attr('data-bp-tooltip', target.text());
@@ -8569,10 +8573,33 @@ window.bp = window.bp || {};
 						}
 					},
 					error  : function () {
-						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading');
+						self.revertDocumentPrivacy( target, older_privacy );
 					}
 				}
 			);
+		},
+
+		/**
+		 * Put the previous privacy back in the document viewer when the server refuses the change.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} target        Clicked privacy item.
+		 * @param {string} older_privacy Privacy before the change.
+		 * @param {Object} response      AJAX response, when there is one.
+		 */
+		revertDocumentPrivacy: function ( target, older_privacy, response ) {
+			var privacy_wrap = target.closest( '.bb-document-privacy-wrap' );
+
+			privacy_wrap.find( '.privacy' ).removeClass( 'loading' );
+			privacy_wrap.find( 'ul.document-privacy li' ).removeClass( 'selected' );
+			privacy_wrap.find( 'ul.document-privacy li[data-value="' + older_privacy + '"]' ).addClass( 'selected' );
+
+			if ( response && response.data && response.data.feedback ) {
+				/* jshint ignore:start */
+				alert( response.data.feedback.replace( '&#039;', '\'' ) );
+				/* jshint ignore:end */
+			}
 		},
 
 		resetActivityMedia: function ( activityId ) {

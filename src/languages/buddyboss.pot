@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.7.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-11-05 11:39:28+00:00\n"
+"POT-Creation-Date: 2026-11-12 02:45:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16141,16 +16141,16 @@ msgid "Failed to rename document."
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:4647
-#: bp-core/classes/class-bb-readylaunch.php:4714
+#: bp-core/classes/class-bb-readylaunch.php:4717
 #: bp-templates/bp-nouveau/includes/media/ajax.php:940
 msgid "Invalid privacy status."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4694
+#: bp-core/classes/class-bb-readylaunch.php:4697
 msgid "You don't have permission to edit this folder."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4705
+#: bp-core/classes/class-bb-readylaunch.php:4708
 msgid "Failed to rename folder."
 msgstr ""
 
