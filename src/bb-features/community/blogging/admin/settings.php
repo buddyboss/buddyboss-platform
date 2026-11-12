@@ -13,13 +13,18 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/callbacks.php';
 
+// Member Blogging add-on state resolution + install/activate AJAX handlers for
+// the "Member Blogs" upsell panel registered below. Loaded unconditionally so
+// the AJAX actions exist even on requests where the panel itself is not built.
+require_once __DIR__ . '/member-blogs-addon.php';
+
 /**
  * Whether the active BuddyBoss Platform Pro is too old to power the blog
  * Bookmarking / Subscriptions features registered on this screen.
  *
  * Both toggles are provided by Pro's blog module, which ships in the version
  * returned by bb_pro_blog_version(). When an older Pro is active it never
- * unlocks the fields, so they would sit as silent "UPGRADE PRO" placeholders —
+ * unlocks the fields, so they would sit as silent "UPGRADE LAUNCH" placeholders —
  * indistinguishable from Pro not being installed at all. This gate lets the
  * screen surface a version notice (and disable the toggles) so the admin knows
  * Pro simply needs updating.
@@ -96,7 +101,7 @@ function bb_blogging_register_admin_settings() {
 	//
 	// The two fields (Bookmarking, Subscriptions) are registered pro_only —
 	// their behaviour is provided by BuddyBoss Platform Pro's blog module.
-	// Without Pro they render as locked "UPGRADE PRO" placeholders; Pro flips
+	// Without Pro they render as locked "UPGRADE LAUNCH" placeholders; Pro flips
 	// them live via the `bb_admin_settings_format_field_data` filter when the
 	// license is valid (see BB_Blog's settings enrichment).
 	bb_register_feature_section(
@@ -280,7 +285,7 @@ function bb_blogging_register_admin_settings() {
 	// "Member Blogs" panel (or its own enable/locked gate) on the later
 	// `bb_after_register_features` hook, so this placeholder is skipped. This
 	// keeps the "Member Blogs" tab visible for discovery/upsell even on sites
-	// that have not installed the Plus add-on.
+	// that have not installed the Scale add-on.
 	if ( ! defined( 'BB_MEMBER_BLOG_VERSION' ) ) {
 		bb_register_side_panel(
 			'blogging',
@@ -306,35 +311,17 @@ function bb_blogging_register_admin_settings() {
 		);
 
 		// The add-on's constant is undefined here, so the plugin is either not
-		// installed or installed-but-inactive. When it is present on disk, tell
-		// the admin to activate it; otherwise show the Plus upgrade CTA.
-		$bb_member_blog_plugin_file = 'buddyboss-member-blogging/buddyboss-member-blogging.php';
-
-		// Add-on action for the empty-state button. When the plugin is installed
-		// but inactive, activate it in place via the Mothership AJAX flow
-		// (mosh_addon_activate) instead of a full-page plugins.php redirect.
-		$bb_member_blog_addon_action = '';
-		$bb_member_blog_addon_slug   = '';
-
-		if ( file_exists( WP_PLUGIN_DIR . '/' . $bb_member_blog_plugin_file ) ) {
-			$bb_member_blog_upsell_description = __( 'The Member Blogging add-on is installed but not activated. Activate it to let your community members create blog posts from the frontend.', 'buddyboss' );
-			$bb_member_blog_upsell_button      = __( 'Activate Plugin', 'buddyboss' );
-			// Kept as a no-JS fallback; the React empty-state button prefers the
-			// AJAX action below when it is present.
-			$bb_member_blog_upsell_url    = wp_nonce_url(
-				self_admin_url( 'plugins.php?action=activate&plugin=' . $bb_member_blog_plugin_file ),
-				'activate-plugin_' . $bb_member_blog_plugin_file
-			);
-			$bb_member_blog_upsell_target = '';
-			$bb_member_blog_addon_action  = 'mosh_addon_activate';
-			$bb_member_blog_addon_slug    = dirname( $bb_member_blog_plugin_file );
-		} else {
-			$bb_member_blog_upsell_description = __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' );
-			$bb_member_blog_upsell_button      = __( 'Upgrade to Plus', 'buddyboss' );
-			$bb_member_blog_upsell_url         = 'https://www.buddyboss.com/pricing/';
-			$bb_member_blog_upsell_target      = '_blank';
-		}
-
+		// installed, installed-but-inactive, or active on a build too old to
+		// register its own settings. Which of those it is — and whether the
+		// license even permits an install — is resolved lazily by
+		// bb_member_blogging_format_upsell_field_data() on the
+		// `bb_admin_settings_format_field_data` filter, so the license/plan
+		// lookup (a potentially blocking remote call) stays off this
+		// registration path, which runs on every admin request.
+		//
+		// The values below are the safe fallback for the case where that filter
+		// never runs: the Plus upsell, which is correct for any site that
+		// cannot install the add-on.
 		bb_register_feature_field(
 			'blogging',
 			'member_blogs',
@@ -345,12 +332,15 @@ function bb_blogging_register_admin_settings() {
 				'type'                    => 'empty_state',
 				'icon'                    => 'bb-icons-rl bb-icons-rl-newspaper',
 				'empty_state_title'       => __( 'Member Blogging', 'buddyboss' ),
-				'empty_state_description' => $bb_member_blog_upsell_description,
-				'button_label'            => $bb_member_blog_upsell_button,
-				'button_url'              => $bb_member_blog_upsell_url,
-				'button_target'           => $bb_member_blog_upsell_target,
-				'addon_action'            => $bb_member_blog_addon_action,
-				'addon_slug'              => $bb_member_blog_addon_slug,
+				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
+				'button_label'            => __( 'Upgrade to Scale', 'buddyboss' ),
+				// Fallback only. With `upgrade_from_catalog` on, the AJAX formatter
+				// replaces this with the campaign-tagged URL from the field-upgrades
+				// catalog when it holds an entry for this panel, so marketing can retarget
+				// the link from S3 without a plugin release.
+				'button_url'              => 'https://www.buddyboss.com/pricing/',
+				'upgrade_from_catalog'    => true,
+				'button_target'           => '_blank',
 				'sanitize_callback'       => '__return_empty_string',
 				'order'                   => 10,
 			)

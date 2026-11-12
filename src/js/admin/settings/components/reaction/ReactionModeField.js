@@ -184,9 +184,9 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 						<span className="bb-reaction-mode__radio-label-text">{opt.label}</span>
 						{opt.disabled && field.pro_notice?.show && (
 							<>
-								<span className="bb-pro-badge">
+								<span className={`bb-pro-badge${ field.pro_notice.tier ? ' bb-pro-badge--' + field.pro_notice.tier : '' }`}>
 									<i className={field.pro_notice.badge_icon || ''} />
-									<span>{field.pro_notice.badge_text || 'PRO'}</span>
+									<span>{field.pro_notice.badge_text || 'LAUNCH'}</span>
 								</span>
 								{/* When a catalog modal payload is present, the
 								    play button opens UpgradeModal in-page (same

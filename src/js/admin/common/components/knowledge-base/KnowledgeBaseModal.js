@@ -41,7 +41,7 @@ export default function KnowledgeBaseModal() {
 
 	// Brand logo from whichever admin app hosts the modal (Settings → bbAdminData,
 	// Integrations → bbIntegrationsData).
-	const adminData = ( typeof window !== 'undefined' && ( window.bbAdminData || window.bbIntegrationsData ) ) || {};
+	const adminData = ( typeof window !== 'undefined' && ( window.bbAdminData || window.bbIntegrationsData || window.bbKb ) ) || {};
 	const brandLogoUrl = adminData.logoUrl || '';
 
 	// Focus capture on open, restore on close.

@@ -600,6 +600,13 @@ class BB_Admin_Topics_Ajax {
 		$resolved_status   = 'password' === $visibility ? 'publish' : $visibility;
 		$resolved_password = 'password' === $visibility ? $post_password : '';
 
+		// Match legacy classic-editor precedence (WP core edit_post()): Private
+		// visibility forces post_status=private and discards the Status
+		// selection — a private topic cannot be created closed/spammed/pended.
+		if ( in_array( $visibility, array( 'private', 'hidden' ), true ) ) {
+			$topic_status = '';
+		}
+
 		$topic_data = array(
 			'post_title'    => $title,
 			'post_content'  => $description,
@@ -805,6 +812,15 @@ class BB_Admin_Topics_Ajax {
 					$update_args['post_status']   = $visibility;
 					$update_args['post_password'] = '';
 				}
+
+				// Match legacy classic-editor precedence (WP core edit_post()):
+				// Private visibility forces post_status=private and discards the
+				// Status selection in the same save — a private topic cannot be
+				// closed/spammed/pended from the edit form. Status transitions on
+				// private topics go through the bulk/row actions instead.
+				if ( in_array( $visibility, array( 'private', 'hidden' ), true ) ) {
+					$topic_status = '';
+				}
 			}
 		}
 
@@ -948,13 +964,20 @@ class BB_Admin_Topics_Ajax {
 					} elseif ( bbp_get_closed_status_id() === $current_status ) {
 						bbp_open_topic( $topic_id );
 					} else {
-						// Pending or other → publish directly.
-						wp_update_post(
-							array(
-								'ID'          => $topic_id,
-								'post_status' => bbp_get_public_status_id(),
-							)
-						);
+						// Pending or other → publish directly. 'publish' is both bbPress's OPEN
+						// status and WP's public status, so skip when this request already applied
+						// a different post_status (visibility) — forcing publish here would
+						// silently revert it.
+						$applied_status = isset( $update_args['post_status'] ) ? $update_args['post_status'] : '';
+
+						if ( '' === $applied_status || bbp_get_public_status_id() === $applied_status ) {
+							wp_update_post(
+								array(
+									'ID'          => $topic_id,
+									'post_status' => bbp_get_public_status_id(),
+								)
+							);
+						}
 					}
 				} elseif ( bbp_get_spam_status_id() === $topic_status ) {
 					bbp_spam_topic( $topic_id );

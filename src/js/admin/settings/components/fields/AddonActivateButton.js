@@ -1,11 +1,22 @@
 /**
  * Add-on activate/install button for empty-state fields.
  *
- * Triggers the Mothership AJAX flow (mosh_addon_activate / mosh_addon_install)
- * in place of a full-page plugins.php redirect, so an installed-but-inactive
- * add-on can be activated without leaving the Settings screen. On success the
- * page reloads so the panel re-renders with the now-active add-on's real
- * settings instead of the upsell placeholder.
+ * Triggers an add-on install/activate AJAX flow in place of a full-page
+ * plugins.php redirect, so an installed-but-inactive add-on can be activated
+ * without leaving the Settings screen. On success the page reloads so the panel
+ * re-renders with the now-active add-on's real settings instead of the upsell
+ * placeholder.
+ *
+ * Two handler families are supported and the server picks which one applies via
+ * `nonceKey`:
+ *
+ * - Mothership (`mosh_addon_activate` / `mosh_addon_install`) — verifies the
+ *   `mosh_addons` nonce, exposed as `bbAdminData.addonNonce` (the default).
+ *   These resolve the product from the licensed add-on server first, so they
+ *   only work on a site with an activated license.
+ * - Platform-owned handlers (e.g. `bb_member_blogging_activate_plugin`) —
+ *   verify the `bb_admin_settings` nonce, exposed as `bbAdminData.ajaxNonce`.
+ *   Pass nonceKey="ajaxNonce" for these.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -15,12 +26,16 @@ import { __ } from '@wordpress/i18n';
 
 /**
  * @param {Object} props
- * @param {string} props.action    Mothership AJAX action ('mosh_addon_activate' | 'mosh_addon_install').
- * @param {string} props.slug      Plugin folder slug (e.g. 'buddyboss-member-blogging').
- * @param {string} props.label     Button label.
+ * @param {string} props.action      AJAX action name.
+ * @param {string} props.slug        Plugin folder slug (e.g. 'buddyboss-member-blogging').
+ * @param {string} props.label       Button label.
  * @param {string} [props.className] Optional CSS class for the button.
+ * @param {string} [props.nonceKey]  `window.bbAdminData` key holding the nonce for `action`.
+ *                                   Defaults to 'addonNonce' (Mothership handlers).
+ * @param {string} [props.busyLabel] Label shown while the request is in flight.
+ *                                   Defaults to 'Activating…'.
  */
-export function AddonActivateButton( { action, slug, label, className } ) {
+export function AddonActivateButton( { action, slug, label, className, nonceKey, busyLabel } ) {
 	const [ busy, setBusy ] = useState( false );
 	const [ error, setError ] = useState( '' );
 
@@ -42,8 +57,19 @@ export function AddonActivateButton( { action, slug, label, className } ) {
 		}
 
 		const adminData = window.bbAdminData || {};
+		const nonce = adminData[ nonceKey || 'addonNonce' ];
 
-		if ( ! slug || ! action || ! adminData.addonNonce || ! adminData.ajaxUrl ) {
+		// Surface the failure rather than returning quietly. A missing nonce or
+		// ajaxUrl is a wiring bug (a field naming a nonceKey that nothing
+		// localizes, most likely), and a button that does nothing at all on
+		// click is indistinguishable from a hung request.
+		if ( ! slug || ! action || ! nonce || ! adminData.ajaxUrl ) {
+			setError(
+				__(
+					'This action is not available right now. Please reload the page and try again.',
+					'buddyboss'
+				)
+			);
 			return;
 		}
 
@@ -52,7 +78,7 @@ export function AddonActivateButton( { action, slug, label, className } ) {
 
 		const formData = new FormData();
 		formData.append( 'action', action );
-		formData.append( '_ajax_nonce', adminData.addonNonce );
+		formData.append( '_ajax_nonce', nonce );
 		formData.append( 'slug', slug );
 		formData.append( 'extension_type', 'plugin' );
 
@@ -96,7 +122,7 @@ export function AddonActivateButton( { action, slug, label, className } ) {
 				disabled={ busy }
 				aria-busy={ busy ? 'true' : undefined }
 			>
-				{ busy ? __( 'Activating…', 'buddyboss' ) : label }
+				{ busy ? ( busyLabel || __( 'Activating…', 'buddyboss' ) ) : label }
 			</button>
 			{ error && (
 				<p className="bb-admin-empty-state__error" role="alert">

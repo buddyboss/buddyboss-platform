@@ -490,6 +490,39 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		$current_repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
+
+		/*
+		 * A set holding a Bio field cannot start repeating: the Bio field is shared
+		 * with the member's WordPress "Biographical Info", so every repeat would be
+		 * another copy of that one value.
+		 *
+		 * Checked before anything is written. Returning the error after the name,
+		 * description and ordering had already been saved would report a failure the
+		 * caller could not act on — part of the request having landed anyway.
+		 *
+		 * bb_xprofile_group_has_bio_field() lives in Platform, and this plugin can be
+		 * updated before Platform is: the two ship together, but a site applies the
+		 * two updates one at a time. Until Platform catches up the helper does not
+		 * exist, so the check is skipped and the endpoint behaves as it did before
+		 * rather than fataling on the request.
+		 */
+		if (
+			isset( $request['repeater_enabled'] ) &&
+			true === $request['repeater_enabled'] &&
+			'on' !== $current_repeater_enabled &&
+			function_exists( 'bb_xprofile_group_has_bio_field' ) &&
+			bb_xprofile_group_has_bio_field( $field_group->id )
+		) {
+			return new WP_Error(
+				'bp_rest_xprofile_field_group_repeater_bio_conflict',
+				__( 'This field set contains a Bio profile field, which is shared with the member\'s WordPress profile, so the repeater set cannot be enabled.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
 		$args = array(
 			'field_group_id' => $field_group->id,
 			'name'           => is_null( $request['name'] ) ? $field_group->name : $request['name'],
@@ -514,20 +547,18 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 			xprofile_update_field_group_position( $group_id, $request['group_order'] );
 		}
 
-		// Update the group meta for repeater set.
+		// Update the group meta for repeater set. The Bio conflict was already
+		// rejected above, before any part of this update was written.
 		if ( isset( $request['repeater_enabled'] ) ) {
 			if ( true === $request['repeater_enabled'] ) {
 				bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' );
 			} else {
 				bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'off' );
 			}
+		} elseif ( ! empty( $current_repeater_enabled ) && 'on' === $current_repeater_enabled ) {
+			bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' );
 		} else {
-			$repeater_enabled = bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true );
-			if ( ! empty( $repeater_enabled ) && 'on' === $repeater_enabled ) {
-				bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' );
-			} else {
-				bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'off' );
-			}
+			bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'off' );
 		}
 
 		$field_group = $this->get_xprofile_field_group_object( $group_id );
@@ -558,6 +589,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 
 		return $response;
 	}
+
 
 	/**
 	 * Check if a given request has access to create a XProfile field group.
