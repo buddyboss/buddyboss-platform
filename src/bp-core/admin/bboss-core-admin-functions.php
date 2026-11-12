@@ -2260,12 +2260,7 @@ function bboss_get_pro_label_notice( $type = 'default' ) {
 			esc_html__( 'to unlock', 'buddyboss-platform' )
 		);
 	} elseif ( ! function_exists( 'bb_platform_pro' ) || ( function_exists( 'bb_pro_should_lock_features' ) ? bb_pro_should_lock_features() : ! bbp_pro_is_license_valid() ) ) {
-		$bb_pro_notice = sprintf(
-			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
-			esc_html__( 'Install', 'buddyboss-platform' ),
-			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' ),
-			esc_html__( 'to unlock', 'buddyboss-platform' )
-		);
+		// Builds without upsell links (the wordpress.org edition) add no "Install ... to unlock" notice.
 	}
 
 	$retval[ $type ] = $bb_pro_notice;

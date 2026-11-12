@@ -328,7 +328,8 @@ function bboss_admin_settings_page() {
 
 	// Pricing links for the React upsells: the upgrade modal and section badge
 	// fallback (`default`), the Appearance "Buy Theme" button (`buyTheme`) and the
-	// Help tab promos (`help*`). Builds without pricing links (the wordpress.org
+	// Help tab promos (`help*`) and the Help tab support-ticket link and chat
+	// fallback (`supportTicket`). Builds without pricing links (the wordpress.org
 	// edition) send an empty list, and each component then hides its link.
 	$bb_pricing_urls = array();
 	$localize_data['pricingUrls'] = $bb_pricing_urls;

@@ -10711,7 +10711,10 @@ function bboss_admin_settings_get_pro_notice( $args = array() ) {
 				'post_feature_image'    => '',
 			);
 
-			$data['link_url'] = isset( $feature_urls[ $type ] ) ? $feature_urls[ $type ] : 'https://www.buddyboss.com/platform/';
+			// Builds without upsell links (the wordpress.org edition) leave other types without a link.
+			$default_feature_url = '';
+
+			$data['link_url'] = isset( $feature_urls[ $type ] ) ? $feature_urls[ $type ] : $default_feature_url;
 		}
 	}
 

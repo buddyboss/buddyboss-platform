@@ -114,10 +114,12 @@ function bboss_tools_ajax_check_plugin_state() {
 
 	// Builds without the in-dashboard installer (the wordpress.org edition) reach this
 	// instead: the addon is downloaded from the BuddyBoss account and uploaded by hand.
+	// Builds without upsell links send no account URL, and the screen shows no button.
+	$download_url = '';
 	wp_send_json_success(
 		array(
 			'state'        => 'download',
-			'download_url' => 'https://www.buddyboss.com/my-account/',
+			'download_url' => $download_url,
 		)
 	);
 }

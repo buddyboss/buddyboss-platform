@@ -1010,7 +1010,7 @@ function bboss_appearance_register_site_seo_pro_placeholder_fields() {
 		'show'       => true,
 		'badge_text' => __( 'LAUNCH', 'buddyboss-platform' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
-		'link_url'   => 'https://www.buddyboss.com/platform/',
+		'link_url'   => '',
 		'link_icon'  => 'bb-icons-rl-play',
 	);
 

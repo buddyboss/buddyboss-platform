@@ -324,12 +324,11 @@ function bboss_member_blogging_get_upsell_field_data() {
 		case 'not_installed':
 			$data = array(
 				'empty_state_description' => __( 'Member Blogging is included in your plan. Install the add-on to let your community members create blog posts from the frontend.', 'buddyboss-platform' ),
-				// Builds without the in-dashboard installer (the wordpress.org edition) link
-				// to the BuddyBoss account, where the add-on is downloaded for upload.
-				'button_label'            => __( 'Go to My Account', 'buddyboss-platform' ),
-				'button_url'              => 'https://www.buddyboss.com/my-account/',
-				'button_target'           => '_blank',
 			);
+			// Builds without the in-dashboard installer link to the BuddyBoss account,
+			// where the add-on is downloaded for upload. Builds without upsell links
+			// (the wordpress.org edition, which never reaches this state: it has no
+			// license connector) render no button.
 			break;
 
 		case 'needs_license':

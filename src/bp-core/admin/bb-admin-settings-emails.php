@@ -82,4 +82,7 @@ add_action( 'bb_register_features', 'bboss_admin_settings_register_emails_featur
 // would have silently dropped the Email Digest entry from the Notifications tab on exactly the
 // sites the placeholder exists for. At file scope the listener is registered long before
 // `bb_register_features` fires at all, and the order no longer matters.
-require_once __DIR__ . '/settings/emails/email-digest-placeholder.php';
+//
+// Not loaded on the WordPress.org build: every state of the stand-in is a licence or plan
+// prompt for an add-on that build never runs beside, so the Emails tab simply has no
+// Email Digest entry there.

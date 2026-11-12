@@ -39,17 +39,9 @@ defined( 'ABSPATH' ) || exit;
 
 	<div class="bp-hello-footer">
 		<div class="bp-hello-social-cta">
-			<p>
-				<?php
-				echo wp_kses_post(
-					sprintf(
-						/* translators: %s: BuddyBoss app URL. */
-						__( '<span>Native mobile apps by </span><a href="%s">BuddyBoss</a><span>.</span>', 'buddyboss-platform' ),
-						esc_url( 'https://buddyboss.com/app' )
-					)
-				);
-				?>
-			</p>
+			<?php
+			// Builds without upsell links (the wordpress.org edition) show no product link here.
+			?>
 		</div>
 
 		<div class="bp-hello-social-links">

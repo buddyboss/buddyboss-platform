@@ -991,8 +991,10 @@ function bboss_media_import_submenu_page() {
 								<?php
 							}
 						} else {
+							// Builds without upsell links (the wordpress.org edition) name the product without a link.
+							$media_import_text = __( 'Import your existing members photo uploads, if you were previously using BuddyBoss Media with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss-platform' );
 							?>
-							<p><?php echo wp_kses_post( __( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss-platform' ) ); ?></p>
+							<p><?php echo wp_kses_post( $media_import_text ); ?></p>
 							<input type="submit" value="<?php esc_html_e( 'Run Migration', 'buddyboss-platform' ); ?>"
 								   id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 						<?php } ?>

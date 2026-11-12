@@ -191,14 +191,17 @@ export default function ActivationRequiredCTA() {
 						'buddyboss-platform'
 					) }
 				</p>
-				<Button
-					variant="primary"
-					href={ downloadUrl || '#' }
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					{ __( 'Go to My Account', 'buddyboss-platform' ) }
-				</Button>
+				{ /* A build without account links sends no URL: no button. */ }
+				{ downloadUrl && (
+					<Button
+						variant="primary"
+						href={ downloadUrl }
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{ __( 'Go to My Account', 'buddyboss-platform' ) }
+					</Button>
+				) }
 			</div>
 		);
 	}
