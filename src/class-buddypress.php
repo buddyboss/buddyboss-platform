@@ -821,10 +821,20 @@ class BuddyPress {
 			return;
 		}
 
+		// The component directory carries the original `bp-` prefix on release and the `bboss-`
+		// prefix in a generated edition; take whichever this build has.
+		$component_dir = dirname( __FILE__ ) . "/bp-{$component}";
+		foreach ( array( 'bboss-', 'bp-' ) as $dir_prefix ) {
+			if ( is_dir( dirname( __FILE__ ) . "/{$dir_prefix}{$component}" ) ) {
+				$component_dir = dirname( __FILE__ ) . "/{$dir_prefix}{$component}";
+				break;
+			}
+		}
+
 		// Sanitize class name.
 		$class = strtolower( str_replace( '_', '-', $class ) );
 		if ( 'bp-rest-attachments' === $class ) {
-			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-bp-rest-attachments.php";
+			$path = "{$component_dir}/classes/trait-bp-rest-attachments.php";
 		} elseif ( 'gdpr' === $component ) {
 			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
 		} elseif ( 'suspend' === $component ) {
@@ -832,9 +842,9 @@ class BuddyPress {
 		} elseif ( 'bp-phpmailer' === $class ) {
 			// File deliberately named without the "phpmailer.php" suffix so it is not mistaken
 			// for the bundled PHPMailer library; the class name BP_PHPMailer is unchanged.
-			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-bp-php-mailer.php";
+			$path = "{$component_dir}/classes/class-bp-php-mailer.php";
 		} else {
-			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-{$class}.php";
+			$path = "{$component_dir}/classes/class-{$class}.php";
 		}
 
 		// Sanity check.

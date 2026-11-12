@@ -403,15 +403,18 @@ class BP_Core extends BP_Component {
 		$feature_integration_dir = $bp->plugin_dir . '/bb-features/integrations/';
 
 		foreach ( $bp->available_integrations as $integration ) {
-			$file = "{$integration_dir}{$integration}/bp-{$integration}-loader.php";
-			if ( file_exists( $file ) ) {
-				include $file;
-				continue;
+			// The loader keeps the original `bp-`/`bb-` name on release; a generated edition renames
+			// the `bp-` one to `bboss-`.
+			$included = false;
+			foreach ( array( 'bboss-', 'bp-', 'bb-' ) as $file_prefix ) {
+				$file = "{$integration_dir}{$integration}/{$file_prefix}{$integration}-loader.php";
+				if ( file_exists( $file ) ) {
+					include $file;
+					$included = true;
+					break;
+				}
 			}
-
-			$file = "{$integration_dir}{$integration}/bb-{$integration}-loader.php";
-			if ( file_exists( $file ) ) {
-				include $file;
+			if ( $included ) {
 				continue;
 			}
 
