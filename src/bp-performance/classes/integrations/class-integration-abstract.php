@@ -134,7 +134,7 @@ abstract class Integration_Abstract {
 		/**
 		 * Filters the cache key of the current endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.2
 		 *
 		 * @param string $cache_key        Cache key, the current request path.
 		 * @param string $integration_name Integration name.
