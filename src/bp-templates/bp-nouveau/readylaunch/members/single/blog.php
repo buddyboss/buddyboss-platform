@@ -68,11 +68,12 @@ $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query
 		?>
 	</div>
 	<?php
+	// Drop the query string from base; paginate_links() re-appends it (e.g. bb-sort) as &paged= args.
 	$bb_blog_pagination_links = paginate_links(
 		array(
 			'total'     => (int) $bb_blog_member_query->max_num_pages,
 			'current'   => max( 1, (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) ),
-			'base'      => get_pagenum_link( 1 ) . '%_%',
+			'base'      => strtok( get_pagenum_link( 1 ), '?' ) . '%_%',
 			'format'    => '?paged=%#%',
 			'mid_size'  => 2,
 			'prev_text' => esc_html__( 'Previous', 'buddyboss' ),
