@@ -4653,7 +4653,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'grouponly' !== $privacy &&
 						! empty( $document_object->id ) &&
 						0 === (int) $document_object->group_id &&
-						0 === (int) $document_object->folder_id
+						0 === (int) $document_object->folder_id &&
+						// Message, forum and comment items keep the privacy of where they were shared.
+						array_key_exists( $document_object->privacy, $document_visibilities ) &&
+						'grouponly' !== $document_object->privacy
 					) {
 						bp_document_update_privacy( $document_id, $privacy, 'document' );
 						$result['privacy']         = $privacy;
