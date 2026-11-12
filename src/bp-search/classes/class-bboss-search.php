@@ -703,7 +703,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
 					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				} elseif ( $args['per_page'] > 0 ) {
-					$offset            = ( (int) $args['current_page'] * absint( $args['per_page'] ) ) - absint( $args['per_page'] );
+					$offset            = max( 0, ( (int) $args['current_page'] * absint( $args['per_page'] ) ) - absint( $args['per_page'] ) );
 					$pre_search_query .= ' LIMIT ' . $offset . ', ' . absint( $args['per_page'] ) . ' ';
 				}
 
