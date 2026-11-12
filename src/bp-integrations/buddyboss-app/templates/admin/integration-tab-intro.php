@@ -13,14 +13,19 @@
 		</h2>
 		<p>
 		<?php
+			// Builds without upsell links (the wordpress.org edition) name the product without a link.
+			$app_link = esc_html__( 'BuddyBoss App', 'buddyboss' );
+			// @bbwt-com-start pricing-links
+			$app_link = sprintf(
+				'<a href="%s" target="_blank">%s</a>',
+				'https://buddyboss.com/app',
+				esc_html__( 'BuddyBoss App', 'buddyboss' )
+			);
+			// @bbwt-com-end pricing-links
 			printf(
 				/* translators: %s: BuddyBoss App link. */
 				esc_html__( 'Access your community from a native mobile app using the %s. BuddyBoss App is a paid product built by BuddyBoss, providing native iOS and Android apps for WordPress, published under your own Apple and Google Play accounts. The apps are branded to match your site, and sync community data (members, groups, forums, etc.) back and forth with WordPress. If using LearnDash your members can take their courses in the app and can even take them offline!', 'buddyboss' ),
-				sprintf(
-					'<a href="%s" target="_blank">%s</a>',
-					'https://buddyboss.com/app',
-					esc_html__( 'BuddyBoss App', 'buddyboss' )
-				)
+				$app_link // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
 			);
 			?>
 		</p>
@@ -33,11 +38,14 @@
 			);
 		?>
 		<?php
+			// Builds without upsell links (the wordpress.org edition) show no "More Info" button.
+			// @bbwt-com-start pricing-links
 			printf(
 				'<a href="%s" target="_blank" class="button-secondary">%s</a>',
 				'https://buddyboss.com/app',
 				esc_html__( 'More Info', 'buddyboss' )
 			);
+			// @bbwt-com-end pricing-links
 		?>
 	</div>
 

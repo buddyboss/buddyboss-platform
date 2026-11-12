@@ -78,9 +78,10 @@ const OnboardingApp = () => {
                 if (selectedOption === 'readylaunch') {
                     // Redirect to ReadyLaunch settings page
                     window.location.href = window.location.origin + '/wp-admin/admin.php?page=buddyboss-platform&tab=buddyboss_readylaunch';
-                } else if (selectedOption === 'buddyboss-theme-buy') {
-                    // Redirect to BuddyBoss theme purchase page
-                    window.open('https://www.buddyboss.com/theme/', '_blank');
+                } else if (selectedOption === 'buddyboss-theme-buy' && window.bbRlOnboarding?.readylaunch?.theme_info_url) {
+                    // Redirect to BuddyBoss theme purchase page (the URL comes from the
+                    // server; a build without it just closes the modal below).
+                    window.open(window.bbRlOnboarding.readylaunch.theme_info_url, '_blank');
                 } else {
                     // Just close the modal for other options
                     setShowModal(false);

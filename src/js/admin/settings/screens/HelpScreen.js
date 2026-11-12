@@ -216,8 +216,13 @@ export function HelpScreen( { onNavigate } ) {
 	 * @returns {void}
 	 */
 	function openChatWhenReady() {
+		// The support page comes from the server (`bbAdminData.pricingUrls.supportTicket`);
+		// a build without it sends none, and the fallback does nothing.
 		var fallback = function () {
-			window.open( 'https://buddyboss.com/my-account/?tab=support', '_blank', 'noopener,noreferrer' );
+			var supportUrl = ( window.bbAdminData && window.bbAdminData.pricingUrls && window.bbAdminData.pricingUrls.supportTicket ) || '';
+			if ( supportUrl ) {
+				window.open( supportUrl, '_blank', 'noopener,noreferrer' );
+			}
 		};
 		if ( 'function' !== typeof window.bbDocsbotEnsure ) {
 			if ( window.bbDocsbotFailed ) {
@@ -682,6 +687,8 @@ export function HelpScreen( { onNavigate } ) {
 			</section>
 			<div className="bb-admin-help-wrapper">
 				<div className="bb-admin-help-cards">
+					{ /* Support ticket link from the server; a build without it hides the card. */ }
+					{ pricingUrls.supportTicket && (
 					<article className="bb-admin-help-card">
 						<i
 							className="bb-icons-rl bb-icons-rl-paper-plane-tilt bb-admin-help-card__icon"
@@ -696,7 +703,7 @@ export function HelpScreen( { onNavigate } ) {
 							</p>
 						</div>
 						<a
-							href="https://buddyboss.com/my-account/?tab=support"
+							href={ pricingUrls.supportTicket }
 							className="bb-admin-help-card__action is-secondary"
 							target="_blank"
 							rel="nofollow noopener noreferrer"
@@ -704,6 +711,7 @@ export function HelpScreen( { onNavigate } ) {
 							{ __( 'Submit a Ticket', 'buddyboss' ) }
 						</a>
 					</article>
+					) }
 
 					{ supportAccessAvailable && (
 					<article className="bb-admin-help-card">
