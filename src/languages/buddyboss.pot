@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 3.7.1\n"
+"Project-Id-Version: BuddyBoss Platform 3.7.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-11-05 12:38:08+00:00\n"
+"POT-Creation-Date: 2026-11-12 11:26:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1251,7 +1251,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:882
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:889
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:2075
-#: bp-moderation/classes/class-bp-moderation-groups.php:237
+#: bp-moderation/classes/class-bp-moderation-groups.php:259
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:25
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:55
 #: bp-templates/bp-nouveau/includes/groups/functions.php:122
@@ -1427,7 +1427,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-widget.php:78
 #: bp-groups/classes/class-bp-groups-widget.php:229
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1137
-#: bp-moderation/classes/class-bp-moderation-groups.php:115
+#: bp-moderation/classes/class-bp-moderation-groups.php:119
 #: bp-search/bp-search-functions.php:375
 #: bp-templates/bp-nouveau/includes/groups/functions.php:123
 #: bp-templates/bp-nouveau/readylaunch/groups/index.php:25
@@ -4049,7 +4049,7 @@ msgstr ""
 #: bp-activity/classes/class-bb-activity-readylaunch.php:582
 #: bp-core/gdpr/class-bp-activity-export.php:70
 #: bp-moderation/classes/class-bp-moderation-activity-comment.php:318
-#: bp-moderation/classes/class-bp-moderation-comment.php:493
+#: bp-moderation/classes/class-bp-moderation-comment.php:515
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:29
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:668
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:669
@@ -8139,7 +8139,7 @@ msgid "No moderation record found for this member."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php:320
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:438
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:499
 #: bp-core/admin/settings/media/callbacks.php:336
 #: bp-core/admin/settings/media/callbacks.php:500
 #: bp-core/bp-core-functions.php:11047
@@ -8155,7 +8155,7 @@ msgid "Other"
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php:407
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:556
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:617
 msgid "Cannot suspend an administrator."
 msgstr ""
 
@@ -8181,7 +8181,7 @@ msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php:465
 #: bp-core/admin/classes/class-bb-admin-replies-ajax.php:1032
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:614
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:675
 msgid "Invalid bulk action."
 msgstr ""
 
@@ -9235,7 +9235,7 @@ msgid_plural "%d replies processed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:342
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:382
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:286
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:445
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:550
@@ -9244,63 +9244,63 @@ msgstr[1] ""
 msgid "Invalid moderation ID."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:351
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:391
 msgid "No moderation record found."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:480
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:516
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:541
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:577
 msgid "Invalid content ID or type."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:485
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:521
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:546
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:582
 msgid "Invalid content type."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:496
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:557
 msgid "Failed to hide content."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:500
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:561
 msgid "Content hidden successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:532
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:593
 msgid "Failed to unhide content."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:536
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:597
 msgid "Content unhidden successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:551
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:581
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:612
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:642
 msgid "Invalid user ID."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:560
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:621
 msgid "This user is already suspended."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:566
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:627
 msgid "User suspended successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:585
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:646
 msgid "This user is not currently suspended."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:591
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:652
 msgid "User unsuspended successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:609
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:670
 msgid "Invalid action or no items selected."
 msgstr ""
 
 #. translators: %d: Number of items.
-#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:657
+#: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:718
 msgid "%d item(s) updated successfully."
 msgstr ""
 
@@ -15262,7 +15262,7 @@ msgstr ""
 
 #: bp-core/bp-core-template.php:119
 #: bp-forums/admin/tools.php:214
-#: bp-moderation/classes/class-bp-moderation-comment.php:400
+#: bp-moderation/classes/class-bp-moderation-comment.php:422
 #: bp-templates/bp-nouveau/buddypress/common/more-options-view.php:13
 #: bp-templates/bp-nouveau/readylaunch/common/more-options-view.php:19
 msgid "Options"
@@ -15828,13 +15828,13 @@ msgstr ""
 msgid "This field type does not support."
 msgstr ""
 
-#: bp-core/classes/class-bb-background-process.php:245
+#: bp-core/classes/class-bb-background-process.php:258
 #: bp-core/libraries/wp-background-process.php:658
 msgid "Every Minute"
 msgstr ""
 
 #. translators: %d: Number of minutes
-#: bp-core/classes/class-bb-background-process.php:248
+#: bp-core/classes/class-bb-background-process.php:261
 #: bp-core/libraries/wp-background-process.php:660
 msgid "Every %d Minutes"
 msgstr ""
@@ -23190,13 +23190,13 @@ msgid "You must be logged in to create new discussions."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/loop-blocked-single-reply.php:46
-#: bp-moderation/classes/class-bp-moderation-comment.php:171
-#: bp-moderation/classes/class-bp-moderation-comment.php:564
+#: bp-moderation/classes/class-bp-moderation-comment.php:175
+#: bp-moderation/classes/class-bp-moderation-comment.php:586
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1298
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1990
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:3049
-#: bp-moderation/classes/suspend/class-bp-suspend-comment.php:258
-#: bp-moderation/classes/suspend/class-bp-suspend-comment.php:644
+#: bp-moderation/classes/suspend/class-bp-suspend-comment.php:262
+#: bp-moderation/classes/suspend/class-bp-suspend-comment.php:666
 #: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:70
 #: bp-templates/bp-nouveau/readylaunch/activity/blocked-comment.php:70
 #: bp-templates/bp-nouveau/readylaunch/forums/loop-blocked-single-reply.php:50
@@ -30408,7 +30408,7 @@ msgid "Moderation not enabled."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-activity-comment.php:296
-#: bp-moderation/classes/class-bp-moderation-comment.php:479
+#: bp-moderation/classes/class-bp-moderation-comment.php:501
 msgid "Report Comment"
 msgstr ""
 
@@ -30465,11 +30465,11 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-comment.php:141
+#: bp-moderation/classes/class-bp-moderation-comment.php:145
 msgid "Blog Comments"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-comment.php:400
+#: bp-moderation/classes/class-bp-moderation-comment.php:422
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:234
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1741
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2223
@@ -30559,7 +30559,7 @@ msgstr ""
 msgid "Standalone Forums"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-groups.php:223
+#: bp-moderation/classes/class-bp-moderation-groups.php:245
 msgid "Report Group"
 msgstr ""
 
@@ -31413,7 +31413,7 @@ msgstr ""
 msgid "Cache Purge Successfully"
 msgstr ""
 
-#: bp-performance/classes/integrations/class-integration-abstract.php:431
+#: bp-performance/classes/integrations/class-integration-abstract.php:440
 msgid "Sorry, something went wrong. Please try again later."
 msgstr ""
 
