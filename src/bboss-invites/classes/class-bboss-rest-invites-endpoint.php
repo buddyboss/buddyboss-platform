@@ -290,7 +290,7 @@ class BBoss_REST_Invites_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $invite_correct_array ) ) {
 
 			if ( ! function_exists( 'bboss_invites_kses_allowed_tags' ) ) {
-				require trailingslashit( bboss()->plugin_dir . 'bboss-invites/actions' ) . '/invites.php';
+				require trailingslashit( bboss()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
 			}
 
 			// check if it has enough recipients to use batch emails.
@@ -351,7 +351,7 @@ class BBoss_REST_Invites_Endpoint extends WP_REST_Controller {
 
 				// Set both variable which will use in email.
 				$_POST['custom_user_name']   = $name;
-				$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', function_exists( 'bboss_attachments_get_default_profile_group_avatar_image' ) ? bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) : bboss()->plugin_url . 'bboss-core/images/profile-avatar-buddyboss.png' );
+				$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', function_exists( 'bboss_attachments_get_default_profile_group_avatar_image' ) ? bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) : bboss()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' );
 
 				$accept_link = add_query_arg(
 					array(
@@ -1207,11 +1207,3 @@ class BBoss_REST_Invites_Endpoint extends WP_REST_Controller {
 		return $value;
 	}
 }
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
-if ( ( class_exists( 'BBoss_REST_Invites_Endpoint', false ) || interface_exists( 'BBoss_REST_Invites_Endpoint', false ) || trait_exists( 'BBoss_REST_Invites_Endpoint', false ) ) && ! class_exists( 'BP_REST_Invites_Endpoint', false ) && ! interface_exists( 'BP_REST_Invites_Endpoint', false ) ) {
-	class_alias( 'BBoss_REST_Invites_Endpoint', 'BP_REST_Invites_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
-}
-// @bbwt-com-end compat-layer

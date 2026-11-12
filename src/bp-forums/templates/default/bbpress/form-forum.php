@@ -1,6 +1,172 @@
 <?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/bbpress/form-forum.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../../bboss-forums/templates/default/bbpress/form-forum.php';
-// @bbwt-com-end compat-layer
+
+/**
+ * New/Edit Forum
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?>
+<div id="bbpress-forums">
+<?php if ( bboss_bbp_is_forum_edit() ) : ?>
+
+
+
+	<?php bboss_bbp_breadcrumb(); ?>
+
+<?php endif; ?>
+
+<?php if ( bboss_bbp_current_user_can_access_create_forum_form() ) : ?>
+
+	<div id="new-forum-<?php bboss_bbp_forum_id(); ?>" class="bbp-forum-form">
+
+		<form id="new-post" name="new-post" method="post" action="<?php the_permalink(); ?>">
+
+			<?php do_action( 'bbp_theme_before_forum_form' ); ?>
+
+			<fieldset class="bbp-form">
+				<h2 class="bbp-form-title entry-title">
+				<?php
+				if ( bboss_bbp_is_forum_edit() ) {
+					/* translators: %s: forum title. */
+					echo wp_kses_post( sprintf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), esc_html( bboss_bbp_get_forum_title() ) ) );
+				} else {
+					/* translators: %s: parent forum title. */
+					bboss_bbp_is_single_forum() ? printf( wp_kses_post( __( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss' ) ), esc_html( bboss_bbp_get_forum_title() ) ) : esc_html_e( 'Create New Forum', 'buddyboss' );
+				}
+				?>
+				</h2>
+
+				<?php do_action( 'bbp_theme_before_forum_form_notices' ); ?>
+
+				<?php if ( ! bboss_bbp_is_forum_edit() && bboss_bbp_is_forum_closed() ) : ?>
+
+					<div class="bp-feedback info">
+						<span class="bp-icon" aria-hidden="true"></span>
+						<p><?php esc_html_e( 'This forum is closed to new content, however your account still allows you to do so.', 'buddyboss' ); ?></p>
+					</div>
+
+				<?php endif; ?>
+
+				<?php do_action( 'bbp_template_notices' ); ?>
+
+				<div>
+
+					<?php do_action( 'bbp_theme_before_forum_form_title' ); ?>
+
+					<p>
+						<label class="bbp-forum-title-label" for="bbp_forum_title"><?php /* translators: %d: maximum forum name length. */ echo wp_kses_post( sprintf( __( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss' ), absint( bboss_bbp_get_title_max_length() ) ) ); ?></label><br />
+						<input type="text" id="bbp_forum_title" value="<?php bboss_bbp_form_forum_title(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="40" name="bbp_forum_title" maxlength="<?php bboss_bbp_title_max_length(); ?>" />
+					</p>
+
+					<?php do_action( 'bbp_theme_after_forum_form_title' ); ?>
+
+					<?php do_action( 'bbp_theme_before_forum_form_content' ); ?>
+
+					<label><?php esc_html_e( 'Description', 'buddyboss' ); ?></label><br />
+					<?php bboss_bbp_the_content( array( 'context' => 'forum' ) ); ?>
+
+					<?php do_action( 'bbp_theme_after_forum_form_content' ); ?>
+
+					<?php bboss_bbp_get_template_part( 'form', 'forum-attachments' ); ?>
+
+					<?php if ( ! ( bboss_bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
+
+						<p class="form-allowed-tags">
+							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss' ) ); ?></label><br />
+							<code><?php bboss_bbp_allowed_tags(); ?></code>
+						</p>
+
+					<?php endif; ?>
+
+					<div class="bp-forum-settings">
+						<?php do_action( 'bbp_theme_before_forum_form_type' ); ?>
+						<p>
+							<label for="bbp_forum_type"><?php esc_html_e( 'Forum Type', 'buddyboss' ); ?></label><br />
+							<?php bboss_bbp_form_forum_type_dropdown(); ?>
+						</p>
+						<?php do_action( 'bbp_theme_after_forum_form_type' ); ?>
+
+						<?php do_action( 'bbp_theme_before_forum_form_status' ); ?>
+						<p>
+							<label for="bbp_forum_status"><?php esc_html_e( 'Status', 'buddyboss' ); ?></label><br />
+							<?php bboss_bbp_form_forum_status_dropdown(); ?>
+						</p>
+						<?php do_action( 'bbp_theme_after_forum_form_status' ); ?>
+
+						<?php do_action( 'bbp_theme_before_forum_form_status' ); ?>
+						<p>
+							<label for="bbp_forum_visibility"><?php esc_html_e( 'Visibility', 'buddyboss' ); ?></label><br />
+							<?php bboss_bbp_form_forum_visibility_dropdown(); ?>
+						</p>
+						<?php do_action( 'bbp_theme_after_forum_visibility_status' ); ?>
+
+						<?php do_action( 'bbp_theme_before_forum_form_parent' ); ?>
+						<p>
+							<label for="bbp_forum_parent_id"><?php esc_html_e( 'Parent Forum', 'buddyboss' ); ?></label><br />
+
+							<?php
+								bboss_bbp_dropdown(
+									array(
+										'select_id' => 'bbp_forum_parent_id',
+										'show_none' => __( '(No Parent)', 'buddyboss' ),
+										'selected'  => bboss_bbp_get_form_forum_parent(),
+										'exclude'   => bboss_bbp_get_forum_id(),
+									)
+								);
+							?>
+						</p>
+						<?php do_action( 'bbp_theme_after_forum_form_parent' ); ?>
+					</div>
+
+					<?php do_action( 'bbp_theme_before_forum_form_submit_wrapper' ); ?>
+
+					<div class="bbp-submit-wrapper">
+
+						<?php do_action( 'bbp_theme_before_forum_form_submit_button' ); ?>
+
+						<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_forum_submit" name="bbp_forum_submit" class="button submit"><?php esc_html_e( 'Submit', 'buddyboss' ); ?></button>
+
+						<?php do_action( 'bbp_theme_after_forum_form_submit_button' ); ?>
+
+					</div>
+
+					<?php do_action( 'bbp_theme_after_forum_form_submit_wrapper' ); ?>
+
+				</div>
+
+				<?php bboss_bbp_forum_form_fields(); ?>
+
+			</fieldset>
+
+			<?php do_action( 'bbp_theme_after_forum_form' ); ?>
+
+		</form>
+	</div>
+
+<?php elseif ( bboss_bbp_is_forum_closed() ) : ?>
+
+	<div id="no-forum-<?php bboss_bbp_forum_id(); ?>" class="bbp-no-forum">
+		<div class="bp-feedback info">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new content.', 'buddyboss' ), esc_html( bboss_bbp_get_forum_title() ) ); ?></p>
+		</div>
+	</div>
+
+<?php else : ?>
+
+	<div id="no-forum-<?php bboss_bbp_forum_id(); ?>" class="bbp-no-forum">
+		<div class="bp-feedback info">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot create new forums.', 'buddyboss' ) : esc_html_e( 'You must be logged in to create new forums.', 'buddyboss' ); ?></p>
+		</div>
+	</div>
+
+<?php endif; ?>
+
+
+</div>
+

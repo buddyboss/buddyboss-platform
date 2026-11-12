@@ -1,0 +1,1470 @@
+<?php
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Fire to add support for third party plugin
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bboss_helper_plugins_loaded_callback() {
+
+	global $bp_plugins;
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support for LearnDash & bbPress Integration
+	 */
+	if ( class_exists( 'Learndash_BBPress' ) ) {
+
+			/**
+			 * Remove bbPress Integration admin init hook action
+			 *
+			 * Support bbPress Integration
+			 */
+			remove_action( 'admin_init', 'wdm_activation_dependency_check' );
+
+		if ( empty( bboss_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
+			deactivate_plugins( 'learndash-bbpress/learndash-bbpress.php' );
+
+			add_action( 'admin_notices', 'bp_core_learndash_bbpress_notices' );
+			add_action( 'network_admin_notices', 'bp_core_learndash_bbpress_notices' );
+		}
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support Rank Math SEO
+	 */
+	if ( class_exists( 'RankMath' ) && interface_exists( 'RankMath\Paper\IPaper' ) && ! is_admin() ) {
+		require bboss()->compatibility_dir . '/bboss-rankmath-plugin-helpers.php';
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support Elementor
+	 */
+	if ( class_exists( '\Elementor\Plugin' ) ) {
+		require bboss()->compatibility_dir . '/bboss-elementor-plugin-helpers.php';
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support Co-Authors Plus
+	 */
+	if ( class_exists( 'CoAuthors_Plus' ) ) {
+		add_filter( 'bp_search_settings_post_type_taxonomies', 'bp_core_remove_authors_taxonomy_for_co_authors_plus', 100, 2 );
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support MemberPress + BuddyPress Integration
+	 */
+	if ( class_exists( 'MpBuddyPress' ) ) {
+		/**
+		 * This action is use when admin bar is Enable
+		 */
+		add_action( 'bp_setup_admin_bar', 'bp_core_add_admin_menu_for_memberpress_buddypress', 100 );
+
+		/**
+		 * This action to update the first and last name usermeta
+		 */
+		add_action( 'user_register', 'bp_core_updated_flname_memberpress_buddypress', 0 );
+	}
+
+	/**
+	 * Include fix when WPML plugin is activated
+	 *
+	 * Support WPML Multilingual CMS
+	 */
+	if ( class_exists( 'SitePress' ) && class_exists( 'WPML_Fix_Links_In_Display_As_Translated_Content' ) ) {
+		require bboss()->compatibility_dir . '/class-bboss-wpml-helpers.php';
+	}
+
+	/**
+	 * Fix email subject, content and link
+     *
+	 * @since BuddyBoss 1.5.4
+	 */
+	if ( class_exists( 'WishListMember' ) ) {
+		global $WishListMemberInstance;
+		remove_filter( 'user_request_action_email_content', array( &$WishListMemberInstance, 'privacy_user_request_email' ), 10 );
+		remove_filter( 'user_request_action_email_subject', array( &$WishListMemberInstance, 'privacy_user_request_email_subject' ), 10 );
+		remove_filter( 'wp_privacy_personal_data_email_content', array( &$WishListMemberInstance, 'privacy_personal_data_email' ), 10 );
+	}
+
+	if ( class_exists( '\InstructorRole\Includes\Instructor_Role' ) ) {
+
+		/**
+		 * Function to exclude group type post to prevent group role overriding.
+		 *
+		 * @param array $exclude_posts excluded post types.
+		 *
+		 * @return array|mixed
+		 */
+		function bboss_core_instructor_role_post_exclude( $exclude_posts ) {
+
+			if ( is_array( $exclude_posts ) ) {
+				$exclude_posts[] = 'bp-group-type';
+				$exclude_posts[] = 'bp-email';
+			}
+
+			return $exclude_posts;
+		}
+
+		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
+	}
+
+	if ( class_exists( 'GeoDirectory' ) ) {
+
+		/**
+		 * Function to deregister some scripts and styles from bp component pages
+		 *
+		 * @since 1.8.0
+		 *
+		 * @return void
+		 */
+		function bboss_exclude_geodirectory_scripts() {
+			$bp_current_component = bboss_current_component();
+
+			// deregister geodirectory select2 script and styles from all component pages
+			if ( $bp_current_component && ! in_array( $bp_current_component, array( 'listings', 'favorites', 'reviews' ), true ) ) {
+				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
+				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
+			}
+		}
+
+		add_action( 'bp_init', 'bp_exclude_geodirectory_scripts' );
+
+		/**
+		 * Deregister and dequeue select2 script from all component pages.
+		 *
+		 * @since 1.8.0
+		 *
+		 * @return void
+		 */
+		function bboss_deregister_geodirectory_script_select2() {
+			wp_dequeue_script( 'select2' );
+			wp_deregister_script( 'select2' );
+			wp_dequeue_script( 'bootstrap-js-bundle' );
+			wp_deregister_script( 'bootstrap-js-bundle' );
+		}
+
+		/**
+		 * Deregister and dequeue styles from all component pages.
+		 *
+		 * @since 1.8.0
+		 *
+		 * @return void
+		 */
+		function bboss_deregister_geodirectory_styles() {
+			wp_dequeue_style( 'ayecode-ui' );
+			wp_deregister_style( 'ayecode-ui' );
+		}
+	}
+
+	/**
+	 * Include filters when Woocommerce plugin is activated
+	 *
+	 * Support Woocommerce
+	 */
+	if ( class_exists( 'WooCommerce' ) ) {
+		require bboss()->compatibility_dir . '/class-bboss-woocommerce-helpers.php';
+	}
+
+	/**
+	 * Include filters when The Events Calendar plugin is activated.
+	 *
+	 * Support The Events Calendar.
+	 */
+	if ( class_exists( 'Tribe__Events__Main' ) ) {
+		require bboss()->compatibility_dir . '/class-bboss-the-events-calendar-helpers.php';
+	}
+
+	/**
+	 * Include Query Monitor compatibility.
+	 */
+	if ( class_exists( 'QueryMonitor' ) ) {
+		require bboss()->compatibility_dir . '/class-bboss-qm-helpers.php';
+	}
+
+	/**
+	 * Include filters when tutor-pro plugin is activated.
+	 */
+	if ( function_exists( 'tutor_pro' ) ) {
+		require bboss()->compatibility_dir . '/class-bboss-tutor-pro-helpers.php';
+	}
+
+	/**
+	 * Include filters to support network search when Paid Membership Pro plugin is activated.
+	 */
+	if ( defined( 'PMPRO_VERSION' ) ) {
+		require bboss()->compatibility_dir . '/class-bboss-pmpro-helpers.php';
+	}
+
+	/**
+	 * Include filters to support network search when Divi Builder plugin is activated.
+	 */
+	if ( class_exists( 'ET_Builder_Plugin' ) ) {
+		add_filter(
+			'et_builder_load_requests',
+			function( $builder_load_requests ) {
+				$builder_load_requests['action'][] = 'bp_search_ajax';
+				return $builder_load_requests;
+			}
+		);
+
+		add_filter( 'et_builder_load_actions',
+			function ( $actions ) {
+				$actions[] = 'bp_search_ajax';
+
+				return $actions;
+			}
+		);
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support Memberpress
+	 */
+	if ( class_exists( 'MeprAppCtrl' ) ) {
+		add_filter( 'mepr_design_style_handle_prefixes', function ( $allowed_handle_prefixes ) {
+			$allowed_handle_prefixes[] = 'admin-bar';
+			$allowed_handle_prefixes[] = 'bp-';
+			$allowed_handle_prefixes[] = 'bb-';
+
+			return $allowed_handle_prefixes;
+		} );
+	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * Support Instructor Role.
+	 *
+	 * @since BuddyBoss 2.5.60
+	 */
+	if ( class_exists( '\InstructorRole\Includes\Instructor_Role' ) ) {
+		add_filter( 'ir_filter_remove_private_protected_from_titles', function ( $is_prepend, $prepend, $post ) {
+			$post_types = array();
+
+			if ( function_exists( 'bboss_bbp_get_forum_post_type' ) ) {
+				$post_types[] = bboss_bbp_get_forum_post_type();
+			}
+
+			if ( function_exists( 'bboss_bbp_get_topic_post_type' ) ) {
+				$post_types[] = bboss_bbp_get_topic_post_type();
+			}
+
+			if ( function_exists( 'bboss_bbp_get_reply_post_type' ) ) {
+				$post_types[] = bboss_bbp_get_reply_post_type();
+			}
+
+			if ( ! empty( $post_types ) && in_array( $post->post_type, $post_types, true ) ) {
+				return true;
+			}
+
+			return $is_prepend;
+		}, 10, 3 );
+	}
+
+	/**
+	 * Include compatible file when the plugin is activated.
+	 * Support CDN Enabler.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 */
+	if ( in_array( 'cdn-enabler/cdn-enabler.php', $bp_plugins ) && class_exists( 'CDN_Enabler_Engine' ) ) {
+		require bboss()->compatibility_dir . '/class-bboss-cdn-helpers.php';
+	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * - Fixed the issue with user register and issue with clear API cache.
+	 *
+	 * Support AffiliateWP.
+	 *
+	 * @since BuddyBoss 2.6.40
+	 */
+	if ( function_exists( 'affwp_do_actions' ) ) {
+		remove_action( 'init', 'affwp_do_actions', 9 );
+		add_action( 'init', 'affwp_do_actions', 10 );
+	}
+
+	/**
+	 * Tutor plugin is activated.
+	 */
+	if ( function_exists( 'tutor' ) ) {
+		require bboss()->compatibility_dir . '/class-bboss-tutor-helpers.php';
+	}
+
+	/**
+	 * SEO plugin compatibility.
+	 *
+	 * They build the document title, the Open Graph tags and the JSON-LD graph themselves, and
+	 * resolve a member's name by reading the WP_User `display_name` property rather than through
+	 * get_the_author_meta() - a read no filter can reach. Without this the full name goes into the
+	 * page source for anonymous visitors and social scrapers on a community that hides it.
+	 *
+	 * Deliberately NOT gated on detecting one of the three plugins it ships support for. The class
+	 * only registers filters, and registering a hook nobody fires costs nothing - which is the same
+	 * argument its own hook list makes for not gating that. Gating the class instead put its two
+	 * documented extension points, `bb_seo_schema_graph_filters` and `bb_seo_author_name_filters`,
+	 * out of reach of exactly the plugins they exist for: a community on SEOPress, Slim SEO, The
+	 * SEO Framework or Squirrly never loaded the class, so its listener was never called and it had
+	 * no supported way to close the leak. Returning an empty array from either filter unregisters
+	 * everything, which is the off switch.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 */
+	require bboss()->compatibility_dir . '/class-bboss-seo-helpers.php';
+	BBoss_SEO_Helpers::instance();
+
+	if ( class_exists( 'LifterLMS' ) ) {
+		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
+	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * - Prevent the "Prevent discovery of usernames" author-scan block from
+	 *   404ing BuddyBoss REST API requests that use an `author` parameter.
+	 *
+	 * Support Wordfence Security.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 */
+	if ( class_exists( 'wordfence' ) ) {
+		add_filter( 'request', 'bb_core_wordfence_rest_author_scan_compatibility', 5 );
+	}
+}
+
+add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
+
+/**
+ * Helper functions for the offload media compatibility.
+ */
+function bboss_wp_offload_media_compatibility_helper() {
+
+	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
+		require bboss()->compatibility_dir . '/bboss-wp-offload-media-helpers.php';
+	}
+
+}
+add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 10 );
+
+/**
+ * Fix the media, video & document display compatibility issue.
+ *
+ * @since BuddyBoss 1.7.9
+ */
+function bboss_seo_press_compatibility_helper() {
+
+	if ( (bool) bboss_get_option( 'seopress_activated' ) ) {
+		if (
+			(
+				! empty( get_query_var( 'bb-media-preview' ) ) ||
+				! empty( get_query_var( 'bb-document-preview' ) ) ||
+				! empty( get_query_var( 'bb-document-player' ) ) ||
+				! empty( get_query_var( 'bb-video-thumb-preview' ) ) ||
+				! empty( get_query_var( 'bb-video-preview' ) )
+			)
+			&&
+			(
+				function_exists( 'seopress_redirections_enabled' ) &&
+				'yes' === seopress_redirections_enabled()
+			)
+		) {
+			remove_action( 'template_redirect', 'seopress_redirections_hook', 1 );
+		}
+	}
+
+}
+
+add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
+
+/**
+ * Allow activity page content restriction via MemberPress
+ *
+ * @since BuddyBoss 2.2.9
+ *
+ * @return void
+ */
+function bboss_core_allow_activity_page_content_restriction_memberpress() {
+
+	if ( bboss_is_active( 'activity' ) && bboss_is_activity_component() && function_exists('bboss_is_bbpress') && bboss_is_bbpress() ) {
+		remove_filter( 'mepr-pre-run-rule-content', 'MeprBbPressIntegration::dont_block_the_content', 11, 3 );
+	}
+
+}
+add_action( 'bp_init', 'bb_core_allow_activity_page_content_restriction_memberpress' );
+
+/**
+ * Add User meta as first and last name is update by BuddyBoss Platform itself
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param int $user_id Register member user id.
+ */
+function bboss_core_updated_flname_memberpress_buddypress( $user_id ) {
+	$user_id = empty( $user_id ) ? bboss_loggedin_user_id() : $user_id;
+	update_user_meta( $user_id, 'bp_flname_sync', 1 );
+}
+
+/**
+ * Add Menu in Admin section for MemberPress + BuddyPress Integration plugin
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param $menus
+ */
+function bboss_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
+	// Define the WordPress global.
+	global $wp_admin_bar, $bp;
+
+	if ( ! bboss_use_wp_admin_bar() || defined( 'DOING_AJAX' ) ) {
+		return;
+	}
+
+	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' );
+	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss' ) );
+	$position  = apply_filters( 'mepr-bp-info-main-nav-position', 25 );
+
+	$wp_admin_bar->add_menu(
+		array(
+			'parent'   => $bp->my_account_menu_id,
+			'id'       => $main_slug,
+			'title'    => $name,
+			'href'     => $bp->loggedin_user->domain . $main_slug . '/',
+			'position' => $position,
+		)
+	);
+
+	// add submenu item
+	$wp_admin_bar->add_menu(
+		array(
+			'parent' => $main_slug,
+			'id'     => 'mp-info',
+			'title'  => _x( 'Info', 'ui', 'buddyboss' ),
+			'href'   => $bp->loggedin_user->domain . $main_slug . '/',
+		)
+	);
+
+	// add submenu item
+	$wp_admin_bar->add_menu(
+		array(
+			'parent' => $main_slug,
+			'id'     => 'mp-subscriptions',
+			'title'  => _x( 'Subscriptions', 'ui', 'buddyboss' ),
+			'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/',
+		)
+	);
+
+	// add submenu item
+	$wp_admin_bar->add_menu(
+		array(
+			'parent' => $main_slug,
+			'id'     => 'mp-payments',
+			'title'  => _x( 'Payments', 'ui', 'buddyboss' ),
+			'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-payments/',
+		)
+	);
+
+}
+
+/**
+ * On BuddyPress update
+ *
+ * @since BuddyBoss 1.0.9
+ */
+function bboss_core_update_group_fields_id_in_db() {
+
+	if ( is_multisite() ) {
+		global $wpdb;
+		$bp_prefix = bboss_core_get_table_prefix();
+
+		$table_name = $bp_prefix . 'bp_xprofile_fields';
+
+		if ( empty( bboss_xprofile_firstname_field_id( 0, false ) ) ) {
+			// first name fields update
+			$firstname = bboss_get_option( 'bp-xprofile-firstname-field-name' );
+			$results   = $wpdb->get_results( "SELECT id FROM {$table_name} WHERE name = '{$firstname}' AND can_delete = 0" );
+			$count     = 0;
+			if ( ! empty( $results ) ) {
+				foreach ( $results as $result ) {
+					$id = absint( $result->id );
+					if ( empty( $count ) && ! empty( $id ) ) {
+						update_site_option( 'bp-xprofile-firstname-field-id', $id );
+						$count ++;
+					} else {
+						$wpdb->delete( $table_name, array( 'id' => $id ) );
+					}
+				}
+			}
+		}
+
+		if ( empty( bboss_xprofile_lastname_field_id( 0, false ) ) ) {
+			// last name fields update
+			$lastname = bboss_get_option( 'bp-xprofile-lastname-field-name' );
+			$results  = $wpdb->get_results( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE name = '{$lastname}' AND can_delete = 0" );
+			$count    = 0;
+			if ( ! empty( $results ) ) {
+				foreach ( $results as $result ) {
+					$id = absint( $result->id );
+					if ( empty( $count ) && ! empty( $id ) ) {
+						update_site_option( 'bp-xprofile-lastname-field-id', $id );
+						$count ++;
+					} else {
+						$wpdb->delete( $table_name, array( 'id' => $id ) );
+					}
+				}
+			}
+		}
+
+		if ( empty( bboss_xprofile_nickname_field_id( true, false ) ) ) {
+			// nick name fields update
+			$nickname = bboss_get_option( 'bp-xprofile-nickname-field-name' );
+			$results  = $wpdb->get_results( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE name = '{$nickname}' AND can_delete = 0" );
+			$count    = 0;
+			if ( ! empty( $results ) ) {
+				foreach ( $results as $result ) {
+					$id = absint( $result->id );
+					if ( empty( $count ) && ! empty( $id ) ) {
+						update_site_option( 'bp-xprofile-nickname-field-id', $id );
+						$count ++;
+					} else {
+						$wpdb->delete( $table_name, array( 'id' => $id ) );
+					}
+				}
+			}
+		}
+
+		update_site_option( 'bp-xprofile-field-ids-updated', 1 );
+	}
+}
+add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db', 100 );
+
+/**
+ * Remove the Author Taxonomies as that is added by Co-Authors Plus which is not used full.
+ *
+ * Support Co-Authors Plus
+ *
+ * @since 1.1.7
+ *
+ * @param array $taxonomies Taxonomies which are registered for the requested object or object type.
+ * @param array $post_type  Post type.
+ *
+ * @return array Return the names or objects of the taxonomies which are registered for the requested object or object type
+ */
+function bboss_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post_type ) {
+
+	delete_blog_option( bboss_get_root_blog_id(), "bp_search_{$post_type}_tax_author" );
+	return array_diff( $taxonomies, array( 'author' ) );
+}
+
+/**
+ * Include plugin when plugin is activated
+ *
+ * Support Google Captcha Pro
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bboss_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
+
+	// check for BuddyPress plugin.
+	if ( 'buddypress' === $section_slug ) {
+		$section_notice = '';
+	}
+
+	// check for bbPress plugin.
+	if ( 'bbpress' === $section_slug ) {
+		$section_notice = '';
+		if ( empty( bboss_is_active( 'forums' ) ) ) {
+			$section_notice = sprintf(
+				'<a href="%s">%s</a>',
+				bboss_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
+				__( 'Activate Forum Discussions Component', 'buddyboss' )
+			);
+		}
+	}
+
+	return $section_notice;
+
+}
+add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
+
+/**
+ * Update the BuddyBoss Platform Fields when user register from MemberPress Registration form
+ *
+ * Support MemberPress and MemberPress Pro
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bboss_core_add_support_mepr_signup_map_user_fields( $txn ) {
+	if ( ! empty( $txn->user_id ) ) {
+		bboss_core_map_user_registration( $txn->user_id, true );
+	}
+}
+
+add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 100 );
+
+/**
+ * Include plugin when plugin is activated
+ *
+ * Support LearnDash & bbPress Integration
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bboss_core_learndash_bbpress_notices() {
+	global $bp_plugins;
+
+	if ( empty( bboss_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
+		$links = bboss_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
+
+		$text     = sprintf( '<a href="%s">%s</a>', esc_url( $links ), esc_html__( 'Forum Discussions', 'buddyboss' ) );
+		$activate = sprintf( '<a href="%s">%s</a>', esc_url( $links ), esc_html__( 'activate', 'buddyboss' ) );
+		?>
+		<div id="message" class="error notice">
+			<p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
+			<?php /* translators: 1: Forum Discussions component link, 2: activate component link. */ ?>
+			<p><?php echo wp_kses_post( sprintf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %1$s component is deactivated. Please activate LearnDash LMS plugin & %2$s component.', 'buddyboss' ), $text, $text, $activate ) ); ?></p>
+		</div>
+		<?php
+	}
+}
+
+/**
+ * Fix PHP notices in WooCommerce status Menu
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param $tabs
+ *
+ * @return mixed
+ */
+function bboss_core_fix_notices_woocommerce_admin_status( $tabs ) {
+	if ( isset( $_GET['page'] ) && 'wc-status' == $_GET['page'] ) {
+		bboss_core_unset_bbpress_buddypress_active();
+	}
+	return $tabs;
+}
+add_filter( 'woocommerce_admin_status_tabs', 'bp_core_fix_notices_woocommerce_admin_status' );
+
+/**
+ * Fix forums subscription tab in user's profile.
+ *
+ * @param $passed
+ *
+ * @return bool
+ * @since BuddyBoss 1.3.3
+ */
+function bboss_core_fix_forums_subscriptions_tab( $passed ) {
+	$bp_current_component = bboss_current_component();
+	$bp_current_action    = bboss_current_action();
+
+	if ( 'forums' === $bp_current_component && $bp_current_action === bboss_bbp_get_user_subscriptions_slug() ) {
+		$passed = false;
+	}
+
+	return $passed;
+}
+
+add_filter( 'woocommerce_account_endpoint_page_not_found', 'bp_core_fix_forums_subscriptions_tab' );
+
+/**
+ * Fix Memberpress Privacy for BuddyPress pages.
+ *
+ * @since BuddyBoss 1.2.4
+ *
+ * @param mixed $content
+ *
+ * @return mixed
+ */
+function bboss_core_memberpress_the_content( $content ) {
+	if ( class_exists( 'MeprBaseModel' ) ) {
+		global $post;
+		$page_ids = bboss_core_get_directory_page_ids();
+
+		if (
+			bboss_is_groups_component()
+			&& ! empty( $page_ids['groups'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['groups'] );
+		} elseif (
+			bboss_is_media_component()
+			&& ! empty( $page_ids['media'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['media'] );
+		} elseif (
+			bboss_is_members_component()
+			&& ! empty( $page_ids['members'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['members'] );
+		} elseif (
+			bboss_is_activity_component()
+			&& ! empty( $page_ids['activity'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['activity'] );
+		}
+	}
+
+	return $content;
+}
+add_filter( 'the_content', 'bp_core_memberpress_the_content', 999 );
+
+/**
+ * Fix Medium Editor version conflict with user blog plugin
+ *
+ * @since BuddyBoss 1.3.4
+ */
+function bboss_remove_user_blog_disable_medium_editor_js() {
+	if ( bboss_is_activity_directory() || bboss_is_user_activity() || bboss_is_group_activity() ) {
+		wp_dequeue_script( 'buddyboss-bower-medium-editor' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'bp_remove_user_blog_disable_medium_editor_js', 100 );
+
+/**
+ * Removed WC filter to the settings page when its active.
+ *
+ * @since BuddyBoss 1.3.3
+ */
+function bboss_settings_remove_wc_lostpassword_url() {
+	if ( class_exists( 'woocommerce' ) ) {
+		remove_filter( 'lostpassword_url', 'wc_lostpassword_url', 10, 1 );
+	}
+}
+add_action( 'bp_before_member_settings_template', 'bp_settings_remove_wc_lostpassword_url' );
+add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
+
+/**
+ * Get the forum page id from settings.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @return int|bool.
+ */
+function bboss_get_forum_page_id() {
+	// Get the page id from the options.
+	$id = (int) bboss_get_option( '_bbp_root_slug_custom_slug' );
+
+	// Check the status of current set value.
+	$status = get_post_status( $id );
+
+	// Set the page id if page exists and in publish otherwise set false.
+	return ( '' !== $status && 'publish' === $status ) ? $id : false;
+}
+
+/**
+ * Generate Yoast SEO title.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @param string $title        Default SEO title
+ * @param object $presentation Collection data for presentation
+ *
+ * @return string.
+ */
+function bboss_wpseo_title( $title, $presentation ) {
+	// Get forum page id
+	$page_id = bboss_get_forum_page_id();
+
+	if ( empty( $page_id ) || ! class_exists( 'WPSEO_Replace_Vars' ) ) {
+		return $title;
+	}
+
+	// Yoast SEO title regarding page id.
+	$title = get_post_meta( $page_id, '_yoast_wpseo_title', true );
+
+	// Replace title tag with actual value.
+	$replace_vars = new WPSEO_Replace_Vars();
+	$page         = get_post( $page_id );
+	$title        = $replace_vars->replace( $title, $page );
+
+	return $title;
+}
+
+/**
+ * Generate Yoast SEO description.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @param string $meta_description Default SEO description
+ * @param object $presentation     Collection data for presentation
+ *
+ * @return string.
+ */
+function bboss_wpseo_meta_description( $meta_description, $presentation ) {
+	// Get forum page id
+	$page_id = bboss_get_forum_page_id();
+
+	if ( empty( $page_id ) || ! class_exists( 'WPSEO_Replace_Vars' ) ) {
+		return $meta_description;
+	}
+
+	// Yoast SEO description regarding page id.
+	$meta_description = get_post_meta( $page_id, '_yoast_wpseo_metadesc', true );
+
+	// Replace title tag with actual value.
+	$replace_vars     = new WPSEO_Replace_Vars();
+	$page             = get_post( $page_id );
+	$meta_description = $replace_vars->replace( $meta_description, $page );
+
+	return $meta_description;
+}
+
+/**
+ * Generate Yoast SEO meta.
+ *
+ * @since BuddyBoss 1.5.8
+ *
+ * @return void.
+ */
+function bboss_set_yoast_meta_tags() {
+	// Prevent execution when forum is disabled.
+	if ( ! bboss_is_active( 'forums' ) ) {
+		return;
+	}
+
+	// Is current post type is forum.
+	if ( bboss_bbp_get_forum_post_type() == get_post_type() ) {
+		// Filter default SEO title for yoast.
+		add_filter( 'wpseo_title', 'bp_wpseo_title', 10, 2 );
+
+		// Filter default SEO description for yoast.
+		add_filter( 'wpseo_metadesc', 'bp_wpseo_meta_description', 10, 2 );
+	}
+}
+
+// Trigger before template load.
+add_action( 'bp_template_redirect', 'set_yoast_meta_tags' );
+
+/**
+ * Load rest compatibility.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bboss_rest_compatibility_loader() {
+	// BuddyPress Groups Tabs creator pro plugin support.
+	if ( class_exists( 'BPGTC_Group_Tabs_Pro' ) ) {
+		require_once dirname( __FILE__ ) . '/bboss-rest-groups-tabs-creator-pro.php';
+	}
+}
+add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
+
+// The LearnDash-aware `group_leader` role sync used to live here as three
+// functions hooked into `delete_post`, `untrash_post`, and `profile_update`
+// (`bb_learndash_delete_group`, `bb_learndash_untrash_group`, and
+// `bb_learndash_role_add`). Two of them instantiated the addon-only class
+// `\Buddyboss\LearndashIntegration\Library\SyncGenerator`, so leaving them in
+// Platform after the extraction caused a fatal on sites that upgraded
+// Platform without installing the buddyboss-learndash addon.
+//
+// As of BuddyBoss 3.0.0 all three functions moved to the addon at
+// `buddyboss-learndash/includes/group-leader-role-sync.php` and are loaded
+// from `BP_Learndash_Integration::includes()` so the class reference can only
+// ever resolve when the addon itself is loaded.
+
+
+
+
+
+/**
+ * Function to set the false to use the default media symlink instead use the WP Stateless media URL of media.
+ *
+ * @param bool   $can           default true.
+ * @param int    $id            media/document/video id.
+ * @param int    $attachment_id attachment id.
+ * @param string $size          preview size.
+ *
+ * @return bool true if the offload media used.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bboss_wp_stateless_do_symlink( $can, $id, $attachment_id, $size ) {
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+		$can = false;
+	}
+
+	return $can;
+}
+
+add_filter( 'bb_media_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_document_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+add_filter( 'bb_video_create_thumb_symlinks', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url Attachment url.
+ * @param int    $video_id       Video id.
+ * @param int    $attachment_id  Attachment id.
+ *
+ * @return string $attachment_url Attachment URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bboss_video_wp_stateless_get_video_url( $attachment_url, $video_id, $attachment_id ) {
+
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+		$attachment_url = wp_get_attachment_url( $attachment_id );
+	}
+
+	return $attachment_url;
+}
+
+add_filter( 'bb_video_get_symlink', 'bp_video_wp_stateless_get_video_url', PHP_INT_MAX, 3 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url Attachment url.
+ * @param int    $video_id       Video id.
+ * @param string $size           size of the media.
+ * @param int    $attachment_id  Attachment id.
+ *
+ * @return false|mixed|string return the original document URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bboss_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+		$get_metadata = wp_get_attachment_metadata( $attachment_id );
+		if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+			$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+		} else {
+			$attachment_url = wp_get_attachment_url( $attachment_id );
+		}
+	}
+
+	return $attachment_url;
+}
+
+add_filter( 'bb_video_get_thumb_url', 'bp_video_wp_stateless_get_thumb_preview_url', PHP_INT_MAX, 4 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url attachment url.
+ * @param int    $media_id       media id.
+ * @param int    $attachment_id  attachment id.
+ * @param string $size           size of the media.
+ *
+ * @return false|mixed|string return the original media URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bboss_media_wp_stateless_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+		$media          = new BBoss_Media( $media_id );
+		$attachment_url = wp_get_attachment_url( $media->attachment_id );
+	}
+
+	return $attachment_url;
+}
+
+add_filter( 'bp_media_get_preview_image_url', 'bp_media_wp_stateless_get_preview_url', PHP_INT_MAX, 4 );
+
+/**
+ * Return the WP Stateless media plugin attachment url.
+ *
+ * @param string $attachment_url attachment url.
+ * @param int    $document_id    media id.
+ * @param string $extension      extension.
+ * @param string $size           size of the media.
+ * @param int    $attachment_id  attachment id.
+ *
+ * @return false|mixed|string return the original document URL.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bboss_document_wp_stateless_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
+
+	if ( function_exists( 'ud_get_stateless_media' ) && in_array( ud_get_stateless_media()->get( 'sm.mode' ), array( 'cdn', 'ephemeral', 'stateless' ), true ) ) {
+
+		if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+			$get_metadata = wp_get_attachment_metadata( $attachment_id );
+			if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+				$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+			} else {
+				$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
+			}
+
+			if ( ! $attachment_url ) {
+				bp_document_generate_document_previews( $attachment_id );
+				if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
+					$attachment_url = wp_get_attachment_image_url( $attachment_id, $size );
+				} else {
+					$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
+				}
+			}
+		}
+
+		if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+			if ( ! empty( $attachment_id ) && ! empty( $document_id ) ) {
+				$attachment_url = wp_get_attachment_url( $attachment_id );
+			}
+		}
+	}
+
+	return $attachment_url;
+}
+
+add_filter( 'bp_document_get_preview_url', 'bp_document_wp_stateless_get_preview_url', PHP_INT_MAX, 5 );
+
+/**
+ * Fix Elementor conflict for forum parent field.
+ * Remove the Page Attributes meta box from forum edit page
+ * since Element's page attributes parent field is conflicting with forum attributes patent field
+ *
+ * @return void
+ *
+ * @since 1.7.6
+ */
+function bboss_bbp_remove_page_attributes_metabox_for_forum() {
+
+	// Check if elementor is exists.
+	if ( class_exists( '\Elementor\Plugin' ) ) {
+		// Remove the page attribute meta box for forum screen.
+		remove_meta_box( 'pageparentdiv' , 'forum' , 'side' );
+	}
+
+}
+
+add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
+
+/**
+ * Function will remove template_redirect action when we view individual saved template
+ * in the Elementor plugin.
+ *
+ * @since BuddyBoss 2.1.0
+ */
+function bboss_elementor_library_template() {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+		return;
+	}
+
+	if ( isset( $_GET['elementor_library'] ) ) {
+		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
+	}
+}
+add_action( 'bp_loaded', 'bb_elementor_library_template' );
+
+/**
+ * Helper functions for the gravity forms compatibility.
+ *
+ * @since BuddyBoss 2.2.1
+ */
+function bboss_wp_gravity_forms_compatibility_helper() {
+
+	if ( class_exists( 'GFForms' ) ) {
+		require bboss()->compatibility_dir . '/bboss-wp-gravity-forms-helpers.php';
+	}
+
+}
+add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
+
+/**
+ * Enqueue the BuddyBoss Platform styles for the MemberPress Classroom.
+ *
+ * @since BuddyBoss 2.6.60
+ *
+ * @param array $allow_handle Allowed handles.
+ *
+ * @return array
+ */
+function bboss_mpcs_add_buddyboss_style( $allow_handle ) {
+	if ( class_exists( 'memberpress\courses\controllers\Classroom' ) ) {
+		$allow_handle[] = 'bp-nouveau';
+	}
+
+	return $allow_handle;
+
+}
+
+add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
+
+/**
+ * Helper function to check if Elementor Maintenance Mode is enabled.
+ *
+ * @return bool
+ */
+function bboss_is_elementor_maintenance_mode_enabled() {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) || ! class_exists( '\Elementor\Plugin' ) ) {
+		return false;
+	}
+
+	static $user = null;
+
+	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
+		return false;
+	}
+
+	$is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', false );
+
+	if ( $is_login_page ) {
+		return false;
+	}
+
+	if ( null === $user ) {
+		$user = wp_get_current_user();
+	}
+
+	$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
+
+	if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( 'custom' === $exclude_mode ) {
+		$exclude_roles = get_option( 'elementor_maintenance_mode_exclude_roles' );
+		$user_roles    = $user->roles;
+
+		if ( is_multisite() && is_super_admin() ) {
+			$user_roles[] = 'super_admin';
+		}
+
+		$compare_roles = array_intersect( $user_roles, $exclude_roles );
+
+		if ( ! empty( $compare_roles ) ) {
+			return false;
+		}
+	}
+
+	$mode = get_option( 'elementor_maintenance_mode_mode' );
+
+	if ( 'maintenance' === $mode || 'coming_soon' === $mode ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Function to get the user enrolled course or all courses.
+ *
+ * This function retrieves the courses a user is enrolled in using the LifterLMS plugin.
+ * It fetches the courses for the logged-in user and returns an array containing course details.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @param array $args Arguments.
+ *
+ * @return array $args User enrolled courses with course details.
+ */
+function bboss_readylaunch_middle_content_llms_courses( $args = array() ) {
+
+	$course_data['integration'] = 'lifterlms';
+
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
+		$user_id = bboss_loggedin_user_id();
+		if ( $user_id ) {
+			// Get enrolled courses for the logged-in user.
+			$student = llms_get_student( bboss_loggedin_user_id() );
+			if ( ! $student ) {
+				return $args;
+			}
+
+			$results = $student->get_courses(
+				array(
+					'status' => 'enrolled',
+					'limit'  => 5,
+				)
+			);
+		} else {
+			// Get all published courses if no user is logged in.
+			$query_args = array(
+				'post_type'      => 'course',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'nopaging'       => false,
+				'posts_per_page' => 5,
+			);
+
+			$query              = new WP_Query( $query_args );
+			$results['results'] = ! empty( $query->posts ) ? $query->posts : array();
+		}
+
+		// Prepare course data.
+		if ( ! empty( $results['results'] ) ) {
+			foreach ( $results['results'] as $post_id ) {
+				$thumbnail_url = '';
+				if ( has_post_thumbnail( $post_id ) ) {
+					$thumbnail_url = get_the_post_thumbnail( $post_id, 'full' );
+				}
+
+				$course_data['items'][ $post_id ] = array(
+					'title'     => get_the_title( $post_id ),
+					'permalink' => get_the_permalink( $post_id ),
+					'thumbnail' => $thumbnail_url,
+				);
+			}
+		}
+	}
+	$args['courses'] = $course_data;
+
+	return $args;
+}
+
+/**
+ * Helper functions for the buddyboss offload media compatibility.
+ *
+ * @since BuddyBoss 2.15.0
+ */
+function bboss_om_compatibility_helper() {
+
+	if ( defined( 'BB_OFFLOAD_MEDIA_VERSION' ) ) {
+		require bboss()->compatibility_dir . '/class-bboss-om-helpers.php';
+	}
+}
+add_action( 'init', 'bb_om_compatibility_helper', 10 );
+
+/**
+ * Keep BuddyBoss REST API requests working when Wordfence's
+ * "Prevent discovery of usernames" protection is enabled.
+ *
+ * Wordfence hooks the `request` filter (`wordfence::preventAuthorNScans`) and
+ * exits with a 404 when the main query vars contain a numeric `author` value.
+ * Because `author` is a public query var, it is populated for `/wp-json/*`
+ * URLs too, which kills requests such as
+ * `GET /wp-json/buddyboss/v1/topics?author=N` before the REST server
+ * dispatches. The main query is never used to build a REST response, so the
+ * `author` query var can safely be dropped for BuddyBoss REST requests — the
+ * REST controllers read `author` from the WP_REST_Request object, not from
+ * the main query. Front-end `?author=N` scans and the WP core users endpoints
+ * are untouched, so Wordfence's username-enumeration protection stays intact.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param array $query_vars The array of requested query variables.
+ *
+ * @return array The query variables without `author` for BuddyBoss REST requests.
+ */
+function bboss_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
+	// `rest_route` arrives as an array for `?rest_route[]=…`; core's rest_api_loaded() ignores those too.
+	if ( empty( $query_vars['rest_route'] ) || ! is_string( $query_vars['rest_route'] ) || empty( $query_vars['author'] ) ) {
+		return $query_vars;
+	}
+
+	/**
+	 * Filters the REST namespaces exempted from Wordfence's author-scan block.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param array $namespaces REST namespaces whose requests keep working
+	 *                          with an `author` parameter.
+	 */
+	$namespaces = apply_filters( 'bb_rest_author_scan_compat_namespaces', array( bboss_rest_namespace(), 'buddyboss-app' ) );
+
+	$rest_route = ltrim( $query_vars['rest_route'], '/' );
+
+	foreach ( $namespaces as $rest_namespace ) {
+		if ( 0 === strpos( $rest_route, trailingslashit( $rest_namespace ) ) ) {
+			unset( $query_vars['author'] );
+			break;
+		}
+	}
+
+	return $query_vars;
+}
+
+/**
+ * Minimum BuddyBoss Theme version for this Platform.
+ *
+ * Theme builds before PROD-9995 build `BP_Document` objects from activity
+ * meta in the Elementor Activity widget without checking that the Documents
+ * component is loaded. Documents now ship in BuddyBoss Add-ons, so on a site
+ * without it those builds fatal. {@see bboss_theme_document_activity_meta_compat()}
+ * keeps them working until the theme is updated.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string Minimum BuddyBoss Theme version.
+ */
+function bboss_platform_3_theme_required_version() {
+	return '2.23.0';
+}
+
+/**
+ * Get the version of the active BuddyBoss Theme, or the parent of the active child theme.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string Theme version, or an empty string when BuddyBoss Theme is not in use.
+ */
+function bboss_get_active_buddyboss_theme_version() {
+	$theme = wp_get_theme();
+
+	if ( 'buddyboss-theme' !== $theme->get_template() ) {
+		return '';
+	}
+
+	$parent = $theme->parent();
+
+	return (string) ( $parent ? $parent->get( 'Version' ) : $theme->get( 'Version' ) );
+}
+
+/**
+ * Activity meta keys that older BuddyBoss Theme builds turn into `BP_Document` objects.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string[] Meta keys.
+ */
+function bboss_theme_document_activity_meta_keys() {
+	return array( 'bp_document_ids', 'bp_document_folder_activity', 'bp_document_id' );
+}
+
+/**
+ * Hide document activity meta from BuddyBoss Theme builds that cannot handle a missing Documents component.
+ *
+ * Handles single-key reads; full reads are filtered by
+ * bboss_theme_document_activity_cached_meta_compat(). Applies only when an older
+ * BuddyBoss Theme is active and `BP_Document` is not loaded. Nothing else can use these keys then: the code that reads them ships
+ * in BuddyBoss Add-ons. The stored meta is untouched, so documents reappear
+ * once Add-ons is active again.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param mixed  $value     Short-circuit value; null to read the meta normally.
+ * @param int    $object_id Activity ID.
+ * @param string $meta_key  Meta key, or an empty string for all meta.
+ * @param bool   $single    Whether a single value was requested.
+ *
+ * @return mixed
+ */
+function bboss_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single ) {
+	/*
+	 * Full reads are left alone: bb_activity_get_metadata() caches what it reads
+	 * in `activity_meta`, and a stripped array kept in a persistent object cache
+	 * would hide the documents after Add-ons is back. That path is filtered on
+	 * return by bb_theme_document_activity_cached_meta_compat() instead.
+	 */
+	if ( null !== $value || '' === $meta_key || class_exists( 'BP_Document' ) || ! in_array( $meta_key, bboss_theme_document_activity_meta_keys(), true ) ) {
+		return $value;
+	}
+
+	return $single ? array( '' ) : array();
+}
+
+/**
+ * Register the document meta compatibility filter for older BuddyBoss Theme builds.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return void
+ */
+function bboss_register_theme_document_meta_compat() {
+	$theme_version = bboss_get_active_buddyboss_theme_version();
+
+	if (
+		'' !== $theme_version &&
+		version_compare( $theme_version, bboss_platform_3_theme_required_version(), '<' ) &&
+		! class_exists( 'BP_Document' )
+	) {
+		add_filter( 'get_activity_metadata', 'bb_theme_document_activity_meta_compat', 10, 4 );
+		add_filter( 'bb_activity_get_metadata', 'bb_theme_document_activity_cached_meta_compat', 10, 2 );
+
+		/*
+		 * The Elementor Activity widget of these builds also treats every activity
+		 * as a document one when the request has `action=document_get_activity`,
+		 * and then calls BP_Document. That action is an Add-ons AJAX handler and is
+		 * not registered while Documents is off, so drop it from other requests.
+		 */
+		if ( ! wp_doing_ajax() ) {
+			// phpcs:disable WordPress.Security.NonceVerification
+			if ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) {
+				unset( $_REQUEST['action'] );
+			}
+			if ( isset( $_GET['action'] ) && 'document_get_activity' === $_GET['action'] ) {
+				unset( $_GET['action'] );
+			}
+			if ( isset( $_POST['action'] ) && 'document_get_activity' === $_POST['action'] ) {
+				unset( $_POST['action'] );
+			}
+			// phpcs:enable WordPress.Security.NonceVerification
+		}
+	}
+}
+
+/**
+ * Hide document activity meta from older BuddyBoss Theme builds on full reads.
+ *
+ * The theme's Elementor Activity widget reads all meta through
+ * bboss_activity_get_metadata(). That function caches what it reads in
+ * `activity_meta`, and returns the cache entry directly once the activity loop
+ * has primed it (bboss_update_meta_cache()). Filtering its return value, cold or
+ * cached, hides the keys without ever caching a stripped copy, which a
+ * persistent object cache would keep after Add-ons is back.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param array|mixed $meta_data   All metadata of the activity.
+ * @param int         $activity_id Activity ID.
+ *
+ * @return array|mixed
+ */
+function bboss_theme_document_activity_cached_meta_compat( $meta_data, $activity_id ) {
+	if ( ! is_array( $meta_data ) || class_exists( 'BP_Document' ) ) {
+		return $meta_data;
+	}
+
+	return array_diff_key( $meta_data, array_flip( bboss_theme_document_activity_meta_keys() ) );
+}
+add_action( 'after_setup_theme', 'bb_register_theme_document_meta_compat', 1 );
+
+/**
+ * Define a no-op group subscription sender when nothing else provides one.
+ *
+ * BuddyBoss Platform Pro 3.3.4 and older call
+ * `bboss_subscription_send_subscribe_group_notifications()` without a
+ * `function_exists()` check when a scheduled group post is published. The
+ * function moved to BuddyBoss Add-ons, which defines it only when its Group
+ * Subscription module loads (`bp_include`, priority 20). Without this fallback,
+ * a site that updates Platform before Pro, without that module, gets a fatal
+ * error in the scheduled post cron.
+ *
+ * Runs late on `bp_loaded`, after the Add-ons module has had its chance to
+ * define the real function. Defining the stub at file load instead would win
+ * the race and stop Add-ons from defining the real one. It lives here, not in
+ * the deprecated files, because those do not load on installs that ignore
+ * deprecated code (the default for new installs since BuddyBoss 2.1.4).
+ *
+ * @since BuddyBoss 3.7.0
+ */
+function bboss_maybe_define_group_subscription_send_fallback() {
+	if ( function_exists( 'bboss_subscription_send_subscribe_group_notifications' ) ) {
+		return;
+	}
+
+	/**
+	 * Send group subscription notifications.
+	 *
+	 * Fallback that does nothing; group subscriptions need BuddyBoss Add-ons. It
+	 * raises no deprecation notice, because Platform's own guarded callers reach
+	 * it on every group post when the Add-ons module is not loaded.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 * @deprecated BuddyBoss 3.7.0 Group subscriptions moved to BuddyBoss Add-ons.
+	 *
+	 * @param string $content     The content of the update.
+	 * @param int    $user_id     ID of the user posting the update.
+	 * @param int    $group_id    ID of the group being posted to.
+	 * @param int    $activity_id ID of the activity item being updated.
+	 */
+	function bboss_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	}
+}
+add_action( 'bp_loaded', 'bb_maybe_define_group_subscription_send_fallback', 99 );

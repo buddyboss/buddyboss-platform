@@ -591,7 +591,7 @@ class BBoss_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 				 * member could post the ID of a Profile Type hidden from the profile field and
 				 * self-assign its WP role. The helper checks
 				 * `_bp_member_type_enable_profile_field`, the same meta the web profile-edit
-				 * screen validates in bboss-xprofile/screens/edit.php — including that screen's
+				 * screen validates in bp-xprofile/screens/edit.php — including that screen's
 				 * allowance for re-submitting the type the member already has, so saving an
 				 * unchanged profile keeps working after an admin hides the type.
 				 *
@@ -667,11 +667,3 @@ class BBoss_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 	}
 
 }
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
-if ( ( class_exists( 'BBoss_REST_XProfile_Update_Endpoint', false ) || interface_exists( 'BBoss_REST_XProfile_Update_Endpoint', false ) || trait_exists( 'BBoss_REST_XProfile_Update_Endpoint', false ) ) && ! class_exists( 'BP_REST_XProfile_Update_Endpoint', false ) && ! interface_exists( 'BP_REST_XProfile_Update_Endpoint', false ) ) {
-	class_alias( 'BBoss_REST_XProfile_Update_Endpoint', 'BP_REST_XProfile_Update_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
-}
-// @bbwt-com-end compat-layer

@@ -162,19 +162,19 @@ class BBoss_Blogs_Component extends BBoss_Component {
 
 		// Actions.
 		if ( isset( $_GET['random-blog'] ) ) {
-			require $this->path . 'bboss-blogs/actions/random.php';
+			require $this->path . 'bp-blogs/actions/random.php';
 		}
 
 		// Screens.
 		if ( bboss_is_user() ) {
-			require $this->path . 'bboss-blogs/screens/my-blogs.php';
+			require $this->path . 'bp-blogs/screens/my-blogs.php';
 		} else {
 			if ( bboss_is_blogs_directory() ) {
-				require $this->path . 'bboss-blogs/screens/directory.php';
+				require $this->path . 'bp-blogs/screens/directory.php';
 			}
 
 			if ( is_user_logged_in() && bboss_is_current_action( 'create' ) ) {
-				require $this->path . 'bboss-blogs/screens/create.php';
+				require $this->path . 'bp-blogs/screens/create.php';
 			}
 
 			// Theme compatibility.

@@ -72,21 +72,21 @@ class BBoss_Settings_Component extends BBoss_Component {
 		// Authenticated actions.
 		if ( is_user_logged_in() ) {
 			if ( ! bboss_current_action() || bboss_is_current_action( 'general' ) ) {
-				require $this->path . 'bboss-settings/actions/general.php';
+				require $this->path . 'bp-settings/actions/general.php';
 
 				// Specific to post requests.
 			} elseif ( bboss_is_post_request() && in_array( bboss_current_action(), $actions, true ) ) {
-				require $this->path . 'bboss-settings/actions/' . bboss_current_action() . '.php';
+				require $this->path . 'bp-settings/actions/' . bboss_current_action() . '.php';
 			}
 		}
 
 		// Screens - User profile integration.
 		if ( bboss_is_user() ) {
-			require $this->path . 'bboss-settings/screens/general.php';
+			require $this->path . 'bp-settings/screens/general.php';
 
 			// Sub-nav items.
 			if ( in_array( bboss_current_action(), $actions, true ) ) {
-				require $this->path . 'bboss-settings/screens/' . bboss_current_action() . '.php';
+				require $this->path . 'bp-settings/screens/' . bboss_current_action() . '.php';
 			}
 		}
 	}

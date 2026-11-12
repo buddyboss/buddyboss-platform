@@ -2187,7 +2187,7 @@ function bboss_setup_template_for_media_preview( $template ) {
 	 */
 	do_action( 'bb_setup_template_for_media_preview' );
 
-	return trailingslashit( bboss()->plugin_dir ) . 'bboss-templates/bboss-nouveau/includes/media/preview.php';
+	return trailingslashit( bboss()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/preview.php';
 }
 
 /**
@@ -2240,7 +2240,7 @@ function bboss_setup_attachment_media_preview_template( $template ) {
 		 */
 		do_action( 'bb_setup_attachment_media_preview_template' );
 
-		return trailingslashit( bboss()->plugin_dir ) . 'bboss-templates/bboss-nouveau/includes/media/attachment.php';
+		return trailingslashit( bboss()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/attachment.php';
 	}
 
 	return $template;
@@ -2341,7 +2341,7 @@ add_action( 'bb_media_upload', 'bb_messages_media_save' );
 // the feature even though the admin has switched it off.
 //
 // The filters below were originally registered in
-// src/bboss-core/admin/settings/media/callbacks.php, but that file is required
+// src/bp-core/admin/settings/media/callbacks.php, but that file is required
 // only when `is_admin() || wp_doing_ajax()` is true (see
 // bb-admin-settings-init.php), so on frontend page loads the filters never
 // fired and the master toggles had no effect on, for example, activity

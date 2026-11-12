@@ -50,7 +50,7 @@ class BBoss_Two_Factor_Integration extends BBoss_Integration {
 	/**
 	 * Directory of this integration.
 	 *
-	 * BBoss_Integration::start() resolves $this->path under bboss-integrations/, which is
+	 * BBoss_Integration::start() resolves $this->path under bp-integrations/, which is
 	 * the wrong tree for this integration.
 	 *
 	 * @since BuddyBoss 3.6.0

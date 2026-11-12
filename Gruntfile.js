@@ -52,14 +52,14 @@ module.exports = function (grunt) {
 		// CSS exclusions, for excluding files from certain tasks, e.g. rtlcss.
 		BP_EXCLUDED_CSS = [
 			'!**/*-rtl.css',
-			// '!bboss-forums/**/*.css',
+			// '!bp-forums/**/*.css',
 			'!**/endpoints/**/*.css'
 		],
 
 		BP_JS = [
 			'**/*.js',
 			'!**/*.min.js',
-			// '!bboss-forums/**/*.js',
+			// '!bp-forums/**/*.js',
 			'!**/vendor/**/*.js',
 			'!**/endpoints/**/*.js'
 		],
@@ -68,12 +68,12 @@ module.exports = function (grunt) {
 
 		// SASS generated "Twenty*"" CSS files.
 		BP_SCSS_CSS_FILES = [
-			// '!bboss-templates/bp-legacy/css/twenty*.css',
-			'!bboss-templates/bboss-nouveau/css/buddypress.css',
-			'!bboss-templates/bboss-nouveau/buddypress/css/member-blog.css',
-			'!bboss-core/admin/css/hello.css',
-			'!bboss-core/css/medium-editor-beagle.css',
-			'!bboss-core/css/medium-editor.css',
+			// '!bp-templates/bp-legacy/css/twenty*.css',
+			'!bp-templates/bp-nouveau/css/buddypress.css',
+			'!bp-templates/bp-nouveau/buddypress/css/member-blog.css',
+			'!bp-core/admin/css/hello.css',
+			'!bp-core/css/medium-editor-beagle.css',
+			'!bp-core/css/medium-editor.css',
 			'!**/endpoints/**/*.css'
 		];
 
@@ -155,8 +155,8 @@ module.exports = function (grunt) {
 					expand: true,
 					ext: '.css',
 					flatten: true,
-					src: ['bboss-templates/bboss-nouveau/sass/buddypress.scss'],
-					dest: SOURCE_DIR + 'bboss-templates/bboss-nouveau/css/'
+					src: ['bp-templates/bp-nouveau/sass/buddypress.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/css/'
 				},
 				member_blog: {
 					cwd: SOURCE_DIR,
@@ -164,8 +164,8 @@ module.exports = function (grunt) {
 					expand: true,
 					ext: '.css',
 					flatten: true,
-					src: ['bboss-templates/bboss-nouveau/sass/member-blog.scss'],
-					dest: SOURCE_DIR + 'bboss-templates/bboss-nouveau/buddypress/css/'
+					src: ['bp-templates/bp-nouveau/sass/member-blog.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/buddypress/css/'
 				},
 				ready_launch: {
 					cwd: SOURCE_DIR,
@@ -173,8 +173,8 @@ module.exports = function (grunt) {
 					expand: true,
 					ext: '.css',
 					flatten: true,
-					src: ['bboss-templates/bboss-nouveau/readylaunch//css/sass/*.scss'],
-					dest: SOURCE_DIR + 'bboss-templates/bboss-nouveau/readylaunch/css'
+					src: ['bp-templates/bp-nouveau/readylaunch//css/sass/*.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/readylaunch/css'
 				},
 				admin: {
 					cwd: SOURCE_DIR,
@@ -183,10 +183,10 @@ module.exports = function (grunt) {
 					ext: '.css',
 					flatten: true,
 					src: [
-						'bboss-core/admin/sass/*.scss',
-						'!bboss-core/admin/sass/tooltips.scss'
+						'bp-core/admin/sass/*.scss',
+						'!bp-core/admin/sass/tooltips.scss'
 					],
-					dest: SOURCE_DIR + 'bboss-core/admin/css/'
+					dest: SOURCE_DIR + 'bp-core/admin/css/'
 				},
 				pusher: {
 					cwd: SOURCE_DIR,
@@ -194,8 +194,8 @@ module.exports = function (grunt) {
 					extDot: 'last',
 					ext: '.css',
 					flatten: true,
-					src: ['bboss-integrations/pusher/assets/css/scss/*.scss'],
-					dest: SOURCE_DIR + 'bboss-integrations/pusher/assets/css/',
+					src: ['bp-integrations/pusher/assets/css/scss/*.scss'],
+					dest: SOURCE_DIR + 'bp-integrations/pusher/assets/css/',
 				},
 				recaptcha: {
 					cwd: SOURCE_DIR,
@@ -203,8 +203,8 @@ module.exports = function (grunt) {
 					extDot: 'last',
 					ext: '.css',
 					flatten: true,
-					src: ['bboss-integrations/recaptcha/assets/css/scss/*.scss'],
-					dest: SOURCE_DIR + 'bboss-integrations/recaptcha/assets/css/',
+					src: ['bp-integrations/recaptcha/assets/css/scss/*.scss'],
+					dest: SOURCE_DIR + 'bp-integrations/recaptcha/assets/css/',
 				},
 			},
 			rtlcss: {
@@ -284,7 +284,7 @@ module.exports = function (grunt) {
 			clean: {
 				all: [BUILD_DIR],
 				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/'],
-				bb_icons: [SOURCE_DIR + 'bboss-templates/bboss-nouveau/icons/bb-icons/'],
+				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/'],
 				composer: [ BUILD_DIR + 'composer.lock', BUILD_DIR + 'scoper.inc.php', BUILD_DIR + 'apidoc.json' ], // composer.json ships beside vendor/ (wp.org pre-review Jul 21; Plugin Check missing_composer_json_file).
 			},
 			copy: {
@@ -342,35 +342,35 @@ module.exports = function (grunt) {
 					dot: true,
 					expand: true,
 					src: [
-					'**/bboss-activity/**',
-					'**/bboss-blogs/**',
-					'**/bboss-forums/**',
-					'**/bboss-friends/**',
-					'**/bboss-groups/**',
-					'**/bboss-invites/**',
-					'**/bboss-media/**',
+					'**/bp-activity/**',
+					'**/bp-blogs/**',
+					'**/bp-forums/**',
+					'**/bp-friends/**',
+					'**/bp-groups/**',
+					'**/bp-invites/**',
+					'**/bp-media/**',
 					// bp-document / bp-video are NOT imported: the components
 					// moved from Platform to the buddyboss-addons plugin, which
 					// ships their REST controllers. Re-importing them here would
 					// silently recreate the directories we deleted (same
 					// rationale as the LearnDash exclusion below, PROD-9792).
-					'**/bboss-members/**',
-					'**/bboss-messages/**',
-					'**/bboss-moderation/**',
-					'**/bboss-notifications/**',
-					'**/bboss-settings/**',
-					'**/bboss-xprofile/**',
-					'**/bboss-integrations/**',
+					'**/bp-members/**',
+					'**/bp-messages/**',
+					'**/bp-moderation/**',
+					'**/bp-notifications/**',
+					'**/bp-settings/**',
+					'**/bp-xprofile/**',
+					'**/bp-integrations/**',
 					// Do NOT re-import any LearnDash REST files. The LD
 					// integration was extracted from Platform in PROD-9792
 					// and now lives in the buddyboss-learndash addon plugin.
 					// The platform-api repo still ships its own copy of the
 					// LD REST controller at
-					// buddyboss-platform-api/includes/bboss-integrations/learndash/
+					// buddyboss-platform-api/includes/bp-integrations/learndash/
 					// — without this exclusion `grunt bp_rest` would sweep
-					// that file back into src/bboss-integrations/learndash/
+					// that file back into src/bp-integrations/learndash/
 					// and silently recreate the directory we deleted.
-					'!**/bboss-integrations/learndash/**'
+					'!**/bp-integrations/learndash/**'
 					],
 					options: {
 						process : function( content ) {
@@ -380,7 +380,7 @@ module.exports = function (grunt) {
 				},
 				bp_rest_core: {
 					cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/',
-					dest: SOURCE_DIR + 'bboss-core/classes/',
+					dest: SOURCE_DIR + 'bp-core/classes/',
 					dot: true,
 					expand: true,
 					flatten: true,
@@ -390,26 +390,26 @@ module.exports = function (grunt) {
 					'!actions.php',
 					'!filters.php',
 					'!functions.php',
-					'!**/bboss-activity/**',
-					'!**/bboss-blogs/**',
-					'!**/bboss-forums/**',
-					'!**/bboss-friends/**',
-					'!**/bboss-groups/**',
-					'!**/bboss-invites/**',
-					'!**/bboss-media/**',
+					'!**/bp-activity/**',
+					'!**/bp-blogs/**',
+					'!**/bp-forums/**',
+					'!**/bp-friends/**',
+					'!**/bp-groups/**',
+					'!**/bp-invites/**',
+					'!**/bp-media/**',
 					'!**/bp-document/**',
 					'!**/bp-video/**',
-					'!**/bboss-members/**',
-					'!**/bboss-messages/**',
-					'!**/bboss-moderation/**',
-					'!**/bboss-notifications/**',
-					'!**/bboss-settings/**',
-					'!**/bboss-xprofile/**',
-					'!**/bboss-integrations/**',
+					'!**/bp-members/**',
+					'!**/bp-messages/**',
+					'!**/bp-moderation/**',
+					'!**/bp-notifications/**',
+					'!**/bp-settings/**',
+					'!**/bp-xprofile/**',
+					'!**/bp-integrations/**',
 					// Reactions REST endpoint lives under the new feature
 					// directory layout (`src/bb-features/community/reactions/classes/`).
 					// Excluded here so the flatten-to-bp-core sweep doesn't
-					// recreate a stale duplicate at `bboss-core/classes/`. See
+					// recreate a stale duplicate at `bp-core/classes/`. See
 					// the dedicated `bp_rest_reactions` task below.
 					'!**/class-bboss-rest-reactions-endpoint.php'
 					],
@@ -423,7 +423,7 @@ module.exports = function (grunt) {
 					// The reactions feature is the first one fully migrated to the
 					// feature-based architecture (`src/bb-features/community/reactions/`).
 					// Its REST controller belongs alongside the rest of the feature's
-					// classes, not in the legacy `bboss-core/classes/` flat namespace.
+					// classes, not in the legacy `bp-core/classes/` flat namespace.
 					// Source path mirrors where buddyboss-platform-api stores it
 					// today: `bp-components/classes/`. If the API repo moves the file,
 					// update `cwd`/`src` here and the matching exclusion in `bp_rest_core`.
@@ -441,7 +441,7 @@ module.exports = function (grunt) {
 				},
 				bp_rest_performance: {
 					cwd: SOURCE_DIR + 'buddyboss-platform-api/Performance/',
-					dest: SOURCE_DIR + 'bboss-performance/classes/',
+					dest: SOURCE_DIR + 'bp-performance/classes/',
 					expand: true,
 					src: '**',
 					options: {
@@ -452,7 +452,7 @@ module.exports = function (grunt) {
 				},
 				bp_rest_mu: {
 					cwd: SOURCE_DIR + 'buddyboss-platform-api/MuPlugin/',
-					dest: SOURCE_DIR + 'bboss-performance/mu-plugins/',
+					dest: SOURCE_DIR + 'bp-performance/mu-plugins/',
 					expand: true,
 					src: '**',
 					options: {
@@ -462,8 +462,8 @@ module.exports = function (grunt) {
 					}
 				},
 				bb_icons: {
-					cwd: SOURCE_DIR + 'bboss-templates/bboss-nouveau/icons/bb-icons/output/',
-					dest: SOURCE_DIR + 'bboss-templates/bboss-nouveau/icons/',
+					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/output/',
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
 					dot: true,
 					expand: true,
 					src: [
@@ -491,8 +491,8 @@ module.exports = function (grunt) {
 							'!**/endpoints/**/*.js',
 							'!**/js/lib/Chart.js',
 							'!**/js/blocks/**/*.js',
-							'!**/bboss-core/admin/bb-settings/**/*.js',
-							'!**/bboss-core/blocks/**/*.js',
+							'!**/bp-core/admin/bb-settings/**/*.js',
+							'!**/bp-core/blocks/**/*.js',
 							'!**/js/admin/**/*.js',
 						]
 					)
@@ -520,8 +520,8 @@ module.exports = function (grunt) {
 							'!**/readylaunch/**/*.css',
 							'!**/js/blocks/**/*.css',
 							'!**/js/admin/**/*.css',
-							'!**/bboss-core/admin/bb-settings/**/*.css',
-							'!**/bboss-core/blocks/**/*.css'
+							'!**/bp-core/admin/bb-settings/**/*.css',
+							'!**/bp-core/blocks/**/*.css'
 						]
 					)
 				},
@@ -535,7 +535,7 @@ module.exports = function (grunt) {
 					src: [
 						'**/*.scss',
 						'!**/vendors/**/*.scss',
-						'!bboss-templates/bboss-nouveau/common-styles/_codemirror.scss'
+						'!bp-templates/bp-nouveau/common-styles/_codemirror.scss'
 					]
 				}
 			},
@@ -638,7 +638,7 @@ module.exports = function (grunt) {
 				},
 				fetch_bb_icons: {
 					command: 'git clone ' + bbGithubCloneUrl( 'bb-icons' ),
-					cwd: SOURCE_DIR + 'bboss-templates/bboss-nouveau/icons/',
+					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
 					stdout: false,
 				},
 				composer: {
@@ -653,7 +653,7 @@ module.exports = function (grunt) {
 				// is handled separately; the POT only carries PHP strings). WP_CLI_PHP_ARGS
 				// raises the memory limit as a safety net for other large JS.
 				makepot_wp: {
-					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bboss-core/admin/bb-settings/*/build/*"',
+					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bp-core/admin/bb-settings/*/build/*"',
 					cwd: '.',
 					stdout: true
 				},
@@ -682,8 +682,8 @@ module.exports = function (grunt) {
 							'!**/endpoints/**/*.js',
 							'!**/js/lib/Chart.js',
 							'!' + SOURCE_DIR + 'js/**/*.js',
-							'!' + SOURCE_DIR + 'bboss-core/admin/bb-settings/**/*.js',
-							'!' + SOURCE_DIR + 'bboss-core/blocks/**/*.js'
+							'!' + SOURCE_DIR + 'bp-core/admin/bb-settings/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/blocks/**/*.js'
 						].concat( BP_EXCLUDED_MISC )
 					}
 				}
@@ -705,15 +705,15 @@ module.exports = function (grunt) {
 					dest: SOURCE_DIR + 'endpoints/',
 					options : {
 						includeFilters: ['.*\\.php$'],
-						excludeFilters : ['assets/', 'bin/','languages/', 'node_modules/', 'vendor/', 'src/vendor/', 'src/bboss-core/admin/js/lib/'],
+						excludeFilters : ['assets/', 'bin/','languages/', 'node_modules/', 'vendor/', 'src/vendor/', 'src/bp-core/admin/js/lib/'],
 					},
 				}
 			},
 			json2php: {
 				convert: {
 					expand: true,
-					cwd: SOURCE_DIR + 'bboss-templates/bboss-nouveau/icons/',
-					dest: SOURCE_DIR + 'bboss-templates/bboss-nouveau/icons/',
+					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
 					ext: '.php',
 					src: [
 						'font-map.json'
@@ -736,7 +736,7 @@ module.exports = function (grunt) {
 				},
 				'icon-translate': {
 					files: [{
-						src: SOURCE_DIR + 'bboss-templates/bboss-nouveau/icons/font-map.php',
+						src: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.php',
 						expand: true,
 					}],
 					options: {

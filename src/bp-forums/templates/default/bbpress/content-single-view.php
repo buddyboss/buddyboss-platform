@@ -1,6 +1,36 @@
 <?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/bbpress/content-single-view.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../../bboss-forums/templates/default/bbpress/content-single-view.php';
-// @bbwt-com-end compat-layer
+
+/**
+ * Single View Content Part
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?>
+
+<div id="bbpress-forums">
+
+	<?php bboss_bbp_breadcrumb(); ?>
+
+	<?php bboss_bbp_set_query_name( bboss_bbp_get_view_rewrite_id() ); ?>
+
+	<?php if ( bboss_bbp_view_query() ) : ?>
+
+		<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
+
+		<?php bboss_bbp_get_template_part( 'loop', 'topics' ); ?>
+
+		<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
+
+	<?php else : ?>
+
+		<?php bboss_bbp_get_template_part( 'feedback', 'no-topics' ); ?>
+
+	<?php endif; ?>
+
+	<?php bboss_bbp_reset_query_name(); ?>
+
+</div>

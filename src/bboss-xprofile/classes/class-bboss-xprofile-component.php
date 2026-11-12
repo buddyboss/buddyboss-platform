@@ -112,24 +112,24 @@ class BBoss_XProfile_Component extends BBoss_Component {
 
 		// User nav.
 		if ( bboss_is_profile_component() ) {
-			require $this->path . 'bboss-xprofile/screens/public.php';
+			require $this->path . 'bp-xprofile/screens/public.php';
 
 			// Action - Delete avatar.
 			if ( is_user_logged_in() && bboss_is_user_change_avatar() && bboss_is_action_variable( 'delete-avatar', 0 ) ) {
-				require $this->path . 'bboss-xprofile/actions/delete-avatar.php';
+				require $this->path . 'bp-xprofile/actions/delete-avatar.php';
 			}
 
 			// Sub-nav items.
 			if ( is_user_logged_in() &&
 				in_array( bboss_current_action(), array( 'edit', 'change-avatar', 'change-cover-image' ), true )
 			) {
-				require $this->path . 'bboss-xprofile/screens/' . bboss_current_action() . '.php';
+				require $this->path . 'bp-xprofile/screens/' . bboss_current_action() . '.php';
 			}
 		}
 
 		// Settings.
 		if ( is_user_logged_in() && bboss_is_user_settings_profile() ) {
-			require $this->path . 'bboss-xprofile/screens/settings-profile.php';
+			require $this->path . 'bp-xprofile/screens/settings-profile.php';
 		}
 	}
 

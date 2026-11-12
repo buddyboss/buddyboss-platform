@@ -13,7 +13,7 @@
  *   4. Is the add-on included in the licensed plan?
  *
  * This mirrors how the Tools feature drives its Sample Data / Migration Tools
- * panels (`bboss-core/admin/settings/tools/callbacks.php`), with one deliberate
+ * panels (`bp-core/admin/settings/tools/callbacks.php`), with one deliberate
  * difference: activation is handled by a Platform-owned AJAX handler that calls
  * `activate_plugin()` directly, NOT by the vendored Mothership
  * `mosh_addon_activate` action. Mothership's `setupAjaxRequest()` resolves the

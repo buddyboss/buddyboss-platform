@@ -522,23 +522,23 @@ function bboss_get_search_user_fields() {
 function bboss_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) {
 
 	$default = array(
-		'product'             => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/product.svg' : 'bb-icon-shopping-cart',
-		'post'                => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/blog-post.svg' : 'bb-icon-article',
-		'forum'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/forum.svg' : 'bb-icon-comments-square',
-		'topic'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/forum.svg' : 'bb-icon-comment-square-dots',
-		'reply'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/forum.svg' : 'bb-icon-reply',
-		'bp-member-type'      => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/membership.svg' : 'bb-icon-user',
-		'memberpressproduct'  => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/membership.svg' : 'bb-icon-user',
-		'wp-parser-function'  => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/code.svg' : 'bb-icon-code',
-		'wp-parser-class'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/code.svg' : 'bb-icon-code',
-		'wp-parser-hook'      => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/code.svg' : 'bb-icon-code',
-		'wp-parser-method'    => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/code.svg' : 'bb-icon-code',
-		'command'             => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/code.svg' : 'bb-icon-code',
-		'llms_membership'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/membership.svg' : 'bb-icon-user',
-		'llms_assignment'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
-		'llms_certificate'    => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/course-content.svg' : 'bb-icon-certificate',
-		'llms_my_certificate' => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/course-content.svg' : 'bb-icon-certificate',
-		'llms_quiz'           => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/quiz.svg' : 'bb-icon-quiz',
+		'product'             => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/product.svg' : 'bb-icon-shopping-cart',
+		'post'                => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/blog-post.svg' : 'bb-icon-article',
+		'forum'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comments-square',
+		'topic'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comment-square-dots',
+		'reply'               => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-reply',
+		'bp-member-type'      => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
+		'memberpressproduct'  => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
+		'wp-parser-function'  => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-class'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-hook'      => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-method'    => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'command'             => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'llms_membership'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
+		'llms_assignment'     => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
+		'llms_certificate'    => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
+		'llms_my_certificate' => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
+		'llms_quiz'           => ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/quiz.svg' : 'bb-icon-quiz',
 	);
 
 	/**
@@ -559,7 +559,7 @@ function bboss_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg'
 		return $default[ $post_type ];
 	}
 
-	return ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bboss-core/images/search/default.svg' : 'bb-icon-f bb-icon-file-doc';
+	return ( 'svg' === $icon_type ) ? bboss()->plugin_url . 'bp-core/images/search/default.svg' : 'bb-icon-f bb-icon-file-doc';
 
 }
 

@@ -1,6 +1,34 @@
 <?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-moderation/screens/user/my-moderation.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../bboss-moderation/screens/user/my-moderation.php';
-// @bbwt-com-end compat-layer
+/**
+ * Moderation: User's "Moderation" screen handler
+ *
+ * @since   BuddyBoss 1.5.6
+ * @package BuddyBoss\Moderation\Screens
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Handle the loading of the My Groups page.
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bboss_moderation_screen() {
+
+	/**
+	 * Fires before the loading of the My Groups page.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 */
+	do_action( 'bp_moderation_screen' );
+
+	/**
+	 * Filters the template to load for the My Groups page.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param string $value Path to the My Groups page template to load.
+	 */
+	bboss_core_load_template( apply_filters( 'moderation_template_content', 'members/single/home' ) );
+}

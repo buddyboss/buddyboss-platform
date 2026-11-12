@@ -1,6 +1,23 @@
 <?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-core/admin/settings/forums/legacy-meta-bridge-replies.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../../bboss-core/admin/settings/forums/legacy-meta-bridge-replies.php';
-// @bbwt-com-end compat-layer
+/**
+ * Legacy Meta-Box Bridge for the Reply edit modal.
+ *
+ * Auto-detects third-party plugins that register `add_meta_box()` calls
+ * against the legacy `reply` CPT edit screen and surfaces their fields
+ * as native React fields in the Settings 2.0 Reply edit modal.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since   BuddyBoss 3.0.0
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
+
+bboss_legacy_register_cpt_meta_bridge(
+	array(
+		'component'    => 'replies',
+		'post_type'    => 'reply',
+		'screen_match' => 'reply',
+	)
+);

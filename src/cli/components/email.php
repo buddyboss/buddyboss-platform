@@ -201,7 +201,7 @@ class Email extends BuddypressCommand {
 	public function reinstall( $args, $assoc_args ) {
 		WP_CLI::confirm( 'Are you sure you want to reinstall BuddyPress emails?', $assoc_args );
 
-		require_once bboss()->plugin_dir . 'bboss-core/admin/bboss-core-admin-tools.php';
+		require_once bboss()->plugin_dir . 'bp-core/admin/bboss-core-admin-tools.php';
 
 		$result = bboss_admin_reinstall_emails();
 

@@ -412,7 +412,7 @@ function bboss_xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'a
 			$data = implode( ', ', $data );
 		}
 	} else {
-		/** This filter is documented in bboss-xprofile/bboss-xprofile-functions.php */
+		/** This filter is documented in bp-xprofile/bboss-xprofile-functions.php */
 		$data = apply_filters( 'xprofile_get_field_data', $values, $field_id, $user_id );
 	}
 
@@ -5114,7 +5114,7 @@ function bboss_xprofile_filter_field_search_matches( $matched_user_ids, $matched
 		return array_values( $matched_user_ids );
 	}
 
-	/** This filter is documented in bboss-xprofile/bboss-xprofile-functions.php */
+	/** This filter is documented in bp-xprofile/bboss-xprofile-functions.php */
 	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', bboss_xprofile_default_search_candidate_limit(), $display_name_format, $viewer_id );
 
 	$remove_ids = array();
@@ -5218,18 +5218,3 @@ function bboss_xprofile_filter_field_search_matches( $matched_user_ids, $matched
 
 	return array_values( array_diff( $matched_user_ids, $remove_ids ) );
 }
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
-if ( function_exists( 'bboss_xprofile_safe_unserialize' ) && ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_safe_unserialize()} (also declared by another BuddyBoss product).
-	 *
-	 * @deprecated Use bboss_xprofile_safe_unserialize() instead.
-	 */
-	function bb_xprofile_safe_unserialize( $value ) {
-		return bboss_xprofile_safe_unserialize( $value );
-	}
-}
-// @bbwt-com-end compat-layer

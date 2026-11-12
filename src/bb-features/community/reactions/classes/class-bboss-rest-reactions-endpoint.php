@@ -1051,11 +1051,3 @@ class BBoss_REST_Reactions_Endpoint extends WP_REST_Controller {
 		return false;
 	}
 }
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
-if ( ( class_exists( 'BBoss_REST_Reactions_Endpoint', false ) || interface_exists( 'BBoss_REST_Reactions_Endpoint', false ) || trait_exists( 'BBoss_REST_Reactions_Endpoint', false ) ) && ! class_exists( 'BB_REST_Reactions_Endpoint', false ) && ! interface_exists( 'BB_REST_Reactions_Endpoint', false ) ) {
-	class_alias( 'BBoss_REST_Reactions_Endpoint', 'BB_REST_Reactions_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
-}
-// @bbwt-com-end compat-layer

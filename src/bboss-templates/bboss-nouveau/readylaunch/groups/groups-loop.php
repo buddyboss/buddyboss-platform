@@ -62,7 +62,7 @@ if ( bboss_has_groups( bboss_ajax_querystring( 'groups' ) ) ) {
 						$has_default_cover     = function_exists( 'bboss_attachment_get_cover_image_class' ) ? bboss_attachment_get_cover_image_class( $bp_group_id, 'group' ) : '';
 
 						if ( empty( $group_cover_image_url ) ) {
-							$group_cover_image_url = esc_url( bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/images/group_cover_image.jpeg' );
+							$group_cover_image_url = esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
 						}
 						?>
 						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' cover-' . $group_cover_height ); ?>">

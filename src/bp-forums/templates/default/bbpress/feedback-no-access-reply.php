@@ -1,6 +1,21 @@
 <?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/bbpress/feedback-no-access-reply.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../../bboss-forums/templates/default/bbpress/feedback-no-access-reply.php';
-// @bbwt-com-end compat-layer
+
+/**
+ * No Access Feedback Part
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?>
+
+<div id="reply-private" class="bbp-reply-content">
+	<div class="entry-content">
+		<div class="bp-feedback info">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php esc_html_e( 'You do not have permission to view this reply.', 'buddyboss' ); ?></p>
+		</div>
+	</div>
+</div><!-- #forum-private -->

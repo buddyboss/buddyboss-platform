@@ -1,6 +1,1 @@
-<?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-core/blocks/readylaunch-header/index.asset.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../bboss-core/blocks/readylaunch-header/index.asset.php';
-// @bbwt-com-end compat-layer
+<?php return array('dependencies' => array('react', 'wp-block-editor', 'wp-blocks', 'wp-components', 'wp-i18n', 'wp-server-side-render'), 'version' => '8793838b232f48df36fb');

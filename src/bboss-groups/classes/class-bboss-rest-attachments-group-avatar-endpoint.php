@@ -263,7 +263,7 @@ class BBoss_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 			'crop_y'        => 0,
 		);
 
-		/** This action is documented in bboss-groups/bp-groups-screens.php */
+		/** This action is documented in bp-groups/bp-groups-screens.php */
 		do_action( 'groups_avatar_uploaded', (int) $request['group_id'], 'crop', $r );
 
 		$retval = $this->prepare_response_for_collection(
@@ -543,11 +543,3 @@ class BBoss_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_attachments_group_avatar_collection_params', $params );
 	}
 }
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
-if ( ( class_exists( 'BBoss_REST_Attachments_Group_Avatar_Endpoint', false ) || interface_exists( 'BBoss_REST_Attachments_Group_Avatar_Endpoint', false ) || trait_exists( 'BBoss_REST_Attachments_Group_Avatar_Endpoint', false ) ) && ! class_exists( 'BP_REST_Attachments_Group_Avatar_Endpoint', false ) && ! interface_exists( 'BP_REST_Attachments_Group_Avatar_Endpoint', false ) ) {
-	class_alias( 'BBoss_REST_Attachments_Group_Avatar_Endpoint', 'BP_REST_Attachments_Group_Avatar_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
-}
-// @bbwt-com-end compat-layer

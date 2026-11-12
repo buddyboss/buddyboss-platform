@@ -2124,13 +2124,13 @@ function bboss_media_import_reset_media_albums() {
 						if ( ! empty( $media_obj->activity_id ) && bboss_is_active( 'activity' ) ) {
 							$activity = new BBoss_Activity_Activity( (int) $media_obj->activity_id );
 
-							/** This action is documented in bboss-activity/bp-activity-actions.php */
+							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 							// Deleting an activity comment.
 							if ( 'activity_comment' === $activity->type ) {
 								if ( bboss_activity_delete_comment( $activity->item_id, $activity->id ) ) {
-									/** This action is documented in bboss-activity/bp-activity-actions.php */
+									/** This action is documented in bp-activity/bp-activity-actions.php */
 									do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 								}
 
@@ -2142,7 +2142,7 @@ function bboss_media_import_reset_media_albums() {
 										'user_id' => $activity->user_id,
 									)
 								) ) {
-									/** This action is documented in bboss-activity/bp-activity-actions.php */
+									/** This action is documented in bp-activity/bp-activity-actions.php */
 									do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 								}
 							}
@@ -2193,13 +2193,13 @@ function bboss_media_import_reset_media() {
 			if ( ! empty( $media_obj->activity_id ) && bboss_is_active( 'activity' ) ) {
 				$activity = new BBoss_Activity_Activity( (int) $media_obj->activity_id );
 
-				/** This action is documented in bboss-activity/bp-activity-actions.php */
+				/** This action is documented in bp-activity/bp-activity-actions.php */
 				do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 				// Deleting an activity comment.
 				if ( 'activity_comment' === $activity->type ) {
 					if ( bboss_activity_delete_comment( $activity->item_id, $activity->id ) ) {
-						/** This action is documented in bboss-activity/bp-activity-actions.php */
+						/** This action is documented in bp-activity/bp-activity-actions.php */
 						do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 					}
 
@@ -2211,7 +2211,7 @@ function bboss_media_import_reset_media() {
 							'user_id' => $activity->user_id,
 						)
 					) ) {
-						/** This action is documented in bboss-activity/bp-activity-actions.php */
+						/** This action is documented in bp-activity/bp-activity-actions.php */
 						do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 					}
 				}
@@ -3883,7 +3883,7 @@ function bboss_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 			'can_move'     => false,
 		);
 
-		/** This filter is documented in bboss-media/bboss-media-functions.php */
+		/** This filter is documented in bp-media/bboss-media-functions.php */
 		return apply_filters( 'bb_media_user_can_access', $data, $id, $type, 0 );
 	}
 

@@ -94,41 +94,41 @@ class BBoss_Messages_Component extends BBoss_Component {
 		if ( bboss_is_messages_component() ) {
 			// Authenticated actions for archived threads.
 			if ( is_user_logged_in() && 'archived' === bboss_current_action() && bboss_action_variable( 0 ) && 'view' === bboss_action_variable( 0 ) ) {
-				require $this->path . 'bboss-messages/screens/' . bboss_current_action() . '-' . bboss_action_variable( 0 ) . '.php';
+				require $this->path . 'bp-messages/screens/' . bboss_current_action() . '-' . bboss_action_variable( 0 ) . '.php';
 			} elseif ( 'archived' === bboss_current_action() ) {
-				require $this->path . 'bboss-messages/actions/' . bboss_current_action() . '.php';
+				require $this->path . 'bp-messages/actions/' . bboss_current_action() . '.php';
 			}
 
 			// Authenticated actions.
 			if ( is_user_logged_in() &&
 				in_array( bboss_current_action(), array( 'compose', 'notices', 'view' ), true )
 			) {
-				require $this->path . 'bboss-messages/actions/' . bboss_current_action() . '.php';
+				require $this->path . 'bp-messages/actions/' . bboss_current_action() . '.php';
 			}
 
 			// Authenticated action variables.
 			if ( is_user_logged_in() && bboss_action_variable( 0 ) &&
 				in_array( bboss_action_variable( 0 ), array( 'delete', 'read', 'unread', 'bulk-manage', 'bulk-delete' ), true )
 			) {
-				require $this->path . 'bboss-messages/actions/' . bboss_action_variable( 0 ) . '.php';
+				require $this->path . 'bp-messages/actions/' . bboss_action_variable( 0 ) . '.php';
 			}
 
 			// Authenticated actions - Star.
 			if ( is_user_logged_in() && bboss_is_active( $this->id, 'star' ) ) {
 				// Single action.
 				if ( in_array( bboss_current_action(), array( 'star', 'unstar' ), true ) ) {
-					require $this->path . 'bboss-messages/actions/star.php';
+					require $this->path . 'bp-messages/actions/star.php';
 				}
 
 				// Bulk-manage.
 				if ( bboss_is_action_variable( 'bulk-manage' ) ) {
-					require $this->path . 'bboss-messages/actions/bulk-manage-star.php';
+					require $this->path . 'bp-messages/actions/bulk-manage-star.php';
 				}
 			}
 
 			// Screens - User profile integration.
 			if ( bboss_is_user() ) {
-				require $this->path . 'bboss-messages/screens/inbox.php';
+				require $this->path . 'bp-messages/screens/inbox.php';
 
 				/*
 				 * Nav items.
@@ -136,12 +136,12 @@ class BBoss_Messages_Component extends BBoss_Component {
 				 * 'view' is not a registered nav item, but we add a screen handler manually.
 				 */
 				if ( bboss_is_user_messages() && in_array( bboss_current_action(), array( 'compose', 'notices', 'view' ), true ) ) {
-					require $this->path . 'bboss-messages/screens/' . bboss_current_action() . '.php';
+					require $this->path . 'bp-messages/screens/' . bboss_current_action() . '.php';
 				}
 
 				// Nav item - Starred.
 				if ( bboss_is_active( $this->id, 'star' ) && bboss_is_current_action( bboss_get_messages_starred_slug() ) ) {
-					require $this->path . 'bboss-messages/screens/starred.php';
+					require $this->path . 'bp-messages/screens/starred.php';
 				}
 			}
 		}

@@ -30,7 +30,7 @@ global $post;
 						<?php
 					} else {
 						?>
-						<img src="<?php echo esc_url( bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Forum placeholder image', 'buddyboss' ); ?>">
+						<img src="<?php echo esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Forum placeholder image', 'buddyboss' ); ?>">
 						<?php
 					}
 					?>

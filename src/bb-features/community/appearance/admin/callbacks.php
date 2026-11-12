@@ -283,7 +283,7 @@ function bboss_appearance_apply_configuration( $settings ) {
 	if ( ! empty( $newly_activated ) ) {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		if ( defined( 'BBOSS_PLUGIN_DIR' ) ) {
-			$schema_path = BBOSS_PLUGIN_DIR . '/bboss-core/admin/bboss-core-admin-schema.php';
+			$schema_path = BBOSS_PLUGIN_DIR . '/bp-core/admin/bboss-core-admin-schema.php';
 			if ( file_exists( $schema_path ) ) {
 				require_once $schema_path;
 			}

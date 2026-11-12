@@ -24,7 +24,7 @@ function bboss_groups_screen_group_activity_permalink() {
 
 	bboss()->is_single_item = true;
 
-	/** This filter is documented in bboss-groups/bp-groups-screens.php */
+	/** This filter is documented in bp-groups/bp-groups-screens.php */
 	bboss_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
 }
 add_action( 'bp_screens', 'groups_screen_group_activity_permalink' );

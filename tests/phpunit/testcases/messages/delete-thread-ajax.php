@@ -22,7 +22,7 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 		parent::setUp();
 
 		if ( ! function_exists( 'bboss_nouveau_ajax_delete_thread' ) ) {
-			require_once bboss()->plugin_dir . 'bboss-templates/bboss-nouveau/includes/messages/ajax.php';
+			require_once bboss()->plugin_dir . 'bp-templates/bp-nouveau/includes/messages/ajax.php';
 		}
 
 		if ( ! class_exists( 'BBoss_Core_Members_Switching' ) || ! defined( 'BBOSS_MEMBER_SWITCHING_OLDUSER_COOKIE' ) ) {

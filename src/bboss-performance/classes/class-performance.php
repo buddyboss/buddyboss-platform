@@ -262,8 +262,8 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 				$file_location          = str_replace( 'Performance', '', $file_location );
 				$bp_mu_plugin_file_path = $file_location . 'MuPlugin/buddyboss-api-caching-mu.php';
 			} elseif ( strpos( $file_location, 'bp-performance' ) !== false ) {
-				$bp_platform_mu_path     = WP_PLUGIN_DIR . '/buddyboss-platform/bboss-performance/mu-plugins/buddyboss-api-caching-mu.php';
-				$bp_platform_dev_mu_path = WP_PLUGIN_DIR . '/buddyboss-platform/src/bboss-performance/mu-plugins/buddyboss-api-caching-mu.php';
+				$bp_platform_mu_path     = WP_PLUGIN_DIR . '/buddyboss-platform/bp-performance/mu-plugins/buddyboss-api-caching-mu.php';
+				$bp_platform_dev_mu_path = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-performance/mu-plugins/buddyboss-api-caching-mu.php';
 
 				if ( file_exists( $bp_platform_mu_path ) ) {
 					$bp_mu_plugin_file_path = $bp_platform_mu_path;

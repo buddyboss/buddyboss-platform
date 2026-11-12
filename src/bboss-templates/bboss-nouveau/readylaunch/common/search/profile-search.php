@@ -274,7 +274,7 @@ $search_form_data = bboss_profile_search_escaped_form_data( $form_id );
 							$km          = __( 'km', 'buddyboss' );
 							$miles       = __( 'miles', 'buddyboss' );
 							$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
-							$icon_url    = bboss()->plugin_url . 'bboss-core/profile-search/templates/members/locator.png';
+							$icon_url    = bboss()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
 							$icon_title  = __( 'get current location', 'buddyboss' );
 							?>
 

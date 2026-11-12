@@ -279,7 +279,7 @@ WP_CLI::add_hook(
 						WP_CLI::error( 'The BuddyPress plugin is not active.' );
 					}
 
-					require_once bboss()->plugin_dir . 'bboss-core/admin/bboss-core-admin-tools.php';
+					require_once bboss()->plugin_dir . 'bp-core/admin/bboss-core-admin-tools.php';
 				},
 			)
 		);

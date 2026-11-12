@@ -183,38 +183,3 @@ if ( ! function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) ) {
 		}
 	}
 }
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
-if ( function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) && ! function_exists( 'bb_is_allowed_endpoint_mu_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_allowed_endpoint_mu_cache()} (also declared by another BuddyBoss product).
-	 *
-	 * @deprecated Use bboss_is_allowed_endpoint_mu_cache() instead.
-	 */
-	function bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) {
-		return bboss_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url );
-	}
-}
-if ( function_exists( 'bboss_restricate_rest_api_mu_cache' ) && ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_restricate_rest_api_mu_cache()} (also declared by another BuddyBoss product).
-	 *
-	 * @deprecated Use bboss_restricate_rest_api_mu_cache() instead.
-	 */
-	function bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints ) {
-		return bboss_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );
-	}
-}
-if ( function_exists( 'bboss_rest_post_dispatch_cache_callback' ) && ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_post_dispatch_cache_callback()} (also declared by another BuddyBoss product).
-	 *
-	 * @deprecated Use bboss_rest_post_dispatch_cache_callback() instead.
-	 */
-	function rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint ) {
-		return bboss_rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint );
-	}
-}
-// @bbwt-com-end compat-layer

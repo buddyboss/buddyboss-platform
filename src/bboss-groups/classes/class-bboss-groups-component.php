@@ -160,17 +160,17 @@ class BBoss_Groups_Component extends BBoss_Component {
 			if ( is_user_logged_in() &&
 				in_array( bboss_current_action(), array( 'create', 'join', 'leave-group' ), true )
 			) {
-				require $this->path . 'bboss-groups/actions/' . bboss_current_action() . '.php';
+				require $this->path . 'bp-groups/actions/' . bboss_current_action() . '.php';
 			}
 
 			// Actions - RSS feed handler.
 			if ( bboss_is_active( 'activity' ) && bboss_is_current_action( 'feed' ) ) {
-				require $this->path . 'bboss-groups/actions/feed.php';
+				require $this->path . 'bp-groups/actions/feed.php';
 			}
 
 			// Actions - Random group handler.
 			if ( isset( $_GET['random-group'] ) ) {
-				require $this->path . 'bboss-groups/actions/random.php';
+				require $this->path . 'bp-groups/actions/random.php';
 			}
 
 			// Screens - Directory.
@@ -185,46 +185,46 @@ class BBoss_Groups_Component extends BBoss_Component {
 					)
 				)
 			) {
-				require $this->path . 'bboss-groups/screens/directory.php';
+				require $this->path . 'bp-groups/screens/directory.php';
 			}
 
 			// Screens - User profile integration.
 			if ( bboss_is_user() ) {
-				require $this->path . 'bboss-groups/screens/user/my-groups.php';
+				require $this->path . 'bp-groups/screens/user/my-groups.php';
 
 				if ( bboss_is_current_action( 'invites' ) ) {
-					require $this->path . 'bboss-groups/screens/user/invites.php';
+					require $this->path . 'bp-groups/screens/user/invites.php';
 				}
 			}
 
 			// Single group.
 			if ( bboss_is_group() ) {
 				// Actions - Access protection.
-				require $this->path . 'bboss-groups/actions/access.php';
+				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
 				if ( in_array( bboss_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups' ), true ) ) {
-					require $this->path . 'bboss-groups/screens/single/' . bboss_current_action() . '.php';
+					require $this->path . 'bp-groups/screens/single/' . bboss_current_action() . '.php';
 				}
 
 				if ( in_array( bboss_get_group_current_members_tab(), array( 'all-members', 'leaders' ), true ) ) {
-					require $this->path . 'bboss-groups/screens/single/members/' . bboss_get_group_current_members_tab() . '.php';
+					require $this->path . 'bp-groups/screens/single/members/' . bboss_get_group_current_members_tab() . '.php';
 				}
 
 				if ( bboss_is_group_invites() && is_user_logged_in() ) {
-					require $this->path . 'bboss-groups/screens/single/invite.php';
+					require $this->path . 'bp-groups/screens/single/invite.php';
 				}
 
 				if ( bboss_is_group_messages() && is_user_logged_in() ) {
-					require $this->path . 'bboss-groups/screens/single/messages.php';
+					require $this->path . 'bp-groups/screens/single/messages.php';
 				}
 
 				// Admin nav items.
 				if ( bboss_is_item_admin() && is_user_logged_in() ) {
-					require $this->path . 'bboss-groups/screens/single/admin.php';
+					require $this->path . 'bp-groups/screens/single/admin.php';
 
 					if ( in_array( bboss_get_group_current_admin_tab(), array( 'edit-details', 'group-settings', 'group-avatar', 'group-cover-image', 'manage-members', 'membership-requests', 'delete-group' ), true ) ) {
-						require $this->path . 'bboss-groups/screens/single/admin/' . bboss_get_group_current_admin_tab() . '.php';
+						require $this->path . 'bp-groups/screens/single/admin/' . bboss_get_group_current_admin_tab() . '.php';
 					}
 				}
 			}
@@ -1048,7 +1048,7 @@ class BBoss_Groups_Component extends BBoss_Component {
 			do_action( 'groups_setup_nav', $this->current_group->user_has_access );
 		} else {
 
-			/** This action is documented in bboss-groups/bboss-groups-loader.php */
+			/** This action is documented in bp-groups/bboss-groups-loader.php */
 			do_action( 'groups_setup_nav' );
 		}
 	}

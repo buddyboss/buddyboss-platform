@@ -1203,9 +1203,9 @@ add_action( 'bp_init', 'bb_messages_maybe_schedule_digest_email_notifications', 
  * @param mixed $value     New value of the delay option.
  */
 function bboss_messages_record_delay_email_notification_change( $old_value, $value ) {
-	/** This filter is documented in bboss-notifications/bboss-notifications-functions.php */
+	/** This filter is documented in bp-notifications/bboss-notifications-functions.php */
 	$was_enabled = (bool) apply_filters( 'bb_delay_email_notifications_enabled', $old_value );
-	/** This filter is documented in bboss-notifications/bboss-notifications-functions.php */
+	/** This filter is documented in bp-notifications/bboss-notifications-functions.php */
 	$is_enabled = (bool) apply_filters( 'bb_delay_email_notifications_enabled', $value );
 
 	if ( $was_enabled === $is_enabled ) {

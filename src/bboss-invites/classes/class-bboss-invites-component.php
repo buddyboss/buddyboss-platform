@@ -111,17 +111,17 @@ class BBoss_Invites_Component extends BBoss_Component {
 		// Authenticated actions.
 		if ( is_user_logged_in() ) {
 			if ( ! bboss_current_action() || bboss_is_current_action( 'invites' ) ) {
-				require $this->path . 'bboss-invites/actions/invites.php';
+				require $this->path . 'bp-invites/actions/invites.php';
 
 				// Specific to post requests.
-			} elseif ( bboss_is_post_request() && in_array( bboss_current_action(), $actions, true ) && file_exists( $this->path . 'bboss-invites/actions/' . bboss_current_action() . '.php' ) ) {
-				require $this->path . 'bboss-invites/actions/' . bboss_current_action() . '.php';
+			} elseif ( bboss_is_post_request() && in_array( bboss_current_action(), $actions, true ) && file_exists( $this->path . 'bp-invites/actions/' . bboss_current_action() . '.php' ) ) {
+				require $this->path . 'bp-invites/actions/' . bboss_current_action() . '.php';
 			}
 
 			if ( is_user_logged_in() &&
 				 in_array( bboss_current_action(), array( 'revoke-invite' ), true )
 			) {
-				require $this->path . 'bboss-invites/actions/' . bboss_current_action() . '.php';
+				require $this->path . 'bp-invites/actions/' . bboss_current_action() . '.php';
 			}
 		} else {
 			bboss_core_no_access();
@@ -130,11 +130,11 @@ class BBoss_Invites_Component extends BBoss_Component {
 
 		// Screens - User profile integration.
 		if ( bboss_is_user() ) {
-			require_once $this->path . 'bboss-invites/screens/send-invites.php';
+			require_once $this->path . 'bp-invites/screens/send-invites.php';
 
 			// Sub-nav items.
 			if ( in_array( bboss_current_action(), $actions, true ) ) {
-				require_once $this->path . 'bboss-invites/screens/' . bboss_current_action() . '.php';
+				require_once $this->path . 'bp-invites/screens/' . bboss_current_action() . '.php';
 			}
 		}
 

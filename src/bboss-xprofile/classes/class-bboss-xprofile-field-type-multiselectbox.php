@@ -90,7 +90,7 @@ class BBoss_XProfile_Field_Type_Multiselectbox extends BBoss_XProfile_Field_Type
 
 		<?php
 
-		/** This action is documented in bboss-xprofile/bp-xprofile-classes */
+		/** This action is documented in bp-xprofile/bp-xprofile-classes */
 		do_action( bboss_get_the_profile_field_errors_action() );
 		?>
 

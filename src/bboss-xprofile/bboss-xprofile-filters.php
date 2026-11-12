@@ -364,7 +364,7 @@ function bboss_xprofile_sanitize_data_value_before_save( $field_value, $field_id
 			$kses_field_value = bboss_xprofile_filter_kses( $value, $data_obj );
 			$filtered_value   = wp_rel_nofollow( force_balance_tags( $kses_field_value ) );
 
-			/** This filter is documented in bboss-xprofile/bboss-xprofile-filters.php */
+			/** This filter is documented in bp-xprofile/bboss-xprofile-filters.php */
 			$filtered_values[] = apply_filters( 'xprofile_filtered_data_value_before_save', $filtered_value, $value, $data_obj );
 		}
 

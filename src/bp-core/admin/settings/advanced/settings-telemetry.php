@@ -1,6 +1,87 @@
 <?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-core/admin/settings/advanced/settings-telemetry.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../../bboss-core/admin/settings/advanced/settings-telemetry.php';
-// @bbwt-com-end compat-layer
+/**
+ * BuddyBoss Admin Settings - Advanced Telemetry Panel.
+ *
+ * Registers fields for the Telemetry side panel of the Advanced feature.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Register Advanced Telemetry panel fields.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return void
+ */
+function bboss_advanced_register_telemetry_fields() {
+
+	$feature_id = 'advanced';
+	$panel_id   = 'telemetry';
+
+	// =========================================================================
+	// SECTION: Telemetry
+	// =========================================================================
+
+	bboss_register_feature_section(
+		$feature_id,
+		$panel_id,
+		'advanced_telemetry',
+		array(
+			'title' => __( 'Telemetry', 'buddyboss' ),
+			'order' => 10,
+		)
+	);
+
+	// Telemetry descriptions per mode — legacy shows different description text
+	// dynamically when the user switches between radio buttons. React uses
+	// `option_descriptions` so SettingsForm updates the description on select change.
+	$current_mode = bboss_get_option( 'bb_advanced_telemetry_reporting', 'disable' );
+
+	$option_descriptions = array(
+		// @bbwt-com-start telemetry-complete
+		'complete'  => __( 'Telemetry helps us gather usage statistics and information about your configuration and the features and functionality you use. We aggregate this information to help us improve our product and associate it with your customer record to help us serve you better. We do not gather or send any of your users\' personally identifiable information. To stop contributing towards improving the product, you can disable telemetry.', 'buddyboss' ),
+		// @bbwt-com-end telemetry-complete
+		'anonymous' => __( 'Telemetry helps us gather usage statistics and information about your configuration and the features and functionality you use. We aggregate this information to help us improve our product. By choosing anonymous reporting, your data will not be associated with your customer record, and the way we serve you will be less relevant to you. We do not gather or send any of your users\' personally identifiable information. If you stop contributing towards improving the product, you can disable telemetry.', 'buddyboss' ),
+		'disable'   => __( 'Disabling telemetry will stop gathering and reporting usage statistics about your configuration and the features and functionality you use. By disabling telemetry, you will not be contributing towards the improvement of the product and the way we serve you will be less relevant to you.', 'buddyboss' ),
+	);
+
+	// Field 1: Telemetry Reporting Mode.
+	// Options match legacy (Complete / Anonymous / Disable telemetry); builds
+	// without "complete" reporting offer Anonymous and Disable only.
+	bboss_register_feature_field(
+		$feature_id,
+		$panel_id,
+		'advanced_telemetry',
+		array(
+			'name'                => 'bb_advanced_telemetry_reporting',
+			'label'               => __( 'Telemetry', 'buddyboss' ),
+			'description'         => $option_descriptions[ $current_mode ] ?? $option_descriptions['disable'],
+			'type'                => 'select',
+			'default'             => $current_mode,
+			'sanitize_callback'   => 'bboss_advanced_sanitize_telemetry_reporting',
+			'option_descriptions' => $option_descriptions,
+			'options'             => array(
+				// @bbwt-com-start telemetry-complete
+				array(
+					'value' => 'complete',
+					'label' => __( 'Complete reporting', 'buddyboss' ),
+				),
+				// @bbwt-com-end telemetry-complete
+				array(
+					'value' => 'anonymous',
+					'label' => __( 'Anonymous reporting', 'buddyboss' ),
+				),
+				array(
+					'value' => 'disable',
+					'label' => __( 'Disable telemetry', 'buddyboss' ),
+				),
+			),
+			'order'               => 10,
+		)
+	);
+}

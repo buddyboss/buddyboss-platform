@@ -1,6 +1,45 @@
 <?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/extras/single-forum.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../../bboss-forums/templates/default/extras/single-forum.php';
-// @bbwt-com-end compat-layer
+
+/**
+ * Single Forum
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+get_header(); ?>
+
+	<?php do_action( 'bbp_before_main_content' ); ?>
+
+	<?php do_action( 'bbp_template_notices' ); ?>
+
+	<?php
+	while ( have_posts() ) :
+		the_post();
+		?>
+
+		<?php if ( bboss_bbp_user_can_view_forum() ) : ?>
+
+			<div id="forum-<?php bboss_bbp_forum_id(); ?>" class="bbp-forum-content">
+				<h1 class="entry-title"><?php bboss_bbp_forum_title(); ?></h1>
+				<div class="entry-content">
+
+					<?php bboss_bbp_get_template_part( 'content', 'single-forum' ); ?>
+
+				</div>
+			</div><!-- #forum-<?php bboss_bbp_forum_id(); ?> -->
+
+		<?php else : // Forum exists, user no access ?>
+
+			<?php bboss_bbp_get_template_part( 'feedback', 'no-access' ); ?>
+
+		<?php endif; ?>
+
+	<?php endwhile; ?>
+
+	<?php do_action( 'bbp_after_main_content' ); ?>
+
+<?php get_sidebar(); ?>
+<?php get_footer(); ?>

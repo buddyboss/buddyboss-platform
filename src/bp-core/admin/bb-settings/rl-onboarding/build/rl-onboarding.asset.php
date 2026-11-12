@@ -1,6 +1,1 @@
-<?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.asset.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../../../bboss-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.asset.php';
-// @bbwt-com-end compat-layer
+<?php return array('dependencies' => array('react', 'react-dom', 'wp-components', 'wp-element', 'wp-i18n'), 'version' => '113dec830cf8bf485e6d');

@@ -27,7 +27,7 @@ function bboss_nouveau_messages_enqueue_styles( $styles = array() ) {
 		$styles,
 		array(
 			'bp-nouveau-messages-at' => array(
-				'file'         => bboss()->plugin_url . 'bboss-core/css/mentions%1$s%2$s.css',
+				'file'         => bboss()->plugin_url . 'bp-core/css/mentions%1$s%2$s.css',
 				'dependencies' => array( 'bp-nouveau' ),
 				'version'      => bboss_get_version(),
 			),
@@ -53,7 +53,7 @@ function bboss_nouveau_messages_register_scripts( $scripts = array() ) {
 		$scripts,
 		array(
 			'bp-nouveau-messages-at' => array(
-				'file'         => bboss()->plugin_url . 'bboss-core/js/mentions%s.js',
+				'file'         => bboss()->plugin_url . 'bp-core/js/mentions%s.js',
 				'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
 				'version'      => bboss_get_version(),
 				'footer'       => true,

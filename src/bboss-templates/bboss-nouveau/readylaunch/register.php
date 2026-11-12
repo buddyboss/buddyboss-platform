@@ -16,10 +16,10 @@ defined( 'ABSPATH' ) || exit;
 
 wp_enqueue_script( 'bp-select2' );
 wp_enqueue_style( 'bp-select2' );
-wp_enqueue_style( 'bb-rl-login-fonts', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/assets/fonts/fonts.css', array(), bboss_get_version() );
-wp_enqueue_style( 'bb-rl-login-style-icons', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bboss_get_version() );
+wp_enqueue_style( 'bb-rl-login-fonts', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bboss_get_version() );
+wp_enqueue_style( 'bb-rl-login-style-icons', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bboss_get_version() );
 wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
-wp_enqueue_style( 'bb-rl-login-style', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/css/login.css', array(), bboss_get_version() );
+wp_enqueue_style( 'bb-rl-login-style', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bboss_get_version() );
 wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 
 /*

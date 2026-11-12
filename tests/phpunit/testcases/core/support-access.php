@@ -27,7 +27,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 		parent::set_up();
 
 		if ( ! class_exists( 'BBoss_Support_Access' ) ) {
-			require_once bboss()->plugin_dir . 'bboss-core/admin/classes/class-bboss-support-access.php';
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bboss-support-access.php';
 		}
 
 		// Self-boots and registers the bp_user_query_uid_clauses filter.

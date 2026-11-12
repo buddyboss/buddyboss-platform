@@ -435,7 +435,7 @@ add_action( 'groups_create_group_step_complete', 'bp_core_clear_cache' );
 add_action( 'groups_created_group', 'bp_core_clear_cache' );
 add_action( 'groups_group_avatar_updated', 'bp_core_clear_cache' );
 
-// bb_groups_clear_group_type_cache_on_update() moved to bboss-core/deprecated/buddyboss/3.0.0.php
+// bb_groups_clear_group_type_cache_on_update() moved to bp-core/deprecated/buddyboss/3.0.0.php
 
 /**
  * Clear the group_type cache when group type post is deleted.

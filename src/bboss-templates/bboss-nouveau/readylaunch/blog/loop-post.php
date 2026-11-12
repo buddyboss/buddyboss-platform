@@ -8,7 +8,7 @@
  * The status tag and the more-options menu are gated by two independent flags
  * (`bb_rl_blog_card_show_status` / `bb_rl_blog_card_show_menu`), both seeded
  * from the `bb_blog_card_context` query var — mirroring the non-RL sibling
- * `bboss-templates/bboss-nouveau/buddypress/blog/loop-post.php`. This lets a
+ * `bp-templates/bp-nouveau/buddypress/blog/loop-post.php`. This lets a
  * bookmark list keep the menu while hiding the status tag (or vice-versa).
  *
  * @since   BuddyBoss 3.2.0
@@ -41,7 +41,7 @@ $bb_rl_blog_status_label  = isset( $bb_rl_blog_status_labels[ $bb_rl_blog_status
 	: ( $bb_rl_blog_status_obj ? $bb_rl_blog_status_obj->label : ucfirst( $bb_rl_blog_status ) );
 
 // Card context, mirrored from the non-RL sibling
-// (bboss-templates/bboss-nouveau/buddypress/blog/loop-post.php). Empty on the public
+// (bp-templates/bp-nouveau/buddypress/blog/loop-post.php). Empty on the public
 // blog archive; set to 'member-posts' or 'bookmarks' on the member profile
 // Blogs tab. Drives the status-tag and menu defaults below and is passed to
 // each filter so consumers can branch on it. Unknown/absent values fall back
@@ -84,7 +84,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 				the_post_thumbnail( 'medium_large', array( 'class' => 'img-responsive' ) );
 			else :
 				?>
-				<img src="<?php echo esc_url( bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Blog post placeholder image', 'buddyboss' ); ?>">
+				<img src="<?php echo esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Blog post placeholder image', 'buddyboss' ); ?>">
 			<?php endif; ?>
 		</a>
 		<?php if ( $bb_rl_blog_show_status_tag ) : ?>

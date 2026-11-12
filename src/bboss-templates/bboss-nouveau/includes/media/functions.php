@@ -173,7 +173,7 @@ function bboss_nouveau_media_localize_scripts( $params = array() ) {
 		'forums'   => bboss_is_forums_emoji_support_enabled(),
 		'document' => bboss_is_forums_document_support_enabled(),
 	);
-	$params['media']['emoji_filter_url'] = bboss()->plugin_url . 'bboss-core/images/emojifilter/';
+	$params['media']['emoji_filter_url'] = bboss()->plugin_url . 'bp-core/images/emojifilter/';
 
 	$params['media']['gif']         = array(
 		'profile'  => bboss_is_profiles_gif_support_enabled(),

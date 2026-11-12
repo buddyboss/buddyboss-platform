@@ -604,7 +604,7 @@ function bboss_messages_delete_thread( $thread_ids, $user_id = 0 ) {
 			return false;
 		}
 
-		/** This action is documented in bboss-messages/bboss-messages-functions.php */
+		/** This action is documented in bp-messages/bboss-messages-functions.php */
 		do_action( 'messages_delete_thread', $thread_ids, $user_id );
 
 		return true;

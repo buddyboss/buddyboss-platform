@@ -43,7 +43,7 @@ $has_default_cover        = bboss_attachment_get_cover_image_class( bboss_get_gr
 			$has_cover_image_position = ' has-position';
 		}
 	} else {
-		$group_cover_image = esc_url( bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/images/group_cover_image.jpeg' );
+		$group_cover_image = esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
 	}
 	?>
 

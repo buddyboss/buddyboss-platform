@@ -44,7 +44,7 @@ class BBoss_Media_Theme_Compat {
 		if ( ! bboss_displayed_user_id() && ! bboss_current_action() ) {
 			bboss_update_is_directory( true, 'media' );
 
-			/** This action is documented in bboss-media/bp-media-screens.php */
+			/** This action is documented in bp-media/bp-media-screens.php */
 			do_action( 'bp_media_screen_index' );
 
 			add_filter( 'bp_get_buddypress_template', array( $this, 'directory_template_hierarchy' ) );

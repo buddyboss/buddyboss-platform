@@ -71,7 +71,7 @@ function bboss_search_helpers_cpts( $helpers ) {
 			$cpt_obj         = get_post_type_object( $post_type );
 			// is cpt still valid?
 			if ( $cpt_obj && ! is_wp_error( $cpt_obj ) ) {
-				require_once bboss()->plugin_dir . 'bboss-search/plugins/search-cpt/class-bboss-search-cpt.php';
+				require_once bboss()->plugin_dir . 'bp-search/plugins/search-cpt/class-bboss-search-cpt.php';
 				$helpers[ $searchable_type ]              = new BBoss_Search_CPT( $post_type, $searchable_type );
 				BBoss_Search::instance()->searchable_items[] = $searchable_type;
 			}

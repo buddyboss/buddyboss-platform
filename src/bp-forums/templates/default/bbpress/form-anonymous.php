@@ -1,6 +1,44 @@
 <?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/bbpress/form-anonymous.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../../bboss-forums/templates/default/bbpress/form-anonymous.php';
-// @bbwt-com-end compat-layer
+
+/**
+ * Anonymous User
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?>
+
+<?php if ( bboss_bbp_current_user_can_access_anonymous_user_form() ) : ?>
+
+	<?php do_action( 'bbp_theme_before_anonymous_form' ); ?>
+
+	<fieldset class="bbp-form">
+		<legend><?php ( bboss_bbp_is_topic_edit() || bboss_bbp_is_reply_edit() ) ? esc_html_e( 'Author Information', 'buddyboss' ) : esc_html_e( 'Your information:', 'buddyboss' ); ?></legend>
+
+		<?php do_action( 'bbp_theme_anonymous_form_extras_top' ); ?>
+
+		<p>
+			<label for="bbp_anonymous_author"><?php esc_html_e( 'Name (required):', 'buddyboss' ); ?></label><br />
+			<input type="text" id="bbp_anonymous_author"  value="<?php bboss_bbp_author_display_name(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="40" name="bbp_anonymous_name" />
+		</p>
+
+		<p>
+			<label for="bbp_anonymous_email"><?php esc_html_e( 'Email (will not be published) (required):', 'buddyboss' ); ?></label><br />
+			<input type="text" id="bbp_anonymous_email"   value="<?php bboss_bbp_author_email(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="40" name="bbp_anonymous_email" />
+		</p>
+
+		<p>
+			<label for="bbp_anonymous_website"><?php esc_html_e( 'Website:', 'buddyboss' ); ?></label><br />
+			<input type="text" id="bbp_anonymous_website" value="<?php bboss_bbp_author_url(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="40" name="bbp_anonymous_website" />
+		</p>
+
+		<?php do_action( 'bbp_theme_anonymous_form_extras_bottom' ); ?>
+
+	</fieldset>
+
+	<?php do_action( 'bbp_theme_after_anonymous_form' ); ?>
+
+<?php endif; ?>

@@ -33,12 +33,12 @@ $bb_blog_query_args = array(
 	'order'          => 'oldest' === $bb_blog_sort ? 'ASC' : 'DESC',
 );
 
-/** This filter is documented in bboss-templates/bboss-nouveau/readylaunch/members/single/blog.php */
+/** This filter is documented in bp-templates/bp-nouveau/readylaunch/members/single/blog.php */
 $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query_args', $bb_blog_query_args ) );
 ?>
 <div class="bb-member-blog">
 	<?php
-	/** This action is documented in bboss-templates/bboss-nouveau/readylaunch/members/single/blog.php */
+	/** This action is documented in bp-templates/bp-nouveau/readylaunch/members/single/blog.php */
 	do_action( 'bb_blog_member_posts_before' );
 	?>
 	<?php if ( $bb_blog_member_query->have_posts() ) : ?>

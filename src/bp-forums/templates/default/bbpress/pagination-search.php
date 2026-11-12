@@ -1,6 +1,30 @@
 <?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/bbpress/pagination-search.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../../bboss-forums/templates/default/bbpress/pagination-search.php';
-// @bbwt-com-end compat-layer
+
+/**
+ * Pagination for pages of search results
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?>
+
+<?php do_action( 'bbp_template_before_pagination_loop' ); ?>
+
+<div class="bbp-pagination">
+	<div class="bbp-pagination-count">
+
+		<?php bboss_bbp_search_pagination_count(); ?>
+
+	</div>
+
+	<div class="bbp-pagination-links">
+
+		<?php bboss_bbp_search_pagination_links(); ?>
+
+	</div>
+</div>
+
+<?php do_action( 'bbp_template_after_pagination_loop' ); ?>

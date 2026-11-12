@@ -53,7 +53,7 @@ class BBoss_Core_Friends_Widget extends WP_Widget {
 	 */
 	public function enqueue_scripts() {
 		$min = bboss_core_get_minified_asset_suffix();
-		wp_enqueue_script( 'bp_core_widget_friends-js', bboss()->plugin_url . "bboss-friends/js/widget-friends{$min}.js", array( 'jquery' ), bboss_get_version() );
+		wp_enqueue_script( 'bp_core_widget_friends-js', bboss()->plugin_url . "bp-friends/js/widget-friends{$min}.js", array( 'jquery' ), bboss_get_version() );
 	}
 
 	/**

@@ -76,7 +76,7 @@ class BBoss_XProfile_Field_Type_Textarea extends BBoss_XProfile_Field_Type {
 			<?php
 		endif;
 
-		/** This action is documented in bboss-xprofile/bp-xprofile-classes */
+		/** This action is documented in bp-xprofile/bp-xprofile-classes */
 		do_action( bboss_get_the_profile_field_errors_action() );
 
 		if ( ! $richtext_enabled ) {
@@ -196,7 +196,7 @@ class BBoss_XProfile_Field_Type_Textarea extends BBoss_XProfile_Field_Type {
 			<?php
 		} else {
 
-			/** This filter is documented in bboss-xprofile/classes/class-bboss-xprofile-field-type-textarea.php */
+			/** This filter is documented in bp-xprofile/classes/class-bboss-xprofile-field-type-textarea.php */
 			$editor_args = apply_filters(
 				'bp_xprofile_field_type_textarea_editor_args',
 				array(

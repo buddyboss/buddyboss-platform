@@ -412,7 +412,7 @@ function bboss_nouveau_ajax_delete_activity() {
 		}
 	}
 
-	/** This action is documented in bboss-activity/bp-activity-actions.php */
+	/** This action is documented in bp-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 	// Deleting an activity comment.
@@ -433,7 +433,7 @@ function bboss_nouveau_ajax_delete_activity() {
 		}
 	}
 
-	/** This action is documented in bboss-activity/bp-activity-actions.php */
+	/** This action is documented in bp-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 
 	// The activity has been deleted successfully.
@@ -595,7 +595,7 @@ function bboss_nouveau_ajax_get_single_activity_content() {
 		}
 	}
 
-	/** This filter is documented in bboss-activity/bboss-activity-template.php */
+	/** This filter is documented in bp-activity/bboss-activity-template.php */
 	$content = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
 
 	wp_send_json_success( array( 'contents' => $content ) );
@@ -1255,7 +1255,7 @@ function bboss_nouveau_ajax_post_update() {
 			$draft_activity_meta_key .= '_' . $item_id;
 		}
 	} else {
-		/** This filter is documented in bboss-activity/bp-activity-actions.php */
+		/** This filter is documented in bp-activity/bp-activity-actions.php */
 		$activity_id = apply_filters( 'bp_activity_custom_update', false, $object, $item_id, $_POST['content'] );
 	}
 
@@ -1471,7 +1471,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 			// would be dropped unseen by this save. Hand it back instead: the
 			// browser merges it with the member's text and saves again.
 			if ( bboss_draft_save_waits_for_handback( $draft_user_id, $draft_activity['data_key'] ) ) {
-				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
 
 				wp_send_json_error(
@@ -1709,7 +1709,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 			$raw_draft_size = strlen( maybe_serialize( wp_unslash( $draft_activity ) ) );
 
 			if ( $raw_draft_size > bboss_draft_max_size() ) {
-				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $raw_draft_size, 'per_draft' );
 
 				wp_send_json_error(
@@ -1792,7 +1792,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 			if ( empty( $draft_budget['allowed'] ) ) {
 				$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
 
-				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $draft_size, $budget_reason );
 
 				// Two different refusals, and telling them apart matters. When the
@@ -1899,7 +1899,7 @@ function bboss_nouveau_ajax_post_draft_activity() {
 			// that never loaded the stored draft (a failed fetch, a stale tab)
 			// must not delete it, or its attachments, on the member's behalf.
 			if ( ! bboss_draft_base_matches( $stored_draft, bboss_draft_request_base() ) ) {
-				/** This action is documented in bboss-templates/bboss-nouveau/includes/activity/ajax.php */
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
 
 				wp_send_json_error(
@@ -2088,7 +2088,7 @@ function bboss_nouveau_ajax_spam_activity() {
 		wp_send_json_error( $response );
 	}
 
-	/** This action is documented in bboss-activity/bp-activity-actions.php */
+	/** This action is documented in bp-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_before_action_spam_activity', $activity->id, $activity );
 
 	// Mark as spam.
@@ -2096,7 +2096,7 @@ function bboss_nouveau_ajax_spam_activity() {
 	$activity->title_required = false;
 	$activity->save();
 
-	/** This action is documented in bboss-activity/bp-activity-actions.php */
+	/** This action is documented in bp-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_action_spam_activity', $activity->id, $activity->user_id );
 
 	// Prepare the successfull reply.

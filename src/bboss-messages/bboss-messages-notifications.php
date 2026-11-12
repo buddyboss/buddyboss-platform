@@ -139,7 +139,7 @@ function bboss_messages_format_notifications( $action, $item_id, $secondary_item
 			 */
 			$return = apply_filters( 'bp_messages_' . $amount . '_new_message_notification', $return, (int) $total_items, $text, $link, $item_id, $secondary_item_id );
 		} else {
-			/** This filter is documented in bboss-messages/bboss-messages-notifications.php */
+			/** This filter is documented in bp-messages/bboss-messages-notifications.php */
 			$return = apply_filters(
 				'bp_messages_' . $amount . '_new_message_notification',
 				array(
@@ -172,12 +172,12 @@ function bboss_messages_format_notifications( $action, $item_id, $secondary_item
 		 */
 		if ( has_filter( 'bp_messages_single_new_message_notification' ) ) {
 			if ( 'string' === $format ) {
-				/** This filter is documented in bboss-messages/bboss-messages-notifications.php */
+				/** This filter is documented in bp-messages/bboss-messages-notifications.php */
 				$return = apply_filters( 'bp_messages_single_new_message_notification', $return, (int) $total_items, $text, $link, $item_id, $secondary_item_id );
 
 				// Notice that there are seven parameters instead of six? Ugh...
 			} else {
-				/** This filter is documented in bboss-messages/bboss-messages-notifications.php */
+				/** This filter is documented in bp-messages/bboss-messages-notifications.php */
 				$return = apply_filters( 'bp_messages_single_new_message_notification', $return, $link, (int) $total_items, $text, $link, $item_id, $secondary_item_id );
 			}
 		}

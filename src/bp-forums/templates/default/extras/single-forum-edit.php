@@ -1,6 +1,35 @@
 <?php
-// @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-forums/templates/default/extras/single-forum-edit.php (decisions 0009/0011); kept so code that
-// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../../../bboss-forums/templates/default/extras/single-forum-edit.php';
-// @bbwt-com-end compat-layer
+
+/**
+ * Edit handler for forums
+ *
+ * @package BuddyBoss\Theme
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+get_header(); ?>
+
+	<?php do_action( 'bbp_before_main_content' ); ?>
+
+	<?php
+	while ( have_posts() ) :
+		the_post();
+		?>
+
+		<div id="bbp-edit-page" class="bbp-edit-page">
+			<h1 class="entry-title"><?php the_title(); ?></h1>
+			<div class="entry-content">
+
+				<?php bboss_bbp_get_template_part( 'form', 'forum' ); ?>
+
+			</div>
+		</div><!-- #bbp-edit-page -->
+
+	<?php endwhile; ?>
+
+	<?php do_action( 'bbp_after_main_content' ); ?>
+
+<?php get_sidebar(); ?>
+<?php get_footer(); ?>
