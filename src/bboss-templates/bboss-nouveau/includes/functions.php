@@ -583,7 +583,7 @@ function bboss_nouveau_get_component_filters( $context = '', $component = '' ) {
 		$filters = bboss_nouveau_get_activity_filters();
 
 		// Specific case for the activity dropdown
-		$filters = array_merge( array( '-1' => __( '- View All -', 'buddyboss-platform' ) ), $filters );
+		$filters = array_merge( array( '-1' => __( '- View All -', 'buddyboss' ) ), $filters );
 	} elseif ( 'groups' === $component ) {
 		$filters = bboss_nouveau_get_groups_filters( $context );
 	} elseif ( 'blogs' === $component ) {
@@ -890,264 +890,264 @@ function bboss_nouveau_get_user_feedback( $feedback_id = '' ) {
 		array(
 			'registration-disabled'             => array(
 				'type'    => 'info',
-				'message' => __( 'Member registration is currently disabled.', 'buddyboss-platform' ),
+				'message' => __( 'Member registration is currently disabled.', 'buddyboss' ),
 				'before'  => 'bp_before_registration_disabled',
 				'after'   => 'bp_after_registration_disabled',
 			),
 			'completed-confirmation'            => array(
 				'type'    => 'info',
-				'message' => __( 'You have successfully created your account! Please log in using the email and password you have just created.', 'buddyboss-platform' ),
+				'message' => __( 'You have successfully created your account! Please log in using the email and password you have just created.', 'buddyboss' ),
 				'before'  => 'bp_before_registration_confirmed',
 				'after'   => 'bp_after_registration_confirmed',
 			),
 			'directory-activity-loading'        => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading community updates. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading community updates. Please wait.', 'buddyboss' ),
 			),
 			'activity-comments-loading'         => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading activity comments. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading activity comments. Please wait.', 'buddyboss' ),
 			),
 			'single-activity-loading'           => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading the update. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading the update. Please wait.', 'buddyboss' ),
 			),
 			'activity-loop-none'                => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, there was no activity found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, there was no activity found.', 'buddyboss' ),
 			),
 			'blogs-loop-none'                   => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, there were no sites found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, there were no sites found.', 'buddyboss' ),
 			),
 			'blogs-no-signup'                   => array(
 				'type'    => 'info',
-				'message' => __( 'Site registration is currently disabled.', 'buddyboss-platform' ),
+				'message' => __( 'Site registration is currently disabled.', 'buddyboss' ),
 			),
 			'directory-blogs-loading'           => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading the sites of the network. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading the sites of the network. Please wait.', 'buddyboss' ),
 			),
 			'directory-groups-loading'          => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading groups of the community. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading groups of the community. Please wait.', 'buddyboss' ),
 			),
 			'groups-loop-none'                  => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, there were no groups found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, there were no groups found.', 'buddyboss' ),
 			),
 			'group-activity-loading'            => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading the group updates. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading the group updates. Please wait.', 'buddyboss' ),
 			),
 			'group-members-loading'             => array(
 				'type'    => 'loading',
-				'message' => __( 'Requesting the group members. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Requesting the group members. Please wait.', 'buddyboss' ),
 			),
 			'group-leaders-loading'             => array(
 				'type'    => 'loading',
-				'message' => __( 'Requesting the group leaders. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Requesting the group leaders. Please wait.', 'buddyboss' ),
 			),
 			'group-media-loading'               => array(
 				'type'    => 'loading',
-				'message' => __( 'Requesting the group photos. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Requesting the group photos. Please wait.', 'buddyboss' ),
 			),
 			'group-video-loading'               => array(
 				'type'    => 'loading',
-				'message' => __( 'Requesting the group videos. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Requesting the group videos. Please wait.', 'buddyboss' ),
 			),
 			'group-document-loading'            => array(
 				'type'    => 'loading',
-				'message' => __( 'Requesting the group documents. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Requesting the group documents. Please wait.', 'buddyboss' ),
 			),
 			'group-members-none'                => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no group members were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no group members were found.', 'buddyboss' ),
 			),
 			'group-members-search-none'         => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, there was no member with that name found within this group.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, there was no member with that name found within this group.', 'buddyboss' ),
 			),
 			'group-manage-members-none'         => array(
 				'type'    => 'info',
-				'message' => __( 'This group has no members.', 'buddyboss-platform' ),
+				'message' => __( 'This group has no members.', 'buddyboss' ),
 			),
 			'group-requests-none'               => array(
 				'type'    => 'info',
-				'message' => __( 'There are no pending membership requests.', 'buddyboss-platform' ),
+				'message' => __( 'There are no pending membership requests.', 'buddyboss' ),
 			),
 			'group-requested-membership'        => array(
 				'type'    => 'info',
-				'message' => __( 'You have already requested to join this group.', 'buddyboss-platform' ),
+				'message' => __( 'You have already requested to join this group.', 'buddyboss' ),
 			),
 			'group-requests-loading'            => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading the members who requested to join the group. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading the members who requested to join the group. Please wait.', 'buddyboss' ),
 			),
 			'group-delete-warning'              => array(
 				'type'    => 'warning',
-				'message' => __( 'WARNING: Deleting this group will completely remove ALL content associated with it. There is no way back. Please be careful with this option.', 'buddyboss-platform' ),
+				'message' => __( 'WARNING: Deleting this group will completely remove ALL content associated with it. There is no way back. Please be careful with this option.', 'buddyboss' ),
 			),
 			'group-avatar-delete-info'          => array(
 				'type'    => 'info',
-				'message' => __( 'To remove the existing group photo, please use the delete group profile photo button.', 'buddyboss-platform' ),
+				'message' => __( 'To remove the existing group photo, please use the delete group profile photo button.', 'buddyboss' ),
 			),
 			'directory-members-loading'         => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading members of the community. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading members of the community. Please wait.', 'buddyboss' ),
 			),
 			'members-loop-none'                 => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no members were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no members were found.', 'buddyboss' ),
 			),
 			'member-requests-none'              => array(
 				'type'    => 'info',
-				'message' => __( 'You have no pending requests to connect.', 'buddyboss-platform' ),
+				'message' => __( 'You have no pending requests to connect.', 'buddyboss' ),
 			),
 			'member-mutual-friends-none'        => array(
 				'type'    => 'loading',
-				'message' => __( 'You have no mutual connections with this member.', 'buddyboss-platform' ),
+				'message' => __( 'You have no mutual connections with this member.', 'buddyboss' ),
 			),
 			'member-invites-none'               => array(
 				'type'    => 'info',
-				'message' => __( 'You have no outstanding group invites.', 'buddyboss-platform' ),
+				'message' => __( 'You have no outstanding group invites.', 'buddyboss' ),
 			),
 			'member-notifications-none'         => array(
 				'type'    => 'info',
-				'message' => __( 'This member has no notifications.', 'buddyboss-platform' ),
+				'message' => __( 'This member has no notifications.', 'buddyboss' ),
 			),
 			'member-wp-profile-none'            => array(
 				'type'    => 'info',
 				/* translators: %s: member display name. */
-				'message' => __( '%s did not save any profile information yet.', 'buddyboss-platform' ),
+				'message' => __( '%s did not save any profile information yet.', 'buddyboss' ),
 			),
 			'member-delete-account'             => array(
 				'type'    => 'warning',
-				'message' => __( 'Deleting this account will delete all of the content it has created. It will be completely unrecoverable.', 'buddyboss-platform' ),
+				'message' => __( 'Deleting this account will delete all of the content it has created. It will be completely unrecoverable.', 'buddyboss' ),
 			),
 			'member-activity-loading'           => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading member\'s updates. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading member\'s updates. Please wait.', 'buddyboss' ),
 			),
 			'member-blogs-loading'              => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading member\'s blog. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading member\'s blog. Please wait.', 'buddyboss' ),
 			),
 			'member-friends-loading'            => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading member\'s friends. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading member\'s friends. Please wait.', 'buddyboss' ),
 			),
 			'member-mutual-friends-loading'     => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading member\'s mutual connections. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading member\'s mutual connections. Please wait.', 'buddyboss' ),
 			),
 			'member-groups-loading'             => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading member\'s groups. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading member\'s groups. Please wait.', 'buddyboss' ),
 			),
 			'member-notifications-loading'      => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading notifications. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading notifications. Please wait.', 'buddyboss' ),
 			),
 			'member-group-invites-all'          => array(
 				'type'    => 'info',
-				'message' => __( 'Currently every member of the community can invite you to join their groups. Optionally, you may restrict group invites to your connections only.', 'buddyboss-platform' ),
+				'message' => __( 'Currently every member of the community can invite you to join their groups. Optionally, you may restrict group invites to your connections only.', 'buddyboss' ),
 			),
 			'member-group-invites-friends-only' => array(
 				'type'    => 'info',
-				'message' => __( 'Currently only your connections may invite you to join a group. Uncheck this box to allow any member to send invites.', 'buddyboss-platform' ),
+				'message' => __( 'Currently only your connections may invite you to join a group. Uncheck this box to allow any member to send invites.', 'buddyboss' ),
 			),
 			'member-data-export'                => array(
 				'type'    => 'info',
-				'message' => __( 'You may download a copy of all data you have created on this platform. Click the button below to start a new request. An email will be sent to you to verify the request. Then the site admin will review your request and if approved, a zip file will be generated and emailed to you.', 'buddyboss-platform' ),
+				'message' => __( 'You may download a copy of all data you have created on this platform. Click the button below to start a new request. An email will be sent to you to verify the request. Then the site admin will review your request and if approved, a zip file will be generated and emailed to you.', 'buddyboss' ),
 			),
 			'member-media-loading'              => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading member\'s photos. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading member\'s photos. Please wait.', 'buddyboss' ),
 			),
 			'member-document-loading'           => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading member\'s documents. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading member\'s documents. Please wait.', 'buddyboss' ),
 			),
 			'member-video-loading'              => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading member\'s videos. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading member\'s videos. Please wait.', 'buddyboss' ),
 			),
 			'media-loop-none'                   => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no photos were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 			),
 			'media-video-loop-none'             => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no photos or videos were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no photos or videos were found.', 'buddyboss' ),
 			),
 			'video-loop-none'                   => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no videos were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no videos were found.', 'buddyboss' ),
 			),
 			'document-loop-none'                => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no documents were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
 			),
 			'media-loop-document-none'          => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no documents were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
 			),
 			'member-media-none'                 => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no photos were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 			),
 			'member-video-none'                 => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no videos were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no videos were found.', 'buddyboss' ),
 			),
 			'member-media-document-none'        => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no documents were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
 			),
 			'media-album-none'                  => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no albums were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no albums were found.', 'buddyboss' ),
 			),
 			'video-album-none'                  => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no albums were found.', 'buddyboss-platform' ),
+				'message' => __( 'Sorry, no albums were found.', 'buddyboss' ),
 			),
 			'album-media-loading'               => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading photos from the album. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading photos from the album. Please wait.', 'buddyboss' ),
 			),
 			'album-media-video-loading'         => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading photos and videos from the album. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading photos and videos from the album. Please wait.', 'buddyboss' ),
 			),
 			'album-video-loading'               => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading videos from the album. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading videos from the album. Please wait.', 'buddyboss' ),
 			),
 			'directory-media-loading'           => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading photos from the community. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading photos from the community. Please wait.', 'buddyboss' ),
 			),
 			'directory-video-loading'           => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading videos from the community. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading videos from the community. Please wait.', 'buddyboss' ),
 			),
 			'directory-media-document-loading'  => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss' ),
 			),
 			'moderation-block-member-loading'   => array(
 				'type'    => 'loading',
-				'message' => __( 'Loading blocked members. Please wait.', 'buddyboss-platform' ),
+				'message' => __( 'Loading blocked members. Please wait.', 'buddyboss' ),
 			),
 			'moderation-requests-none'          => array(
 				'type'    => 'info',
-				'message' => __( 'No blocked members found.', 'buddyboss-platform' ),
+				'message' => __( 'No blocked members found.', 'buddyboss' ),
 			),
 			'group-request-join-member-type'    => array(
 				'type'    => 'info',
-				'message' => __( 'Click the <strong>"Join Group"</strong> button to access the group.', 'buddyboss-platform' ),
+				'message' => __( 'Click the <strong>"Join Group"</strong> button to access the group.', 'buddyboss' ),
 			),
 		)
 	);
@@ -1160,31 +1160,31 @@ function bboss_nouveau_get_user_feedback( $feedback_id = '' ) {
 	 * Adjust some messages to the context.
 	 */
 	if ( 'completed-confirmation' === $feedback_id && bboss_registration_needs_activation() ) {
-		$feedback_messages['completed-confirmation']['message'] = __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss-platform' );
+		$feedback_messages['completed-confirmation']['message'] = __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss' );
 	} elseif ( 'member-notifications-none' === $feedback_id ) {
 		$is_myprofile = bboss_is_my_profile();
 
 		if ( bboss_is_current_action( 'unread' ) ) {
-			$feedback_messages['member-notifications-none']['message'] = __( 'This member has no unread notifications.', 'buddyboss-platform' );
+			$feedback_messages['member-notifications-none']['message'] = __( 'This member has no unread notifications.', 'buddyboss' );
 
 			if ( $is_myprofile ) {
-				$feedback_messages['member-notifications-none']['message'] = __( 'You have no unread notifications.', 'buddyboss-platform' );
+				$feedback_messages['member-notifications-none']['message'] = __( 'You have no unread notifications.', 'buddyboss' );
 			}
 		} elseif ( $is_myprofile ) {
-			$feedback_messages['member-notifications-none']['message'] = __( 'You have no notifications.', 'buddyboss-platform' );
+			$feedback_messages['member-notifications-none']['message'] = __( 'You have no notifications.', 'buddyboss' );
 		}
 	} elseif ( 'member-wp-profile-none' === $feedback_id && bboss_is_user_profile() ) {
 		$feedback_messages['member-wp-profile-none']['message'] = sprintf( /* translators: %s: member display name. */ $feedback_messages['member-wp-profile-none']['message'], bboss_get_displayed_user_fullname() );
 	} elseif ( 'member-delete-account' === $feedback_id && bboss_is_my_profile() ) {
-		$feedback_messages['member-delete-account']['message'] = __( 'Deleting your account will delete all of the content you have created. It will be completely irrecoverable.', 'buddyboss-platform' );
+		$feedback_messages['member-delete-account']['message'] = __( 'Deleting your account will delete all of the content you have created. It will be completely irrecoverable.', 'buddyboss' );
 	} elseif ( 'member-activity-loading' === $feedback_id && bboss_is_my_profile() ) {
-		$feedback_messages['member-activity-loading']['message'] = __( 'Loading your updates. Please wait.', 'buddyboss-platform' );
+		$feedback_messages['member-activity-loading']['message'] = __( 'Loading your updates. Please wait.', 'buddyboss' );
 	} elseif ( 'member-blogs-loading' === $feedback_id && bboss_is_my_profile() ) {
-		$feedback_messages['member-blogs-loading']['message'] = __( 'Loading your blogs. Please wait.', 'buddyboss-platform' );
+		$feedback_messages['member-blogs-loading']['message'] = __( 'Loading your blogs. Please wait.', 'buddyboss' );
 	} elseif ( 'member-friends-loading' === $feedback_id && bboss_is_my_profile() ) {
-		$feedback_messages['member-friends-loading']['message'] = __( 'Loading your connections. Please wait.', 'buddyboss-platform' );
+		$feedback_messages['member-friends-loading']['message'] = __( 'Loading your connections. Please wait.', 'buddyboss' );
 	} elseif ( 'member-groups-loading' === $feedback_id && bboss_is_my_profile() ) {
-		$feedback_messages['member-groups-loading']['message'] = __( 'Loading your groups. Please wait.', 'buddyboss-platform' );
+		$feedback_messages['member-groups-loading']['message'] = __( 'Loading your groups. Please wait.', 'buddyboss' );
 	}
 
 	/**
@@ -1230,7 +1230,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 			array(
 				'account_details' => array(
 					'signup_email'            => array(
-						'label'          => __( 'Email', 'buddyboss-platform' ),
+						'label'          => __( 'Email', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_email_value',
 						'attribute_type' => 'email',
@@ -1238,7 +1238,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_email_confirm'    => array(
-						'label'          => __( 'Confirm Email', 'buddyboss-platform' ),
+						'label'          => __( 'Confirm Email', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_confirm_email_value',
 						'attribute_type' => 'email',
@@ -1246,7 +1246,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_password'         => array(
-						'label'          => __( 'Password', 'buddyboss-platform' ),
+						'label'          => __( 'Password', 'buddyboss' ),
 						'required'       => true,
 						'value'          => '',
 						'attribute_type' => 'password',
@@ -1254,7 +1254,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => 'password-entry',
 					),
 					'signup_password_confirm' => array(
-						'label'          => __( 'Confirm Password', 'buddyboss-platform' ),
+						'label'          => __( 'Confirm Password', 'buddyboss' ),
 						'required'       => true,
 						'value'          => '',
 						'attribute_type' => 'password',
@@ -1264,7 +1264,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 				),
 				'blog_details'    => array(
 					'signup_blog_url'             => array(
-						'label'          => __( 'Site URL', 'buddyboss-platform' ),
+						'label'          => __( 'Site URL', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_blog_url_value',
 						'attribute_type' => 'slug',
@@ -1272,7 +1272,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_title'           => array(
-						'label'          => __( 'Site Title', 'buddyboss-platform' ),
+						'label'          => __( 'Site Title', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_blog_title_value',
 						'attribute_type' => 'title',
@@ -1280,7 +1280,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_privacy_public'  => array(
-						'label'          => __( 'Yes', 'buddyboss-platform' ),
+						'label'          => __( 'Yes', 'buddyboss' ),
 						'required'       => false,
 						'value'          => 'public',
 						'attribute_type' => '',
@@ -1288,7 +1288,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_privacy_private' => array(
-						'label'          => __( 'No', 'buddyboss-platform' ),
+						'label'          => __( 'No', 'buddyboss' ),
 						'required'       => false,
 						'value'          => 'private',
 						'attribute_type' => '',
@@ -1304,7 +1304,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 			array(
 				'account_details' => array(
 					'signup_email'            => array(
-						'label'          => __( 'Email', 'buddyboss-platform' ),
+						'label'          => __( 'Email', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_email_value',
 						'attribute_type' => 'email',
@@ -1312,7 +1312,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_password'         => array(
-						'label'          => __( 'Password', 'buddyboss-platform' ),
+						'label'          => __( 'Password', 'buddyboss' ),
 						'required'       => true,
 						'value'          => '',
 						'attribute_type' => 'password',
@@ -1320,7 +1320,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => 'password-entry',
 					),
 					'signup_password_confirm' => array(
-						'label'          => __( 'Confirm Password', 'buddyboss-platform' ),
+						'label'          => __( 'Confirm Password', 'buddyboss' ),
 						'required'       => true,
 						'value'          => '',
 						'attribute_type' => 'password',
@@ -1330,7 +1330,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 				),
 				'blog_details'    => array(
 					'signup_blog_url'             => array(
-						'label'          => __( 'Site URL', 'buddyboss-platform' ),
+						'label'          => __( 'Site URL', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_blog_url_value',
 						'attribute_type' => 'slug',
@@ -1338,7 +1338,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_title'           => array(
-						'label'          => __( 'Site Title', 'buddyboss-platform' ),
+						'label'          => __( 'Site Title', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_blog_title_value',
 						'attribute_type' => 'title',
@@ -1346,7 +1346,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_privacy_public'  => array(
-						'label'          => __( 'Yes', 'buddyboss-platform' ),
+						'label'          => __( 'Yes', 'buddyboss' ),
 						'required'       => false,
 						'value'          => 'public',
 						'attribute_type' => '',
@@ -1354,7 +1354,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_privacy_private' => array(
-						'label'          => __( 'No', 'buddyboss-platform' ),
+						'label'          => __( 'No', 'buddyboss' ),
 						'required'       => false,
 						'value'          => 'private',
 						'attribute_type' => '',
@@ -1370,7 +1370,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 			array(
 				'account_details' => array(
 					'signup_email'         => array(
-						'label'          => __( 'Email', 'buddyboss-platform' ),
+						'label'          => __( 'Email', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_email_value',
 						'attribute_type' => 'email',
@@ -1378,7 +1378,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_email_confirm' => array(
-						'label'          => __( 'Confirm Email', 'buddyboss-platform' ),
+						'label'          => __( 'Confirm Email', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_confirm_email_value',
 						'attribute_type' => 'email',
@@ -1386,7 +1386,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_password'      => array(
-						'label'          => __( 'Password', 'buddyboss-platform' ),
+						'label'          => __( 'Password', 'buddyboss' ),
 						'required'       => true,
 						'value'          => '',
 						'attribute_type' => 'password',
@@ -1396,7 +1396,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 				),
 				'blog_details'    => array(
 					'signup_blog_url'             => array(
-						'label'          => __( 'Site URL', 'buddyboss-platform' ),
+						'label'          => __( 'Site URL', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_blog_url_value',
 						'attribute_type' => 'slug',
@@ -1404,7 +1404,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_title'           => array(
-						'label'          => __( 'Site Title', 'buddyboss-platform' ),
+						'label'          => __( 'Site Title', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_blog_title_value',
 						'attribute_type' => 'title',
@@ -1412,7 +1412,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_privacy_public'  => array(
-						'label'          => __( 'Yes', 'buddyboss-platform' ),
+						'label'          => __( 'Yes', 'buddyboss' ),
 						'required'       => false,
 						'value'          => 'public',
 						'attribute_type' => '',
@@ -1420,7 +1420,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_privacy_private' => array(
-						'label'          => __( 'No', 'buddyboss-platform' ),
+						'label'          => __( 'No', 'buddyboss' ),
 						'required'       => false,
 						'value'          => 'private',
 						'attribute_type' => '',
@@ -1436,7 +1436,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 			array(
 				'account_details' => array(
 					'signup_email'    => array(
-						'label'          => __( 'Email', 'buddyboss-platform' ),
+						'label'          => __( 'Email', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_email_value',
 						'attribute_type' => 'email',
@@ -1444,7 +1444,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_password' => array(
-						'label'          => __( 'Password', 'buddyboss-platform' ),
+						'label'          => __( 'Password', 'buddyboss' ),
 						'required'       => true,
 						'value'          => '',
 						'attribute_type' => 'password',
@@ -1454,7 +1454,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 				),
 				'blog_details'    => array(
 					'signup_blog_url'             => array(
-						'label'          => __( 'Site URL', 'buddyboss-platform' ),
+						'label'          => __( 'Site URL', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_blog_url_value',
 						'attribute_type' => 'slug',
@@ -1462,7 +1462,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_title'           => array(
-						'label'          => __( 'Site Title', 'buddyboss-platform' ),
+						'label'          => __( 'Site Title', 'buddyboss' ),
 						'required'       => true,
 						'value'          => 'bp_get_signup_blog_title_value',
 						'attribute_type' => 'title',
@@ -1470,7 +1470,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_privacy_public'  => array(
-						'label'          => __( 'Yes', 'buddyboss-platform' ),
+						'label'          => __( 'Yes', 'buddyboss' ),
 						'required'       => false,
 						'value'          => 'public',
 						'attribute_type' => '',
@@ -1478,7 +1478,7 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 						'class'          => '',
 					),
 					'signup_blog_privacy_private' => array(
-						'label'          => __( 'No', 'buddyboss-platform' ),
+						'label'          => __( 'No', 'buddyboss' ),
 						'required'       => false,
 						'value'          => 'private',
 						'attribute_type' => '',
@@ -1533,7 +1533,7 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 				'attributes' => array(
 					'name'  => 'signup_submit',
 					'id'    => 'signup_submit',
-					'value' => __( 'Create Account', 'buddyboss-platform' ),
+					'value' => __( 'Create Account', 'buddyboss' ),
 				),
 			),
 			'member-profile-edit'           => array(
@@ -1543,7 +1543,7 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 				'attributes' => array(
 					'name'  => 'profile-group-edit-submit',
 					'id'    => 'profile-group-edit-submit',
-					'value' => __( 'Save Changes', 'buddyboss-platform' ),
+					'value' => __( 'Save Changes', 'buddyboss' ),
 				),
 			),
 			'member-capabilities'           => array(
@@ -1553,7 +1553,7 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 				'attributes' => array(
 					'name'  => 'capabilities-submit',
 					'id'    => 'capabilities-submit',
-					'value' => __( 'Save', 'buddyboss-platform' ),
+					'value' => __( 'Save', 'buddyboss' ),
 				),
 			),
 			'member-delete-account'         => array(
@@ -1564,7 +1564,7 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 					'disabled' => 'disabled',
 					'name'     => 'delete-account-button',
 					'id'       => 'delete-account-button',
-					'value'    => __( 'Delete Account', 'buddyboss-platform' ),
+					'value'    => __( 'Delete Account', 'buddyboss' ),
 				),
 			),
 			'members-general-settings'      => array(
@@ -1574,7 +1574,7 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 				'attributes' => array(
 					'name'  => 'submit',
 					'id'    => 'submit',
-					'value' => __( 'Save Changes', 'buddyboss-platform' ),
+					'value' => __( 'Save Changes', 'buddyboss' ),
 					'class' => 'auto',
 				),
 			),
@@ -1585,7 +1585,7 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 				'attributes' => array(
 					'name'  => 'submit',
 					'id'    => 'submit',
-					'value' => __( 'Save Changes', 'buddyboss-platform' ),
+					'value' => __( 'Save Changes', 'buddyboss' ),
 					'class' => 'auto',
 				),
 			),
@@ -1596,7 +1596,7 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 				'attributes' => array(
 					'name'  => 'xprofile-settings-submit',
 					'id'    => 'submit',
-					'value' => __( 'Save Changes', 'buddyboss-platform' ),
+					'value' => __( 'Save Changes', 'buddyboss' ),
 					'class' => 'auto',
 				),
 			),
@@ -1605,7 +1605,7 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 				'attributes' => array(
 					'name'  => 'member-group-invites-submit',
 					'id'    => 'submit',
-					'value' => __( 'Save', 'buddyboss-platform' ),
+					'value' => __( 'Save', 'buddyboss' ),
 					'class' => 'auto',
 				),
 			),
@@ -1616,8 +1616,8 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 				'wrapper'    => false,
 				'attributes' => array(
 					'name'                => 'ac_form_submit',
-					'value'               => __( 'Post', 'buddyboss-platform' ),
-					'data-add-edit-label' => __( 'Save', 'buddyboss-platform' ),
+					'value'               => __( 'Post', 'buddyboss' ),
+					'data-add-edit-label' => __( 'Save', 'buddyboss' ),
 				),
 			),
 			'member-data-export'            => array(
@@ -1625,7 +1625,7 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 				'attributes' => array(
 					'name'  => 'member-data-export-submit',
 					'id'    => 'submit',
-					'value' => __( 'Request Data Export', 'buddyboss-platform' ),
+					'value' => __( 'Request Data Export', 'buddyboss' ),
 					'class' => 'auto',
 				),
 			),
@@ -1634,7 +1634,7 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 				'attributes' => array(
 					'name'  => 'member-invite-submit',
 					'id'    => 'submit',
-					'value' => __( 'Send Invites', 'buddyboss-platform' ),
+					'value' => __( 'Send Invites', 'buddyboss' ),
 					'class' => 'auto',
 				),
 			),

@@ -173,7 +173,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					'bp_rest_invalid_group_members_message',
 					sprintf(
 						'%1$s %2$s',
-						( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss-platform' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss-platform' ),
+						( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss' ),
 						implode( ', ', $not_access_list )
 					),
 					array(
@@ -187,7 +187,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					'bp_rest_invalid_group_members_message',
 					sprintf(
 						'%1$s %2$s',
-						( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message: ', 'buddyboss-platform' ) : __( 'You need to be connected with this member in order to send a message: ', 'buddyboss-platform' ),
+						( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message: ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message: ', 'buddyboss' ),
 						implode( ', ', $not_friends )
 					),
 					array(
@@ -200,7 +200,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		if ( empty( $group ) ) {
 			return new WP_Error(
 				'bp_rest_no_group_selected',
-				__( 'Sorry, Group id is missing.', 'buddyboss-platform' ),
+				__( 'Sorry, Group id is missing.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -210,7 +210,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		if ( empty( $members ) ) {
 			return new WP_Error(
 				'bp_rest_no_members_selected',
-				__( 'Sorry, you have not selected any members.', 'buddyboss-platform' ),
+				__( 'Sorry, you have not selected any members.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -231,7 +231,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_messages_empty_message',
-				__( 'Sorry, Your message cannot be empty.', 'buddyboss-platform' ),
+				__( 'Sorry, Your message cannot be empty.', 'buddyboss' ),
 				array(
 					'status' => 400,
 				)
@@ -243,7 +243,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bp_message_media',
-					__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the media.', 'buddyboss' ),
 					array(
 						'status' => 400,
 					)
@@ -256,7 +256,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
-					__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the document.', 'buddyboss' ),
 					array(
 						'status' => 400,
 					)
@@ -269,7 +269,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
-					__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the video.', 'buddyboss' ),
 					array(
 						'status' => 400,
 					)
@@ -282,7 +282,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
-					__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
 					array(
 						'status' => 400,
 					)
@@ -895,11 +895,11 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			if ( 'all' !== $message_users ) {
 				$retval['message'] = sprintf(
 				/* translators: Message member count. */
-					__( 'Your message was sent privately to %s members of this group.', 'buddyboss-platform' ),
+					__( 'Your message was sent privately to %s members of this group.', 'buddyboss' ),
 					count( $all_members )
 				);
 			} else {
-				$retval['message'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss-platform' );
+				$retval['message'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss' );
 			}
 
 			if ( ! empty( $error ) ) {
@@ -935,7 +935,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create a group message.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to create a group message.', 'buddyboss' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -970,12 +970,12 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'message' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Information for the user.', 'buddyboss-platform' ),
+					'description' => __( 'Information for the user.', 'buddyboss' ),
 					'type'        => 'string',
 				),
 				'data'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Message thread', 'buddyboss-platform' ),
+					'description' => __( 'Message thread', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'object',
 					'properties'  => array(),
@@ -1007,7 +1007,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		unset( $params['page'], $params['per_page'], $params['search'] );
 
 		$params['group_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
+			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 			'type'              => 'integer',
 			'required'          => true,
 			'sanitize_callback' => 'absint',
@@ -1015,14 +1015,14 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['message'] = array(
-			'description'       => __( 'Content of the Message to add to the Thread.', 'buddyboss-platform' ),
+			'description'       => __( 'Content of the Message to add to the Thread.', 'buddyboss' ),
 			'type'              => 'string',
 			'required'          => false,
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['users'] = array(
-			'description'       => __( 'Group thread users individual or all.', 'buddyboss-platform' ),
+			'description'       => __( 'Group thread users individual or all.', 'buddyboss' ),
 			'type'              => 'string',
 			'required'          => true,
 			'enum'              => array( 'all', 'individual' ),
@@ -1030,7 +1030,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['users_list'] = array(
-			'description'       => __( 'Limit result to messages created by a specific user.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result to messages created by a specific user.', 'buddyboss' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'bboss_rest_sanitize_string_list',
@@ -1038,7 +1038,7 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['type'] = array(
-			'description'       => __( 'Type of message, Group thread or private reply.', 'buddyboss-platform' ),
+			'description'       => __( 'Type of message, Group thread or private reply.', 'buddyboss' ),
 			'type'              => 'string',
 			'required'          => true,
 			'enum'              => array( 'open', 'private' ),
@@ -1142,11 +1142,11 @@ class BBoss_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			if ( 'individual' === $type ) {
 				$retval['message'] = sprintf(
 				/* translators: Message member count. */
-					__( 'Your message was sent to %s members of this group.', 'buddyboss-platform' ),
+					__( 'Your message was sent to %s members of this group.', 'buddyboss' ),
 					$recipients_count
 				);
 			} else {
-				$retval['message'] = __( 'Your message was sent to all members of this group.', 'buddyboss-platform' );
+				$retval['message'] = __( 'Your message was sent to all members of this group.', 'buddyboss' );
 			}
 
 			$last_message = wp_list_filter( $thread->messages, array( 'id' => $thread->last_message_id ) );

@@ -22,4 +22,4 @@ function bboss_setup_search() {
 
 add_action( 'bp_setup_components', 'bboss_setup_search', 6 );
 
-require bboss()->plugin_dir . 'bboss-search/classes/class-bboss-search-core.php';
+require bboss()->plugin_dir . 'bp-search/classes/class-bboss-search-core.php';

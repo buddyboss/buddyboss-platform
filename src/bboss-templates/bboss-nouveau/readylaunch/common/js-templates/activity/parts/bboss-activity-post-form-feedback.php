@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 	<span class="bb-icons-rl-fill" aria-hidden="true"></span>
 	<div class="bb-rl-notice--content">
 		{{{data.message}}}
-		<button class="bb-rl-notice__close" aria-label="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>">
+		<button class="bb-rl-notice__close" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 			<i class="bb-icons-rl-x"></i>
 		</button>
 	</div>

@@ -41,7 +41,7 @@ function bboss_two_factor_settings_admin_nav( $wp_admin_nav ) {
 	$wp_admin_nav[] = array(
 		'parent'   => 'my-account-' . $settings_id,
 		'id'       => 'my-account-' . $settings_id . '-security',
-		'title'    => __( 'Security', 'buddyboss-platform' ),
+		'title'    => __( 'Security', 'buddyboss' ),
 		'href'     => bboss_two_factor_get_settings_url( bboss_loggedin_user_id() ),
 		'position' => 15,
 	);
@@ -66,7 +66,7 @@ function bboss_two_factor_submit_button( $buttons ) {
 		'attributes' => array(
 			'name'  => 'bb-two-factor-submit',
 			'id'    => 'submit',
-			'value' => __( 'Save Changes', 'buddyboss-platform' ),
+			'value' => __( 'Save Changes', 'buddyboss' ),
 			'class' => 'auto',
 		),
 	);

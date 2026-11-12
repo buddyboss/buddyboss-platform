@@ -364,8 +364,8 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
         if (!currentStep || !currentStep.component) {
             return (
                 <div className="bb-rl-error-state">
-                    <h2>{__('Step Not Found', 'buddyboss-platform')}</h2>
-                    <p>{__('The current step could not be loaded. Please try refreshing the page.', 'buddyboss-platform')}</p>
+                    <h2>{__('Step Not Found', 'buddyboss')}</h2>
+                    <p>{__('The current step could not be loaded. Please try refreshing the page.', 'buddyboss')}</p>
                 </div>
             );
         }
@@ -374,9 +374,9 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
         if (!hasStepComponent(currentStep.component)) {
             return (
                 <div className="bb-rl-error-state">
-                    <h2>{__('Component Not Found', 'buddyboss-platform')}</h2>
+                    <h2>{__('Component Not Found', 'buddyboss')}</h2>
                     <p>
-                        {__('Component', 'buddyboss-platform')} "{currentStep.component}" {__('not found in registry.', 'buddyboss-platform')}
+                        {__('Component', 'buddyboss')} "{currentStep.component}" {__('not found in registry.', 'buddyboss')}
                     </p>
                 </div>
             );
@@ -388,8 +388,8 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
         if (!StepComponent) {
             return (
                 <div className="bb-rl-error-state">
-                    <h2>{__('Component Load Error', 'buddyboss-platform')}</h2>
-                    <p>{__('Failed to load the step component.', 'buddyboss-platform')}</p>
+                    <h2>{__('Component Load Error', 'buddyboss')}</h2>
+                    <p>{__('Failed to load the step component.', 'buddyboss')}</p>
                 </div>
             );
         }
@@ -457,7 +457,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
                         <Button
                             className="bb-rl-close-button"
                             onClick={handleClose}
-                            label={__('Close', 'buddyboss-platform')}
+                            label={__('Close', 'buddyboss')}
                             disabled={isProcessing}
                         >
                             <span className="bb-icons-rl-x"></span>

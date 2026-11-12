@@ -99,7 +99,7 @@ export function RecaptchaBypassField( props ) {
 		<div className="bb-admin-settings-field__recaptcha-bypass">
 			<div className="bb-admin-settings-field__recaptcha-bypass-row">
 				<ToggleControl
-					label={ __( 'Allow bypass, enter a 6 to 10-character string to customize your URL', 'buddyboss-platform' ) }
+					label={ __( 'Allow bypass, enter a 6 to 10-character string to customize your URL', 'buddyboss' ) }
 					checked={ isChecked }
 					onChange={ function() { handleCheckboxChange(); } }
 					disabled={ disabled }
@@ -117,7 +117,7 @@ export function RecaptchaBypassField( props ) {
 				/>
 			</div>
 			<p className="bb-admin-settings-field__recaptcha-bypass-description">
-				{ __( 'The bypass URL enables you to bypass reCAPTCHA in case of issues. We recommend keeping the link below securely stored for accessing your site.', 'buddyboss-platform' ) }
+				{ __( 'The bypass URL enables you to bypass reCAPTCHA in case of issues. We recommend keeping the link below securely stored for accessing your site.', 'buddyboss' ) }
 			</p>
 			{ isChecked && (
 				<div className={ 'bb-admin-settings-field__recaptcha-bypass-url' + ( ! isValidLength ? ' bb-admin-settings-field__recaptcha-bypass-url--invalid' : '' ) }>
@@ -134,7 +134,7 @@ export function RecaptchaBypassField( props ) {
 							type="button"
 							className="bb-admin-settings-field__recaptcha-bypass-copy"
 							onClick={ handleCopy }
-							title={ isCopied ? __( 'Copied', 'buddyboss-platform' ) : __( 'Copy', 'buddyboss-platform' ) }
+							title={ isCopied ? __( 'Copied', 'buddyboss' ) : __( 'Copy', 'buddyboss' ) }
 						>
 							<i className={ isCopied ? 'bb-icon-l bb-icon-check' : 'bb-icon-l bb-icon-copy' } />
 						</button>

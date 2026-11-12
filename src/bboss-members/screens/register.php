@@ -98,7 +98,7 @@ function bboss_core_screen_signup() {
 
 		// Check that both password fields are filled in.
 		if ( empty( $_POST['signup_password'] ) ) {
-			$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password.', 'buddyboss-platform' );
+			$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password.', 'buddyboss' );
 		}
 
 		// if email opt enabled.
@@ -106,12 +106,12 @@ function bboss_core_screen_signup() {
 
 			// Check that both password fields are filled in.
 			if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
-				$bp->signup->errors['signup_email'] = __( 'Please make sure to enter your email twice.', 'buddyboss-platform' );
+				$bp->signup->errors['signup_email'] = __( 'Please make sure to enter your email twice.', 'buddyboss' );
 			}
 
 			// Check that the passwords match.
 			if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && strcasecmp( $_POST['signup_email'], $_POST['signup_email_confirm'] ) !== 0 ) {
-				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss-platform' );
+				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss' );
 			}
 		}
 
@@ -120,12 +120,12 @@ function bboss_core_screen_signup() {
 
 			// Check that both password fields are filled in.
 			if ( empty( $_POST['signup_password'] ) || empty( $_POST['signup_password_confirm'] ) ) {
-				$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password twice.', 'buddyboss-platform' );
+				$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password twice.', 'buddyboss' );
 			}
 
 			// Check that the passwords match.
 			if ( ( ! empty( $_POST['signup_password'] ) && ! empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] != $_POST['signup_password_confirm'] ) {
-				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss-platform' );
+				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss' );
 			}
 		}
 
@@ -161,7 +161,7 @@ function bboss_core_screen_signup() {
 								<span class="bp-icon" aria-hidden="true"></span>
 								<p>%s</p>
 							</div>',
-							__( 'This is a required field.', 'buddyboss-platform' )
+							__( 'This is a required field.', 'buddyboss' )
 						);
 					} else {
 						// Validate xprofile.
@@ -210,7 +210,7 @@ function bboss_core_screen_signup() {
 								<span class="bp-icon" aria-hidden="true"></span>
 								<p>%s</p>
 							</div>',
-							__( 'Please select a valid profile type.', 'buddyboss-platform' )
+							__( 'Please select a valid profile type.', 'buddyboss' )
 						);
 					}
 				}
@@ -248,7 +248,7 @@ function bboss_core_screen_signup() {
 
 		// Adding error message for the legal agreement checkbox.
 		if ( true === bboss_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
-			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss-platform' );
+			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss' );
 		}
 
 		// Add any errors to the action for the field in the template for display.
@@ -400,12 +400,12 @@ function bboss_signup_check_email_username() {
 
 		// Check that both password fields are filled in.
 		if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
-			$signup_email = __( 'Please make sure to enter your email twice.', 'buddyboss-platform' );
+			$signup_email = __( 'Please make sure to enter your email twice.', 'buddyboss' );
 		}
 
 		// Check that the passwords match.
 		if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && strcasecmp( $_POST['signup_email'], $_POST['signup_email_confirm'] ) !== 0 ) {
-			$signup_email = __( 'The emails entered do not match.', 'buddyboss-platform' );
+			$signup_email = __( 'The emails entered do not match.', 'buddyboss' );
 		}
 	}
 	$nickname_field = 'field_' . bboss_xprofile_nickname_field_id();

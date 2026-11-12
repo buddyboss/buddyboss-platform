@@ -266,7 +266,7 @@ export function ReportedContentScreen() {
 			} )
 			.catch( function () {
 				setActionInProgress( null );
-				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
+				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 			} );
 	}, [ bulkAction, selectedIds, page, contentType, statusFilter, fetchItems ] );
 
@@ -277,13 +277,13 @@ export function ReportedContentScreen() {
 		}
 
 		var confirmMessage = 'hide' === bulkAction
-			? __( 'Are you sure you want to hide the selected content items?', 'buddyboss-platform' )
-			: __( 'Are you sure you want to unhide the selected content items?', 'buddyboss-platform' );
+			? __( 'Are you sure you want to hide the selected content items?', 'buddyboss' )
+			: __( 'Are you sure you want to unhide the selected content items?', 'buddyboss' );
 
 		setConfirmModal( {
-			title: 'hide' === bulkAction ? __( 'Hide Content', 'buddyboss-platform' ) : __( 'Unhide Content', 'buddyboss-platform' ),
+			title: 'hide' === bulkAction ? __( 'Hide Content', 'buddyboss' ) : __( 'Unhide Content', 'buddyboss' ),
 			message: confirmMessage,
-			confirmLabel: 'hide' === bulkAction ? __( 'Hide', 'buddyboss-platform' ) : __( 'Unhide', 'buddyboss-platform' ),
+			confirmLabel: 'hide' === bulkAction ? __( 'Hide', 'buddyboss' ) : __( 'Unhide', 'buddyboss' ),
 			onConfirm: executeBulkAction,
 		} );
 	}, [ bulkAction, selectedIds, executeBulkAction ] );
@@ -295,13 +295,13 @@ export function ReportedContentScreen() {
 		}
 
 		var confirmMessage = ( 'hide' === action )
-			? __( 'Please confirm you want to hide this content. It will be hidden from all members in your network.', 'buddyboss-platform' )
-			: __( 'Please confirm you want to unhide this content. It will be open for all members in your network.', 'buddyboss-platform' );
+			? __( 'Please confirm you want to hide this content. It will be hidden from all members in your network.', 'buddyboss' )
+			: __( 'Please confirm you want to unhide this content. It will be open for all members in your network.', 'buddyboss' );
 
 		setConfirmModal( {
-			title: 'hide' === action ? __( 'Hide Content', 'buddyboss-platform' ) : __( 'Unhide Content', 'buddyboss-platform' ),
+			title: 'hide' === action ? __( 'Hide Content', 'buddyboss' ) : __( 'Unhide Content', 'buddyboss' ),
 			message: confirmMessage,
-			confirmLabel: 'hide' === action ? __( 'Hide', 'buddyboss-platform' ) : __( 'Unhide', 'buddyboss-platform' ),
+			confirmLabel: 'hide' === action ? __( 'Hide', 'buddyboss' ) : __( 'Unhide', 'buddyboss' ),
 			onConfirm: function () {
 				setConfirmModal( null );
 				setActionInProgress( item.id );
@@ -319,7 +319,7 @@ export function ReportedContentScreen() {
 					} )
 					.catch( function () {
 						setActionInProgress( null );
-						setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
+						setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 					} );
 			},
 		} );
@@ -332,13 +332,13 @@ export function ReportedContentScreen() {
 		}
 
 		var confirmMessage = ( 'suspend' === action )
-			? __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss-platform' )
-			: __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss-platform' );
+			? __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' )
+			: __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' );
 
 		setConfirmModal( {
-			title: 'suspend' === action ? __( 'Suspend Owner', 'buddyboss-platform' ) : __( 'Unsuspend Owner', 'buddyboss-platform' ),
+			title: 'suspend' === action ? __( 'Suspend Owner', 'buddyboss' ) : __( 'Unsuspend Owner', 'buddyboss' ),
 			message: confirmMessage,
-			confirmLabel: 'suspend' === action ? __( 'Suspend', 'buddyboss-platform' ) : __( 'Unsuspend', 'buddyboss-platform' ),
+			confirmLabel: 'suspend' === action ? __( 'Suspend', 'buddyboss' ) : __( 'Unsuspend', 'buddyboss' ),
 			onConfirm: function () {
 				setConfirmModal( null );
 				setActionInProgress( item.id );
@@ -363,7 +363,7 @@ export function ReportedContentScreen() {
 					} )
 					.catch( function () {
 						setActionInProgress( null );
-						setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
+						setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 					} );
 			},
 		} );
@@ -381,7 +381,7 @@ export function ReportedContentScreen() {
 	var hasBulkSelection = selectedIds.length > 0;
 
 	// Build content type options for SelectControl.
-	var contentTypeOptions = [ { label: __( 'All Content Types', 'buddyboss-platform' ), value: '' } ];
+	var contentTypeOptions = [ { label: __( 'All Content Types', 'buddyboss' ), value: '' } ];
 	Object.keys( reportedContentTypes ).forEach( function ( key ) {
 		contentTypeOptions.push( { label: reportedContentTypes[ key ], value: key } );
 	} );
@@ -400,7 +400,7 @@ export function ReportedContentScreen() {
 				{/* Title */}
 				<div className="bb-admin-reported-content__title-bar">
 					<h2 className="bb-admin-reported-content__title">
-						{ __( 'Reported Content', 'buddyboss-platform' ) }
+						{ __( 'Reported Content', 'buddyboss' ) }
 					</h2>
 				</div>
 
@@ -413,9 +413,9 @@ export function ReportedContentScreen() {
 								<SelectControl
 									value={ bulkAction }
 									options={ [
-										{ label: __( 'Bulk actions', 'buddyboss-platform' ), value: '' },
-										{ label: __( 'Hide Content', 'buddyboss-platform' ), value: 'hide' },
-										{ label: __( 'Unhide Content', 'buddyboss-platform' ), value: 'unhide' },
+										{ label: __( 'Bulk actions', 'buddyboss' ), value: '' },
+										{ label: __( 'Hide Content', 'buddyboss' ), value: 'hide' },
+										{ label: __( 'Unhide Content', 'buddyboss' ), value: 'unhide' },
 									] }
 									onChange={ setBulkAction }
 									disabled={ ! hasBulkSelection }
@@ -427,7 +427,7 @@ export function ReportedContentScreen() {
 									disabled={ ! bulkAction || ! hasBulkSelection || actionInProgress === 'bulk' }
 									className="bb-admin-reported-content__bulk-apply"
 								>
-									{ actionInProgress === 'bulk' ? <Spinner /> : __( 'Apply', 'buddyboss-platform' ) }
+									{ actionInProgress === 'bulk' ? <Spinner /> : __( 'Apply', 'buddyboss' ) }
 								</Button>
 							</div>
 						</div>
@@ -435,9 +435,9 @@ export function ReportedContentScreen() {
 							<SelectControl
 								value={ statusFilter }
 								options={ [
-									{ label: __( 'All', 'buddyboss-platform' ) + ' (' + statusCounts.all + ')', value: '' },
-									{ label: __( 'Hidden', 'buddyboss-platform' ) + ' (' + statusCounts.hidden + ')', value: 'hidden' },
-									{ label: __( 'Visible', 'buddyboss-platform' ) + ' (' + statusCounts.visible + ')', value: 'visible' },
+									{ label: __( 'All', 'buddyboss' ) + ' (' + statusCounts.all + ')', value: '' },
+									{ label: __( 'Hidden', 'buddyboss' ) + ' (' + statusCounts.hidden + ')', value: 'hidden' },
+									{ label: __( 'Visible', 'buddyboss' ) + ' (' + statusCounts.visible + ')', value: 'visible' },
 								] }
 								onChange={ handleStatusFilterChange }
 								className="bb-admin-reported-content__status-select"
@@ -463,7 +463,7 @@ export function ReportedContentScreen() {
 							</div>
 						) : 0 === items.length ? (
 							<div className="bb-admin-reported-content__empty bb-admin-list-table__empty">
-								<p>{ __( 'No reported content found.', 'buddyboss-platform' ) }</p>
+								<p>{ __( 'No reported content found.', 'buddyboss' ) }</p>
 							</div>
 						) : (
 							<table className="bb-admin-reported-content__table bb-admin-list-table">
@@ -477,16 +477,16 @@ export function ReportedContentScreen() {
 											/>
 										</th>
 										<th className="bb-admin-reported-content__th--content">
-											{ __( 'Content', 'buddyboss-platform' ) }
+											{ __( 'Content', 'buddyboss' ) }
 										</th>
 										<th className="bb-admin-reported-content__th--owner">
-											{ __( 'Owner', 'buddyboss-platform' ) }
+											{ __( 'Owner', 'buddyboss' ) }
 										</th>
 										<th className="bb-admin-reported-content__th--reports">
-											{ __( 'Reports', 'buddyboss-platform' ) }
+											{ __( 'Reports', 'buddyboss' ) }
 										</th>
 										<th className="bb-admin-reported-content__th--status">
-											{ __( 'Status', 'buddyboss-platform' ) }
+											{ __( 'Status', 'buddyboss' ) }
 										</th>
 										<th className="bb-admin-reported-content__th--actions">&nbsp;</th>
 									</tr>
@@ -550,7 +550,7 @@ export function ReportedContentScreen() {
 															</a>
 														) : (
 															<span className="bb-admin-reported-content__owner-name">
-																{ __( 'Unknown', 'buddyboss-platform' ) }
+																{ __( 'Unknown', 'buddyboss' ) }
 															</span>
 														) }
 													</div>
@@ -562,7 +562,7 @@ export function ReportedContentScreen() {
 												<td className="bb-admin-reported-content__td--status">
 													{ item.is_hidden && (
 														<span className="bb-admin-reported-content__hidden-badge">
-															{ __( 'Hidden', 'buddyboss-platform' ) }
+															{ __( 'Hidden', 'buddyboss' ) }
 														</span>
 													) }
 												</td>
@@ -572,7 +572,7 @@ export function ReportedContentScreen() {
 													) : (
 														<DropdownMenu
 															icon={ <i className="bb-icons-rl bb-icons-rl-dots-three"></i> }
-															label={ __( 'More options', 'buddyboss-platform' ) }
+															label={ __( 'More options', 'buddyboss' ) }
 														>
 															{ function ( { onClose } ) {
 																return (
@@ -583,7 +583,7 @@ export function ReportedContentScreen() {
 																			} }
 																		>
 																			<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																			{ __( 'View Report', 'buddyboss-platform' ) }
+																			{ __( 'View Report', 'buddyboss' ) }
 																		</MenuItem>
 																		{ item.content_url && (
 																			<MenuItem
@@ -600,7 +600,7 @@ export function ReportedContentScreen() {
 																				} }
 																			>
 																				<i className="bb-icons-rl bb-icons-rl-file-text"></i>
-																				{ __( 'View Content', 'buddyboss-platform' ) }
+																				{ __( 'View Content', 'buddyboss' ) }
 																				<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
 																			</MenuItem>
 																		) }
@@ -613,7 +613,7 @@ export function ReportedContentScreen() {
 																					} }
 																				>
 																					<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																					{ __( 'Unhide Content', 'buddyboss-platform' ) }
+																					{ __( 'Unhide Content', 'buddyboss' ) }
 																				</MenuItem>
 																			) : (
 																				<MenuItem
@@ -622,7 +622,7 @@ export function ReportedContentScreen() {
 																					} }
 																				>
 																					<i className="bb-icons-rl bb-icons-rl-eye-slash"></i>
-																					{ __( 'Hide Content', 'buddyboss-platform' ) }
+																					{ __( 'Hide Content', 'buddyboss' ) }
 																				</MenuItem>
 																			)
 																		) }
@@ -631,10 +631,10 @@ export function ReportedContentScreen() {
 																			item.suspend_in_progress ? (
 																				<MenuItem
 																					disabled
-																					aria-label={ __( 'The background process is currently in the queue. Please refresh the page after a short while.', 'buddyboss-platform' ) }
+																					aria-label={ __( 'The background process is currently in the queue. Please refresh the page after a short while.', 'buddyboss' ) }
 																				>
 																					<i className={ item.is_owner_suspended ? 'bb-icons-rl bb-icons-rl-plus-circle' : 'bb-icons-rl bb-icons-rl-minus-circle' }></i>
-																					{ item.is_owner_suspended ? __( 'Unsuspend Owner', 'buddyboss-platform' ) : __( 'Suspend Owner', 'buddyboss-platform' ) }
+																					{ item.is_owner_suspended ? __( 'Unsuspend Owner', 'buddyboss' ) : __( 'Suspend Owner', 'buddyboss' ) }
 																				</MenuItem>
 																			) : (
 																				item.is_owner_suspended ? (
@@ -644,7 +644,7 @@ export function ReportedContentScreen() {
 																						} }
 																					>
 																						<i className="bb-icons-rl bb-icons-rl-plus-circle"></i>
-																						{ __( 'Unsuspend Owner', 'buddyboss-platform' ) }
+																						{ __( 'Unsuspend Owner', 'buddyboss' ) }
 																					</MenuItem>
 																				) : (
 																					<MenuItem
@@ -653,7 +653,7 @@ export function ReportedContentScreen() {
 																						} }
 																					>
 																						<i className="bb-icons-rl bb-icons-rl-minus-circle"></i>
-																						{ __( 'Suspend Owner', 'buddyboss-platform' ) }
+																						{ __( 'Suspend Owner', 'buddyboss' ) }
 																					</MenuItem>
 																				)
 																			)
@@ -678,7 +678,7 @@ export function ReportedContentScreen() {
 							<span className="bb-admin-reported-content__item-count">
 								{ sprintf(
 									/* translators: %s: number of items. */
-									_n( '%s item', '%s items', total, 'buddyboss-platform' ),
+									_n( '%s item', '%s items', total, 'buddyboss' ),
 									total
 								) }
 							</span>
@@ -759,7 +759,7 @@ export function ReportedContentScreen() {
 								setConfirmModal( null );
 							} }
 						>
-							{ __( 'Cancel', 'buddyboss-platform' ) }
+							{ __( 'Cancel', 'buddyboss' ) }
 						</Button>
 					</div>
 				</Modal>

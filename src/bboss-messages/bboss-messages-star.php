@@ -105,12 +105,12 @@ function bboss_get_the_message_star_action_link( $args = array() ) {
 			'thread_id'           => 0,
 			'message_id'          => (int) bboss_get_the_thread_message_id(),
 			'url_only'            => false,
-			'text_unstar'         => __( 'Unstar', 'buddyboss-platform' ),
-			'text_star'           => __( 'Star', 'buddyboss-platform' ),
-			'title_unstar'        => __( 'Starred', 'buddyboss-platform' ),
-			'title_star'          => __( 'Not starred', 'buddyboss-platform' ),
-			'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss-platform' ),
-			'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss-platform' ),
+			'text_unstar'         => __( 'Unstar', 'buddyboss' ),
+			'text_star'           => __( 'Star', 'buddyboss' ),
+			'title_unstar'        => __( 'Starred', 'buddyboss' ),
+			'title_star'          => __( 'Not starred', 'buddyboss' ),
+			'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
+			'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss' ),
 		),
 		'messages_star_action_link'
 	);
@@ -342,8 +342,8 @@ add_action( 'bp_enqueue_scripts', 'bboss_messages_star_enqueue_scripts' );
 function bboss_messages_star_bulk_management_dropdown() {
 	?>
 
-	<option value="star"><?php esc_html_e( 'Add star', 'buddyboss-platform' ); ?></option>
-	<option value="unstar"><?php esc_html_e( 'Remove star', 'buddyboss-platform' ); ?></option>
+	<option value="star"><?php esc_html_e( 'Add star', 'buddyboss' ); ?></option>
+	<option value="unstar"><?php esc_html_e( 'Remove star', 'buddyboss' ); ?></option>
 
 	<?php
 }

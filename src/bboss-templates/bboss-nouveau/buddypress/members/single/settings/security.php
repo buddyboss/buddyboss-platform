@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 bboss_nouveau_member_hook( 'before', 'settings_template' );
 ?>
 
-<h2 class="screen-heading security-settings-screen"><?php esc_html_e( 'Security', 'buddyboss-platform' ); ?></h2>
+<h2 class="screen-heading security-settings-screen"><?php esc_html_e( 'Security', 'buddyboss' ); ?></h2>
 <?php
 if ( function_exists( 'bboss_two_factor_render_section' ) ) {
 	bboss_two_factor_render_section();

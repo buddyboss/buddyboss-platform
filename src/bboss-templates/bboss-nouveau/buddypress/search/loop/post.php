@@ -40,7 +40,7 @@ $result         = bboss_search_is_post_restricted( $search_post_id, get_current_
 				<?php
 					echo esc_attr(
 						/* translators: %s title attribute. */
-						sprintf( __( 'Permalink to %s', 'buddyboss-platform' ), the_title_attribute( 'echo=0' ) )
+						sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) )
 					);
 					?>
 					"
@@ -60,7 +60,7 @@ $result         = bboss_search_is_post_restricted( $search_post_id, get_current_
 					$get_the_post_content,
 					100,
 					array(
-						'ending' => __( '&hellip;', 'buddyboss-platform' ),
+						'ending' => __( '&hellip;', 'buddyboss' ),
 					)
 				);
 
@@ -72,7 +72,7 @@ $result         = bboss_search_is_post_restricted( $search_post_id, get_current_
 				<span class="author">
 					<?php
 					/* translators: %s author name */
-					printf( esc_html__( 'By %s', 'buddyboss-platform' ), get_the_author_link() );
+					printf( esc_html__( 'By %s', 'buddyboss' ), get_the_author_link() );
 					?>
 				</span>
 				<span class="middot">&middot;</span>

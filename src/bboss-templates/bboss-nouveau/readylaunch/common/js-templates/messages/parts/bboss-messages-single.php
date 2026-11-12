@@ -37,7 +37,7 @@ $os = bboss_core_get_os();
 				<?php bboss_nouveau_messages_hook( 'before', 'reply_meta' ); ?>
 
 				<div class="avatar-box">
-					<strong><?php esc_html_e( 'Send a Reply', 'buddyboss-platform' ); ?></strong>
+					<strong><?php esc_html_e( 'Send a Reply', 'buddyboss' ); ?></strong>
 				</div>
 
 				<?php bboss_nouveau_messages_hook( 'after', 'reply_meta' ); ?>
@@ -48,16 +48,16 @@ $os = bboss_core_get_os();
 
 				<?php bboss_nouveau_messages_hook( 'before', 'reply_box' ); ?>
 
-				<label for="message_content" class="bp-screen-reader-text"><?php esc_html_e( 'Reply to Message', 'buddyboss-platform' ); ?></label>
+				<label for="message_content" class="bp-screen-reader-text"><?php esc_html_e( 'Reply to Message', 'buddyboss' ); ?></label>
 				<div id="bp-message-content"></div>
 				<?php
 				if ( 'mac' === $os ) {
 					?>
-					<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Return', 'buddyboss-platform' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss-platform' ); ?></span><strong><?php esc_html_e( 'Shift+Return', 'buddyboss-platform' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss-platform' ); ?></p>
+					<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Return', 'buddyboss' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss' ); ?></span><strong><?php esc_html_e( 'Shift+Return', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
 					<?php
 				} elseif ( 'window' === $os ) {
 					?>
-					<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Enter', 'buddyboss-platform' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss-platform' ); ?></span><strong><?php esc_html_e( 'Shift+Enter', 'buddyboss-platform' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss-platform' ); ?></p>
+					<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Enter', 'buddyboss' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss' ); ?></span><strong><?php esc_html_e( 'Shift+Enter', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
 					<?php
 				}
 				?>
@@ -74,5 +74,5 @@ $os = bboss_core_get_os();
 	<?php bboss_nouveau_messages_hook( 'after', 'thread_content' ); ?>
 </script>
 <script type="text/html" id="tmpl-bp-messages-reply-form-submit">
-	<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss-platform' ); ?>" id="send_reply_button" class="small" />
+	<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button" class="small" />
 </script>

@@ -17,14 +17,14 @@ $post_title = '';
 $no_results = '';
 
 if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
-	$post_title = __( 'No results found', 'buddyboss-platform' );
+	$post_title = __( 'No results found', 'buddyboss' );
 	$no_results = ' bb-rl-no-search-results';
 } elseif ( BBoss_Search::instance()->has_search_results() ) {
 	/* translators: %s: search query. */
-	$post_title = sprintf( __( 'Showing results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss-platform' ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
+	$post_title = sprintf( __( 'Showing results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
 } else {
 	/* translators: %s: search query. */
-	$post_title = sprintf( __( 'No results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss-platform' ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
+	$post_title = sprintf( __( 'No results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
 	$no_results = ' bb-rl-no-search-results';
 }
 ?>

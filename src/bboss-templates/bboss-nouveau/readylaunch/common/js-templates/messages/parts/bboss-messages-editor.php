@@ -12,5 +12,5 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-editor">
-	<div id="message_content" name="message_content" tabindex="3" aria-label="<?php esc_attr_e( 'Message content', 'buddyboss-platform' ); ?>"></div>
+	<div id="message_content" name="message_content" tabindex="3" aria-label="<?php esc_attr_e( 'Message content', 'buddyboss' ); ?>"></div>
 </script>

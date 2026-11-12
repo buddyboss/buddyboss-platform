@@ -250,7 +250,7 @@ function bboss_group_messages_groups_membership_accepted( $user_id, $group_id, $
 		array_push( $message_users_ids, $user_id );
 		$group_name = bboss_get_group_name( bboss_groups_get_group( $group_id ) );
 		/* translators: %s: group name. */
-		$text       = sprintf( __( 'Joined "%s" ', 'buddyboss-platform' ), $group_name );
+		$text       = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
 
 		bboss_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 
@@ -581,7 +581,7 @@ function bboss_group_messages_banned_member( $user_id, $group_id ) {
 		$message_users_ids = explode( ',', $message_users_ids );
 		$group_name        = bboss_get_group_name( bboss_groups_get_group( $group_id ) );
 		/* translators: %s: group name. */
-		$text              = sprintf( __( 'Left "%s" ', 'buddyboss-platform' ), $group_name );
+		$text              = sprintf( __( 'Left "%s" ', 'buddyboss' ), $group_name );
 		if ( ( $key = array_search( $user_id, $message_users_ids ) ) !== false ) {
 			unset( $message_users_ids[ $key ] );
 		}
@@ -768,7 +768,7 @@ function bboss_messages_remove_user_to_group_message_thread( $group_id, $user_id
 function bboss_messages_repair_items_unread_count( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-messages-unread-count',
-		esc_html__( 'Repair unread messages count', 'buddyboss-platform' ),
+		esc_html__( 'Repair unread messages count', 'buddyboss' ),
 		'bp_messages_admin_repair_unread_messages_count',
 	);
 	return $repair_list;
@@ -799,7 +799,7 @@ function bboss_messages_admin_repair_unread_messages_count() {
 			$offset ++;
 		}
 		/* translators: %s: number of message threads updated. */
-		$records_updated = sprintf( __( '%s message threads updated successfully.', 'buddyboss-platform' ), bboss_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s message threads updated successfully.', 'buddyboss' ), bboss_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -809,7 +809,7 @@ function bboss_messages_admin_repair_unread_messages_count() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing unread messages count &hellip; Complete!', 'buddyboss-platform' ),
+			'message' => __( 'Repairing unread messages count &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -919,26 +919,26 @@ function bboss_messages_screen_notification_settings() {
 		<thead>
 		<tr>
 			<th class="icon"></th>
-			<th class="title"><?php esc_html_e( 'Messages', 'buddyboss-platform' ); ?></th>
-			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></th>
-			<th class="no"><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
 		</tr>
 		</thead>
 
 		<tbody>
 		<tr id="messages-notification-settings-new-message">
 			<td></td>
-			<td><?php esc_html_e( 'A member sends you a new message', 'buddyboss-platform' ); ?></td>
+			<td><?php esc_html_e( 'A member sends you a new message', 'buddyboss' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $new_messages, 'yes', true ); ?> />
-					<label for="notification-messages-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-messages-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $new_messages, 'no', true ); ?> />
-					<label for="notification-messages-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-messages-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
 				</div>
 			</td>
 		</tr>
@@ -1027,20 +1027,20 @@ add_filter( 'bp_ajax_querystring', 'bboss_messages_exclude_disabled_group_thread
 function bboss_messages_compose_action_sub_nav() {
 	?>
 	<div class="bb_more_options message-action-options">
-		<a href="#" class="bb_more_options_action" data-action="more_options" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>">
+		<a href="#" class="bb_more_options_action" data-action="more_options" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 			<i class="bb-icon-f bb-icon-ellipsis-h"></i>
-			<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss-platform' ); ?></span>
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
 		</a>
 		<ul class="bb_more_options_list message_action__list">
 			<li class="archived-messages">
-				<a href="<?php bboss_messages_archived_url(); ?>" class="archived-page" data-action="more_options"><?php echo esc_html__( 'Archived messages', 'buddyboss-platform' ); ?></a>
+				<a href="<?php bboss_messages_archived_url(); ?>" class="archived-page" data-action="more_options"><?php echo esc_html__( 'Archived messages', 'buddyboss' ); ?></a>
 			</li>
 			<?php
 			if ( bboss_is_user_messages() && bboss_is_active( 'notifications' ) ) {
 				$settings_slug = function_exists( 'bboss_get_settings_slug' ) ? bboss_get_settings_slug() : 'settings';
 				$settings_link = bboss_core_get_user_domain( bboss_loggedin_user_id() ) . $settings_slug . '/notifications/';
 				$class         = function_exists( 'bboss_enabled_legacy_email_preference' ) && false === bboss_enabled_legacy_email_preference() ? 'notification_preferences' : 'email_preferences';
-				$title         = function_exists( 'bboss_enabled_legacy_email_preference' ) && false === bboss_enabled_legacy_email_preference() ? __( 'Notification preferences', 'buddyboss-platform' ) : __( 'Email preferences', 'buddyboss-platform' );
+				$title         = function_exists( 'bboss_enabled_legacy_email_preference' ) && false === bboss_enabled_legacy_email_preference() ? __( 'Notification preferences', 'buddyboss' ) : __( 'Email preferences', 'buddyboss' );
 				?>
 				<li class="<?php echo esc_attr( $class ); ?>">
 					<a href="<?php echo esc_url( $settings_link ); ?>" data-action="more_options"><?php echo esc_html( $title ); ?></a>
@@ -1203,9 +1203,9 @@ add_action( 'bp_init', 'bboss_messages_maybe_schedule_digest_email_notifications
  * @param mixed $value     New value of the delay option.
  */
 function bboss_messages_record_delay_email_notification_change( $old_value, $value ) {
-	/** This filter is documented in bboss-notifications/bboss-notifications-functions.php */
+	/** This filter is documented in bp-notifications/bboss-notifications-functions.php */
 	$was_enabled = (bool) apply_filters( 'bb_delay_email_notifications_enabled', $old_value );
-	/** This filter is documented in bboss-notifications/bboss-notifications-functions.php */
+	/** This filter is documented in bp-notifications/bboss-notifications-functions.php */
 	$is_enabled = (bool) apply_filters( 'bb_delay_email_notifications_enabled', $value );
 
 	if ( $was_enabled === $is_enabled ) {

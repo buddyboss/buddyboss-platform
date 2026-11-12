@@ -164,7 +164,7 @@ export function useFetchOnChange( fields, values ) {
 			const next = Object.assign( {}, prev );
 			next[ fieldName ] = {
 				loading: true,
-				loadingText: config.loading_text || __( 'Loading...', 'buddyboss-platform' ),
+				loadingText: config.loading_text || __( 'Loading...', 'buddyboss' ),
 				options: prev[ fieldName ] ? prev[ fieldName ].options : null,
 				disabled: true,
 			};
@@ -223,7 +223,7 @@ export function useFetchOnChange( fields, values ) {
 					// same failing payload on every subsequent render. A retry
 					// fires only when the user actually changes one of the
 					// watched fields — which is the documented intent.
-					const errorMsg = ( result.data && result.data.message ) || __( 'Failed to fetch data.', 'buddyboss-platform' );
+					const errorMsg = ( result.data && result.data.message ) || __( 'Failed to fetch data.', 'buddyboss' );
 
 					setOverrides( function ( prev ) {
 						const next = Object.assign( {}, prev );
@@ -259,7 +259,7 @@ export function useFetchOnChange( fields, values ) {
 					const next = Object.assign( {}, prev );
 					next[ fieldName ] = {
 						loading: false,
-						options: [ { value: '', label: __( 'Connection error. Please try again.', 'buddyboss-platform' ) } ],
+						options: [ { value: '', label: __( 'Connection error. Please try again.', 'buddyboss' ) } ],
 						disabled: true,
 					};
 					return next;

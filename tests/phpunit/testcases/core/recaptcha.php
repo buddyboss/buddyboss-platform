@@ -151,11 +151,11 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 		$data = $this->localized_data();
 
 		$this->assertSame(
-			__( 'The security check could not be loaded. Please reload the page and try again.', 'buddyboss-platform' ),
+			__( 'The security check could not be loaded. Please reload the page and try again.', 'buddyboss' ),
 			$data['data']['i18n']['script_failed']
 		);
 		$this->assertSame(
-			__( 'The security check could not be completed. Please try again.', 'buddyboss-platform' ),
+			__( 'The security check could not be completed. Please try again.', 'buddyboss' ),
 			$data['data']['i18n']['token_failed']
 		);
 	}
@@ -255,7 +255,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 
 		$this->assertInstanceOf( 'WP_Error', $result );
 		$this->assertSame( 'bb_recaptcha_token_missing', $result->get_error_code() );
-		$this->assertSame( __( 'Google reCAPTCHA token is missing.', 'buddyboss-platform' ), $result->get_error_message() );
+		$this->assertSame( __( 'Google reCAPTCHA token is missing.', 'buddyboss' ), $result->get_error_message() );
 	}
 
 	public function test_verification_fails_closed_for_v2_too_when_the_token_is_missing() {

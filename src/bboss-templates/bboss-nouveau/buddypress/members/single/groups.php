@@ -39,7 +39,7 @@ if ( bboss_enable_content_counts() ) {
 									'<span class="bb-count">%d</span> Invite',
 									'<span class="bb-count">%d</span> Invites',
 									$count,
-									'buddyboss-platform'
+									'buddyboss'
 								),
 								array( 'span' => array( 'class' => true ) )
 							),
@@ -53,7 +53,7 @@ if ( bboss_enable_content_counts() ) {
 									'<span class="bb-count">%d</span> Group',
 									'<span class="bb-count">%d</span> Groups',
 									$count,
-									'buddyboss-platform'
+									'buddyboss'
 								),
 								array( 'span' => array( 'class' => true ) )
 							),

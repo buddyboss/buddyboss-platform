@@ -106,7 +106,7 @@ class BBoss_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -116,7 +116,7 @@ class BBoss_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bboss_disable_group_type_creation' ) && false === bboss_disable_group_type_creation() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Group Type is disabled from setting.', 'buddyboss-platform' ),
+				__( 'Sorry, Group Type is disabled from setting.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -280,7 +280,7 @@ class BBoss_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'labels'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Labels to use in various parts of the interface.', 'buddyboss-platform' ),
+					'description' => __( 'Labels to use in various parts of the interface.', 'buddyboss' ),
 					'type'        => 'object',
 					'arg_options' => array(
 						'sanitize_callback' => null,
@@ -288,13 +288,13 @@ class BBoss_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'name'          => array(
-							'description' => __( 'Default name. Should typically be plural.', 'buddyboss-platform' ),
+							'description' => __( 'Default name. Should typically be plural.', 'buddyboss' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
 						),
 						'singular_name' => array(
-							'description' => __( 'Singular name.', 'buddyboss-platform' ),
+							'description' => __( 'Singular name.', 'buddyboss' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -302,43 +302,43 @@ class BBoss_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 					),
 				),
 				'name'                  => array(
-					'description' => __( 'Slug of the group type.', 'buddyboss-platform' ),
+					'description' => __( 'Slug of the group type.', 'buddyboss' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'description'           => array(
-					'description' => __( 'Description of the group type.', 'buddyboss-platform' ),
+					'description' => __( 'Description of the group type.', 'buddyboss' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'directory_slug'        => array(
-					'description' => __( 'Directory slug of the group type.', 'buddyboss-platform' ),
+					'description' => __( 'Directory slug of the group type.', 'buddyboss' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'has_directory'         => array(
-					'description' => __( 'Whether the group type should have its own type-specific directory.', 'buddyboss-platform' ),
+					'description' => __( 'Whether the group type should have its own type-specific directory.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'show_in_create_screen' => array(
-					'description' => __( 'Whether this group type is allowed to be selected on the group creation page.', 'buddyboss-platform' ),
+					'description' => __( 'Whether this group type is allowed to be selected on the group creation page.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'show_in_list'          => array(
-					'description' => __( 'Whether this group type should be shown in lists.', 'buddyboss-platform' ),
+					'description' => __( 'Whether this group type should be shown in lists.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'create_screen_checked' => array(
-					'description' => __( 'Whether we should have our group type checkbox checked by default on group create.', 'buddyboss-platform' ),
+					'description' => __( 'Whether we should have our group type checkbox checked by default on group create.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
@@ -349,49 +349,49 @@ class BBoss_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		$post_types = get_post_types();
 		if ( ! empty( $post_types ) && in_array( 'bp-group-type', $post_types, true ) ) {
 			$schema['properties']['enable_filter'] = array(
-				'description' => __( 'Display this group type in "Types" filter in Groups Directory.', 'buddyboss-platform' ),
+				'description' => __( 'Display this group type in "Types" filter in Groups Directory.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['enable_remove'] = array(
-				'description' => __( 'Hide all groups of this type from Groups Directory.', 'buddyboss-platform' ),
+				'description' => __( 'Hide all groups of this type from Groups Directory.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['restrict-invites-user-same-group-type'] = array(
-				'description' => __( 'If a member is already in a group of this type, they cannot be sent an invite to join another group of this type.', 'buddyboss-platform' ),
+				'description' => __( 'If a member is already in a group of this type, they cannot be sent an invite to join another group of this type.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['member_type_group_invites'] = array(
-				'description' => __( 'Only members of the selected profile types may be sent requests to join this group.', 'buddyboss-platform' ),
+				'description' => __( 'Only members of the selected profile types may be sent requests to join this group.', 'buddyboss' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['member_type_join'] = array(
-				'description' => __( 'Members of the selected Profile Types below can join Private groups of the Group Type without approval.', 'buddyboss-platform' ),
+				'description' => __( 'Members of the selected Profile Types below can join Private groups of the Group Type without approval.', 'buddyboss' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['group_type_role_labels'] = array(
-				'description' => __( 'Rename the group member roles for groups of this type.', 'buddyboss-platform' ),
+				'description' => __( 'Rename the group member roles for groups of this type.', 'buddyboss' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['label_colors'] = array(
-				'description' => __( 'Label\'s text and background colors for group types.' , 'buddyboss-platform' ),
+				'description' => __( 'Label\'s text and background colors for group types.' , 'buddyboss' ),
 				'type'        => 'array',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,

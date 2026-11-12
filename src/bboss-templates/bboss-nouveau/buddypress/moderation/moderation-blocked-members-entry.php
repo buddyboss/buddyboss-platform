@@ -19,20 +19,20 @@ $bp_moderation_item_id   = bboss_get_moderation_item_id();
 $bp_moderation_item_type = bboss_get_moderation_item_type();
 ?>
 <tr class="moderation-item-wrp">
-	<td class="moderation-block-member" data-title="<?php esc_html_e( 'Blocked Member', 'buddyboss-platform' ); ?>">
+	<td class="moderation-block-member" data-title="<?php esc_html_e( 'Blocked Member', 'buddyboss' ); ?>">
 		<?php
 		$user_id = bboss_moderation_get_content_owner_id( $bp_moderation_item_id, $bp_moderation_item_type );
 		echo esc_html( bboss_core_get_user_displayname( $user_id ) );
 		if ( true === $hide_sitewide ) {
 			?>
 			<span class="description">
-				<?php esc_html_e( 'suspended', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'suspended', 'buddyboss' ); ?>
 			</span>
 			<?php
 		}
 		?>
 	</td>
-	<td class="moderation-item-last-updated" data-title="<?php esc_html_e( 'Blocked', 'buddyboss-platform' ); ?>">
+	<td class="moderation-item-last-updated" data-title="<?php esc_html_e( 'Blocked', 'buddyboss' ); ?>">
 		<?php
 		echo esc_html( bboss_get_moderation_last_updated() );
 		?>
@@ -43,7 +43,7 @@ $bp_moderation_item_type = bboss_get_moderation_item_type();
 		?>
 		<a href="javascript:void(0)" class="<?php echo esc_attr( $btn_cls ); ?>" data-id="<?php echo esc_attr( $bp_moderation_item_id ); ?>" data-type="<?php echo esc_attr( $bp_moderation_item_type ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-unblock-user' ) ); ?>" <?php echo ( true === $hide_sitewide ) ? 'data-balloon-pos="left" data-balloon="Member Suspended"' : '' ?>>
 			<?php
-			esc_html_e( 'Unblock', 'buddyboss-platform' );
+			esc_html_e( 'Unblock', 'buddyboss' );
 			?>
 		</a>
 	</td>

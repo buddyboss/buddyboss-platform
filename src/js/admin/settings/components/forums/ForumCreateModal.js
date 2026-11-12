@@ -139,7 +139,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		} );
 
 		if ( ! opened ) {
-			setError( __( 'The WordPress Media Library is not available.', 'buddyboss-platform' ) );
+			setError( __( 'The WordPress Media Library is not available.', 'buddyboss' ) );
 		}
 	};
 
@@ -161,7 +161,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	var handleCreate = function () {
 		var nameVal = registeredValues.name || '';
 		if ( ! nameVal.trim() ) {
-			setError( __( 'Forum name is required.', 'buddyboss-platform' ) );
+			setError( __( 'Forum name is required.', 'buddyboss' ) );
 			return;
 		}
 
@@ -188,14 +188,14 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					onCreated( response.data.forum_id );
 				}
 			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to create forum.', 'buddyboss-platform' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to create forum.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
 			setIsSaving( false );
-			setError( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
+			setError( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 		} );
 	};
 
@@ -321,7 +321,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 
 	return (
 		<Modal
-			title={ __( 'Create New Forum', 'buddyboss-platform' ) }
+			title={ __( 'Create New Forum', 'buddyboss' ) }
 			onRequestClose={ handleClose }
 			className="bb-forum-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -335,7 +335,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 
 				<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
 					<label className="components-base-control__label" htmlFor="bb-forum-create-image">
-						{ __( 'Feature Image (Optional)', 'buddyboss-platform' ) }
+						{ __( 'Feature Image (Optional)', 'buddyboss' ) }
 					</label>
 					{ imageUrl ? (
 						<div className="bb-forum-modal__image-preview">
@@ -346,7 +346,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 									onClick={ openMediaLibrary }
 									className="bb-forum-modal__replace-image"
 								>
-									{ __( 'Replace', 'buddyboss-platform' ) }
+									{ __( 'Replace', 'buddyboss' ) }
 								</Button>
 								<Button
 									variant="secondary"
@@ -354,7 +354,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 									onClick={ handleRemoveImage }
 									className="bb-forum-modal__remove-image"
 								>
-									{ __( 'Reset', 'buddyboss-platform' ) }
+									{ __( 'Reset', 'buddyboss' ) }
 								</Button>
 							</div>
 						</div>
@@ -368,7 +368,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 						</button>
 					) }
 					<p className="bb-forum-create-modal__image-help">
-						{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss-platform' ) }
+						{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss' ) }
 					</p>
 				</div>
 			</div>
@@ -379,7 +379,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					onClick={ handleClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -387,7 +387,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					isBusy={ isSaving }
 					disabled={ isSaving || ! ( registeredValues.name || '' ).trim() }
 				>
-					{ __( 'Save', 'buddyboss-platform' ) }
+					{ __( 'Save', 'buddyboss' ) }
 				</Button>
 			</div>
 		</Modal>

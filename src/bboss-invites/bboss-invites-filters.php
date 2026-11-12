@@ -105,7 +105,7 @@ function bboss_invites_validate_invitation_before_registration( $email, $inviter
 		$bp_get_invitee_email = new WP_Query( $args );
 
 		if ( ! $bp_get_invitee_email->have_posts() ) {
-			return __( "We couldn't find any invitations associated with this email address.", 'buddyboss-platform' );
+			return __( "We couldn't find any invitations associated with this email address.", 'buddyboss' );
 		}
 	}
 
@@ -167,7 +167,7 @@ function bboss_invites_validate_invitation_before_wp_registration( $errors, $san
  */
 function bboss_invites_register_profile_nav_item( $items ) {
 	$items['invites'] = array(
-		'label'     => __( 'Email Invites', 'buddyboss-platform' ),
+		'label'     => __( 'Email Invites', 'buddyboss' ),
 		'component' => 'invites',
 	);
 

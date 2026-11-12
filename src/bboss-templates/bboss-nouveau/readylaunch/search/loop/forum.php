@@ -49,7 +49,7 @@ $result      = bboss_search_is_post_restricted( $forum_id, get_current_user_id()
 					echo esc_html(
 						sprintf(
 							/* translators: total topics */
-							_n( '%d topic', '%d topics', $total_topic, 'buddyboss-platform' ),
+							_n( '%d topic', '%d topics', $total_topic, 'buddyboss' ),
 							absint( $total_topic )
 						)
 					);
@@ -61,7 +61,7 @@ $result      = bboss_search_is_post_restricted( $forum_id, get_current_user_id()
 					echo esc_html(
 						sprintf(
 							/* translators: total replies */
-							_n( '%d reply', '%d replies', $total_reply, 'buddyboss-platform' ),
+							_n( '%d reply', '%d replies', $total_reply, 'buddyboss' ),
 							absint( $total_reply )
 						)
 					);
@@ -75,7 +75,7 @@ $result      = bboss_search_is_post_restricted( $forum_id, get_current_user_id()
 					<span class="middot">&middot;</span>
 					<span class="freshness">
 						<?php
-						esc_html_e( 'Last active ', 'buddyboss-platform' );
+						esc_html_e( 'Last active ', 'buddyboss' );
 						echo wp_kses_post( $last_active );
 						?>
 					</span>

@@ -26,7 +26,7 @@ class BB_Tests_Group_Members_Widget extends BP_UnitTestCase {
 		parent::setUp();
 
 		if ( ! class_exists( 'BBoss_Group_Members_Widget' ) ) {
-			require_once bboss()->plugin_dir . 'bboss-core/classes/class-bboss-group-members-widget.php';
+			require_once bboss()->plugin_dir . 'bp-core/classes/class-bboss-group-members-widget.php';
 		}
 
 		$this->widget = new BBoss_Group_Members_Widget();

@@ -38,8 +38,8 @@ import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
  * @type {Array}
  */
 var sortOptions = [
-	{ label: __( 'Newest', 'buddyboss-platform' ), value: 'newest' },
-	{ label: __( 'Oldest', 'buddyboss-platform' ), value: 'oldest' },
+	{ label: __( 'Newest', 'buddyboss' ), value: 'newest' },
+	{ label: __( 'Oldest', 'buddyboss' ), value: 'oldest' },
 ];
 
 /**
@@ -315,13 +315,13 @@ export default function InvitesListScreen( props ) {
 				} else {
 					setToast( {
 						status: 'error',
-						message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss-platform' ),
+						message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
 					} );
 				}
 			} )
 			.catch( function() {
 				setBulkProcessing( false );
-				setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss-platform' ) } );
+				setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss' ) } );
 			} );
 	}, [ bulkProcessing, page, sort, search, filter, fetchInvites ] );
 
@@ -347,7 +347,7 @@ export default function InvitesListScreen( props ) {
 	} );
 
 	// Build bulk action options.
-	var bulkActionOptions = [ { label: __( 'Bulk actions', 'buddyboss-platform' ), value: '' } ];
+	var bulkActionOptions = [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ];
 	Object.keys( bulkActions ).forEach( function( key ) {
 		bulkActionOptions.push( { label: decodeEntities( bulkActions[ key ] ), value: key } );
 	} );
@@ -367,7 +367,7 @@ export default function InvitesListScreen( props ) {
 				value: key,
 			} );
 		} );
-		return opts.length > 0 ? opts : [ { label: __( 'All', 'buddyboss-platform' ), value: 'all' } ];
+		return opts.length > 0 ? opts : [ { label: __( 'All', 'buddyboss' ), value: 'all' } ];
 	}, [ views ] );
 
 	return (
@@ -375,7 +375,7 @@ export default function InvitesListScreen( props ) {
 			{/* Header */}
 			<div className="bb-invites-list__header">
 				<h2 className="bb-invites-list__title">
-					{ __( 'Email Invites', 'buddyboss-platform' ) }
+					{ __( 'Email Invites', 'buddyboss' ) }
 				</h2>
 			</div>
 
@@ -395,7 +395,7 @@ export default function InvitesListScreen( props ) {
 							onClick={ handleBulkApply }
 							disabled={ ! bulkAction || 0 === selectedIds.length || bulkProcessing }
 						>
-							{ __( 'Apply', 'buddyboss-platform' ) }
+							{ __( 'Apply', 'buddyboss' ) }
 						</Button>
 					</div>
 				</div>
@@ -426,7 +426,7 @@ export default function InvitesListScreen( props ) {
 						<input
 							type="text"
 							className="bb-invites-list__search-input bb-admin-list-search__input"
-							placeholder={ __( 'Search sent invites', 'buddyboss-platform' ) }
+							placeholder={ __( 'Search sent invites', 'buddyboss' ) }
 							value={ searchInput }
 							onChange={ handleSearchChange }
 						/>
@@ -443,8 +443,8 @@ export default function InvitesListScreen( props ) {
 				) : 0 === items.length ? (
 					<div className="bb-invites-list__empty bb-admin-list-table__empty">
 						{ search
-							? __( 'No invites found matching your search.', 'buddyboss-platform' )
-							: __( 'No invites found.', 'buddyboss-platform' )
+							? __( 'No invites found matching your search.', 'buddyboss' )
+							: __( 'No invites found.', 'buddyboss' )
 						}
 					</div>
 				) : (
@@ -459,19 +459,19 @@ export default function InvitesListScreen( props ) {
 									/>
 								</th>
 								<th className="bb-invites-list__th--sender">
-									{ __( 'Sender', 'buddyboss-platform' ) }
+									{ __( 'Sender', 'buddyboss' ) }
 								</th>
 								<th className="bb-invites-list__th--recipient">
-									{ __( 'Recipient', 'buddyboss-platform' ) }
+									{ __( 'Recipient', 'buddyboss' ) }
 								</th>
 								<th className="bb-invites-list__th--email">
-									{ __( 'Recipient Email', 'buddyboss-platform' ) }
+									{ __( 'Recipient Email', 'buddyboss' ) }
 								</th>
 								<th className="bb-invites-list__th--status">
-									{ __( 'Status', 'buddyboss-platform' ) }
+									{ __( 'Status', 'buddyboss' ) }
 								</th>
 								<th className="bb-invites-list__th--date">
-									{ __( 'Date Invited', 'buddyboss-platform' ) }
+									{ __( 'Date Invited', 'buddyboss' ) }
 								</th>
 								<th className="bb-invites-list__th--actions"></th>
 							</tr>
@@ -537,7 +537,7 @@ export default function InvitesListScreen( props ) {
 										<td className="bb-invites-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
-												label={ __( 'More options', 'buddyboss-platform' ) }
+												label={ __( 'More options', 'buddyboss' ) }
 											>
 												{ function( { onClose } ) {
 													return (
@@ -550,7 +550,7 @@ export default function InvitesListScreen( props ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-arrow-square-out"></i>
-																	{ __( 'View', 'buddyboss-platform' ) }
+																	{ __( 'View', 'buddyboss' ) }
 																</MenuItem>
 															) }
 															{ item.edit_url && (
@@ -561,7 +561,7 @@ export default function InvitesListScreen( props ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
-																	{ __( 'Edit', 'buddyboss-platform' ) }
+																	{ __( 'Edit', 'buddyboss' ) }
 																</MenuItem>
 															) }
 															{ item.can_revoke && (
@@ -575,7 +575,7 @@ export default function InvitesListScreen( props ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-trash"></i>
-																	{ __( 'Revoke Invite', 'buddyboss-platform' ) }
+																	{ __( 'Revoke Invite', 'buddyboss' ) }
 																</MenuItem>
 															) }
 														</MenuGroup>
@@ -616,10 +616,10 @@ export default function InvitesListScreen( props ) {
 			{/* Single Revoke Confirmation */}
 			<DeleteConfirmModal
 				isOpen={ revokeConfirmOpen && 1 === revokeConfirmIds.length }
-				singleTitle={ __( 'Revoke Invite', 'buddyboss-platform' ) }
+				singleTitle={ __( 'Revoke Invite', 'buddyboss' ) }
 				items={ revokeConfirmIds.length === 1 ? [ { id: revokeConfirmIds[0], title: ( items.find( function( i ) { return i.id === revokeConfirmIds[0]; } ) || {} ).recipient_email || '' } ] : [] }
-				warningText={ __( 'This will permanently revoke email invitations and cannot be undone.', 'buddyboss-platform' ) }
-				confirmLabel={ __( 'I understand that this removes email invitations.', 'buddyboss-platform' ) }
+				warningText={ __( 'This will permanently revoke email invitations and cannot be undone.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this removes email invitations.', 'buddyboss' ) }
 				confirmChecked={ revokeConfirmChecked }
 				onConfirmChange={ setRevokeConfirmChecked }
 				onConfirm={ function () {
@@ -627,7 +627,7 @@ export default function InvitesListScreen( props ) {
 					setRevokeConfirmChecked( false );
 					performRevoke( revokeConfirmIds );
 				} }
-				confirmText={ __( 'Revoke', 'buddyboss-platform' ) }
+				confirmText={ __( 'Revoke', 'buddyboss' ) }
 				onClose={ function () { setRevokeConfirmOpen( false ); setRevokeConfirmChecked( false ); } }
 				isProcessing={ bulkProcessing }
 				className="bb-invites-revoke-modal"
@@ -636,7 +636,7 @@ export default function InvitesListScreen( props ) {
 			{/* Bulk Revoke Confirmation */}
 			<DeleteConfirmModal
 				isOpen={ revokeConfirmOpen && revokeConfirmIds.length > 1 }
-				bulkTitle={ __( 'Bulk Revoke Invitations', 'buddyboss-platform' ) }
+				bulkTitle={ __( 'Bulk Revoke Invitations', 'buddyboss' ) }
 				items={ items.filter( function( item ) { return -1 !== revokeConfirmIds.indexOf( item.id ); } ).map( function( item ) { return { id: item.id, title: item.recipient_email || '' }; } ) }
 				onRemoveItem={ function ( id ) {
 					setRevokeConfirmIds( function ( prev ) {
@@ -650,8 +650,8 @@ export default function InvitesListScreen( props ) {
 						return prev.filter( function ( i ) { return i !== id; } );
 					} );
 				} }
-				warningText={ __( 'This will permanently revoke email invitations and cannot be undone.', 'buddyboss-platform' ) }
-				confirmLabel={ __( 'I understand that this removes email invitations.', 'buddyboss-platform' ) }
+				warningText={ __( 'This will permanently revoke email invitations and cannot be undone.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this removes email invitations.', 'buddyboss' ) }
 				confirmChecked={ revokeConfirmChecked }
 				onConfirmChange={ setRevokeConfirmChecked }
 				onConfirm={ function () {
@@ -659,7 +659,7 @@ export default function InvitesListScreen( props ) {
 					setRevokeConfirmChecked( false );
 					performRevoke( revokeConfirmIds );
 				} }
-				confirmText={ __( 'Revoke', 'buddyboss-platform' ) }
+				confirmText={ __( 'Revoke', 'buddyboss' ) }
 				onClose={ function () { setRevokeConfirmOpen( false ); setRevokeConfirmChecked( false ); } }
 				isProcessing={ bulkProcessing }
 				className="bb-invites-revoke-modal"

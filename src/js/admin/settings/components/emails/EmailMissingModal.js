@@ -112,7 +112,7 @@ export function EmailMissingModal( { isOpen, isLoading, missingCount, missingEma
 			setProcessing( '' );
 			if ( response.success ) {
 				if ( setToast ) {
-					setToast( { status: 'success', message: __( 'Missing email templates installed successfully.', 'buddyboss-platform' ) } );
+					setToast( { status: 'success', message: __( 'Missing email templates installed successfully.', 'buddyboss' ) } );
 				}
 				if ( onInstalled ) {
 					onInstalled();
@@ -121,7 +121,7 @@ export function EmailMissingModal( { isOpen, isLoading, missingCount, missingEma
 				if ( setToast ) {
 					setToast( {
 						status: 'error',
-						message: __( 'Failed to install missing emails.', 'buddyboss-platform' ),
+						message: __( 'Failed to install missing emails.', 'buddyboss' ),
 					} );
 				}
 			}
@@ -131,7 +131,7 @@ export function EmailMissingModal( { isOpen, isLoading, missingCount, missingEma
 			}
 			setProcessing( '' );
 			if ( setToast ) {
-				setToast( { status: 'error', message: __( 'An error occurred.', 'buddyboss-platform' ) } );
+				setToast( { status: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
 			}
 		} );
 	};
@@ -155,7 +155,7 @@ export function EmailMissingModal( { isOpen, isLoading, missingCount, missingEma
 			setProcessing( '' );
 			if ( response.success ) {
 				if ( setToast ) {
-					setToast( { status: 'success', message: __( 'All email templates have been reset to defaults.', 'buddyboss-platform' ) } );
+					setToast( { status: 'success', message: __( 'All email templates have been reset to defaults.', 'buddyboss' ) } );
 				}
 				if ( onInstalled ) {
 					onInstalled();
@@ -164,7 +164,7 @@ export function EmailMissingModal( { isOpen, isLoading, missingCount, missingEma
 				if ( setToast ) {
 					setToast( {
 						status: 'error',
-						message: __( 'Failed to reset email templates.', 'buddyboss-platform' ),
+						message: __( 'Failed to reset email templates.', 'buddyboss' ),
 					} );
 				}
 			}
@@ -174,7 +174,7 @@ export function EmailMissingModal( { isOpen, isLoading, missingCount, missingEma
 			}
 			setProcessing( '' );
 			if ( setToast ) {
-				setToast( { status: 'error', message: __( 'An error occurred.', 'buddyboss-platform' ) } );
+				setToast( { status: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
 			}
 		} );
 	};
@@ -183,7 +183,7 @@ export function EmailMissingModal( { isOpen, isLoading, missingCount, missingEma
 		<Modal
 			title={
 				<span className="bb-email-missing-modal__title-wrap">
-					{ __( 'Email Missing', 'buddyboss-platform' ) }
+					{ __( 'Email Missing', 'buddyboss' ) }
 					{ missingCount > 0 && (
 						<span className="bb-email-missing-modal__count-badge">
 							{ missingCount }
@@ -205,7 +205,7 @@ export function EmailMissingModal( { isOpen, isLoading, missingCount, missingEma
 						{/* Warning notice */}
 						<div className="bb-email-missing-modal__warning">
 							<i className="bb-icons-rl bb-icons-rl-warning-circle" />
-							<span>{ __( 'Missing Email Template', 'buddyboss-platform' ) }</span>
+							<span>{ __( 'Missing Email Template', 'buddyboss' ) }</span>
 						</div>
 
 						{/* Missing email list */}
@@ -229,7 +229,7 @@ export function EmailMissingModal( { isOpen, isLoading, missingCount, missingEma
 							isBusy={ 'reset' === processing }
 							disabled={ !! processing }
 						>
-							{ 'reset' === processing ? __( 'Resetting...', 'buddyboss-platform' ) : __( 'Reset All Emails', 'buddyboss-platform' ) }
+							{ 'reset' === processing ? __( 'Resetting...', 'buddyboss' ) : __( 'Reset All Emails', 'buddyboss' ) }
 						</Button>
 						<Button
 							variant="primary"
@@ -237,7 +237,7 @@ export function EmailMissingModal( { isOpen, isLoading, missingCount, missingEma
 							isBusy={ 'install' === processing }
 							disabled={ !! processing }
 						>
-							{ 'install' === processing ? __( 'Installing...', 'buddyboss-platform' ) : __( 'Install Missing Emails', 'buddyboss-platform' ) }
+							{ 'install' === processing ? __( 'Installing...', 'buddyboss' ) : __( 'Install Missing Emails', 'buddyboss' ) }
 						</Button>
 					</div>
 				</>

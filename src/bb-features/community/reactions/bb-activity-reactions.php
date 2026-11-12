@@ -274,7 +274,7 @@ function bboss_get_activity_post_reaction_button_html( $item_id, $item_type = 'a
 
 	$button_args = array(
 		'reaction_link'         => $reaction_link,
-		'icon_text'             => ! empty( $prepared_icon['icon_text'] ) ? $prepared_icon['icon_text'] : esc_html__( 'Like', 'buddyboss-platform' ),
+		'icon_text'             => ! empty( $prepared_icon['icon_text'] ) ? $prepared_icon['icon_text'] : esc_html__( 'Like', 'buddyboss' ),
 		'icon_html'             => 'activity' === $item_type ? $prepared_icon['icon_html'] : '',
 		'text_color'            => ! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : '',
 		'reaction_button_class' => $reaction_button_class,
@@ -473,7 +473,7 @@ function bboss_get_activity_reaction_ajax_callback() {
 	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Nonce verification failed.', 'buddyboss-platform' ),
+				'message' => __( 'Nonce verification failed.', 'buddyboss' ),
 				'type'    => 'error',
 			)
 		);
@@ -483,7 +483,7 @@ function bboss_get_activity_reaction_ajax_callback() {
 	if ( empty( $item_id ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Item ID is required.', 'buddyboss-platform' ),
+				'message' => __( 'Item ID is required.', 'buddyboss' ),
 				'type'    => 'error',
 			)
 		);
@@ -508,7 +508,7 @@ function bboss_get_activity_reaction_ajax_callback() {
 	) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Activity not found.', 'buddyboss-platform' ),
+				'message' => __( 'Activity not found.', 'buddyboss' ),
 				'type'    => 'error',
 			)
 		);
@@ -520,7 +520,7 @@ function bboss_get_activity_reaction_ajax_callback() {
 	if ( ! bboss_activity_user_can_view( $activity ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Activity not found.', 'buddyboss-platform' ),
+				'message' => __( 'Activity not found.', 'buddyboss' ),
 				'type'    => 'error',
 			)
 		);
@@ -532,7 +532,7 @@ function bboss_get_activity_reaction_ajax_callback() {
 		if ( empty( $most_reacted ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'No reactions found!', 'buddyboss-platform' ),
+					'message' => __( 'No reactions found!', 'buddyboss' ),
 					'type'    => 'info',
 				)
 			);
@@ -541,9 +541,9 @@ function bboss_get_activity_reaction_ajax_callback() {
 		$tabs = array();
 
 		if ( bboss_is_reaction_emotions_enabled() ) {
-			$popup_heading = __( 'Reactions', 'buddyboss-platform' );
+			$popup_heading = __( 'Reactions', 'buddyboss' );
 		} else {
-			$popup_heading = __( 'Likes', 'buddyboss-platform' );
+			$popup_heading = __( 'Likes', 'buddyboss' );
 		}
 
 		$all_emotions = bboss_active_reactions();
@@ -601,7 +601,7 @@ function bboss_get_activity_reaction_ajax_callback() {
 					'name'        => 'All',
 					'type'        => 'all',
 					'icon'        => '',
-					'icon_text'   => esc_html__( 'All', 'buddyboss-platform' ),
+					'icon_text'   => esc_html__( 'All', 'buddyboss' ),
 					'paged'       => 1,
 					'total_pages' => ceil( $all_reacted['total'] / $per_page ),
 					'total_count' => $all_reacted['total'],
@@ -763,7 +763,7 @@ function bboss_activity_reaction_names_and_count( $activity_id, $activity_type =
 
 	$display_names = array();
 	if ( true === $is_current_user_reacted ) {
-		$display_names[] = esc_html__( 'You', 'buddyboss-platform' );
+		$display_names[] = esc_html__( 'You', 'buddyboss' );
 		--$name_count;
 	}
 
@@ -788,7 +788,7 @@ function bboss_activity_reaction_names_and_count( $activity_id, $activity_type =
 		} else {
 			$display_names[] = sprintf(
 				/* translators: %s: Number of other users who reacted. */
-				__( '%s others', 'buddyboss-platform' ),
+				__( '%s others', 'buddyboss' ),
 				bboss_format_reaction_count( count( $reacted_users ) )
 			);
 		}
@@ -802,7 +802,7 @@ function bboss_activity_reaction_names_and_count( $activity_id, $activity_type =
 
 	// Add the last name with "and".
 	if ( $return_str ) {
-		$return_str .= __( ' and ', 'buddyboss-platform' ) . end( $display_names );
+		$return_str .= __( ' and ', 'buddyboss' ) . end( $display_names );
 	} else {
 		$return_str = end( $display_names );
 	}
@@ -917,7 +917,7 @@ function bboss_activity_get_user_reaction_by_item( $item_id, $item_type = 'activ
 function bboss_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
 
 	$settings  = bboss_get_reaction_button_settings();
-	$icon_text = ! empty( $settings['text'] ) && ! $has_reacted ? $settings['text'] : esc_html__( 'Like', 'buddyboss-platform' );
+	$icon_text = ! empty( $settings['text'] ) && ! $has_reacted ? $settings['text'] : esc_html__( 'Like', 'buddyboss' );
 	$icon      = ! empty( $settings['icon'] ) && ! $has_reacted ? $settings['icon'] : 'thumbs-up bb-icon-f';
 	$icon_html = '<i class="bb-icon-' . $icon . ' "></i>';
 
@@ -1015,7 +1015,7 @@ function bboss_get_reaction_button_settings() {
 
 	$args = array(
 		'icon' => 'thumbs-up',
-		'text' => esc_html__( 'Like', 'buddyboss-platform' ),
+		'text' => esc_html__( 'Like', 'buddyboss' ),
 	);
 
 	if (

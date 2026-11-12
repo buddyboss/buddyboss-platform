@@ -29,7 +29,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 	bboss_nouveau_single_item_subnav_classes();
 	echo esc_attr( bboss_is_user_settings() ? ' bb-rl-profile-edit-subnav' : ' bb-rl-profile-subnav' );
 	?>
-	" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Sub Menu', 'buddyboss-platform' ); ?>">
+	" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Sub Menu', 'buddyboss' ); ?>">
 	<ul class="subnav">
 
 		<?php

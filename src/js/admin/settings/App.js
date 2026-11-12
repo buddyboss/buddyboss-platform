@@ -408,7 +408,7 @@ function AppInner() {
 	return (
 		<div className="bb-admin-app">
 			<a href="#bb-admin-settings-main" className="screen-reader-shortcut">
-				{ __( 'Skip to settings content', 'buddyboss-platform' ) }
+				{ __( 'Skip to settings content', 'buddyboss' ) }
 			</a>
 			<BBAdminHeader
 				logoUrl={ ( typeof bbAdminData !== 'undefined' && bbAdminData.logoUrl ) || '' }

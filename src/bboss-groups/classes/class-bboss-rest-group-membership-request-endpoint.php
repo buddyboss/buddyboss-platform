@@ -90,7 +90,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'request_id' => array(
-						'description' => __( 'A unique numeric ID for the group membership request.', 'buddyboss-platform' ),
+						'description' => __( 'A unique numeric ID for the group membership request.', 'buddyboss' ),
 						'type'        => 'integer',
 					),
 				),
@@ -201,7 +201,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to view membership requests.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to view membership requests.', 'buddyboss' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -225,7 +225,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			if ( $request['group_id'] && ! $group instanceof BBoss_Groups_Group ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss-platform' ),
+					__( 'Invalid group ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
 					)
@@ -235,7 +235,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			} elseif ( $user_id_arg && ! $user instanceof WP_User ) {
 				$retval = new WP_Error(
 					'bp_rest_member_invalid_id',
-					__( 'Invalid member ID.', 'buddyboss-platform' ),
+					__( 'Invalid member ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
 					)
@@ -249,7 +249,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_membership_requests_cannot_get_items',
-					__( 'Sorry, you are not allowed to view membership requests.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to view membership requests.', 'buddyboss' ),
 					array(
 						'status' => 500,
 					)
@@ -317,7 +317,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to get a membership.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to get a membership.', 'buddyboss' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -332,7 +332,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			if ( ! $group_request ) {
 				$retval = new WP_Error(
 					'bp_rest_group_membership_requests_invalid_id',
-					__( 'Invalid group membership request ID.', 'buddyboss-platform' ),
+					__( 'Invalid group membership request ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
 					)
@@ -344,7 +344,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_membership_requests_cannot_get_item',
-					__( 'Sorry, you are not allowed to view a membership request.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to view a membership request.', 'buddyboss' ),
 					array(
 						'status' => 500,
 					)
@@ -390,7 +390,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		if ( bboss_groups_check_for_membership_request( $user->ID, $group->id ) ) {
 			return new WP_Error(
 				'bp_rest_group_membership_requests_duplicate_request',
-				__( 'There is already a request to this member.', 'buddyboss-platform' ),
+				__( 'There is already a request to this member.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -408,7 +408,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		if ( ! $request_id ) {
 			return new WP_Error(
 				'bp_rest_group_membership_requests_cannot_create_item',
-				__( 'Could not send membership request to this group.', 'buddyboss-platform' ),
+				__( 'Could not send membership request to this group.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -460,7 +460,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create a membership request.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to create a membership request.', 'buddyboss' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -479,7 +479,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			if ( ! $user instanceof WP_User ) {
 				$retval = new WP_Error(
 					'bp_rest_group_member_invalid_id',
-					__( 'Invalid member ID.', 'buddyboss-platform' ),
+					__( 'Invalid member ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
 					)
@@ -489,7 +489,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			} elseif ( ! $group instanceof BBoss_Groups_Group ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss-platform' ),
+					__( 'Invalid group ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
 					)
@@ -502,7 +502,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_membership_requests_cannot_create_item',
-					__( 'User may not extend requests on behalf of another user.', 'buddyboss-platform' ),
+					__( 'User may not extend requests on behalf of another user.', 'buddyboss' ),
 					array(
 						'status' => 500,
 					)
@@ -543,7 +543,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		if ( ! $success ) {
 			return new WP_Error(
 				'bp_rest_group_member_request_cannot_update_item',
-				__( 'There was an error accepting the membership request.', 'buddyboss-platform' ),
+				__( 'There was an error accepting the membership request.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -588,7 +588,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to make an update.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to make an update.', 'buddyboss' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -603,7 +603,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			if ( ! $group_request ) {
 				$retval = new WP_Error(
 					'bp_rest_group_membership_requests_invalid_id',
-					__( 'Invalid group membership request ID.', 'buddyboss-platform' ),
+					__( 'Invalid group membership request ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
 					)
@@ -614,7 +614,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_member_request_cannot_update_item',
-					__( 'User is not allowed to approve membership requests to this group.', 'buddyboss-platform' ),
+					__( 'User is not allowed to approve membership requests to this group.', 'buddyboss' ),
 					array(
 						'status' => 500,
 					)
@@ -677,7 +677,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		if ( ! $success ) {
 			return new WP_Error(
 				'bp_rest_group_membership_requests_cannot_delete_item',
-				__( 'There was an error rejecting the membership request.', 'buddyboss-platform' ),
+				__( 'There was an error rejecting the membership request.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -724,7 +724,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete a request.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to delete a request.', 'buddyboss' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -739,7 +739,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			if ( ! $group_request ) {
 				$retval = new WP_Error(
 					'bp_rest_group_membership_requests_invalid_id',
-					__( 'Invalid group membership request ID.', 'buddyboss-platform' ),
+					__( 'Invalid group membership request ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
 					)
@@ -751,7 +751,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_membership_requests_cannot_delete_item',
-					__( 'User is not allowed to delete this membership request.', 'buddyboss-platform' ),
+					__( 'User is not allowed to delete this membership request.', 'buddyboss' ),
 					array(
 						'status' => 500,
 					)
@@ -903,7 +903,7 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			$key = 'create_item';
 
 			$args['message']['type']        = 'string';
-			$args['message']['description'] = __( 'The optional message to send to the invited user.', 'buddyboss-platform' );
+			$args['message']['description'] = __( 'The optional message to send to the invited user.', 'buddyboss' );
 			$args['group_id']['required']   = true;
 			$args['user_id']['default']     = bboss_loggedin_user_id();
 
@@ -942,13 +942,13 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		$schema['title'] = 'bp_group_membership_request';
 
 		// Adapt some item schema property descriptions to this endpoint.
-		$schema['properties']['user_id']['description']  = __( 'The ID of the user who requested a Group membership.', 'buddyboss-platform' );
-		$schema['properties']['group_id']['description'] = __( 'The ID of the group the user requested a membership for.', 'buddyboss-platform' );
+		$schema['properties']['user_id']['description']  = __( 'The ID of the user who requested a Group membership.', 'buddyboss' );
+		$schema['properties']['group_id']['description'] = __( 'The ID of the group the user requested a membership for.', 'buddyboss' );
 		$schema['properties']['type']['default']         = 'request';
 
 		$schema['properties']['joined'] = array(
 			'context'     => array( 'view', 'edit' ),
-			'description' => __( 'The user auto join in private group or not.', 'buddyboss-platform' ),
+			'description' => __( 'The user auto join in private group or not.', 'buddyboss' ),
 			'type'        => 'boolean',
 			'default'     => false,
 		);
@@ -975,8 +975,8 @@ class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'view';
 
 		// Adapt some item schema property descriptions to this endpoint.
-		$params['user_id']['description']  = __( 'Return only Membership requests made by a specific user.', 'buddyboss-platform' );
-		$params['group_id']['description'] = __( 'The ID of the group the user requested a membership for.', 'buddyboss-platform' );
+		$params['user_id']['description']  = __( 'Return only Membership requests made by a specific user.', 'buddyboss' );
+		$params['group_id']['description'] = __( 'The ID of the group the user requested a membership for.', 'buddyboss' );
 
 		// Remove unused properties.
 		unset( $params['invite_sent'], $params['inviter_id'] );

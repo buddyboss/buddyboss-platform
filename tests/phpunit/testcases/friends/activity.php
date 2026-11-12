@@ -20,7 +20,7 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 			'secondary_item_id' => $u2,
 		) );
 
-		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss-platform' ), bboss_core_get_userlink( $u1 ), bboss_core_get_userlink( $u2 ) );
+		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), bboss_core_get_userlink( $u1 ), bboss_core_get_userlink( $u2 ) );
 
 		$a_obj = new BBoss_Activity_Activity( $a );
 
@@ -42,7 +42,7 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 			'secondary_item_id' => $u2,
 		) );
 
-		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss-platform' ), bboss_core_get_userlink( $u1 ), bboss_core_get_userlink( $u2 ) );
+		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), bboss_core_get_userlink( $u1 ), bboss_core_get_userlink( $u2 ) );
 
 		$a_obj = new BBoss_Activity_Activity( $a );
 

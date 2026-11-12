@@ -17,22 +17,22 @@ defined( 'ABSPATH' ) || exit;
 	<?php do_action( 'bbp_theme_before_anonymous_form' ); ?>
 
 	<fieldset class="bbp-form bb-rl-forum-anonymous-form">
-		<legend><?php ( bboss_bbp_is_topic_edit() || bboss_bbp_is_reply_edit() ) ? esc_html_e( 'Author Information', 'buddyboss-platform' ) : esc_html_e( 'Your information:', 'buddyboss-platform' ); ?></legend>
+		<legend><?php ( bboss_bbp_is_topic_edit() || bboss_bbp_is_reply_edit() ) ? esc_html_e( 'Author Information', 'buddyboss' ) : esc_html_e( 'Your information:', 'buddyboss' ); ?></legend>
 
 		<?php do_action( 'bbp_theme_anonymous_form_extras_top' ); ?>
 
 		<p>
-			<label for="bbp_anonymous_author"><?php esc_html_e( 'Name (required):', 'buddyboss-platform' ); ?></label>
+			<label for="bbp_anonymous_author"><?php esc_html_e( 'Name (required):', 'buddyboss' ); ?></label>
 			<input type="text" id="bbp_anonymous_author" value="<?php bboss_bbp_author_display_name(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" name="bbp_anonymous_name" />
 		</p>
 
 		<p>
-			<label for="bbp_anonymous_email"><?php esc_html_e( 'Email (will not be published) (required):', 'buddyboss-platform' ); ?></label>
+			<label for="bbp_anonymous_email"><?php esc_html_e( 'Email (will not be published) (required):', 'buddyboss' ); ?></label>
 			<input type="text" id="bbp_anonymous_email" value="<?php bboss_bbp_author_email(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" name="bbp_anonymous_email" />
 		</p>
 
 		<p>
-			<label for="bbp_anonymous_website"><?php esc_html_e( 'Website:', 'buddyboss-platform' ); ?></label>
+			<label for="bbp_anonymous_website"><?php esc_html_e( 'Website:', 'buddyboss' ); ?></label>
 			<input type="text" id="bbp_anonymous_website" value="<?php bboss_bbp_author_url(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" name="bbp_anonymous_website" />
 		</p>
 

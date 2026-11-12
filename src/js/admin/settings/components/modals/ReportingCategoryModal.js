@@ -91,7 +91,7 @@ export function ReportingCategoryModal( { isOpen, onClose, onSave, category, sho
 		}
 
 		if ( ! formData.name.trim() ) {
-			setError( __( 'Category name is required.', 'buddyboss-platform' ) );
+			setError( __( 'Category name is required.', 'buddyboss' ) );
 			return;
 		}
 
@@ -119,12 +119,12 @@ export function ReportingCategoryModal( { isOpen, onClose, onSave, category, sho
 						onSave();
 					}
 				} else {
-					setError( ( response.data && response.data.message ) || __( 'Failed to save category.', 'buddyboss-platform' ) );
+					setError( ( response.data && response.data.message ) || __( 'Failed to save category.', 'buddyboss' ) );
 				}
 			} )
 			.catch( function () {
 				setIsSaving( false );
-				setError( __( 'Failed to save category.', 'buddyboss-platform' ) );
+				setError( __( 'Failed to save category.', 'buddyboss' ) );
 			} );
 	}, [ formData, category, onSave, isSaving ] );
 
@@ -134,8 +134,8 @@ export function ReportingCategoryModal( { isOpen, onClose, onSave, category, sho
 
 	var isEditing = !! ( category && category.id );
 	var modalTitle = isEditing
-		? __( 'Edit Category', 'buddyboss-platform' )
-		: __( 'Add New Category', 'buddyboss-platform' );
+		? __( 'Edit Category', 'buddyboss' )
+		: __( 'Add New Category', 'buddyboss' );
 
 	// Build select options from server data or use defaults.
 	// Server labels may contain HTML entities (e.g. &amp;) from esc_html__(), so decode them.
@@ -144,9 +144,9 @@ export function ReportingCategoryModal( { isOpen, onClose, onSave, category, sho
 			return { label: decodeEntities( opt.label ), value: opt.value };
 		} )
 		: [
-			{ label: __( 'Content', 'buddyboss-platform' ), value: 'content' },
-			{ label: __( 'Members', 'buddyboss-platform' ), value: 'members' },
-			{ label: __( 'Content & Members', 'buddyboss-platform' ), value: 'content_members' },
+			{ label: __( 'Content', 'buddyboss' ), value: 'content' },
+			{ label: __( 'Members', 'buddyboss' ), value: 'members' },
+			{ label: __( 'Content & Members', 'buddyboss' ), value: 'content_members' },
 		];
 
 	return (
@@ -169,7 +169,7 @@ export function ReportingCategoryModal( { isOpen, onClose, onSave, category, sho
 
 				{/* Name */}
 				<TextControl
-					label={ __( 'Name', 'buddyboss-platform' ) }
+					label={ __( 'Name', 'buddyboss' ) }
 					value={ formData.name }
 					onChange={ function ( val ) { updateField( 'name', val ); } }
 					required
@@ -177,15 +177,15 @@ export function ReportingCategoryModal( { isOpen, onClose, onSave, category, sho
 
 				{/* Description */}
 				<TextareaControl
-					label={ __( 'Description', 'buddyboss-platform' ) }
+					label={ __( 'Description', 'buddyboss' ) }
 					value={ formData.description }
 					onChange={ function ( val ) { updateField( 'description', val ); } }
-					placeholder={ __( 'Enter category description...', 'buddyboss-platform' ) }
+					placeholder={ __( 'Enter category description...', 'buddyboss' ) }
 				/>
 
 				{/* Show When Reporting */}
 				<SelectControl
-					label={ __( 'Show When Reporting', 'buddyboss-platform' ) }
+					label={ __( 'Show When Reporting', 'buddyboss' ) }
 					value={ formData.show_when_reporting }
 					options={ selectOptions }
 					onChange={ function ( val ) { updateField( 'show_when_reporting', val ); } }
@@ -198,7 +198,7 @@ export function ReportingCategoryModal( { isOpen, onClose, onSave, category, sho
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -206,7 +206,7 @@ export function ReportingCategoryModal( { isOpen, onClose, onSave, category, sho
 					isBusy={ isSaving }
 					disabled={ isSaving || ! formData.name.trim() }
 				>
-					{ isSaving ? __( 'Saving...', 'buddyboss-platform' ) : ( isEditing ? __( 'Update', 'buddyboss-platform' ) : __( 'Save', 'buddyboss-platform' ) ) }
+					{ isSaving ? __( 'Saving...', 'buddyboss' ) : ( isEditing ? __( 'Update', 'buddyboss' ) : __( 'Save', 'buddyboss' ) ) }
 				</Button>
 			</div>
 		</Modal>

@@ -325,10 +325,10 @@ function bboss_nouveau_activity_state() {
 					<?php
 					if ( $comment_count > 1 || 0 === $comment_count ) {
 						/* translators: %d: number of comments. */
-						printf( esc_html_x( '%d Comments', 'placeholder: activity comments count', 'buddyboss-platform' ), esc_html( $comment_count ) );
+						printf( esc_html_x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), esc_html( $comment_count ) );
 					} else {
 						/* translators: %d: number of comments. */
-						printf( esc_html_x( '%d Comment', 'placeholder: activity comment count', 'buddyboss-platform' ), esc_html( $comment_count ) );
+						printf( esc_html_x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), esc_html( $comment_count ) );
 					}
 					?>
 				</span>
@@ -603,7 +603,7 @@ function bboss_nouveau_get_activity_entry_buttons( $args ) {
 			'inprogress' === bb_pro_reaction_get_migration_status()
 		) {
 			$buttons['activity_favorite']['button_attr'] ['class']               = $fav_args['link_class'] . ' bb-reaction-migration-inprogress';
-			$buttons['activity_favorite']['button_attr'] ['data-bp-tooltip']     = esc_html__( 'This feature is temporarily unavailable. Please try again later.', 'buddyboss-platform' );
+			$buttons['activity_favorite']['button_attr'] ['data-bp-tooltip']     = esc_html__( 'This feature is temporarily unavailable. Please try again later.', 'buddyboss' );
 			$buttons['activity_favorite']['button_attr'] ['data-bp-tooltip-pos'] = 'up';
 		}
 	}
@@ -630,12 +630,12 @@ function bboss_nouveau_get_activity_entry_buttons( $args ) {
 				'button_element'    => $button_element,
 				'button_attr'       => array(
 					'class'               => 'button view bp-secondary-action bp-tooltip',
-					'data-bp-tooltip'     => __( 'View Conversation', 'buddyboss-platform' ),
+					'data-bp-tooltip'     => __( 'View Conversation', 'buddyboss' ),
 					'data-bp-tooltip-pos' => 'up',
 				),
 				'link_text'         => sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>',
-					__( 'View Conversation', 'buddyboss-platform' )
+					__( 'View Conversation', 'buddyboss' )
 				),
 			);
 
@@ -667,8 +667,8 @@ function bboss_nouveau_get_activity_entry_buttons( $args ) {
 				),
 				'link_text'         => sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-					__( 'Comment', 'buddyboss-platform' ),
-					__( 'Comment', 'buddyboss-platform' )
+					__( 'Comment', 'buddyboss' ),
+					__( 'Comment', 'buddyboss' )
 				),
 			);
 
@@ -798,7 +798,7 @@ function bboss_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 		if ( 0 !== $comment->all_child_count ) {
 			$link_text = sprintf(
 			/* translators: total replies */
-				_n( 'View %d reply', 'View %d replies', $comment->all_child_count, 'buddyboss-platform' ),
+				_n( 'View %d reply', 'View %d replies', $comment->all_child_count, 'buddyboss' ),
 				absint( $comment->all_child_count )
 			);
 			echo "<li class='acomments-view-more' data-child-count='" . esc_attr( $comment->all_child_count ) . "'><i class='bb-icon-l bb-icon-corner-right'></i>" . esc_html( $link_text ) . "</li>";
@@ -872,7 +872,7 @@ function bboss_nouveau_get_activity_comment_action() {
 		'bp_nouveau_get_activity_comment_action',
 		sprintf(
 			/* translators: 1: User profile link, 2: Username, 3: Edited text */
-			__( '<a class="author-name" href="%1$s" %4$s>%2$s</a>%3$s', 'buddyboss-platform' ),
+			__( '<a class="author-name" href="%1$s" %4$s>%2$s</a>%3$s', 'buddyboss' ),
 			esc_url( bboss_get_activity_comment_user_link() ),
 			esc_html( bboss_get_activity_comment_name() ),
 			bboss_nouveau_activity_comment_is_edited(),
@@ -994,7 +994,7 @@ function bboss_nouveau_get_activity_comment_buttons( $args ) {
 			$key              => bboss_get_activity_comment_favorite_link(),
 			'link_text'       => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
-				esc_html__( 'Like', 'buddyboss-platform' )
+				esc_html__( 'Like', 'buddyboss' )
 			),
 			'data-reacted-id' => '',
 		);
@@ -1004,7 +1004,7 @@ function bboss_nouveau_get_activity_comment_buttons( $args ) {
 			$fav_args['link_text'] = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
 				<span class="like-count">%1$s</span>',
-				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : __( 'Like', 'buddyboss-platform' ),
+				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : __( 'Like', 'buddyboss' ),
 			);
 		} elseif ( function_exists( 'bboss_activity_get_user_reaction_by_item' ) ) {
 			// Get user reacted reaction data and prepare the link.
@@ -1032,7 +1032,7 @@ function bboss_nouveau_get_activity_comment_buttons( $args ) {
 			'inprogress' === bb_pro_reaction_get_migration_status()
 		) {
 			$fav_args['class']               = $fav_args['class'] . ' bb-reaction-migration-inprogress';
-			$fav_args['data-bp-tooltip']     = esc_html__( 'This feature is temporarily unavailable. Please try again later.', 'buddyboss-platform' );
+			$fav_args['data-bp-tooltip']     = esc_html__( 'This feature is temporarily unavailable. Please try again later.', 'buddyboss' );
 			$fav_args['data-bp-tooltip-pos'] = 'up';
 		}
 
@@ -1061,7 +1061,7 @@ function bboss_nouveau_get_activity_comment_buttons( $args ) {
 		'parent_element'    => $parent_element,
 		'parent_attr'       => $parent_attr,
 		'button_element'    => $button_element,
-		'link_text'         => esc_html__( 'Reply', 'buddyboss-platform' ),
+		'link_text'         => esc_html__( 'Reply', 'buddyboss' ),
 		'button_attr'       => array(
 			'class' => "acomment-reply bp-primary-action",
 			'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
@@ -1169,7 +1169,7 @@ function bboss_nouveau_activity_comment_meta_buttons( $comment, $args ) {
 		'parent_element'    => false,
 		'parent_attr'       => array(),
 		'button_element'    => $button_element,
-		'link_text'         => __( 'Reply', 'buddyboss-platform' ),
+		'link_text'         => __( 'Reply', 'buddyboss' ),
 		'button_attr'       => array(
 			'data-comment_id'      => $comment->comment_ID,
 			'data-comment_post_id' => $comment->comment_post_ID,
@@ -1397,11 +1397,11 @@ function bboss_nouveau_activity_privacy() {
 				<ul class="activity-privacy">
 					<?php if ( $album_id && ! empty( $album_url ) ) : ?>
 						<li class="bb-edit-privacy" data-value="<?php echo esc_url( $album_url ); ?>">
-							<a href="<?php echo esc_url( $album_url ); ?>" data-value="<?php echo esc_url( $album_url ); ?>"><?php esc_html_e( 'Edit Album Privacy', 'buddyboss-platform' ); ?></a>
+							<a href="<?php echo esc_url( $album_url ); ?>" data-value="<?php echo esc_url( $album_url ); ?>"><?php esc_html_e( 'Edit Album Privacy', 'buddyboss' ); ?></a>
 						</li>
 					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
 						<li class="bb-edit-privacy" data-value="<?php echo esc_url( $parent_activity_permalink ); ?>">
-							<a href="<?php echo esc_url( $parent_activity_permalink ); ?>" data-value="<?php echo esc_url( $parent_activity_permalink ); ?>"><?php esc_html_e( 'Edit Post Privacy', 'buddyboss-platform' ); ?></a>
+							<a href="<?php echo esc_url( $parent_activity_permalink ); ?>" data-value="<?php echo esc_url( $parent_activity_permalink ); ?>"><?php esc_html_e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
 						</li>
 					<?php endif; ?>
 				</ul>
@@ -1419,11 +1419,11 @@ function bboss_nouveau_activity_privacy() {
 						$folder_url = $folder_url . '#openEditFolder';
 						?>
 						<li data-value="<?php echo esc_url( $folder_url ); ?>" class="bb-edit-privacy <?php echo esc_attr( $privacy ); ?>">
-							<a data-value="<?php echo esc_url( $folder_url ); ?>" href="<?php echo esc_url( $folder_url ); ?>"><?php esc_html_e( 'Edit Folder Privacy', 'buddyboss-platform' ); ?></a>
+							<a data-value="<?php echo esc_url( $folder_url ); ?>" href="<?php echo esc_url( $folder_url ); ?>"><?php esc_html_e( 'Edit Folder Privacy', 'buddyboss' ); ?></a>
 						</li>
 					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
 						<li data-value="<?php echo esc_url( $parent_activity_permalink ); ?>" class="bb-edit-privacy <?php echo esc_attr( $privacy ); ?>">
-							<a data-value="<?php echo esc_url( $parent_activity_permalink ); ?>" href="<?php echo esc_url( $parent_activity_permalink ); ?>"><?php esc_html_e( 'Edit Post Privacy', 'buddyboss-platform' ); ?></a>
+							<a data-value="<?php echo esc_url( $parent_activity_permalink ); ?>" href="<?php echo esc_url( $parent_activity_permalink ); ?>"><?php esc_html_e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
 						</li>
 					<?php endif; ?>
 				</ul>
@@ -1482,7 +1482,7 @@ function bboss_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 	$is_edited      = $activity_metas['_is_edited'][0] ?? '';
 
 	if ( $is_edited ) {
-		$activity_text = '<span class="bb-activity-edited-text"> ' . __( '(edited)', 'buddyboss-platform' ) . ' </span>';
+		$activity_text = '<span class="bb-activity-edited-text"> ' . __( '(edited)', 'buddyboss' ) . ' </span>';
 	} else {
 		$activity_text = null;
 	}
@@ -1529,8 +1529,8 @@ function bboss_nouveau_video_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $video->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 			<span class="bb-icon-l bb-icon-edit "></span>
-			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?></span>
-			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
+			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 
 		<?php
@@ -1541,12 +1541,12 @@ function bboss_nouveau_video_activity_description( $activity_id = 0 ) {
 
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
-				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" role="textbox"><?php echo wp_kses_post( $video->description ); ?></textarea>
+				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo wp_kses_post( $video->description ); ?></textarea>
 			</div>
 			<div class="in-profile description-new-submit">
 				<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
-				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss-platform' ); ?>">
-				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?>">
+				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 			</div>
 		</div>
 
@@ -1589,17 +1589,17 @@ function bboss_nouveau_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $media->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 			<span class="bb-icon-l bb-icon-edit"></span>
-			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?></span>
-			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
+			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
-				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" role="textbox"><?php echo esc_textarea( $media->description ); ?></textarea>
+				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo esc_textarea( $media->description ); ?></textarea>
 			</div>
 			<div class="in-profile description-new-submit">
 				<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
-				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss-platform' ); ?>">
-				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?>">
+				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 			</div>
 		</div>
 
@@ -1642,17 +1642,17 @@ function bboss_nouveau_document_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $document->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 			<span class="bb-icon-l bb-icon-edit"></span>
-			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?></span>
-			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
+			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
-				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" role="textbox"><?php echo esc_textarea( $document->description ); ?></textarea>
+				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo esc_textarea( $document->description ); ?></textarea>
 			</div>
 			<div class="in-profile description-new-submit">
 				<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
-				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss-platform' ); ?>">
-				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?>">
+				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 			</div>
 		</div>
 
@@ -1740,7 +1740,7 @@ function bboss_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 			%3$s
 		</div>
 		<div class="bb_more_dropdown_overlay"></div>',
-		esc_html__( 'More Options', 'buddyboss-platform' ),
+		esc_html__( 'More Options', 'buddyboss' ),
 		$template_part_content,
 		$output
 	);
@@ -1808,12 +1808,12 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 			'button_attr'       => array(
 				'href'  => '#',
 				'class' => 'button edit edit-activity bp-secondary-action bp-tooltip',
-				'title' => __( 'Edit Activity', 'buddyboss-platform' ),
+				'title' => __( 'Edit Activity', 'buddyboss' ),
 			),
 			'link_text'         => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
-				__( 'Edit Activity', 'buddyboss-platform' ),
-				__( 'Edit', 'buddyboss-platform' )
+				__( 'Edit Activity', 'buddyboss' ),
+				__( 'Edit', 'buddyboss' )
 			),
 		);
 	}
@@ -1850,8 +1850,8 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 						'button_element'    => $button_element,
 						'link_text'         => sprintf(
 							'<span class="bp-screen-reader-text">%1$s</span><span class="change-label">%2$s</span>',
-							esc_html__( 'Change Thumbnail', 'buddyboss-platform' ),
-							esc_html__( 'Change Thumbnail', 'buddyboss-platform' )
+							esc_html__( 'Change Thumbnail', 'buddyboss' ),
+							esc_html__( 'Change Thumbnail', 'buddyboss' )
 						),
 						'button_attr'       => array(
 							'data-action'              => 'video',
@@ -1912,8 +1912,8 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				'link_id'         => '',
 				'link_class'      => 'button item-button bp-secondary-action delete-activity confirm',
 				'link_rel'        => 'nofollow',
-				'data_bp_tooltip' => __( 'Delete', 'buddyboss-platform' ),
-				'link_text'       => __( 'Delete', 'buddyboss-platform' ),
+				'data_bp_tooltip' => __( 'Delete', 'buddyboss' ),
+				'link_text'       => __( 'Delete', 'buddyboss' ),
 			);
 
 			// If button element set add nonce link to data-attr attr.
@@ -1950,7 +1950,7 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	// Close comments related menu.
 	if ( bboss_is_close_activity_comments_enabled() && bboss_activity_can_comment() ) {
 
-		$closed_action_label     = esc_html__( 'Turn off commenting', 'buddyboss-platform' );
+		$closed_action_label     = esc_html__( 'Turn off commenting', 'buddyboss' );
 		$closed_action_class     = 'close-activity-comment';
 		$is_closed_comments      = bboss_is_activity_comments_closed( $activity_id );
 		$closed_action_permitted = false;
@@ -1967,7 +1967,7 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 
 		if ( $is_closed_comments ) {
 			// Unable to edit closed comments activity.
-			$closed_action_label = esc_html__( 'Turn on commenting', 'buddyboss-platform' );
+			$closed_action_label = esc_html__( 'Turn on commenting', 'buddyboss' );
 			$closed_action_class = 'unclose-activity-comment';
 		}
 
@@ -2020,8 +2020,8 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 						),
 						'link_text'         => sprintf(
 							'<span class="bp-screen-reader-text">%s</span><span class="download-label">%s</span>',
-							esc_html__( 'Download', 'buddyboss-platform' ),
-							esc_html__( 'Download', 'buddyboss-platform' )
+							esc_html__( 'Download', 'buddyboss' ),
+							esc_html__( 'Download', 'buddyboss' )
 						),
 					);
 				}
@@ -2054,8 +2054,8 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 						),
 						'link_text'         => sprintf(
 							'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-							esc_html__( 'Download', 'buddyboss-platform' ),
-							esc_html__( 'Download', 'buddyboss-platform' )
+							esc_html__( 'Download', 'buddyboss' ),
+							esc_html__( 'Download', 'buddyboss' )
 						),
 					);
 				}
@@ -2088,8 +2088,8 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 						),
 						'link_text'         => sprintf(
 							'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-							esc_html__( 'Download', 'buddyboss-platform' ),
-							esc_html__( 'Download', 'buddyboss-platform' )
+							esc_html__( 'Download', 'buddyboss' ),
+							esc_html__( 'Download', 'buddyboss' )
 						),
 					);
 				}
@@ -2101,11 +2101,11 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) && ( bboss_get_activity_user_id() === bboss_loggedin_user_id() || in_array( bboss_loggedin_user_id(), bboss_activity_get_comments_user_ids(), true ) ) ) {
 
 		$unmute_action_class = 'bb-icon-bell-slash';
-		$unmute_action_label = __( 'Turn off notifications', 'buddyboss-platform' );
+		$unmute_action_label = __( 'Turn off notifications', 'buddyboss' );
 
 		if ( bboss_user_has_mute_notification( $activity_id, bboss_loggedin_user_id() ) ) {
 			$unmute_action_class = 'bb-icon-bell';
-			$unmute_action_label = __( 'Turn on notifications', 'buddyboss-platform' );
+			$unmute_action_label = __( 'Turn on notifications', 'buddyboss' );
 		}
 
 		$buttons['turn_on_off_notification'] = array(
@@ -2222,7 +2222,7 @@ function bboss_nouveau_activity_comment_bubble_buttons( $args = array() ) {
 			%3$s
 		</div>
 		<div class="bb_more_dropdown_overlay"></div>',
-		esc_html__( 'More Options', 'buddyboss-platform' ),
+		esc_html__( 'More Options', 'buddyboss' ),
 		$template_part_content,
 		$output
 	);
@@ -2296,12 +2296,12 @@ function bboss_nouveau_get_activity_comment_bubble_buttons( $args ) {
 			'button_attr'       => array(
 				'href'  => '#',
 				'class' => 'edit acomment-edit bp-secondary-action',
-				'title' => __( 'Edit Comment', 'buddyboss-platform' ),
+				'title' => __( 'Edit Comment', 'buddyboss' ),
 			),
 			'link_text'         => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
-				__( 'Edit Comment', 'buddyboss-platform' ),
-				__( 'Edit', 'buddyboss-platform' )
+				__( 'Edit Comment', 'buddyboss' ),
+				__( 'Edit', 'buddyboss' )
 			),
 		);
 	}
@@ -2332,7 +2332,7 @@ function bboss_nouveau_get_activity_comment_bubble_buttons( $args ) {
 			'parent_element'    => $parent_element,
 			'parent_attr'       => $parent_attr,
 			'button_element'    => $button_element,
-			'link_text'         => esc_html__( 'Delete', 'buddyboss-platform' ),
+			'link_text'         => esc_html__( 'Delete', 'buddyboss' ),
 			'button_attr'       => array(
 				'class' => 'delete acomment-delete confirm bp-secondary-action',
 				'rel'   => 'nofollow',
@@ -2472,7 +2472,7 @@ function bboss_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $ec
 	$is_edited      = $activity_metas['_is_edited'][0] ?? '';
 
 	if ( $is_edited ) {
-		$activity_comment_text = '<span class="bb-activity-edited-text" data-balloon-pos="up" data-balloon="' . bboss_core_time_since( $is_edited ) . '"> ' . __( '(edited)', 'buddyboss-platform' ) . ' </span>';
+		$activity_comment_text = '<span class="bb-activity-edited-text" data-balloon-pos="up" data-balloon="' . bboss_core_time_since( $is_edited ) . '"> ' . __( '(edited)', 'buddyboss' ) . ' </span>';
 	}
 
 	$rendered_text = apply_filters( 'bb_nouveau_activity_comment_is_edited', $activity_comment_text, $activity_comment_id );
@@ -2526,7 +2526,7 @@ function bboss_nouveau_get_activity_comment_meta() {
 		'bp_nouveau_get_activity_comment_meta',
 		sprintf(
 			/* translators: 1: activity permalink, 2: activity recorded date, 3: activity timestamp, 4: activity timestamp, 5: activity human time since */
-			__( '<a href="%1$s" class="activity-time-since"><span class="time-since" datetime="%2$s" data-bp-timestamp="%3$d" data-livestamp="%4$s">%5$s</span></a>', 'buddyboss-platform' ),
+			__( '<a href="%1$s" class="activity-time-since"><span class="time-since" datetime="%2$s" data-bp-timestamp="%3$d" data-livestamp="%4$s">%5$s</span></a>', 'buddyboss' ),
 			esc_url( bboss_get_activity_comment_permalink() ),
 			esc_attr( bboss_get_activity_comment_date_recorded_raw() ),
 			esc_attr( strtotime( bboss_get_activity_comment_date_recorded_raw() ) ),

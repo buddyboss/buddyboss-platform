@@ -64,8 +64,8 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 		) {
 			$this->register_notification_group(
 				'mentions',
-				esc_html__( 'Mentions', 'buddyboss-platform' ),
-				esc_html__( 'Mentions', 'buddyboss-platform' ),
+				esc_html__( 'Mentions', 'buddyboss' ),
+				esc_html__( 'Mentions', 'buddyboss' ),
 				3
 			);
 
@@ -83,10 +83,10 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 			'bb_new_mention',
 			sprintf(
 				/* translators: %s: users mention name. */
-				__( 'A member mentions you using "@%s"', 'buddyboss-platform' ),
+				__( 'A member mentions you using "@%s"', 'buddyboss' ),
 				bboss_members_get_user_mentionname( get_current_user_id() )
 			),
-			esc_html__( 'A member is mentioned by another member', 'buddyboss-platform' ),
+			esc_html__( 'A member is mentioned by another member', 'buddyboss' ),
 			'mentions'
 		);
 
@@ -94,13 +94,13 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 			'new-mention',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a {{mentioned.type}}', 'buddyboss-platform' ),
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a {{mentioned.type}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a {{mentioned.type}}:\n\n{{{mentioned.content}}}", 'buddyboss-platform' ),
+				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a {{mentioned.type}}:\n\n{{{mentioned.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} mentioned you in a {{mentioned.type}}:\n\n{{{mentioned.content}}}\n\nView the {{mentioned.type}}: {{{mentioned.url}}}", 'buddyboss-platform' ),
-				'situation_label'     => __( 'A member is mentioned by another member', 'buddyboss-platform' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss-platform' ),
+				'email_plain_content' => __( "{{poster.name}} mentioned you in a {{mentioned.type}}:\n\n{{{mentioned.content}}}\n\nView the {{mentioned.type}}: {{{mentioned.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'A member is mentioned by another member', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
 				'group'               => 'activity',
 			),
 			'bb_new_mention'
@@ -110,13 +110,13 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 			'new-mention-group',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group {{mentioned.type}}', 'buddyboss-platform' ),
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group {{mentioned.type}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a {{mentioned.type}} in the <b>{{group.name}}</b> group:\n\n{{{mentioned.content}}}", 'buddyboss-platform' ),
+				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a {{mentioned.type}} in the <b>{{group.name}}</b> group:\n\n{{{mentioned.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} mentioned you in a {{mentioned.type}} in the {{group.name}} group:\n\n{{{mentioned.content}}}\n\nView the {{mentioned.type}}: {{{mentioned.url}}}", 'buddyboss-platform' ),
-				'situation_label'     => __( 'A member is mentioned in a group', 'buddyboss-platform' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss-platform' ),
+				'email_plain_content' => __( "{{poster.name}} mentioned you in a {{mentioned.type}} in the {{group.name}} group:\n\n{{{mentioned.content}}}\n\nView the {{mentioned.type}}: {{{mentioned.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'A member is mentioned in a group', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
 				'group'               => 'groups_discussions',
 			),
 			'bb_new_mention'
@@ -130,7 +130,7 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'New mentions', 'buddyboss-platform' ),
+			esc_html__( 'New mentions', 'buddyboss' ),
 			array( 'bb_new_mention' ),
 			10
 		);
@@ -165,7 +165,7 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 			in_array( $notification->component_name, array( 'core' ), true )
 		) {
 			$comment                = get_comment( $notification->item_id );
-			$notification_type_html = esc_html__( 'comment', 'buddyboss-platform' );
+			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
 			$notification_link      = bboss_get_notifications_permalink();
 			$commenter_name         = '';
 
@@ -182,17 +182,17 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 				if ( ! empty( $notification_type_html ) ) {
 					$text = sprintf(
 					/* translators: Activity type. */
-						__( 'Mentioned you in a %s', 'buddyboss-platform' ),
+						__( 'Mentioned you in a %s', 'buddyboss' ),
 						$notification_type_html
 					);
 				} else {
-					$text = __( 'Mentioned you', 'buddyboss-platform' );
+					$text = __( 'Mentioned you', 'buddyboss' );
 				}
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 					/* translators: %s: Total mentioned count. */
-						__( 'You have %1$d new mentions', 'buddyboss-platform' ),
+						__( 'You have %1$d new mentions', 'buddyboss' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
@@ -200,14 +200,14 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 					if ( ! empty( $notification_type_html ) ) {
 						$text = sprintf(
 						/* translators: 1: User full name, 2: Activity type. */
-							esc_html__( '%1$s mentioned you in a %2$s', 'buddyboss-platform' ),
+							esc_html__( '%1$s mentioned you in a %2$s', 'buddyboss' ),
 							$commenter_name,
 							$notification_type_html
 						);
 					} else {
 						$text = sprintf(
 						/* translators: %s: User full name. */
-							esc_html__( '%1$s mentioned you', 'buddyboss-platform' ),
+							esc_html__( '%1$s mentioned you', 'buddyboss' ),
 							$commenter_name
 						);
 					}
@@ -264,19 +264,19 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 
 			if ( $notification_type ) {
 				if ( 'post_comment' === $notification_type ) {
-					$notification_type_html = esc_html__( 'comment', 'buddyboss-platform' );
+					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
 
 					if ( bboss_is_active( 'activity' ) ) {
 						$notification_link = bboss_activity_get_permalink( $item_id );
 						$notification_link = apply_filters( 'bp_activity_new_at_mention_permalink', $notification_link, $item_id, $secondary_item_id, $total_items );
 					}
 				} elseif ( 'activity_comment' === $notification_type || 'activity_post' === $notification_type ) {
-					$notification_type_html = esc_html__( 'post', 'buddyboss-platform' );
+					$notification_type_html = esc_html__( 'post', 'buddyboss' );
 					if ( bboss_is_active( 'activity' ) ) {
 						$notification_link = bboss_activity_get_permalink( $item_id );
 					}
 				} elseif ( 'forum_reply' === $notification_type || 'forum_topic' === $notification_type ) {
-					$notification_type_html = esc_html__( 'discussion', 'buddyboss-platform' );
+					$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
 
 					if ( bboss_is_active( 'forums' ) ) {
 						$notification_link = bboss_bbp_get_reply_url( $item_id );
@@ -290,17 +290,17 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 				if ( ! empty( $notification_type_html ) ) {
 					$text = sprintf(
 						/* translators: Activity type. */
-						__( 'Mentioned you in a %s', 'buddyboss-platform' ),
+						__( 'Mentioned you in a %s', 'buddyboss' ),
 						$notification_type_html
 					);
 				} else {
-					$text = __( 'Mentioned you', 'buddyboss-platform' );
+					$text = __( 'Mentioned you', 'buddyboss' );
 				}
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 					/* translators: %s: Total mentioned count. */
-						__( 'You have %1$d new mentions', 'buddyboss-platform' ),
+						__( 'You have %1$d new mentions', 'buddyboss' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
@@ -308,14 +308,14 @@ class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstra
 					if ( ! empty( $notification_type_html ) ) {
 						$text = sprintf(
 						/* translators: 1: User full name, 2: Activity type. */
-							esc_html__( '%1$s mentioned you in a %2$s', 'buddyboss-platform' ),
+							esc_html__( '%1$s mentioned you in a %2$s', 'buddyboss' ),
 							$user_fullname,
 							$notification_type_html
 						);
 					} else {
 						$text = sprintf(
 						/* translators: %s: User full name. */
-							esc_html__( '%1$s mentioned you', 'buddyboss-platform' ),
+							esc_html__( '%1$s mentioned you', 'buddyboss' ),
 							$user_fullname
 						);
 					}

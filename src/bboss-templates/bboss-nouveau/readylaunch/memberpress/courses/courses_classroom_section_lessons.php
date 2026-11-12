@@ -85,13 +85,13 @@ foreach ( $sections as $section ) :
 						<span class="mpcs-button">
 						<?php if ( $has_completed_lesson ) : ?>
 							<span class="btn is-outline" href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>">
-							<?php esc_html_e( 'View', 'buddyboss-platform' ); ?>
+							<?php esc_html_e( 'View', 'buddyboss' ); ?>
 						</span>
 
 						<?php elseif ( $lesson_available ) : ?>
 							<span class="btn btn-green is-purple"
 								href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>">
-							<?php esc_html_e( 'Start', 'buddyboss-platform' ); ?>
+							<?php esc_html_e( 'Start', 'buddyboss' ); ?>
 						</span>
 						<?php endif; ?>
 					</span>
@@ -102,7 +102,7 @@ foreach ( $sections as $section ) :
 						</a>
 					<?php else : ?>
 						</span>
-						<span class="mpcs-lesson-locked-tooltip"><?php esc_html_e( 'Lesson unavailable. You must complete all previous lessons and quizzes before you start this lesson.', 'buddyboss-platform' ); ?></span>
+						<span class="mpcs-lesson-locked-tooltip"><?php esc_html_e( 'Lesson unavailable. You must complete all previous lessons and quizzes before you start this lesson.', 'buddyboss' ); ?></span>
 					<?php endif; ?>
 					</div>
 					<?php

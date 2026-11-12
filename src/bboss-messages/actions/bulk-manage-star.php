@@ -57,7 +57,7 @@ function bboss_messages_star_bulk_manage_handler() {
 			}
 
 			/* translators: %s: number of messages starred. */
-			bboss_core_add_message( sprintf( _n( '%s message was successfully starred', '%s messages were successfully starred', $count, 'buddyboss-platform' ), $count ) );
+			bboss_core_add_message( sprintf( _n( '%s message was successfully starred', '%s messages were successfully starred', $count, 'buddyboss' ), $count ) );
 			break;
 
 		case 'unstar':
@@ -74,7 +74,7 @@ function bboss_messages_star_bulk_manage_handler() {
 			}
 
 			/* translators: %s: number of messages unstarred. */
-			bboss_core_add_message( sprintf( _n( '%s message was successfully unstarred', '%s messages were successfully unstarred', $count, 'buddyboss-platform' ), $count ) );
+			bboss_core_add_message( sprintf( _n( '%s message was successfully unstarred', '%s messages were successfully unstarred', $count, 'buddyboss' ), $count ) );
 			break;
 	}
 

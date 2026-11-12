@@ -3059,7 +3059,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->isolate_draft_maintenance();
 
 		if ( ! function_exists( 'bboss_version_updater' ) ) {
-			require_once bboss()->plugin_dir . 'bboss-core/bboss-core-update.php';
+			require_once bboss()->plugin_dir . 'bp-core/bboss-core-update.php';
 		}
 
 		$this->assertGreaterThan( 23631, (int) bboss()->db_version, 'db_version must be above the 3.7.0 value so the upgrade routine runs.' );
@@ -3112,7 +3112,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->isolate_draft_maintenance();
 
 		if ( ! function_exists( 'bboss_drafts_cleanup_on_upgrade' ) ) {
-			require_once bboss()->plugin_dir . 'bboss-core/bboss-core-update.php';
+			require_once bboss()->plugin_dir . 'bp-core/bboss-core-update.php';
 		}
 
 		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
@@ -3429,7 +3429,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->isolate_draft_maintenance();
 
 		if ( ! function_exists( 'bboss_drafts_cleanup_on_upgrade' ) ) {
-			require_once bboss()->plugin_dir . 'bboss-core/bboss-core-update.php';
+			require_once bboss()->plugin_dir . 'bp-core/bboss-core-update.php';
 		}
 
 		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
@@ -10236,7 +10236,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * the whole suite green.
 	 *
 	 * Mutation check: skip bboss_draft_protect_payload_attachments() in
-	 * bboss-templates/bboss-nouveau/includes/activity/ajax.php when the payload is
+	 * bp-templates/bp-nouveau/includes/activity/ajax.php when the payload is
 	 * already over bboss_draft_max_size(), and this goes red.
 	 */
 	public function test_size_capped_activity_save_still_protects_uploaded_attachments() {
@@ -10509,7 +10509,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * full TTL.
 	 *
 	 * Mutation check: move the bboss_draft_invalidate_referenced_cache() call in
-	 * bboss-forums/core/actions.php above the bboss_update_user_meta() row write, and
+	 * bp-forums/core/actions.php above the bboss_update_user_meta() row write, and
 	 * this goes red.
 	 */
 	public function test_forum_draft_save_bumps_the_referenced_token_after_the_row_write() {
@@ -10557,7 +10557,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * leaving one to drift.
 	 *
 	 * Mutation check: move the bboss_draft_invalidate_referenced_cache() call in
-	 * bboss-templates/bboss-nouveau/includes/activity/ajax.php above the
+	 * bp-templates/bp-nouveau/includes/activity/ajax.php above the
 	 * bboss_update_user_meta() row write, and this goes red.
 	 */
 	public function test_activity_draft_save_bumps_the_referenced_token_after_the_row_write() {

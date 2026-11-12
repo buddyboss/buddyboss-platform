@@ -24,7 +24,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 	return;
 }
 ?>
-<nav class="bb-rl-profile-edit-subnav" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Sub Menu', 'buddyboss-platform' ); ?>">
+<nav class="bb-rl-profile-edit-subnav" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Sub Menu', 'buddyboss' ); ?>">
 	<ul class="subnav">
 		<?php
 		// Profile link.
@@ -38,7 +38,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 		if ( $is_enable_profile_avatar && bboss()->avatar->show_avatars ) {
 			?>
 			<li class="bb-rl-profile-subnav-item <?php echo esc_attr( bboss_is_user_change_avatar() ? 'selected' : '' ); ?>" id="bb-rl-xprofile-change-avatar">
-				<a href="<?php echo esc_url( trailingslashit( $profile_link . 'change-avatar' ) ); ?>"><?php esc_html_e( 'Profile Photo', 'buddyboss-platform' ); ?></a>
+				<a href="<?php echo esc_url( trailingslashit( $profile_link . 'change-avatar' ) ); ?>"><?php esc_html_e( 'Profile Photo', 'buddyboss' ); ?></a>
 			</li>
 			<?php
 		}
@@ -67,7 +67,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 					<a href="<?php echo esc_url( $edit_profile_link . bboss_get_the_profile_group_id() ); ?>">
 						<?php
 						if ( 1 === $profile_group_id ) {
-							echo esc_html__( 'General Information', 'buddyboss-platform' );
+							echo esc_html__( 'General Information', 'buddyboss' );
 						} else {
 							echo esc_html( $profile_group_name );
 						}

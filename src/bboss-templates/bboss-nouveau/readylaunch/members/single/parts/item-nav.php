@@ -14,7 +14,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 
-<nav class="<?php bboss_nouveau_single_item_nav_classes(); ?> bb-rl-main-nav" id="object-nav" role="navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'buddyboss-platform' ); ?>">
+<nav class="<?php bboss_nouveau_single_item_nav_classes(); ?> bb-rl-main-nav" id="object-nav" role="navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'buddyboss' ); ?>">
 
 	<?php if ( bboss_nouveau_has_nav( array( 'type' => 'primary' ) ) ) : ?>
 		<ul class="bb-rl-main-nav-list">

@@ -129,7 +129,7 @@ function bboss_nouveau_ajax_albums_loader() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -161,7 +161,7 @@ function bboss_nouveau_ajax_albums_loader() {
 		if ( bboss_album_has_more_items() ) : ?>
 
 			<li class="load-more">
-				<a class="button outline" href="<?php bboss_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
+				<a class="button outline" href="<?php bboss_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 			</li>
 
 			<?php
@@ -186,7 +186,7 @@ function bboss_nouveau_ajax_albums_loader() {
  */
 function bboss_nouveau_ajax_media_upload() {
 	$response = array(
-		'feedback' => __( 'There was a problem when trying to upload this file.', 'buddyboss-platform' ),
+		'feedback' => __( 'There was a problem when trying to upload this file.', 'buddyboss' ),
 	);
 
 	// Bail if not a POST action.
@@ -225,7 +225,7 @@ function bboss_nouveau_ajax_media_save() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -259,7 +259,7 @@ function bboss_nouveau_ajax_media_save() {
 	if ( ! empty( $album_id ) && bboss_is_single_album() && $current_album_id !== $album_id ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem saving media.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem saving media.', 'buddyboss' )
 		);
 
 		$album = new BBoss_Media_Album( $album_id );
@@ -302,7 +302,7 @@ function bboss_nouveau_ajax_media_save() {
 			if ( ! $can_add ) {
 				$response['feedback'] = sprintf(
 					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-					esc_html__( 'You do not have permission to add media to this album.', 'buddyboss-platform' )
+					esc_html__( 'You do not have permission to add media to this album.', 'buddyboss' )
 				);
 				wp_send_json_error( $response );
 			}
@@ -313,7 +313,7 @@ function bboss_nouveau_ajax_media_save() {
 	if ( empty( $medias ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please upload media before saving.', 'buddyboss-platform' )
+			esc_html__( 'Please upload media before saving.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -323,7 +323,7 @@ function bboss_nouveau_ajax_media_save() {
 		if ( ! in_array( $album_id, $album_ids, true ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'There was a problem saving media.', 'buddyboss-platform' )
+				esc_html__( 'There was a problem saving media.', 'buddyboss' )
 			);
 			wp_send_json_error( $response );
 		}
@@ -341,7 +341,7 @@ function bboss_nouveau_ajax_media_save() {
 		) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to add media to this album.', 'buddyboss-platform' )
+				esc_html__( 'You do not have permission to add media to this album.', 'buddyboss' )
 			);
 			wp_send_json_error( $response );
 		}
@@ -409,7 +409,7 @@ function bboss_nouveau_ajax_media_save() {
 	if ( empty( $media ) && ! $skip_error ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem saving media.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem saving media.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -483,7 +483,7 @@ function bboss_nouveau_ajax_media_delete() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -510,7 +510,7 @@ function bboss_nouveau_ajax_media_delete() {
 	if ( empty( $media ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please select media to delete.', 'buddyboss-platform' )
+			esc_html__( 'Please select media to delete.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -542,7 +542,7 @@ function bboss_nouveau_ajax_media_delete() {
 	if ( count( $media_ids ) !== count( $media ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem deleting media.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem deleting media.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -614,7 +614,7 @@ function bboss_nouveau_ajax_media_delete() {
 			if ( bboss_media_has_more_items() ) {
 				?>
 				<li class="load-more">
-					<a class="button outline full" href="<?php bboss_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
+					<a class="button outline full" href="<?php bboss_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 				</li>
 				<?php
 			}
@@ -652,7 +652,7 @@ function bboss_nouveau_ajax_media_delete() {
 			if ( bboss_media_has_more_items() ) {
 				?>
 				<li class="load-more">
-					<a class="button outline full" href="<?php bboss_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
+					<a class="button outline full" href="<?php bboss_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 				</li>
 				<?php
 			}
@@ -720,7 +720,7 @@ function bboss_nouveau_ajax_media_move_to_album() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -743,7 +743,7 @@ function bboss_nouveau_ajax_media_move_to_album() {
 	if ( empty( $medias ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Please upload media before saving.', 'buddyboss-platform' )
+			esc_html__( 'Please upload media before saving.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -754,7 +754,7 @@ function bboss_nouveau_ajax_media_move_to_album() {
 	if ( empty( $album_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Please provide album to move media.', 'buddyboss-platform' )
+			esc_html__( 'Please provide album to move media.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -780,7 +780,7 @@ function bboss_nouveau_ajax_media_move_to_album() {
 		if ( ! $media ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'There was a problem when trying to move the media.', 'buddyboss-platform' )
+				esc_html__( 'There was a problem when trying to move the media.', 'buddyboss' )
 			);
 
 			wp_send_json_error( $response );
@@ -873,7 +873,7 @@ function bboss_nouveau_ajax_media_album_save() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -896,7 +896,7 @@ function bboss_nouveau_ajax_media_album_save() {
 	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please enter title of album.', 'buddyboss-platform' )
+			esc_html__( 'Please enter title of album.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -916,7 +916,7 @@ function bboss_nouveau_ajax_media_album_save() {
 		if ( ! bboss_album_user_can_edit( $id ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You don\'t have permission to edit this album.', 'buddyboss-platform' )
+				esc_html__( 'You don\'t have permission to edit this album.', 'buddyboss' )
 			);
 			wp_send_json_error( $response );
 		}
@@ -937,7 +937,7 @@ function bboss_nouveau_ajax_media_album_save() {
 	if ( ! array_key_exists( $privacy, bboss_media_get_visibility_levels() ) && ! empty( $id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Invalid privacy status.', 'buddyboss-platform' )
+			esc_html__( 'Invalid privacy status.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -955,7 +955,7 @@ function bboss_nouveau_ajax_media_album_save() {
 	if ( ! $album_id ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem when trying to create the album.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem when trying to create the album.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -1013,7 +1013,7 @@ function bboss_nouveau_ajax_media_album_delete() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -1037,7 +1037,7 @@ function bboss_nouveau_ajax_media_album_delete() {
 	if ( empty( $album_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide ID of album to delete.', 'buddyboss-platform' )
+			esc_html__( 'Please provide ID of album to delete.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1046,7 +1046,7 @@ function bboss_nouveau_ajax_media_album_delete() {
 	if ( ! bboss_album_user_can_delete( $album_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'You do not have permission to delete this album.', 'buddyboss-platform' )
+			esc_html__( 'You do not have permission to delete this album.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1087,7 +1087,7 @@ function bboss_nouveau_ajax_media_get_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -1171,7 +1171,7 @@ function bboss_nouveau_ajax_media_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -1193,7 +1193,7 @@ function bboss_nouveau_ajax_media_delete_attachment() {
 	if ( empty( $id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide attachment id to delete.', 'buddyboss-platform' )
+			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1204,7 +1204,7 @@ function bboss_nouveau_ajax_media_delete_attachment() {
 	if ( empty( $attachment ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide valid attachment id to delete.', 'buddyboss-platform' )
+			esc_html__( 'Please provide valid attachment id to delete.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1214,7 +1214,7 @@ function bboss_nouveau_ajax_media_delete_attachment() {
 	if ( ! ( bboss_current_user_can( 'bp_moderate' ) || (int) $attachment->post_author === bboss_loggedin_user_id() ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss-platform' )
+			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1239,7 +1239,7 @@ function bboss_nouveau_ajax_media_update_privacy() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -1257,7 +1257,7 @@ function bboss_nouveau_ajax_media_update_privacy() {
 	if ( empty( $media_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide media id to update.', 'buddyboss-platform' )
+			esc_html__( 'Please provide media id to update.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1268,7 +1268,7 @@ function bboss_nouveau_ajax_media_update_privacy() {
 	if ( empty( $privacy ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide privacy to update.', 'buddyboss-platform' )
+			esc_html__( 'Please provide privacy to update.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1277,7 +1277,7 @@ function bboss_nouveau_ajax_media_update_privacy() {
 	if ( ! in_array( $privacy, array_keys( bboss_media_get_visibility_levels() ) ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Privacy option is not valid.', 'buddyboss-platform' )
+			esc_html__( 'Privacy option is not valid.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1286,7 +1286,7 @@ function bboss_nouveau_ajax_media_update_privacy() {
     if ( ! bboss_media_user_can_edit( $media_id ) ) {
 	    $response['feedback'] = sprintf(
 		    '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-		    esc_html__( 'You don\'t have a permission to update privacy.', 'buddyboss-platform' )
+		    esc_html__( 'You don\'t have a permission to update privacy.', 'buddyboss' )
 	    );
 
 	    wp_send_json_error( $response );
@@ -1322,7 +1322,7 @@ function bboss_nouveau_ajax_media_description_save() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -1345,7 +1345,7 @@ function bboss_nouveau_ajax_media_description_save() {
 	if ( empty( $description ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1356,7 +1356,7 @@ function bboss_nouveau_ajax_media_description_save() {
 	if ( empty( $attachment ) || 'attachment' !== $attachment->post_type ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1392,7 +1392,7 @@ function bboss_nouveau_ajax_media_description_save() {
 	// item the user can edit. Video and document items are only editable while their
 	// component (provided by BuddyBoss Add-ons) is active and loaded.
 	$can_edit           = false;
-	$permission_message = esc_html__( 'You do not have permission to update this media\'s description.', 'buddyboss-platform' );
+	$permission_message = esc_html__( 'You do not have permission to update this media\'s description.', 'buddyboss' );
 
 	if ( ! empty( $media_id ) ) {
 		$media    = new BBoss_Media( $media_id );
@@ -1400,11 +1400,11 @@ function bboss_nouveau_ajax_media_description_save() {
 	} elseif ( ! empty( $video_id ) && bboss_is_active( 'video' ) && class_exists( 'BP_Video' ) && function_exists( 'bp_video_user_can_edit' ) ) {
 		$video              = new BP_Video( $video_id );
 		$can_edit           = ! empty( $video->id ) && (int) $video->attachment_id === (int) $attachment_id && bp_video_user_can_edit( $video );
-		$permission_message = esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss-platform' );
+		$permission_message = esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' );
 	} elseif ( ! empty( $document_id ) && bboss_is_active( 'document' ) && class_exists( 'BP_Document' ) && function_exists( 'bp_document_user_can_edit' ) ) {
 		$document           = new BP_Document( $document_id );
 		$can_edit           = ! empty( $document->id ) && (int) $document->attachment_id === (int) $attachment_id && bp_document_user_can_edit( $document );
-		$permission_message = esc_html__( 'You do not have permission to update this document\'s description.', 'buddyboss-platform' );
+		$permission_message = esc_html__( 'You do not have permission to update this document\'s description.', 'buddyboss' );
 	}
 
 	if ( ! $can_edit ) {
@@ -1512,7 +1512,7 @@ function bboss_nouveau_ajax_media_get_media_description() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -1628,15 +1628,15 @@ function bboss_nouveau_ajax_media_get_media_description() {
 					if ( $download_url ) {
 						?>
 						<div class="bb-activity-more-options-wrap action">
-								<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="<?php echo esc_html__( 'More Options', 'buddyboss-platform' ); ?>">
+								<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="<?php echo esc_html__( 'More Options', 'buddyboss' ); ?>">
 									<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 								</span>
 							<div class="bb-activity-more-options bb_more_dropdown">
 								<?php bboss_get_template_part( 'common/more-options-view' ); ?>
 								<div class="generic-button">
 									<a id="activity-media-download-<?php echo esc_attr( $attachment_id ); ?>" href="<?php echo esc_url( $download_url ); ?>" class="button item-button bp-secondary-action activity-media-download download-activity">
-										<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss-platform' ); ?></span>
-										<span class="download-label"><?php echo esc_html__( 'Download', 'buddyboss-platform' ); ?></span>
+										<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+										<span class="download-label"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
 									</a>
 								</div>
 							</div>
@@ -1651,7 +1651,7 @@ function bboss_nouveau_ajax_media_get_media_description() {
 					</div>
 
 					<div class="activity-header">
-						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an image', 'buddyboss-platform' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an image', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
 						<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $time_since ); ?></a></p>
 					</div>
 				</div>
@@ -1662,18 +1662,18 @@ function bboss_nouveau_ajax_media_get_media_description() {
 						?>
 						<a class="bp-add-media-activity-description <?php echo ( ! empty( $media->description ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
 							<span class="bb-icon-l bb-icon-edit"></span>
-							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?></span>
-							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
+							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 						</a>
 
 						<div class="bp-edit-media-activity-description" style="display: none;">
 							<div class="innerWrap">
-								<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" role="textbox"><?php echo esc_textarea( $media->description ); ?></textarea>
+								<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo esc_textarea( $media->description ); ?></textarea>
 							</div>
 							<div class="in-profile description-new-submit">
 								<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
-								<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss-platform' ); ?>">
-								<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?>">
+								<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+								<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 							</div>
 						</div>
 						<?php
@@ -1749,7 +1749,7 @@ function bboss_nouveau_ajax_media_get_album_view() {
 	$first_text   = '';
 	$create_album = false;
 	if ( 'profile' === $type ) {
-		$first_text   = esc_html__( ' Medias', 'buddyboss-platform' );
+		$first_text   = esc_html__( ' Medias', 'buddyboss' );
 		$create_album = is_user_logged_in() && bboss_is_profile_media_support_enabled() && bboss_user_can_create_media();
 
 	} else {
@@ -1778,7 +1778,7 @@ function bboss_nouveau_ajax_media_get_album_view() {
 function bboss_nouveau_ajax_media_move() {
 
 	$response = array(
-		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' ),
+		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
 	);
 
 	// Bail if not a POST action.
@@ -1819,7 +1819,7 @@ function bboss_nouveau_ajax_media_move() {
 	if ( (int) $media_id > 0 ) {
 		$has_access = bboss_media_user_can_edit( $media_id );
 		if ( ! $has_access ) {
-			$response['feedback'] = esc_html__( 'You don\'t have permission to move this media.', 'buddyboss-platform' );
+			$response['feedback'] = esc_html__( 'You don\'t have permission to move this media.', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 	}
@@ -1827,7 +1827,7 @@ function bboss_nouveau_ajax_media_move() {
 	if ( (int) $album_id > 0 ) {
 		$has_access = bboss_album_user_can_edit( $album_id );
 		if ( ! $has_access ) {
-			$response['feedback'] = esc_html__( 'You don\'t have permission to move this media.', 'buddyboss-platform' );
+			$response['feedback'] = esc_html__( 'You don\'t have permission to move this media.', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 	}

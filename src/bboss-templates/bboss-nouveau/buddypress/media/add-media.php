@@ -15,7 +15,7 @@ if ( ( ( bboss_is_my_profile() && bboss_user_can_create_media() ) || ( bboss_is_
 
 	<div class="bb-media-actions-wrap">
 		<div class="bb-media-actions">
-			<a href="#" id="bp-add-media" class="bb-add-media button small outline"><?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?></a>
+			<a href="#" id="bp-add-media" class="bb-add-media button small outline"><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 

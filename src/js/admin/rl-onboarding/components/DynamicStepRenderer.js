@@ -156,7 +156,7 @@ export const DynamicStepRenderer = ({
 
             case 'text':
                 // Add placeholder for fields without labels
-                const placeholder = !label && fieldKey === 'blogname' ? __('Enter site title...', 'buddyboss-platform') : '';
+                const placeholder = !label && fieldKey === 'blogname' ? __('Enter site title...', 'buddyboss') : '';
 
                 return (
                     <TextControl
@@ -259,9 +259,9 @@ export const DynamicStepRenderer = ({
 
                     // Create the media frame
                     const mediaFrame = window.wp.media({
-                        title: __('Select or Upload Media', 'buddyboss-platform'),
+                        title: __('Select or Upload Media', 'buddyboss'),
                         button: {
-                            text: __('Use this media', 'buddyboss-platform'),
+                            text: __('Use this media', 'buddyboss'),
                         },
                         multiple: false,
                         library: {
@@ -303,14 +303,14 @@ export const DynamicStepRenderer = ({
                                                 className="change-image-button bb-rl-button bb-rl-button--secondary bb-rl-button--small"
                                                 icon={<i className="bb-icons-rl-upload-simple" />}
                                             >
-                                                {__('Replace', 'buddyboss-platform')}
+                                                {__('Replace', 'buddyboss')}
                                             </Button>
                                             <Button
                                                 onClick={() => onChange(null)}
                                                 className="remove-image-button bb-rl-button bb-rl-button--outline bb-rl-button--small"
                                                 icon={<i className="bb-icons-rl-x" />}
                                             >
-                                                {__('Remove', 'buddyboss-platform')}
+                                                {__('Remove', 'buddyboss')}
                                             </Button>
                                         </div>
                                     </div>
@@ -575,16 +575,16 @@ export const DynamicStepRenderer = ({
                             <div className="bb-rl-link-item-edit" ref={innerRef} {...draggableProps}>
                                 <div className="bb-rl-edit-form">
                                     <TextControl
-                                        label={__('Link Title', 'buddyboss-platform')}
+                                        label={__('Link Title', 'buddyboss')}
                                         value={linkFormData.title}
                                         onChange={(value) => setLinkFormData({ ...linkFormData, title: value })}
-                                        placeholder={__('Enter link title', 'buddyboss-platform')}
+                                        placeholder={__('Enter link title', 'buddyboss')}
                                     />
                                     <TextControl
-                                        label={__('Link URL', 'buddyboss-platform')}
+                                        label={__('Link URL', 'buddyboss')}
                                         value={linkFormData.url}
                                         onChange={(value) => setLinkFormData({ ...linkFormData, url: value })}
-                                        placeholder={__('Enter link URL', 'buddyboss-platform')}
+                                        placeholder={__('Enter link URL', 'buddyboss')}
                                         type="url"
                                     />
                                     <div className="bb-rl-edit-actions">
@@ -592,13 +592,13 @@ export const DynamicStepRenderer = ({
                                             className="bb-rl-button bb-rl-button--primary bb-rl-button--small"
                                             onClick={handleSaveEditedLink}
                                         >
-                                            {__('Save', 'buddyboss-platform')}
+                                            {__('Save', 'buddyboss')}
                                         </Button>
                                         <Button
                                             className="bb-rl-button bb-rl-button--outline bb-rl-button--small"
                                             onClick={handleCancelEdit}
                                         >
-                                            {__('Cancel', 'buddyboss-platform')}
+                                            {__('Cancel', 'buddyboss')}
                                         </Button>
                                     </div>
                                 </div>
@@ -623,14 +623,14 @@ export const DynamicStepRenderer = ({
                                                 className="bb-rl-edit-link-button"
                                                 icon={<i className="bb-icons-rl-pencil-simple" />}
                                                 onClick={onEdit}
-                                                label={__('Edit', 'buddyboss-platform')}
+                                                label={__('Edit', 'buddyboss')}
                                                 isSmall
                                             />
                                             <Button
                                                 className="bb-rl-delete-link-button"
                                                 icon={<i className="bb-icons-rl-trash" />}
                                                 onClick={onDelete}
-                                                label={__('Delete', 'buddyboss-platform')}
+                                                label={__('Delete', 'buddyboss')}
                                                 isSmall
                                             />
                                         </div>
@@ -681,17 +681,17 @@ export const DynamicStepRenderer = ({
                                         {showAddForm && (
                                             <div className="bb-rl-add-link-form">
                                                 <TextControl
-                                                    label={__('Link Title', 'buddyboss-platform')}
+                                                    label={__('Link Title', 'buddyboss')}
                                                     value={linkFormData.title}
                                                     onChange={(value) => setLinkFormData({ ...linkFormData, title: value })}
-                                                    placeholder={__('Enter link title', 'buddyboss-platform')}
+                                                    placeholder={__('Enter link title', 'buddyboss')}
                                                     required
                                                 />
                                                 <TextControl
-                                                    label={__('Link URL', 'buddyboss-platform')}
+                                                    label={__('Link URL', 'buddyboss')}
                                                     value={linkFormData.url}
                                                     onChange={(value) => setLinkFormData({ ...linkFormData, url: value })}
-                                                    placeholder={__('Enter link URL', 'buddyboss-platform')}
+                                                    placeholder={__('Enter link URL', 'buddyboss')}
                                                     type="url"
                                                     required
                                                 />
@@ -700,13 +700,13 @@ export const DynamicStepRenderer = ({
                                                         className="bb-rl-button bb-rl-button--primary bb-rl-button--small"
                                                         onClick={handleAddLink}
                                                     >
-                                                        {__('Add Link', 'buddyboss-platform')}
+                                                        {__('Add Link', 'buddyboss')}
                                                     </Button>
                                                     <Button
                                                         className="bb-rl-button bb-rl-button--outline bb-rl-button--small"
                                                         onClick={handleCancelEdit}
                                                     >
-                                                        {__('Cancel', 'buddyboss-platform')}
+                                                        {__('Cancel', 'buddyboss')}
                                                     </Button>
                                                 </div>
                                             </div>
@@ -719,7 +719,7 @@ export const DynamicStepRenderer = ({
                                                 onClick={() => setShowAddForm(true)}
                                                 icon={<i className="bb-icons-rl-plus" />}
                                             >
-                                                {__('Add New Link', 'buddyboss-platform')}
+                                                {__('Add New Link', 'buddyboss')}
                                             </Button>
                                         )}
                                     </div>
@@ -733,7 +733,7 @@ export const DynamicStepRenderer = ({
                 return (
                     <div key={fieldKey} className="bb-rl-field-group">
                         <p className="bb-rl-error-message">
-                            {__('Unknown field type:', 'buddyboss-platform')} {type}
+                            {__('Unknown field type:', 'buddyboss')} {type}
                         </p>
                     </div>
                 );
@@ -1025,7 +1025,7 @@ export const DynamicStepRenderer = ({
 						className="color-picker-button"
 						onClick={togglePicker}
 						aria-expanded={isPickerOpen}
-						aria-label={__('Select color', 'buddyboss-platform')}
+						aria-label={__('Select color', 'buddyboss')}
 					>
 						<div className="color-indicator-wrapper">
 							<ColorIndicator colorValue={colorValue} />
@@ -1053,7 +1053,7 @@ export const DynamicStepRenderer = ({
 										onClick={applyColor}
 										className="apply-color-button"
 									>
-										{__('Apply', 'buddyboss-platform')}
+										{__('Apply', 'buddyboss')}
 									</Button>
 								</div>
 							</div>

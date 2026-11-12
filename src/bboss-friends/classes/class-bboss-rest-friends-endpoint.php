@@ -74,7 +74,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'Identifier for the friendship.', 'buddyboss-platform' ),
+						'description' => __( 'Identifier for the friendship.', 'buddyboss' ),
 						'type'        => 'integer',
 					),
 				),
@@ -179,7 +179,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! $user instanceof WP_User ) {
 			return new WP_Error(
 				'bp_rest_friends_get_items_user_failed',
-				__( 'There was a problem confirming if user is valid.', 'buddyboss-platform' ),
+				__( 'There was a problem confirming if user is valid.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -224,7 +224,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -269,7 +269,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! $friendship || empty( $friendship->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid friendship ID.', 'buddyboss-platform' ),
+				__( 'Invalid friendship ID.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -307,7 +307,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -355,7 +355,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! $initiator_id || ! $friend_id ) {
 			return new WP_Error(
 				'bp_rest_friends_create_item_failed',
-				__( 'There was a problem confirming if user is a valid one.', 'buddyboss-platform' ),
+				__( 'There was a problem confirming if user is a valid one.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -366,7 +366,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( 'not_friends' !== bboss_friends_check_friendship_status( $initiator_id->ID, $friend_id->ID ) ) {
 			return new WP_Error(
 				'bp_rest_friends_create_item_failed',
-				__( 'Those users are already friends or have sent friendship request(s) recently.', 'buddyboss-platform' ),
+				__( 'Those users are already friends or have sent friendship request(s) recently.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -379,7 +379,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! in_array( bboss_loggedin_user_id(), array( $initiator_id->ID, $friend_id->ID ), true ) && ! $is_moderator ) {
 			return new WP_Error(
 				'bp_rest_friends_create_item_failed',
-				__( 'You are not allowed to perform this action.', 'buddyboss-platform' ),
+				__( 'You are not allowed to perform this action.', 'buddyboss' ),
 				array(
 					'status' => 403,
 				)
@@ -396,7 +396,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! bboss_friends_add_friend( $initiator_id->ID, $friend_id->ID, $request['force'] ) ) {
 			return new WP_Error(
 				'bp_rest_friends_create_item_failed',
-				__( 'There was a problem sending the connection request.', 'buddyboss-platform' ),
+				__( 'There was a problem sending the connection request.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -411,7 +411,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! $friendship || empty( $friendship->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Friendship does not exist.', 'buddyboss-platform' ),
+				__( 'Friendship does not exist.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -485,7 +485,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! $friendship || empty( $friendship->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid friendship ID.', 'buddyboss-platform' ),
+				__( 'Invalid friendship ID.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -496,7 +496,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! bboss_friends_accept_friendship( $friendship->id ) ) {
 			return new WP_Error(
 				'bp_rest_friends_cannot_update_item',
-				__( 'Could not accept friendship.', 'buddyboss-platform' ),
+				__( 'Could not accept friendship.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -570,7 +570,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( empty( $request['friend_id'] ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid ID of the friend member.', 'buddyboss-platform' ),
+				__( 'Invalid ID of the friend member.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -582,7 +582,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! $user instanceof WP_User ) {
 			return new WP_Error(
 				'bp_rest_invalid_friend_user',
-				__( 'There was a problem confirming if friend user is a valid one.', 'buddyboss-platform' ),
+				__( 'There was a problem confirming if friend user is a valid one.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -604,7 +604,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		} else {
 			$status = new WP_Error(
 				'bp_rest_friends_cannot_unfriend_friendship',
-				__( 'Connection could not be cancelled.', 'buddyboss-platform' ),
+				__( 'Connection could not be cancelled.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -681,7 +681,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! $friendship || empty( $friendship->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid friendship ID.', 'buddyboss-platform' ),
+				__( 'Invalid friendship ID.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -710,7 +710,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		if ( ! $deleted ) {
 			return new WP_Error(
 				'bp_rest_friends_cannot_delete_item',
-				__( 'Could not delete friendship.', 'buddyboss-platform' ),
+				__( 'Could not delete friendship.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -835,7 +835,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 
 			// This one is optional.
 			$args['force'] = array(
-				'description'       => __( 'Whether to force friendship acceptance.', 'buddyboss-platform' ),
+				'description'       => __( 'Whether to force friendship acceptance.', 'buddyboss' ),
 				'default'           => false,
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
@@ -874,28 +874,28 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the friendship.', 'buddyboss-platform' ),
+					'description' => __( 'A unique numeric ID for the friendship.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
 				'initiator_id' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'User ID of the friendship initiator.', 'buddyboss-platform' ),
+					'description' => __( 'User ID of the friendship initiator.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
 				'friend_id'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'User ID of the `friend` - the one invited to the friendship.', 'buddyboss-platform' ),
+					'description' => __( 'User ID of the `friend` - the one invited to the friendship.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
 				'is_confirmed' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the friendship been confirmed/accepted.', 'buddyboss-platform' ),
+					'description' => __( 'Whether the friendship been confirmed/accepted.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'date_created' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( "The date the friendship was created, in the site's timezone.", 'buddyboss-platform' ),
+					'description' => __( "The date the friendship was created, in the site's timezone.", 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
@@ -926,7 +926,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		unset( $params['search'] );
 
 		$params['user_id'] = array(
-			'description'       => __( 'ID of the user whose friends are being retrieved.', 'buddyboss-platform' ),
+			'description'       => __( 'ID of the user whose friends are being retrieved.', 'buddyboss' ),
 			'default'           => bboss_loggedin_user_id(),
 			'type'              => 'integer',
 			'required'          => true,
@@ -935,7 +935,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['is_confirmed'] = array(
-			'description'       => __( 'Wether the friendship has been accepted.', 'buddyboss-platform' ),
+			'description'       => __( 'Wether the friendship has been accepted.', 'buddyboss' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -943,7 +943,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['id'] = array(
-			'description'       => __( 'ID of a specific friendship to retrieve.', 'buddyboss-platform' ),
+			'description'       => __( 'ID of a specific friendship to retrieve.', 'buddyboss' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -951,7 +951,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['initiator_id'] = array(
-			'description'       => __( 'ID of the friendship initiator.', 'buddyboss-platform' ),
+			'description'       => __( 'ID of the friendship initiator.', 'buddyboss' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -959,7 +959,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['friend_id'] = array(
-			'description'       => __( 'ID of a specific friendship to retrieve.', 'buddyboss-platform' ),
+			'description'       => __( 'ID of a specific friendship to retrieve.', 'buddyboss' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -967,7 +967,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order_by'] = array(
-			'description'       => __( 'Column name to order the results by.', 'buddyboss-platform' ),
+			'description'       => __( 'Column name to order the results by.', 'buddyboss' ),
 			'default'           => 'date_created',
 			'type'              => 'string',
 			'enum'              => array( 'date_created', 'initiator_user_id', 'friend_user_id', 'id' ),
@@ -976,7 +976,7 @@ class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Order results ascending or descending.', 'buddyboss-platform' ),
+			'description'       => __( 'Order results ascending or descending.', 'buddyboss' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),

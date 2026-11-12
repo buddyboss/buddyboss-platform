@@ -29,7 +29,7 @@ if ( bboss_has_activities( bboss_ajax_querystring( 'activity' ) ) ) :
 	if ( bboss_activity_has_more_items() ) :
 		?>
 		<li class="load-more">
-			<a class="button outline" href="<?php bboss_activity_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
+			<a class="button outline" href="<?php bboss_activity_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 		</li>
 		<?php
 	endif;

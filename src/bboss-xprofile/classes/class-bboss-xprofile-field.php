@@ -868,13 +868,13 @@ class BBoss_XProfile_Field {
 
 			// Add the 'null' option to the end of the list.
 			if ( $has_null ) {
-				$member_type_labels[] = __( 'Users with no profile type', 'buddyboss-platform' );
+				$member_type_labels[] = __( 'Users with no profile type', 'buddyboss' );
 			}
 
 			/* translators: %s: profile type names. */
-			$label = sprintf( __( '(Profile types: %s)', 'buddyboss-platform' ), implode( ', ', array_map( 'esc_html', $member_type_labels ) ) );
+			$label = sprintf( __( '(Profile types: %s)', 'buddyboss' ), implode( ', ', array_map( 'esc_html', $member_type_labels ) ) );
 		} else {
-			$label = '<span class="member-type-none-notice">' . __( '(Unavailable to all members)', 'buddyboss-platform' ) . '</span>';
+			$label = '<span class="member-type-none-notice">' . __( '(Unavailable to all members)', 'buddyboss' ) . '</span>';
 		}
 
 		return $label;
@@ -1220,21 +1220,21 @@ class BBoss_XProfile_Field {
 
 		// Check field name.
 		if ( ! isset( $_POST['title'] ) || ( '' === $_POST['title'] ) ) {
-			$message = esc_html__( 'Profile fields must have a name.', 'buddyboss-platform' );
+			$message = esc_html__( 'Profile fields must have a name.', 'buddyboss' );
 
 			return false;
 		}
 
 		// Check field requirement.
 		if ( ! isset( $_POST['required'] ) ) {
-			$message = esc_html__( 'Profile field requirement is missing.', 'buddyboss-platform' );
+			$message = esc_html__( 'Profile field requirement is missing.', 'buddyboss' );
 
 			return false;
 		}
 
 		// Check field type.
 		if ( empty( $_POST['fieldtype'] ) ) {
-			$message = esc_html__( 'Profile field type is missing.', 'buddyboss-platform' );
+			$message = esc_html__( 'Profile field type is missing.', 'buddyboss' );
 
 			return false;
 		}
@@ -1242,7 +1242,7 @@ class BBoss_XProfile_Field {
 		// Check that field is of valid type.
 		if ( ! in_array( $_POST['fieldtype'], array_keys( bboss_xprofile_get_field_types() ), true ) ) {
 			/* translators: %s: field type (wrapped in <code>). */
-			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddyboss-platform' ), '<code>' . esc_html( sanitize_text_field( wp_unslash( $_POST['fieldtype'] ) ) ) . '</code>' );
+			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddyboss' ), '<code>' . esc_html( sanitize_text_field( wp_unslash( $_POST['fieldtype'] ) ) ) . '</code>' );
 
 			return false;
 		}
@@ -1258,7 +1258,7 @@ class BBoss_XProfile_Field {
 
 			// Check for missing or malformed options.
 			if ( empty( $_POST[ $option_name ] ) || ! is_array( $_POST[ $option_name ] ) ) {
-				$message = esc_html__( 'These field options are invalid.', 'buddyboss-platform' );
+				$message = esc_html__( 'These field options are invalid.', 'buddyboss' );
 
 				return false;
 			}
@@ -1271,7 +1271,7 @@ class BBoss_XProfile_Field {
 			// Check for missing or malformed options.
 			if ( 0 === $field_count ) {
 				/* translators: %s: field type name. */
-				$message = sprintf( esc_html__( '%s require at least one option.', 'buddyboss-platform' ), $field_type->name );
+				$message = sprintf( esc_html__( '%s require at least one option.', 'buddyboss' ), $field_type->name );
 
 				return false;
 			}
@@ -1279,7 +1279,7 @@ class BBoss_XProfile_Field {
 			// If only one option exists, it cannot be an empty string.
 			if ( ( 1 === $field_count ) && ( '' === $field_options[0] ) ) {
 				/* translators: %s: field type name. */
-				$message = sprintf( esc_html__( '%s require at least one option.', 'buddyboss-platform' ), $field_type->name );
+				$message = sprintf( esc_html__( '%s require at least one option.', 'buddyboss' ), $field_type->name );
 
 				return false;
 			}
@@ -1328,8 +1328,8 @@ class BBoss_XProfile_Field {
 
 		// Add New
 		if ( empty( $this->id ) ) {
-			$title  = __( 'Add New Field', 'buddyboss-platform' );
-			$button = __( 'Save', 'buddyboss-platform' );
+			$title  = __( 'Add New Field', 'buddyboss' );
+			$button = __( 'Save', 'buddyboss' );
 			$action = add_query_arg(
 				array(
 					'page'     => 'bp-profile-setup',
@@ -1353,8 +1353,8 @@ class BBoss_XProfile_Field {
 
 			// Edit
 		} else {
-			$title  = __( 'Edit Field', 'buddyboss-platform' );
-			$button = __( 'Update', 'buddyboss-platform' );
+			$title  = __( 'Edit Field', 'buddyboss' );
+			$button = __( 'Update', 'buddyboss' );
 			$action = add_query_arg(
 				array(
 					'page'     => 'bp-profile-setup',
@@ -1371,7 +1371,7 @@ class BBoss_XProfile_Field {
 			$users_tab = count( bboss_core_get_users_admin_tabs() );
 			if ( $users_tab > 1 ) {
 				?>
-				<h2 class="nav-tab-wrapper"><?php bboss_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss-platform' ) ); ?></h2>
+				<h2 class="nav-tab-wrapper"><?php bboss_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2>
 																			<?php
 			}
 			?>
@@ -1391,7 +1391,7 @@ class BBoss_XProfile_Field {
 				?>
 
 				<a href="<?php echo esc_url( $action_add ); ?>"
-				   class="page-title-action"><?php esc_html_e( 'Add New Field', 'buddyboss-platform' ); ?></a>
+				   class="page-title-action"><?php esc_html_e( 'Add New Field', 'buddyboss' ); ?></a>
 				<?php
 			}
 			?>
@@ -1401,7 +1401,7 @@ class BBoss_XProfile_Field {
 
 				<?php
 				if ( isset( $_GET['type'] ) && 'updated' === $_GET['type'] ) {
-					$message      = __( 'The field was saved successfully.', 'buddyboss-platform' );
+					$message      = __( 'The field was saved successfully.', 'buddyboss' );
 					$message_type = 'updated';
 				}
 				?>
@@ -1520,7 +1520,7 @@ class BBoss_XProfile_Field {
 		?>
 
 		<div id="submitdiv" class="postbox">
-			<h2><?php esc_html_e( 'Submit', 'buddyboss-platform' ); ?></h2>
+			<h2><?php esc_html_e( 'Submit', 'buddyboss' ); ?></h2>
 			<div class="inside">
 				<div id="submitcomment" class="submitbox">
 					<div id="major-publishing-actions">
@@ -1551,7 +1551,7 @@ class BBoss_XProfile_Field {
 
 						<div id="delete-action">
 							<a href="<?php echo esc_url( $cancel_url ); ?>"
-							   class="deletion"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+							   class="deletion"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						</div>
 
 						<?php wp_nonce_field( 'xprofile_delete_option' ); ?>
@@ -1585,14 +1585,14 @@ class BBoss_XProfile_Field {
 		<div id="titlediv">
 			<div class="titlewrap">
 				<label id="title-prompt-text"
-					   for="title" class="screen-reader-text"><?php echo esc_html__( 'Name (required)', 'buddyboss-platform' ); ?></label>
+					   for="title" class="screen-reader-text"><?php echo esc_html__( 'Name (required)', 'buddyboss' ); ?></label>
 				<input type="text" name="title" id="title" value="<?php echo esc_attr( $this->name ); ?>"
 					   autocomplete="off"/>
 			</div>
 		</div>
 
 		<div class="postbox">
-			<h2><?php echo esc_html__( 'Text members see when editing this profile field (optional)', 'buddyboss-platform' ); ?></h2>
+			<h2><?php echo esc_html__( 'Text members see when editing this profile field (optional)', 'buddyboss' ); ?></h2>
 			<div class="inside">
 				<?php
 				/**
@@ -1605,20 +1605,20 @@ class BBoss_XProfile_Field {
 				<table class="widefat bp-postbox-table" style="margin-top: 6px;">
 					<tbody>
 					<tr>
-						<th><?php esc_html_e( 'Alternate Title', 'buddyboss-platform' ); ?></th>
+						<th><?php esc_html_e( 'Alternate Title', 'buddyboss' ); ?></th>
 						<td>
 							<input type="text" name="title_secondary" id="title_secondary"
 								   value="<?php echo esc_attr( $this->get_alternate_name() ); ?>" autocomplete="off"
 								   style="width: 100%;">
-							<p class="description"><?php esc_html_e( 'For example, "How old are you?" could be used instead of "Age".', 'buddyboss-platform' ); ?></p>
+							<p class="description"><?php esc_html_e( 'For example, "How old are you?" could be used instead of "Age".', 'buddyboss' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th><?php esc_html_e( 'Instructions', 'buddyboss-platform' ); ?></th>
+						<th><?php esc_html_e( 'Instructions', 'buddyboss' ); ?></th>
 						<td>
 							<textarea name="description" id="description" rows="6"
 									  cols="60"><?php echo ! empty( $this->description ) ? esc_textarea( $this->description ) : ''; ?></textarea>
-							<p class="description"><?php esc_html_e( 'Explain to members how best to fill out this field.', 'buddyboss-platform' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Explain to members how best to fill out this field.', 'buddyboss' ); ?></p>
 						</td>
 					</tr>
 					</tbody>
@@ -1656,9 +1656,9 @@ class BBoss_XProfile_Field {
 		?>
 
 		<div id="member-types-div" class="postbox">
-			<h2><?php esc_html_e( 'Profile Types', 'buddyboss-platform' ); ?></h2>
+			<h2><?php esc_html_e( 'Profile Types', 'buddyboss' ); ?></h2>
 			<div class="inside">
-				<p class="description"><?php esc_html_e( 'This field should be available to:', 'buddyboss-platform' ); ?></p>
+				<p class="description"><?php esc_html_e( 'This field should be available to:', 'buddyboss' ); ?></p>
 
 				<ul>
 					<?php foreach ( $member_types as $member_type ) : ?>
@@ -1678,7 +1678,7 @@ class BBoss_XProfile_Field {
 							<input name="member-types[]" id="member-type-none" class="member-type-selector"
 								   type="checkbox"
 								   value="null" <?php checked( in_array( 'null', $field_member_types ) ); ?>/>
-							<?php esc_html_e( 'Users with no profile type', 'buddyboss-platform' ); ?>
+							<?php esc_html_e( 'Users with no profile type', 'buddyboss' ); ?>
 						</label>
 					</li>
 
@@ -1687,7 +1687,7 @@ class BBoss_XProfile_Field {
 				<?php
 				if ( ! empty( $field_member_types ) ) :
 					?>
-					 hide<?php endif; ?>"><?php esc_html_e( 'Unavailable to all members.', 'buddyboss-platform' ); ?></p>
+					 hide<?php endif; ?>"><?php esc_html_e( 'Unavailable to all members.', 'buddyboss' ); ?></p>
 			</div>
 
 			<input type="hidden" name="has-member-types" value="1"/>
@@ -1725,7 +1725,7 @@ class BBoss_XProfile_Field {
 		?>
 
 		<div class="postbox">
-			<h2><label for="default-visibility"><?php esc_html_e( 'Visibility', 'buddyboss-platform' ); ?></label></h2>
+			<h2><label for="default-visibility"><?php esc_html_e( 'Visibility', 'buddyboss' ); ?></label></h2>
 			<div class="inside">
 				<div>
 					<select name="default-visibility" id="default-visibility">
@@ -1746,12 +1746,12 @@ class BBoss_XProfile_Field {
 						<li>
 							<input type="radio" id="allow-custom-visibility-allowed" name="allow-custom-visibility"
 								   value="allowed" <?php checked( $this->get_allow_custom_visibility(), 'allowed' ); ?> />
-							<label for="allow-custom-visibility-allowed"><?php esc_html_e( 'Allow members to override', 'buddyboss-platform' ); ?></label>
+							<label for="allow-custom-visibility-allowed"><?php esc_html_e( 'Allow members to override', 'buddyboss' ); ?></label>
 						</li>
 						<li>
 							<input type="radio" id="allow-custom-visibility-disabled" name="allow-custom-visibility"
 								   value="disabled" <?php checked( $this->get_allow_custom_visibility(), 'disabled' ); ?> />
-							<label for="allow-custom-visibility-disabled"><?php esc_html_e( 'Enforce field visibility', 'buddyboss-platform' ); ?></label>
+							<label for="allow-custom-visibility-disabled"><?php esc_html_e( 'Enforce field visibility', 'buddyboss' ); ?></label>
 						</li>
 					</ul>
 				</div>
@@ -1777,11 +1777,11 @@ class BBoss_XProfile_Field {
 		?>
 
 		<div class="postbox">
-			<h2><label for="required"><?php esc_html_e( 'Requirement', 'buddyboss-platform' ); ?></label></h2>
+			<h2><label for="required"><?php esc_html_e( 'Requirement', 'buddyboss' ); ?></label></h2>
 			<div class="inside">
 				<select name="required" id="required">
-					<option value="0"<?php selected( $this->is_required, '0' ); ?>><?php esc_html_e( 'Optional', 'buddyboss-platform' ); ?></option>
-					<option value="1"<?php selected( $this->is_required, '1' ); ?>><?php esc_html_e( 'Required', 'buddyboss-platform' ); ?></option>
+					<option value="0"<?php selected( $this->is_required, '0' ); ?>><?php esc_html_e( 'Optional', 'buddyboss' ); ?></option>
+					<option value="1"<?php selected( $this->is_required, '1' ); ?>><?php esc_html_e( 'Required', 'buddyboss' ); ?></option>
 				</select>
 			</div>
 		</div>
@@ -1805,7 +1805,7 @@ class BBoss_XProfile_Field {
 		?>
 
 		<div class="postbox">
-			<h2><label for="fieldtype"><?php esc_html_e( 'Type', 'buddyboss-platform' ); ?></label></h2>
+			<h2><label for="fieldtype"><?php esc_html_e( 'Type', 'buddyboss' ); ?></label></h2>
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
 				<select name="fieldtype" id="fieldtype" onchange="show_options(this.value)">
 

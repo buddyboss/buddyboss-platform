@@ -100,7 +100,7 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 	 */
 	var handleCreate = function () {
 		if ( ! name.trim() ) {
-			setError( __( 'Group name is required.', 'buddyboss-platform' ) );
+			setError( __( 'Group name is required.', 'buddyboss' ) );
 			return;
 		}
 
@@ -137,14 +137,14 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 					onCreated( response.data.group_id );
 				}
 			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to create group.', 'buddyboss-platform' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to create group.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
 			setIsSaving( false );
-			setError( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
+			setError( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 		} );
 	};
 
@@ -164,14 +164,14 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 	};
 
 	var privacyOptions = [
-		{ value: 'public', label: __( 'Public', 'buddyboss-platform' ) },
-		{ value: 'private', label: __( 'Private', 'buddyboss-platform' ) },
-		{ value: 'hidden', label: __( 'Hidden', 'buddyboss-platform' ) },
+		{ value: 'public', label: __( 'Public', 'buddyboss' ) },
+		{ value: 'private', label: __( 'Private', 'buddyboss' ) },
+		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
 	];
 
 	return (
 		<Modal
-			title={ __( 'Create New Group', 'buddyboss-platform' ) }
+			title={ __( 'Create New Group', 'buddyboss' ) }
 			onRequestClose={ handleClose }
 			className="bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -182,30 +182,30 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 				) }
 
 				<TextControl
-					label={ __( 'Name', 'buddyboss-platform' ) }
+					label={ __( 'Name', 'buddyboss' ) }
 					value={ name }
 					onChange={ handleNameChange }
-					placeholder={ __( 'Enter group name', 'buddyboss-platform' ) }
+					placeholder={ __( 'Enter group name', 'buddyboss' ) }
 					__nextHasNoMarginBottom
 				/>
 
 				<TextControl
-					label={ __( 'Permalink', 'buddyboss-platform' ) }
+					label={ __( 'Permalink', 'buddyboss' ) }
 					value={ permalink }
 					onChange={ handlePermalinkChange }
-					placeholder={ __( 'group-slug', 'buddyboss-platform' ) }
+					placeholder={ __( 'group-slug', 'buddyboss' ) }
 					__nextHasNoMarginBottom
 				/>
 
 				<RichTextEditor
 					id="bb-admin-create-group-description"
-					label={ __( 'Description (Optional)', 'buddyboss-platform' ) }
+					label={ __( 'Description (Optional)', 'buddyboss' ) }
 					value={ description }
 					onChange={ setDescription }
 				/>
 
 				<SelectControl
-					label={ __( 'Group Privacy', 'buddyboss-platform' ) }
+					label={ __( 'Group Privacy', 'buddyboss' ) }
 					value={ status }
 					options={ privacyOptions }
 					onChange={ setStatus }
@@ -219,7 +219,7 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 					onClick={ handleClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -227,7 +227,7 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 					isBusy={ isSaving }
 					disabled={ isSaving || ! name.trim() }
 				>
-					{ __( 'Save', 'buddyboss-platform' ) }
+					{ __( 'Save', 'buddyboss' ) }
 				</Button>
 			</div>
 		</Modal>

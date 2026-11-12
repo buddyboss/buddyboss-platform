@@ -50,14 +50,14 @@ export function ListToolbar( {
 	// Build options from bulkActions object if bulkOptions not provided.
 	var options = bulkOptions;
 	if ( ! options && bulkActions ) {
-		options = [ { label: __( 'Bulk actions', 'buddyboss-platform' ), value: '' } ].concat(
+		options = [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ].concat(
 			Object.keys( bulkActions ).map( function ( key ) {
 				return { label: bulkActions[ key ], value: key };
 			} )
 		);
 	}
 	if ( ! options ) {
-		options = [ { label: __( 'Bulk actions', 'buddyboss-platform' ), value: '' } ];
+		options = [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ];
 	}
 
 	return (
@@ -76,7 +76,7 @@ export function ListToolbar( {
 						disabled={ ! bulkAction || 0 === selectedCount || isBulkProcessing }
 						className={ className + '__bulk-apply' }
 					>
-						{ __( 'Apply', 'buddyboss-platform' ) }
+						{ __( 'Apply', 'buddyboss' ) }
 					</Button>
 				</div>
 			</div>
@@ -91,8 +91,8 @@ export function ListToolbar( {
 						onChange={ function ( e ) {
 							onSearchChange( e.target.value );
 						} }
-						placeholder={ searchPlaceholder || __( 'Search', 'buddyboss-platform' ) }
-						aria-label={ searchPlaceholder || __( 'Search', 'buddyboss-platform' ) }
+						placeholder={ searchPlaceholder || __( 'Search', 'buddyboss' ) }
+						aria-label={ searchPlaceholder || __( 'Search', 'buddyboss' ) }
 						className={ className + '__search-input bb-admin-list-search__input' }
 					/>
 					{ onSearchClear && searchInput ? (

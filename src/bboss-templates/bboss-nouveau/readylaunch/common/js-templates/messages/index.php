@@ -30,13 +30,13 @@ defined( 'ABSPATH' ) || exit;
 		<div class="bb-rl-messages-tabs">
 			<ul class="bb-rl-messages-tabs-list">
 				<li class="bb-rl-messages-tab-item <?php echo ! bboss_is_current_action( 'archived' ) ? 'active' : ''; ?>">
-					<a href="#" class="bb-rl-messages-tab-link" data-tab="all"><?php esc_html_e( 'All', 'buddyboss-platform' ); ?></a>
+					<a href="#" class="bb-rl-messages-tab-link" data-tab="all"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
 				</li>
 				<li class="bb-rl-messages-tab-item">
-					<a href="#" class="bb-rl-messages-tab-link" data-tab="unread"><?php esc_html_e( 'Unread', 'buddyboss-platform' ); ?></a>
+					<a href="#" class="bb-rl-messages-tab-link" data-tab="unread"><?php esc_html_e( 'Unread', 'buddyboss' ); ?></a>
 				</li>
 				<li class="bb-rl-messages-tab-item <?php echo bboss_is_current_action( 'archived' ) ? 'active' : ''; ?>">
-					<a href="#" class="bb-rl-messages-tab-link" data-tab="archived"><?php esc_html_e( 'Archive', 'buddyboss-platform' ); ?></a>
+					<a href="#" class="bb-rl-messages-tab-link" data-tab="archived"><?php esc_html_e( 'Archive', 'buddyboss' ); ?></a>
 				</li>
 			</ul>
 		</div>

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <h2 class="screen-heading data-export-screen">
-	<?php esc_html_e( 'Request an export of your data', 'buddyboss-platform' ); ?>
+	<?php esc_html_e( 'Request an export of your data', 'buddyboss' ); ?>
 </h2>
 
 <?php bboss_nouveau_user_feedback( 'member-data-export' ); ?>

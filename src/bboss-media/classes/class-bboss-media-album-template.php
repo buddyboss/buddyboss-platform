@@ -220,8 +220,8 @@ class BBoss_Media_Album_Template {
 					'format'    => '',
 					'total'     => ceil( (int) $this->total_album_count / (int) $this->pag_num ),
 					'current'   => (int) $this->pag_page,
-					'prev_text' => __( '&larr;', 'buddyboss-platform' ),
-					'next_text' => __( '&rarr;', 'buddyboss-platform' ),
+					'prev_text' => __( '&larr;', 'buddyboss' ),
+					'next_text' => __( '&rarr;', 'buddyboss' ),
 					'mid_size'  => 1,
 					'add_args'  => array(),
 				)

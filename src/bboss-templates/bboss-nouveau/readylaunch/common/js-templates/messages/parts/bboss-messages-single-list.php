@@ -168,7 +168,7 @@ defined( 'ABSPATH' ) || exit;
 							<div class="bb-rl-activity-media-elem bb-rl-document-activity " data-id="">
 								<# if ( data.document[i].id ) { #>
 									<div class="bb-rl-document-description-wrap">
-										<a href="{{data.document[i].url}}" class="bb-rl-entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}" aria-label="<?php esc_attr_e( 'Open document', 'buddyboss-platform' ); ?>">
+										<a href="{{data.document[i].url}}" class="bb-rl-entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}" aria-label="<?php esc_attr_e( 'Open document', 'buddyboss' ); ?>">
 											<i class="{{data.document[i].svg_icon}}" ></i>
 										</a>
 										<a href="{{data.document[i].url}}"
@@ -226,7 +226,7 @@ defined( 'ABSPATH' ) || exit;
 								<video preload="auto" playsinline poster="{{data.gif.preview_url}}" loop muted>
 									<source src="{{data.gif.video_url}}" type="video/mp4">
 								</video>
-								<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss-platform' ); ?>">
+								<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
 									<span class="bb-icon-bl bb-icon-play"></span>
 								</a>
 								<span class="gif-icon"></span>

@@ -57,7 +57,7 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'manage_group_members' ) .
 						<?php
 						if ( bboss_get_group_member_is_banned() ) :
 							/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
-							esc_html_e( '(banned)', 'buddyboss-platform' );
+							esc_html_e( '(banned)', 'buddyboss' );
 							endif;
 						?>
 						</span>
@@ -75,7 +75,7 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'manage_group_members' ) .
 						} elseif ( bboss_groups_is_user_member( $bp_member_user_id, $group->id ) ) {
 							echo esc_html( bboss_get_group_role_label( $group->id, 'member_singular_label_name' ) );
 						} else {
-							esc_html_e( 'Select Action', 'buddyboss-platform' );
+							esc_html_e( 'Select Action', 'buddyboss' );
 						}
 						?>
 						</option>
@@ -87,7 +87,7 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'manage_group_members' ) .
 						</option>
 					</select>
 					<div class="bb-rl-group-member-action-wrapper">
-						<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss-platform' ); ?></button>
+						<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
 					</div>
 				</div>
 
@@ -118,7 +118,7 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'manage_group_members' ) .
 			?>
 			<li class="bb-rl-view-more bb-rl-view-more--pagination" data-bp-pagination="<?php echo esc_attr( $members_template->pag_arg ); ?>">
 				<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="<?php echo esc_url( bboss_get_groups_members_load_more_link() ); ?>" data-method="append">
-					<?php esc_html_e( 'Show More', 'buddyboss-platform' ); ?>
+					<?php esc_html_e( 'Show More', 'buddyboss' ); ?>
 					<i class="bb-icons-rl-caret-down"></i>
 				</a>
 			</li>

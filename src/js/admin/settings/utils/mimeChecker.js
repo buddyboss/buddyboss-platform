@@ -87,7 +87,7 @@ export function useMimeChecker() {
 				if ( result.success && result.data && result.data.type ) {
 					setMimeCheckerResult( result.data.type );
 				} else {
-					setMimeCheckerError( __( 'Could not detect MIME type.', 'buddyboss-platform' ) );
+					setMimeCheckerError( __( 'Could not detect MIME type.', 'buddyboss' ) );
 				}
 				setIsMimeChecking( false );
 			} )
@@ -97,7 +97,7 @@ export function useMimeChecker() {
 					return;
 				}
 				setIsMimeChecking( false );
-				setMimeCheckerError( __( 'Failed to detect MIME type. Please try again.', 'buddyboss-platform' ) );
+				setMimeCheckerError( __( 'Failed to detect MIME type. Please try again.', 'buddyboss' ) );
 			} );
 	};
 

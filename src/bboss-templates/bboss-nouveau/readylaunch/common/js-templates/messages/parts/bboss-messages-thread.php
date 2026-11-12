@@ -74,50 +74,50 @@ defined( 'ABSPATH' ) || exit;
 	#>
 
 	<div class="bb_more_options bb-rl-message-thread-options">
-		<a href="#" class="bb_more_options_action bp-tooltip" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>">
+		<a href="#" class="bb_more_options_action bp-tooltip" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 			<i class="bb-icon-menu-dots-h"></i>
 		</a>
 		<ul class="bb_more_options_list message_action__list" data-bp-thread-id="{{ data.id }}">
 			<li class="{{ read_unread_action }}">
-				<a data-bp-action="{{ read_unread_action }}" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss-platform' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss-platform' ); ?>">
+				<a data-bp-action="{{ read_unread_action }}" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>">
 					<# if ( data.unread ) { #>
-						<?php esc_html_e( 'Mark as read', 'buddyboss-platform' ); ?>
+						<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>
 					<# } else { #>
-						<?php esc_html_e( 'Mark as unread', 'buddyboss-platform' ); ?>
+						<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>
 					<# } #>
 				</a>
 			</li>
 
 			<# if ( data.is_thread_archived ) { #>
 			<li class="unhide_thread">
-				<a data-bp-action="unhide_thread" href="#"><?php esc_html_e( 'Unarchive', 'buddyboss-platform' ); ?>
+				<a data-bp-action="unhide_thread" href="#"><?php esc_html_e( 'Unarchive', 'buddyboss' ); ?>
 				</a>
 			</li>
 			<# } else { #>
 			<li class="hide_thread">
-				<a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Archive', 'buddyboss-platform' ); ?>
+				<a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Archive', 'buddyboss' ); ?>
 				</a>
 			</li>
 			<# } #>
 
 			<# if ( data.is_group_thread || action_other_recipients.length > 2 ) { #>
 			<li class="view_members">
-				<a href="#message-members-list" id="view_more_members" class="view_more_members" data-thread-id="{{data.id}}" data-tp="{{data.action_recipients.total_pages}}" data-tc="{{data.action_recipients.count}}" data-pp="{{data.action_recipients.per_page}}" data-cp="1" data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss-platform' ); ?></a>
+				<a href="#message-members-list" id="view_more_members" class="view_more_members" data-thread-id="{{data.id}}" data-tp="{{data.action_recipients.total_pages}}" data-tc="{{data.action_recipients.count}}" data-pp="{{data.action_recipients.per_page}}" data-cp="1" data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
 			</li>
 			<# } #>
 
 			<?php if ( bboss_is_active( 'moderation' ) && bboss_is_moderation_member_blocking_enable() ) { ?>
 				<# if ( action_other_recipients.length > 1 ) { #>
 					<li class="report_thread">
-						<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1" data-text="<?php esc_html_e( 'Block a Member', 'buddyboss-platform' ); ?>"><?php esc_html_e( 'Block a member', 'buddyboss-platform' ); ?></a>
+						<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1" data-text="<?php esc_html_e( 'Block a Member', 'buddyboss' ); ?>"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 					</li>
 				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_user_blocked ) { #>
 					<li class="reported_thread">
-						<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss-platform' ); ?></a>
+						<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
 					</li>
 				<# } else if ( action_other_recipients.length == 1 && true == action_other_recipients[0].can_be_blocked && 1 !== action_other_recipients[0].is_deleted ) { #>
 					<li class="report_thread">
-						<a id="report-content-<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{action_other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss-platform' ); ?></a>
+						<a id="report-content-<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{action_other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
 					</li>
 				<# } #>
 			<?php } ?>
@@ -125,22 +125,22 @@ defined( 'ABSPATH' ) || exit;
 			<?php if ( bboss_is_active( 'moderation' ) && bboss_is_moderation_member_reporting_enable() ) { ?>
 				<# if (  action_other_recipients.length > 1 ) { #>
 					<li class="report_member_thread">
-						<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss-platform' ); ?></a>
+						<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss' ); ?></a>
 					</li>
 				<# } else if ( action_other_recipients.length == 1 && action_other_recipients[0].is_user_reported && true !== other_recipients[0].is_user_suspended ) { #>
 					<li class="report_member_thread">
-						<a id="report-content-<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type_report ); ?>-{{action_other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{action_other_recipients[0].reported_type}}" item_id="{{action_other_recipients[0].id}}" item_type="<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss-platform' ); ?></a>
+						<a id="report-content-<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type_report ); ?>-{{action_other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{action_other_recipients[0].reported_type}}" item_id="{{action_other_recipients[0].id}}" item_type="<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
 					</li>
 				<# } else if ( action_other_recipients.length == 1 && true == action_other_recipients[0].can_be_report && 1 !== action_other_recipients[0].is_deleted && true !== other_recipients[0].is_user_suspended ) { #>
 					<li class="report_member_thread">
-						<a id="report-content-<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type_report ); ?>-{{action_other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{action_other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{action_other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss-platform' ); ?></a>
+						<a id="report-content-<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type_report ); ?>-{{action_other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{action_other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BBoss_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{action_other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
 					</li>
 				<# } #>
 			<?php } ?>
 
 
 			<li class="delete_messages" data-bp-action="delete">
-				<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss-platform' ); ?></a>
+				<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
 			</li>
 			<?php
 			$can_delete_conversation = function_exists( 'bboss_messages_user_can_delete_conversation' ) ? bboss_messages_user_can_delete_conversation() : bboss_current_user_can( 'bp_moderate' );
@@ -148,7 +148,7 @@ defined( 'ABSPATH' ) || exit;
 			if ( $can_delete_conversation ) {
 				?>
 				<li class="delete_thread">
-					<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss-platform' ); ?></a>
+					<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>
 				</li>
 			<?php } ?>
 		</ul>
@@ -203,7 +203,7 @@ defined( 'ABSPATH' ) || exit;
 					<span class="user-name">{{data.group_name}}</span>
 				<# } else { #>
 					<# for ( i in first_four ) { #>
-						<span class="user-name"<# if ( ! other_recipients[i].is_deleted && ! other_recipients[i].is_user_suspended && ! other_recipients[i].is_user_blocked && ! other_recipients[i].is_user_blocked_by ) { #> data-bb-hp-profile="{{other_recipients[i].id}}"<# } #>>{{other_recipients[i].user_name}}<# if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss-platform' ); ?><# } #></span>
+						<span class="user-name"<# if ( ! other_recipients[i].is_deleted && ! other_recipients[i].is_user_suspended && ! other_recipients[i].is_user_blocked && ! other_recipients[i].is_user_blocked_by ) { #> data-bb-hp-profile="{{other_recipients[i].id}}"<# } #>>{{other_recipients[i].user_name}}<# if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #></span>
 					<# } #>
 
 					<# if ( data.toOthers ) { #>

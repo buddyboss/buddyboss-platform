@@ -792,18 +792,18 @@ class BBoss_Media {
 				$group_name = bboss_get_group_name( $group );
 				$status     = bboss_get_group_status( $group );
 				if ( 'hidden' === $status || 'private' === $status ) {
-					$visibility = esc_html__( 'Group Members', 'buddyboss-platform' );
+					$visibility = esc_html__( 'Group Members', 'buddyboss' );
 				} else {
 					$visibility = ucfirst( $status );
 				}
 			} else {
 				$media_privacy = bboss_media_get_visibility_levels();
 				if ( 'friends' === $media->privacy && bboss_loggedin_user_id() !== (int) $media->user_id ) {
-					$visibility = esc_html__( 'Connections', 'buddyboss-platform' );
+					$visibility = esc_html__( 'Connections', 'buddyboss' );
 				} elseif ( 'message' === $media->privacy ) {
-					$visibility = esc_html__( 'Message', 'buddyboss-platform' );
+					$visibility = esc_html__( 'Message', 'buddyboss' );
 				} elseif ( 'forums' === $media->privacy ) {
-					$visibility = esc_html__( 'Forums', 'buddyboss-platform' );
+					$visibility = esc_html__( 'Forums', 'buddyboss' );
 				} else {
 					$visibility = ( isset( $media_privacy[ $media->privacy ] ) ) ? ucfirst( $media_privacy[ $media->privacy ] ) : '';
 				}
@@ -1251,13 +1251,13 @@ class BBoss_Media {
 						continue;
 					}
 
-					/** This action is documented in bboss-activity/bp-activity-actions.php */
+					/** This action is documented in bp-activity/bp-activity-actions.php */
 					do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 					// Deleting an activity comment.
 					if ( 'activity_comment' == $activity->type ) {
 						if ( bboss_activity_delete_comment( $activity->item_id, $activity->id ) ) {
-							/** This action is documented in bboss-activity/bp-activity-actions.php */
+							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 
@@ -1284,7 +1284,7 @@ class BBoss_Media {
 								)
 							)
 						) {
-							/** This action is documented in bboss-activity/bp-activity-actions.php */
+							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 					}

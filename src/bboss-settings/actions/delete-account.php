@@ -51,7 +51,7 @@ function bboss_settings_action_delete_account() {
 
 		// Add feedback after deleting a user.
 		/* translators: %s: member display name. */
-		bboss_core_add_message( sprintf( __( '%s was successfully deleted.', 'buddyboss-platform' ), $username ), 'success' );
+		bboss_core_add_message( sprintf( __( '%s was successfully deleted.', 'buddyboss' ), $username ), 'success' );
 
 		// Redirect to the root domain.
 		bboss_core_redirect( bboss_get_root_domain() );

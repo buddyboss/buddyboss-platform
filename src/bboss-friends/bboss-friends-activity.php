@@ -105,23 +105,23 @@ function bboss_friends_register_activity_actions() {
 	bboss_activity_set_action(
 		$bp->friends->id,
 		'friendship_accepted',
-		__( 'Connections accepted', 'buddyboss-platform' ),
+		__( 'Connections accepted', 'buddyboss' ),
 		'bboss_friends_format_activity_action_friendship_accepted',
-		__( 'Connections', 'buddyboss-platform' ),
+		__( 'Connections', 'buddyboss' ),
 		array( 'activity', 'member' )
 	);
 
 	bboss_activity_set_action(
 		$bp->friends->id,
 		'friendship_created',
-		__( 'New connections', 'buddyboss-platform' ),
+		__( 'New connections', 'buddyboss' ),
 		'bboss_friends_format_activity_action_friendship_created',
-		__( 'Connections', 'buddyboss-platform' ),
+		__( 'Connections', 'buddyboss' ),
 		array( 'activity', 'member' )
 	);
 
 	// < BP 1.6 backpat.
-	bboss_activity_set_action( $bp->friends->id, 'friends_register_activity_action', __( 'New connection created', 'buddyboss-platform' ) );
+	bboss_activity_set_action( $bp->friends->id, 'friends_register_activity_action', __( 'New connection created', 'buddyboss' ) );
 
 	/**
 	 * Fires after all default bp-friends activity actions have been registered.
@@ -146,7 +146,7 @@ function bboss_friends_format_activity_action_friendship_accepted( $action, $act
 	$friend_link    = bboss_core_get_userlink( $activity->secondary_item_id );
 
 	/* translators: 1: initiator user link, 2: friend user link. */
-	$action = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss-platform' ), $initiator_link, $friend_link );
+	$action = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), $initiator_link, $friend_link );
 
 	// Backward compatibility for legacy filter
 	// The old filter has the $friendship object passed to it. We want to
@@ -181,7 +181,7 @@ function bboss_friends_format_activity_action_friendship_created( $action, $acti
 	$friend_link    = bboss_core_get_userlink( $activity->secondary_item_id );
 
 	/* translators: 1: initiator user link, 2: friend user link. */
-	$action = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss-platform' ), $initiator_link, $friend_link );
+	$action = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), $initiator_link, $friend_link );
 
 	// Backward compatibility for legacy filter
 	// The old filter has the $friendship object passed to it. We want to

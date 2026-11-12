@@ -18,7 +18,7 @@ export function IntegrationGrid( { items, status, categoryMap, plugins, onSelect
 		return (
 			<div className="bb-integrations__grid" aria-busy="true">
 				<span className="screen-reader-text" aria-live="polite">
-					{ __( 'Loading integrations…', 'buddyboss-platform' ) }
+					{ __( 'Loading integrations…', 'buddyboss' ) }
 				</span>
 				{ Array.from( { length: SKELETON_COUNT } ).map( ( _, i ) => (
 					<div key={ i } className="bb-integrations__card bb-integrations__card--skeleton" aria-hidden="true" />
@@ -30,9 +30,9 @@ export function IntegrationGrid( { items, status, categoryMap, plugins, onSelect
 	if ( 'error' === status ) {
 		return (
 			<div className="bb-integrations__state bb-integrations__state--error" role="alert">
-				<p>{ __( 'We couldn’t load integrations right now. Please try again.', 'buddyboss-platform' ) }</p>
+				<p>{ __( 'We couldn’t load integrations right now. Please try again.', 'buddyboss' ) }</p>
 				<button type="button" className="button button-secondary" onClick={ onRetry }>
-					{ __( 'Retry', 'buddyboss-platform' ) }
+					{ __( 'Retry', 'buddyboss' ) }
 				</button>
 			</div>
 		);
@@ -41,7 +41,7 @@ export function IntegrationGrid( { items, status, categoryMap, plugins, onSelect
 	if ( 'empty' === status ) {
 		return (
 			<div className="bb-integrations__state bb-integrations__state--empty">
-				<p>{ __( 'No integrations match your search.', 'buddyboss-platform' ) }</p>
+				<p>{ __( 'No integrations match your search.', 'buddyboss' ) }</p>
 			</div>
 		);
 	}

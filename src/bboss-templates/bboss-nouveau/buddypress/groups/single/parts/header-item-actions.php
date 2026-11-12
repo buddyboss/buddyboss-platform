@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 <div id="item-actions" class="group-item-actions">
 
 	<?php if ( bboss_enable_group_hierarchies() ) : ?>
-		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Parent', 'buddyboss-platform' ); ?></h2>
+		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></h2>
 		<?php bboss_group_list_parents(); ?>
 	<?php endif; ?>
 
@@ -26,12 +26,12 @@ defined( 'ABSPATH' ) || exit;
 			<h2 class="bp-screen-reader-text">
 				<?php
 				/* translators: Group %s */
-				printf( esc_html__( 'Group %s', 'buddyboss-platform' ), esc_attr( bboss_get_group_role_label( bboss_get_current_group_id(), 'organizer_plural_label_name' ) ) );
+				printf( esc_html__( 'Group %s', 'buddyboss' ), esc_attr( bboss_get_group_role_label( bboss_get_current_group_id(), 'organizer_plural_label_name' ) ) );
 				?>
 			</h2>
 
 			<dl class="moderators-lists">
-				<dt class="moderators-title"><?php esc_html_e( 'Organized by', 'buddyboss-platform' ); ?></dt>
+				<dt class="moderators-title"><?php esc_html_e( 'Organized by', 'buddyboss' ); ?></dt>
 				<dd class="user-list admins"><?php bboss_group_list_admins(); ?>
 					<?php bboss_nouveau_group_hook( 'after', 'menu_admins' ); ?>
 				</dd>

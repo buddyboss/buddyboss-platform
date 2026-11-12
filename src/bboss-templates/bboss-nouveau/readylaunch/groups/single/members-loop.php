@@ -253,7 +253,7 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'group_members' ) . '&type
 
 					<div class="bp-members-list-hook">
 						<?php if ( $member_loop_has_content ) { ?>
-							<a class="more-action-button" href="#" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>"><i class="bb-icon-menu-dots-h"></i></a>
+							<a class="more-action-button" href="#" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>"><i class="bb-icon-menu-dots-h"></i></a>
 						<?php } ?>
 						<div class="bp-members-list-hook-inner">
 							<?php bboss_nouveau_member_hook( '', 'members_list_item' ); ?>
@@ -262,9 +262,9 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'group_members' ) . '&type
 
 					<?php if ( ! empty( $member_switch_button ) || ! empty( $member_report_button ) || ! empty( $member_block_button ) ) { ?>
 						<div class="bb_more_options member-dropdown bb-rl-context-wrap">
-							<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'More Options', 'buddyboss-platform' ); ?>">
+							<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
 								<i class="bb-icons-rl-dots-three"></i>
-								<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss-platform' ); ?></span>
+								<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
 							</a>
 							<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
 								<?php bboss_get_template_part( 'common/more-options-view' ); ?>
@@ -301,7 +301,7 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'group_members' ) . '&type
 			<div class="bb-rl-modal-wrapper">
 				<div class="bb-rl-modal-container">
 					<header class="bb-rl-modal-header">
-						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss-platform' ); ?></span></h4>
+						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
 						<a class="bb-close-remove-connection bb-rl-modal-close-button" href="#">
 							<span class="bb-icons-rl-x"></span>
 						</a>
@@ -311,15 +311,15 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'group_members' ) . '&type
 							<?php
 								printf(
 								/* translators: %s: The member name with HTML tags */
-									esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss-platform' ),
+									esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
 									'<span class="bb-user-name"></span>'
 								);
 								?>
 						</p>
 					</div>
 					<footer class="bb-rl-modal-footer flex items-center">
-						<a class="bb-close-remove-connection bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss-platform' ); ?></a>
-						<a class="button push-right bb-confirm-remove-connection bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss-platform' ); ?></a>
+						<a class="bb-close-remove-connection bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>
@@ -334,49 +334,49 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'group_members' ) . '&type
 			<div class="bb-rl-modal-wrapper">
 				<div class="bb-rl-modal-container">
 					<header class="bb-rl-modal-header">
-						<h4><span class="target_name"><?php echo esc_html__( 'Block Member?', 'buddyboss-platform' ); ?></span></h4>
+						<h4><span class="target_name"><?php echo esc_html__( 'Block Member?', 'buddyboss' ); ?></span></h4>
 						<a class="bb-rl-close-block-member bb-rl-modal-close-button" href="#">
 							<span class="bb-icons-rl-x"></span>
 						</a>
 					</header>
 					<div class="bb-rl-block-member-content bb-rl-modal-content">
 						<p>
-							<?php esc_html_e( 'Please confirm you want to block this member.', 'buddyboss-platform' ); ?>
+							<?php esc_html_e( 'Please confirm you want to block this member.', 'buddyboss' ); ?>
 						</p>
 						<div>
-							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss-platform' ); ?>
+							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' ); ?>
 						</div>
 						<ul>
 							<?php if ( bboss_is_active( 'activity' ) ) : ?>
 								<li>
 									<?php
-										esc_html_e( 'See blocked member\'s posts', 'buddyboss-platform' );
+										esc_html_e( 'See blocked member\'s posts', 'buddyboss' );
 									?>
 								</li>
 							<?php endif; ?>
 							<li>
 								<?php
-									esc_html_e( 'Mention this member in posts', 'buddyboss-platform' );
+									esc_html_e( 'Mention this member in posts', 'buddyboss' );
 								?>
 							</li>
 							<?php if ( bboss_is_active( 'groups' ) ) : ?>
 								<li>
 									<?php
-										esc_html_e( 'Invite this member to groups', 'buddyboss-platform' );
+										esc_html_e( 'Invite this member to groups', 'buddyboss' );
 									?>
 								</li>
 							<?php endif; ?>
 							<?php if ( bboss_is_active( 'messages' ) ) : ?>
 								<li>
 									<?php
-										esc_html_e( 'Message this member', 'buddyboss-platform' );
+										esc_html_e( 'Message this member', 'buddyboss' );
 									?>
 								</li>
 							<?php endif; ?>
 							<?php if ( bboss_is_active( 'friends' ) ) : ?>
 								<li>
 									<?php
-										esc_html_e( 'Add this member as a connection', 'buddyboss-platform' );
+										esc_html_e( 'Add this member as a connection', 'buddyboss' );
 									?>
 								</li>
 							<?php endif; ?>
@@ -387,18 +387,18 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'group_members' ) . '&type
 								<?php
 								printf(
 									/* translators: 1: "Please note:" label, 2: notice message text. */
-									wp_kses( __( '<span>%1$s</span> %2$s', 'buddyboss-platform' ), array( 'span' => array() ) ),
-									esc_html__( 'Please note:', 'buddyboss-platform' ),
-									esc_html__( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss-platform' )
+									wp_kses( __( '<span>%1$s</span> %2$s', 'buddyboss' ), array( 'span' => array() ) ),
+									esc_html__( 'Please note:', 'buddyboss' ),
+									esc_html__( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss' )
 								);
 								?>
 							<?php endif; ?>
 
-							<?php esc_html_e( 'Please allow a few minutes for this process to complete.', 'buddyboss-platform' ); ?>
+							<?php esc_html_e( 'Please allow a few minutes for this process to complete.', 'buddyboss' ); ?>
 						</div>
 					</div>
 					<footer class="bb-rl-modal-footer flex items-center">
-						<a class="bb-rl-close-block-member bb-rl-close-modal bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="bb-rl-close-block-member bb-rl-close-modal bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
 						<input type="submit" name="block-member-submit" id="bb-rl-submit-block-member" form="bb-rl-block-member-form" value="Confirm" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 					</footer>
 				</div>

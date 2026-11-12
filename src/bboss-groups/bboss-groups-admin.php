@@ -36,7 +36,7 @@ function bboss_groups_add_admin_menu() {
 		: admin_url( 'admin.php?page=bb-settings&tab=groups&panel=all_groups' );
 
 	$submenu['buddyboss-platform'][] = array(
-		__( 'Groups', 'buddyboss-platform' ),
+		__( 'Groups', 'buddyboss' ),
 		'bp_moderate',
 		$settings_url,
 	);

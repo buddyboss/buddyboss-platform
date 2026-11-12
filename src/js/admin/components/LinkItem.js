@@ -33,14 +33,14 @@ export const LinkItem = ({ link, onEdit, onDelete, innerRef, draggableProps, dra
                                 className="edit-link-button"
                                 icon={<i className="bb-icons-rl-pencil-simple" />}
                                 onClick={onEdit}
-                                label={__('Edit', 'buddyboss-platform')}
+                                label={__('Edit', 'buddyboss')}
                                 isSmall
                             />
                             <Button
                                 className="delete-link-button" 
                                 icon={<i className="bb-icons-rl-trash" />}
                                 onClick={onDelete}
-                                label={__('Delete', 'buddyboss-platform')}
+                                label={__('Delete', 'buddyboss')}
                                 isSmall
                             />
                         </div>

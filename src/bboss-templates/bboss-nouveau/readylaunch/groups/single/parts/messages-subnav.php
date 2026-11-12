@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 add_filter( 'bp_nouveau_get_nav_link_text', 'BBoss_Group_Readylaunch::bb_rl_modify_nav_link_text', 10, 3 );
 ?>
 
-<nav class="<?php bboss_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group Messages menu', 'buddyboss-platform' ); ?>">
+<nav class="<?php bboss_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group Messages menu', 'buddyboss' ); ?>">
 	<?php if ( bboss_nouveau_has_nav( array( 'object' => 'group_messages' ) ) ) : ?>
 		<ul class="subnav">
 			<?php

@@ -82,7 +82,7 @@ class BBoss_Group_Readylaunch {
 	public function bb_rl_get_groups_bubble_buttons( $buttons, $group ) {
 		$buttons['about-group'] = array(
 			'id'             => 'about-group',
-			'link_text'      => __( 'About group', 'buddyboss-platform' ),
+			'link_text'      => __( 'About group', 'buddyboss' ),
 			'position'       => 10,
 			'component'      => 'groups',
 			'button_element' => 'a',
@@ -97,7 +97,7 @@ class BBoss_Group_Readylaunch {
 		if ( bboss_is_item_admin() ) {
 			$buttons['group-manage'] = array(
 				'id'             => 'group-manage',
-				'link_text'      => __( 'Manage', 'buddyboss-platform' ),
+				'link_text'      => __( 'Manage', 'buddyboss' ),
 				'position'       => 20,
 				'component'      => 'groups',
 				'button_element' => 'a',
@@ -111,7 +111,7 @@ class BBoss_Group_Readylaunch {
 
 			$buttons['delete-group'] = array(
 				'id'             => 'delete-group',
-				'link_text'      => __( 'Delete', 'buddyboss-platform' ),
+				'link_text'      => __( 'Delete', 'buddyboss' ),
 				'position'       => 1000,
 				'component'      => 'groups',
 				'button_element' => 'a',
@@ -144,11 +144,11 @@ class BBoss_Group_Readylaunch {
 				'wrapper_class'     => 'group-button ' . $group->status,
 				'wrapper_id'        => 'groupbutton-' . $group->id,
 				'link_href'         => $nonce_url,
-				'link_text'         => esc_html__( 'Leave group', 'buddyboss-platform' ),
+				'link_text'         => esc_html__( 'Leave group', 'buddyboss' ),
 				'link_class'        => 'group-button leave-group',
 				'button_attr'       => array(
-					'data-title'           => esc_html__( 'Leave Group', 'buddyboss-platform' ),
-					'data-title-displayed' => esc_html__( 'Leave group', 'buddyboss-platform' ),
+					'data-title'           => esc_html__( 'Leave Group', 'buddyboss' ),
+					'data-title-displayed' => esc_html__( 'Leave group', 'buddyboss' ),
 					'data-bb-group-name'   => esc_attr( $group->name ),
 					'data-bb-group-link'   => esc_url( bboss_get_group_permalink( $group ) ),
 					'data-bp-btn-action'   => 'leave_group',
@@ -187,7 +187,7 @@ class BBoss_Group_Readylaunch {
 								<h4>
 									<span class="target_name">
 										<?php
-											esc_html_e( 'About group', 'buddyboss-platform' );
+											esc_html_e( 'About group', 'buddyboss' );
 										?>
 									</span>
 								</h4>
@@ -221,7 +221,7 @@ class BBoss_Group_Readylaunch {
 								<h4>
 									<span class="target_name">
 										<?php
-											esc_html_e( 'Group Description', 'buddyboss-platform' );
+											esc_html_e( 'Group Description', 'buddyboss' );
 										?>
 									</span>
 								</h4>
@@ -316,7 +316,7 @@ class BBoss_Group_Readylaunch {
 						</h3>
 						<span class="bb-rl-meta-desc flex">
 							<?php
-							esc_html_e( 'Total members in the group', 'buddyboss-platform' );
+							esc_html_e( 'Total members in the group', 'buddyboss' );
 							?>
 						</span>
 					</div>
@@ -334,14 +334,14 @@ class BBoss_Group_Readylaunch {
 						<?php
 						printf(
 						/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-							esc_html__( 'Active %s', 'buddyboss-platform' ),
+							esc_html__( 'Active %s', 'buddyboss' ),
 							wp_kses_post( bboss_get_group_last_active( $group ) )
 						);
 						?>
 					</h3>
 					<span class="bb-rl-meta-desc flex">
 						<?php
-						esc_html_e( 'Last post by any member', 'buddyboss-platform' );
+						esc_html_e( 'Last post by any member', 'buddyboss' );
 						?>
 					</span>
 				</div>
@@ -363,9 +363,9 @@ class BBoss_Group_Readylaunch {
 					<h3>
 						<?php
 						if ( 'widget' === $action ) {
-							esc_html_e( 'Organizers', 'buddyboss-platform' );
+							esc_html_e( 'Organizers', 'buddyboss' );
 						} else {
-							esc_html_e( 'Group Organizers', 'buddyboss-platform' );
+							esc_html_e( 'Group Organizers', 'buddyboss' );
 						}
 						?>
 					</h3>
@@ -442,7 +442,7 @@ class BBoss_Group_Readylaunch {
 								<?php
 								printf(
 									/* translators: %d = number of additional group organizers */
-									esc_html__( '+%d more', 'buddyboss-platform' ),
+									esc_html__( '+%d more', 'buddyboss' ),
 									absint( $total_admins - $max_avatars )
 								);
 								?>
@@ -466,7 +466,7 @@ class BBoss_Group_Readylaunch {
 						?>
 						<h3>
 							<?php
-							echo esc_html_x( 'Description', 'Group description', 'buddyboss-platform' );
+							echo esc_html_x( 'Description', 'Group description', 'buddyboss' );
 							?>
 						</h3>
 						<?php
@@ -499,7 +499,7 @@ class BBoss_Group_Readylaunch {
 			$group_link    = bboss_get_group_permalink( $current_group );
 			if ( $current_group->user_has_access ) {
 				$invite_link = trailingslashit( $group_link ) . 'invite';
-				echo '<span class="bb-group-member-invite"><a data-balloon-pos="right" data-balloon="' . esc_attr__( 'Send Invites', 'buddyboss-platform' ) . '" href="' . esc_url( $invite_link ) . '"><i class="bb-icons-rl-user-plus"></i><span class="bb-rl-screen-reader-text">' . esc_html__( 'Send Invites', 'buddyboss-platform' ) . '</span></a></span>';
+				echo '<span class="bb-group-member-invite"><a data-balloon-pos="right" data-balloon="' . esc_attr__( 'Send Invites', 'buddyboss' ) . '" href="' . esc_url( $invite_link ) . '"><i class="bb-icons-rl-user-plus"></i><span class="bb-rl-screen-reader-text">' . esc_html__( 'Send Invites', 'buddyboss' ) . '</span></a></span>';
 			}
 		}
 	}
@@ -594,7 +594,7 @@ class BBoss_Group_Readylaunch {
 	 * @return string Modified excerpt.
 	 */
 	public function bb_rl_get_group_description_excerpt( $excerpt ) {
-		$group_link = '... <a href="#" id="group-description-' . esc_attr( bboss_get_current_group_id() ) . '" class="bb-rl-more-link">' . esc_html__( 'Show more', 'buddyboss-platform' ) . '</a>';
+		$group_link = '... <a href="#" id="group-description-' . esc_attr( bboss_get_current_group_id() ) . '" class="bb-rl-more-link">' . esc_html__( 'Show more', 'buddyboss' ) . '</a>';
 
 		return bboss_create_excerpt( $excerpt, 160, array( 'ending' => $group_link ) );
 	}
@@ -646,7 +646,7 @@ class BBoss_Group_Readylaunch {
 	 */
 	public function bb_rl_get_js_strings_for_groups( $params ) {
 		if ( isset( $params['group_messages'] ) && isset( $params['group_messages']['type_message'] ) ) {
-			$params['group_messages']['type_message'] = __( 'Type a message', 'buddyboss-platform' );
+			$params['group_messages']['type_message'] = __( 'Type a message', 'buddyboss' );
 		}
 
 		return $params;
@@ -668,11 +668,11 @@ class BBoss_Group_Readylaunch {
 		}
 
 		if ( 'public' === $group->status ) {
-			$description = __( 'Anyone can join the group.', 'buddyboss-platform' );
+			$description = __( 'Anyone can join the group.', 'buddyboss' );
 		} elseif ( 'hidden' === $group->status ) {
-			$description = __( 'Only invited member can join the group & group will not listed anywhere.', 'buddyboss-platform' );
+			$description = __( 'Only invited member can join the group & group will not listed anywhere.', 'buddyboss' );
 		} elseif ( 'private' === $group->status ) {
-			$description = __( 'Only people who requested membership and are accepted can join the group.', 'buddyboss-platform' );
+			$description = __( 'Only people who requested membership and are accepted can join the group.', 'buddyboss' );
 		}
 
 		return $description;
@@ -693,7 +693,7 @@ class BBoss_Group_Readylaunch {
 		$last_activity_date = date_i18n( 'd M Y', strtotime( $last_activity_date ) );
 		$last_activity      = sprintf(
 		/* translators: 1: User joined date. */
-			esc_html__( 'Joined %s', 'buddyboss-platform' ),
+			esc_html__( 'Joined %s', 'buddyboss' ),
 			esc_html( $last_activity_date )
 		);
 
@@ -714,9 +714,9 @@ class BBoss_Group_Readylaunch {
 	public static function bb_rl_modify_nav_link_text( $link_text, $nav_item, $nav_scope ) {
 		if ( ! empty( $nav_item->slug ) && ! empty( $nav_scope ) && 'groups' === $nav_scope ) {
 			if ( 'public-message' === $nav_item->slug ) {
-				$link_text = __( 'Group message', 'buddyboss-platform' );
+				$link_text = __( 'Group message', 'buddyboss' );
 			} elseif ( 'private-message' === $nav_item->slug ) {
-				$link_text = __( 'Private message', 'buddyboss-platform' );
+				$link_text = __( 'Private message', 'buddyboss' );
 			}
 		}
 
@@ -739,8 +739,8 @@ class BBoss_Group_Readylaunch {
 
 		if ( 'membership_requested' === $button['id'] ) {
 			$button['link_class']                         .= ' bb-rl-cancel-request bp-toggle-action-button';
-			$button['button_attr']['data-title']           = esc_html__( 'Cancel Request', 'buddyboss-platform' );
-			$button['button_attr']['data-title-displayed'] = esc_html__( 'Request Sent', 'buddyboss-platform' );
+			$button['button_attr']['data-title']           = esc_html__( 'Cancel Request', 'buddyboss' );
+			$button['button_attr']['data-title-displayed'] = esc_html__( 'Request Sent', 'buddyboss' );
 		}
 		return $button;
 	}
@@ -761,7 +761,7 @@ class BBoss_Group_Readylaunch {
 		}
 
 		if ( 'groups_request_membership' === $action ) {
-			$response['feedback'] = esc_html__( 'Your membership request has been sent! The group organizer will review it, and you\'ll be notified once they respond. ', 'buddyboss-platform' );
+			$response['feedback'] = esc_html__( 'Your membership request has been sent! The group organizer will review it, and you\'ll be notified once they respond. ', 'buddyboss' );
 		}
 
 		if ( 'groups_membership_requested' === $action ) {
@@ -774,7 +774,7 @@ class BBoss_Group_Readylaunch {
 
 			if ( ! bboss_groups_delete_membership_request( false, bboss_loggedin_user_id(), $group_id ) ) {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error canceling membership request.', 'buddyboss-platform' ) ),
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error canceling membership request.', 'buddyboss' ) ),
 					'type'     => 'error',
 				);
 			} else {

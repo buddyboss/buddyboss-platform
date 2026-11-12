@@ -61,8 +61,8 @@ class BBoss_Members_Notification extends BBoss_Core_Notification_Abstract {
 		if ( bboss_is_active( 'settings' ) ) {
 			$this->register_notification_group(
 				'members',
-				esc_html__( 'Account Settings', 'buddyboss-platform' ),
-				esc_html__( 'Account Settings', 'buddyboss-platform' ),
+				esc_html__( 'Account Settings', 'buddyboss' ),
+				esc_html__( 'Account Settings', 'buddyboss' ),
 				6
 			);
 
@@ -79,8 +79,8 @@ class BBoss_Members_Notification extends BBoss_Core_Notification_Abstract {
 
 		$this->register_notification_type(
 			'bb_account_password',
-			esc_html__( 'Your password is changed', 'buddyboss-platform' ),
-			esc_html__( 'A member\'s password is updated', 'buddyboss-platform' ),
+			esc_html__( 'Your password is changed', 'buddyboss' ),
+			esc_html__( 'A member\'s password is updated', 'buddyboss' ),
 			'members'
 		);
 
@@ -88,13 +88,13 @@ class BBoss_Members_Notification extends BBoss_Core_Notification_Abstract {
 			'settings-password-changed',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] Your password was changed', 'buddyboss-platform' ),
+				'email_title'         => __( '[{{{site.name}}}] Your password was changed', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "Your password was changed on [{{{site.name}}}]. \n\n If you didn't make this change, please <a href=\"{{{reset.url}}}\">reset your password</a>.", 'buddyboss-platform' ),
+				'email_content'       => __( "Your password was changed on [{{{site.name}}}]. \n\n If you didn't make this change, please <a href=\"{{{reset.url}}}\">reset your password</a>.", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "Your password was changed on [{{{site.name}}}] \n\n If you didn't make this change, please reset your password: {{{reset.url}}}", 'buddyboss-platform' ),
-				'situation_label'     => __( 'A member\'s password is changed', 'buddyboss-platform' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when your password is changed.', 'buddyboss-platform' ),
+				'email_plain_content' => __( "Your password was changed on [{{{site.name}}}] \n\n If you didn't make this change, please reset your password: {{{reset.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'A member\'s password is changed', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when your password is changed.', 'buddyboss' ),
 				'group'               => 'account',
 			),
 			'bb_account_password'
@@ -108,7 +108,7 @@ class BBoss_Members_Notification extends BBoss_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'Password changed', 'buddyboss-platform' ),
+			esc_html__( 'Password changed', 'buddyboss' ),
 			array( 'bb_account_password' ),
 			125
 		);
@@ -145,7 +145,7 @@ class BBoss_Members_Notification extends BBoss_Core_Notification_Abstract {
 			if ( 'web_push' === $screen ) {
 				$settings_link = trailingslashit( bboss_core_get_user_domain( $notification->user_id ) . bboss_get_settings_slug() );
 				$settings_link = add_query_arg( 'rid', (int) $notification->id, $settings_link );
-				$text          = __( 'Your password was changed. If you didn\'t make this change, please reset your password.', 'buddyboss-platform' );
+				$text          = __( 'Your password was changed. If you didn\'t make this change, please reset your password.', 'buddyboss' );
 			} else {
 				$settings_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_settings_slug() );
 				$settings_link = add_query_arg( 'rid', (int) $notification_id, $settings_link );
@@ -153,10 +153,10 @@ class BBoss_Members_Notification extends BBoss_Core_Notification_Abstract {
 				// Set up the string and the filter.
 				if ( (int) $total_items > 1 ) {
 					// translators: %d: number of password-change notifications.
-					$text   = sprintf( __( '%d Your password was changed', 'buddyboss-platform' ), (int) $total_items );
+					$text   = sprintf( __( '%d Your password was changed', 'buddyboss' ), (int) $total_items );
 					$amount = 'multiple';
 				} else {
-					$text = __( 'Your password was changed', 'buddyboss-platform' );
+					$text = __( 'Your password was changed', 'buddyboss' );
 				}
 			}
 

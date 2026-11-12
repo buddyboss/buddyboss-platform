@@ -32,13 +32,13 @@ import { useKb } from '../../context/KbContext';
 export default function KBBreadcrumb( { categoryName } ) {
 	const { dispatch } = useKb();
 	return (
-		<nav className="bb-kb-breadcrumb" aria-label={ __( 'Breadcrumb', 'buddyboss-platform' ) }>
+		<nav className="bb-kb-breadcrumb" aria-label={ __( 'Breadcrumb', 'buddyboss' ) }>
 			<button
 				type="button"
 				className="bb-kb-breadcrumb__link"
 				onClick={ () => dispatch( { type: 'goToLanding' } ) }
 			>
-				{ __( 'Documentation', 'buddyboss-platform' ) }
+				{ __( 'Documentation', 'buddyboss' ) }
 			</button>
 			<span className="bb-kb-breadcrumb__separator" aria-hidden="true"><i className="bb-icons-rl-caret-right"></i></span>
 			<span className="bb-kb-breadcrumb__current">{ categoryName }</span>

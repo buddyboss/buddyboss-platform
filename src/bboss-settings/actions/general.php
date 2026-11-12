@@ -196,19 +196,19 @@ function bboss_settings_action_general() {
 	// Email feedback.
 	switch ( $email_error ) {
 		case 'invalid':
-			$feedback['email_invalid'] = __( 'That email address is invalid. Check the formatting and try again.', 'buddyboss-platform' );
+			$feedback['email_invalid'] = __( 'That email address is invalid. Check the formatting and try again.', 'buddyboss' );
 			break;
 		case 'blocked':
-			$feedback['email_blocked'] = __( 'That email address is currently unavailable for use.', 'buddyboss-platform' );
+			$feedback['email_blocked'] = __( 'That email address is currently unavailable for use.', 'buddyboss' );
 			break;
 		case 'taken':
-			$feedback['email_taken'] = __( 'That email address is already taken.', 'buddyboss-platform' );
+			$feedback['email_taken'] = __( 'That email address is already taken.', 'buddyboss' );
 			break;
 		case 'empty':
-			$feedback['email_empty'] = __( 'Email address cannot be empty.', 'buddyboss-platform' );
+			$feedback['email_empty'] = __( 'Email address cannot be empty.', 'buddyboss' );
 			break;
 		case 'bb_restricted_email':
-			$feedback['bb_restricted_email'] = __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss-platform' );
+			$feedback['bb_restricted_email'] = __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' );
 			break;
 		case false:
 			// No change.
@@ -218,16 +218,16 @@ function bboss_settings_action_general() {
 	// Password feedback.
 	switch ( $pass_error ) {
 		case 'invalid':
-			$feedback['pass_error'] = __( 'Your current password is invalid.', 'buddyboss-platform' );
+			$feedback['pass_error'] = __( 'Your current password is invalid.', 'buddyboss' );
 			break;
 		case 'mismatch':
-			$feedback['pass_mismatch'] = __( 'The new password fields did not match.', 'buddyboss-platform' );
+			$feedback['pass_mismatch'] = __( 'The new password fields did not match.', 'buddyboss' );
 			break;
 		case 'empty':
-			$feedback['pass_empty'] = __( 'One of the password fields was empty.', 'buddyboss-platform' );
+			$feedback['pass_empty'] = __( 'One of the password fields was empty.', 'buddyboss' );
 			break;
 		case 'same':
-			$feedback['pass_same'] = __( 'The new password must be different from the current password.', 'buddyboss-platform' );
+			$feedback['pass_same'] = __( 'The new password must be different from the current password.', 'buddyboss' );
 			break;
 		case false:
 			// No change.
@@ -292,7 +292,7 @@ function bboss_settings_action_general() {
 			true === $email_changed
 		)
 	) {
-		$feedback[]    = __( 'Your settings have been saved.', 'buddyboss-platform' );
+		$feedback[]    = __( 'Your settings have been saved.', 'buddyboss' );
 		$feedback_type = 'success';
 
 		// Some kind of errors occurred.
@@ -303,9 +303,9 @@ function bboss_settings_action_general() {
 		false === $email_changed
 	) {
 		if ( bboss_is_my_profile() ) {
-			$feedback['nochange'] = __( 'No changes were made to your account.', 'buddyboss-platform' );
+			$feedback['nochange'] = __( 'No changes were made to your account.', 'buddyboss' );
 		} else {
-			$feedback['nochange'] = __( 'No changes were made to this account.', 'buddyboss-platform' );
+			$feedback['nochange'] = __( 'No changes were made to this account.', 'buddyboss' );
 		}
 	}
 
@@ -362,10 +362,10 @@ function bboss_settings_verify_email_change() {
 			bboss_delete_user_meta( bboss_displayed_user_id(), 'pending_email_change' );
 
 			// Post a success message and redirect.
-			bboss_core_add_message( __( 'You have successfully verified your new email address.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'You have successfully verified your new email address.', 'buddyboss' ) );
 		} else {
 			// Unknown error.
-			bboss_core_add_message( __( 'There was a problem verifying your new email address. Please try again.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'There was a problem verifying your new email address. Please try again.', 'buddyboss' ), 'error' );
 		}
 
 		bboss_core_redirect( $redirect_to );
@@ -377,7 +377,7 @@ function bboss_settings_verify_email_change() {
 
 		if ( $nonce_check ) {
 			bboss_delete_user_meta( bboss_displayed_user_id(), 'pending_email_change' );
-			bboss_core_add_message( __( 'You have successfully dismissed your pending email change.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'You have successfully dismissed your pending email change.', 'buddyboss' ) );
 		}
 
 		bboss_core_redirect( $redirect_to );

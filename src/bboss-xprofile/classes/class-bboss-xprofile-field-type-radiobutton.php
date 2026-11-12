@@ -24,8 +24,8 @@ class BBoss_XProfile_Field_Type_Radiobutton extends BBoss_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
-		$this->name     = __( 'Radio Buttons', 'buddyboss-platform' );
+		$this->category = __( 'Multi Fields', 'buddyboss' );
+		$this->name     = __( 'Radio Buttons', 'buddyboss' );
 
 		$this->supports_options = true;
 
@@ -79,7 +79,7 @@ class BBoss_XProfile_Field_Type_Radiobutton extends BBoss_XProfile_Field_Type {
 
 			<?php
 
-			/** This action is documented in bboss-xprofile/bp-xprofile-classes */
+			/** This action is documented in bp-xprofile/bp-xprofile-classes */
 			do_action( bboss_get_the_profile_field_errors_action() );
 			?>
 
@@ -90,7 +90,7 @@ class BBoss_XProfile_Field_Type_Radiobutton extends BBoss_XProfile_Field_Type {
 				?>
 
 				<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bboss_get_the_profile_field_input_name() ); ?>' );">
-					<?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?>
+					<?php esc_html_e( 'Clear', 'buddyboss' ); ?>
 				</a>
 
 			<?php endif; ?>
@@ -186,7 +186,7 @@ class BBoss_XProfile_Field_Type_Radiobutton extends BBoss_XProfile_Field_Type {
 		?>
 
 		<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bboss_get_the_profile_field_input_name() ); ?>' );">
-			<?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?>
+			<?php esc_html_e( 'Clear', 'buddyboss' ); ?>
 		</a>
 
 		<?php

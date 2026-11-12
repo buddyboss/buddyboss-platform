@@ -55,7 +55,7 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 				if ( response.success && response.data ) {
 					setReport( response.data );
 				} else {
-					setError( ( response.data && response.data.message ) || __( 'Failed to load report.', 'buddyboss-platform' ) );
+					setError( ( response.data && response.data.message ) || __( 'Failed to load report.', 'buddyboss' ) );
 				}
 			} )
 			.catch( function ( err ) {
@@ -63,7 +63,7 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 					return;
 				}
 				setIsLoading( false );
-				setError( __( 'Failed to load report.', 'buddyboss-platform' ) );
+				setError( __( 'Failed to load report.', 'buddyboss' ) );
 			} );
 
 		return function () {
@@ -77,7 +77,7 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 
 	return (
 		<Modal
-			title={ __( 'View Report', 'buddyboss-platform' ) }
+			title={ __( 'View Report', 'buddyboss' ) }
 			onRequestClose={ onClose }
 			className="bb-admin-view-report-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -119,7 +119,7 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 									<i className="bb-icons-rl bb-icons-rl-flag"></i>
 									{ sprintf(
 										/* translators: %s: number of reports. */
-										_n( '%s report', '%s reports', report.reports, 'buddyboss-platform' ),
+										_n( '%s report', '%s reports', report.reports, 'buddyboss' ),
 										report.reports
 									) }
 								</span>
@@ -127,13 +127,13 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 									<i className="bb-icons-rl bb-icons-rl-prohibit"></i>
 									{ sprintf(
 										/* translators: %s: number of blocks. */
-										_n( '%s block', '%s blocks', report.blocks, 'buddyboss-platform' ),
+										_n( '%s block', '%s blocks', report.blocks, 'buddyboss' ),
 										report.blocks
 									) }
 								</span>
 								{ report.is_suspended && (
 									<span className="bb-admin-view-report-modal__suspended-badge">
-										{ __( 'Suspended', 'buddyboss-platform' ) }
+										{ __( 'Suspended', 'buddyboss' ) }
 									</span>
 								) }
 							</div>
@@ -143,7 +143,7 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 						{ report.reporters && report.reporters.length > 0 && (
 							<div className="bb-admin-view-report-modal__section">
 								<h4 className="bb-admin-view-report-modal__section-title">
-									{ __( 'Reporter', 'buddyboss-platform' ) }
+									{ __( 'Reporter', 'buddyboss' ) }
 								</h4>
 								<div className="bb-admin-view-report-modal__list">
 									{ report.reporters.map( function ( reporter, index ) {
@@ -186,7 +186,7 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 						{ report.blockers && report.blockers.length > 0 && (
 							<div className="bb-admin-view-report-modal__section">
 								<h4 className="bb-admin-view-report-modal__section-title">
-									{ __( 'Blocker', 'buddyboss-platform' ) }
+									{ __( 'Blocker', 'buddyboss' ) }
 								</h4>
 								<div className="bb-admin-view-report-modal__list">
 									{ report.blockers.map( function ( blocker, index ) {
@@ -226,7 +226,7 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 					className="bb-admin-view-report-modal__close-btn"
 					onClick={ onClose }
 				>
-					{ __( 'Close', 'buddyboss-platform' ) }
+					{ __( 'Close', 'buddyboss' ) }
 				</Button>
 			</div>
 		</Modal>

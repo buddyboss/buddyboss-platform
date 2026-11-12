@@ -146,7 +146,7 @@ export function CheckboxListField( { field, value, onChange, disabled, sanitized
 						className="bb-admin-settings-field__checkbox-list-status-tag"
 						aria-hidden="true"
 					>
-						{ __( 'Hidden', 'buddyboss-platform' ) }
+						{ __( 'Hidden', 'buddyboss' ) }
 					</span>
 				) }
 			</span>
@@ -167,7 +167,7 @@ export function CheckboxListField( { field, value, onChange, disabled, sanitized
 		return (
 			<div className="bb-admin-empty-state">
 				<p className="bb-admin-empty-state__description">
-					{ __( 'There are no navigation items to order yet. Create a group first to populate this list.', 'buddyboss-platform' ) }
+					{ __( 'There are no navigation items to order yet. Create a group first to populate this list.', 'buddyboss' ) }
 				</p>
 			</div>
 		);

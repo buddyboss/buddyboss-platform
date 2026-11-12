@@ -30,7 +30,7 @@ function bboss_messages_format_notifications( $action, $item_id, $secondary_item
 	$total_items = (int) $total_items;
 	$text        = '';
 	$link        = trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() . '/inbox' );
-	$title       = __( 'Messages', 'buddyboss-platform' );
+	$title       = __( 'Messages', 'buddyboss' );
 	$amount      = 'single';
 
 	if ( 'new_message' === $action ) {
@@ -38,7 +38,7 @@ function bboss_messages_format_notifications( $action, $item_id, $secondary_item
 			$amount = 'multiple';
 			$text   = sprintf(
 				/* translators: %d total messages */
-				__( 'You have %d new messages', 'buddyboss-platform' ),
+				__( 'You have %d new messages', 'buddyboss' ),
 				$total_items
 			);
 
@@ -63,55 +63,55 @@ function bboss_messages_format_notifications( $action, $item_id, $secondary_item
 					if ( empty( $message_from ) ) {
 						$text = sprintf(
 							/* translators: %s user name */
-							__( '%s sent you a new private message', 'buddyboss-platform' ),
+							__( '%s sent you a new private message', 'buddyboss' ),
 							bboss_core_get_user_displayname( $secondary_item_id )
 						);
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'individual' === $message_users ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
-							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss-platform' ),
+							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
 							bboss_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'all' === $message_users ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
-							__( '%1$s sent you a new group message from the group: %2$s', 'buddyboss-platform' ),
+							__( '%1$s sent you a new group message from the group: %2$s', 'buddyboss' ),
 							bboss_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'all' === $message_users ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
-							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss-platform' ),
+							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
 							bboss_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'individual' === $message_users && isset( $secondary_item_id ) && ! bboss_core_get_user_displayname( $secondary_item_id ) ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
-							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss-platform' ),
+							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
 							bboss_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} else {
 						$text = sprintf(
 							/* translators: %s user name */
-							__( '%s sent you a new private message', 'buddyboss-platform' ),
+							__( '%s sent you a new private message', 'buddyboss' ),
 							bboss_core_get_user_displayname( $secondary_item_id )
 						);
 					}
 				} else {
 					$text = sprintf(
 						/* translators: %s user name */
-						__( '%s sent you a new private message', 'buddyboss-platform' ),
+						__( '%s sent you a new private message', 'buddyboss' ),
 						bboss_core_get_user_displayname( $secondary_item_id )
 					);
 				}
 			} else {
 				$text = sprintf(
 					/* translators: Number of total private messages */
-					_n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss-platform' ),
+					_n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss' ),
 					bboss_core_number_format( $total_items )
 				);
 			}
@@ -139,7 +139,7 @@ function bboss_messages_format_notifications( $action, $item_id, $secondary_item
 			 */
 			$return = apply_filters( 'bp_messages_' . $amount . '_new_message_notification', $return, (int) $total_items, $text, $link, $item_id, $secondary_item_id );
 		} else {
-			/** This filter is documented in bboss-messages/bboss-messages-notifications.php */
+			/** This filter is documented in bp-messages/bboss-messages-notifications.php */
 			$return = apply_filters(
 				'bp_messages_' . $amount . '_new_message_notification',
 				array(
@@ -172,12 +172,12 @@ function bboss_messages_format_notifications( $action, $item_id, $secondary_item
 		 */
 		if ( has_filter( 'bp_messages_single_new_message_notification' ) ) {
 			if ( 'string' === $format ) {
-				/** This filter is documented in bboss-messages/bboss-messages-notifications.php */
+				/** This filter is documented in bp-messages/bboss-messages-notifications.php */
 				$return = apply_filters( 'bp_messages_single_new_message_notification', $return, (int) $total_items, $text, $link, $item_id, $secondary_item_id );
 
 				// Notice that there are seven parameters instead of six? Ugh...
 			} else {
-				/** This filter is documented in bboss-messages/bboss-messages-notifications.php */
+				/** This filter is documented in bp-messages/bboss-messages-notifications.php */
 				$return = apply_filters( 'bp_messages_single_new_message_notification', $return, $link, (int) $total_items, $text, $link, $item_id, $secondary_item_id );
 			}
 		}

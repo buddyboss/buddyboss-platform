@@ -28,8 +28,8 @@ function bboss_nouveau_customize_register( WP_Customize_Manager $wp_customize ) 
 	$bp_nouveau_options = bboss_nouveau_get_appearance_settings();
 	//@todo is the BuddyBoss Platform really translatable?
 	$wp_customize->add_panel( 'bp_nouveau_panel', array(
-		'description' => __( 'Customize the appearance of the BuddyBoss Platform.', 'buddyboss-platform' ),
-		'title'       => __( 'BuddyBoss Platform', 'buddyboss-platform' ),
+		'description' => __( 'Customize the appearance of the BuddyBoss Platform.', 'buddyboss' ),
+		'title'       => __( 'BuddyBoss Platform', 'buddyboss' ),
 		'priority'    => 200,
 	) );
 
@@ -43,16 +43,16 @@ function bboss_nouveau_customize_register( WP_Customize_Manager $wp_customize ) 
 	$sections = apply_filters( 'bp_nouveau_customizer_sections', array(
 		// Profile Navigation section removed — now managed via Settings 2.0 (settings-profile-navigation.php).
 		'bp_nouveau_user_profile_header' => array(
-			'title'       => __( 'Profile Action Buttons', 'buddyboss-platform' ),
+			'title'       => __( 'Profile Action Buttons', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 50,
-			'description' => __( 'Customize the order of the action buttons in profile headers, visible when viewing other member\'s profiles.', 'buddyboss-platform' ),
+			'description' => __( 'Customize the order of the action buttons in profile headers, visible when viewing other member\'s profiles.', 'buddyboss' ),
 		),
 		'bp_nouveau_mail' => array(
-			'title'       => __( 'BuddyBoss Emails', 'buddyboss-platform' ),
+			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 80,
-			'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss-platform' ),
+			'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
 		),
 	) );
 
@@ -162,7 +162,7 @@ function bboss_nouveau_customize_register( WP_Customize_Manager $wp_customize ) 
 	$controls = array(
 		'user_profile_actions_display'   => array(
 			'class'    => 'BBoss_Nouveau_Profile_Header_Customize_Control',
-			'label'    => __( 'Customize the order of the action buttons in profile headers, visible when viewing other member\'s profiles.', 'buddyboss-platform' ),
+			'label'    => __( 'Customize the order of the action buttons in profile headers, visible when viewing other member\'s profiles.', 'buddyboss' ),
 			'section'  => 'bp_nouveau_user_profile_header',
 			'settings' => 'bp_nouveau_appearance[user_profile_actions_display]',
 			'type'     => 'header_button',
@@ -239,11 +239,11 @@ function bboss_nouveau_customizer_user_profile_actions() {
 	$buttons = array();
 
 	if ( bboss_is_active( 'friends' ) ) {
-		$buttons['member_friendship'] = __( 'Connect', 'buddyboss-platform' );
+		$buttons['member_friendship'] = __( 'Connect', 'buddyboss' );
 	}
 
 	if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) { // add follow button
-		$buttons['member_follow'] = __( 'Follow', 'buddyboss-platform' );
+		$buttons['member_follow'] = __( 'Follow', 'buddyboss' );
 	}
 
 	$bp_force_friendship_to_message = bboss_force_friendship_to_message();
@@ -252,11 +252,11 @@ function bboss_nouveau_customizer_user_profile_actions() {
 	     && ( ! $bp_force_friendship_to_message
 	          || ( $bp_force_friendship_to_message && bboss_is_active( 'friends' ) ) )
 	) {
-		$buttons['private_message'] = __( 'Message', 'buddyboss-platform' );
+		$buttons['private_message'] = __( 'Message', 'buddyboss' );
 	}
 
 	//Member switch button
-	$buttons['member_switch'] = __( 'View As', 'buddyboss-platform' );
+	$buttons['member_switch'] = __( 'View As', 'buddyboss' );
 
 	$buttons = apply_filters( 'bp_nouveau_customizer_user_profile_actions', $buttons );
 

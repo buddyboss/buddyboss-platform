@@ -633,13 +633,13 @@ if ( ! class_exists( 'BBoss_Search_Members' ) ) :
 		 */
 		function print_search_options( $items_to_search ) {
 			echo "<div class='wp-user-fields' style='margin: 10px 0 0 30px'>";
-			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html__( 'Account', 'buddyboss-platform' ) . '</strong></p>';
+			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html__( 'Account', 'buddyboss' ) . '</strong></p>';
 
 			$fields = array(
-				'user_login'   => __( 'Username/Login', 'buddyboss-platform' ),
-				'display_name' => __( 'Display Name', 'buddyboss-platform' ),
-				'user_email'   => __( 'Email', 'buddyboss-platform' ),
-				'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
+				'user_login'   => __( 'Username/Login', 'buddyboss' ),
+				'display_name' => __( 'Display Name', 'buddyboss' ),
+				'user_email'   => __( 'Email', 'buddyboss' ),
+				'user_meta'    => __( 'User Meta', 'buddyboss' ),
 			);
 			foreach ( $fields as $field => $label ) {
 				$item    = 'member_field_' . $field;
@@ -1802,44 +1802,44 @@ if ( ! class_exists( 'BBoss_Search_Members' ) ) :
 				case 'year':
 					return array(
 						/* translators: %s: number of years. */
-						'singular' => _n( '%s year', '%s years', 1, 'buddyboss-platform' ),
+						'singular' => _n( '%s year', '%s years', 1, 'buddyboss' ),
 						/* translators: %s: number of years. */
-						'plural'   => _n( '%s year', '%s years', 2, 'buddyboss-platform' ),
+						'plural'   => _n( '%s year', '%s years', 2, 'buddyboss' ),
 					);
 				case 'month':
 					return array(
 						/* translators: %s: number of months. */
-						'singular' => _n( '%s month', '%s months', 1, 'buddyboss-platform' ),
+						'singular' => _n( '%s month', '%s months', 1, 'buddyboss' ),
 						/* translators: %s: number of months. */
-						'plural'   => _n( '%s month', '%s months', 2, 'buddyboss-platform' ),
+						'plural'   => _n( '%s month', '%s months', 2, 'buddyboss' ),
 					);
 				case 'week':
 					return array(
 						/* translators: %s: number of weeks. */
-						'singular' => _n( '%s week', '%s weeks', 1, 'buddyboss-platform' ),
+						'singular' => _n( '%s week', '%s weeks', 1, 'buddyboss' ),
 						/* translators: %s: number of weeks. */
-						'plural'   => _n( '%s week', '%s weeks', 2, 'buddyboss-platform' ),
+						'plural'   => _n( '%s week', '%s weeks', 2, 'buddyboss' ),
 					);
 				case 'day':
 					return array(
 						/* translators: %s: number of days. */
-						'singular' => _n( '%s day', '%s days', 1, 'buddyboss-platform' ),
+						'singular' => _n( '%s day', '%s days', 1, 'buddyboss' ),
 						/* translators: %s: number of days. */
-						'plural'   => _n( '%s day', '%s days', 2, 'buddyboss-platform' ),
+						'plural'   => _n( '%s day', '%s days', 2, 'buddyboss' ),
 					);
 				case 'hour':
 					return array(
 						/* translators: %s: number of hours. */
-						'singular' => _n( '%s hour', '%s hours', 1, 'buddyboss-platform' ),
+						'singular' => _n( '%s hour', '%s hours', 1, 'buddyboss' ),
 						/* translators: %s: number of hours. */
-						'plural'   => _n( '%s hour', '%s hours', 2, 'buddyboss-platform' ),
+						'plural'   => _n( '%s hour', '%s hours', 2, 'buddyboss' ),
 					);
 				case 'minute':
 					return array(
 						/* translators: %s: number of minutes. */
-						'singular' => _n( '%s minute', '%s minutes', 1, 'buddyboss-platform' ),
+						'singular' => _n( '%s minute', '%s minutes', 1, 'buddyboss' ),
 						/* translators: %s: number of minutes. */
-						'plural'   => _n( '%s minute', '%s minutes', 2, 'buddyboss-platform' ),
+						'plural'   => _n( '%s minute', '%s minutes', 2, 'buddyboss' ),
 					);
 			}
 
@@ -1866,17 +1866,17 @@ if ( ! class_exists( 'BBoss_Search_Members' ) ) :
 		private function bb_get_time_string_translation( $unit ) {
 			switch ( $unit ) {
 				case 'a year':
-					return __( 'a year', 'buddyboss-platform' );
+					return __( 'a year', 'buddyboss' );
 				case 'sometime':
-					return __( 'sometime', 'buddyboss-platform' );
+					return __( 'sometime', 'buddyboss' );
 				case 'a week':
-					return __( 'a week', 'buddyboss-platform' );
+					return __( 'a week', 'buddyboss' );
 				case 'a day':
-					return __( 'a day', 'buddyboss-platform' );
+					return __( 'a day', 'buddyboss' );
 				case 'an hour':
-					return __( 'an hour', 'buddyboss-platform' );
+					return __( 'an hour', 'buddyboss' );
 				case 'a minute':
-					return __( 'a minute', 'buddyboss-platform' );
+					return __( 'a minute', 'buddyboss' );
 			}
 
 			// Unknown unit: return as-is, matching __() with no available translation.
@@ -1900,13 +1900,13 @@ if ( ! class_exists( 'BBoss_Search_Members' ) ) :
 			switch ( $direction ) {
 				case 'ago':
 					/* translators: %s: amount of time (e.g. "2 days"). */
-					return __( '%s ago', 'buddyboss-platform' );
+					return __( '%s ago', 'buddyboss' );
 				case 'since':
 					/* translators: %s: amount of time (e.g. "2 days"). */
-					return __( '%s since', 'buddyboss-platform' );
+					return __( '%s since', 'buddyboss' );
 				case 'from now':
 					/* translators: %s: amount of time (e.g. "2 days"). */
-					return __( '%s from now', 'buddyboss-platform' );
+					return __( '%s from now', 'buddyboss' );
 			}
 
 			// Unknown direction: return as-is so behaviour matches the original.

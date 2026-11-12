@@ -38,9 +38,9 @@ function bboss_groups_screen_group_admin_manage_members() {
 
 			// Promote a user.
 			if ( ! bboss_groups_promote_member( $user_id, $bp->groups->current_group->id, $status ) ) {
-				bboss_core_add_message( __( 'There was an error when promoting that user. Please try again.', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'There was an error when promoting that user. Please try again.', 'buddyboss' ), 'error' );
 			} else {
-				bboss_core_add_message( __( 'User promoted successfully', 'buddyboss-platform' ) );
+				bboss_core_add_message( __( 'User promoted successfully', 'buddyboss' ) );
 			}
 
 			/**
@@ -69,14 +69,14 @@ function bboss_groups_screen_group_admin_manage_members() {
 			// Stop sole admins from abandoning their group.
 			$group_admins = bboss_groups_get_group_admins( $bp->groups->current_group->id );
 			if ( 1 == count( $group_admins ) && $group_admins[0]->user_id == $user_id ) {
-				bboss_core_add_message( __( 'This group must have at least one organizer', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'This group must have at least one organizer', 'buddyboss' ), 'error' );
 			}
 
 			// Demote a user.
 			elseif ( ! bboss_groups_demote_member( $user_id, $bp->groups->current_group->id ) ) {
-				bboss_core_add_message( __( 'There was an error when demoting that user. Please try again.', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'There was an error when demoting that user. Please try again.', 'buddyboss' ), 'error' );
 			} else {
-				bboss_core_add_message( __( 'User demoted successfully', 'buddyboss-platform' ) );
+				bboss_core_add_message( __( 'User demoted successfully', 'buddyboss' ) );
 			}
 
 			/**
@@ -102,9 +102,9 @@ function bboss_groups_screen_group_admin_manage_members() {
 
 			// Ban a user.
 			if ( ! bboss_groups_ban_member( $user_id, $bp->groups->current_group->id ) ) {
-				bboss_core_add_message( __( 'There was an error when banning that user. Please try again.', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'There was an error when banning that user. Please try again.', 'buddyboss' ), 'error' );
 			} else {
-				bboss_core_add_message( __( 'User banned successfully', 'buddyboss-platform' ) );
+				bboss_core_add_message( __( 'User banned successfully', 'buddyboss' ) );
 			}
 
 			/**
@@ -130,9 +130,9 @@ function bboss_groups_screen_group_admin_manage_members() {
 
 			// Remove a ban for user.
 			if ( ! bboss_groups_unban_member( $user_id, $bp->groups->current_group->id ) ) {
-				bboss_core_add_message( __( 'There was an error when unbanning that user. Please try again.', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'There was an error when unbanning that user. Please try again.', 'buddyboss' ), 'error' );
 			} else {
-				bboss_core_add_message( __( 'User ban removed successfully', 'buddyboss-platform' ) );
+				bboss_core_add_message( __( 'User ban removed successfully', 'buddyboss' ) );
 			}
 
 			/**
@@ -158,9 +158,9 @@ function bboss_groups_screen_group_admin_manage_members() {
 
 			// Remove a user.
 			if ( ! bboss_groups_remove_member( $user_id, $bp->groups->current_group->id ) ) {
-				bboss_core_add_message( __( 'There was an error removing that user from the group. Please try again.', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'There was an error removing that user from the group. Please try again.', 'buddyboss' ), 'error' );
 			} else {
-				bboss_core_add_message( __( 'User removed successfully', 'buddyboss-platform' ) );
+				bboss_core_add_message( __( 'User removed successfully', 'buddyboss' ) );
 			}
 
 			/**

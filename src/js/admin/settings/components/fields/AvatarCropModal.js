@@ -320,7 +320,7 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 					var newUrl = response.data.avatar || response.data.url || '';
 					onSave( newUrl );
 				} else {
-					var msg = ( response.data && response.data.message ) || __( 'Crop failed.', 'buddyboss-platform' );
+					var msg = ( response.data && response.data.message ) || __( 'Crop failed.', 'buddyboss' );
 					setError( msg );
 					setSaving( false );
 				}
@@ -329,7 +329,7 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 				if ( 'AbortError' === err.name ) {
 					return;
 				}
-				setError( err.message || __( 'Crop failed.', 'buddyboss-platform' ) );
+				setError( err.message || __( 'Crop failed.', 'buddyboss' ) );
 				setSaving( false );
 			} );
 	};
@@ -356,19 +356,19 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 			className="bb-admin-image-upload__crop-overlay"
 			role="dialog"
 			aria-modal="true"
-			aria-label={ __( 'Upload Custom Avatar', 'buddyboss-platform' ) }
+			aria-label={ __( 'Upload Custom Avatar', 'buddyboss' ) }
 		>
 			<div className="bb-admin-image-upload__crop-modal">
 				<div className="bb-admin-image-upload__crop-header">
 					<h3 className="bb-admin-image-upload__crop-title">
-						{ __( 'Upload Custom Avatar', 'buddyboss-platform' ) }
+						{ __( 'Upload Custom Avatar', 'buddyboss' ) }
 					</h3>
 					<button
 						type="button"
 						className="bb-admin-image-upload__crop-close"
 						onClick={ onCancel }
 						disabled={ saving }
-						aria-label={ __( 'Close', 'buddyboss-platform' ) }
+						aria-label={ __( 'Close', 'buddyboss' ) }
 					>
 						<i className="bb-icons-rl bb-icons-rl-x" aria-hidden="true"></i>
 					</button>
@@ -421,7 +421,7 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 						onClick={ onCancel }
 						disabled={ saving }
 					>
-						{ __( 'Cancel', 'buddyboss-platform' ) }
+						{ __( 'Cancel', 'buddyboss' ) }
 					</button>
 					<button
 						type="button"
@@ -429,7 +429,7 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 						onClick={ handleCropSave }
 						disabled={ saving || ! imgLoaded }
 					>
-						{ saving ? __( 'Uploading...', 'buddyboss-platform' ) : __( 'Crop & Upload', 'buddyboss-platform' ) }
+						{ saving ? __( 'Uploading...', 'buddyboss' ) : __( 'Crop & Upload', 'buddyboss' ) }
 					</button>
 				</div>
 			</div>

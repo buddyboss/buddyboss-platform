@@ -60,8 +60,8 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 	public function load() {
 		$this->register_notification_group(
 			'friends',
-			esc_html__( 'Member Connections', 'buddyboss-platform' ),
-			esc_html__( 'Member Connections', 'buddyboss-platform' ),
+			esc_html__( 'Member Connections', 'buddyboss' ),
+			esc_html__( 'Member Connections', 'buddyboss' ),
 			22
 		);
 
@@ -69,7 +69,7 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 		$this->register_notification_for_friendship_accept();
 
 		$this->register_notification_filter(
-			esc_html__( 'Connection requests', 'buddyboss-platform' ),
+			esc_html__( 'Connection requests', 'buddyboss' ),
 			array( 'bb_connections_new_request', 'bb_connections_request_accepted' ),
 			45
 		);
@@ -83,8 +83,8 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 	public function register_notification_for_friendship_request() {
 		$this->register_notification_type(
 			'bb_connections_new_request',
-			esc_html__( 'You receive a new connection request', 'buddyboss-platform' ),
-			esc_html__( 'A member receives a new connection request', 'buddyboss-platform' ),
+			esc_html__( 'You receive a new connection request', 'buddyboss' ),
+			esc_html__( 'A member receives a new connection request', 'buddyboss' ),
 			'friends'
 		);
 
@@ -92,13 +92,13 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 			'friends-request',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss-platform' ),
+				'email_title'         => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss-platform' ),
+				'email_content'       => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss-platform' ),
-				'situation_label'     => __( 'A member receives a new connection request', 'buddyboss-platform' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss-platform' ),
+				'email_plain_content' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'A member receives a new connection request', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss' ),
 				'group'               => 'connections',
 			),
 			'bb_connections_new_request'
@@ -121,8 +121,8 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 	public function register_notification_for_friendship_accept() {
 		$this->register_notification_type(
 			'bb_connections_request_accepted',
-			esc_html__( 'Your connection request is accepted', 'buddyboss-platform' ),
-			esc_html__( 'A member\'s connection request is accepted', 'buddyboss-platform' ),
+			esc_html__( 'Your connection request is accepted', 'buddyboss' ),
+			esc_html__( 'A member\'s connection request is accepted', 'buddyboss' ),
 			'friends'
 		);
 
@@ -130,13 +130,13 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 			'friends-request-accepted',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss-platform' ),
+				'email_title'         => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss-platform' ),
+				'email_content'       => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss-platform' ),
-				'situation_label'     => __( 'A member\'s connection request is accepted', 'buddyboss-platform' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone accepts your invitation to connect.', 'buddyboss-platform' ),
+				'email_plain_content' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'A member\'s connection request is accepted', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone accepts your invitation to connect.', 'buddyboss' ),
 				'group'               => 'connections',
 			),
 			'bb_connections_request_accepted'
@@ -196,7 +196,7 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 
 			if ( 'web_push' === $screen ) {
 				$notification_link = trailingslashit( bboss_core_get_user_domain( $notification->user_id ) . bboss_get_friends_slug() . '/my-friends' );
-				$text              = __( 'Has accepted your connection request', 'buddyboss-platform' );
+				$text              = __( 'Has accepted your connection request', 'buddyboss' );
 			} else {
 				$notification_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_friends_slug() . '/my-friends' );
 
@@ -204,14 +204,14 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 					/* translators: total members count */
-						esc_html__( '%d members accepted your connection requests', 'buddyboss-platform' ),
+						esc_html__( '%d members accepted your connection requests', 'buddyboss' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
 				} else {
 					$text = sprintf(
 					/* translators: member name */
-						esc_html__( '%s has accepted your connection request', 'buddyboss-platform' ),
+						esc_html__( '%s has accepted your connection request', 'buddyboss' ),
 						bboss_core_get_user_displayname( $item_id )
 					);
 
@@ -239,7 +239,7 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 			$amount = 'single';
 			if ( 'web_push' === $screen ) {
 				$notification_link = bboss_core_get_user_domain( $notification->user_id ) . bboss_get_friends_slug() . '/requests/?new';
-				$text              = __( 'Sent you a connection request', 'buddyboss-platform' );
+				$text              = __( 'Sent you a connection request', 'buddyboss' );
 			} else {
 				$notification_link = bboss_loggedin_user_domain() . bboss_get_friends_slug() . '/requests/?new';
 
@@ -247,7 +247,7 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 					/* translators: total number. */
-						esc_html__( 'You have %d pending requests to connect', 'buddyboss-platform' ),
+						esc_html__( 'You have %d pending requests to connect', 'buddyboss' ),
 						(int) $total_items
 					);
 
@@ -255,7 +255,7 @@ class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 				} else {
 					$text = sprintf(
 					/* translators: users display name. */
-						esc_html__( '%s has sent you a connection request', 'buddyboss-platform' ),
+						esc_html__( '%s has sent you a connection request', 'buddyboss' ),
 						bboss_core_get_user_displayname( $item_id )
 					);
 

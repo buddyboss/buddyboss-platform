@@ -27,11 +27,11 @@ if ( bboss_has_profile( 'profile_group_id=' . $profile_group_id ) ) {
 			<h2 class="screen-heading edit-profile-screen">
 				<?php
 				if ( 1 === $profile_group_id ) {
-					echo esc_html__( 'Edit profile', 'buddyboss-platform' );
+					echo esc_html__( 'Edit profile', 'buddyboss' );
 				} else {
 					printf(
 						/* translators: %s = profile field group name */
-						esc_html__( 'Edit "%s" Information', 'buddyboss-platform' ),
+						esc_html__( 'Edit "%s" Information', 'buddyboss' ),
 						bboss_get_the_profile_group_name() // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- group name is pre-escaped via the wp_filter_kses filter chain; esc_html would double-encode entities such as "R&D".
 					);
 				}

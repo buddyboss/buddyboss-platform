@@ -79,7 +79,7 @@ class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'group_id' => array(
-						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
+						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 						'type'        => 'integer',
 					),
 				),
@@ -125,7 +125,7 @@ class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( empty( $cover_url ) ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_cover_no_image',
-				__( 'Sorry, there was a problem fetching this group cover.', 'buddyboss-platform' ),
+				__( 'Sorry, there was a problem fetching this group cover.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -166,7 +166,7 @@ class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -178,7 +178,7 @@ class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! $this->group ) {
 			$retval = new WP_Error(
 				'bp_rest_group_invalid_id',
-				__( 'Invalid group id.', 'buddyboss-platform' ),
+				__( 'Invalid group id.', 'buddyboss' ),
 				array(
 					'status' => 404,
 				)
@@ -222,7 +222,7 @@ class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( empty( $files ) ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_cover_no_image_file',
-				__( 'Sorry, you need an image file to upload.', 'buddyboss-platform' ),
+				__( 'Sorry, you need an image file to upload.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -269,7 +269,7 @@ class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && bboss_disable_group_cover_image_uploads() ) {
 			$retval = new WP_Error(
 				'bp_rest_attachments_group_cover_disabled',
-				__( 'Sorry, group cover upload is disabled.', 'buddyboss-platform' ),
+				__( 'Sorry, group cover upload is disabled.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -318,7 +318,7 @@ class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( ! $deleted ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_cover_delete_failed',
-				__( 'Sorry, there was a problem deleting this group cover.', 'buddyboss-platform' ),
+				__( 'Sorry, there was a problem deleting this group cover.', 'buddyboss' ),
 				array(
 					'status' => 500,
 				)
@@ -377,7 +377,7 @@ class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-platform' ),
+				__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -387,7 +387,7 @@ class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! empty( $args ) && ! bboss_attachments_current_user_can( 'edit_cover_image', $args ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss-platform' ),
+				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -453,14 +453,14 @@ class BBoss_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'image'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Full size of the image file.', 'buddyboss-platform' ),
+					'description' => __( 'Full size of the image file.', 'buddyboss' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'readonly'    => true,
 				),
 				'warning' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Warning while uploading the cover photo.', 'buddyboss-platform' ),
+					'description' => __( 'Warning while uploading the cover photo.', 'buddyboss' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),

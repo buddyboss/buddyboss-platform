@@ -202,7 +202,7 @@ class BBoss_XProfile_Group {
 			 */
 			if ( is_admin() && ! wp_doing_ajax() && function_exists( 'bboss_core_add_admin_notice' ) && isset( bboss()->admin ) ) {
 				bboss_core_add_admin_notice(
-					__( 'This field set contains a "Bio" profile field, which shares its value with the member\'s WordPress profile, so the repeater set was not enabled. Remove the Bio field first.', 'buddyboss-platform' ),
+					__( 'This field set contains a "Bio" profile field, which shares its value with the member\'s WordPress profile, so the repeater set was not enabled. Remove the Bio field first.', 'buddyboss' ),
 					'error'
 				);
 			}
@@ -767,7 +767,7 @@ class BBoss_XProfile_Group {
 
 		// Validate Form.
 		if ( empty( $_POST['group_name'] ) ) {
-			$message = __( 'Please make sure you give the group a name.', 'buddyboss-platform' );
+			$message = __( 'Please make sure you give the group a name.', 'buddyboss' );
 			return false;
 		} else {
 			return true;
@@ -945,8 +945,8 @@ class BBoss_XProfile_Group {
 
 		// New field group.
 		if ( empty( $this->id ) ) {
-			$title  = __( 'New Field Set', 'buddyboss-platform' );
-			$button = __( 'Save', 'buddyboss-platform' );
+			$title  = __( 'New Field Set', 'buddyboss' );
+			$button = __( 'Save', 'buddyboss' );
 			$action = add_query_arg(
 				array(
 					'page' => 'bp-profile-setup',
@@ -957,8 +957,8 @@ class BBoss_XProfile_Group {
 
 			// Existing field group.
 		} else {
-			$title  = __( 'Edit Field Set', 'buddyboss-platform' );
-			$button = __( 'Update', 'buddyboss-platform' );
+			$title  = __( 'Edit Field Set', 'buddyboss' );
+			$button = __( 'Update', 'buddyboss' );
 			$action = add_query_arg(
 				array(
 					'page'     => 'bp-profile-setup',
@@ -974,7 +974,7 @@ class BBoss_XProfile_Group {
 			$users_tab = count( bboss_core_get_users_admin_tabs() );
 			if ( $users_tab > 1 ) {
 				?>
-				<h2 class="nav-tab-wrapper"><?php bboss_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss-platform' ) ); ?></h2>
+				<h2 class="nav-tab-wrapper"><?php bboss_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2>
 																			<?php
 			}
 			?>
@@ -994,17 +994,17 @@ class BBoss_XProfile_Group {
 						<div id="post-body-content">
 							<div id="titlediv">
 								<div class="titlewrap">
-									<label id="title-prompt-text" for="title" class="screen-reader-text"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss-platform' ); ?></label>
+									<label id="title-prompt-text" for="title" class="screen-reader-text"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
 									<input type="text" name="group_name" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off" />
 								</div>
 							</div>
 							<div class="postbox">
-								<h2><?php esc_html_e( 'Field Set Description', 'buddyboss-platform' ); ?></h2>
+								<h2><?php esc_html_e( 'Field Set Description', 'buddyboss' ); ?></h2>
 								<div class="inside">
 									<label for="group_description" class="screen-reader-text">
 									<?php
 										/* translators: accessibility text */
-										esc_html_e( 'Add description', 'buddyboss-platform' );
+										esc_html_e( 'Add description', 'buddyboss' );
 									?>
 									</label>
 									<textarea name="group_description" id="group_description" rows="8" cols="60"><?php echo ! empty( $this->description ) ? esc_textarea( $this->description ) : ''; ?></textarea>
@@ -1040,7 +1040,7 @@ class BBoss_XProfile_Group {
 							?>
 
 							<div id="submitdiv" class="postbox">
-								<h2><?php esc_html_e( 'Submit', 'buddyboss-platform' ); ?></h2>
+								<h2><?php esc_html_e( 'Submit', 'buddyboss' ); ?></h2>
 								<div class="inside">
 									<div id="submitcomment" class="submitbox">
 										<div id="major-publishing-actions">
@@ -1065,7 +1065,7 @@ class BBoss_XProfile_Group {
 												<input type="submit" name="save_group" value="<?php echo esc_attr( $button ); ?>" class="button-primary"/>
 											</div>
 											<div id="delete-action">
-												<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+												<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 											</div>
 											<div class="clear"></div>
 										</div>
@@ -1096,12 +1096,12 @@ class BBoss_XProfile_Group {
 								<?php $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off'; ?>
 
 								<div id="repeatersetdiv" class="postbox">
-									<h2><?php esc_html_e( 'Repeater Set', 'buddyboss-platform' ); ?></h2>
+									<h2><?php esc_html_e( 'Repeater Set', 'buddyboss' ); ?></h2>
 									<div class="inside">
-										<p style="margin-top: 0;"><?php esc_html_e( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss-platform' ); ?></p>
+										<p style="margin-top: 0;"><?php esc_html_e( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss' ); ?></p>
 										<select name="group_is_repeater" id="group_is_repeater" >
-											<option value="off" <?php selected( $enabled, 'off' ); ?>><?php esc_html_e( 'Disabled', 'buddyboss-platform' ); ?></option>
-											<option value="on" <?php selected( $enabled, 'on' ); ?>><?php esc_html_e( 'Enabled', 'buddyboss-platform' ); ?></option>
+											<option value="off" <?php selected( $enabled, 'off' ); ?>><?php esc_html_e( 'Disabled', 'buddyboss' ); ?></option>
+											<option value="on" <?php selected( $enabled, 'on' ); ?>><?php esc_html_e( 'Enabled', 'buddyboss' ); ?></option>
 										</select>
 									</div>
 								</div>

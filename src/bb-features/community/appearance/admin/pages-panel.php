@@ -48,8 +48,8 @@ defined( 'ABSPATH' ) || exit;
 function bboss_appearance_get_registration_section_meta() {
 	$meta = array(
 		'render'        => true,
-		'title'         => __( 'Registration Pages', 'buddyboss-platform' ),
-		'description'   => __( 'Associate a WordPress page with each of the following components.', 'buddyboss-platform' ),
+		'title'         => __( 'Registration Pages', 'buddyboss' ),
+		'description'   => __( 'Associate a WordPress page with each of the following components.', 'buddyboss' ),
 		'show_register' => true,
 	);
 
@@ -62,9 +62,9 @@ function bboss_appearance_get_registration_section_meta() {
 	$invites_on = function_exists( 'bboss_is_active' ) && bboss_is_active( 'invites' );
 
 	if ( ! $reg_on && ! $invites_on ) {
-		$meta['title']         = __( 'Login Pages', 'buddyboss-platform' );
+		$meta['title']         = __( 'Login Pages', 'buddyboss' );
 		$meta['show_register'] = false;
-		$meta['description']   = __( 'Associate a WordPress page with the following Login sections.', 'buddyboss-platform' );
+		$meta['description']   = __( 'Associate a WordPress page with the following Login sections.', 'buddyboss' );
 	}
 
 	return $meta;
@@ -91,14 +91,14 @@ function bboss_appearance_get_static_page_description( $name ) {
 
 	switch ( $name ) {
 		case 'register':
-			return __( 'New users fill out this form to register their accounts.', 'buddyboss-platform' );
+			return __( 'New users fill out this form to register their accounts.', 'buddyboss' );
 		case 'terms':
 		case 'privacy':
 			return $popup_is_register_and_login
-				? __( 'If a page is added, its contents will display in a popup on the register and login forms.', 'buddyboss-platform' )
-				: __( 'If a page is added, its contents will display in a popup on the login form.', 'buddyboss-platform' );
+				? __( 'If a page is added, its contents will display in a popup on the register and login forms.', 'buddyboss' )
+				: __( 'If a page is added, its contents will display in a popup on the login form.', 'buddyboss' );
 		case 'activate':
-			return __( 'After registering, users are sent to this page to activate their accounts.', 'buddyboss-platform' );
+			return __( 'After registering, users are sent to this page to activate their accounts.', 'buddyboss' );
 	}
 
 	return '';
@@ -238,8 +238,8 @@ function bboss_appearance_register_pages_fields( $feature_id ) {
 		'pages',
 		'component_pages',
 		array(
-			'title'       => __( 'Component Pages', 'buddyboss-platform' ),
-			'description' => __( 'Associate a WordPress page with each of the following components.', 'buddyboss-platform' ),
+			'title'       => __( 'Component Pages', 'buddyboss' ),
+			'description' => __( 'Associate a WordPress page with each of the following components.', 'buddyboss' ),
 			'order'       => 10,
 			// Reuses the legacy Pages-screen KB article ID (637148) until the
 			// docs team delivers a dedicated Component-Pages article. Swap to
@@ -264,7 +264,7 @@ function bboss_appearance_register_pages_fields( $feature_id ) {
 				'label'             => '',
 				'type'              => 'notice',
 				'notice_type'       => 'warning',
-				'description'       => __( 'Page mappings are managed in the default WPML language. Switch to your default language to modify these settings — changes made here will not be saved.', 'buddyboss-platform' ),
+				'description'       => __( 'Page mappings are managed in the default WPML language. Switch to your default language to modify these settings — changes made here will not be saved.', 'buddyboss' ),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 1,
 			)
@@ -316,7 +316,7 @@ function bboss_appearance_register_pages_fields( $feature_id ) {
 				'label'             => $label,
 				'type'              => 'async_select',
 				'async_action'      => 'bb_admin_search_pages_list',
-				'placeholder'       => __( '— Select a page —', 'buddyboss-platform' ),
+				'placeholder'       => __( '— Select a page —', 'buddyboss' ),
 				'description'       => bboss_appearance_get_directory_page_description( $name ),
 				'default'           => $current_id ? (string) $current_id : '',
 				'sanitize_callback' => 'absint',
@@ -371,16 +371,16 @@ function bboss_appearance_register_pages_fields( $feature_id ) {
 			$invites_url = admin_url( 'admin.php?page=bb-settings&tab=invites' );
 			$invite_text = sprintf(
 				/* translators: %s: Email Invites admin link. */
-				__( 'Because %s is enabled, invited users will still be allowed to register new accounts.', 'buddyboss-platform' ),
-				'<a href="' . esc_url( $invites_url ) . '">' . esc_html__( 'Email Invites', 'buddyboss-platform' ) . '</a>'
+				__( 'Because %s is enabled, invited users will still be allowed to register new accounts.', 'buddyboss' ),
+				'<a href="' . esc_url( $invites_url ) . '">' . esc_html__( 'Email Invites', 'buddyboss' ) . '</a>'
 			);
 		}
 
 		$notice_description = sprintf(
 			/* translators: 1: optional Email Invites sentence. 2: General Settings admin link. */
-			__( 'Registration is currently disabled. %1$s To enable open registration, please click on the "Registration" checkbox in %2$s.', 'buddyboss-platform' ),
+			__( 'Registration is currently disabled. %1$s To enable open registration, please click on the "Registration" checkbox in %2$s.', 'buddyboss' ),
 			$invite_text,
-			'<a href="' . esc_url( $general_settings_url ) . '">' . esc_html__( 'General Settings', 'buddyboss-platform' ) . '</a>'
+			'<a href="' . esc_url( $general_settings_url ) . '">' . esc_html__( 'General Settings', 'buddyboss' ) . '</a>'
 		);
 
 		bboss_register_feature_field(
@@ -435,7 +435,7 @@ function bboss_appearance_register_pages_fields( $feature_id ) {
 				'label'             => $label,
 				'type'              => 'async_select',
 				'async_action'      => 'bb_admin_search_pages_list',
-				'placeholder'       => __( '— Select a page —', 'buddyboss-platform' ),
+				'placeholder'       => __( '— Select a page —', 'buddyboss' ),
 				'description'       => bboss_appearance_get_static_page_description( $name ),
 				'default'           => $current_id ? (string) $current_id : '',
 				'sanitize_callback' => 'absint',
@@ -465,19 +465,19 @@ add_action( 'bb_admin_settings_before_get_feature', 'bboss_appearance_register_p
 function bboss_appearance_get_directory_page_description( $name ) {
 	switch ( $name ) {
 		case 'members':
-			return __( 'This directory shows a listing of all members.', 'buddyboss-platform' );
+			return __( 'This directory shows a listing of all members.', 'buddyboss' );
 		case 'groups':
-			return __( 'This directory shows a listing of all groups.', 'buddyboss-platform' );
+			return __( 'This directory shows a listing of all groups.', 'buddyboss' );
 		case 'new_forums_page':
-			return __( 'This directory shows a listing of all forums.', 'buddyboss-platform' );
+			return __( 'This directory shows a listing of all forums.', 'buddyboss' );
 		case 'activity':
-			return __( 'This directory shows all sitewide activity.', 'buddyboss-platform' );
+			return __( 'This directory shows all sitewide activity.', 'buddyboss' );
 		case 'media':
-			return __( 'This directory shows all photos uploaded by members.', 'buddyboss-platform' );
+			return __( 'This directory shows all photos uploaded by members.', 'buddyboss' );
 		case 'document':
-			return __( 'This directory shows all documents uploaded by members.', 'buddyboss-platform' );
+			return __( 'This directory shows all documents uploaded by members.', 'buddyboss' );
 		case 'video':
-			return __( 'This directory shows all video uploaded by members.', 'buddyboss-platform' );
+			return __( 'This directory shows all video uploaded by members.', 'buddyboss' );
 	}
 	return '';
 }
@@ -809,7 +809,7 @@ function bboss_appearance_enrich_page_field_data( $field_data, $field, $feature_
 	// on this panel the naive resolve path hit admin-ajax.php 11 times for
 	// identical `selected_id` lookups — this collapses them to zero.
 	/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
-	$no_title_fallback = __( '(no title) #%d', 'buddyboss-platform' );
+	$no_title_fallback = __( '(no title) #%d', 'buddyboss' );
 	if ( $page_id ) {
 		$title                       = get_the_title( $page_id );
 		$field_data['initial_label'] = $title ? $title : sprintf( $no_title_fallback, $page_id );

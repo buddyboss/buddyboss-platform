@@ -139,12 +139,12 @@ class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			'bp_members_ms_signup_columns',
 			array(
 				'cb'         => '<input type="checkbox" />',
-				'username'   => __( 'Username', 'buddyboss-platform' ),
-				'name'       => __( 'Name', 'buddyboss-platform' ),
-				'email'      => __( 'Email', 'buddyboss-platform' ),
-				'registered' => __( 'Registered', 'buddyboss-platform' ),
-				'date_sent'  => __( 'Last Sent', 'buddyboss-platform' ),
-				'count_sent' => __( 'Emails Sent', 'buddyboss-platform' ),
+				'username'   => __( 'Username', 'buddyboss' ),
+				'name'       => __( 'Name', 'buddyboss' ),
+				'email'      => __( 'Email', 'buddyboss' ),
+				'registered' => __( 'Registered', 'buddyboss' ),
+				'date_sent'  => __( 'Last Sent', 'buddyboss' ),
+				'count_sent' => __( 'Emails Sent', 'buddyboss' ),
 			)
 		);
 	}
@@ -156,12 +156,12 @@ class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'activate' => __( 'Activate', 'buddyboss-platform' ),
-			'resend'   => __( 'Email', 'buddyboss-platform' ),
+			'activate' => __( 'Activate', 'buddyboss' ),
+			'resend'   => __( 'Email', 'buddyboss' ),
 		);
 
 		if ( current_user_can( 'delete_users' ) ) {
-			$actions['delete'] = __( 'Delete', 'buddyboss-platform' );
+			$actions['delete'] = __( 'Delete', 'buddyboss' );
 		}
 
 		return $actions;
@@ -176,16 +176,16 @@ class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 */
 	public function no_items() {
 		if ( bboss_get_signup_allowed() ) {
-			esc_html_e( 'No pending accounts found.', 'buddyboss-platform' );
+			esc_html_e( 'No pending accounts found.', 'buddyboss' );
 		} else {
 			$link = false;
 
 			if ( current_user_can( 'manage_network_users' ) ) {
-				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( network_admin_url( 'settings.php' ) ), esc_html__( 'Edit settings', 'buddyboss-platform' ) );
+				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( network_admin_url( 'settings.php' ) ), esc_html__( 'Edit settings', 'buddyboss' ) );
 			}
 
 			/* translators: %s: link to edit registration settings. */
-			printf( esc_html__( 'Registration is disabled. %s', 'buddyboss-platform' ), wp_kses_post( $link ) );
+			printf( esc_html__( 'Registration is disabled. %s', 'buddyboss' ), wp_kses_post( $link ) );
 		}
 	}
 
@@ -264,7 +264,7 @@ class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 																 <?php
 																	printf(
 																		/* translators: accessibility text */
-																		esc_html__( 'Select user: %s', 'buddyboss-platform' ),
+																		esc_html__( 'Select user: %s', 'buddyboss' ),
 																		esc_html( $signup_object->user_login )
 																	);
 																	?>
@@ -317,14 +317,14 @@ class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 
 		$actions = array();
 
-		$actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $activate_link ), __( 'Activate', 'buddyboss-platform' ) );
-		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link ), __( 'Email', 'buddyboss-platform' ) );
+		$actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $activate_link ), __( 'Activate', 'buddyboss' ) );
+		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link ), __( 'Email', 'buddyboss' ) );
 
 		if ( current_user_can( 'delete_users' ) ) {
-			$actions['delete'] = sprintf( '<a href="%1$s" class="delete">%2$s</a>', esc_url( $delete_link ), __( 'Delete', 'buddyboss-platform' ) );
+			$actions['delete'] = sprintf( '<a href="%1$s" class="delete">%2$s</a>', esc_url( $delete_link ), __( 'Delete', 'buddyboss' ) );
 		}
 
-		/** This filter is documented in bboss-members/admin/bp-members-classes.php */
+		/** This filter is documented in bp-members/admin/bp-members-classes.php */
 		$actions = apply_filters( 'bp_members_ms_signup_row_actions', $actions, $signup_object );
 
 		echo wp_kses_post( $this->row_actions( $actions ) );

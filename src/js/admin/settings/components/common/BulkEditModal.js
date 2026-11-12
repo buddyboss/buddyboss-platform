@@ -51,7 +51,7 @@ export function BulkEditModal( {
 
 	return (
 		<Modal
-			title={ __( 'Bulk Edit', 'buddyboss-platform' ) }
+			title={ __( 'Bulk Edit', 'buddyboss' ) }
 			onRequestClose={ onClose }
 			className={ modalClass }
 			shouldCloseOnClickOutside={ false }
@@ -83,14 +83,14 @@ export function BulkEditModal( {
 					variant="secondary"
 					onClick={ onClose }
 				>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss' ) }
 				</Button>
 				<Button
 					variant="primary"
 					onClick={ onConfirm }
 					disabled={ confirmDisabled }
 				>
-					{ __( 'Save', 'buddyboss-platform' ) }
+					{ __( 'Save', 'buddyboss' ) }
 				</Button>
 			</div>
 		</Modal>

@@ -37,11 +37,11 @@ export function InputButtonField( props ) {
 	var disabled = props.disabled;
 	var values = props.values;
 	var isConnected = field.is_connected || false;
-	var initialButtonLabel = field.button_label || __( 'Connect', 'buddyboss-platform' );
+	var initialButtonLabel = field.button_label || __( 'Connect', 'buddyboss' );
 	var isButtonOnly = field.button_only || false;
 	var isIconOnly = !! field.icon_only;
 	var iconClass = field.icon || '';
-	var iconAriaLabel = field.icon_label || field.button_label || __( 'Action', 'buddyboss-platform' );
+	var iconAriaLabel = field.icon_label || field.button_label || __( 'Action', 'buddyboss' );
 
 	var inputRef = useRef( null );
 	var abortRef = useRef( null );
@@ -77,7 +77,7 @@ export function InputButtonField( props ) {
 	// Sync connected state when field.is_connected changes (e.g. after page reload).
 	useEffect( function() {
 		setConnected( field.is_connected || false );
-		setButtonLabel( field.button_label || __( 'Connect', 'buddyboss-platform' ) );
+		setButtonLabel( field.button_label || __( 'Connect', 'buddyboss' ) );
 	}, [ field.is_connected, field.button_label ] );
 
 	// Abort in-flight request on unmount.
@@ -198,7 +198,7 @@ export function InputButtonField( props ) {
 						setWarningMessage( data.message );
 					}
 				} else {
-					setErrorMessage( ( result.data && result.data.message ) || __( 'Connection failed.', 'buddyboss-platform' ) );
+					setErrorMessage( ( result.data && result.data.message ) || __( 'Connection failed.', 'buddyboss' ) );
 				}
 			} )
 			.catch( function( err ) {
@@ -207,7 +207,7 @@ export function InputButtonField( props ) {
 					return;
 				}
 				setIsLoading( false );
-				setErrorMessage( __( 'Connection failed. Please try again.', 'buddyboss-platform' ) );
+				setErrorMessage( __( 'Connection failed. Please try again.', 'buddyboss' ) );
 			} );
 	}
 
@@ -258,7 +258,7 @@ export function InputButtonField( props ) {
 						onClick={ handleButtonClick }
 						disabled={ isButtonDisabled }
 					>
-						{ isLoading ? __( 'Saving...', 'buddyboss-platform' ) : buttonLabel }
+						{ isLoading ? __( 'Saving...', 'buddyboss' ) : buttonLabel }
 					</button>
 				) }
 			</div>

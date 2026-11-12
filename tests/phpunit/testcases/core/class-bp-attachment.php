@@ -16,7 +16,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		add_filter( 'upload_dir',                            array( $this, 'filter_upload_dir' ),      20, 1 );
 		add_filter( 'bp_attachments_cover_image_upload_dir', array( $this, 'filter_cover_image_dir' ), 10, 2 );
 		$this->upload_results = array();
-		$this->image_file = trailingslashit( bboss()->plugin_dir ) . 'bboss-core/images/profile-avatar-buddyboss.png';
+		$this->image_file = trailingslashit( bboss()->plugin_dir ) . 'bp-core/images/profile-avatar-buddyboss.png';
 		$this->original_upload_dir = array();
 	}
 

@@ -152,7 +152,7 @@ class BBoss_Nouveau extends BBoss_Theme_Compat {
 		$width      = 1178;
 		$top_offset = 200;
 
-		/** This filter is documented in bboss-core/bboss-core-avatars.php. */
+		/** This filter is documented in bp-core/bboss-core-avatars.php. */
 		$avatar_height = apply_filters( 'bp_core_avatar_full_height', $top_offset );
 
 		if ( $avatar_height > $top_offset ) {
@@ -535,7 +535,7 @@ JS;
 		}
 
 		$scripts['bp-nouveau-magnific-popup'] = array(
-			'file'         => bboss()->plugin_url . 'bboss-core/js/vendor/magnific-popup.js',
+			'file'         => bboss()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
 		);
@@ -543,13 +543,13 @@ JS;
 		if ( bboss_is_active( 'media' ) ) {
 
 			$scripts['bp-nouveau-codemirror'] = array(
-				'file'         => bboss()->plugin_url . 'bboss-core/js/vendor/codemirror%s.js',
+				'file'         => bboss()->plugin_url . 'bp-core/js/vendor/codemirror%s.js',
 				'dependencies' => array(),
 				'footer'       => true,
 			);
 
 			$scripts['bp-nouveau-codemirror-css'] = array(
-				'file'         => bboss()->plugin_url . 'bboss-core/js/vendor/css%s.js',
+				'file'         => bboss()->plugin_url . 'bp-core/js/vendor/css%s.js',
 				'dependencies' => array(),
 				'footer'       => true,
 			);
@@ -666,39 +666,39 @@ JS;
 
 		$params = array(
 			'ajaxurl'                    => bboss_core_ajax_url(),
-			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss-platform' ),
-			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss-platform' ),
-			'confirm'                    => __( 'Are you sure?', 'buddyboss-platform' ),
-			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss-platform' ),
-			'show_x_comments'            => __( 'View more comments', 'buddyboss-platform' ),
-			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss-platform' ),
+			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
+			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
+			'confirm'                    => __( 'Are you sure?', 'buddyboss' ),
+			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
+			'show_x_comments'            => __( 'View more comments', 'buddyboss' ),
+			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
 			'object_nav_parent'          => '#buddypress',
-			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss-platform' ),
-			'empty_field'                => __( 'New Field', 'buddyboss-platform' ),
-			'close'                      => __( 'Close', 'buddyboss-platform' ),
-			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss-platform' ),
+			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss' ),
+			'empty_field'                => __( 'New Field', 'buddyboss' ),
+			'close'                      => __( 'Close', 'buddyboss' ),
+			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss' ),
 			'group_leave_confirm'        => sprintf(
 				'<p>%s<span class="bb-group-name"></span>?</p>',
-				esc_html__( 'Are you sure you want to leave ', 'buddyboss-platform' )
+				esc_html__( 'Are you sure you want to leave ', 'buddyboss' )
 			),
 			'wpTime'                     => current_time( 'Y-m-d H:i:s' ),
 			'wpTimezone'                 => bboss_get_option( 'timezone_string' ),
 			'dir_labels'                 => array(
 				'members'   => array(
-					'singular' => esc_html__( 'Member', 'buddyboss-platform' ),
-					'plural'   => esc_html__( 'Members', 'buddyboss-platform' ),
+					'singular' => esc_html__( 'Member', 'buddyboss' ),
+					'plural'   => esc_html__( 'Members', 'buddyboss' ),
 				),
 				'followers' => array(
-					'singular' => esc_html__( 'Follower', 'buddyboss-platform' ),
-					'plural'   => esc_html__( 'Followers', 'buddyboss-platform' ),
+					'singular' => esc_html__( 'Follower', 'buddyboss' ),
+					'plural'   => esc_html__( 'Followers', 'buddyboss' ),
 				),
 			),
 			'rest_url'                   => untrailingslashit( home_url( 'wp-json/buddyboss/v1' ) ),
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
 			// Shown in a hover pop-up card when its request fails.
-			'card_load_error'            => __( 'Failed to load data.', 'buddyboss-platform' ),
-			'member_label'               => __( 'member', 'buddyboss-platform' ),
-			'members_label'              => __( 'members', 'buddyboss-platform' ),
+			'card_load_error'            => __( 'Failed to load data.', 'buddyboss' ),
+			'member_label'               => __( 'member', 'buddyboss' ),
+			'members_label'              => __( 'members', 'buddyboss' ),
 			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card.
 			// The cards previously read BP_Nouveau.activity.params.user_id, which carries the
 			// same value but is only registered when the Activity component is enabled — with
@@ -709,8 +709,8 @@ JS;
 
 		if ( bboss_is_active( 'friends' ) ) {
 			$params['dir_labels']['connections'] = array(
-				'singular' => esc_html__( 'Connection', 'buddyboss-platform' ),
-				'plural'   => esc_html__( 'Connections', 'buddyboss-platform' ),
+				'singular' => esc_html__( 'Connection', 'buddyboss' ),
+				'plural'   => esc_html__( 'Connections', 'buddyboss' ),
 			);
 		}
 
@@ -778,10 +778,10 @@ JS;
 		$params['bb_enable_content_counts'] = bboss_enable_content_counts();
 
 		// Add localize variable for more menu items.
-		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss-platform' );
+		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss' );
 
 		// Add localize variable for more menu text.
-		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss-platform' );
+		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
@@ -810,7 +810,7 @@ JS;
 			'idle_inactive_span'        => bboss_idle_inactive_span(),
 			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
 			'native_presence'           => (bool) bboss_get_option( 'bb_use_core_native_presence', false ),
-			'native_presence_url'       => bboss()->plugin_url . 'bboss-core/bb-core-native-presence.php',
+			'native_presence_url'       => bboss()->plugin_url . 'bp-core/bb-core-native-presence.php',
 			'presence_rest_url'         => home_url( 'wp-json/buddyboss/v1/members/presence' ),
 		);
 

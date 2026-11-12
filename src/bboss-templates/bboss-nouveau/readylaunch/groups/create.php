@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 bboss_nouveau_groups_create_hook( 'before', 'page' ); ?>
 <div class="bb-rl-content-wrapper">
 	<div class="bb-rl-create-group">
-		<h2 class="bp-subhead"><?php esc_html_e( 'Create a group', 'buddyboss-platform' ); ?></h2>
+		<h2 class="bp-subhead"><?php esc_html_e( 'Create a group', 'buddyboss' ); ?></h2>
 
 		<?php bboss_nouveau_groups_create_hook( 'before', 'content_template' ); ?>
 
@@ -36,7 +36,7 @@ bboss_nouveau_groups_create_hook( 'before', 'page' ); ?>
 		?>
 			<div class="item-body" id="group-create-body">
 
-				<nav class="<?php bboss_nouveau_groups_create_steps_classes(); ?>" id="group-create-tabs" role="navigation" aria-label="<?php esc_attr_e( 'Group creation menu', 'buddyboss-platform' ); ?>">
+				<nav class="<?php bboss_nouveau_groups_create_steps_classes(); ?>" id="group-create-tabs" role="navigation" aria-label="<?php esc_attr_e( 'Group creation menu', 'buddyboss' ); ?>">
 					<ol class="group-create-buttons button-tabs">
 						<?php bboss_group_creation_tabs(); ?>
 					</ol>

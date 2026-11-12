@@ -3926,7 +3926,7 @@
    Network Search panel — scoped overrides
    ----------------------------------------------------------------
    The Network Search panel (registered in
-   src/bboss-core/admin/settings/search/settings-network-search.php as
+   src/bp-core/admin/settings/search/settings-network-search.php as
    the section ID `network_search_components`) is the only consumer
    of `child_group_label`, and its toggles always pair with one or
    more child checkboxes (Albums under Photos, Folders under

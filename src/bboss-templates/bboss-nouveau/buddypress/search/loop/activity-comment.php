@@ -26,7 +26,7 @@ $bp_activity_url       = bboss_activity_get_permalink( bboss_get_activity_id() )
 		<div class="item activity-content">
 			<div class="activity-header">
 				<a href="<?php echo esc_url( $bp_activity_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bboss_get_activity_user_id() ); ?>"><?php echo wp_kses_post( bboss_core_get_user_displayname( bboss_get_activity_user_id() ) ); ?></a>
-				<a href="<?php echo esc_url( $bp_activity_url ); ?>"><?php esc_html_e( 'replied to a post', 'buddyboss-platform' ); ?></a>
+				<a href="<?php echo esc_url( $bp_activity_url ); ?>"><?php esc_html_e( 'replied to a post', 'buddyboss' ); ?></a>
 			</div>
 			<?php if ( bboss_nouveau_activity_has_content() ) : ?>
 				<div class="activity-inner">

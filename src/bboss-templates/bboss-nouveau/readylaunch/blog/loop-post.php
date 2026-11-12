@@ -8,7 +8,7 @@
  * The status tag and the more-options menu are gated by two independent flags
  * (`bb_rl_blog_card_show_status` / `bb_rl_blog_card_show_menu`), both seeded
  * from the `bb_blog_card_context` query var — mirroring the non-RL sibling
- * `bboss-templates/bboss-nouveau/buddypress/blog/loop-post.php`. This lets a
+ * `bp-templates/bp-nouveau/buddypress/blog/loop-post.php`. This lets a
  * bookmark list keep the menu while hiding the status tag (or vice-versa).
  *
  * @since   BuddyBoss 3.2.0
@@ -23,7 +23,7 @@ $bb_rl_blog_author_url  = function_exists( 'bboss_core_get_user_domain' ) ? bbos
 $bb_rl_blog_author_name = function_exists( 'bboss_core_get_user_displayname' ) ? bboss_core_get_user_displayname( $bb_rl_blog_author_id ) : get_the_author();
 
 if ( '' === trim( (string) $bb_rl_blog_author_name ) ) {
-	$bb_rl_blog_author_name = __( 'Unknown Member', 'buddyboss-platform' );
+	$bb_rl_blog_author_name = __( 'Unknown Member', 'buddyboss' );
 }
 $bb_rl_blog_status        = get_post_status();
 $bb_rl_blog_status_obj    = get_post_status_object( $bb_rl_blog_status );
@@ -31,17 +31,17 @@ $bb_rl_blog_comment_count = (int) get_comments_number();
 
 // Display labels per the design (WP's own label for anything unmapped).
 $bb_rl_blog_status_labels = array(
-	'publish' => __( 'Published', 'buddyboss-platform' ),
-	'pending' => __( 'In Review', 'buddyboss-platform' ),
-	'draft'   => __( 'Draft', 'buddyboss-platform' ),
-	'future'  => __( 'Scheduled', 'buddyboss-platform' ),
+	'publish' => __( 'Published', 'buddyboss' ),
+	'pending' => __( 'In Review', 'buddyboss' ),
+	'draft'   => __( 'Draft', 'buddyboss' ),
+	'future'  => __( 'Scheduled', 'buddyboss' ),
 );
 $bb_rl_blog_status_label  = isset( $bb_rl_blog_status_labels[ $bb_rl_blog_status ] )
 	? $bb_rl_blog_status_labels[ $bb_rl_blog_status ]
 	: ( $bb_rl_blog_status_obj ? $bb_rl_blog_status_obj->label : ucfirst( $bb_rl_blog_status ) );
 
 // Card context, mirrored from the non-RL sibling
-// (bboss-templates/bboss-nouveau/buddypress/blog/loop-post.php). Empty on the public
+// (bp-templates/bp-nouveau/buddypress/blog/loop-post.php). Empty on the public
 // blog archive; set to 'member-posts' or 'bookmarks' on the member profile
 // Blogs tab. Drives the status-tag and menu defaults below and is passed to
 // each filter so consumers can branch on it. Unknown/absent values fall back
@@ -84,7 +84,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 				the_post_thumbnail( 'medium_large', array( 'class' => 'img-responsive' ) );
 			else :
 				?>
-				<img src="<?php echo esc_url( bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Blog post placeholder image', 'buddyboss-platform' ); ?>">
+				<img src="<?php echo esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Blog post placeholder image', 'buddyboss' ); ?>">
 			<?php endif; ?>
 		</a>
 		<?php if ( $bb_rl_blog_show_status_tag ) : ?>
@@ -100,7 +100,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 		</h2>
 		<?php if ( $bb_rl_blog_show_menu ) : ?>
 			<div class="bb-rl-blog-card__menu">
-				<button type="button" class="bb-rl-blog-card__menu-toggle" aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>">
+				<button type="button" class="bb-rl-blog-card__menu-toggle" aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl bb-icons-rl-dots-three" aria-hidden="true"></i>
 				</button>
 				<ul class="bb-rl-blog-card__menu-list">
@@ -119,7 +119,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 					 */
 					if ( apply_filters( 'bb_blog_card_show_view_post_menu_item', true, get_the_ID() ) ) :
 						?>
-						<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss-platform' ); ?></a></li>
+						<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></li>
 						<?php
 					endif;
 					?>
@@ -163,7 +163,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 				$bb_rl_blog_author_link = '<a href="' . esc_url( $bb_rl_blog_author_url ) . '"' . $bb_rl_blog_hp_attr . '>' . esc_html( $bb_rl_blog_author_name ) . '</a>';
 				printf(
 					/* translators: %s: linked author display name. */
-					esc_html__( 'By %s', 'buddyboss-platform' ),
+					esc_html__( 'By %s', 'buddyboss' ),
 					$bb_rl_blog_author_link // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Anchor assembled from esc_url()/esc_html() parts; the hover attribute is escaped in bb_get_hover_card_profile_attr().
 				);
 				?>
@@ -171,7 +171,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 		</div>
 		<div class="bb-rl-blog-card__excerpt"><?php the_excerpt(); ?></div>
 		<a class="bb-rl-blog-card__view" href="<?php the_permalink(); ?>">
-			<?php esc_html_e( 'View Post', 'buddyboss-platform' ); ?>
+			<?php esc_html_e( 'View Post', 'buddyboss' ); ?>
 			<i class="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
 		</a>
 		<a class="bb-rl-blog-card__comments" href="<?php echo esc_url( get_comments_link() ); ?>">

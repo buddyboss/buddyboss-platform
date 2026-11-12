@@ -674,7 +674,7 @@ class BBoss_Signup {
 				if ( ! empty( $user_id ) && 2 != self::check_user_status( $user_id ) ) {
 
 					// Status is not 2, so user's account has been activated.
-					$result['errors'][ $signup->signup_id ] = array( $signup->user_login, esc_html__( 'the sign-up has already been activated.', 'buddyboss-platform' ) );
+					$result['errors'][ $signup->signup_id ] = array( $signup->user_login, esc_html__( 'the sign-up has already been activated.', 'buddyboss' ) );
 
 					// Repair signups table.
 					self::validate( $signup->activation_key );
@@ -765,7 +765,7 @@ class BBoss_Signup {
 				if ( empty( $user_id ) ) {
 
 					// Status is not 2, so user's account has been activated.
-					$result['errors'][ $signup->signup_id ] = array( $signup->user_login, esc_html__( 'the sign-up has already been activated.', 'buddyboss-platform' ) );
+					$result['errors'][ $signup->signup_id ] = array( $signup->user_login, esc_html__( 'the sign-up has already been activated.', 'buddyboss' ) );
 
 					// Repair signups table.
 					self::validate( $signup->activation_key );
@@ -843,7 +843,7 @@ class BBoss_Signup {
 				if ( 2 != self::check_user_status( $user_id ) ) {
 
 					// Status is not 2, so user's account has been activated.
-					$result['errors'][ $signup->signup_id ] = array( $signup->user_login, esc_html__( 'the sign-up has already been activated.', 'buddyboss-platform' ) );
+					$result['errors'][ $signup->signup_id ] = array( $signup->user_login, esc_html__( 'the sign-up has already been activated.', 'buddyboss' ) );
 
 					// Repair signups table.
 					self::validate( $signup->activation_key );

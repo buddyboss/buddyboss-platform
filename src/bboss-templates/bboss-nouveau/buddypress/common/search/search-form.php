@@ -23,12 +23,12 @@ $search_term = ( is_search() && isset( $_GET['s'] ) ) ? $_GET['s'] : '';
 
 		<button type="submit" id="<?php bboss_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit search-form_submit" name="<?php bboss_nouveau_search_selector_name( 'search_submit' ); ?>">
 			<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
-			<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></span>
+			<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
 		</button>
 
 		<button type="reset" class="search-form_reset">
 			<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
-			<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?></span>
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
 		</button>
 
 	</form>

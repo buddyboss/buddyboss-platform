@@ -6,7 +6,7 @@
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
  * Version:     3.7.1
- * Text Domain: buddyboss-platform
+ * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -406,11 +406,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		?>
 
 		<div id="message" class="error notice">
-			<p><strong><?php esc_html_e( 'Your site does not support BuddyBoss Platform.', 'buddyboss-platform' ); ?></strong>
+			<p><strong><?php esc_html_e( 'Your site does not support BuddyBoss Platform.', 'buddyboss' ); ?></strong>
 			</p>
 			<?php /* translators: 1: current PHP version, 2: required PHP version */ ?>
-			<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Platform requires version %2$s or greater.', 'buddyboss-platform' ), esc_html( phpversion() ), esc_html( BBOSS_REQUIRED_PHP_VERSION ) ); ?></p>
-			<p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss Platform.', 'buddyboss-platform' ); ?></p>
+			<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Platform requires version %2$s or greater.', 'buddyboss' ), esc_html( phpversion() ), esc_html( BBOSS_REQUIRED_PHP_VERSION ) ); ?></p>
+			<p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss Platform.', 'buddyboss' ); ?></p>
 		</div>
 
 		<?php
@@ -439,7 +439,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		}
 
 		// load the member switch class so all the hook prior to bp_init can be hook in.
-		require dirname( __FILE__ ) . '/bboss-members/classes/class-bboss-core-members-switching.php';
+		require dirname( __FILE__ ) . '/bp-members/classes/class-bboss-core-members-switching.php';
 
 		/*
 		 * Hook BuddyPress early onto the 'plugins_loaded' action.
@@ -457,7 +457,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			// hence we grab the pure db value and load the class
 			// so all the hook prior to bp_init can be hook in.
 			if ( $bp_forum_active ) {
-				require dirname( __FILE__ ) . '/bboss-forums/classes/class-bboss-forums.php';
+				require dirname( __FILE__ ) . '/bp-forums/classes/class-bboss-forums.php';
 				add_action( 'plugins_loaded', 'bboss_forums', (int) BUDDYPRESS_LATE_LOAD );
 			}
 
@@ -467,7 +467,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 			$bp_forum_active = array_key_exists( 'forums', bboss_get_option( 'bp-active-components', array() ) );
 			if ( $bp_forum_active ) {
-				require dirname( __FILE__ ) . '/bboss-forums/classes/class-bboss-forums.php';
+				require dirname( __FILE__ ) . '/bp-forums/classes/class-bboss-forums.php';
 				$GLOBALS['bbp'] = bboss_forums();
 			}
 		}
@@ -492,12 +492,12 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		// Disable BuddyPress message.
 		if ( $is_bp_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss-platform' ) );
+			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
 			?>
 
 			<div id="message" class="error notice">
-				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
-				<p><?php /* translators: %s: link to the Plugins screen. */ printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss-platform' ), wp_kses_post( $link_plugins ) ); ?></p>
+				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+				<p><?php /* translators: %s: link to the Plugins screen. */ printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), wp_kses_post( $link_plugins ) ); ?></p>
 			</div>
 
 			<?php
@@ -506,12 +506,12 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		// Disable bbPress message.
 		if ( $is_bb_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss-platform' ) );
+			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
 			?>
 
 			<div id="message" class="error notice">
-				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
-				<p><?php /* translators: %s: link to the Plugins screen. */ printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss-platform' ), wp_kses_post( $link_plugins ) ); ?></p>
+				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+				<p><?php /* translators: %s: link to the Plugins screen. */ printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), wp_kses_post( $link_plugins ) ); ?></p>
 			</div>
 
 			<?php
@@ -519,13 +519,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		if ( ! empty( $bp_incompatible_plugins ) ) {
 			$incompatible_plugins_list_messages = array(
-				'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss-platform' ),
-				'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss-platform' ),
+				'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+				'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
 			);
 			foreach ( $bp_incompatible_plugins as $incompatible_plugin_key ) {
 				?>
 				<div id="message" class="error notice">
-					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
+					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
 					<?php
 					printf( '<p>%s</p>', wp_kses_post( $incompatible_plugins_list_messages[ $incompatible_plugin_key ] ) );
 					?>
@@ -575,7 +575,7 @@ if ( ! function_exists( 'bboss_core_load_buddypress_textdomain' ) ) {
 		static $loaded_locale   = null;
 		static $path_registered = false;
 
-		$domain = 'buddyboss-platform';
+		$domain = 'buddyboss';
 		// determine_locale(): unlike get_locale(), it resolves the user's admin
 		// language in wp-admin — matching core's own plugin-catalog resolution
 		// and this function's load_plugin_textdomain() fallback (WP < 5.0

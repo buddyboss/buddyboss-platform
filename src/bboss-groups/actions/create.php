@@ -28,7 +28,7 @@ function bboss_groups_action_create_group() {
 	}
 
 	if ( ! bboss_user_can_create_groups() ) {
-		bboss_core_add_message( __( 'Sorry, you are not allowed to create groups.', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'Sorry, you are not allowed to create groups.', 'buddyboss' ), 'error' );
 		bboss_core_redirect( bboss_get_groups_directory_permalink() );
 	}
 
@@ -53,7 +53,7 @@ function bboss_groups_action_create_group() {
 
 	// If this is a creation step that is not recognized, just redirect them back to the first screen.
 	if ( bboss_get_groups_current_create_step() && empty( $bp->groups->group_creation_steps[ bboss_get_groups_current_create_step() ] ) ) {
-		bboss_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
 		bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create' ) );
 	}
 
@@ -69,7 +69,7 @@ function bboss_groups_action_create_group() {
 
 		// Only allow the group creator to continue to edit the new group.
 		if ( ! bboss_is_group_creator( $bp->groups->current_group, bboss_loggedin_user_id() ) ) {
-			bboss_core_add_message( __( 'Only the group organizer may continue editing this group.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'Only the group organizer may continue editing this group.', 'buddyboss' ), 'error' );
 			bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create' ) );
 		}
 	}
@@ -82,7 +82,7 @@ function bboss_groups_action_create_group() {
 
 		if ( 'group-details' == bboss_get_groups_current_create_step() ) {
 			if ( empty( $_POST['group-name'] ) || ! strlen( trim( $_POST['group-name'] ) ) ) {
-				bboss_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss' ), 'error' );
 				bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create/step/' . bboss_get_groups_current_create_step() ) );
 			}
 
@@ -98,7 +98,7 @@ function bboss_groups_action_create_group() {
 					'status'       => 'public',
 				)
 			) ) {
-				bboss_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
 				bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create/step/' . bboss_get_groups_current_create_step() ) );
 			}
 		}
@@ -127,7 +127,7 @@ function bboss_groups_action_create_group() {
 					'parent_id'    => $parent_id,
 				)
 			) ) {
-				bboss_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
 				bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create/step/' . bboss_get_groups_current_create_step() ) );
 			}
 
@@ -332,11 +332,11 @@ function bboss_groups_action_create_group() {
 			return false;
 		}
 
-		$message = __( 'Invite successfully withdrawn', 'buddyboss-platform' );
+		$message = __( 'Invite successfully withdrawn', 'buddyboss' );
 		$error   = false;
 
 		if ( ! bboss_groups_uninvite_user( (int) $_REQUEST['user_id'], $bp->groups->new_group_id ) ) {
-			$message = __( 'There was an error withdrawing the invite', 'buddyboss-platform' );
+			$message = __( 'There was an error withdrawing the invite', 'buddyboss' );
 			$error   = 'error';
 		}
 
@@ -377,7 +377,7 @@ function bboss_groups_action_create_group() {
 			);
 
 			if ( ! bboss_core_avatar_handle_crop( $args ) ) {
-				bboss_core_add_message( __( 'There was an error with the group profile photo, please try again.', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'There was an error with the group profile photo, please try again.', 'buddyboss' ), 'error' );
 			} else {
 				/**
 				 * Fires after a group avatar is uploaded.
@@ -390,7 +390,7 @@ function bboss_groups_action_create_group() {
 				 */
 				do_action( 'groups_avatar_uploaded', bboss_get_current_group_id(), 'crop', $args );
 
-				bboss_core_add_message( __( 'The group profile photo was uploaded successfully.', 'buddyboss-platform' ) );
+				bboss_core_add_message( __( 'The group profile photo was uploaded successfully.', 'buddyboss' ) );
 			}
 		}
 	}

@@ -39,7 +39,7 @@ bboss_nouveau_before_activity_directory_content();
 							<div class="activity-topic-selector">
 								<ul>
 									<li>
-										<a href="<?php echo esc_url( bboss_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss-platform' ); ?></a>
+										<a href="<?php echo esc_url( bboss_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
 									</li>
 									<?php
 									foreach ( $topics as $topic ) {

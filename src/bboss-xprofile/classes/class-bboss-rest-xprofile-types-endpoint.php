@@ -106,7 +106,7 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -116,7 +116,7 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && function_exists( 'bboss_member_type_enable_disable' ) && false === bboss_member_type_enable_disable() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Profile Types is disabled from setting.', 'buddyboss-platform' ),
+				__( 'Sorry, Profile Types is disabled from setting.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -328,7 +328,7 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'labels'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Labels to use in various parts of the interface.', 'buddyboss-platform' ),
+					'description' => __( 'Labels to use in various parts of the interface.', 'buddyboss' ),
 					'type'        => 'object',
 					'arg_options' => array(
 						'sanitize_callback' => null,
@@ -336,13 +336,13 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'name'          => array(
-							'description' => __( 'Default name. Should typically be plural.', 'buddyboss-platform' ),
+							'description' => __( 'Default name. Should typically be plural.', 'buddyboss' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
 						),
 						'singular_name' => array(
-							'description' => __( 'Singular name.', 'buddyboss-platform' ),
+							'description' => __( 'Singular name.', 'buddyboss' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -350,19 +350,19 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 					),
 				),
 				'has_directory'  => array(
-					'description' => __( 'Whether the profile type should have its own type-specific directory.', 'buddyboss-platform' ),
+					'description' => __( 'Whether the profile type should have its own type-specific directory.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'name'           => array(
-					'description' => __( 'Slug of the member type.', 'buddyboss-platform' ),
+					'description' => __( 'Slug of the member type.', 'buddyboss' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'directory_slug' => array(
-					'description' => __( 'Directory slug of the member type.', 'buddyboss-platform' ),
+					'description' => __( 'Directory slug of the member type.', 'buddyboss' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
@@ -380,28 +380,28 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 			)
 		) {
 			$schema['properties']['enable_filter'] = array(
-				'description' => __( 'Display this profile type in "Types" filter in Members Directory.', 'buddyboss-platform' ),
+				'description' => __( 'Display this profile type in "Types" filter in Members Directory.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['enable_remove'] = array(
-				'description' => __( 'Hide all members of this type from Members Directory.', 'buddyboss-platform' ),
+				'description' => __( 'Hide all members of this type from Members Directory.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['network_search_enable_remove'] = array(
-				'description' => __( 'Hide all members of this type from Network Search results.', 'buddyboss-platform' ),
+				'description' => __( 'Hide all members of this type from Network Search results.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
 
 			$schema['properties']['enable_profile_field'] = array(
-				'description' => __( 'Allow users to self-select as this profile type from the "Profile Type" profile field dropdown.', 'buddyboss-platform' ),
+				'description' => __( 'Allow users to self-select as this profile type from the "Profile Type" profile field dropdown.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
@@ -413,7 +413,7 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				&& false === bboss_restrict_group_creation()
 			) {
 				$schema['properties']['bp-group-type'] = array(
-					'description' => __( 'Which group types this profile type is allowed to create.', 'buddyboss-platform' ),
+					'description' => __( 'Which group types this profile type is allowed to create.', 'buddyboss' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
@@ -428,7 +428,7 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				&& true === bboss_enable_group_auto_join()
 			) {
 				$schema['properties']['bp-group-type-auto-join'] = array(
-					'description' => __( 'On Registration and Account activation, Profile Type members will auto-join Groups from Selected Group Types below other than Hidden Groups.', 'buddyboss-platform' ),
+					'description' => __( 'On Registration and Account activation, Profile Type members will auto-join Groups from Selected Group Types below other than Hidden Groups.', 'buddyboss' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
@@ -441,14 +441,14 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				&& true === bboss_disable_invite_member_type()
 			) {
 				$schema['properties']['bp-member-type-enabled-invite'] = array(
-					'description' => __( 'Allow members to select the profile type that the invited recipient will be automatically assigned to on registration.', 'buddyboss-platform' ),
+					'description' => __( 'Allow members to select the profile type that the invited recipient will be automatically assigned to on registration.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				);
 
 				$schema['properties']['bp-member-type-invite'] = array(
-					'description' => __( 'Allowed profile types to select on the email invites.', 'buddyboss-platform' ),
+					'description' => __( 'Allowed profile types to select on the email invites.', 'buddyboss' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
@@ -456,7 +456,7 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 			}
 
 			$schema['properties']['wp_roles'] = array(
-				'description' => __( 'Users of this profile type will be auto-assigned to the following WordPress roles.', 'buddyboss-platform' ),
+				'description' => __( 'Users of this profile type will be auto-assigned to the following WordPress roles.', 'buddyboss' ),
 				'type'        => 'array',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
@@ -464,7 +464,7 @@ class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 
 			if ( bboss_is_active( 'messages' ) && bboss_is_active( 'friends' ) && true === (bool) bboss_get_option( 'bp-force-friendship-to-message', false ) ) {
 				$schema['properties']['allow_messaging_without_connection'] = array(
-					'description' => __( 'Allow messaging without connection.', 'buddyboss-platform' ),
+					'description' => __( 'Allow messaging without connection.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,

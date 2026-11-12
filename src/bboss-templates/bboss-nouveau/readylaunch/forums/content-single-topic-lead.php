@@ -33,7 +33,7 @@ if ( function_exists( 'bboss_bbp_is_forum_group_forum' ) && bboss_bbp_is_forum_g
 						'html'    => true,
 						'alt'     => sprintf(
 							/* translators: %s is the group name */
-							__( '%s logo', 'buddyboss-platform' ),
+							__( '%s logo', 'buddyboss' ),
 							$group->name
 						),
 						'class'   => 'bb-rl-group-avatar',
@@ -51,7 +51,7 @@ if ( function_exists( 'bboss_bbp_is_forum_group_forum' ) && bboss_bbp_is_forum_g
 	<div class="bb-rl-topic-header-meta">
 		<?php if ( ! bboss_bbp_is_topic_open() ) { ?>
 				<div class="bb-rl-topic-status-closed">
-					<?php esc_html_e( 'Closed', 'buddyboss-platform' ); ?>
+					<?php esc_html_e( 'Closed', 'buddyboss' ); ?>
 				</div>
 		<?php } ?>
 		<?php
@@ -87,7 +87,7 @@ if ( function_exists( 'bboss_bbp_is_forum_group_forum' ) && bboss_bbp_is_forum_g
 			if ( ! $empty ) {
 				?>
 				<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
-					<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'More Options', 'buddyboss-platform' ); ?>">
+					<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
 						<i class="bb-icons-rl-dots-three"></i>
 					</a>
 					<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
@@ -170,7 +170,7 @@ if ( function_exists( 'bboss_bbp_is_forum_group_forum' ) && bboss_bbp_is_forum_g
 				bboss_bbp_topic_reply_link();
 				if ( ! bboss_bbp_current_user_can_access_create_reply_form() && ! bboss_bbp_is_topic_closed() && ! bboss_bbp_is_forum_closed( bboss_bbp_get_topic_forum_id() ) && ! is_user_logged_in() ) {
 					?>
-						<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bbp-topic-login-link bb-style-primary-bgr-color bb-style-border-radius"><?php esc_html_e( 'Log In to Reply', 'buddyboss-platform' ); ?></a>
+						<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bbp-topic-login-link bb-style-primary-bgr-color bb-style-border-radius"><?php esc_html_e( 'Log In to Reply', 'buddyboss' ); ?></a>
 				<?php } ?>
 			</div>
 		</div><!-- .bb-rl-forum-actions -->

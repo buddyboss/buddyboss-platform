@@ -31,13 +31,13 @@ export const LinkModal = ({ isOpen, onClose, linkData = {}, onSave }) => {
     const newErrors = {};
     
     if (!title.trim()) {
-      newErrors.title = __('Title is required', 'buddyboss-platform');
+      newErrors.title = __('Title is required', 'buddyboss');
     }
     
     if (!url.trim()) {
-      newErrors.url = __('URL is required', 'buddyboss-platform');
+      newErrors.url = __('URL is required', 'buddyboss');
     } else if (!isValidUrl(url)) {
-      newErrors.url = __('Please enter a valid URL', 'buddyboss-platform');
+      newErrors.url = __('Please enter a valid URL', 'buddyboss');
     }
     
     if (Object.keys(newErrors).length > 0) {
@@ -72,27 +72,27 @@ export const LinkModal = ({ isOpen, onClose, linkData = {}, onSave }) => {
   
   return (
     <Modal
-      title={linkData.id ? __('Edit Link', 'buddyboss-platform') : __('Add Link', 'buddyboss-platform')}
+      title={linkData.id ? __('Edit Link', 'buddyboss') : __('Add Link', 'buddyboss')}
       onRequestClose={onClose}
       className="link-modal bb-rl-modal"
     >
       <div className="link-modal-content">
         <div className="link-modal-form">
           <TextControl
-            label={__('Title', 'buddyboss-platform')}
+            label={__('Title', 'buddyboss')}
             value={title}
             onChange={setTitle}
             help={errors.title}
-            placeholder={__('Type a title', 'buddyboss-platform')}
+            placeholder={__('Type a title', 'buddyboss')}
             className={`bb-rl-input-field ${errors.title ? 'has-error' : ''}`}
           />
           
           <TextControl
-            label={__('URL', 'buddyboss-platform')}
+            label={__('URL', 'buddyboss')}
             value={url}
             onChange={setUrl}
             help={errors.url}
-            placeholder={__('Paste link', 'buddyboss-platform')}
+            placeholder={__('Paste link', 'buddyboss')}
             className={`bb-rl-input-field ${errors.url ? 'has-error' : ''}`}
           />
         </div>
@@ -102,13 +102,13 @@ export const LinkModal = ({ isOpen, onClose, linkData = {}, onSave }) => {
             onClick={onClose}
             className="bb-rl-button bb-rl-button--secondary bb-rl-button--small"
           >
-            {__('Cancel', 'buddyboss-platform')}
+            {__('Cancel', 'buddyboss')}
           </Button>
           <Button
             onClick={handleSave}
             className="bb-rl-button bb-rl-button--primary bb-rl-button--small"
           >
-            {__('Save', 'buddyboss-platform')}
+            {__('Save', 'buddyboss')}
           </Button>
         </div>
       </div>

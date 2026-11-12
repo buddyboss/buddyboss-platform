@@ -94,18 +94,18 @@ class BBoss_Members_Component extends BBoss_Component {
 		if ( bboss_is_members_component() ) {
 			// Actions - Random member handler.
 			if ( isset( $_GET['random-member'] ) ) {
-				require $this->path . 'bboss-members/actions/random.php';
+				require $this->path . 'bp-members/actions/random.php';
 			}
 
 			// Screens - Directory.
 			if ( bboss_is_members_directory() ) {
-				require $this->path . 'bboss-members/screens/directory.php';
+				require $this->path . 'bp-members/screens/directory.php';
 			}
 		}
 
 		// Members - User main nav screen.
 		if ( bboss_is_user() ) {
-			require $this->path . 'bboss-members/screens/profile.php';
+			require $this->path . 'bp-members/screens/profile.php';
 		}
 
 		// Members - Theme compatibility.
@@ -116,9 +116,9 @@ class BBoss_Members_Component extends BBoss_Component {
 		// Registration / Activation.
 		if ( bboss_is_register_page() || bboss_is_activation_page() ) {
 			if ( bboss_is_register_page() ) {
-				require $this->path . 'bboss-members/screens/register.php';
+				require $this->path . 'bp-members/screens/register.php';
 			} else {
-				require $this->path . 'bboss-members/screens/activate.php';
+				require $this->path . 'bp-members/screens/activate.php';
 			}
 
 			// Theme compatibility.
@@ -161,7 +161,7 @@ class BBoss_Members_Component extends BBoss_Component {
 			'root_slug'       => isset( $bp->pages->members->slug ) ? $bp->pages->members->slug : BBOSS_MEMBERS_SLUG,
 			'has_directory'   => true,
 			'directory_title' => isset( $bp->pages->members->title ) ? $bp->pages->members->title : $default_directory_title,
-			'search_string'   => __( 'Search Members&hellip;', 'buddyboss-platform' ),
+			'search_string'   => __( 'Search Members&hellip;', 'buddyboss' ),
 			'global_tables'   => array(
 				'table_name_last_activity' => bboss_core_get_table_prefix() . 'bp_activity',
 				'table_name_signups'       => $wpdb->base_prefix . 'signups', // Signups is a global WordPress table.
@@ -389,7 +389,7 @@ class BBoss_Members_Component extends BBoss_Component {
 
 		if ( ! $is_xprofile_active ) {
 			$this->main_nav = array(
-				'name'                => __( 'Profile', 'buddyboss-platform' ),
+				'name'                => __( 'Profile', 'buddyboss' ),
 				'slug'                => $slug,
 				'position'            => 10,
 				'screen_function'     => 'bboss_members_screen_display_profile',
@@ -405,7 +405,7 @@ class BBoss_Members_Component extends BBoss_Component {
 		 * is not active.
 		 */
 		$this->sub_nav = array(
-			'name'            => __( 'View', 'buddyboss-platform' ),
+			'name'            => __( 'View', 'buddyboss' ),
 			'slug'            => 'public',
 			'parent_url'      => trailingslashit( $user_domain . $slug ),
 			'parent_slug'     => $slug,
@@ -419,7 +419,7 @@ class BBoss_Members_Component extends BBoss_Component {
 		 */
 		if ( bboss_displayed_user_has_front_template() ) {
 			$main_nav = array(
-				'name'                => __( 'Dashboard', 'buddyboss-platform' ),
+				'name'                => __( 'Dashboard', 'buddyboss' ),
 				'slug'                => 'front',
 				'position'            => 5,
 				'screen_function'     => 'bboss_members_screen_display_profile',
@@ -484,7 +484,7 @@ class BBoss_Members_Component extends BBoss_Component {
 		$bp = bboss();
 
 		if ( bboss_is_my_profile() ) {
-			$bp->bp_options_title = __( 'You', 'buddyboss-platform' );
+			$bp->bp_options_title = __( 'You', 'buddyboss' );
 		} elseif ( bboss_is_user() ) {
 			$bp->bp_options_title  = bboss_get_displayed_user_fullname();
 			$bp->bp_options_avatar = bboss_core_fetch_avatar(
@@ -492,7 +492,7 @@ class BBoss_Members_Component extends BBoss_Component {
 					'item_id' => bboss_displayed_user_id(),
 					'type'    => 'thumb',
 					/* translators: %s: displayed user name. */
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $bp->bp_options_title ),
+					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $bp->bp_options_title ),
 				)
 			);
 		}

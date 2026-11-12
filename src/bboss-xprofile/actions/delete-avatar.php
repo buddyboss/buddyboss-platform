@@ -31,9 +31,9 @@ function bboss_xprofile_action_delete_avatar() {
 	}
 
 	if ( bboss_core_delete_existing_avatar( array( 'item_id' => bboss_displayed_user_id() ) ) ) {
-		bboss_core_add_message( __( 'Your profile photo was deleted successfully!', 'buddyboss-platform' ) );
+		bboss_core_add_message( __( 'Your profile photo was deleted successfully!', 'buddyboss' ) );
 	} else {
-		bboss_core_add_message( __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss' ), 'error' );
 	}
 
 	bboss_core_redirect( wp_get_referer() );

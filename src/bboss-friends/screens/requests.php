@@ -20,9 +20,9 @@ function bboss_friends_screen_requests() {
 		check_admin_referer( 'friends_accept_friendship' );
 
 		if ( bboss_friends_accept_friendship( bboss_action_variable( 1 ) ) ) {
-			bboss_core_add_message( __( 'Connection accepted', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'Connection accepted', 'buddyboss' ) );
 		} else {
-			bboss_core_add_message( __( 'Connection could not be accepted', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'Connection could not be accepted', 'buddyboss' ), 'error' );
 		}
 
 		bboss_core_redirect( trailingslashit( bboss_loggedin_user_domain() . bboss_current_component() . '/' . bboss_current_action() ) );
@@ -32,9 +32,9 @@ function bboss_friends_screen_requests() {
 		check_admin_referer( 'friends_reject_friendship' );
 
 		if ( bboss_friends_reject_friendship( bboss_action_variable( 1 ) ) ) {
-			bboss_core_add_message( __( 'Connection rejected', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'Connection rejected', 'buddyboss' ) );
 		} else {
-			bboss_core_add_message( __( 'Connection could not be rejected', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'Connection could not be rejected', 'buddyboss' ), 'error' );
 		}
 
 		bboss_core_redirect( trailingslashit( bboss_loggedin_user_domain() . bboss_current_component() . '/' . bboss_current_action() ) );
@@ -44,9 +44,9 @@ function bboss_friends_screen_requests() {
 		check_admin_referer( 'friends_withdraw_friendship' );
 
 		if ( bboss_friends_withdraw_friendship( bboss_loggedin_user_id(), bboss_action_variable( 1 ) ) ) {
-			bboss_core_add_message( __( 'Connection request withdrawn', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'Connection request withdrawn', 'buddyboss' ) );
 		} else {
-			bboss_core_add_message( __( 'Connection request could not be withdrawn', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'Connection request could not be withdrawn', 'buddyboss' ), 'error' );
 		}
 
 		bboss_core_redirect( trailingslashit( bboss_loggedin_user_domain() . bboss_current_component() . '/' . bboss_current_action() ) );

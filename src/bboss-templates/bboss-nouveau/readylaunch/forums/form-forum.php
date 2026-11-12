@@ -31,10 +31,10 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				if ( bboss_bbp_is_forum_edit() ) {
 					/* translators: %s: Forum title */
-					printf( esc_html__( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), esc_html( bboss_bbp_get_forum_title() ) );
+					printf( esc_html__( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), esc_html( bboss_bbp_get_forum_title() ) );
 				} else {
 					/* translators: %s: Forum title */
-					bboss_bbp_is_single_forum() ? printf( esc_html__( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss-platform' ), esc_html( bboss_bbp_get_forum_title() ) ) : esc_html_e( 'Create New Forum', 'buddyboss-platform' );
+					bboss_bbp_is_single_forum() ? printf( esc_html__( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss' ), esc_html( bboss_bbp_get_forum_title() ) ) : esc_html_e( 'Create New Forum', 'buddyboss' );
 				}
 				?>
 				</h2>
@@ -45,7 +45,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
-						<p><?php esc_html_e( 'This forum is closed to new content, however your account still allows you to do so.', 'buddyboss-platform' ); ?></p>
+						<p><?php esc_html_e( 'This forum is closed to new content, however your account still allows you to do so.', 'buddyboss' ); ?></p>
 					</div>
 
 				<?php endif; ?>
@@ -60,7 +60,7 @@ defined( 'ABSPATH' ) || exit;
 						<label class="bbp-forum-title-label" for="bbp_forum_title">
 							<?php
 							/* translators: %d: Maximum length of forum title */
-							echo wp_kses_post( sprintf( __( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss-platform' ), bboss_bbp_get_title_max_length() ) );
+							echo wp_kses_post( sprintf( __( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss' ), bboss_bbp_get_title_max_length() ) );
 							?>
 						</label><br />
 						<input type="text" id="bbp_forum_title" value="<?php bboss_bbp_form_forum_title(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="40" name="bbp_forum_title" maxlength="<?php bboss_bbp_title_max_length(); ?>" />
@@ -70,7 +70,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<?php do_action( 'bbp_theme_before_forum_form_content' ); ?>
 
-					<label><?php esc_html_e( 'Description', 'buddyboss-platform' ); ?></label><br />
+					<label><?php esc_html_e( 'Description', 'buddyboss' ); ?></label><br />
 					<?php bboss_bbp_the_content( array( 'context' => 'forum' ) ); ?>
 
 					<?php do_action( 'bbp_theme_after_forum_form_content' ); ?>
@@ -80,7 +80,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php if ( ! ( bboss_bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php esc_html_e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ); ?></label><br />
+							<label><?php esc_html_e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss' ); ?></label><br />
 							<code><?php bboss_bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -89,34 +89,34 @@ defined( 'ABSPATH' ) || exit;
 					<div class="bp-forum-settings">
 						<?php do_action( 'bbp_theme_before_forum_form_type' ); ?>
 						<p>
-							<label for="bbp_forum_type"><?php esc_html_e( 'Forum Type', 'buddyboss-platform' ); ?></label><br />
+							<label for="bbp_forum_type"><?php esc_html_e( 'Forum Type', 'buddyboss' ); ?></label><br />
 							<?php bboss_bbp_form_forum_type_dropdown(); ?>
 						</p>
 						<?php do_action( 'bbp_theme_after_forum_form_type' ); ?>
 
 						<?php do_action( 'bbp_theme_before_forum_form_status' ); ?>
 						<p>
-							<label for="bbp_forum_status"><?php esc_html_e( 'Status', 'buddyboss-platform' ); ?></label><br />
+							<label for="bbp_forum_status"><?php esc_html_e( 'Status', 'buddyboss' ); ?></label><br />
 							<?php bboss_bbp_form_forum_status_dropdown(); ?>
 						</p>
 						<?php do_action( 'bbp_theme_after_forum_form_status' ); ?>
 
 						<?php do_action( 'bbp_theme_before_forum_form_status' ); ?>
 						<p>
-							<label for="bbp_forum_visibility"><?php esc_html_e( 'Visibility', 'buddyboss-platform' ); ?></label><br />
+							<label for="bbp_forum_visibility"><?php esc_html_e( 'Visibility', 'buddyboss' ); ?></label><br />
 							<?php bboss_bbp_form_forum_visibility_dropdown(); ?>
 						</p>
 						<?php do_action( 'bbp_theme_after_forum_visibility_status' ); ?>
 
 						<?php do_action( 'bbp_theme_before_forum_form_parent' ); ?>
 						<p>
-							<label for="bbp_forum_parent_id"><?php esc_html_e( 'Parent Forum', 'buddyboss-platform' ); ?></label><br />
+							<label for="bbp_forum_parent_id"><?php esc_html_e( 'Parent Forum', 'buddyboss' ); ?></label><br />
 
 							<?php
 								bboss_bbp_dropdown(
 									array(
 										'select_id' => 'bbp_forum_parent_id',
-										'show_none' => __( '(No Parent)', 'buddyboss-platform' ),
+										'show_none' => __( '(No Parent)', 'buddyboss' ),
 										'selected'  => bboss_bbp_get_form_forum_parent(),
 										'exclude'   => bboss_bbp_get_forum_id(),
 									)
@@ -132,7 +132,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<?php do_action( 'bbp_theme_before_forum_form_submit_button' ); ?>
 
-						<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_forum_submit" name="bbp_forum_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php esc_html_e( 'Submit', 'buddyboss-platform' ); ?></button>
+						<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_forum_submit" name="bbp_forum_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php esc_html_e( 'Submit', 'buddyboss' ); ?></button>
 
 						<?php do_action( 'bbp_theme_after_forum_form_submit_button' ); ?>
 
@@ -159,7 +159,7 @@ defined( 'ABSPATH' ) || exit;
 			<p>
 				<?php
 				/* translators: %s: Forum title */
-				printf( esc_html__( 'The forum "%s" is closed to new content.', 'buddyboss-platform' ), esc_html( bboss_bbp_get_forum_title() ) );
+				printf( esc_html__( 'The forum "%s" is closed to new content.', 'buddyboss' ), esc_html( bboss_bbp_get_forum_title() ) );
 				?>
 			</p>
 		</div>
@@ -170,7 +170,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-forum-<?php bboss_bbp_forum_id(); ?>" class="bbp-no-forum">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot create new forums.', 'buddyboss-platform' ) : esc_html_e( 'You must be logged in to create new forums.', 'buddyboss-platform' ); ?></p>
+			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot create new forums.', 'buddyboss' ) : esc_html_e( 'You must be logged in to create new forums.', 'buddyboss' ); ?></p>
 		</div>
 	</div>
 

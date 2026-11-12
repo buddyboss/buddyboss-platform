@@ -21,15 +21,15 @@ if ( bboss_has_notifications( bboss_ajax_querystring( 'notifications' ) ) ) :
 				<tr>
 					<th class="icon"></th>
 					<th class="bulk-select-all">
-						<input id="select-all-notifications" class="bs-styled-checkbox" type="checkbox" aria-label="<?php esc_attr_e( 'Select all', 'buddyboss-platform' ); ?>" />
-						<label class="bp-screen-reader-text" for="select-all-notifications"><?php esc_html_e( 'Select all', 'buddyboss-platform' ); ?></label>
+						<input id="select-all-notifications" class="bs-styled-checkbox" type="checkbox" aria-label="<?php esc_attr_e( 'Select all', 'buddyboss' ); ?>" />
+						<label class="bp-screen-reader-text" for="select-all-notifications"><?php esc_html_e( 'Select all', 'buddyboss' ); ?></label>
 					</th>
-					<th class="title"><?php esc_html_e( 'Notification', 'buddyboss-platform' ); ?></th>
+					<th class="title"><?php esc_html_e( 'Notification', 'buddyboss' ); ?></th>
 					<th class="date">
-						<?php esc_html_e( 'Date Received', 'buddyboss-platform' ); ?>
+						<?php esc_html_e( 'Date Received', 'buddyboss' ); ?>
 						<?php bboss_nouveau_notifications_sort_order_links(); ?>
 					</th>
-					<th class="actions"><?php esc_html_e( 'Actions', 'buddyboss-platform' ); ?></th>
+					<th class="actions"><?php esc_html_e( 'Actions', 'buddyboss' ); ?></th>
 				</tr>
 			</thead>
 
@@ -45,7 +45,7 @@ if ( bboss_has_notifications( bboss_ajax_querystring( 'notifications' ) ) ) :
 						<td></td>
 						<td class="bulk-select-check">
 							<input id="<?php echo esc_attr( $bp_notification_id ); ?>" type="checkbox" name="notifications[]" value="<?php echo esc_attr( $bp_notification_id ); ?>" class="notification-check bs-styled-checkbox" data-readonly="<?php echo esc_attr( $readonly ); ?>"/>
-							<label for="<?php echo esc_attr( $bp_notification_id ); ?>"><span class="bp-screen-reader-text"><?php esc_html_e( 'Select this notification', 'buddyboss-platform' ); ?></span></label>
+							<label for="<?php echo esc_attr( $bp_notification_id ); ?>"><span class="bp-screen-reader-text"><?php esc_html_e( 'Select this notification', 'buddyboss' ); ?></span></label>
 						</td>
 						<td class="notification-description"><?php bboss_the_notification_description(); ?></td>
 						<td class="notification-since"><?php bboss_the_notification_time_since(); ?></td>

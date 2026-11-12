@@ -91,7 +91,7 @@ function bboss_get_groups_group_type_base() {
 	 * @param string $base
 	 * @todo why would you change this and what is this going to break?
 	 */
-	return apply_filters( 'bp_groups_group_type_base', _x( 'type', 'Group type URL base slug', 'buddyboss-platform' ) );
+	return apply_filters( 'bp_groups_group_type_base', _x( 'type', 'Group type URL base slug', 'buddyboss' ) );
 }
 
 /**
@@ -234,7 +234,7 @@ function bboss_get_group_type_list( $group_id = 0, $r = array() ) {
 			'parent_attr'    => array(
 				'class' => 'bp-group-type-list',
 			),
-			'label'          => __( 'Group Types:', 'buddyboss-platform' ),
+			'label'          => __( 'Group Types:', 'buddyboss' ),
 			'label_element'  => 'strong',
 			'label_attr'     => array(),
 			'show_all'       => false,
@@ -765,32 +765,32 @@ function bboss_get_group_type( $group = false ) {
 
 		if ( 'public' == $group->status ) {
 
-			$group_visibility = esc_html__( 'Public', 'buddyboss-platform' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss-platform' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss-platform' ) . '</span>';
+			$group_visibility = esc_html__( 'Public', 'buddyboss' );
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'hidden' == $group->status ) {
 
-			$group_visibility = esc_html__( 'Hidden', 'buddyboss-platform' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss-platform' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss-platform' ) . '</span>';
+			$group_visibility = esc_html__( 'Hidden', 'buddyboss' );
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'private' == $group->status ) {
 
-			$group_visibility = esc_html__( 'Private', 'buddyboss-platform' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss-platform' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss-platform' ) . '</span>';
+			$group_visibility = esc_html__( 'Private', 'buddyboss' );
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} else {
-			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss-platform' );
+			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
 		}
 	} else {
 
 		if ( 'public' == $group->status ) {
-			$type = '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss-platform' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss-platform' ) . '</span>';
+			$type = '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 		} elseif ( 'hidden' == $group->status ) {
-			$type = '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss-platform' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss-platform' ) . '</span>';
+			$type = '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 		} elseif ( 'private' == $group->status ) {
-			$type = '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss-platform' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss-platform' ) . '</span>';
+			$type = '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 		} else {
-			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss-platform' );
+			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
 		}
 	}
 
@@ -873,13 +873,13 @@ function bboss_get_group_status_description( $group = false ) {
 	}
 
 	if ( 'public' == $group->status ) {
-		$description = __( 'This group\'s content, including its members and activity, are visible to any site member.', 'buddyboss-platform' );
+		$description = __( 'This group\'s content, including its members and activity, are visible to any site member.', 'buddyboss' );
 	} elseif ( 'hidden' == $group->status ) {
-		$description = __( 'This group and its content are only visible to members of the group.', 'buddyboss-platform' );
+		$description = __( 'This group and its content are only visible to members of the group.', 'buddyboss' );
 	} elseif ( 'private' == $group->status ) {
-		$description = __( 'This group\'s content is only visible to members of the group.', 'buddyboss-platform' );
+		$description = __( 'This group\'s content is only visible to members of the group.', 'buddyboss' );
 	} else {
-		$description = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss-platform' );
+		$description = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
 	}
 
 	/**
@@ -943,7 +943,7 @@ function bboss_get_group_avatar( $args = '' ) {
 			'class'  => 'avatar',
 			'id'     => false,
 			/* translators: %s: group name. */
-			'alt'    => sprintf( __( 'Group logo of %s', 'buddyboss-platform' ), $groups_template->group->name ),
+			'alt'    => sprintf( __( 'Group logo of %s', 'buddyboss' ), $groups_template->group->name ),
 		)
 	);
 
@@ -1164,7 +1164,7 @@ function bboss_get_group_last_active( $group = false, $args = array() ) {
 	}
 
 	if ( empty( $last_active ) ) {
-		return __( 'not yet active', 'buddyboss-platform' );
+		return __( 'not yet active', 'buddyboss' );
 	} else {
 
 		/**
@@ -1525,9 +1525,9 @@ function bboss_get_group_description_excerpt( $group = false, $length = 225 ) {
  * @return string Excerpt.
  */
 function bboss_get_group_description_excerpt_view_more( $excerpt, $group ) {
-	$group_link = '... <a href="' . esc_url( bboss_get_group_permalink( $group ) ) . '" class="bb-more-link">' . esc_html__( 'View more', 'buddyboss-platform' ) . '</a>';
+	$group_link = '... <a href="' . esc_url( bboss_get_group_permalink( $group ) ) . '" class="bb-more-link">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
 	if ( bboss_is_single_item() && bboss_is_current_item( $group->slug ) ) {
-		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . esc_html__( 'View more', 'buddyboss-platform' ) . '</a>';
+		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
 	}
 	return bboss_create_excerpt( $excerpt, 120, array( 'ending' => $group_link ) );
 }
@@ -1564,9 +1564,9 @@ function bboss_get_group_public_status( $group = false ) {
 	}
 
 	if ( $group->is_public ) {
-		return __( 'Public', 'buddyboss-platform' );
+		return __( 'Public', 'buddyboss' );
 	} else {
-		return __( 'Private', 'buddyboss-platform' );
+		return __( 'Private', 'buddyboss' );
 	}
 }
 
@@ -1859,7 +1859,7 @@ function bboss_get_group_creator_avatar( $group = false, $args = array() ) {
 			'class'  => 'avatar',
 			'id'     => false,
 			/* translators: %s: member display name. */
-			'alt'    => sprintf( __( 'Group organizer profile photo of %s', 'buddyboss-platform' ), bboss_core_get_user_displayname( $group->creator_id ) ),
+			'alt'    => sprintf( __( 'Group organizer profile photo of %s', 'buddyboss' ), bboss_core_get_user_displayname( $group->creator_id ) ),
 		),
 		'group_creator_avatar'
 	);
@@ -1951,7 +1951,7 @@ function bboss_group_list_admins( $group = false ) {
 							'alt'     => sprintf( // translators: Profile photo of %s.
 								esc_html__(
 									'Profile photo of %s',
-									'buddyboss-platform'
+									'buddyboss'
 								),
 								bboss_core_get_user_displayname( $admin->user_id )
 							),
@@ -1983,7 +1983,7 @@ function bboss_group_list_admins( $group = false ) {
 			<?php } ?>
 		</ul>
 	<?php } else { ?>
-		<span class="activity"><?php esc_html_e( 'No Organizers', 'buddyboss-platform' ); ?></span>
+		<span class="activity"><?php esc_html_e( 'No Organizers', 'buddyboss' ); ?></span>
 	<?php } ?>
 	<?php
 }
@@ -2007,7 +2007,7 @@ function bboss_group_list_parents( $group = false ) {
 		$parent_group      = bboss_groups_get_group( $group->parent_id );
 		$group_type        = bboss_groups_get_group_type( $group->parent_id );
 		$group_type_object = bboss_groups_get_group_type_object( $group_type );
-		$group_type        = ( isset( $group_type_object ) && isset( $group_type_object->labels['singular_name'] ) ) ?: esc_html__( 'Subgroup of', 'buddyboss-platform' );
+		$group_type        = ( isset( $group_type_object ) && isset( $group_type_object->labels['singular_name'] ) ) ?: esc_html__( 'Subgroup of', 'buddyboss' );
 		?>
 		<dl class="parent-list">
 			<dt class="parent-title"><?php echo esc_html( $group_type ); ?></dt>
@@ -2021,7 +2021,7 @@ function bboss_group_list_parents( $group = false ) {
 								'item_id' => $parent_group->id,
 								'object'  => 'group',
 								/* translators: %s: group name. */
-								'alt'     => sprintf( __( 'Group photo of %s', 'buddyboss-platform' ), bboss_get_group_name( $parent_group ) ),
+								'alt'     => sprintf( __( 'Group photo of %s', 'buddyboss' ), bboss_get_group_name( $parent_group ) ),
 							)
 						)
 						?>
@@ -2068,7 +2068,7 @@ function bboss_group_list_mods( $group = false ) {
 									/* translators: %s: member display name. */
 									__(
 										'Profile photo of %s',
-										'buddyboss-platform'
+										'buddyboss'
 									),
 									bboss_core_get_user_displayname( $mod->user_id )
 								),
@@ -2084,7 +2084,7 @@ function bboss_group_list_mods( $group = false ) {
 
 	<?php else : ?>
 
-		<span class="activity"><?php esc_html_e( 'No Moderators', 'buddyboss-platform' ); ?></span>
+		<span class="activity"><?php esc_html_e( 'No Moderators', 'buddyboss' ); ?></span>
 
 		<?php
 	endif;
@@ -2225,7 +2225,7 @@ function bboss_get_group_all_members_permalink( $group = false ) {
 function bboss_group_search_form() {
 
 	$action = bboss_displayed_user_domain() . bboss_get_groups_slug() . '/my-groups/search/';
-	$label  = __( 'Filter Groups', 'buddyboss-platform' );
+	$label  = __( 'Filter Groups', 'buddyboss' );
 	$name   = 'group-filter-box';
 
 	$search_form_html = '<form action="' . $action . '" id="group-search-form" method="post">
@@ -2325,7 +2325,7 @@ function bboss_get_groups_pagination_count() {
 	$total     = bboss_core_number_format( $groups_template->total_group_count );
 
 	/* translators: 1: number, 2: number, 3: number. */
-	$message = sprintf( _n( 'Viewing 1 group', 'Viewing %1$s - %2$s of %3$s groups', $groups_template->total_group_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
+	$message = sprintf( _n( 'Viewing 1 group', 'Viewing %1$s - %2$s of %3$s groups', $groups_template->total_group_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
 	 * Filters the "Viewing x-y of z groups" pagination message.
@@ -2425,7 +2425,7 @@ function bboss_get_group_member_count() {
 	}
 
 	/* translators: %s: number. */
-	$count_string = sprintf( _n( '%s member', '%s members', $count, 'buddyboss-platform' ), bboss_core_number_format( $count ) );
+	$count_string = sprintf( _n( '%s member', '%s members', $count, 'buddyboss' ), bboss_core_number_format( $count ) );
 
 	/**
 	 * Filters the "x members" count string for a group.
@@ -3239,7 +3239,7 @@ function bboss_group_admin_memberlist( $admin_list = false, $group = false ) {
 							/* translators: %s: member display name. */
 							__(
 								'Profile photo of %s',
-								'buddyboss-platform'
+								'buddyboss'
 							),
 							bboss_core_get_user_displayname( $admin->user_id )
 						),
@@ -3252,7 +3252,7 @@ function bboss_group_admin_memberlist( $admin_list = false, $group = false ) {
 					<?php echo wp_kses_post( bboss_core_get_userlink( $admin->user_id ) ); ?>
 
 					<span class="small">
-						<a class="button confirm admin-demote-to-member" href="<?php bboss_group_member_demote_link( $admin->user_id ); ?>"><?php esc_html_e( 'Demote to member', 'buddyboss-platform' ); ?></a>
+						<a class="button confirm admin-demote-to-member" href="<?php bboss_group_member_demote_link( $admin->user_id ); ?>"><?php esc_html_e( 'Demote to member', 'buddyboss' ); ?></a>
 					</span>
 				</h5>
 			</li>
@@ -3270,7 +3270,7 @@ function bboss_group_admin_memberlist( $admin_list = false, $group = false ) {
 							/* translators: %s: member display name. */
 							__(
 								'Profile photo of %s',
-								'buddyboss-platform'
+								'buddyboss'
 							),
 							bboss_core_get_user_displayname( $admin->user_id )
 						),
@@ -3280,7 +3280,7 @@ function bboss_group_admin_memberlist( $admin_list = false, $group = false ) {
 
 				<h5><?php echo wp_kses_post( bboss_core_get_userlink( $admin->user_id ) ); ?></h5>
 				<span class="activity">
-					<?php /* translators: %s: human-readable time since joining. */ echo esc_html( bboss_core_get_last_activity( strtotime( $admin->date_modified ), __( 'joined %s', 'buddyboss-platform' ) ) ); ?>
+					<?php /* translators: %s: human-readable time since joining. */ echo esc_html( bboss_core_get_last_activity( strtotime( $admin->date_modified ), __( 'joined %s', 'buddyboss' ) ) ); ?>
 				</span>
 
 				<?php if ( bboss_is_active( 'friends' ) ) : ?>
@@ -3305,7 +3305,7 @@ function bboss_group_admin_memberlist( $admin_list = false, $group = false ) {
 	<?php else : ?>
 
 		<div id="message" class="info">
-			<p><?php esc_html_e( 'This group has no organizers', 'buddyboss-platform' ); ?></p>
+			<p><?php esc_html_e( 'This group has no organizers', 'buddyboss' ); ?></p>
 		</div>
 
 		<?php
@@ -3355,7 +3355,7 @@ function bboss_group_mod_memberlist( $admin_list = false, $group = false ) {
 							/* translators: %s: member display name. */
 							__(
 								'Profile photo of %s',
-								'buddyboss-platform'
+								'buddyboss'
 							),
 							bboss_core_get_user_displayname( $mod->user_id )
 						),
@@ -3367,8 +3367,8 @@ function bboss_group_mod_memberlist( $admin_list = false, $group = false ) {
 					<?php echo wp_kses_post( bboss_core_get_userlink( $mod->user_id ) ); ?>
 
 					<span class="small">
-						<a href="<?php bboss_group_member_promote_admin_link( array( 'user_id' => $mod->user_id ) ); ?>" class="button confirm mod-promote-to-admin"><?php esc_html_e( 'Promote to co-organizer', 'buddyboss-platform' ); ?></a>
-						<a class="button confirm mod-demote-to-member" href="<?php bboss_group_member_demote_link( $mod->user_id ); ?>"><?php esc_html_e( 'Demote to member', 'buddyboss-platform' ); ?></a>
+						<a href="<?php bboss_group_member_promote_admin_link( array( 'user_id' => $mod->user_id ) ); ?>" class="button confirm mod-promote-to-admin"><?php esc_html_e( 'Promote to co-organizer', 'buddyboss' ); ?></a>
+						<a class="button confirm mod-demote-to-member" href="<?php bboss_group_member_demote_link( $mod->user_id ); ?>"><?php esc_html_e( 'Demote to member', 'buddyboss' ); ?></a>
 					</span>
 				</h5>
 			</li>
@@ -3386,7 +3386,7 @@ function bboss_group_mod_memberlist( $admin_list = false, $group = false ) {
 							/* translators: %s: member display name. */
 							__(
 								'Profile photo of %s',
-								'buddyboss-platform'
+								'buddyboss'
 							),
 							bboss_core_get_user_displayname( $mod->user_id )
 						),
@@ -3396,7 +3396,7 @@ function bboss_group_mod_memberlist( $admin_list = false, $group = false ) {
 
 				<h5><?php echo wp_kses_post( bboss_core_get_userlink( $mod->user_id ) ); ?></h5>
 
-				<span class="activity"><?php /* translators: %s: human-readable time since joining. */ echo esc_html( bboss_core_get_last_activity( strtotime( $mod->date_modified ), __( 'joined %s', 'buddyboss-platform' ) ) ); ?></span>
+				<span class="activity"><?php /* translators: %s: human-readable time since joining. */ echo esc_html( bboss_core_get_last_activity( strtotime( $mod->date_modified ), __( 'joined %s', 'buddyboss' ) ) ); ?></span>
 
 				<?php if ( bboss_is_active( 'friends' ) ) : ?>
 
@@ -3416,7 +3416,7 @@ function bboss_group_mod_memberlist( $admin_list = false, $group = false ) {
 	<?php } else { ?>
 
 		<div id="message" class="info">
-			<p><?php esc_html_e( 'This group has no moderators', 'buddyboss-platform' ); ?></p>
+			<p><?php esc_html_e( 'This group has no moderators', 'buddyboss' ); ?></p>
 		</div>
 
 		<?php
@@ -3782,7 +3782,7 @@ function bboss_group_admin_tabs_backcompat( $subnav_output = '', $subnav_item = 
 	ob_end_clean();
 
 	if ( ! empty( $admin_tabs_backcompat ) ) {
-		_doing_it_wrong( "do_action( 'groups_admin_tabs' )", esc_html__( 'This action should not be used directly. Please use the BuddyPress Group Extension API to generate Manage tabs.', 'buddyboss-platform' ), '2.2.0' );
+		_doing_it_wrong( "do_action( 'groups_admin_tabs' )", esc_html__( 'This action should not be used directly. Please use the BuddyPress Group Extension API to generate Manage tabs.', 'buddyboss' ), '2.2.0' );
 		$subnav_output .= $admin_tabs_backcompat;
 	}
 
@@ -4359,7 +4359,7 @@ function bboss_get_group_join_button( $group = false ) {
 			'link_text'         => $button_text,
 			'link_class'        => 'group-button leave-group bp-toggle-action-button',
 			'button_attr'       => array(
-				'data-title'           => esc_html__( 'Leave Group', 'buddyboss-platform' ),
+				'data-title'           => esc_html__( 'Leave Group', 'buddyboss' ),
 				'data-title-displayed' => $button_text,
 				'data-bb-group-name'   => esc_attr( $group->name ),
 				'data-bb-group-link'   => esc_url( bboss_get_group_permalink( $group ) ),
@@ -4387,7 +4387,7 @@ function bboss_get_group_join_button( $group = false ) {
 					'wrapper_class'     => 'group-button ' . $group->status,
 					'wrapper_id'        => 'groupbutton-' . $group->id,
 					'link_href'         => wp_nonce_url( trailingslashit( bboss_get_group_permalink( $group ) . 'join' ), 'groups_join_group' ),
-					'link_text'         => esc_html__( 'Join Group', 'buddyboss-platform' ),
+					'link_text'         => esc_html__( 'Join Group', 'buddyboss' ),
 					'link_class'        => 'group-button join-group',
 				);
 				break;
@@ -4404,7 +4404,7 @@ function bboss_get_group_join_button( $group = false ) {
 						'wrapper_class'     => 'group-button ' . $group->status,
 						'wrapper_id'        => 'groupbutton-' . $group->id,
 						'link_href'         => add_query_arg( 'redirect_to', bboss_get_group_permalink( $group ), bboss_get_group_accept_invite_link( $group ) ),
-						'link_text'         => esc_html__( 'Accept Invitation', 'buddyboss-platform' ),
+						'link_text'         => esc_html__( 'Accept Invitation', 'buddyboss' ),
 						'link_class'        => 'group-button accept-invite',
 					);
 
@@ -4419,7 +4419,7 @@ function bboss_get_group_join_button( $group = false ) {
 						'wrapper_class'     => 'group-button pending ' . $group->status,
 						'wrapper_id'        => 'groupbutton-' . $group->id,
 						'link_href'         => bboss_get_group_permalink( $group ),
-						'link_text'         => esc_html__( 'Request Sent', 'buddyboss-platform' ),
+						'link_text'         => esc_html__( 'Request Sent', 'buddyboss' ),
 						'link_class'        => 'group-button pending membership-requested',
 					);
 
@@ -4446,7 +4446,7 @@ function bboss_get_group_join_button( $group = false ) {
 								'wrapper_class'     => 'group-button ' . $group->status,
 								'wrapper_id'        => 'groupbutton-' . $group->id,
 								'link_href'         => wp_nonce_url( trailingslashit( bboss_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-								'link_text'         => esc_html__( 'Join Group', 'buddyboss-platform' ),
+								'link_text'         => esc_html__( 'Join Group', 'buddyboss' ),
 								'link_class'        => 'group-button request-membership',
 							);
 						} else {
@@ -4458,7 +4458,7 @@ function bboss_get_group_join_button( $group = false ) {
 								'wrapper_class'     => 'group-button ' . $group->status,
 								'wrapper_id'        => 'groupbutton-' . $group->id,
 								'link_href'         => wp_nonce_url( trailingslashit( bboss_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-								'link_text'         => esc_html__( 'Request Access', 'buddyboss-platform' ),
+								'link_text'         => esc_html__( 'Request Access', 'buddyboss' ),
 								'link_class'        => 'group-button request-membership',
 							);
 						}
@@ -4471,7 +4471,7 @@ function bboss_get_group_join_button( $group = false ) {
 							'wrapper_class'     => 'group-button ' . $group->status,
 							'wrapper_id'        => 'groupbutton-' . $group->id,
 							'link_href'         => wp_nonce_url( trailingslashit( bboss_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-							'link_text'         => esc_html__( 'Request Access', 'buddyboss-platform' ),
+							'link_text'         => esc_html__( 'Request Access', 'buddyboss' ),
 							'link_class'        => 'group-button request-membership',
 						);
 					}
@@ -4530,7 +4530,7 @@ function bboss_get_group_create_button() {
 	$button_args = array(
 		'id'         => 'create_group',
 		'component'  => 'groups',
-		'link_text'  => __( 'Create a Group', 'buddyboss-platform' ),
+		'link_text'  => __( 'Create a Group', 'buddyboss' ),
 		'link_class' => 'group-create no-ajax',
 		'link_href'  => trailingslashit( bboss_get_groups_directory_permalink() . 'create' ),
 		'wrapper'    => false,
@@ -4622,7 +4622,7 @@ function bboss_group_status_message( $group = null ) {
 
 	// Group status is not set (maybe outside of group loop?).
 	if ( empty( $group->status ) ) {
-		$message = __( 'This group is not currently accessible.', 'buddyboss-platform' );
+		$message = __( 'This group is not currently accessible.', 'buddyboss' );
 
 		// Group has a status.
 	} else {
@@ -4633,15 +4633,15 @@ function bboss_group_status_message( $group = null ) {
 				if ( ! bboss_group_has_requested_membership( $group ) ) {
 					if ( is_user_logged_in() ) {
 						if ( bboss_group_is_invited( $group ) ) {
-							$message = __( 'You must accept your pending invitation before you can access this private group.', 'buddyboss-platform' );
+							$message = __( 'You must accept your pending invitation before you can access this private group.', 'buddyboss' );
 						} else {
-							$message = __( 'This is a private group and you must request group membership in order to join.', 'buddyboss-platform' );
+							$message = __( 'This is a private group and you must request group membership in order to join.', 'buddyboss' );
 						}
 					} else {
-						$message = __( 'This is a private group. To join you must be a registered site member and request group membership.', 'buddyboss-platform' );
+						$message = __( 'This is a private group. To join you must be a registered site member and request group membership.', 'buddyboss' );
 					}
 				} else {
-					$message = __( 'This is a private group. Your membership request is awaiting approval from the group organizer.', 'buddyboss-platform' );
+					$message = __( 'This is a private group. Your membership request is awaiting approval from the group organizer.', 'buddyboss' );
 				}
 
 				break;
@@ -4649,7 +4649,7 @@ function bboss_group_status_message( $group = null ) {
 			// Hidden group.
 			case 'hidden':
 			default:
-				$message = __( 'This is a hidden group. You must be invited to join.', 'buddyboss-platform' );
+				$message = __( 'This is a hidden group. You must be invited to join.', 'buddyboss' );
 				break;
 		}
 	}
@@ -4952,7 +4952,7 @@ function bboss_get_group_member_avatar( $args = '' ) {
 			'type'    => 'full',
 			'email'   => $members_template->member->user_email,
 			/* translators: %s: Member display name. */
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_group_member_display_name() ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bboss_get_group_member_display_name() ),
 		)
 	);
 
@@ -4995,7 +4995,7 @@ function bboss_get_group_member_avatar_thumb( $args = '' ) {
 			'type'    => 'thumb',
 			'email'   => $members_template->member->user_email,
 			/* translators: %s: Member display name. */
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_group_member_display_name() ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bboss_get_group_member_display_name() ),
 		)
 	);
 
@@ -5040,7 +5040,7 @@ function bboss_get_group_member_avatar_mini( $width = 30, $height = 30 ) {
 			'type'    => 'thumb',
 			'email'   => $members_template->member->user_email,
 			/* translators: %s: Member display name. */
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_group_member_display_name() ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bboss_get_group_member_display_name() ),
 			'width'   => absint( $width ),
 			'height'  => absint( $height ),
 		)
@@ -5337,7 +5337,7 @@ function bboss_get_group_member_joined_since( $args = array() ) {
 		bboss_core_get_last_activity(
 			$members_template->member->date_modified,
 			/* translators: %s: Last joined date of member in the group. */
-			esc_html__( 'Joined %s', 'buddyboss-platform' )
+			esc_html__( 'Joined %s', 'buddyboss' )
 		)
 	);
 }
@@ -5471,7 +5471,7 @@ function bboss_get_group_member_pagination_count() {
 	$total     = bboss_core_number_format( $members_template->total_member_count );
 
 	/* translators: 1: number, 2: number, 3: number. */
-	$message = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
+	$message = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
 	 * Filters the "Viewing x-y of z members" pagination message.
@@ -5605,7 +5605,7 @@ function bboss_groups_get_front_template( $group = null ) {
  */
 function bboss_groups_members_template_part() {
 	?>
-	<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Group secondary navigation', 'buddyboss-platform' ); ?>" role="navigation">
+	<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Group secondary navigation', 'buddyboss' ); ?>" role="navigation">
 		<ul>
 			<li class="groups-members-search" role="search">
 				<?php bboss_directory_members_search_form(); ?>
@@ -5630,7 +5630,7 @@ function bboss_groups_members_template_part() {
 	<h2 class="bp-screen-reader-text">
 	<?php
 		/* translators: accessibility text */
-		esc_html_e( 'Members', 'buddyboss-platform' );
+		esc_html_e( 'Members', 'buddyboss' );
 	?>
 	</h2>
 
@@ -5650,16 +5650,16 @@ function bboss_groups_members_template_part() {
 function bboss_groups_members_filter() {
 	?>
 	<li id="group_members-order-select" class="last filter">
-		<label for="group_members-order-by"><?php esc_html_e( 'Order By:', 'buddyboss-platform' ); ?></label>
+		<label for="group_members-order-by"><?php esc_html_e( 'Order By:', 'buddyboss' ); ?></label>
 		<select id="group_members-order-by">
-			<option value="last_joined"><?php esc_html_e( 'Newest', 'buddyboss-platform' ); ?></option>
-			<option value="first_joined"><?php esc_html_e( 'Oldest', 'buddyboss-platform' ); ?></option>
+			<option value="last_joined"><?php esc_html_e( 'Newest', 'buddyboss' ); ?></option>
+			<option value="first_joined"><?php esc_html_e( 'Oldest', 'buddyboss' ); ?></option>
 
 			<?php if ( bboss_is_active( 'activity' ) ) : ?>
-				<option value="group_activity"><?php esc_html_e( 'Group Activity', 'buddyboss-platform' ); ?></option>
+				<option value="group_activity"><?php esc_html_e( 'Group Activity', 'buddyboss' ); ?></option>
 			<?php endif; ?>
 
-			<option value="alphabetical"><?php esc_html_e( 'Alphabetical', 'buddyboss-platform' ); ?></option>
+			<option value="alphabetical"><?php esc_html_e( 'Alphabetical', 'buddyboss' ); ?></option>
 
 			<?php
 
@@ -6142,7 +6142,7 @@ function bboss_get_new_group_avatar( $args = '' ) {
 			'height' => false,
 			'class'  => 'avatar',
 			'id'     => 'avatar-crop-preview',
-			'alt'    => __( 'Group photo', 'buddyboss-platform' ),
+			'alt'    => __( 'Group photo', 'buddyboss' ),
 		),
 		'get_new_group_avatar'
 	);
@@ -6436,7 +6436,7 @@ function bboss_directory_groups_search_form() {
 
 	$search_form_html = '<form action="" method="get" id="search-groups-form">
 		<label for="groups_search"><input type="text" name="' . esc_attr( $query_arg ) . '" id="groups_search" placeholder="' . esc_attr( $search_value ) . '" /></label>
-		<input type="submit" id="groups_search_submit" name="groups_search_submit" value="' . __( 'Search', 'buddyboss-platform' ) . '" />
+		<input type="submit" id="groups_search_submit" name="groups_search_submit" value="' . __( 'Search', 'buddyboss' ) . '" />
 	</form>';
 
 	/**
@@ -6465,32 +6465,32 @@ function bboss_groups_header_tabs() {
 	<?php
 	if ( ! bboss_action_variable( 0 ) || bboss_is_action_variable( 'recently-active', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/recently-active' ) ); ?>"><?php esc_html_e( 'Recently Active', 'buddyboss-platform' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/recently-active' ) ); ?>"><?php esc_html_e( 'Recently Active', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bboss_is_action_variable( 'recently-joined', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/recently-joined' ) ); ?>"><?php esc_html_e( 'Recently Joined', 'buddyboss-platform' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/recently-joined' ) ); ?>"><?php esc_html_e( 'Recently Joined', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bboss_is_action_variable( 'most-popular', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/most-popular' ) ); ?>"><?php esc_html_e( 'Most Popular', 'buddyboss-platform' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/most-popular' ) ); ?>"><?php esc_html_e( 'Most Popular', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bboss_is_action_variable( 'admin-of', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/admin-of' ) ); ?>"><?php esc_html_e( 'Organizer Of', 'buddyboss-platform' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/admin-of' ) ); ?>"><?php esc_html_e( 'Organizer Of', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bboss_is_action_variable( 'mod-of', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/mod-of' ) ); ?>"><?php esc_html_e( 'Moderator Of', 'buddyboss-platform' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/mod-of' ) ); ?>"><?php esc_html_e( 'Moderator Of', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bboss_is_action_variable( 'alphabetically' ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/alphabetically' ) ); ?>"><?php esc_html_e( 'Alphabetically', 'buddyboss-platform' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/alphabetically' ) ); ?>"><?php esc_html_e( 'Alphabetically', 'buddyboss' ); ?></a></li>
 
 	<?php
 	do_action( 'groups_header_tabs' );
@@ -6509,22 +6509,22 @@ function bboss_groups_filter_title() {
 	switch ( $current_filter ) {
 		case 'recently-active':
 		default:
-			esc_html_e( 'Recently Active', 'buddyboss-platform' );
+			esc_html_e( 'Recently Active', 'buddyboss' );
 			break;
 		case 'recently-joined':
-			esc_html_e( 'Recently Joined', 'buddyboss-platform' );
+			esc_html_e( 'Recently Joined', 'buddyboss' );
 			break;
 		case 'most-popular':
-			esc_html_e( 'Most Popular', 'buddyboss-platform' );
+			esc_html_e( 'Most Popular', 'buddyboss' );
 			break;
 		case 'admin-of':
-			esc_html_e( 'Administrator Of', 'buddyboss-platform' );
+			esc_html_e( 'Administrator Of', 'buddyboss' );
 			break;
 		case 'mod-of':
-			esc_html_e( 'Moderator Of', 'buddyboss-platform' );
+			esc_html_e( 'Moderator Of', 'buddyboss' );
 			break;
 		case 'alphabetically':
-			esc_html_e( 'Alphabetically', 'buddyboss-platform' );
+			esc_html_e( 'Alphabetically', 'buddyboss' );
 			break;
 	}
 	do_action( 'bp_groups_filter_title' );
@@ -6552,7 +6552,7 @@ function bboss_get_current_group_directory_type_message() {
 	// Unknown type (e.g. a mistyped shortcode attribute): avoid a broken sentence and PHP warnings.
 	if ( ! empty( $type_object ) && ! empty( $type_object->labels['name'] ) ) {
 		/* translators: %s: group type label (wrapped in <strong>). */
-		$message = sprintf( __( 'Viewing all groups that are %s', 'buddyboss-platform' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
+		$message = sprintf( __( 'Viewing all groups that are %s', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
 	}
 
 	/**
@@ -6669,7 +6669,7 @@ function bboss_get_group_current_avatar( $type = 'thumb' ) {
 			'object'     => 'group',
 			'type'       => $type,
 			'avatar_dir' => 'group-avatars',
-			'alt'        => __( 'Group avatar', 'buddyboss-platform' ),
+			'alt'        => __( 'Group avatar', 'buddyboss' ),
 			'class'      => 'avatar',
 		)
 	);
@@ -6886,7 +6886,7 @@ function bboss_group_request_user_avatar_thumb() {
 					/* translators: %s: member display name. */
 					__(
 						'Profile photo of %s',
-						'buddyboss-platform'
+						'buddyboss'
 					),
 					bboss_core_get_user_displayname( $requests_template->request->user_id )
 				),
@@ -7015,7 +7015,7 @@ function bboss_group_request_time_since_requested() {
 	 * @param string $value Formatted time since membership was requested.
 	 */
 	/* translators: %s: date or time. */
-	echo esc_html( apply_filters( 'bp_group_request_time_since_requested', sprintf( __( 'requested %s', 'buddyboss-platform' ), bboss_core_time_since( $requests_template->request->date_modified ) ) ) );
+	echo esc_html( apply_filters( 'bp_group_request_time_since_requested', sprintf( __( 'requested %s', 'buddyboss' ), bboss_core_time_since( $requests_template->request->date_modified ) ) ) );
 }
 
 /**
@@ -7088,7 +7088,7 @@ function bboss_get_group_requests_pagination_count() {
 	$total     = bboss_core_number_format( $requests_template->total_request_count );
 
 		/* translators: 1: number, 2: number, 3: number. */
-		$message = sprintf( _n( 'Viewing 1 request', 'Viewing %1$s - %2$s of %3$s requests', $requests_template->total_request_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
+		$message = sprintf( _n( 'Viewing 1 request', 'Viewing %1$s - %2$s of %3$s requests', $requests_template->total_request_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
 	 * Filters pagination count text for group membership requests.
@@ -7382,9 +7382,9 @@ function bboss_get_group_invite_pagination_count() {
 	$total     = bboss_core_number_format( $invites_template->total_invite_count );
 
 	/* translators: 1: number, 2: number, 3: number. */
-	$message = sprintf( _n( 'Viewing 1 invitation', 'Viewing %1$s - %2$s of %3$s invitations', $invites_template->total_invite_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
+	$message = sprintf( _n( 'Viewing 1 invitation', 'Viewing %1$s - %2$s of %3$s invitations', $invites_template->total_invite_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
-	/** This filter is documented in bboss-groups/bboss-groups-template.php */
+	/** This filter is documented in bp-groups/bboss-groups-template.php */
 	return apply_filters( 'bp_get_groups_pagination_count', $message, $from_num, $to_num, $total );
 }
 
@@ -7403,7 +7403,7 @@ function bboss_groups_activity_feed() {
 	}
 	?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php bboss_current_group_name(); ?> | <?php esc_html_e( 'Group Activity RSS Feed', 'buddyboss-platform' ); ?>" href="<?php bboss_group_activity_feed_link(); ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php bboss_current_group_name(); ?> | <?php esc_html_e( 'Group Activity RSS Feed', 'buddyboss' ); ?>" href="<?php bboss_group_activity_feed_link(); ?>" />
 
 	<?php
 }
@@ -7689,7 +7689,7 @@ function bboss_groups_get_profile_stats( $args = '' ) {
 
 			// If groups exist, show some formatted output.
 			/* translators: %s: number of groups (wrapped in <strong>). */
-			$r['output'] = $r['before'] . sprintf( _n( '%s group', '%s groups', $r['groups'], 'buddyboss-platform' ), '<strong>' . $r['groups'] . '</strong>' ) . $r['after'];
+			$r['output'] = $r['before'] . sprintf( _n( '%s group', '%s groups', $r['groups'], 'buddyboss' ), '<strong>' . $r['groups'] . '</strong>' ) . $r['after'];
 		}
 	}
 
@@ -7792,11 +7792,11 @@ function bboss_get_article_prefix( $string ) {
 	);
 
 	if ( ! in_array( get_locale(), $supported_languages ) ) {
-		return apply_filters( 'bp_get_article_prefix', __( 'a', 'buddyboss-platform' ) . ' ' . $string, $string );
+		return apply_filters( 'bp_get_article_prefix', __( 'a', 'buddyboss' ) . ' ' . $string, $string );
 	}
 
 	$vowel_array = array( 'a', 'e', 'i', 'o', 'u' );  // array of vowel
-	$prefix      = in_array( strtolower( substr( $string, 0, 1 ) ), $vowel_array ) ? __( 'an', 'buddyboss-platform' ) : __( 'a', 'buddyboss-platform' );
+	$prefix      = in_array( strtolower( substr( $string, 0, 1 ) ), $vowel_array ) ? __( 'an', 'buddyboss' ) : __( 'a', 'buddyboss' );
 
 	return apply_filters( 'bp_get_article_prefix', $prefix . ' ' . $string, $string );
 

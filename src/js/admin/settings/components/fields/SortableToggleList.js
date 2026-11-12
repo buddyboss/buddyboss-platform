@@ -119,7 +119,7 @@ export function SortableToggleList( { value, onChange, availableItems, disabled 
 	if ( ! items.length ) {
 		return (
 			<p className="bb-admin-sortable-toggle-list__empty">
-				{ __( 'No items available.', 'buddyboss-platform' ) }
+				{ __( 'No items available.', 'buddyboss' ) }
 			</p>
 		);
 	}
@@ -152,7 +152,7 @@ export function SortableToggleList( { value, onChange, availableItems, disabled 
 													<span
 														className="bb-admin-sortable-toggle-list__handle"
 														{ ...providedDrag.dragHandleProps }
-														aria-label={ __( 'Drag to reorder', 'buddyboss-platform' ) }
+														aria-label={ __( 'Drag to reorder', 'buddyboss' ) }
 													>
 														<i className="bb-icons-rl bb-icons-rl-list" aria-hidden="true"></i>
 													</span>

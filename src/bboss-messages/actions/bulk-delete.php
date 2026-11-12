@@ -30,9 +30,9 @@ function bboss_messages_action_bulk_delete() {
 		}
 
 		if ( ! bboss_messages_delete_thread( $thread_ids ) ) {
-			bboss_core_add_message( __( 'There was an error deleting messages.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'There was an error deleting messages.', 'buddyboss' ), 'error' );
 		} else {
-			bboss_core_add_message( __( 'Messages deleted.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'Messages deleted.', 'buddyboss' ) );
 		}
 
 		bboss_core_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() ) );

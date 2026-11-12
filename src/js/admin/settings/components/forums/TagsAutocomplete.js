@@ -378,7 +378,7 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 										e.stopPropagation();
 										removeTag( index );
 									} }
-									aria-label={ tag + ' - ' + __( 'Remove', 'buddyboss-platform' ) }
+									aria-label={ tag + ' - ' + __( 'Remove', 'buddyboss' ) }
 								>
 									<i className="bb-icons-rl bb-icons-rl-x"></i>
 								</button>
@@ -397,7 +397,7 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 							}
 						} }
 						onKeyDown={ handleKeyDown }
-						placeholder={ tags.length > 0 ? '' : ( placeholder || __( 'Enter tags, separated by commas', 'buddyboss-platform' ) ) }
+						placeholder={ tags.length > 0 ? '' : ( placeholder || __( 'Enter tags, separated by commas', 'buddyboss' ) ) }
 						className="bb-tags-autocomplete__input"
 						role="combobox"
 						aria-expanded={ dropdownVisible ? 'true' : 'false' }
@@ -446,7 +446,7 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 									handleSelectSuggestion( trimmedInput );
 								} }
 							>
-								{ __( 'Create', 'buddyboss-platform' ) + ': ' }
+								{ __( 'Create', 'buddyboss' ) + ': ' }
 								<strong>{ trimmedInput }</strong>
 							</button>
 						) }

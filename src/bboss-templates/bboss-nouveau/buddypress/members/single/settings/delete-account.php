@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 bboss_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 <h2 class="screen-heading delete-account-screen warn">
-	<?php esc_html_e( 'Delete Account', 'buddyboss-platform' ); ?>
+	<?php esc_html_e( 'Delete Account', 'buddyboss' ); ?>
 </h2>
 
 <?php bboss_nouveau_user_feedback( 'member-delete-account' ); ?>
@@ -23,7 +23,7 @@ bboss_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 	<div class="bp-checkbox-wrap">
 		<input id="delete-account-understand" class="disabled bs-styled-checkbox" type="checkbox" name="delete-account-understand" value="1" data-bp-disable-input="#delete-account-button" />
-		<label class="warn" for="delete-account-understand"><?php esc_html_e( 'I understand the consequences.', 'buddyboss-platform' ); ?></label>
+		<label class="warn" for="delete-account-understand"><?php esc_html_e( 'I understand the consequences.', 'buddyboss' ); ?></label>
 	</div>
 
 	<?php bboss_nouveau_submit_button( 'member-delete-account' ); ?>

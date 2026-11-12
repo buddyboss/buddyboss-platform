@@ -94,41 +94,41 @@ class BBoss_Messages_Component extends BBoss_Component {
 		if ( bboss_is_messages_component() ) {
 			// Authenticated actions for archived threads.
 			if ( is_user_logged_in() && 'archived' === bboss_current_action() && bboss_action_variable( 0 ) && 'view' === bboss_action_variable( 0 ) ) {
-				require $this->path . 'bboss-messages/screens/' . bboss_current_action() . '-' . bboss_action_variable( 0 ) . '.php';
+				require $this->path . 'bp-messages/screens/' . bboss_current_action() . '-' . bboss_action_variable( 0 ) . '.php';
 			} elseif ( 'archived' === bboss_current_action() ) {
-				require $this->path . 'bboss-messages/actions/' . bboss_current_action() . '.php';
+				require $this->path . 'bp-messages/actions/' . bboss_current_action() . '.php';
 			}
 
 			// Authenticated actions.
 			if ( is_user_logged_in() &&
 				in_array( bboss_current_action(), array( 'compose', 'notices', 'view' ), true )
 			) {
-				require $this->path . 'bboss-messages/actions/' . bboss_current_action() . '.php';
+				require $this->path . 'bp-messages/actions/' . bboss_current_action() . '.php';
 			}
 
 			// Authenticated action variables.
 			if ( is_user_logged_in() && bboss_action_variable( 0 ) &&
 				in_array( bboss_action_variable( 0 ), array( 'delete', 'read', 'unread', 'bulk-manage', 'bulk-delete' ), true )
 			) {
-				require $this->path . 'bboss-messages/actions/' . bboss_action_variable( 0 ) . '.php';
+				require $this->path . 'bp-messages/actions/' . bboss_action_variable( 0 ) . '.php';
 			}
 
 			// Authenticated actions - Star.
 			if ( is_user_logged_in() && bboss_is_active( $this->id, 'star' ) ) {
 				// Single action.
 				if ( in_array( bboss_current_action(), array( 'star', 'unstar' ), true ) ) {
-					require $this->path . 'bboss-messages/actions/star.php';
+					require $this->path . 'bp-messages/actions/star.php';
 				}
 
 				// Bulk-manage.
 				if ( bboss_is_action_variable( 'bulk-manage' ) ) {
-					require $this->path . 'bboss-messages/actions/bulk-manage-star.php';
+					require $this->path . 'bp-messages/actions/bulk-manage-star.php';
 				}
 			}
 
 			// Screens - User profile integration.
 			if ( bboss_is_user() ) {
-				require $this->path . 'bboss-messages/screens/inbox.php';
+				require $this->path . 'bp-messages/screens/inbox.php';
 
 				/*
 				 * Nav items.
@@ -136,12 +136,12 @@ class BBoss_Messages_Component extends BBoss_Component {
 				 * 'view' is not a registered nav item, but we add a screen handler manually.
 				 */
 				if ( bboss_is_user_messages() && in_array( bboss_current_action(), array( 'compose', 'notices', 'view' ), true ) ) {
-					require $this->path . 'bboss-messages/screens/' . bboss_current_action() . '.php';
+					require $this->path . 'bp-messages/screens/' . bboss_current_action() . '.php';
 				}
 
 				// Nav item - Starred.
 				if ( bboss_is_active( $this->id, 'star' ) && bboss_is_current_action( bboss_get_messages_starred_slug() ) ) {
-					require $this->path . 'bboss-messages/screens/starred.php';
+					require $this->path . 'bp-messages/screens/starred.php';
 				}
 			}
 		}
@@ -187,7 +187,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 				'slug'                  => BBOSS_MESSAGES_SLUG,
 				'has_directory'         => false,
 				'notification_callback' => 'bboss_messages_format_notifications',
-				'search_string'         => __( 'Search Messages&hellip;', 'buddyboss-platform' ),
+				'search_string'         => __( 'Search Messages&hellip;', 'buddyboss' ),
 				'global_tables'         => $global_tables,
 				'meta_tables'           => $meta_tables,
 			)
@@ -219,14 +219,14 @@ class BBoss_Messages_Component extends BBoss_Component {
 		if ( bboss_is_user() && bboss_user_has_access() ) {
 			$count     = bboss_get_total_unread_messages_count( bboss_displayed_user_id() );
 			$class     = ( 0 === $count ) ? 'no-count' : 'count';
-			$nav_name  = __( 'Messages', 'buddyboss-platform' );
+			$nav_name  = __( 'Messages', 'buddyboss' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
 				bboss_core_number_format( $count )
 			);
 		} else {
-			$nav_name = __( 'Messages', 'buddyboss-platform' );
+			$nav_name = __( 'Messages', 'buddyboss' );
 		}
 
 		// Add 'Messages' to the main navigation.
@@ -242,7 +242,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 
 		// Add the subnav items to the profile.
 		$sub_nav[] = array(
-			'name'            => __( 'Messages', 'buddyboss-platform' ),
+			'name'            => __( 'Messages', 'buddyboss' ),
 			'slug'            => 'inbox',
 			'parent_url'      => $messages_link,
 			'parent_slug'     => $slug,
@@ -257,7 +257,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 			if ( bboss_is_user_messages() && bboss_is_active( 'notifications' ) ) {
 				// Show "Actions" on the logged-in user's profile only.
 				$sub_nav[] = array(
-					'name'            => __( 'Actions', 'buddyboss-platform' ),
+					'name'            => __( 'Actions', 'buddyboss' ),
 					'slug'            => 'compose-action',
 					'parent_url'      => 'javascript:void(0);',
 					'parent_slug'     => $slug,
@@ -269,7 +269,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 
 			// Show "Compose" on the logged-in user's profile only.
 			$sub_nav[] = array(
-				'name'            => __( 'New Message', 'buddyboss-platform' ),
+				'name'            => __( 'New Message', 'buddyboss' ),
 				'slug'            => 'compose',
 				'parent_url'      => $messages_link,
 				'parent_slug'     => $slug,
@@ -280,7 +280,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 
 			// Show "Archived" on the logged-in user's profile only.
 			$sub_nav[] = array(
-				'name'            => __( 'Archived', 'buddyboss-platform' ),
+				'name'            => __( 'Archived', 'buddyboss' ),
 				'slug'            => 'archived',
 				'parent_url'      => $messages_link,
 				'parent_slug'     => $slug,
@@ -295,7 +295,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 			 */
 			if ( bboss_current_user_can( 'bp_moderate' ) ) {
 				$sub_nav[] = array(
-					'name'            => __( 'Notices', 'buddyboss-platform' ),
+					'name'            => __( 'Notices', 'buddyboss' ),
 					'slug'            => 'notices',
 					'parent_url'      => $messages_link,
 					'parent_slug'     => $slug,
@@ -327,17 +327,17 @@ class BBoss_Messages_Component extends BBoss_Component {
 			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Unread message count for the current user */
-					__( 'Messages %s', 'buddyboss-platform' ),
+					__( 'Messages %s', 'buddyboss' ),
 					'<span class="count">' . bboss_core_number_format( $count ) . '</span>'
 				);
 				$inbox = sprintf(
 					/* translators: %s: Unread message count for the current user */
-					__( 'Messages %s', 'buddyboss-platform' ),
+					__( 'Messages %s', 'buddyboss' ),
 					'<span class="count">' . bboss_core_number_format( $count ) . '</span>'
 				);
 			} else {
-				$title = __( 'Messages', 'buddyboss-platform' );
-				$inbox = __( 'Messages', 'buddyboss-platform' );
+				$title = __( 'Messages', 'buddyboss' );
+				$inbox = __( 'Messages', 'buddyboss' );
 			}
 
 			// Add main Messages menu.
@@ -361,7 +361,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-compose',
-				'title'    => __( 'New Message', 'buddyboss-platform' ),
+				'title'    => __( 'New Message', 'buddyboss' ),
 				'href'     => trailingslashit( $messages_link . 'compose' ),
 				'position' => 30,
 			);
@@ -371,7 +371,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-notices',
-					'title'    => __( 'Site Notices', 'buddyboss-platform' ),
+					'title'    => __( 'Site Notices', 'buddyboss' ),
 					'href'     => trailingslashit( $messages_link . 'notices' ),
 					'position' => 90,
 				);
@@ -390,14 +390,14 @@ class BBoss_Messages_Component extends BBoss_Component {
 			$bp = bboss();
 
 			if ( bboss_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Messages', 'buddyboss-platform' );
+				$bp->bp_options_title = __( 'My Messages', 'buddyboss' );
 			} else {
 				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
 						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bboss_get_displayed_user_fullname();

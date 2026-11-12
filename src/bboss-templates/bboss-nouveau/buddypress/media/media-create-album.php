@@ -17,8 +17,8 @@ defined( 'ABSPATH' ) || exit;
 <div class="create-popup-album-wrap popup-on-fly-create-album" style="display: none;">
 
 	<div class="bb-field-wrap">
-		<label for="new_album_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss-platform' ); ?></label>
-		<input id="new_album_name_input" class="popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss-platform' ); ?>">
+		<label for="new_album_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss' ); ?></label>
+		<input id="new_album_name_input" class="popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>">
 	</div>
 	<?php
 	if ( ! bboss_is_group() ) :
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 	endif;
 	?>
 	<div class="db-modal-buttons">
-		<a class="close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
-		<a class="button bp-media-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss-platform' ); ?></a>
+		<a class="close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+		<a class="button bp-media-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss' ); ?></a>
 	</div>
 </div>

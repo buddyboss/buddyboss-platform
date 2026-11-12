@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 <?php if ( bboss_is_group_create() ) : ?>
 
 	<h2 class="bp-screen-title creation-step-name">
-		<?php esc_html_e( 'Upload Cover Photo', 'buddyboss-platform' ); ?>
+		<?php esc_html_e( 'Upload Cover Photo', 'buddyboss' ); ?>
 	</h2>
 
 	<?php
@@ -40,7 +40,7 @@ defined( 'ABSPATH' ) || exit;
 <?php else : ?>
 
 	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Change Cover Photo', 'buddyboss-platform' ); ?>
+		<?php esc_html_e( 'Change Cover Photo', 'buddyboss' ); ?>
 	</h2>
 
 <?php endif; ?>

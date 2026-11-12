@@ -55,7 +55,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 				if ( response.success && response.data ) {
 					setReport( response.data );
 				} else {
-					setError( ( response.data && response.data.message ) || __( 'Failed to load report.', 'buddyboss-platform' ) );
+					setError( ( response.data && response.data.message ) || __( 'Failed to load report.', 'buddyboss' ) );
 				}
 			} )
 			.catch( function ( err ) {
@@ -63,7 +63,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 					return;
 				}
 				setIsLoading( false );
-				setError( __( 'Failed to load report.', 'buddyboss-platform' ) );
+				setError( __( 'Failed to load report.', 'buddyboss' ) );
 			} );
 
 		return function () {
@@ -77,7 +77,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 
 	return (
 		<Modal
-			title={ __( 'View Report', 'buddyboss-platform' ) }
+			title={ __( 'View Report', 'buddyboss' ) }
 			onRequestClose={ onClose }
 			className="bb-admin-view-content-report-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -118,7 +118,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 											{ report.owner.display_name }
 										</a>
 										<span className="bb-admin-view-content-report-modal__owner-label">
-											{ ' (' + __( 'Owner', 'buddyboss-platform' ) + ')' }
+											{ ' (' + __( 'Owner', 'buddyboss' ) + ')' }
 										</span>
 									</span>
 								) }
@@ -127,7 +127,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 								<i className="bb-icons-rl bb-icons-rl-flag"></i>
 								{ sprintf(
 									/* translators: %s: number of reports. */
-									_n( '%s report', '%s reports', report.reports, 'buddyboss-platform' ),
+									_n( '%s report', '%s reports', report.reports, 'buddyboss' ),
 									report.reports
 								) }
 							</span>
@@ -148,7 +148,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 							{ report.is_hidden && (
 								<span className="bb-admin-view-content-report-modal__hidden-badge">
 									<i className="bb-icons-rl bb-icons-rl-eye-slash"></i>
-									{ __( 'Hidden', 'buddyboss-platform' ) }
+									{ __( 'Hidden', 'buddyboss' ) }
 								</span>
 							) }
 						</div>
@@ -157,7 +157,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 						{ report.reporters && report.reporters.length > 0 && (
 							<div className="bb-admin-view-content-report-modal__section">
 								<h4 className="bb-admin-view-content-report-modal__section-title">
-									{ __( 'Reporter', 'buddyboss-platform' ) }
+									{ __( 'Reporter', 'buddyboss' ) }
 								</h4>
 								<div className="bb-admin-view-content-report-modal__list">
 									{ report.reporters.map( function ( reporter, index ) {
@@ -205,7 +205,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 					className="bb-admin-view-content-report-modal__close-btn"
 					onClick={ onClose }
 				>
-					{ __( 'Close', 'buddyboss-platform' ) }
+					{ __( 'Close', 'buddyboss' ) }
 				</Button>
 			</div>
 		</Modal>

@@ -35,16 +35,16 @@ function bboss_groups_action_join_group() {
 		// User wants to join a group that requires an invitation to join.
 		if ( ! bboss_current_user_can( 'groups_join_group', array( 'group_id' => $bp->groups->current_group->id ) ) ) {
 			if ( ! bboss_groups_check_user_has_invite( bboss_loggedin_user_id(), $bp->groups->current_group->id ) ) {
-				bboss_core_add_message( __( 'There was an error joining the group.', 'buddyboss-platform' ), 'error' );
+				bboss_core_add_message( __( 'There was an error joining the group.', 'buddyboss' ), 'error' );
 				bboss_core_redirect( bboss_get_group_permalink( $bp->groups->current_group ) );
 			}
 		}
 
 		// User wants to join any group.
 		if ( ! bboss_groups_join_group( $bp->groups->current_group->id ) ) {
-			bboss_core_add_message( __( 'There was an error joining the group.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'There was an error joining the group.', 'buddyboss' ), 'error' );
 		} else {
-			bboss_core_add_message( __( 'You joined the group!', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'You joined the group!', 'buddyboss' ) );
 		}
 
 		bboss_core_redirect( bboss_get_group_permalink( $bp->groups->current_group ) );

@@ -119,8 +119,8 @@ function bboss_nouveau_groups_disallow_all_members_invites( $default = false ) {
 function bboss_nouveau_groups_localize_scripts( $params = array() ) {
 
 	$params['dir_labels']['groups'] = array(
-		'singular' => esc_html__( 'Group', 'buddyboss-platform' ),
-		'plural'   => esc_html__( 'Groups', 'buddyboss-platform' ),
+		'singular' => esc_html__( 'Group', 'buddyboss' ),
+		'plural'   => esc_html__( 'Groups', 'buddyboss' ),
 	);
 
 	if ( ! bboss_is_group_invites() && ! ( bboss_is_group_create() && bboss_is_group_creation_step( 'group-invites' ) ) ) {
@@ -133,18 +133,18 @@ function bboss_nouveau_groups_localize_scripts( $params = array() ) {
 	$invites_nav = array(
 		'members' => array(
 			'id'      => 'members',
-			'caption' => __( 'All Members', 'buddyboss-platform' ),
+			'caption' => __( 'All Members', 'buddyboss' ),
 			'order'   => 5,
 		),
 		'invited' => array(
 			'id'      => 'invited',
-			'caption' => __( 'Pending Invites', 'buddyboss-platform' ),
+			'caption' => __( 'Pending Invites', 'buddyboss' ),
 			'order'   => 90,
 			'hide'    => (int) ! $show_pending,
 		),
 		'invites' => array(
 			'id'      => 'invites',
-			'caption' => __( 'Send Invites', 'buddyboss-platform' ),
+			'caption' => __( 'Send Invites', 'buddyboss' ),
 			'order'   => 100,
 			'hide'    => 1,
 			'href'    => '#send-invites-editor',
@@ -154,7 +154,7 @@ function bboss_nouveau_groups_localize_scripts( $params = array() ) {
 	if ( bboss_is_active( 'friends' ) ) {
 		$invites_nav['friends'] = array(
 			'id'      => 'friends',
-			'caption' => __( 'My Connections', 'buddyboss-platform' ),
+			'caption' => __( 'My Connections', 'buddyboss' ),
 			'order'   => 0,
 		);
 
@@ -165,17 +165,17 @@ function bboss_nouveau_groups_localize_scripts( $params = array() ) {
 
 	$params['group_invites'] = array(
 		'nav'                     => bboss_sort_by_key( $invites_nav, 'order', 'num' ),
-		'loading'                 => __( 'Loading members. Please wait.', 'buddyboss-platform' ),
-		'removing'                => __( 'Removing member invite. Please wait.', 'buddyboss-platform' ),
+		'loading'                 => __( 'Loading members. Please wait.', 'buddyboss' ),
+		'removing'                => __( 'Removing member invite. Please wait.', 'buddyboss' ),
 		'invites_form'            => '',
-		'cancel_invite_tooltip'   => __( 'Cancel Invite', 'buddyboss-platform' ),
-		'add_invite_tooltip'      => __( 'Send Invite', 'buddyboss-platform' ),
-		'invites_form_reset'      => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss-platform' ),
-		'invites_sending'         => __( 'Sending group invitations. Please wait.', 'buddyboss-platform' ),
+		'cancel_invite_tooltip'   => __( 'Cancel Invite', 'buddyboss' ),
+		'add_invite_tooltip'      => __( 'Send Invite', 'buddyboss' ),
+		'invites_form_reset'      => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
+		'invites_sending'         => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
 		/* translators: %s: member name. */
-		'removeUserInvite'        => __( 'Cancel invitation %s', 'buddyboss-platform' ),
-		'all_member_invited'      => __( 'All members of this group are invited.', 'buddyboss-platform' ),
-		'member_invite_info_text' => __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss-platform' ),
+		'removeUserInvite'        => __( 'Cancel invitation %s', 'buddyboss' ),
+		'all_member_invited'      => __( 'All members of this group are invited.', 'buddyboss' ),
+		'member_invite_info_text' => __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' ),
 		'group_id'                => ! bboss_get_current_group_id() ? bboss_get_new_group_id() : bboss_get_current_group_id(),
 		'is_group_create'         => bboss_is_group_create(),
 		'nonces'                  => array(
@@ -349,13 +349,13 @@ function bboss_nouveau_get_group_potential_invites( $args = array() ) {
 function bboss_nouveau_group_invites_create_steps( $steps = array() ) {
 	if ( bboss_is_active( 'friends' ) && isset( $steps['group-invites'] ) ) {
 		// Simply change the name
-		$steps['group-invites']['name'] = __( 'Invite', 'buddyboss-platform' );
+		$steps['group-invites']['name'] = __( 'Invite', 'buddyboss' );
 		return $steps;
 	}
 
 	// Add the create step if friends component is not active
 	$steps['group-invites'] = array(
-		'name'     => __( 'Invite', 'buddyboss-platform' ),
+		'name'     => __( 'Invite', 'buddyboss' ),
 		'position' => 30,
 	);
 
@@ -377,7 +377,7 @@ function bboss_nouveau_group_setup_nav() {
 		$bp = bboss();
 
 		$bp->groups->nav->edit_nav(
-			array( 'name' => __( 'Send Invites', 'buddyboss-platform' ) ),
+			array( 'name' => __( 'Send Invites', 'buddyboss' ) ),
 			'invite',
 			bboss_get_current_group_slug()
 		);
@@ -388,7 +388,7 @@ function bboss_nouveau_group_setup_nav() {
 		$group_link    = bboss_get_group_permalink( $current_group );
 
 		bboss_core_new_subnav_item( array(
-			'name'            => __( 'Send Invites', 'buddyboss-platform' ),
+			'name'            => __( 'Send Invites', 'buddyboss' ),
 			'slug'            => 'invite',
 			'parent_url'      => $group_link,
 			'parent_slug'     => $current_group->slug,
@@ -402,7 +402,7 @@ function bboss_nouveau_group_setup_nav() {
 		if ( ! bboss_is_active( 'friends' ) ) {
 
 			bboss_core_new_subnav_item( array(
-				'name'            => __( 'Send Invites', 'buddyboss-platform' ),
+				'name'            => __( 'Send Invites', 'buddyboss' ),
 				'slug'            => 'invite/send-invites',
 				'parent_url'      => $group_link,
 				'parent_slug'     => $current_group->slug . '_invite',
@@ -414,7 +414,7 @@ function bboss_nouveau_group_setup_nav() {
 			) );
 
 			bboss_core_new_subnav_item( array(
-				'name'            => __( 'Pending Invites', 'buddyboss-platform' ),
+				'name'            => __( 'Pending Invites', 'buddyboss' ),
 				'slug'            => 'invite/pending-invites',
 				'parent_url'      => $group_link,
 				'parent_slug'     => $current_group->slug . '_invite',
@@ -543,7 +543,7 @@ function bboss_nouveau_groups_invites_restriction_nav() {
 	}
 
 	bboss_core_new_subnav_item( array(
-		'name'            => __( 'Group Invites', 'buddyboss-platform' ),
+		'name'            => __( 'Group Invites', 'buddyboss' ),
 		'slug'            => 'invites',
 		'parent_url'      => trailingslashit( $user_domain . $slug ),
 		'parent_slug'     => $slug,
@@ -571,7 +571,7 @@ function bboss_nouveau_groups_invites_restriction_admin_nav( $wp_admin_nav ) {
 	$wp_admin_nav[] = array(
 		'parent' => 'my-account-' . bboss()->settings->id,
 		'id'     => 'my-account-' . bboss()->settings->id . '-invites',
-		'title'  => __( 'Group Invites', 'buddyboss-platform' ),
+		'title'  => __( 'Group Invites', 'buddyboss' ),
 		'href'   => trailingslashit( $settings_link . 'invites/' ),
 	);
 
@@ -601,9 +601,9 @@ function bboss_nouveau_groups_screen_invites_restriction() {
 				bboss_update_user_meta( bboss_displayed_user_id(), '_bp_nouveau_restrict_invites_to_friends', (int) $_POST['account-group-invites-preferences'] );
 			}
 
-			bboss_core_add_message( __( 'Group invites preferences saved.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'Group invites preferences saved.', 'buddyboss' ) );
 		} else {
-			bboss_core_add_message( __( 'You are not allowed to perform this action.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'You are not allowed to perform this action.', 'buddyboss' ), 'error' );
 		}
 
 		bboss_core_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_settings_slug() ) . 'invites/' );
@@ -633,7 +633,7 @@ function bboss_nouveau_get_groups_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array( 'selected' ),
 		'link'      => bboss_get_groups_directory_permalink(),
-		'text'      => __( 'All Groups', 'buddyboss-platform' ),
+		'text'      => __( 'All Groups', 'buddyboss' ),
 		'position'  => 5,
 		'count'     => false,
 	);
@@ -662,7 +662,7 @@ function bboss_nouveau_get_groups_directory_nav_items() {
 				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bboss_loggedin_user_domain() . bboss_get_groups_slug() . '/my-groups/',
-				'text'      => __( 'My Groups', 'buddyboss-platform' ),
+				'text'      => __( 'My Groups', 'buddyboss' ),
 				'position'  => 15,
 			);
 
@@ -678,7 +678,7 @@ function bboss_nouveau_get_groups_directory_nav_items() {
 				'slug'      => 'create', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array( 'no-ajax', 'group-create', 'create-button' ),
 				'link'      => trailingslashit( bboss_get_groups_directory_permalink() . 'create' ),
-				'text'      => __( 'Create a Group', 'buddyboss-platform' ),
+				'text'      => __( 'Create a Group', 'buddyboss' ),
 				'count'     => false,
 				'position'  => 999,
 			);
@@ -735,10 +735,10 @@ function bboss_nouveau_get_groups_filters( $context = '' ) {
 	 * @param string the context.
 	 */
 	$filters = apply_filters( 'bp_nouveau_get_groups_filters', array(
-		'active'       => __( 'Recently Active', 'buddyboss-platform' ),
-		'popular'      => __( 'Most Members', 'buddyboss-platform' ),
-		'newest'       => __( 'Newly Created', 'buddyboss-platform' ),
-		'alphabetical' => __( 'Alphabetical', 'buddyboss-platform' ),
+		'active'       => __( 'Recently Active', 'buddyboss' ),
+		'popular'      => __( 'Most Members', 'buddyboss' ),
+		'newest'       => __( 'Newly Created', 'buddyboss' ),
+		'alphabetical' => __( 'Alphabetical', 'buddyboss' ),
 	), $context );
 
 	if ( $action ) {
@@ -1140,32 +1140,32 @@ function bboss_nouveau_groups_notification_filters() {
 	$notifications = array(
 		array(
 			'id'       => 'new_membership_request',
-			'label'    => __( 'Pending Group membership requests', 'buddyboss-platform' ),
+			'label'    => __( 'Pending Group membership requests', 'buddyboss' ),
 			'position' => 55,
 		),
 		array(
 			'id'       => 'membership_request_accepted',
-			'label'    => __( 'Accepted Group membership requests', 'buddyboss-platform' ),
+			'label'    => __( 'Accepted Group membership requests', 'buddyboss' ),
 			'position' => 65,
 		),
 		array(
 			'id'       => 'membership_request_rejected',
-			'label'    => __( 'Rejected Group membership requests', 'buddyboss-platform' ),
+			'label'    => __( 'Rejected Group membership requests', 'buddyboss' ),
 			'position' => 75,
 		),
 		array(
 			'id'       => 'member_promoted_to_admin',
-			'label'    => __( 'Group Organizer promotions', 'buddyboss-platform' ),
+			'label'    => __( 'Group Organizer promotions', 'buddyboss' ),
 			'position' => 85,
 		),
 		array(
 			'id'       => 'member_promoted_to_mod',
-			'label'    => __( 'Group Moderator promotions', 'buddyboss-platform' ),
+			'label'    => __( 'Group Moderator promotions', 'buddyboss' ),
 			'position' => 95,
 		),
 		array(
 			'id'       => 'group_invite',
-			'label'    => __( 'Group invitations', 'buddyboss-platform' ),
+			'label'    => __( 'Group invitations', 'buddyboss' ),
 			'position' => 105,
 		),
 	);
@@ -1181,7 +1181,7 @@ function bboss_nouveau_group_pending_invites_set_page_title( $title ){
 	$new_title = '';
 
 	if ( 'pending-invites' === bboss_get_group_current_invite_tab() ) {
-		$new_title = esc_html__( 'Pending Invites', 'buddyboss-platform' );
+		$new_title = esc_html__( 'Pending Invites', 'buddyboss' );
 	}
 
 	if( strlen( $new_title ) > 0 ) {
@@ -1198,7 +1198,7 @@ function bboss_nouveau_group_pending_invites_set_title_tag( $title ){
 	$new_title = "";
 
 	if ( 'pending-invites' === bboss_get_group_current_invite_tab() ) {
-		$new_title         = esc_html__( 'Pending Invites', 'buddyboss-platform' );
+		$new_title         = esc_html__( 'Pending Invites', 'buddyboss' );
 		$sep               = apply_filters( 'document_title_separator', '-' );
 		$get_current_group = bboss_get_current_group_name();
 
@@ -1230,25 +1230,25 @@ function bboss_nouveau_groups_messages_localize_scripts( $params = array() ) {
 
 	$params['group_messages'] = array(
 		'page'                  => 1,
-		'type_message'          => __( 'Type message', 'buddyboss-platform' ),
-		'group_no_member'       => __( 'There are no other members in this group. Please add some members before sending a message.', 'buddyboss-platform' ),
-		'group_no_member_pro'   => __( 'You are not allowed to send private messages to any member of this group.', 'buddyboss-platform' ),
-		'loading'               => __( 'Loading members. Please wait.', 'buddyboss-platform' ),
-		'remove_recipient'      => __( 'Remove Member', 'buddyboss-platform' ),
-		'add_recipient'         => __( 'Add Member', 'buddyboss-platform' ),
-		'no_content'            => __( 'Please add some content to your message.', 'buddyboss-platform' ),
-		'no_recipient'          => __( 'Please add at least one recipient.', 'buddyboss-platform' ),
-		'select_default_text'   => __( 'All Group Members', 'buddyboss-platform' ),
-		'select_default_value'  => __( 'all', 'buddyboss-platform' ),
-		'no_member'             => __( 'No members were found. Try another filter.', 'buddyboss-platform' ),
-		'invites_form_all'      => __( 'This message will be delivered to all members of this group you can message.', 'buddyboss-platform' ),
-		'invites_form_separate' => __( 'Select group members to message by clicking the + button next to each member. Once you\'ve made a selection, click "Send Message" to create a new group message.', 'buddyboss-platform' ),
-		'invites_form_reset'    => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss-platform' ),
-		'invites_sending'       => __( 'Sending group invitations. Please wait.', 'buddyboss-platform' ),
+		'type_message'          => __( 'Type message', 'buddyboss' ),
+		'group_no_member'       => __( 'There are no other members in this group. Please add some members before sending a message.', 'buddyboss' ),
+		'group_no_member_pro'   => __( 'You are not allowed to send private messages to any member of this group.', 'buddyboss' ),
+		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
+		'remove_recipient'      => __( 'Remove Member', 'buddyboss' ),
+		'add_recipient'         => __( 'Add Member', 'buddyboss' ),
+		'no_content'            => __( 'Please add some content to your message.', 'buddyboss' ),
+		'no_recipient'          => __( 'Please add at least one recipient.', 'buddyboss' ),
+		'select_default_text'   => __( 'All Group Members', 'buddyboss' ),
+		'select_default_value'  => __( 'all', 'buddyboss' ),
+		'no_member'             => __( 'No members were found. Try another filter.', 'buddyboss' ),
+		'invites_form_all'      => __( 'This message will be delivered to all members of this group you can message.', 'buddyboss' ),
+		'invites_form_separate' => __( 'Select group members to message by clicking the + button next to each member. Once you\'ve made a selection, click "Send Message" to create a new group message.', 'buddyboss' ),
+		'invites_form_reset'    => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
+		'invites_sending'       => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
 		/* translators: %s: member name. */
-		'removeUserInvite'      => __( 'Cancel invitation %s', 'buddyboss-platform' ),
-		'feedback_select_all'   => __( 'This message will be delivered to all members of this group you can message.', 'buddyboss-platform' ),
-		'feedback_individual'   => __( 'Select individual recipients by clicking the + button next to each member.', 'buddyboss-platform' ),
+		'removeUserInvite'      => __( 'Cancel invitation %s', 'buddyboss' ),
+		'feedback_select_all'   => __( 'This message will be delivered to all members of this group you can message.', 'buddyboss' ),
+		'feedback_individual'   => __( 'Select individual recipients by clicking the + button next to each member.', 'buddyboss' ),
 		'group_id'              => ! bboss_get_current_group_id() ? bboss_get_new_group_id() : bboss_get_current_group_id(),
 		'is_group_create'       => bboss_is_group_create(),
 		'nonces'                => array(

@@ -826,7 +826,7 @@ function bboss_print_add_repeater_set_button( $args = array() ) {
 		echo '<i class="bb-icon-f bb-icon-plus"></i>';
 		printf(
 			/* translators: %s = profile field group name */
-			esc_html__( 'Add Another', 'buddyboss-platform' ),
+			esc_html__( 'Add Another', 'buddyboss' ),
 			esc_html( bboss_get_the_profile_group_name() )
 		);
 		echo '</button>';
@@ -907,16 +907,16 @@ function bboss_profile_repeaters_print_group_html_start( $args = array() ) {
 
 				<div class="repeater_tools">
 					<span class="repeater_set_title"></span>
-					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss-platform' ); ?>">
+					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
 						<i class="dashicons dashicons-edit"></i>
-						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 					</a>
 					<?php
 					if ( true === $can_delete ) {
 						?>
-						<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss-platform' ); ?>">
+						<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>">
 							<i class="dashicons dashicons-trash"></i>
-							<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></span>
+							<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
 						</a>
 						<?php
 					}
@@ -936,16 +936,16 @@ function bboss_profile_repeaters_print_group_html_start( $args = array() ) {
 
 				<div class="repeater_tools">
 					<span class="repeater_set_title"></span>
-					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss-platform' ); ?>">
+					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
 						<i class="dashicons dashicons-edit"></i>
-						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 					</a>
 				<?php
 				if ( true === $can_delete ) {
 					?>
-					<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss-platform' ); ?>">
+					<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>">
 						<i class="dashicons dashicons-trash"></i>
-						<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></span>
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
 					</a>
 					<?php
 				}
@@ -1152,13 +1152,13 @@ function bboss_admin_xprofile_add_repeater_set() {
 		<div class="repeater_group_outer" data-set_no="<?php echo esc_attr( $current_set_number ); ?>">
 			<div class="repeater_tools">
 				<span class="repeater_set_title"></span>
-				<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss-platform' ); ?>">
+				<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Edit', 'buddyboss' ); ?>">
 					<i class="dashicons dashicons-edit"></i>
-					<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
+					<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 				</a>
-				<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss-platform' ); ?>">
+				<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>">
 					<i class="dashicons dashicons-trash"></i>
-					<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></span>
+					<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
 				</a>
 			</div>
 			<div class='repeater_group_inner'>
@@ -1184,22 +1184,22 @@ function bboss_admin_xprofile_add_repeater_set() {
 									<?php
 									printf(
 										/* translators: %s: visibility level label (wrapped in <span>). */
-										esc_html__( 'This field can be seen by: %s', 'buddyboss-platform' ),
+										esc_html__( 'This field can be seen by: %s', 'buddyboss' ),
 										'<span class="current-visibility-level">' . esc_html( bboss_get_the_profile_field_visibility_level_label() ) . '</span>'
 									);
 									?>
 									</span>
 								<?php if ( $can_change_visibility ) : ?>
-									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bboss_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss-platform' ); ?></button>
+									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bboss_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
 								<?php endif; ?>
 							</p>
 							<?php if ( $can_change_visibility ) : ?>
 								<div class="field-visibility-settings" id="field-visibility-settings-<?php bboss_the_profile_field_id(); ?>">
 									<fieldset>
-										<legend><?php esc_html_e( 'Who can see this field?', 'buddyboss-platform' ); ?></legend>
+										<legend><?php esc_html_e( 'Who can see this field?', 'buddyboss' ); ?></legend>
 										<?php bboss_profile_visibility_radio_buttons(); ?>
 									</fieldset>
-									<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss-platform' ); ?></button>
+									<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>
 								</div>
 							<?php endif;
 							do_action( 'bp_custom_profile_edit_fields' );

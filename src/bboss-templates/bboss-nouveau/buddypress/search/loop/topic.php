@@ -45,15 +45,15 @@ $total    = bboss_bbp_get_topic_reply_count( $topic_id );
 				<?php echo wp_kses_post( wp_trim_words( bboss_bbp_get_topic_content( $topic_id ), 30, '...' ) ); ?>
 			</div>
 			<div class="entry-meta">
-				<span><?php echo esc_html__( 'By ', 'buddyboss-platform' ) . esc_html( bboss_core_get_user_displayname( bboss_bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
+				<span><?php echo esc_html__( 'By ', 'buddyboss' ) . esc_html( bboss_core_get_user_displayname( bboss_bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
 				<span class="middot">&middot;</span>
 				<span class="reply-count">
-					<?php /* translators: %s: number. */ printf( esc_html( _n( '%d reply', '%d replies', $total, 'buddyboss-platform' ) ), (int) $total ); ?>
+					<?php /* translators: %s: number. */ printf( esc_html( _n( '%d reply', '%d replies', $total, 'buddyboss' ) ), (int) $total ); ?>
 				</span>
 				<span class="middot">&middot;</span>
 				<span>
 					<?php
-					esc_html_e( 'Started ', 'buddyboss-platform' );
+					esc_html_e( 'Started ', 'buddyboss' );
 					echo wp_kses_post( bboss_bbp_get_topic_created_time( $topic_id ) );
 					?>
 				</span>

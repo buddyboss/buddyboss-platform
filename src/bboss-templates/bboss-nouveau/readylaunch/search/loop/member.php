@@ -35,7 +35,7 @@ $member_user_link = bboss_get_member_permalink();
 			if ( bboss_nouveau_member_has_meta() ) :
 				?>
 				<p class="item-meta last-activity">
-					<?php echo esc_html__( 'Last active', 'buddyboss-platform' ) . ' ' . wp_kses_post( bboss_get_member_last_activity_time() ); ?>
+					<?php echo esc_html__( 'Last active', 'buddyboss' ) . ' ' . wp_kses_post( bboss_get_member_last_activity_time() ); ?>
 				</p>
 			<?php endif; ?>
 		</div>

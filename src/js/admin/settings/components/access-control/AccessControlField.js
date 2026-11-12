@@ -253,7 +253,7 @@ export function AccessControlField( { field, value, onChange } ) {
 				return;
 			}
 			setLoading( false );
-			setFetchError( __( 'Failed to load options. Please try again.', 'buddyboss-platform' ) );
+			setFetchError( __( 'Failed to load options. Please try again.', 'buddyboss' ) );
 		} );
 
 		return function() {
@@ -416,7 +416,7 @@ export function AccessControlField( { field, value, onChange } ) {
 				return;
 			}
 			setLoading( false );
-			setFetchError( __( 'Failed to load options. Please try again.', 'buddyboss-platform' ) );
+			setFetchError( __( 'Failed to load options. Please try again.', 'buddyboss' ) );
 		} );
 	};
 
@@ -485,7 +485,7 @@ export function AccessControlField( { field, value, onChange } ) {
 				return;
 			}
 			setLoading( false );
-			setFetchError( __( 'Failed to load options. Please try again.', 'buddyboss-platform' ) );
+			setFetchError( __( 'Failed to load options. Please try again.', 'buddyboss' ) );
 		} );
 	};
 
@@ -589,7 +589,7 @@ export function AccessControlField( { field, value, onChange } ) {
 						disabled={ ! isActive }
 						onChange={ function() { handleModeChange( optKey, 'all' ); } }
 					/>
-					{ __( 'All', 'buddyboss-platform' ) }
+					{ __( 'All', 'buddyboss' ) }
 				</label>
 				<label className="bb-access-control-field__threaded-radio-option">
 					<input
@@ -600,7 +600,7 @@ export function AccessControlField( { field, value, onChange } ) {
 						disabled={ ! isActive }
 						onChange={ function() { handleModeChange( optKey, 'specific' ); } }
 					/>
-					{ __( 'Specific', 'buddyboss-platform' ) }
+					{ __( 'Specific', 'buddyboss' ) }
 				</label>
 			</div>
 		);
@@ -655,7 +655,7 @@ export function AccessControlField( { field, value, onChange } ) {
 				<SelectControl
 					value={ selectedType }
 					options={ [
-						{ label: data.select_placeholder || __( 'Select Role', 'buddyboss-platform' ), value: '' },
+						{ label: data.select_placeholder || __( 'Select Role', 'buddyboss' ), value: '' },
 					].concat(
 						types.map( function( t ) {
 							return { label: decodeEntities( t.label ), value: t.value, disabled: t.disabled || false };
@@ -670,7 +670,7 @@ export function AccessControlField( { field, value, onChange } ) {
 					<SelectControl
 						value={ selectedSubType }
 						options={ [
-							{ label: currentTypeConfig.sub_types.placeholder || __( 'Select Type', 'buddyboss-platform' ), value: '' },
+							{ label: currentTypeConfig.sub_types.placeholder || __( 'Select Type', 'buddyboss' ), value: '' },
 						].concat(
 							currentTypeConfig.sub_types.items.map( function( st ) {
 								return { label: decodeEntities( st.label ), value: st.value, disabled: st.disabled || false };
@@ -691,7 +691,7 @@ export function AccessControlField( { field, value, onChange } ) {
 			) }
 			{ showNoOptions && ! fetchError && (
 				<p className="bb-access-control-field__no-options">
-					{ __( 'No options found.', 'buddyboss-platform' ) }
+					{ __( 'No options found.', 'buddyboss' ) }
 				</p>
 			) }
 			{ ! loading && options.length > 0 && (

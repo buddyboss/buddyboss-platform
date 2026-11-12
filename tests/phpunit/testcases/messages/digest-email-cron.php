@@ -21,7 +21,7 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		parent::setUp();
 
 		if ( ! function_exists( 'bboss_messages_reschedule_cron_after_save' ) ) {
-			require_once bboss()->plugin_dir . 'bboss-core/admin/settings/messages/callbacks.php';
+			require_once bboss()->plugin_dir . 'bp-core/admin/settings/messages/callbacks.php';
 		}
 
 		$timestamp = wp_next_scheduled( 'bb_digest_email_notifications_hook' );

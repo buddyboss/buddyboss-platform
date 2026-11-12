@@ -67,7 +67,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -126,7 +126,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 			$response = array(
 				'feedback' => sprintf(
 					'<div class="bp-feedback error">%s</div>',
-					esc_html__( 'No member found by that ID.', 'buddyboss-platform' )
+					esc_html__( 'No member found by that ID.', 'buddyboss' )
 				),
 			);
 		}
@@ -140,7 +140,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 			$response = array(
 				'feedback' => sprintf(
 					'<div class="bp-feedback error">%s</div>',
-					esc_html__( 'There was a problem accepting that request. Please try again.', 'buddyboss-platform' )
+					esc_html__( 'There was a problem accepting that request. Please try again.', 'buddyboss' )
 				),
 			);
 
@@ -150,7 +150,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 			$response = array(
 				'feedback'     => sprintf(
 					'<div class="bp-feedback success">%s</div>',
-					esc_html__( 'Connection accepted.', 'buddyboss-platform' )
+					esc_html__( 'Connection accepted.', 'buddyboss' )
 				),
 				'type'         => 'success',
 				'is_user'      => true,
@@ -166,7 +166,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 			$response = array(
 				'feedback' => sprintf(
 					'<div class="bp-feedback error">%s</div>',
-					esc_html__( 'There was a problem rejecting that request. Please try again.', 'buddyboss-platform' )
+					esc_html__( 'There was a problem rejecting that request. Please try again.', 'buddyboss' )
 				),
 			);
 		} else {
@@ -175,7 +175,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 			$response = array(
 				'feedback'     => sprintf(
 					'<div class="bp-feedback success">%s</div>',
-					esc_html__( 'Connection rejected.', 'buddyboss-platform' )
+					esc_html__( 'Connection rejected.', 'buddyboss' )
 				),
 				'type'         => 'success',
 				'is_user'      => true,
@@ -188,7 +188,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 		if ( ! bboss_friends_remove_friend( bboss_loggedin_user_id(), $friend_id ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
-				esc_html__( 'Connection could not be cancelled.', 'buddyboss-platform' )
+				esc_html__( 'Connection could not be cancelled.', 'buddyboss' )
 			);
 
 			$type = 'error';
@@ -208,7 +208,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 				$response = array(
 					'feedback'     => sprintf(
 						'<div class="bp-feedback success">%s</div>',
-						esc_html__( 'Connection removed.', 'buddyboss-platform' )
+						esc_html__( 'Connection removed.', 'buddyboss' )
 					),
 					'type'         => 'success',
 					'is_user'      => $is_user,
@@ -225,7 +225,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 		if ( ! bboss_friends_add_friend( bboss_loggedin_user_id(), $friend_id ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
-				esc_html__( 'Connection could not be requested.', 'buddyboss-platform' )
+				esc_html__( 'Connection could not be requested.', 'buddyboss' )
 			);
 
 			$type = 'error';
@@ -259,7 +259,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 		} else {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
-				esc_html__( 'Connection request could not be cancelled.', 'buddyboss-platform' )
+				esc_html__( 'Connection request could not be cancelled.', 'buddyboss' )
 			);
 			$type                 = 'error';
 		}
@@ -268,7 +268,7 @@ function bboss_nouveau_ajax_addremove_friend() {
 	} else {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Request Pending', 'buddyboss-platform' )
+			esc_html__( 'Request Pending', 'buddyboss' )
 		);
 		$type                 = 'error';
 

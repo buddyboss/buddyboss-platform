@@ -44,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php if ( bboss_bbp_is_single_user_replies() ) : ?>
 
 				<span class="bbp-header">
-				<?php esc_html_e( 'in reply to: ', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'in reply to: ', 'buddyboss' ); ?>
 					<a class="bbp-topic-permalink"
 						href="<?php bboss_bbp_topic_permalink( bboss_bbp_get_reply_topic_id() ); ?>"><?php bboss_bbp_topic_title( bboss_bbp_get_reply_topic_id() ); ?></a>
 				</span>

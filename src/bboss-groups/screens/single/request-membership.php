@@ -35,9 +35,9 @@ function bboss_groups_screen_group_request_membership() {
 		}
 
 		if ( ! bboss_groups_send_membership_request( array( 'user_id' => bboss_loggedin_user_id(), 'group_id' => $bp->groups->current_group->id, 'content' => $_POST['group-request-membership-comments'] ) ) ) {
-			bboss_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss' ), 'error' );
 		} else {
-			bboss_core_add_message( __( 'Your membership request was sent to the group organizer successfully. You will be notified when the group organizer responds to your request.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'Your membership request was sent to the group organizer successfully. You will be notified when the group organizer responds to your request.', 'buddyboss' ) );
 		}
 		bboss_core_redirect( bboss_get_group_permalink( $bp->groups->current_group ) );
 	}

@@ -181,7 +181,7 @@ class BBoss_Groups_Theme_Compat {
 	 */
 	public function create_dummy_post() {
 
-		$title = __( 'Social Groups', 'buddyboss-platform' );
+		$title = __( 'Social Groups', 'buddyboss' );
 
 		$groups_page_id = bboss_core_get_directory_page_id( 'groups' );
 		bboss_theme_compat_reset_post(

@@ -69,7 +69,7 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						if ( ( $bp_is_my_profile || $bp_is_user_media ) || ( $bp_is_group ) ) {
 							?>
 								<div class="video-action-wrap item-action-wrap bb_more_options action">
-									<a href="#" class="album-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>">
+									<a href="#" class="album-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 										<i class="bb-icons-rl-dots-three"></i>
 									</a>
 									<div class="media-action_list bb_more_dropdown bb_more_options_list">
@@ -91,7 +91,7 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												?>
 													<li class="album-add-photos">
 														<a class="bb-album-add-photos" id="bp-add-media" href="#" >
-														<?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?>
+														<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
 														</a>
 													</li>
 													<?php
@@ -113,7 +113,7 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												) {
 												?>
 													<li class="album-add-videos">
-														<a href="#" id="bp-add-video" class="bb-album-add-videos"><?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?></a>
+														<a href="#" id="bp-add-video" class="bb-album-add-videos"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
 													</li>
 													<?php
 											}
@@ -129,7 +129,7 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 													<li class="album-edit">
 														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title" <?php echo $privacy; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $privacy is a data-attribute fragment built with esc_attr(). ?>>
 														<?php
-															esc_html_e( 'Edit Album', 'buddyboss-platform' );
+															esc_html_e( 'Edit Album', 'buddyboss' );
 														?>
 														</a>
 													</li>
@@ -140,7 +140,7 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												?>
 													<li class="album-delete">
 															<a class="bb-album-delete error" id="bb-delete-album" href="#">
-															<?php esc_html_e( 'Delete Album', 'buddyboss-platform' ); ?>
+															<?php esc_html_e( 'Delete Album', 'buddyboss' ); ?>
 															</a>
 													</li>
 													<?php
@@ -184,7 +184,7 @@ if ( bboss_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				</div>
 				<div class="bb-rl-album-meta">
 					<p>
-						<span><?php esc_html_e( 'Created: ', 'buddyboss-platform' ); ?><?php bboss_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep"></span>
+						<span><?php esc_html_e( 'Created: ', 'buddyboss' ); ?><?php bboss_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep"></span>
 
 						<?php
 						if ( $bp_is_my_profile ) {

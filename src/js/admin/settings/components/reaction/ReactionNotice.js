@@ -277,11 +277,11 @@ export function ReactionNotice({ field }) {
 					<p>
 						<strong>{formatNumber(totalReactions)} {fromEmotionsName}</strong>
 						{' '}
-						{__('were successfully converted to the', 'buddyboss-platform')}
+						{__('were successfully converted to the', 'buddyboss')}
 						{' '}
 						<strong>{toEmotionsName}</strong>
 						{' '}
-						{__('emotion.', 'buddyboss-platform')}
+						{__('emotion.', 'buddyboss')}
 					</p>
 				);
 			}
@@ -290,7 +290,7 @@ export function ReactionNotice({ field }) {
 					<p>
 						<strong>{formatNumber(totalReactions)}</strong>
 						{' '}
-						{__('reactions were successfully converted to', 'buddyboss-platform')}
+						{__('reactions were successfully converted to', 'buddyboss')}
 						{' '}
 						<strong>{toEmotionsName}</strong>.
 					</p>
@@ -312,7 +312,7 @@ export function ReactionNotice({ field }) {
 						type="button"
 						className="bb-admin-notice__close"
 						onClick={handleDismiss}
-						aria-label={__('Dismiss', 'buddyboss-platform')}
+						aria-label={__('Dismiss', 'buddyboss')}
 					>
 						<span className="bb-icons-rl bb-icons-rl-x" />
 					</button>
@@ -336,14 +336,14 @@ export function ReactionNotice({ field }) {
 					<div className="bb-admin-notice__content">
 						<p>
 							<strong>
-								{__('%1$s out of %2$s %3$s reactions have been converted', 'buddyboss-platform')
+								{__('%1$s out of %2$s %3$s reactions have been converted', 'buddyboss')
 									.replace('%1$s', formatNumber(updatedEmotions))
 									.replace('%2$s', formatNumber(total))
 									.replace('%3$s', `(${percentage}%)`)}
 							</strong>
 						</p>
 						<p>
-							{__('This action is being performed in the background, but may take some time based on the amount of data.', 'buddyboss-platform')}
+							{__('This action is being performed in the background, but may take some time based on the amount of data.', 'buddyboss')}
 						</p>
 					</div>
 					<div className="bb-admin-notice__actions">
@@ -352,32 +352,32 @@ export function ReactionNotice({ field }) {
 							className="bb-admin-notice__button bb-admin-notice__button--outline"
 							onClick={handleRecheckStatus}
 						>
-							{__('Recheck status', 'buddyboss-platform')}
+							{__('Recheck status', 'buddyboss')}
 						</button>
 						<button
 							type="button"
 							className="bb-admin-notice__button bb-admin-notice__button--text"
 							onClick={handleStopMigration}
 						>
-							{__('Stop', 'buddyboss-platform')}
+							{__('Stop', 'buddyboss')}
 						</button>
 					</div>
 					{ confirmStopVisible && (
 						<div className="bb-admin-notice__confirm">
-							<span>{ __( 'Are you sure you want to stop the migration?', 'buddyboss-platform' ) }</span>
+							<span>{ __( 'Are you sure you want to stop the migration?', 'buddyboss' ) }</span>
 							<button
 								type="button"
 								className="bb-admin-notice__button bb-admin-notice__button--danger"
 								onClick={ handleConfirmStop }
 							>
-								{ __( 'Yes, stop', 'buddyboss-platform' ) }
+								{ __( 'Yes, stop', 'buddyboss' ) }
 							</button>
 							<button
 								type="button"
 								className="bb-admin-notice__button bb-admin-notice__button--text"
 								onClick={ () => setConfirmStopVisible( false ) }
 							>
-								{ __( 'Cancel', 'buddyboss-platform' ) }
+								{ __( 'Cancel', 'buddyboss' ) }
 							</button>
 						</div>
 					) }

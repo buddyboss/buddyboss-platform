@@ -165,7 +165,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				setTags( response.data.tags || [] );
 				setTotal( response.data.total || 0 );
 			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to load tags.', 'buddyboss-platform' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to load tags.', 'buddyboss' ) );
 			}
 			setIsLoading( false );
 		} ).catch( function ( err ) {
@@ -173,7 +173,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				return;
 			}
 			setIsLoading( false );
-			setError( __( 'Failed to load tags.', 'buddyboss-platform' ) );
+			setError( __( 'Failed to load tags.', 'buddyboss' ) );
 		} );
 	}, [ currentPage, searchQuery ] );
 
@@ -273,13 +273,13 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 
 			if ( response.success ) {
 				setNotice( {
-					message: __( 'Tags deleted successfully.', 'buddyboss-platform' ),
+					message: __( 'Tags deleted successfully.', 'buddyboss' ),
 					type: 'success',
 				} );
 				fetchTags( { page: currentPage, search: searchQuery } );
 			} else {
 				setNotice( {
-					message: ( response.data && response.data.message ) || __( 'Failed to delete tags.', 'buddyboss-platform' ),
+					message: ( response.data && response.data.message ) || __( 'Failed to delete tags.', 'buddyboss' ),
 					type: 'error',
 				} );
 			}
@@ -287,7 +287,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			setIsBulkProcessing( false );
 			setBulkDeleteOpen( false );
 			setNotice( {
-				message: __( 'Failed to delete tags.', 'buddyboss-platform' ),
+				message: __( 'Failed to delete tags.', 'buddyboss' ),
 				type: 'error',
 			} );
 		} );
@@ -316,7 +316,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			} else {
 				setIsEditOpen( false );
 				setNotice( {
-					message: __( 'Failed to load tag data.', 'buddyboss-platform' ),
+					message: __( 'Failed to load tag data.', 'buddyboss' ),
 					type: 'error',
 				} );
 			}
@@ -328,7 +328,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			setIsEditOpen( false );
 			setIsEditLoading( false );
 			setNotice( {
-				message: __( 'Failed to load tag data.', 'buddyboss-platform' ),
+				message: __( 'Failed to load tag data.', 'buddyboss' ),
 				type: 'error',
 			} );
 		} );
@@ -367,7 +367,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			setDeleteConfirm( false );
 			if ( response.success ) {
 				setNotice( {
-					message: __( 'Tag deleted successfully.', 'buddyboss-platform' ),
+					message: __( 'Tag deleted successfully.', 'buddyboss' ),
 					type: 'success',
 				} );
 				setSelectedIds( function ( prev ) {
@@ -376,7 +376,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				fetchTags( { page: currentPage, search: searchQuery } );
 			} else {
 				setNotice( {
-					message: ( response.data && response.data.message ) || __( 'Failed to delete tag.', 'buddyboss-platform' ),
+					message: ( response.data && response.data.message ) || __( 'Failed to delete tag.', 'buddyboss' ),
 					type: 'error',
 				} );
 			}
@@ -385,7 +385,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			setDeleteTagItem( null );
 			setDeleteConfirm( false );
 			setNotice( {
-				message: __( 'Failed to delete tag.', 'buddyboss-platform' ),
+				message: __( 'Failed to delete tag.', 'buddyboss' ),
 				type: 'error',
 			} );
 		} );
@@ -401,7 +401,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		setIsEditOpen( false );
 		setEditTag( null );
 		setNotice( {
-			message: __( 'Tag saved successfully.', 'buddyboss-platform' ),
+			message: __( 'Tag saved successfully.', 'buddyboss' ),
 			type: 'success',
 		} );
 		fetchTags( { page: currentPage, search: searchQuery } );
@@ -423,7 +423,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			{ /* Header */ }
 			<div className="bb-discussion-tags-list__header">
 				<h2 className="bb-discussion-tags-list__title">
-					{ __( 'Discussion Tags', 'buddyboss-platform' ) }
+					{ __( 'Discussion Tags', 'buddyboss' ) }
 				</h2>
 				<Button
 					variant="primary"
@@ -434,7 +434,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 					} }
 				>
 					<i className="bb-icons-rl bb-icons-rl-plus"></i>
-					{ __( 'Add New Tag', 'buddyboss-platform' ) }
+					{ __( 'Add New Tag', 'buddyboss' ) }
 				</Button>
 			</div>
 
@@ -443,8 +443,8 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				className="bb-discussion-tags-list"
 				bulkAction={ bulkAction }
 				bulkOptions={ [
-					{ value: '', label: __( 'Bulk actions', 'buddyboss-platform' ) },
-					{ value: 'bulk_delete', label: __( 'Delete', 'buddyboss-platform' ) },
+					{ value: '', label: __( 'Bulk actions', 'buddyboss' ) },
+					{ value: 'bulk_delete', label: __( 'Delete', 'buddyboss' ) },
 				] }
 				onBulkActionChange={ setBulkAction }
 				onBulkApply={ handleBulkApply }
@@ -452,7 +452,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				isBulkProcessing={ isBulkProcessing }
 				searchInput={ searchInput }
 				onSearchChange={ handleSearchChange }
-				searchPlaceholder={ __( 'Search tags', 'buddyboss-platform' ) }
+				searchPlaceholder={ __( 'Search tags', 'buddyboss' ) }
 				onSearchClear={ handleSearchClear }
 			/>
 
@@ -472,14 +472,14 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 							fetchTags( { page: currentPage, search: searchQuery } );
 						} }
 					>
-						{ __( 'Retry', 'buddyboss-platform' ) }
+						{ __( 'Retry', 'buddyboss' ) }
 					</Button>
 				</div>
 			) }
 
 			{ ! isLoading && ! error && 0 === tags.length && (
 				<div className="bb-discussion-tags-list__empty bb-admin-list-table__empty">
-					<p>{ searchQuery ? __( 'No tags found matching your search.', 'buddyboss-platform' ) : __( 'No discussion tags found.', 'buddyboss-platform' ) }</p>
+					<p>{ searchQuery ? __( 'No tags found matching your search.', 'buddyboss' ) : __( 'No discussion tags found.', 'buddyboss' ) }</p>
 				</div>
 			) }
 
@@ -497,13 +497,13 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 									/>
 								</th>
 								<th className="bb-discussion-tags-list__col-tag">
-									{ __( 'Name', 'buddyboss-platform' ) }
+									{ __( 'Name', 'buddyboss' ) }
 								</th>
 								<th className="bb-discussion-tags-list__col-slug">
-									{ __( 'Slug', 'buddyboss-platform' ) }
+									{ __( 'Slug', 'buddyboss' ) }
 								</th>
 								<th className="bb-discussion-tags-list__col-count">
-									{ __( 'Count', 'buddyboss-platform' ) }
+									{ __( 'Count', 'buddyboss' ) }
 								</th>
 								<th className="bb-discussion-tags-list__col-actions"></th>
 							</tr>
@@ -544,14 +544,14 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 														className="bb-discussion-tags-list__count-link"
 													>
 														{ sprintf(
-															_n( '%s discussion', '%s discussions', tag.count, 'buddyboss-platform' ),
+															_n( '%s discussion', '%s discussions', tag.count, 'buddyboss' ),
 															tag.count
 														) }
 													</a>
 												) : (
 													<span className="bb-discussion-tags-list__count-zero">
 														{ sprintf(
-															_n( '%s discussion', '%s discussions', tag.count, 'buddyboss-platform' ),
+															_n( '%s discussion', '%s discussions', tag.count, 'buddyboss' ),
 															tag.count
 														) }
 													</span>
@@ -561,7 +561,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 										<td className="bb-discussion-tags-list__col-actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
-												label={ __( 'More options', 'buddyboss-platform' ) }
+												label={ __( 'More options', 'buddyboss' ) }
 												className="bb-discussion-tags-list__actions-menu"
 											>
 												{ function ( dropdownProps ) {
@@ -579,7 +579,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i>
-																	{ __( 'View', 'buddyboss-platform' ) }
+																	{ __( 'View', 'buddyboss' ) }
 																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external" aria-hidden="true"></i>
 																</MenuItem>
 															) }
@@ -590,7 +590,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-note-pencil" aria-hidden="true"></i>
-																{ __( 'Edit', 'buddyboss-platform' ) }
+																{ __( 'Edit', 'buddyboss' ) }
 															</MenuItem>
 															<MenuItem
 																isDestructive
@@ -600,7 +600,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
-																{ __( 'Delete', 'buddyboss-platform' ) }
+																{ __( 'Delete', 'buddyboss' ) }
 															</MenuItem>
 														</MenuGroup>
 													);
@@ -652,11 +652,11 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			{ /* Single Delete Confirmation Modal */ }
 			<DeleteConfirmModal
 				isOpen={ !! deleteTagItem }
-				singleTitle={ __( 'Delete Tag', 'buddyboss-platform' ) }
+				singleTitle={ __( 'Delete Tag', 'buddyboss' ) }
 				items={ deleteTagItem ? [ { id: deleteTagItem.id, name: deleteTagItem.name } ] : [] }
-				warningText={ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss-platform' ) }
-				description={ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss-platform' ) }
-				confirmLabel={ __( 'I understand that this deletes the discussion tags.', 'buddyboss-platform' ) }
+				warningText={ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the discussion tags.', 'buddyboss' ) }
 				confirmChecked={ deleteConfirm }
 				onConfirmChange={ setDeleteConfirm }
 				onConfirm={ handleDeleteConfirm }
@@ -668,7 +668,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			{ /* Bulk Delete Confirmation Modal */ }
 			<DeleteConfirmModal
 				isOpen={ bulkDeleteOpen }
-				singleTitle={ __( 'Delete Tag', 'buddyboss-platform' ) }
+				singleTitle={ __( 'Delete Tag', 'buddyboss' ) }
 				items={ bulkDeleteTagNames }
 				onRemoveItem={ function ( id ) {
 					setBulkDeleteTargetIds( function ( prev ) {
@@ -682,9 +682,9 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 						return prev.filter( function ( i ) { return i !== id; } );
 					} );
 				} }
-				warningText={ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss-platform' ) }
-				description={ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss-platform' ) }
-				confirmLabel={ __( 'I understand that this deletes the discussion tags.', 'buddyboss-platform' ) }
+				warningText={ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the discussion tags.', 'buddyboss' ) }
 				confirmChecked={ bulkDeleteConfirm }
 				onConfirmChange={ setBulkDeleteConfirm }
 				onConfirm={ handleBulkDeleteConfirm }

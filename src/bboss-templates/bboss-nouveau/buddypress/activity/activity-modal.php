@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
 
 	<div id="activity-modal" class="activity-modal activity">
 		<div class="bb-modal-activity-header">
-			<h2><span class="screen-reader-text"><?php esc_attr_e( 'Activity modal title', 'buddyboss-platform' ); ?></span></h2>
-			<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>">
+			<h2><span class="screen-reader-text"><?php esc_attr_e( 'Activity modal title', 'buddyboss' ); ?></span></h2>
+			<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 				<span class="bb-icon-l bb-icon-times"></span>
 			</a>
 		</div>
@@ -36,14 +36,14 @@ defined( 'ABSPATH' ) || exit;
 								if ( bboss_is_active( 'media' ) ) {
 									?>
 									<div class="post-elements-buttons-item post-media media-support">
-										<a href="#" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss-platform' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss-platform' ); ?>">
+										<a href="#" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
 											<i class="bb-icon-l bb-icon-camera"></i>
 										</a>
 									</div>
 
 									<?php if ( bboss_is_active( 'video' ) ) : ?>
 									<div class="post-elements-buttons-item post-video video-support">
-										<a href="#" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>">
+										<a href="#" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
 											<i class="bb-icon-l bb-icon-video"></i>
 										</a>
 									</div>
@@ -51,7 +51,7 @@ defined( 'ABSPATH' ) || exit;
 
 									<?php if ( bboss_is_active( 'document' ) ) : ?>
 									<div class="post-elements-buttons-item post-media document-support">
-										<a href="#" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>">
+										<a href="#" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 											<i class="bb-icon-l bb-icon-attach"></i>
 										</a>
 									</div>
@@ -59,17 +59,17 @@ defined( 'ABSPATH' ) || exit;
 
 									<div class="post-elements-buttons-item post-gif">
 										<div class="gif-media-search">
-											<a href="#" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Choose a GIF', 'buddyboss-platform' ); ?>">
+											<a href="#" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
 												<i class="bb-icon-l bb-icon-gif"></i>
 											</a>
 											<div class="gif-media-search-dropdown"></div>
 										</div>
 									</div>
 
-									<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss-platform' ); ?>" id="ac-reply-emoji-button-536" data-nth-child="5">
+									<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>" id="ac-reply-emoji-button-536" data-nth-child="5">
 										<div class="emojionearea emojionearea-standalone ac-input bp-suggestions medium-editor-element" role="application">
-											<div class="emojionearea-editor has-placeholder" contenteditable="false" placeholder="<?php esc_attr_e( 'Write a comment...', 'buddyboss-platform' ); ?>" tabindex="0" dir="ltr" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></div>
-											<div class="emojionearea-button" title="<?php esc_attr_e( 'Use the TAB key to insert emoji faster', 'buddyboss-platform' ); ?>">
+											<div class="emojionearea-editor has-placeholder" contenteditable="false" placeholder="<?php esc_attr_e( 'Write a comment...', 'buddyboss' ); ?>" tabindex="0" dir="ltr" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></div>
+											<div class="emojionearea-button" title="<?php esc_attr_e( 'Use the TAB key to insert emoji faster', 'buddyboss' ); ?>">
 												<div class="emojionearea-button-open"></div>
 											</div>
 										</div>
@@ -80,7 +80,7 @@ defined( 'ABSPATH' ) || exit;
 							</div>
 
 							<div class="ac-submit-wrap">
-								<input type="submit" name="ac_form_submit" value="<?php esc_attr_e( 'Post', 'buddyboss-platform' ); ?>" data-add-edit-label="<?php esc_attr_e( 'Save', 'buddyboss-platform' ); ?>">
+								<input type="submit" name="ac_form_submit" value="<?php esc_attr_e( 'Post', 'buddyboss' ); ?>" data-add-edit-label="<?php esc_attr_e( 'Save', 'buddyboss' ); ?>">
 							</div>
 						</div>
 					</div>

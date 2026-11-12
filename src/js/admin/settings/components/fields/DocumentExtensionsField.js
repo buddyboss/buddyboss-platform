@@ -415,7 +415,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 		} );
 
 		if ( isDuplicate ) {
-			setModalError( __( 'This extension already exists.', 'buddyboss-platform' ) );
+			setModalError( __( 'This extension already exists.', 'buddyboss' ) );
 			return;
 		}
 
@@ -437,7 +437,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 
 		// MIME type is required.
 		if ( ! mimeType ) {
-			setModalError( __( 'MIME type is required.', 'buddyboss-platform' ) );
+			setModalError( __( 'MIME type is required.', 'buddyboss' ) );
 			return;
 		}
 
@@ -657,13 +657,13 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 				{ field.manage_icon && (
 					<i className={ field.manage_icon } />
 				) }
-				<span>{ field.manage_label || __( 'Manage', 'buddyboss-platform' ) }</span>
+				<span>{ field.manage_label || __( 'Manage', 'buddyboss' ) }</span>
 			</button>
 
 			{ /* Manage File Extensions Modal */ }
 			{ isManageOpen && (
 				<Modal
-					title={ __( 'Manage File Extensions', 'buddyboss-platform' ) }
+					title={ __( 'Manage File Extensions', 'buddyboss' ) }
 					onRequestClose={ handleCancelManage }
 					className="bb-doc-extensions-modal bb-admin-settings-modal"
 					overlayClassName="bb-extension-modal-overlay"
@@ -705,7 +705,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 											<div className="bb-doc-extensions-modal__ext-actions">
 												<DropdownMenu
 													icon={ <i className="bb-icons-rl-dots-three"></i> }
-													label={ __( 'More options', 'buddyboss-platform' ) }
+													label={ __( 'More options', 'buddyboss' ) }
 												>
 													{ function ( dropdownProps ) {
 														var onClose = dropdownProps.onClose;
@@ -718,7 +718,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-note-pencil"></i>
-																	{ __( 'Edit', 'buddyboss-platform' ) }
+																	{ __( 'Edit', 'buddyboss' ) }
 																</MenuItem>
 																<MenuItem
 																	isDestructive
@@ -728,7 +728,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-trash"></i>
-																	{ __( 'Delete', 'buddyboss-platform' ) }
+																	{ __( 'Delete', 'buddyboss' ) }
 																</MenuItem>
 															</MenuGroup>
 														);
@@ -752,7 +752,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 								disabled={ disabled }
 							>
 								<i className="bb-icons-rl bb-icons-rl-plus" />
-								<span>{ __( 'Add Extension', 'buddyboss-platform' ) }</span>
+								<span>{ __( 'Add Extension', 'buddyboss' ) }</span>
 							</button>
 						</div>
 					</div>
@@ -762,13 +762,13 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 							variant="secondary"
 							onClick={ handleCancelManage }
 						>
-							{ __( 'Cancel', 'buddyboss-platform' ) }
+							{ __( 'Cancel', 'buddyboss' ) }
 						</Button>
 						<Button
 							variant="primary"
 							onClick={ handleSaveManage }
 						>
-							{ __( 'Save', 'buddyboss-platform' ) }
+							{ __( 'Save', 'buddyboss' ) }
 						</Button>
 					</div>
 			</Modal>
@@ -777,14 +777,14 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 		{ /* Add New Extension modal — portaled to body so it renders over the Manage modal */ }
 		{ isManageOpen && isAddOpen && createPortal(
 			<div className="bb-extension-modal-overlay bb-extension-modal-overlay--nested">
-				<div className="bb-extension-modal--nested" role="dialog" aria-modal="true" aria-label={ __( 'Add New Extension', 'buddyboss-platform' ) }>
+				<div className="bb-extension-modal--nested" role="dialog" aria-modal="true" aria-label={ __( 'Add New Extension', 'buddyboss' ) }>
 					<div className="bb-extension-modal--nested__header">
-						<h1>{ __( 'Add New Extension', 'buddyboss-platform' ) }</h1>
+						<h1>{ __( 'Add New Extension', 'buddyboss' ) }</h1>
 						<button
 							type="button"
 							className="bb-extension-modal--nested__close"
 							onClick={ resetAddState }
-							aria-label={ __( 'Close', 'buddyboss-platform' ) }
+							aria-label={ __( 'Close', 'buddyboss' ) }
 						>
 							<i className="bb-icons-rl bb-icons-rl-x" />
 						</button>
@@ -797,7 +797,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						) }
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'Extension', 'buddyboss-platform' ) }
+								{ __( 'Extension', 'buddyboss' ) }
 							</label>
 							<TextControl
 								value={ newExtension }
@@ -805,24 +805,24 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 									setNewExtension( val );
 									setModalError( '' );
 								} }
-								placeholder={ __( 'Enter an extension (e.g., .extension)', 'buddyboss-platform' ) }
+								placeholder={ __( 'Enter an extension (e.g., .extension)', 'buddyboss' ) }
 								__nextHasNoMarginBottom
 							/>
 						</div>
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'Description', 'buddyboss-platform' ) }
+								{ __( 'Description', 'buddyboss' ) }
 							</label>
 							<TextareaControl
 								value={ newDescription }
 								onChange={ setNewDescription }
-								placeholder={ __( 'Enter a short description', 'buddyboss-platform' ) }
+								placeholder={ __( 'Enter a short description', 'buddyboss' ) }
 								__nextHasNoMarginBottom
 							/>
 						</div>
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'Icon', 'buddyboss-platform' ) }
+								{ __( 'Icon', 'buddyboss' ) }
 							</label>
 							<div className="bb-extension-modal__icon-select" ref={ iconDropdownRef }>
 								<div
@@ -843,7 +843,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 										( iconOptions.find( function( o ) { return o.value === newIcon; } ) || {} ).icon_class || getDefaultIconClass()
 									} />
 									<span className="bb-extension-modal__icon-dropdown-label">
-										{ ( iconOptions.find( function( o ) { return o.value === newIcon; } ) || {} ).label || __( 'Default', 'buddyboss-platform' ) }
+										{ ( iconOptions.find( function( o ) { return o.value === newIcon; } ) || {} ).label || __( 'Default', 'buddyboss' ) }
 									</span>
 									<i className="bb-icons-rl bb-icons-rl-caret-down bb-extension-modal__icon-dropdown-chevron" />
 								</div>
@@ -870,7 +870,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						</div>
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'MIME Type', 'buddyboss-platform' ) }
+								{ __( 'MIME Type', 'buddyboss' ) }
 							</label>
 							<div className="bb-extension-modal__mime-row">
 								<TextControl
@@ -879,7 +879,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 										setNewMimeType( val );
 										setModalError( '' );
 									} }
-									placeholder={ __( 'Enter MIME type', 'buddyboss-platform' ) }
+									placeholder={ __( 'Enter MIME type', 'buddyboss' ) }
 									__nextHasNoMarginBottom
 								/>
 								<Button
@@ -890,12 +890,12 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 										mimeChecker.setMimeCheckerResult( '' );
 									} }
 								>
-									{ __( 'MIME Checker', 'buddyboss-platform' ) }
+									{ __( 'MIME Checker', 'buddyboss' ) }
 								</Button>
 							</div>
 							{ ! mimeChecker.isMimeCheckerOpen && ! newMimeType.trim() && (
 								<p className="bb-extension-modal__field-hint">
-									{ __( 'Not sure? Click "MIME Checker" to detect the correct type from a sample file.', 'buddyboss-platform' ) }
+									{ __( 'Not sure? Click "MIME Checker" to detect the correct type from a sample file.', 'buddyboss' ) }
 								</p>
 							) }
 						</div>
@@ -912,14 +912,14 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 							variant="secondary"
 							onClick={ resetAddState }
 						>
-							{ __( 'Cancel', 'buddyboss-platform' ) }
+							{ __( 'Cancel', 'buddyboss' ) }
 						</Button>
 						<Button
 							variant="primary"
 							onClick={ handleSaveExtension }
 							disabled={ ! newExtension.trim() || ! newMimeType.trim() }
 						>
-							{ __( 'Save', 'buddyboss-platform' ) }
+							{ __( 'Save', 'buddyboss' ) }
 						</Button>
 					</div>
 				</div>
@@ -930,14 +930,14 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 		{ /* Edit Extension modal — portaled to body so it renders over the Manage modal */ }
 		{ isManageOpen && isEditOpen && editingKey && createPortal(
 			<div className="bb-extension-modal-overlay bb-extension-modal-overlay--nested">
-				<div className="bb-extension-modal--nested" role="dialog" aria-modal="true" aria-label={ __( 'Edit Extension', 'buddyboss-platform' ) }>
+				<div className="bb-extension-modal--nested" role="dialog" aria-modal="true" aria-label={ __( 'Edit Extension', 'buddyboss' ) }>
 					<div className="bb-extension-modal--nested__header">
-						<h1>{ __( 'Edit Extension', 'buddyboss-platform' ) }</h1>
+						<h1>{ __( 'Edit Extension', 'buddyboss' ) }</h1>
 						<button
 							type="button"
 							className="bb-extension-modal--nested__close"
 							onClick={ handleCancelEdit }
-							aria-label={ __( 'Close', 'buddyboss-platform' ) }
+							aria-label={ __( 'Close', 'buddyboss' ) }
 						>
 							<i className="bb-icons-rl bb-icons-rl-x" />
 						</button>
@@ -945,7 +945,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 					<div className="bb-extension-modal__body">
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'Extension', 'buddyboss-platform' ) }
+								{ __( 'Extension', 'buddyboss' ) }
 							</label>
 							<TextControl
 								value={ editExtension }
@@ -955,7 +955,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						</div>
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'Description', 'buddyboss-platform' ) }
+								{ __( 'Description', 'buddyboss' ) }
 							</label>
 							<TextControl
 								value={ editDescription }
@@ -965,7 +965,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						</div>
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'Icon', 'buddyboss-platform' ) }
+								{ __( 'Icon', 'buddyboss' ) }
 							</label>
 							<div className="bb-extension-modal__icon-select" ref={ editIconDropdownRef }>
 								<div
@@ -986,7 +986,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 										( iconOptions.find( function( o ) { return o.value === editIcon; } ) || {} ).icon_class || getDefaultIconClass()
 									} />
 									<span className="bb-extension-modal__icon-dropdown-label">
-										{ ( iconOptions.find( function( o ) { return o.value === editIcon; } ) || {} ).label || __( 'Default', 'buddyboss-platform' ) }
+										{ ( iconOptions.find( function( o ) { return o.value === editIcon; } ) || {} ).label || __( 'Default', 'buddyboss' ) }
 									</span>
 									<i className="bb-icons-rl bb-icons-rl-caret-down bb-extension-modal__icon-dropdown-chevron" />
 								</div>
@@ -1013,13 +1013,13 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						</div>
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
-								{ __( 'MIME Type', 'buddyboss-platform' ) }
+								{ __( 'MIME Type', 'buddyboss' ) }
 							</label>
 							<div className="bb-extension-modal__mime-row">
 								<TextControl
 									value={ editMimeType }
 									onChange={ setEditMimeType }
-									placeholder={ __( 'Enter MIME type', 'buddyboss-platform' ) }
+									placeholder={ __( 'Enter MIME type', 'buddyboss' ) }
 									__nextHasNoMarginBottom
 								/>
 								<Button
@@ -1030,12 +1030,12 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 										mimeChecker.setMimeCheckerResult( '' );
 									} }
 								>
-									{ __( 'MIME Checker', 'buddyboss-platform' ) }
+									{ __( 'MIME Checker', 'buddyboss' ) }
 								</Button>
 							</div>
 							{ ! mimeChecker.isMimeCheckerOpen && ! editMimeType.trim() && (
 								<p className="bb-extension-modal__field-hint">
-									{ __( 'Not sure? Click "MIME Checker" to detect the correct type from a sample file.', 'buddyboss-platform' ) }
+									{ __( 'Not sure? Click "MIME Checker" to detect the correct type from a sample file.', 'buddyboss' ) }
 								</p>
 							) }
 						</div>
@@ -1055,14 +1055,14 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 							variant="secondary"
 							onClick={ handleCancelEdit }
 						>
-							{ __( 'Cancel', 'buddyboss-platform' ) }
+							{ __( 'Cancel', 'buddyboss' ) }
 						</Button>
 						<Button
 							variant="primary"
 							onClick={ handleSaveEdit }
 							disabled={ ! editExtension.trim() || ! editMimeType.trim() }
 						>
-							{ __( 'Save', 'buddyboss-platform' ) }
+							{ __( 'Save', 'buddyboss' ) }
 						</Button>
 					</div>
 				</div>

@@ -920,7 +920,7 @@ class BBoss_Messages_Thread {
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 			/* translators: 1: method name, 2: file path. */
-			_deprecated_argument( __METHOD__, '2.2.0', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
+			_deprecated_argument( __METHOD__, '2.2.0', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'user_id',
@@ -1668,7 +1668,7 @@ class BBoss_Messages_Thread {
 
 		if ( count( $recipients ) >= 5 ) {
 			/* translators: %s: number. */
-			return sprintf( __( '%s Recipients', 'buddyboss-platform' ), bboss_core_number_format( count( $recipients ) ) );
+			return sprintf( __( '%s Recipients', 'buddyboss' ), bboss_core_number_format( count( $recipients ) ) );
 		}
 
 		$recipient_links = array();
@@ -1677,7 +1677,7 @@ class BBoss_Messages_Thread {
 			$recipient_link = bboss_core_get_userlink( $recipient->user_id );
 
 			if ( empty( $recipient_link ) ) {
-				$recipient_link = __( 'Deleted User', 'buddyboss-platform' );
+				$recipient_link = __( 'Deleted User', 'buddyboss' );
 			}
 
 			$recipient_links[] = $recipient_link;

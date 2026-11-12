@@ -18,8 +18,8 @@ defined( 'ABSPATH' ) || exit;
 bboss_register_feature(
 	'blogging',
 	array(
-		'label'              => __( 'Blogs', 'buddyboss-platform' ),
-		'description'        => __( 'Manage your blog settings, such as author blocks, Bookmarking and member subscriptions.', 'buddyboss-platform' ),
+		'label'              => __( 'Blogs', 'buddyboss' ),
+		'description'        => __( 'Manage your blog settings, such as author blocks, Bookmarking and member subscriptions.', 'buddyboss' ),
 		'icon'               => array(
 			'type'  => 'font',
 			'class' => 'bb-icons-rl bb-icons-rl-book-open',

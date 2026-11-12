@@ -421,7 +421,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 			)
 		);
 
-		$refused = __( 'Activity not found.', 'buddyboss-platform' );
+		$refused = __( 'Activity not found.', 'buddyboss' );
 
 		$this->assertSame( $refused, $this->reactions( 0, $comment )['data']['message'] );
 		$this->assertSame( $refused, $this->reactions( $this->stranger, $comment )['data']['message'] );

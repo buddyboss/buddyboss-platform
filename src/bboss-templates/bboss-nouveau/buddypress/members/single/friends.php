@@ -29,7 +29,7 @@ if ( 'my-friends' === $bp_current_action && bboss_enable_content_counts() ) {
 								'<span class="bb-count">%d</span> Request',
 								'<span class="bb-count">%d</span> Requests',
 								$count,
-								'buddyboss-platform'
+								'buddyboss'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),
@@ -43,7 +43,7 @@ if ( 'my-friends' === $bp_current_action && bboss_enable_content_counts() ) {
 								'<span class="bb-count">%d</span> Connection',
 								'<span class="bb-count">%d</span> Connections',
 								$count,
-								'buddyboss-platform'
+								'buddyboss'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),

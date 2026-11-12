@@ -97,7 +97,7 @@ $topic_id = bboss_bbp_get_topic_id();
 									bboss_bbp_topic_reply_link();
 									if ( ! bboss_bbp_current_user_can_access_create_reply_form() && ! bboss_bbp_is_topic_closed() && ! bboss_bbp_is_forum_closed( bboss_bbp_get_topic_forum_id() ) && ! is_user_logged_in() ) {
 										?>
-											<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bbp-topic-login-link bb-style-primary-bgr-color bb-style-border-radius"><?php esc_html_e( 'Log In to Reply', 'buddyboss-platform' ); ?></a>
+											<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bbp-topic-login-link bb-style-primary-bgr-color bb-style-border-radius"><?php esc_html_e( 'Log In to Reply', 'buddyboss' ); ?></a>
 									<?php } ?>
 								</div>
 							</div>

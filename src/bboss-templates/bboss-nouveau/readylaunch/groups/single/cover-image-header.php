@@ -43,7 +43,7 @@ $has_default_cover        = bboss_attachment_get_cover_image_class( bboss_get_gr
 			$has_cover_image_position = ' has-position';
 		}
 	} else {
-		$group_cover_image = esc_url( bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/images/group_cover_image.jpeg' );
+		$group_cover_image = esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
 	}
 	?>
 
@@ -59,23 +59,23 @@ $has_default_cover        = bboss_attachment_get_cover_image_class( bboss_get_gr
 			?>
 
 			<?php if ( bboss_is_item_admin() ) { ?>
-				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip bb-rl-group-cover-ctrl" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss-platform' ); ?>">
+				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip bb-rl-group-cover-ctrl" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-camera"></i>
 				</a>
 			<?php } ?>
 
 			<?php if ( ! empty( $group_cover_image ) && bboss_is_item_admin() && bboss_attachments_get_group_has_cover_image( bboss_get_group_id() ) ) { ?>
-				<a href="#" class="position-change-cover-image bp-tooltip bb-rl-group-cover-ctrl" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss-platform' ); ?>">
+				<a href="#" class="position-change-cover-image bp-tooltip bb-rl-group-cover-ctrl" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-arrows-out-cardinal"></i>
 				</a>
-				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="delete-cover-image bp-tooltip bb-rl-group-cover-ctrl" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Delete Cover Photo', 'buddyboss-platform' ); ?>">
+				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="delete-cover-image bp-tooltip bb-rl-group-cover-ctrl" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Delete Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-trash"></i>
 				</a>
 				<div class="header-cover-reposition-wrap">
-					<a href="#" class="button small cover-image-cancel"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
-					<a href="#" class="button small cover-image-save"><?php esc_html_e( 'Save Change', 'buddyboss-platform' ); ?></a>
-					<span class="drag-element-helper"><i class="bb-icons-rl-list"></i><?php esc_html_e( 'Drag to move cover photo', 'buddyboss-platform' ); ?></span>
-					<img src="<?php echo esc_url( $group_cover_image ); ?>" alt="<?php esc_attr_e( 'Cover photo', 'buddyboss-platform' ); ?>" />
+					<a href="#" class="button small cover-image-cancel"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+					<a href="#" class="button small cover-image-save"><?php esc_html_e( 'Save Change', 'buddyboss' ); ?></a>
+					<span class="drag-element-helper"><i class="bb-icons-rl-list"></i><?php esc_html_e( 'Drag to move cover photo', 'buddyboss' ); ?></span>
+					<img src="<?php echo esc_url( $group_cover_image ); ?>" alt="<?php esc_attr_e( 'Cover photo', 'buddyboss' ); ?>" />
 				</div>
 			<?php } ?>
 		<?php } ?>

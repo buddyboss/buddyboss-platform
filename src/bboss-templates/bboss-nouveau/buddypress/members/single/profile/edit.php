@@ -23,7 +23,7 @@ if ( bboss_has_profile( 'profile_group_id=' . bboss_get_current_profile_group_id
 			<?php
 			printf(
 			/* translators: %s = profile field group name */
-				esc_html__( 'Edit "%s" Information', 'buddyboss-platform' ),
+				esc_html__( 'Edit "%s" Information', 'buddyboss' ),
 				esc_html( bboss_get_the_profile_group_name() )
 			)
 			?>

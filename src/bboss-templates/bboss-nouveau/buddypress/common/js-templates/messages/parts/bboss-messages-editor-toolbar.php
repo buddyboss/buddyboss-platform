@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php if ( bboss_is_active( 'media' ) ) : ?>
 
 		<div class="post-elements-buttons-item post-media post-media-photo-support">
-			<a href="#" id="messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss-platform' ); ?>">
+			<a href="#" id="messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
 				<i class="bb-icon-l bb-icon-camera"></i>
 			</a>
 		</div>
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
 		if ( ! empty( $video_extensions ) ) :
 			?>
             <div class="post-elements-buttons-item post-video post-media-video-support">
-                <a href="#" id="messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>">
+                <a href="#" id="messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
                     <i class="bb-icon-l bb-icon-video"></i>
                 </a>
             </div>
@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 		if ( ! empty( $extensions ) ) :
 			?>
 			<div class="post-elements-buttons-item post-media post-media-document-support">
-				<a href="#" id="messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>">
+				<a href="#" id="messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 					<i class="bb-icon-l bb-icon-attach"></i>
 				</a>
 			</div>
@@ -51,7 +51,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="post-elements-buttons-item post-gif post-media-gif-support">
 			<div class="gif-media-search">
-				<a href="#" id="messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Choose a GIF', 'buddyboss-platform' ); ?>">
+				<a href="#" id="messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
 					<i class="bb-icon-l bb-icon-gif"></i>
 				</a>
 				<div class="gif-media-search-dropdown"></div>

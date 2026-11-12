@@ -40,11 +40,11 @@ function bboss_groups_action_leave_group() {
 		$group_admins = bboss_groups_get_group_admins( bboss_get_current_group_id() );
 
 		if ( 1 == count( $group_admins ) && $group_admins[0]->user_id == bboss_loggedin_user_id() ) {
-			bboss_core_add_message( __( 'This group must have at least one organizer.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'This group must have at least one organizer.', 'buddyboss' ), 'error' );
 		} elseif ( ! bboss_groups_leave_group( $bp->groups->current_group->id ) ) {
-			bboss_core_add_message( __( 'There was an error leaving the group.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'There was an error leaving the group.', 'buddyboss' ), 'error' );
 		} else {
-			bboss_core_add_message( __( 'You left the group.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'You left the group.', 'buddyboss' ) );
 		}
 
 		$group    = bboss_groups_get_current_group();
@@ -57,7 +57,7 @@ function bboss_groups_action_leave_group() {
 		bboss_core_redirect( $redirect );
 	}
 
-	/** This filter is documented in bboss-groups/bp-groups-actions.php */
+	/** This filter is documented in bp-groups/bp-groups-actions.php */
 	bboss_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
 }
 add_action( 'bp_actions', 'bboss_groups_action_leave_group' );

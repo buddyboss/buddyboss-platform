@@ -52,7 +52,7 @@ defined( 'ABSPATH' ) || exit;
 					<div class="bb-card-action bb-card-action-join bb-card-action-primary"></div>
 				<?php endif; ?>
 				<div class="bb-card-action bb-card-action-outline">
-					<a href="" class="card-button card-button-group"><?php esc_html_e( 'View Group', 'buddyboss-platform' ); ?></a>
+					<a href="" class="card-button card-button-group"><?php esc_html_e( 'View Group', 'buddyboss' ); ?></a>
 				</div>
 			</div>
 		</div>

@@ -114,7 +114,7 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 	public function get_settings_sections() {
 
 		$status      = 'not-connected';
-		$status_text = __( 'Not Connected', 'buddyboss-platform' );
+		$status_text = __( 'Not Connected', 'buddyboss' );
 		$html        = '<div class="bb-pusher-status">' .
 			'<span class="status-line ' . esc_attr( $status ) . '">' . esc_html( $status_text ) . '</span>' .
 		'</div>';
@@ -122,7 +122,7 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 		$settings = array(
 			'bb_pusher_settings_section' => array(
 				'page'              => 'Pusher',
-				'title'             => __( 'Pusher', 'buddyboss-platform' ) . $html,
+				'title'             => __( 'Pusher', 'buddyboss' ) . $html,
 				'tutorial_callback' => array( $this, 'setting_callback_pusher_tutorial' ),
 			),
 		);
@@ -165,7 +165,7 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 
 		$fields['bb_pusher_settings_section'] = array(
 			'information' => array(
-				'title'             => esc_html__( 'Information', 'buddyboss-platform' ),
+				'title'             => esc_html__( 'Information', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_pusher_information' ),
 				'sanitize_callback' => 'string',
 				'args'              => array( 'class' => 'notes-hidden-header' ),
@@ -174,7 +174,7 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 
 		if ( ! function_exists( 'bb_platform_pro' ) ) {
 			$fields['bb_pusher_settings_section']['infos'] = array(
-				'title'             => esc_html__( 'Notes', 'buddyboss-platform' ),
+				'title'             => esc_html__( 'Notes', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_pusher_bbp_pro_not_installed' ),
 				'sanitize_callback' => 'string',
 				'args'              => array( 'class' => 'notes-hidden-header' ),
@@ -184,7 +184,7 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 			version_compare( bb_platform_pro()->version, bboss_pro_pusher_version(), '<' )
 		) {
 			$fields['bb_pusher_settings_section']['infos'] = array(
-				'title'             => esc_html__( 'Notes', 'buddyboss-platform' ),
+				'title'             => esc_html__( 'Notes', 'buddyboss' ),
 				'callback'          => array( $this, 'setting_callback_pusher_bbp_pro_older_version_installed' ),
 				'sanitize_callback' => 'string',
 				'args'              => array( 'class' => 'notes-hidden-header' ),
@@ -216,7 +216,7 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 					)
 				);
 			?>
-			"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
+			"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 		<?php
 	}
@@ -231,8 +231,8 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 	public function setting_callback_pusher_information() {
 		printf(
 			/* translators: pusher channels link */
-			esc_html__( 'The BuddyBoss Platform has an integration with %s, a WebSocket service which can power realtime features on your BuddyBoss community such as live messaging.', 'buddyboss-platform' ),
-			'<a href="https://pusher.com/channels" target="_blank">' . esc_html__( 'Pusher Channels', 'buddyboss-platform' ) . '</a>'
+			esc_html__( 'The BuddyBoss Platform has an integration with %s, a WebSocket service which can power realtime features on your BuddyBoss community such as live messaging.', 'buddyboss' ),
+			'<a href="https://pusher.com/channels" target="_blank">' . esc_html__( 'Pusher Channels', 'buddyboss' ) . '</a>'
 		);
 	}
 
@@ -243,13 +243,13 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 	 */
 	public function setting_callback_pusher_bbp_pro_not_installed() {
 		// Builds without upsell links (the wordpress.org edition) name the plugin without a link.
-		$pro_link = esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' );
+		$pro_link = esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' );
 
 		echo '<p class="description notification-information bb-lab-notice">' .
 			sprintf(
 				wp_kses_post(
 					/* translators: BuddyBoss Pro purchase link */
-					__( 'Please install %1$s to use Pusher on your site.', 'buddyboss-platform' )
+					__( 'Please install %1$s to use Pusher on your site.', 'buddyboss' )
 				),
 				$pro_link
 			) .
@@ -263,13 +263,13 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 	 */
 	public function setting_callback_pusher_bbp_pro_older_version_installed() {
 		// Builds without upsell links (the wordpress.org edition) name the plugin without a link.
-		$pro_link = esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' );
+		$pro_link = esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' );
 
 		echo '<p class="description notification-information bb-lab-notice">' .
 			sprintf(
 				wp_kses_post(
 					/* translators: BuddyBoss Pro purchase link */
-					__( 'Please update %1$s to version %2$s to use Pusher on your site.', 'buddyboss-platform' )
+					__( 'Please update %1$s to version %2$s to use Pusher on your site.', 'buddyboss' )
 				),
 				$pro_link,
 				esc_html( bboss_pro_pusher_version() )

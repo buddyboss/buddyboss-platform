@@ -128,16 +128,16 @@ const NotificationTypesField = ( props ) => {
 
 		if ( ! emailTemplate.has_templates ) {
 			// No email templates registered at all.
-			label = __( 'Add Email Template', 'buddyboss-platform' );
+			label = __( 'Add Email Template', 'buddyboss' );
 		} else if ( emailTemplate.missing ) {
 			missingCount = emailTemplate.count - ( emailTemplate.existing_count || 0 );
 			label = missingCount > 1
-				? __( 'Add Email Templates', 'buddyboss-platform' )
-				: __( 'Add Email Template', 'buddyboss-platform' );
+				? __( 'Add Email Templates', 'buddyboss' )
+				: __( 'Add Email Template', 'buddyboss' );
 		} else {
 			label = emailTemplate.count > 1
-				? __( 'Email Templates', 'buddyboss-platform' )
-				: __( 'Email Template', 'buddyboss-platform' );
+				? __( 'Email Templates', 'buddyboss' )
+				: __( 'Email Template', 'buddyboss' );
 		}
 
 		let className = 'bb-notification-types__email-link';
@@ -160,7 +160,7 @@ const NotificationTypesField = ( props ) => {
 	if ( ! groups.length ) {
 		return (
 			<p className="bb-notification-types__empty">
-				{ __( 'No notification types registered.', 'buddyboss-platform' ) }
+				{ __( 'No notification types registered.', 'buddyboss' ) }
 			</p>
 		);
 	}

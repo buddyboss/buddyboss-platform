@@ -1,0 +1,1382 @@
+<?php
+/**
+ * BuddyPress Filters & Actions.
+ *
+ * This file contains the actions and filters that are used through-out BuddyPress.
+ * They are consolidated here to make searching for them easier, and to help
+ * developers understand at a glance the order in which things occur.
+ *
+ * @package BuddyBoss\Hooks
+ * @since BuddyPress 1.6.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Attach BuddyPress to WordPress.
+ *
+ * BuddyPress uses its own internal actions to help aid in third-party plugin
+ * development, and to limit the amount of potential future code changes when
+ * updates to WordPress core occur.
+ *
+ * These actions exist to create the concept of 'plugin dependencies'. They
+ * provide a safe way for plugins to execute code *only* when BuddyPress is
+ * installed and activated, without needing to do complicated guesswork.
+ *
+ * For more information on how this works, see the 'Plugin Dependency' section
+ * near the bottom of this file.
+ *
+ *           v--WordPress Actions       v--BuddyPress Sub-actions
+ */
+add_action( 'plugins_loaded', 'bboss_loaded', 10 );
+add_action( 'init', 'bboss_init', 10 );
+add_action( 'rest_api_init', 'bboss_rest_api_init', 20 ); // After WP core.
+add_action( 'customize_register', 'bboss_customize_register', 20 ); // After WP core.
+add_action( 'parse_query', 'bboss_parse_query', 2 ); // Early for overrides.
+add_action( 'wp', 'bboss_ready', 10 );
+add_action( 'set_current_user', 'bboss_setup_current_user', 10 );
+add_action( 'setup_theme', 'bboss_setup_theme', 10 );
+add_action( 'after_setup_theme', 'bboss_after_setup_theme', 100 ); // After WP themes.
+add_action( 'wp_enqueue_scripts', 'bboss_enqueue_scripts', 10 );
+add_action( 'enqueue_embed_scripts', 'bboss_enqueue_embed_scripts', 10 );
+add_action( 'admin_bar_menu', 'bboss_setup_admin_bar', 20 ); // After WP core.
+add_action( 'template_redirect', 'bboss_template_redirect', 10 );
+add_action( 'widgets_init', 'bboss_widgets_init', 10 );
+add_action( 'generate_rewrite_rules', 'bboss_generate_rewrite_rules', 10 );
+
+/**
+ * The bp_loaded hook - Attached to 'plugins_loaded' above.
+ *
+ * Attach various loader actions to the bp_loaded action.
+ * The load order helps to execute code at the correct time.
+ *                                                      v---Load order
+ */
+add_action( 'bp_loaded', 'bboss_setup_components', 2 );
+add_action( 'bp_loaded', 'bboss_setup_integrations', 3 );
+add_action( 'bp_loaded', 'bboss_include', 4 );
+add_action( 'bp_loaded', 'bboss_setup_option_filters', 5 );
+add_action( 'bp_loaded', 'bboss_setup_cache_groups', 5 );
+add_action( 'bp_loaded', 'bboss_setup_widgets', 6 );
+add_action( 'bp_loaded', 'bboss_register_theme_packages', 12 );
+
+/**
+ * The bp_init hook - Attached to 'init' above.
+ *
+ * Attach various initialization actions to the bp_init action.
+ * The load order helps to execute code at the correct time.
+ *                                                   v---Load order
+ */
+add_action( 'bp_init', 'bboss_register_post_types', 2 );
+add_action( 'bp_init', 'bboss_register_taxonomies', 2 );
+add_action( 'bp_init', 'bboss_core_set_uri_globals', 2 );
+add_action( 'bp_init', 'bboss_setup_globals', 4 );
+add_action( 'bp_init', 'bboss_setup_canonical_stack', 5 );
+add_action( 'bp_init', 'bboss_setup_nav', 6 );
+add_action( 'bp_init', 'bboss_setup_title', 8 );
+add_action( 'bp_init', 'bboss_blocks_init', 10 );
+add_action( 'bp_init', 'bboss_core_load_admin_bar_css', 12 );
+add_action( 'bp_init', 'bboss_add_rewrite_tags', 20 );
+add_action( 'bp_init', 'bboss_add_rewrite_rules', 30 );
+add_action( 'bp_init', 'bboss_add_permastructs', 40 );
+add_action( 'bp_init', 'bboss_init_background_updater', 50 );
+add_action( 'bp_init', 'bboss_init_email_background_updater', 51 );
+add_action( 'bp_init', 'bboss_init_notifications_background_updater', 52 );
+add_action( 'bp_init', 'bboss_bb_init_background_updater', 50 );
+add_action( 'bp_init', 'bboss_load_topics_manager' );
+
+/**
+ * The bp_register_taxonomies hook - Attached to 'bp_init' @ priority 2 above.
+ */
+add_action( 'bp_register_taxonomies', 'bboss_register_member_types' );
+
+/**
+ * Late includes.
+ *
+ * Run after the canonical stack is setup to allow for conditional includes
+ * on certain pages.
+ */
+add_action( 'bp_setup_canonical_stack', 'bboss_late_include', 20 );
+
+/**
+ * The bp_template_redirect hook - Attached to 'template_redirect' above.
+ *
+ * Attach various template actions to the bp_template_redirect action.
+ * The load order helps to execute code at the correct time.
+ *
+ * Note that we currently use template_redirect versus template include because
+ * BuddyPress is a bully and overrides the existing themes output in many
+ * places. This won't always be this way, we promise.
+ *                                                           v---Load order
+ */
+add_action( 'bp_template_redirect', 'bboss_redirect_canonical', 2 );
+add_action( 'bp_template_redirect', 'bboss_actions', 4 );
+add_action( 'bp_template_redirect', 'bboss_screens', 6 );
+add_action( 'bp_template_redirect', 'bboss_post_request', 10 );
+add_action( 'bp_template_redirect', 'bboss_get_request', 10 );
+add_action( 'bp_template_redirect', 'bboss_private_network_template_redirect', 10 );
+
+/**
+ * Add the BuddyPress functions file and the Theme Compat Default features.
+ */
+add_action( 'bp_after_setup_theme', 'bboss_check_theme_template_pack_dependency', -10 );
+add_action( 'bp_after_setup_theme', 'bboss_load_theme_functions', 1 );
+add_action( 'bp_after_setup_theme', 'bboss_show_hide_toolbar', 9999999 );
+
+// Restrict user when view media/document from url.
+add_action( 'template_redirect', 'bboss_restrict_single_attachment', 999 );
+
+// Load Post Notifications.
+add_action( 'bp_loaded', 'bboss_load_post_notifications' );
+add_action( 'comment_post', 'bboss_post_new_comment_reply_notification', 20, 3 );
+add_action( 'wp_insert_comment', 'bboss_post_new_comment_reply_notification_helper', 20, 2 );
+add_action( 'transition_comment_status', 'bboss_post_comment_on_status_change', 20, 3 );
+
+// Load the admin.
+if ( is_admin() ) {
+	add_action( 'bp_loaded', 'bboss_admin' );
+}
+
+// Activation redirect.
+add_action( 'bp_activation', 'bboss_add_activation_redirect' );
+
+// Email unsubscribe.
+add_action( 'bp_get_request_unsubscribe', 'bboss_email_unsubscribe_handler' );
+
+add_action(
+	'bp_init',
+	function() {
+		if ( false === bboss_enabled_legacy_email_preference() ) {
+			// Render notifications on frontend.
+			add_action( 'bp_notification_settings', 'bboss_render_notification_settings', 1 );
+		}
+	}
+);
+
+add_action(
+	'bp_init',
+	function() {
+		$component = bboss_get_option( 'bp-active-components' );
+
+		if ( ! is_array( $component ) ) {
+			return;
+		}
+
+		// The option lives on the root blog, while code availability depends on the plugins
+		// active on the current site. On multisite only the root blog decides, as in BP_Core.
+		if ( is_multisite() && ! bboss_is_root_blog() ) {
+			return;
+		}
+
+		/*
+		 * Keep the "Document" and "Video" components in step with "Media".
+		 *
+		 * Both need Media, so they are switched off with it. They are only
+		 * switched on when their code is available — the components now ship
+		 * in the BuddyBoss Add-ons plugin, and adding one that cannot load
+		 * would just be scrubbed again by BP_Core on the next request. Media may
+		 * be stored as '1' (legacy) or 1 (Settings 2.0), so test truthiness.
+		 *
+		 * Each child is switched on automatically once per Media activation
+		 * (remembered in `bb_media_auto_enabled_components`), so an admin can
+		 * still turn Video or Documents off on their own afterwards. Its
+		 * directory page is created at the same time, as the Media toggle did
+		 * when it owned these components.
+		 */
+		$auto_enabled = bboss_get_option( 'bb_media_auto_enabled_components', false );
+		if ( false === $auto_enabled ) {
+			// Seed it so later reads come from autoloaded options instead of a query per request.
+			$auto_enabled = array();
+			bboss_update_option( 'bb_media_auto_enabled_components', $auto_enabled );
+		}
+
+		$auto_enabled  = (array) $auto_enabled;
+		$updated       = false;
+		$added         = array();
+		$added_or_seen = array();
+		foreach ( array( 'document', 'video' ) as $media_child ) {
+			if ( ! empty( $component['media'] ) ) {
+				if ( ! empty( $component[ $media_child ] ) ) {
+					// Already on: remember it so a later manual disable sticks.
+					$added_or_seen[] = $media_child;
+				} elseif (
+					! in_array( $media_child, $auto_enabled, true ) &&
+					bboss_is_component_directory_available( $media_child )
+				) {
+					$component[ $media_child ] = '1';
+					$added[ $media_child ]     = 1;
+					$added_or_seen[]           = $media_child;
+					$updated                   = true;
+				}
+			} elseif ( isset( $component[ $media_child ] ) ) {
+				unset( $component[ $media_child ] );
+				$updated = true;
+			}
+		}
+
+		if ( $updated ) {
+			bboss_update_option( 'bp-active-components', $component );
+		}
+
+		$new_auto_enabled = empty( $component['media'] )
+			? array()
+			: array_values( array_unique( array_merge( $auto_enabled, $added_or_seen ) ) );
+		if ( $new_auto_enabled !== $auto_enabled ) {
+			bboss_update_option( 'bb_media_auto_enabled_components', $new_auto_enabled );
+		}
+
+		if ( ! empty( $added ) ) {
+			// bp_core_add_page_mappings() uses post_exists(), which only loads in wp-admin.
+			if ( ! function_exists( 'post_exists' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/post.php';
+			}
+			bboss_core_add_page_mappings( $added, 'keep', false );
+			add_action( 'shutdown', 'flush_rewrite_rules' );
+		}
+	},
+	10,
+	2
+);
+
+// remove admin notices for the ReadyLaunch screen.
+add_action( 'admin_head', 'bboss_remove_admin_notices', 99 );
+
+/**
+ * Restrict user when visit attachment url from media/document.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bboss_restrict_single_attachment() {
+	if ( is_attachment() ) {
+		global $post;
+		if ( ! empty( $post ) ) {
+			$media_meta    = get_post_meta( $post->ID, 'bp_media_upload', true );
+			$document_meta = get_post_meta( $post->ID, 'bp_document_upload', true );
+			if (
+				! empty( $media_meta ) ||
+				! empty( $document_meta )
+			) {
+				bboss_do_404();
+				return;
+			}
+		}
+	}
+}
+
+/**
+ * Validate and update symlink option value.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param int $updated_value Current value of options.
+ */
+function bboss_media_symlink_validate( $updated_value ) {
+	$keys = array(
+		'bb_media_symlink_type',
+		'bb_document_symlink_type',
+		'bb_document_video_symlink_type',
+		'bb_video_symlink_type',
+		'bb_video_thumb_symlink_type',
+	);
+
+	if ( true === bboss_check_server_disabled_symlink() ) {
+		bboss_update_option( 'bp_media_symlink_support', 0 );
+		foreach ( $keys as $k ) {
+			bboss_delete_option( $k );
+		}
+		return;
+	}
+
+	$output_file_src = '';
+
+	$upload_dir = wp_upload_dir();
+	$upload_dir = $upload_dir['basedir'];
+
+	$platform_previews_path = $upload_dir . '/bb-platform-previews';
+	if ( ! is_dir( $platform_previews_path ) ) {
+		wp_mkdir_p( $platform_previews_path );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
+	}
+
+	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
+	if ( ! is_dir( $media_symlinks_path ) ) {
+		wp_mkdir_p( $media_symlinks_path );
+		chmod( $media_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
+	}
+
+	foreach ( $keys as $k ) {
+		bboss_delete_option( $k );
+	}
+
+	if ( empty( $updated_value ) || 0 === $updated_value ) {
+		return;
+	}
+
+	$attachment_id = bboss_core_upload_dummy_attachment();
+
+	if ( ! empty( $attachment_id ) ) {
+
+		$attachment_url  = wp_get_attachment_image_src( $attachment_id );
+		$attachment_file = get_attached_file( $attachment_id );
+		$symlinks_path   = $media_symlinks_path;
+		$size            = 'thumbnail';
+		$symlink_name    = md5( 'testsymlink' . $attachment_id . $size );
+		$attachment_path = $symlinks_path . '/' . $symlink_name;
+		$file            = image_get_intermediate_size( $attachment_id, $size );
+		if ( $file && ! empty( $file['path'] ) ) {
+			$output_file_src = $upload_dir . '/' . $file['path'];
+		} elseif ( $attachment_url ) {
+			$output_file_src = $attachment_file;
+		}
+
+		$upload_directory        = wp_get_upload_dir();
+		$key                     = 'bb_media_symlink_type';
+		$preview_attachment_path = $symlinks_path . '/' . $symlink_name;
+		$symlink_url             = bboss_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
+
+		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+			if ( ! is_link( $attachment_path ) ) {
+
+				$sym_status = bboss_get_option( $key, '' );
+				$status     = false;
+
+				if ( empty( $sym_status ) || 'default' === $sym_status ) {
+
+					symlink( $output_file_src, $attachment_path );
+				}
+
+				if ( empty( $sym_status ) ) {
+					if ( ! empty( $symlink_url ) ) {
+
+						$fetch = wp_remote_get( $symlink_url );
+						if ( is_wp_error( $fetch ) ) {
+							$fetch = wp_remote_get( $symlink_url, array( 'sslverify' => apply_filters( 'https_local_ssl_verify', false ) ) );
+						}
+
+						if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+							$status     = true;
+							$sym_status = 'default';
+							foreach ( $keys as $k ) {
+								bboss_update_option( $k, $sym_status );
+							}
+							bboss_delete_option( 'bb_display_support_error' );
+						} else {
+							bboss_update_option( 'bb_display_support_error', 1 );
+						}
+					}
+
+					if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
+						wp_delete_file( $attachment_path );
+						bboss_update_option( 'bp_media_symlink_support', 0 );
+
+						foreach ( $keys as $k ) {
+							bboss_delete_option( $k );
+						}
+						bboss_update_option( 'bb_display_support_error', 1 );
+					} else {
+						bboss_delete_option( 'bb_display_support_error' );
+					}
+				}
+
+				if ( false === $status && ( empty( $sym_status ) || 'relative' === $sym_status ) ) {
+					$tmp = getcwd();
+					chdir( wp_normalize_path( ABSPATH ) );
+					$sym_path   = explode( '/', $symlinks_path );
+					$search_key = array_search( 'wp-content', $sym_path, true );
+					if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
+						$sym_path = array_slice( array_filter( $sym_path ), $search_key );
+						$sym_path = implode( '/', $sym_path );
+					}
+					if ( is_dir( 'wp-content/' . $sym_path ) ) {
+						chdir( 'wp-content/' . $sym_path );
+						if ( empty( $file['path'] ) ) {
+							$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
+						}
+						$output_file_src = '../../' . $file['path'];
+						if ( file_exists( $output_file_src ) ) {
+							symlink( $output_file_src, $symlink_name );
+						}
+					}
+					chdir( $tmp );
+
+					if ( empty( $sym_status ) ) {
+
+						if ( ! empty( $symlink_url ) ) {
+							$fetch = wp_remote_get( $symlink_url );
+							if ( is_wp_error( $fetch ) ) {
+								$fetch = wp_remote_get( $symlink_url, array( 'sslverify' => apply_filters( 'https_local_ssl_verify', false ) ) );
+							}
+							if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+								$status     = true;
+								$sym_status = 'relative';
+								foreach ( $keys as $k ) {
+									bboss_update_option( $k, $sym_status );
+								}
+								bboss_delete_option( 'bb_display_support_error' );
+							} else {
+								bboss_update_option( 'bb_display_support_error', 1 );
+							}
+						}
+
+						if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
+							wp_delete_file( $attachment_path );
+							bboss_update_option( 'bp_media_symlink_support', 0 );
+							bboss_update_option( 'bb_display_support_error', 1 );
+							foreach ( $keys as $k ) {
+								bboss_delete_option( $k );
+							}
+						} else {
+							bboss_delete_option( 'bb_display_support_error' );
+						}
+					}
+				}
+			}
+		}
+		wp_delete_attachment( $attachment_id, true );
+	} else {
+
+		foreach ( $keys as $k ) {
+			bboss_delete_option( $k );
+		}
+
+		bboss_update_option( 'bp_media_symlink_support', 0 );
+		bboss_core_remove_temp_directory( $upload_dir . '/bb-platform-previews' );
+	}
+}
+
+/**
+ * Check the symlink type default/relative on symlink option update.
+ *
+ * @since BuddyBoss 1.8.2
+ *
+ * @param mixed $old_value The old option value.
+ * @param mixed $value     The new option value.
+ */
+function bboss_update_media_symlink_support( $old_value, $value ) {
+	if ( $old_value !== $value ) {
+		bboss_media_symlink_validate( $value );
+	}
+}
+
+add_action( 'update_option_bp_media_symlink_support', 'bboss_update_media_symlink_support', 10, 2 );
+
+/**
+ * Check and re-start the background process if queue is not empty.
+ *
+ * @since BuddyBoss 1.8.1
+ */
+function bboss_email_handle_cron_healthcheck() {
+	global $bb_email_background_updater;
+	if ( $bb_email_background_updater->is_updating() ) {
+		$bb_email_background_updater->handle_cron_healthcheck();
+	}
+}
+
+add_action( 'bb_init_email_background_updater', 'bboss_email_handle_cron_healthcheck' );
+
+/**
+ * Check and reschedule the background process if queue is not empty.
+ *
+ * @since BuddyBoss 1.8.3
+ */
+function bboss_handle_cron_healthcheck() {
+	global $bp_background_updater;
+	if ( $bp_background_updater->is_updating() ) {
+		$bp_background_updater->schedule_event();
+	}
+}
+
+add_action( 'bp_init_background_updater', 'bboss_handle_cron_healthcheck' );
+
+/**
+ * Check and reschedule the newly added background process if queue is not empty.
+ *
+ * @since BuddyBoss 2.4.20
+ */
+function bboss_updater_handle_cron_healthcheck() {
+	global $bb_background_updater;
+	if (
+		is_object( $bb_background_updater ) &&
+		$bb_background_updater->is_updating()
+	) {
+		$bb_background_updater->schedule_event();
+	}
+}
+
+add_action( 'bb_init_background_updater', 'bboss_updater_handle_cron_healthcheck' );
+
+/**
+ * Function will remove RSS Feeds.
+ *
+ * @since BuddyBoss 1.8.6
+ */
+function bboss_restricate_rss_feed_callback() {
+	if ( is_user_logged_in() ) {
+		return;
+	}
+	if ( true === bboss_enable_private_rss_feeds() ) {
+		bboss_restricate_rss_feed();
+	}
+}
+add_action( 'init', 'bboss_restricate_rss_feed_callback', 10 );
+
+/**
+ * Restrict RSS feeds once WordPress has parsed the request.
+ *
+ * The `init` check in bboss_restricate_rss_feed_callback() runs before the query is parsed, so it can only
+ * recognise a feed from its URL and misses feed URLs such as `/members/rss2`. This catches every
+ * feed WordPress serves through its template loader. It runs before `bp_template_redirect`, whose
+ * Private Website redirect leaves feeds to this setting. Forum feeds are printed earlier and are
+ * restricted by bboss_restricate_rss_feed_forums_request().
+ *
+ * @since BuddyBoss 3.6.1
+ */
+function bboss_restricate_rss_feed_template_redirect() {
+	if ( is_user_logged_in() || ! is_feed() || true !== bboss_enable_private_rss_feeds() ) {
+		return;
+	}
+
+	bboss_restricate_rss_feed( true );
+}
+add_action( 'template_redirect', 'bboss_restricate_rss_feed_template_redirect', 1 );
+
+/**
+ * Restrict forum feeds, which are printed while WordPress is still parsing the request.
+ *
+ * Forum, topic, reply and view feeds are output by bboss_bbp_request_feed_trap() on the `request`
+ * filter, before REST routing and before `template_redirect`. The `init` check exempts REST
+ * requests and cannot see feed URLs such as `/forums/rss2/`, and the `template_redirect`
+ * check never runs, so these feeds are checked here, just before the trap and on the same
+ * conditions it uses to decide whether it will print a feed.
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @param array $query_vars Request query variables.
+ *
+ * @return array
+ */
+function bboss_restricate_rss_feed_forums_request( $query_vars ) {
+	if (
+		! isset( $query_vars['feed'] ) ||
+		is_user_logged_in() ||
+		true !== bboss_enable_private_rss_feeds() ||
+		! function_exists( 'bboss_bbp_get_forum_post_type' )
+	) {
+		return $query_vars;
+	}
+
+	$is_forum_feed = ! empty( $query_vars[ bboss_bbp_get_view_rewrite_id() ] );
+
+	if ( ! $is_forum_feed && isset( $query_vars['post_type'] ) ) {
+		$forum_post_types = array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
+		$is_forum_feed    = (bool) array_intersect( $forum_post_types, (array) $query_vars['post_type'] );
+	}
+
+	if ( $is_forum_feed ) {
+		bboss_restricate_rss_feed( true );
+	}
+
+	return $query_vars;
+}
+add_filter( 'bbp_request', 'bboss_restricate_rss_feed_forums_request', 9 );
+
+/**
+ * Function will remove REST APIs endpoint.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ *                                                                   Usually a WP_REST_Response or WP_Error.
+ * @param array                                            $handler  Route handler used for the request.
+ * @param WP_REST_Request                                  $request  Request used to generate the response.
+ *
+ * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ */
+function bboss_restricate_rest_api_callback( $response, $handler, $request ) {
+	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+
+	if (
+		! is_user_logged_in() &&
+		! empty( $handler['permission_callback'] ) &&
+		(
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) && // buddyboss-app is active.
+				true === bbapp_is_private_app_enabled() && // private app is enabled.
+				true === bboss_enable_private_rest_apis() // BB private rest api is enabled.
+			) ||
+			(
+				! function_exists( 'bbapp_is_private_app_enabled' ) && // buddyboss-app is not active.
+				true === bboss_enable_private_rest_apis() // BB private rest api is enabled.
+			)
+		)
+	) {
+		return bboss_restricate_rest_api( $response, $handler, $request );
+	}
+
+	return $response;
+}
+
+add_filter( 'rest_request_before_callbacks', 'bboss_restricate_rest_api_callback', 100, 3 );
+
+/**
+ * Function will run after plugin successfully update.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param object $upgrader_object WP_Upgrader instance.
+ * @param array  $options         Array of bulk item update data.
+ */
+function bboss_plugin_upgrade_function_callback( $upgrader_object, $options ) {
+	$show_display_popup = false;
+	// The path to our plugin's main file.
+	$our_plugin = 'buddyboss-platform/bp-loader.php';
+	if ( ! empty( $options ) && 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
+		foreach ( $options['plugins'] as $plugin ) {
+			if ( ! empty( $plugin ) && $plugin === $our_plugin ) {
+				update_option( '_bb_is_update', $show_display_popup );
+				flush_rewrite_rules(); // Flush rewrite rules when update the Buddyboss platform plugin.
+			}
+		}
+	}
+}
+add_action( 'upgrader_process_complete', 'bboss_plugin_upgrade_function_callback', 10, 2 );
+
+/**
+ * Render registered notifications into frontend.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bboss_render_notification_settings() {
+	$registered_notification = bboss_register_notification_preferences();
+
+	bboss_render_enable_notification_options();
+
+	bboss_render_manual_notification();
+
+	if ( ! empty( $registered_notification ) ) {
+		foreach ( $registered_notification as $group => $data ) {
+			bboss_render_notification( $group );
+		}
+	}
+}
+
+/**
+ * Clear interval time when heartbeat enable/disabled.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @param int $old_value Previous saved value.
+ * @param int $value     Newly updated value.
+ *
+ * @return void
+ */
+function bboss_clear_interval_on_enable_disabled_heartbeat( $old_value, $value ) {
+	if ( $old_value !== $value ) {
+		bboss_delete_option( 'bb_presence_interval' );
+	}
+}
+
+add_action( 'update_option_bp_wp_heartbeat_disabled', 'bboss_clear_interval_on_enable_disabled_heartbeat', 10, 2 );
+
+/**
+ * Redirect old forums subscriptions links to new one.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @return void
+ */
+function bboss_forums_subscriptions_redirect() {
+
+	if ( bboss_is_my_profile() && function_exists( 'bboss_bbp_get_user_subscriptions_slug' ) ) {
+		global $wp;
+		$url = explode( '/', untrailingslashit( $wp->request ) );
+		if (
+			! empty( $url ) &&
+			end( $url ) === bboss_bbp_get_user_subscriptions_slug() &&
+			isset( bboss()->forums ) &&
+			! empty( bboss()->forums->id ) &&
+			bboss()->forums->id === $url[ count( $url ) - 2 ] &&
+			bboss_is_active( 'settings' ) &&
+			! empty( bboss_get_subscriptions_types() )
+		) {
+			$user_domain   = bboss_loggedin_user_domain();
+			$slug          = bboss_get_settings_slug();
+			$settings_link = trailingslashit( $user_domain . $slug ) . 'notifications/subscriptions';
+			if ( wp_safe_redirect( $settings_link ) ) {
+				exit;
+			}
+		}
+	}
+}
+
+add_action( 'bp_ready', 'bboss_forums_subscriptions_redirect' );
+
+/**
+ * Load Presence API mu plugin.
+ *
+ * @since BuddyBoss 2.3.1
+ */
+function bboss_load_presence_api_mu() {
+	if ( class_exists( 'BBoss_Presence' ) ) {
+		BBoss_Presence::bb_load_presence_api_mu_plugin( false );
+	}
+}
+
+add_action( 'bp_admin_init', 'bboss_load_presence_api_mu' );
+
+/**
+ * Function to check server allow to load php file directly or not.
+ *
+ * @since BuddyBoss 2.3.1
+ */
+function bboss_check_presence_load_directly() {
+	if ( class_exists( 'BBoss_Presence' ) ) {
+		BBoss_Presence::bb_check_native_presence_load_directly();
+	}
+}
+
+add_action( 'bp_admin_init', 'bboss_check_presence_load_directly' );
+
+/**
+ * Register the post comment reply notifications.
+ *
+ * @since BuddyBoss 2.3.50
+ */
+function bboss_load_post_notifications() {
+	if ( class_exists( 'BBoss_Post_Notification' ) ) {
+		BBoss_Post_Notification::instance();
+	}
+}
+
+/**
+ * Send new post comment reply notification.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param int        $comment_id       The comment ID.
+ * @param int|string $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam.
+ * @param array      $commentdata      Comment data.
+ */
+function bboss_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
+
+	// Don't send notification if the comment hasn't been approved.
+	if ( empty( $comment_approved ) ) {
+		return false;
+	}
+
+	// Don't record activity if the comment has already been marked as spam.
+	if ( 'spam' === $comment_approved ) {
+		return false;
+	}
+
+	if ( empty( $commentdata['comment_parent'] ) ) {
+		return false;
+	}
+
+	// Get the post.
+	$post = get_post( $commentdata['comment_post_ID'] );
+	if (
+		! is_a( $post, 'WP_Post' ) ||
+		( isset( $post->post_type ) && 'post' !== $post->post_type ) // Allow only for the WP default post only.
+	) {
+		return false;
+	}
+
+	// Get the user by the comment author email.
+	$comment_author = get_user_by( 'email', $commentdata['comment_author_email'] );
+	$parent_comment = get_comment( $commentdata['comment_parent'] );
+
+	if ( empty( $parent_comment->user_id ) ) {
+		return false;
+	}
+
+	if ( ! empty( $comment_author ) && $comment_author->ID === (int) $parent_comment->user_id ) {
+		return false;
+	}
+
+	// Check for moderation.
+	if (
+		! empty( $parent_comment ) &&
+		! empty( $comment_author ) &&
+		true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $comment_author->ID, $parent_comment->user_id )
+	) {
+		return false;
+	}
+
+	$comment_author_id        = ! empty( $comment_author ) ? $comment_author->ID : $commentdata['user_id'];
+	$comment_content          = $commentdata['comment_content'];
+	$comment_link             = get_comment_link( $comment_id );
+	$parent_comment_author_id = (int) $parent_comment->user_id;
+	$comment_author_name      = ! empty( $comment_author ) ? bboss_core_get_user_displayname( $comment_author->ID, $parent_comment_author_id ) : $commentdata['comment_author'];
+
+	// Send an email if the user hasn't opted-out.
+	if ( ! empty( $parent_comment_author_id ) ) {
+
+		$usernames = bboss_find_mentions_by_at_sign( array(), $comment_content );
+		$send_mail = true;
+
+		if ( ! empty( $usernames ) && array_key_exists( $parent_comment_author_id, $usernames ) ) {
+			if ( true === bboss_is_notification_enabled( $parent_comment_author_id, 'bb_new_mention' ) ) {
+				$send_mail = false;
+			}
+		}
+
+		if ( true === $send_mail && true === bboss_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
+
+			$unsubscribe_args = array(
+				'user_id'           => $parent_comment_author_id,
+				'notification_type' => 'new-comment-reply',
+			);
+
+			$args = array(
+				'tokens' => array(
+					'comment.id'     => $comment_id,
+					'commenter.id'   => $comment_author_id,
+					'commenter.name' => $comment_author_name,
+					'comment_reply'  => wp_strip_all_tags( $comment_content ),
+					'comment.url'    => esc_url( $comment_link ),
+					'unsubscribe'    => esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				),
+			);
+
+			bboss_send_email( 'new-comment-reply', $parent_comment_author_id, $args );
+
+		}
+
+		update_comment_meta( $comment_id, 'bb_comment_notified_after_approved', 1 );
+
+		/**
+		 * Fires at the point that notifications should be sent for new comment reply.
+		 *
+		 * @since BuddyPress 2.3.50
+		 *
+		 * @param int   $comment_id   ID for the newly received comment reply.
+		 * @param int   $commenter_id ID of the user who made the comment reply.
+		 * @param array $commentdata  Comment reply related data.
+		 */
+		do_action( 'bb_post_new_comment_reply_notification', $comment_id, $comment_author_id, $commentdata );
+	}
+}
+
+/**
+ * Check post comment status on transition_comment_status hook and send the new comment reply notification if not sent already.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param string     $new_status New comment status.
+ * @param string     $old_status Previous comment status.
+ * @param WP_Comment $comment Comment data.
+ */
+function bboss_post_comment_on_status_change( $new_status, $old_status, $comment ) {
+
+	$notification_already_sent = get_comment_meta( $comment->comment_ID, 'bb_comment_notified_after_approved', true );
+	if (
+		empty( $notification_already_sent ) &&
+		'approved' === $new_status &&
+		in_array( $old_status, array( 'unapproved', 'spam' ), true )
+	) {
+		$commentdata = get_object_vars( $comment );
+		bboss_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
+	}
+}
+
+/**
+ * Call new blog post comment reply notification in case of REST API.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param string     $comment_ID Comment id.
+ * @param WP_Comment $comment    Comment data.
+ */
+function bboss_post_new_comment_reply_notification_helper( $comment_ID, $comment ) {
+	$commentdata               = get_object_vars( $comment );
+	$notification_already_sent = get_comment_meta( $comment_ID, 'bb_comment_notified_after_approved', true );
+	if ( empty( $notification_already_sent ) && 1 === (int) $commentdata['comment_approved'] ) {
+		bboss_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
+	}
+}
+
+/**
+ * Mark blog comment notifications as read.
+ *
+ * @since BuddyBoss 2.3.50
+ */
+function bboss_core_read_blog_comment_notification() {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	// The body of this function calls BP_Notifications_Notification::update()
+	// and bp_notifications_get_notification(), both owned by the notifications
+	// component. When notifications is deactivated via Settings 2.0, the class
+	// autoloader (src/class-bboss-platform.php) returns early for inactive
+	// components, and the function file (bboss-notifications-functions.php) is
+	// not loaded — so calling either would fatal.
+	if ( ! bboss_is_active( 'notifications' ) ) {
+		return;
+	}
+
+	$comment_id = 0;
+	// For replies to a parent update.
+	if ( ! empty( $_GET['cid'] ) ) {
+		$comment_id = (int) $_GET['cid'];
+	}
+
+	// Mark individual notification as read.
+	if ( ! empty( $comment_id ) ) {
+		$updated = BBoss_Notifications_Notification::update(
+			array(
+				'is_new' => false,
+			),
+			array(
+				'user_id' => bboss_loggedin_user_id(),
+				'id'      => $comment_id,
+			)
+		);
+
+		if ( 1 === $updated ) {
+			$notifications_data = bboss_notifications_get_notification( $comment_id );
+			if ( isset( $notifications_data->item_id ) ) {
+				BBoss_Notifications_Notification::update(
+					array(
+						'is_new' => false,
+					),
+					array(
+						'user_id'        => bboss_loggedin_user_id(),
+						'item_id'        => $notifications_data->item_id,
+						'component_name' => $notifications_data->component_name,
+					)
+				);
+
+				if ( bboss_is_active( 'activity' ) ) {
+					$activity_id = get_comment_meta( $notifications_data->item_id, 'bp_activity_comment_id', true );
+					if ( ! empty( $activity_id ) ) {
+						BBoss_Notifications_Notification::update(
+							array(
+								'is_new' => false,
+							),
+							array(
+								'user_id'        => bboss_loggedin_user_id(),
+								'item_id'        => $activity_id,
+								'component_name' => 'activity',
+							)
+						);
+					}
+				}
+			}
+		}
+	}
+}
+
+add_action( 'template_redirect', 'bboss_core_read_blog_comment_notification', 99 );
+
+/**
+ * Fire an email when someone mentioned users into the blog post comment and post published.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param int  $comment_id  ID of the comment.
+ * @param bool $is_approved Whether the comment is approved or not.
+ */
+function bboss_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
+
+	if ( ! function_exists( 'bboss_find_mentions_by_at_sign' ) ) {
+		return;
+	}
+
+	// Get the users comment.
+	$post_type_comment = get_comment( $comment_id );
+
+	// Don't record activity if the comment hasn't been approved.
+	if ( empty( $is_approved ) ) {
+		return false;
+	}
+
+	// Don't record activity if no email address has been included.
+	if ( empty( $post_type_comment->comment_author_email ) ) {
+		return false;
+	}
+
+	// Don't record activity if the comment has already been marked as spam.
+	if ( 'spam' === $is_approved ) {
+		return false;
+	}
+
+	// Get the user by the comment author email.
+	$user = get_user_by( 'email', $post_type_comment->comment_author_email );
+
+	// If user isn't registered, don't record activity.
+	if ( empty( $user ) ) {
+		return false;
+	}
+
+	// Get the user_id.
+	$comment_user_id = (int) $user->ID;
+
+	// Get the post.
+	$post = get_post( $post_type_comment->comment_post_ID );
+
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return false;
+	}
+
+	if (
+		! empty( $post->post_type ) &&
+		bboss_is_active( 'activity' ) &&
+		(
+			bboss_is_post_type_feed_enable( $post->post_type ) ||
+			(
+				bboss_is_post_type_feed_enable( $post->post_type ) &&
+				! bboss_is_post_type_feed_comment_enable( $post->post_type )
+			)
+		)
+	) {
+		return;
+	}
+
+	// Try to find mentions.
+	$usernames = bboss_find_mentions_by_at_sign( array(), $post_type_comment->comment_content );
+
+	if ( empty( $usernames ) ) {
+		return;
+	}
+
+	// Replace @mention text with userlinks.
+	foreach ( (array) $usernames as $user_id => $username ) {
+		$replacement = "<a class='bp-suggestions-mention' data-bb-hp-profile='" . esc_attr( $user_id ) . "' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+		if ( false === strpos( $post_type_comment->comment_content, $replacement ) ) {
+			// Pattern for cases with existing <a>@mention</a> or @mention.
+			$pattern                            = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+			$post_type_comment->comment_content = preg_replace( $pattern, $replacement, $post_type_comment->comment_content );
+		}
+	}
+
+	// Send @mentions and setup BP notifications.
+	foreach ( (array) $usernames as $user_id => $username ) {
+
+		// Check the sender is blocked by recipient or not.
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $comment_user_id ) ) {
+			continue;
+		}
+
+		// User Mentions email.
+		if (
+			(
+				! bboss_enabled_legacy_email_preference() &&
+				true === bboss_is_notification_enabled( $user_id, 'bb_new_mention' )
+			) ||
+			(
+				bboss_enabled_legacy_email_preference() &&
+				true === bboss_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
+			)
+		) {
+
+			// Poster name.
+			$reply_author_name = bboss_core_get_user_displayname( $comment_user_id, $user_id );
+			$author_id         = $comment_user_id;
+
+			/** Mail */
+			// Strip tags from text and setup mail data.
+			//
+			// Suppress BP_Moderation_Comment::add_report_button() for this
+			// filter pass. PROD-9232 (BuddyBoss 2.18.0) attached that callback
+			// to `comment_text` (display intent), and it would otherwise inject
+			// the "Options / Report Comment" dropdown markup into both the
+			// stripped `usermessage` token and the HTML `mentioned.content`
+			// token — leaking the visible "Options" / "Report Comment" strings
+			// as plain text into mention notification emails, and rendering a
+			// non-functional dropdown inside the HTML email body. The dropdown
+			// is a frontend display affordance, not an email one.
+			if ( class_exists( 'BBoss_Moderation_Comment' ) ) {
+				BBoss_Moderation_Comment::bb_set_skip_report_button( true );
+			}
+			$reply_content = apply_filters( 'comment_text', $post_type_comment->comment_content, $post_type_comment, array() );
+			if ( class_exists( 'BBoss_Moderation_Comment' ) ) {
+				BBoss_Moderation_Comment::bb_set_skip_report_button( false );
+			}
+			$reply_url     = get_comment_link( $post_type_comment );
+			$title_text    = get_the_title( $post );
+
+			$email_type = 'new-mention';
+
+			$unsubscribe_args = array(
+				'user_id'           => $user_id,
+				'notification_type' => $email_type,
+			);
+
+			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+
+			$args = array(
+				'tokens' => array(
+					'usermessage'       => wp_strip_all_tags( $reply_content ),
+					'mentioned.url'     => $reply_url,
+					'poster.name'       => $reply_author_name,
+					'receiver-user.id'  => $user_id,
+					'unsubscribe'       => esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					'mentioned.type'    => $notification_type_html,
+					'mentioned.content' => $reply_content,
+					'author_id'         => $author_id,
+					'reply_text'        => esc_html__( 'View Comment', 'buddyboss' ),
+					'title_text'        => $title_text,
+				),
+			);
+
+			bboss_send_email( $email_type, $user_id, $args );
+		}
+
+		if ( bboss_is_active( 'notifications' ) ) {
+			// Specify the Notification type.
+			$component_action = 'bb_new_mention';
+			$component_name   = 'core';
+
+			add_filter( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
+			bboss_notifications_add_notification(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $comment_id,
+					'secondary_item_id' => $comment_user_id,
+					'component_name'    => $component_name,
+					'component_action'  => $component_action,
+					'date_notified'     => bboss_core_current_time(),
+					'is_new'            => 1,
+				)
+			);
+			remove_filter( 'bp_notification_after_save', 'bboss_notification_after_save_meta', 5, 1 );
+		}
+	}
+
+}
+
+add_action( 'comment_post', 'bboss_mention_post_type_comment', 10, 2 );
+
+/**
+ * Fired and mention email when comment has been approved.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param string     $new_status New comment status.
+ * @param string     $old_status Previous comment status.
+ * @param WP_Comment $comment Comment data.
+ *
+ * @return void
+ */
+function bboss_mention_post_type_comment_status_change( $new_status, $old_status, $comment ) {
+
+	if (
+		'approved' === $new_status &&
+		in_array( $old_status, array( 'unapproved', 'spam' ), true )
+	) {
+		$commentdata = get_object_vars( $comment );
+		bboss_mention_post_type_comment( $commentdata['comment_ID'], $commentdata['comment_approved'] );
+	}
+}
+
+add_action( 'transition_comment_status', 'bboss_mention_post_type_comment_status_change', 10, 3 );
+
+/**
+ * Registered component name for the core.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param array $component_names Array of registered component names.
+ *
+ * @return mixed
+ */
+function bboss_core_registered_notification_components( $component_names ) {
+	if ( ! in_array( 'core', $component_names, true ) ) {
+		$component_names[] = 'core';
+	}
+
+	return $component_names;
+}
+
+add_action( 'bp_notifications_get_registered_components', 'bboss_core_registered_notification_components', 20, 1 );
+
+/**
+ * Removed duplicate background jobs from the table if exists.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param object $batch Batch object.
+ *
+ * @return void
+ */
+function bboss_background_remove_duplicate_async_request_batch_process( $batch ) {
+	global $bb_background_updater, $wpdb;
+
+	if (
+		empty( $batch ) ||
+		! property_exists( $batch, 'group' ) ||
+		empty( $batch->group ) ||
+		empty( $batch->data ) ||
+		empty( $batch->data['args'] )
+	) {
+		return;
+	}
+
+	$table_name = $bb_background_updater::$table_name;
+
+	$del_sql = $wpdb->prepare(
+		"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s AND `data_id` = %s AND `secondary_data_id` = %s AND `data` = %s AND `priority` = %d AND `blog_id` = %d AND `id` != %d",
+		array(
+			$batch->type,
+			$batch->group,
+			$batch->item_id,
+			$batch->secondary_id,
+			maybe_serialize( $batch->data ),
+			$batch->priority,
+			$batch->blog_id,
+			$batch->key,
+		)
+	);
+
+	$wpdb->query( $del_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $del_sql is $wpdb->prepare()'d above (every value bound with %s/%d); table name from the background updater class.
+}
+
+add_action( 'bb_async_request_batch_process', 'bboss_background_remove_duplicate_async_request_batch_process', 1, 1 );
+
+/**
+ * Save directory layout settings for BuddyBoss.
+ * This function handles the AJAX request to save directory layout settings for BuddyBoss.
+ * It verifies the nonce, checks for valid options and values, and stores
+ * the layout option in the database or cookie.
+ *
+ * @since BuddyBoss 2.5.11
+ */
+function buddyboss_directory_save_layout() {
+	$object = bboss_filter_input_string( INPUT_POST, 'object' );
+	if ( empty( $object ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Invalid object.', 'buddyboss' ),
+		) );
+	}
+
+	$nonce = bboss_filter_input_string( INPUT_POST, 'nonce' );
+	if ( ! wp_verify_nonce( $nonce, 'bp_nouveau_' . $object ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Invalid request.', 'buddyboss' ),
+		) );
+	}
+
+	$option_name = bboss_filter_input_string( INPUT_POST, 'option' );
+	if ( empty( $option_name ) || 'bb_layout_view' !== $option_name ) {
+		wp_send_json_error( array(
+			'message' => __( 'Not a valid option', 'buddyboss' ),
+		) );
+		wp_die();
+	}
+
+	$option_value = bboss_filter_input_string( INPUT_POST, 'type' );
+	if ( ! in_array( $option_value, array( 'grid', 'list' ), true ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Not a valid value', 'buddyboss' ),
+		) );
+		wp_die();
+	}
+
+	if ( 'group_members' === $object ) {
+		$object = 'members';
+	}
+
+	if ( is_user_logged_in() ) {
+		$existing_layout = get_user_meta( get_current_user_id(), $option_name, true );
+		$existing_layout = ! empty( $existing_layout ) ? $existing_layout : array();
+		// Store layout option in the db.
+		$existing_layout[ $object ] = $option_value;
+		update_user_meta( get_current_user_id(), $option_name, $existing_layout );
+	} else {
+		$existing_layout = ! empty( $_COOKIE[ $option_name ] ) ? json_decode( rawurldecode( wp_unslash( $_COOKIE[ $option_name ] ) ), true ) : array();
+		$existing_layout = is_array( $existing_layout ) ? map_deep( $existing_layout, 'sanitize_text_field' ) : array();
+		// Store layout option in the cookie.
+		$existing_layout[ $object ] = $option_value;
+		setcookie( $option_name, rawurlencode( wp_json_encode( $existing_layout ) ), time() + 31556926, '/', COOKIE_DOMAIN, false, false );
+	}
+
+	wp_send_json_success();
+	wp_die();
+}
+
+add_action( 'wp_ajax_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
+add_action( 'wp_ajax_nopriv_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
+
+/**
+ * Function to load background process log class.
+ *
+ * @since BuddyBoss 2.5.60
+ */
+function bboss_bg_process_log_load() {
+	if ( class_exists( 'BBoss_BG_Process_Log' ) ) {
+		BBoss_BG_Process_Log::instance();
+	}
+}
+
+add_action( 'bp_init', 'bboss_bg_process_log_load' );
+
+/**
+ * Remove notices from the ReadyLaunch screen.
+ *
+ * @since BuddyBoss 2.6.30
+ */
+function bboss_remove_admin_notices() {
+	$screen = get_current_screen();
+	// `bb-readylaunch` screen retired in BuddyBoss 3.0.0; Settings 2.0
+	// (`buddyboss_page_bb-settings`) is now the home for appearance settings
+	// and doesn't need the notice suppression that the legacy page did.
+	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {
+		remove_all_actions( 'admin_notices' );
+
+		// Additional check for the common WordPress error/warning hooks.
+		remove_all_actions( 'all_admin_notices' );
+	}
+}
+
+/**
+ * Function to load telemetry class.
+ *
+ * @since BuddyBoss 2.7.40
+ */
+function bboss_telemetry_load() {
+	if ( class_exists( 'BBoss_Telemetry' ) ) {
+		BBoss_Telemetry::instance();
+	}
+}
+
+add_action( 'bp_init', 'bboss_telemetry_load' );
+
+
+/**
+ * Initialize the Topics Manager.
+ * This ensures we only load the manager when needed.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @return void True if the topics manager is loaded, false otherwise.
+ */
+function bboss_load_topics_manager() {
+	// @todo: Only load if activity topics are enabled for now.
+	if (
+		! bboss_is_active( 'activity' ) ||
+		! function_exists( 'bboss_is_enabled_activity_topics' ) ||
+		! bboss_is_enabled_activity_topics()
+	) {
+		return;
+	}
+
+	bboss_topics_manager_instance();
+}
+
+/**
+ * Function to load readylaunch class.
+ *
+ * @since BuddyBoss 2.9.00
+ */
+function bboss_load_readylaunch() {
+	if ( class_exists( 'BBoss_Readylaunch' ) ) {
+		return BBoss_Readylaunch::instance();
+	}
+}
+
+add_action( 'bp_init', 'bboss_load_readylaunch', 1 );

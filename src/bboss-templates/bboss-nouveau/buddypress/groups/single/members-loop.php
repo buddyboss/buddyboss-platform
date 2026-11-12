@@ -184,7 +184,7 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'group_members' ) . '&type
 
 					<div class="bp-members-list-hook">
 						<?php if ( $member_loop_has_content ) { ?>
-							<a class="more-action-button" href="#" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>"><i class="bb-icon-menu-dots-h"></i></a>
+							<a class="more-action-button" href="#" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>"><i class="bb-icon-menu-dots-h"></i></a>
 						<?php } ?>
 						<div class="bp-members-list-hook-inner">
 							<?php bboss_nouveau_member_hook( '', 'members_list_item' ); ?>
@@ -193,9 +193,9 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'group_members' ) . '&type
 
 					<?php if ( ! empty( $member_switch_button ) ) { ?>
 						<div class="bb_more_options member-dropdown">
-							<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>">
+							<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 								<i class="bb-icon-menu-dots-h"></i>
-								<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss-platform' ); ?></span>
+								<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
 							</a>
 							<div class="bb_more_options_list bb_more_dropdown">
 								<?php bboss_get_template_part( 'common/more-options-view' ); ?>
@@ -226,7 +226,7 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'group_members' ) . '&type
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">
-						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss-platform' ); ?></span></h4>
+						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
 						<a class="bb-close-remove-connection bb-model-close-button" href="#">
 							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
@@ -236,15 +236,15 @@ if ( bboss_group_has_members( bboss_ajax_querystring( 'group_members' ) . '&type
 							<?php
 							echo sprintf(
 								/* translators: %s: The member name with HTML tags */
-								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss-platform' ),
+								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
 								'<span class="bb-user-name"></span>'
 							);
 							?>
 						</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
-						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss-platform' ); ?></a>
-						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss-platform' ); ?></a>
+						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>
