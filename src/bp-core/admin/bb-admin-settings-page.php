@@ -360,13 +360,15 @@ function bb_admin_settings_page() {
 
 	// Pricing links for the React upsells: the upgrade modal and section badge
 	// fallback (`default`), the Appearance "Buy Theme" button (`buyTheme`) and the
-	// Help tab promos (`help*`). Builds without pricing links (the wordpress.org
+	// Help tab promos (`help*`) and the Help tab support-ticket link and chat
+	// fallback (`supportTicket`). Builds without pricing links (the wordpress.org
 	// edition) send an empty list, and each component then hides its link.
 	$bb_pricing_urls = array();
 	// @bbwt-com-start pricing-links
 	$bb_pricing_urls = array(
 		'default'       => 'https://www.buddyboss.com/pricing/',
 		'buyTheme'      => 'https://buddyboss.com/pricing/',
+		'supportTicket' => 'https://buddyboss.com/my-account/?tab=support',
 		'helpPlusToApp' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-plus-to-app&utm_content=help',
 		'helpProToPlus' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help',
 		'helpFreeToPro' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help',

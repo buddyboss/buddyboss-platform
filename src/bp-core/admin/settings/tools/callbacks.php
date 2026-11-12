@@ -120,10 +120,15 @@ function bb_tools_ajax_check_plugin_state() {
 	// @bbwt-com-end installers
 	// Builds without the in-dashboard installer (the wordpress.org edition) reach this
 	// instead: the addon is downloaded from the BuddyBoss account and uploaded by hand.
+	// Builds without upsell links send no account URL, and the screen shows no button.
+	$download_url = '';
+	// @bbwt-com-start pricing-links
+	$download_url = 'https://www.buddyboss.com/my-account/';
+	// @bbwt-com-end pricing-links
 	wp_send_json_success(
 		array(
 			'state'        => 'download',
-			'download_url' => 'https://www.buddyboss.com/my-account/',
+			'download_url' => $download_url,
 		)
 	);
 }

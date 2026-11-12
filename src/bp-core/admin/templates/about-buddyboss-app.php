@@ -39,6 +39,10 @@ defined( 'ABSPATH' ) || exit;
 
 	<div class="bp-hello-footer">
 		<div class="bp-hello-social-cta">
+			<?php
+			// Builds without upsell links (the wordpress.org edition) show no product link here.
+			// @bbwt-com-start pricing-links
+			?>
 			<p>
 				<?php
 				echo wp_kses_post(
@@ -50,6 +54,9 @@ defined( 'ABSPATH' ) || exit;
 				);
 				?>
 			</p>
+			<?php
+			// @bbwt-com-end pricing-links
+			?>
 		</div>
 
 		<div class="bp-hello-social-links">

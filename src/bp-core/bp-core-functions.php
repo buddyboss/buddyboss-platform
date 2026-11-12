@@ -10722,7 +10722,13 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 				'post_feature_image'    => '',
 			);
 
-			$data['link_url'] = isset( $feature_urls[ $type ] ) ? $feature_urls[ $type ] : 'https://www.buddyboss.com/platform/';
+			// Builds without upsell links (the wordpress.org edition) leave other types without a link.
+			$default_feature_url = '';
+			// @bbwt-com-start pricing-links
+			$default_feature_url = 'https://www.buddyboss.com/platform/';
+			// @bbwt-com-end pricing-links
+
+			$data['link_url'] = isset( $feature_urls[ $type ] ) ? $feature_urls[ $type ] : $default_feature_url;
 		}
 	}
 

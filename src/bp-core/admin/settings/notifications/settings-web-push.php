@@ -119,6 +119,12 @@ function bb_notifications_register_web_push_panel_fields() {
 		$pro_available &&
 		version_compare( bb_platform_pro()->version, $min_pro_settings2_version, '<=' )
 	) {
+		// Builds without upsell links (the wordpress.org edition) name the plugin without a link.
+		$pro_link = __( 'BuddyBoss Platform Pro', 'buddyboss' );
+		// @bbwt-com-start pricing-links
+		$pro_link = '<a target="_blank" rel="noopener noreferrer" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . __( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>';
+		// @bbwt-com-end pricing-links
+
 		// Pro installed but older version.
 		bb_register_feature_field(
 			'notifications',
@@ -131,7 +137,7 @@ function bb_notifications_register_web_push_panel_fields() {
 				'description'       => sprintf(
 					/* translators: %s: BuddyBoss Pro link. */
 					__( 'Please update %s to version 2.0.3 to use web push notifications on your site.', 'buddyboss' ),
-					'<a target="_blank" rel="noopener noreferrer" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . __( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
+					$pro_link
 				),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 10,
@@ -186,6 +192,13 @@ function bb_notifications_register_web_push_pro_placeholder_fields() {
 	$feature_id = 'notifications';
 	$panel_id   = 'onesignal';
 
+	// Builds without upsell links (the wordpress.org edition) send no badge URL;
+	// the settings app then hides the section badge.
+	$pro_notice_section_url = '';
+	// @bbwt-com-start pricing-links
+	$pro_notice_section_url = 'https://www.buddyboss.com/platform/';
+	// @bbwt-com-end pricing-links
+
 	// -------------------------------------------------------------------------
 	// SECTION: OneSignal Connection (pro-gated placeholder).
 	// -------------------------------------------------------------------------
@@ -204,7 +217,7 @@ function bb_notifications_register_web_push_pro_placeholder_fields() {
 				'show'       => true,
 				'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
-				'link_url'   => 'https://www.buddyboss.com/platform/',
+				'link_url'   => $pro_notice_section_url,
 			),
 			'description' => sprintf(
 				/* translators: %s: OneSignal URL */

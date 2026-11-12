@@ -242,13 +242,19 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss 2.1.4
 	 */
 	public function setting_callback_pusher_bbp_pro_not_installed() {
+		// Builds without upsell links (the wordpress.org edition) name the plugin without a link.
+		$pro_link = esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' );
+		// @bbwt-com-start pricing-links
+		$pro_link = '<a href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '" target="_blank">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>';
+		// @bbwt-com-end pricing-links
+
 		echo '<p class="description notification-information bb-lab-notice">' .
 			sprintf(
 				wp_kses_post(
 					/* translators: BuddyBoss Pro purchase link */
 					__( 'Please install %1$s to use Pusher on your site.', 'buddyboss' )
 				),
-				'<a href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '" target="_blank">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
+				$pro_link
 			) .
 		'</p>';
 	}
@@ -259,13 +265,19 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss 2.1.4
 	 */
 	public function setting_callback_pusher_bbp_pro_older_version_installed() {
+		// Builds without upsell links (the wordpress.org edition) name the plugin without a link.
+		$pro_link = esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' );
+		// @bbwt-com-start pricing-links
+		$pro_link = '<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>';
+		// @bbwt-com-end pricing-links
+
 		echo '<p class="description notification-information bb-lab-notice">' .
 			sprintf(
 				wp_kses_post(
 					/* translators: BuddyBoss Pro purchase link */
 					__( 'Please update %1$s to version %2$s to use Pusher on your site.', 'buddyboss' )
 				),
-				'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>',
+				$pro_link,
 				esc_html( bb_pro_pusher_version() )
 			) .
 			'</p>';

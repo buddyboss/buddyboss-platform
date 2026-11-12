@@ -87,9 +87,12 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
 			                                {__('Activate BuddyBoss Theme', 'buddyboss')}
 			                            </a>
 	                                ) : (
-			                            <a href='https://www.buddyboss.com/website-platform/#platform_pricing_box' target="_blank" className="bb-rl-button">
+			                            // The purchase link comes from the server; a build without it shows no button.
+			                            window?.bbRlOnboarding?.readylaunch?.buy_theme_url ? (
+			                            <a href={window.bbRlOnboarding.readylaunch.buy_theme_url} target="_blank" className="bb-rl-button">
 				                            {__('Buy Theme', 'buddyboss')}
 			                            </a>
+			                            ) : null
                                     )
 								)
 							}

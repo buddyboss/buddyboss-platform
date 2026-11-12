@@ -293,9 +293,12 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 		'show'       => true,
 		'badge_text' => __( 'LAUNCH', 'buddyboss' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
-		'link_url'   => 'https://www.buddyboss.com/platform/',
+		'link_url'   => '',
 		'link_icon'  => 'bb-icons-rl-play',
 	);
+	// @bbwt-com-start pricing-links
+	$pro_notice_field['link_url'] = 'https://www.buddyboss.com/platform/';
+	// @bbwt-com-end pricing-links
 
 	// Idempotently ensure the section carries the UPGRADE LAUNCH badge.
 	//

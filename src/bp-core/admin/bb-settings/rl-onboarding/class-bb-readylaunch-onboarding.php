@@ -557,6 +557,16 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @return array Localised data array.
 	 */
 	protected function localize_wizard_data() {
+		// BuddyBoss Theme purchase links for the splash screen. Builds without
+		// upsell links (the wordpress.org edition) send them empty, and the
+		// onboarding app then shows no "Buy Theme" button.
+		$buy_theme_url  = '';
+		$theme_info_url = '';
+		// @bbwt-com-start pricing-links
+		$buy_theme_url  = 'https://www.buddyboss.com/website-platform/#platform_pricing_box';
+		$theme_info_url = 'https://www.buddyboss.com/theme/';
+		// @bbwt-com-end pricing-links
+
 		$base_data = array(
 			'shouldShow'   => $this->should_show(),
 			'completed'    => $this->is_completed(),
@@ -585,6 +595,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				'buddyboss_theme_installed' => wp_get_theme( 'buddyboss-theme' )->exists(),
 				'site_url'                  => home_url(),
 				'admin_url'                 => admin_url(),
+				'buy_theme_url'             => $buy_theme_url,
+				'theme_info_url'            => $theme_info_url,
 			),
 		);
 
