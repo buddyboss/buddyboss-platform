@@ -1184,6 +1184,7 @@ window.bp = window.bp || {};
 			// Searching.
 			$( '#buddypress [data-bp-search]' ).on( 'submit', 'form', this, this.searchQuery );
 			$( '#buddypress [data-bp-search]' ).on( 'keyup', 'input[name=group_members_search]', this, _.throttle( this.searchQuery, 900 ) );
+			$( '#buddypress [data-bp-search]' ).on( 'keydown', 'input[name=group_members_search]', this.preventMembersSearchSubmit );
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
@@ -2423,6 +2424,19 @@ window.bp = window.bp || {};
 					member_type_id: $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val()
 				}
 			);
+		},
+
+		/**
+		 * Stop Enter in the group members search from submitting the group settings form around it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} event Keydown event.
+		 */
+		preventMembersSearchSubmit: function ( event ) {
+			if ( 13 === event.which ) {
+				event.preventDefault();
+			}
 		},
 
 		/**
