@@ -439,6 +439,7 @@ function bb_admin_repair_categorize_item( $item_id ) {
 	);
 	$activity_reactions = array(
 		'bp-sync-activity-favourite',
+		'bp-activity-topic-relationships',
 	);
 
 	if ( in_array( $item_id, $members_profiles, true ) ) {

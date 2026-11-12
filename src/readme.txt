@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.6.1
+Stable tag: 3.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,6 @@ BuddyBoss Platform helps site builders & developers add community features to th
 - [Tutorials](https://www.buddyboss.com/resources/docs/)
 - [Code Reference](https://www.buddyboss.com/resources/reference/)
 - [Github](https://github.com/buddyboss/buddyboss-platform/wiki)
-- [Roadmap](https://www.buddyboss.com/roadmap/)
 
 == Requirements ==
 
@@ -56,6 +55,40 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.7.1 =
+* Bug: Activity - Fixed a slowdown caused by activity post drafts with pasted images taking up too much storage
+* Bug: Activity - Fixed an issue where long links in activity post titles did not wrap on mobile and desktop
+* Bug: Core - Fixed a broken Roadmap link in the plugin description
+* Bug: Core - Fixed an issue where some scheduled background cleanup tasks for media, videos and documents were not running
+* Bug: Core - Fixed an issue where the settings page layout did not expand to full width when a meta box was visible
+* Bug: Elementor - Fixed an issue where the activity feed layout broke after deleting media in the Elementor activity widget
+* Bug: Groups - Fixed a security issue related to comments on private and hidden group posts
+* Bug: Media - Fixed an issue where saving a photo or video description caused an unnecessary failed request in the background
+* Bug: Media - Fixed an issue where video uploads over 100 MB failed in forum discussions on sites behind Cloudflare
+* Bug: ReadyLaunch - Fixed a display issue with the radio buttons in the ReadyLaunch onboarding wizard
+
+= 3.7.0 =
+* Enhancement: Core - Moved Videos, Documents, Animated GIFs and Group Subscription to the Addons plugin, with existing customers keeping access
+* Bug: Activity - Fixed an issue where the app's "Only Me" activity filter showed posts from other members
+* Bug: Activity - Fixed several issues with activity topics, including required-topic checks, topic links and cleanup when topics are deleted
+* Bug: Core - Fixed an issue where emoji images did not display correctly
+* Bug: Groups - Fixed an issue where group names containing double quotes were cut off and lost when saved
+* Bug: Groups - Fixed an issue where group organizers who are not site administrators could not add topics to their own group
+* Bug: Groups - Fixed an issue where the group name was missing from the delete confirmation and cut off in the groups list
+* Bug: Groups - Fixed an issue where WP Fusion settings boxes were missing from group edit screens
+* Bug: Members - Fixed an issue where admins could not manually activate pending users when Google reCAPTCHA was enabled
+* Bug: Notifications - Fixed an issue where mention notifications for comments on event activities did not link to the right page
+
+= 3.6.2 =
+* Bug: Activity - Fixed an issue where comment reactions stopped working when reactions were turned off for activity posts
+* Bug: Activity - Fixed an issue where editing an activity comment wrongly increased the comment count
+* Bug: Core - Fixed an issue where the app could not load profile forum topics when a security plugin's username protection was turned on
+* Bug: Core - Strengthened permission checks for media previews, video thumbnails, invites, drafts and private messages
+* Bug: Email - Fixed an issue where message emails sent together could show the wrong sender avatar and profile link
+* Bug: Forums - Fixed an issue where logged-out visitors could not reply to existing replies in public discussions with anonymous posting enabled
+* Bug: Forums - Fixed an issue where videos in discussions and replies did not show a preview in the app
+* Bug: Translations - Fixed an issue where some Report text in the Turkish translation was worded incorrectly
 
 = 3.6.1 =
 * Bug: Activity - Fixed PHP warnings in activity feed caused by invalid cached activity data
