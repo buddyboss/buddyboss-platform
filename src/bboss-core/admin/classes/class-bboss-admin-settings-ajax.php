@@ -1457,8 +1457,8 @@ class BBoss_Admin_Settings_Ajax {
 				// Resolve the current upload URL using the registered getter function.
 				// Strict allowlist — only functions explicitly known to return image URLs.
 				$allowed_url_getters = array(
-					'bb_get_default_custom_upload_group_avatar',
-					'bb_get_default_custom_upload_group_cover',
+					'bboss_get_default_custom_upload_group_avatar',
+					'bboss_get_default_custom_upload_group_cover',
 				);
 
 				/**

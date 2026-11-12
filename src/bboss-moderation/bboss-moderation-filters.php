@@ -660,7 +660,7 @@ function bboss_moderation_migrate_old_data( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-moderation-data',
 		esc_html__( 'Repair moderation data', 'buddyboss' ),
-		'bb_moderation_admin_repair_old_moderation_data',
+		'bboss_moderation_admin_repair_old_moderation_data',
 	);
 
 	return $repair_list;

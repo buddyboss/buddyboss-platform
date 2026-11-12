@@ -838,7 +838,7 @@ function bboss_repair_member_profile_links( $repair_list ) {
 	$repair_list[] = array(
 		'bb-member-repair-profile-links',
 		__( 'Repair member profile links', 'buddyboss' ),
-		'bb_repair_member_profile_links_callback',
+		'bboss_repair_member_profile_links_callback',
 	);
 
 	return $repair_list;

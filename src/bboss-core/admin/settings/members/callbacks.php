@@ -778,8 +778,8 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_cover_uplo
  * @return array Extended list including member profile getter functions.
  */
 function bboss_members_allow_image_url_getters( $allowed_url_getters ) {
-	$allowed_url_getters[] = 'bb_get_default_custom_upload_profile_avatar';
-	$allowed_url_getters[] = 'bb_get_default_custom_upload_profile_cover';
+	$allowed_url_getters[] = 'bboss_get_default_custom_upload_profile_avatar';
+	$allowed_url_getters[] = 'bboss_get_default_custom_upload_profile_cover';
 
 	return $allowed_url_getters;
 }

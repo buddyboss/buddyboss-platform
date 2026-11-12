@@ -1322,7 +1322,7 @@ function bboss_xprofile_repeater_field_repair( $repair_list ) {
 	$repair_list[] = array(
 		'bp-xprofile-repeater-field-repair',
 		esc_html__( 'Repair BuddyBoss profile repeater field sets', 'buddyboss' ),
-		'bb_xprofile_repeater_field_repair_callback',
+		'bboss_xprofile_repeater_field_repair_callback',
 	);
 	return $repair_list;
 }
@@ -1443,7 +1443,7 @@ function bboss_xprofile_repair_user_nicknames( $repair_list ) {
 	$repair_list[] = array(
 		'bb-xprofile-repair-user-nicknames',
 		__( 'Repair user nicknames', 'buddyboss' ),
-		'bb_xprofile_repair_user_nicknames_callback',
+		'bboss_xprofile_repair_user_nicknames_callback',
 	);
 	return $repair_list;
 }
@@ -1842,7 +1842,7 @@ function bboss_xprofile_repair_xprofile_visibility( $repair_list ) {
 	$repair_list[] = array(
 		'bb-xprofile-visibility-field-migrate',
 		esc_html__( 'Migrate visibility settings of profile fields to the new structure', 'buddyboss' ),
-		'bb_migrate_xprofile_visibility',
+		'bboss_migrate_xprofile_visibility',
 	);
 
 	return $repair_list;

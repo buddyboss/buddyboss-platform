@@ -393,7 +393,7 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		$this->assertEquals( $expected, $this->n_args );
 
 		// Reset!
-		bboss()->activity->notification_callback = 'bp_activity_format_notifications';
+		bboss()->activity->notification_callback = 'bboss_activity_format_notifications';
 		unset( $this->n_args );
 	}
 

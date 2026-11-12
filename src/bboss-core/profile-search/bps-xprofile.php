@@ -40,9 +40,9 @@ function bboss_ps_xprofile_setup( $fields ) {
 				$f->description = $f->description;
 				$f->type        = $field->type;
 				$f->format         = bboss_ps_xprofile_format( $field->type, $field->id );
-				$f->search         = 'bp_ps_xprofile_search';
-				$f->sort_directory = 'bp_ps_xprofile_sort_directory';
-				$f->get_value      = 'bp_ps_xprofile_get_value';
+				$f->search         = 'bboss_ps_xprofile_search';
+				$f->sort_directory = 'bboss_ps_xprofile_sort_directory';
+				$f->get_value      = 'bboss_ps_xprofile_get_value';
 
 				$f->options = bboss_ps_xprofile_options( $field->id );
 				foreach ( $f->options as $key => $label ) {
@@ -369,7 +369,7 @@ function bboss_ps_anyfield_setup( $fields ) {
 
 	$f->format  = 'text';
 	$f->options = array();
-	$f->search  = 'bp_ps_anyfield_search';
+	$f->search  = 'bboss_ps_anyfield_search';
 
 	$fields[] = $f;
 	return $fields;
@@ -435,7 +435,7 @@ function bboss_ps_gender_setup( $fields ) {
 			$f->type        = 'selectbox';
 			$f->format      = bboss_ps_xprofile_format( 'selectbox', 'xprofile_gender' );
 			$f->options     = $options;
-			$f->search      = 'bp_ps_xprofile_gender_users_search';
+			$f->search      = 'bboss_ps_xprofile_gender_users_search';
 
 			$fields[] = $f;
 
@@ -656,7 +656,7 @@ function bboss_ps_heading_field_setup( $fields ) {
 
 	$f->format  = 'text';
 	$f->options = array();
-	$f->search  = 'bp_ps_search_dummy_fields';
+	$f->search  = 'bboss_ps_search_dummy_fields';
 
 	$fields[] = $f;
 	return $fields;
@@ -690,7 +690,7 @@ function bboss_ps_email_setup( $fields ) {
 	$f->description = __( 'Email Address', 'buddyboss' );
 	$f->type        = 'textbox';
 	$f->format      = bboss_ps_xprofile_format( 'textbox', 'xprofile_email' );
-	$f->search      = 'bb_ps_xprofile_email_users_search';
+	$f->search      = 'bboss_ps_xprofile_email_users_search';
 
 	$fields[] = $f;
 

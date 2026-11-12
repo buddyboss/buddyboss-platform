@@ -26,7 +26,7 @@ if ( ! function_exists( 'bboss_performance_loaded' ) ) {
 		}
 	}
 
-	add_action( 'muplugins_loaded', 'bp_performance_loaded', 20 );
+	add_action( 'muplugins_loaded', 'bboss_performance_loaded', 20 );
 }
 
 /**
@@ -94,7 +94,7 @@ if ( ! function_exists( 'bboss_rest_post_dispatch_cache_callback' ) ) {
 		return $data;
 	}
 
-	add_filter( 'rest_get_cache', 'rest_post_dispatch_cache_callback', 10, 3 );
+	add_filter( 'rest_get_cache', 'bboss_rest_post_dispatch_cache_callback', 10, 3 );
 }
 
 /**

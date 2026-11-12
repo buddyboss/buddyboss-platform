@@ -1175,7 +1175,7 @@ function bboss_avatar_ajax_upload() {
 	$needs_reset                    = array();
 
 	if ( 'user' === $bp_params['object'] && bboss_is_active( 'xprofile' ) ) {
-		$bp_params['upload_dir_filter'] = 'xprofile_avatar_upload_dir';
+		$bp_params['upload_dir_filter'] = 'bboss_xprofile_avatar_upload_dir';
 
 		if ( ! bboss_displayed_user_id() && ! empty( $bp_params['item_id'] ) ) {
 			$needs_reset            = array(
@@ -1185,7 +1185,7 @@ function bboss_avatar_ajax_upload() {
 			$bp->displayed_user->id = $bp_params['item_id'];
 		}
 	} elseif ( 'group' === $bp_params['object'] && bboss_is_active( 'groups' ) ) {
-		$bp_params['upload_dir_filter'] = 'groups_avatar_upload_dir';
+		$bp_params['upload_dir_filter'] = 'bboss_groups_avatar_upload_dir';
 
 		if ( ! bboss_get_current_group_id() && ! empty( $bp_params['item_id'] ) ) {
 			$needs_reset               = array(

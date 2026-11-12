@@ -203,7 +203,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 			'meta_key'  => 'invite_status',
 			'type_slug' => 'invite',
 			'order'     => 310,
-			'get_fn'    => 'bp_group_get_invite_status',
+			'get_fn'    => 'bboss_group_get_invite_status',
 		),
 		array(
 			'id'         => 'perm_activity_feed',
@@ -211,7 +211,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 			'meta_key'   => 'activity_feed_status',
 			'type_slug'  => 'activity_feed',
 			'order'      => 320,
-			'get_fn'     => 'bp_group_get_activity_feed_status',
+			'get_fn'     => 'bboss_group_get_activity_feed_status',
 			'is_visible' => function ( $group ) {
 				return bboss_is_active( 'activity' );
 			},
@@ -222,7 +222,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 			'meta_key'   => 'media_status',
 			'type_slug'  => 'media',
 			'order'      => 330,
-			'get_fn'     => 'bp_group_get_media_status',
+			'get_fn'     => 'bboss_group_get_media_status',
 			'is_visible' => function ( $group ) {
 				return bboss_is_active( 'media' ) && bboss_is_group_media_support_enabled();
 			},
@@ -233,7 +233,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 			'meta_key'   => 'album_status',
 			'type_slug'  => 'album',
 			'order'      => 340,
-			'get_fn'     => 'bp_group_get_album_status',
+			'get_fn'     => 'bboss_group_get_album_status',
 			'is_visible' => function ( $group ) {
 				return bboss_is_active( 'media' ) && bboss_is_group_albums_support_enabled();
 			},
@@ -244,7 +244,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 			'meta_key'   => 'document_status',
 			'type_slug'  => 'document',
 			'order'      => 350,
-			'get_fn'     => 'bp_group_get_document_status',
+			'get_fn'     => 'bboss_group_get_document_status',
 			'is_visible' => function ( $group ) {
 				return bboss_is_active( 'media' ) && bboss_is_group_document_support_enabled();
 			},
@@ -255,7 +255,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 			'meta_key'   => 'video_status',
 			'type_slug'  => 'video',
 			'order'      => 355,
-			'get_fn'     => 'bp_group_get_video_status',
+			'get_fn'     => 'bboss_group_get_video_status',
 			'is_visible' => function ( $group ) {
 				return bboss_is_active( 'video' ) && function_exists( 'bboss_is_group_video_support_enabled' ) && bboss_is_group_video_support_enabled();
 			},
@@ -266,7 +266,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 			'meta_key'   => 'message_status',
 			'type_slug'  => 'message',
 			'order'      => 360,
-			'get_fn'     => 'bp_group_get_message_status',
+			'get_fn'     => 'bboss_group_get_message_status',
 			'is_visible' => function ( $group ) {
 				return bboss_is_active( 'messages' ) && bboss_disable_group_messages();
 			},

@@ -769,7 +769,7 @@ function bboss_messages_repair_items_unread_count( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-messages-unread-count',
 		esc_html__( 'Repair unread messages count', 'buddyboss' ),
-		'bp_messages_admin_repair_unread_messages_count',
+		'bboss_messages_admin_repair_unread_messages_count',
 	);
 	return $repair_list;
 }

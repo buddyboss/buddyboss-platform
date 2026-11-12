@@ -24,13 +24,13 @@ function bboss_admin_repair_list() {
 	$repair_list[20] = array(
 		'bp-total-member-count',
 		esc_html__( 'Repair total members count', 'buddyboss' ),
-		'bp_admin_repair_count_members',
+		'bboss_admin_repair_count_members',
 	);
 
 	$repair_list[25] = array(
 		'bp-last-activity',
 		esc_html__( 'Repair member "last activity" data', 'buddyboss' ),
-		'bp_admin_repair_last_activity',
+		'bboss_admin_repair_last_activity',
 	);
 
 	// Xprofile:
@@ -38,19 +38,19 @@ function bboss_admin_repair_list() {
 	$repair_list[35] = array(
 		'bp-xprofile-fields',
 		esc_html__( 'Repair default profile set and fields', 'buddyboss' ),
-		'repair_default_profiles_fields',
+		'bboss_repair_default_profiles_fields',
 	);
 
 	$repair_list[36] = array(
 		'bp-xprofile-wordpress-resync',
 		esc_html__( 'Re-sync BuddyBoss profile fields to WordPress profile fields', 'buddyboss' ),
-		'resync_xprofile_wordpress_fields',
+		'bboss_resync_xprofile_wordpress_fields',
 	);
 
 	$repair_list[37] = array(
 		'bp-wordpress-xprofile-resync',
 		esc_html__( 'Re-sync WordPress profile fields to BuddyBoss profile fields', 'buddyboss' ),
-		'resync_wordpress_xprofile_fields',
+		'bboss_resync_wordpress_xprofile_fields',
 	);
 
 	$repair_list[38] = array(
@@ -65,7 +65,7 @@ function bboss_admin_repair_list() {
 		$repair_list[0] = array(
 			'bp-user-friends',
 			esc_html__( 'Repair total connections count for each member', 'buddyboss' ),
-			'bp_admin_repair_friend_count',
+			'bboss_admin_repair_friend_count',
 		);
 	}
 
@@ -76,14 +76,14 @@ function bboss_admin_repair_list() {
 		$repair_list[10] = array(
 			'bp-group-count',
 			esc_html__( 'Repair total groups count for each member', 'buddyboss' ),
-			'bp_admin_repair_group_count',
+			'bboss_admin_repair_group_count',
 		);
 
 		// Recalculate group members count for each group.
 		$repair_list[124] = array(
 			'bp-group-members-count',
 			esc_html__( 'Recalculate the total members count for each group', 'buddyboss' ),
-			'bp_admin_repair_group_member_count',
+			'bboss_admin_repair_group_member_count',
 		);
 	}
 
@@ -93,7 +93,7 @@ function bboss_admin_repair_list() {
 		$repair_list[90] = array(
 			'bp-blog-records',
 			esc_html__( 'Repopulate site tracking records', 'buddyboss' ),
-			'bp_admin_repair_blog_records',
+			'bboss_admin_repair_blog_records',
 		);
 	}
 
@@ -102,7 +102,7 @@ function bboss_admin_repair_list() {
 	$repair_list[99] = array(
 		'bp-missing-emails',
 		esc_html__( 'Install missing emails (restore missing emails from defaults)', 'buddyboss' ),
-		'bp_admin_install_emails',
+		'bboss_admin_install_emails',
 		( isset( $_GET['tool'] ) && 'bp-reinstall-emails' === $_GET['tool'] ),
 	);
 
@@ -110,7 +110,7 @@ function bboss_admin_repair_list() {
 	$repair_list[100] = array(
 		'bp-reinstall-emails',
 		esc_html__( 'Reset emails (delete and restore from defaults)', 'buddyboss' ),
-		'bp_admin_reinstall_emails',
+		'bboss_admin_reinstall_emails',
 		( isset( $_GET['tool'] ) && 'bp-missing-emails' === $_GET['tool'] ),
 	);
 
@@ -123,7 +123,7 @@ function bboss_admin_repair_list() {
 			$repair_list[101] = array(
 				'bp-assign-member-type',
 				esc_html__( 'Assign members without a profile type to the default profile type (excludes admins)', 'buddyboss' ),
-				'bp_admin_assign_member_type',
+				'bboss_admin_assign_member_type',
 			);
 		}
 	}
@@ -133,7 +133,7 @@ function bboss_admin_repair_list() {
 		$repair_list[85] = array(
 			'bp-sync-activity-favourite',
 			esc_html__( 'Migrate BuddyPress activity favourites to BuddyBoss reactions table', 'buddyboss' ),
-			'bp_admin_update_activity_favourite',
+			'bboss_admin_update_activity_favourite',
 		);
 	}
 
@@ -142,14 +142,14 @@ function bboss_admin_repair_list() {
 	$repair_list[110] = array(
 		'bp-invitations-table',
 		esc_html__( 'Create the database table for Invitations and migrate existing group invitations if needed', 'buddyboss' ),
-		'bp_admin_invitations_table',
+		'bboss_admin_invitations_table',
 	);
 
 	// Sync profile completion widget.
 	$repair_list[111] = array(
 		'bp-sync-profile-completion-widget',
 		esc_html__( 'Re-Sync Profile Completion widget profile photo status', 'buddyboss' ),
-		'bb_sync_profile_completion_widget',
+		'bboss_sync_profile_completion_widget',
 	);
 
 	// Activity topics: drop relationship rows left behind by activities deleted before PROD-10670.
@@ -157,7 +157,7 @@ function bboss_admin_repair_list() {
 		$repair_list[113] = array(
 			'bp-activity-topic-relationships',
 			esc_html__( 'Remove activity topic relationships whose activity no longer exists', 'buddyboss' ),
-			'bb_admin_repair_activity_topic_relationships',
+			'bboss_admin_repair_activity_topic_relationships',
 		);
 	}
 
