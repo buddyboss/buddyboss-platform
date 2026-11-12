@@ -76,7 +76,7 @@ function bboss_blogs_register_post_tracking_args( $params = null, $post_type = 0
 		$params->component_id    = bboss()->blogs->id;
 		$params->action_id       = 'new_blog_post';
 		$params->admin_filter    = __( 'New post published', 'buddyboss-platform' );
-		$params->format_callback = 'bp_blogs_format_activity_action_new_blog_post';
+		$params->format_callback = 'bboss_blogs_format_activity_action_new_blog_post';
 		$params->front_filter    = __( 'Posts', 'buddyboss-platform' );
 		$params->contexts        = array( 'activity', 'member' );
 		$params->position        = 5;
@@ -103,7 +103,7 @@ function bboss_blogs_register_post_tracking_args( $params = null, $post_type = 0
 				$params->action_id       = 'new_blog_' . $post_type;
 				/* translators: %s: singular post type label. */
 				$params->admin_filter    = sprintf( __( 'New %s published', 'buddyboss-platform' ), strtolower( $singular_label_name ) );
-				$params->format_callback = 'bp_blogs_format_activity_action_new_custom_post_type_feed';
+				$params->format_callback = 'bboss_blogs_format_activity_action_new_custom_post_type_feed';
 				$params->front_filter    = $plural_label_name;
 				$params->contexts        = array( 'activity', 'member' );
 				$params->position        = 5;
@@ -155,7 +155,7 @@ function bboss_blogs_register_post_tracking_args( $params = null, $post_type = 0
 			$params->comments_tracking->component_id    = bboss()->blogs->id;
 			$params->comments_tracking->action_id       = 'new_blog_comment';
 			$params->comments_tracking->admin_filter    = __( 'New post comment posted', 'buddyboss-platform' );
-			$params->comments_tracking->format_callback = 'bp_blogs_format_activity_action_new_blog_comment';
+			$params->comments_tracking->format_callback = 'bboss_blogs_format_activity_action_new_blog_comment';
 			$params->comments_tracking->front_filter    = __( 'Comments', 'buddyboss-platform' );
 			$params->comments_tracking->contexts        = array( 'activity', 'member' );
 			$params->comments_tracking->position        = 10;

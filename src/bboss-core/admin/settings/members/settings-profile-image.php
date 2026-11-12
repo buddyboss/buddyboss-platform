@@ -155,7 +155,7 @@ function bboss_members_register_profile_image_panel_fields() {
 				'object'      => 'user',
 				'item_id'     => 0,
 				'item_type'   => 'default',
-				'url_getter'  => 'bb_get_default_custom_upload_profile_avatar',
+				'url_getter'  => 'bboss_get_default_custom_upload_profile_avatar',
 				'label'       => __( 'Upload Custom Avatar', 'buddyboss-platform' ),
 				'help_text'   => '', // Injected at AJAX time via bb_members_enrich_avatar_upload_help_text() — avatar dimensions not available at registration.
 				'conditional' => array(
@@ -320,7 +320,7 @@ function bboss_members_register_profile_image_panel_fields() {
 				'object'      => 'user',
 				'item_id'     => 0,
 				'item_type'   => 'default',
-				'url_getter'  => 'bb_get_default_custom_upload_profile_cover',
+				'url_getter'  => 'bboss_get_default_custom_upload_profile_cover',
 				'label'       => __( 'Upload Custom Cover', 'buddyboss-platform' ),
 				'help_text'   => '',
 				// `help_text` AND `dimensions` are both injected at AJAX time

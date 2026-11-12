@@ -191,11 +191,11 @@ trait BBoss_REST_Attachments {
 		switch ( $this->object ) {
 			case 'group':
 				$bp->groups->current_group = $this->group;
-				$upload_main_dir           = 'groups_avatar_upload_dir';
+				$upload_main_dir           = 'bboss_groups_avatar_upload_dir';
 				break;
 			case 'user':
 			default:
-				$upload_main_dir        = 'xprofile_avatar_upload_dir';
+				$upload_main_dir        = 'bboss_xprofile_avatar_upload_dir';
 				$bp->displayed_user     = new stdClass();
 				$bp->displayed_user->id = (int) $this->user->ID;
 				break;
