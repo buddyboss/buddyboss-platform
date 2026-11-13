@@ -1042,13 +1042,16 @@ function bb_legacy_read_multiselect_meta( $post_id, $name ) {
  *     flat LIST of selected ids: `['a','c']` → passed through as a list.
  *
  * The shape is decided by the registered field type, never by inspecting the
- * array keys. `json_decode( …, true )` casts numeric string keys to integers,
- * so a checked map whose option values are post IDs (`{ "12": 1, "15": 1 }`)
- * arrives as `[ 12 => 1, 15 => 1 ]` and is indistinguishable from a flat list
- * by key type alone. A per-key `is_int()` heuristic therefore pushed the
- * checked flag (`1`) instead of the membership ID, and every consumer with
- * numeric option values (BuddyBoss Membership's Access Protection metabox on
- * forums, topics, replies and other CPTs) saved `[1]` — see PROD-10441.
+ * array keys. The React save posts the map as FormData bracket keys
+ * (`field[12]=1&field[15]=1`), and PHP's request parser — like
+ * `json_decode( …, true )` — casts numeric string keys to integers, so a
+ * checked map whose option values are post IDs arrives as
+ * `[ 12 => '1', 15 => '1' ]` and is indistinguishable from a flat list by key
+ * type alone. A per-key `is_int()` heuristic therefore pushed the checked /
+ * unchecked flags (`1` / `0`) instead of the membership IDs, and every
+ * consumer with numeric option values (BuddyBoss Membership's Access
+ * Protection metabox on forums, topics, replies and other CPTs) stored those
+ * flags as conditions — see PROD-10441.
  *
  * All other types pass through unchanged.
  *
