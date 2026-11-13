@@ -74,7 +74,7 @@ function bboss_rest_api_register_request_script() {
 
 	wp_register_script(
 		'bp-api-request',
-		sprintf( '%1$sbp-core/js/bboss-api-request%2$s.js', bboss()->plugin_url, bboss_core_get_minified_asset_suffix() ),
+		bboss()->plugin_url . 'bboss-core/js/bboss-api-request' . bboss_core_get_minified_asset_suffix() . '.js',
 		$dependencies,
 		bboss_get_version(),
 		true
