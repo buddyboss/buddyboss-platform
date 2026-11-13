@@ -191,7 +191,7 @@ function bboss_admin_settings_page() {
 	);
 
 	// Resolve the LTR admin CSS path. Bake the .min suffix into the URL the
-	// same way bb-icons{$min}.css does two enqueues above — WordPress does
+	// same way bboss-icons{$min}.css does two enqueues above — WordPress does
 	// not derive the suffix at render time, it only uses the 'suffix' data
 	// to compute the -rtl variant. Two layouts are supported because the
 	// Settings 2.0 build nests under /styles/ while other targets (e.g.

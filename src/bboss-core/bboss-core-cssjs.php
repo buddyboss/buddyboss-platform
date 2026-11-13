@@ -61,7 +61,7 @@ function bboss_core_register_common_scripts() {
 
 		// Version 2.3.
 		'bp-plupload'         => array(
-			'file'         => "{$url}bp-plupload{$min}.js",
+			'file'         => "{$url}bboss-plupload{$min}.js",
 			'dependencies' => array( 'plupload', 'jquery', 'json2', 'wp-backbone' ),
 			'footer'       => true,
 		),
@@ -144,7 +144,7 @@ function bboss_core_register_common_scripts() {
 			'footer'       => false,
 		),
 		'bb-emoji-loader'               => array(
-			'file'         => "{$url}bb-emoji-loader{$min}.js",
+			'file'         => "{$url}bboss-emoji-loader{$min}.js",
 			'dependencies' => array( 'bb-twemoji' ),
 			'footer'       => false,
 		),
