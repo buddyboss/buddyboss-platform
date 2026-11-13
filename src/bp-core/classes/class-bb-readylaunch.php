@@ -36,6 +36,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public $settings = array();
 
 		/**
+		 * Whether ReadyLaunch owns the forum page of this request.
+		 *
+		 * Taken from the main query before bbPress renders anything, so a forum
+		 * shortcode on an ordinary page cannot change it. Null until then.
+		 *
+		 * @since BuddyBoss 3.7.1
+		 * @var bool|null
+		 */
+		private $bb_rl_owns_forum_page = null;
+
+		/**
 		 * Get the instance of this class.
 		 *
 		 * @since BuddyBoss 2.9.00
@@ -82,6 +93,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$this->load_template_stack();
 
+			// AJAX from legacy-template UIs on non-RL pages (e.g. theme Elementor activity widget)
+			// must get legacy markup back, not RL templates.
+			if ( self::bb_rl_is_legacy_template_ajax() ) {
+				$this->bb_rl_restore_default_template_stack();
+			}
+
 			/*
 			 * Only load ReadyLaunch login/registration integration when enabled in settings.
 			 * When disabled, the theme's default login/register styling and templates are used.
@@ -107,6 +124,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bp_is_active( 'forums' ) ) {
 				add_filter( 'bbp_use_template_canvas', '__return_false' );
 				add_filter( 'bbp_get_page_by_path', array( $this, 'bb_rl_forums_get_page_by_path' ), 99, 1 );
+
+				// Registered here, from the constructor, and NOT from
+				// bb_rl_required_load(): bbPress enqueues its forum scripts during
+				// `template_include` (bbp_template_include_theme_compat ->
+				// display_topic() -> BBP_Shortcodes::start() -> bbp_enqueue_scripts),
+				// and bb_rl_required_load() is itself called from a later
+				// `template_include` callback. A filter added there is registered
+				// too late to see the only pass that matters.
+				add_filter( 'bbp_default_scripts', array( $this, 'bb_rl_remove_default_topic_reply_draft_script' ) );
+
+				// Before bbPress (priority 10) so the decision reads the main
+				// query, not a forum shortcode rendered inside a theme page.
+				add_filter( 'template_include', array( $this, 'bb_rl_capture_forum_page_ownership' ), 1 );
 			}
 
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
@@ -274,6 +304,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_form_login', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
 
 			add_action( 'wp_login_errors', array( $this, 'bb_rl_wp_login_errors' ) );
+		}
+
+		/**
+		 * Whether the current AJAX request comes from a legacy (non-ReadyLaunch) template UI.
+		 *
+		 * Legacy JS sends `bb_legacy_template` so the response is rendered with the
+		 * default template stack, e.g. from the theme's Elementor activity widget.
+		 *
+		 * @since BuddyBoss 3.7.1
+		 *
+		 * @return bool True when the request asks for legacy template markup.
+		 */
+		public static function bb_rl_is_legacy_template_ajax() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			return wp_doing_ajax() && ! empty( $_POST['bb_legacy_template'] );
 		}
 
 		/**
@@ -1381,6 +1426,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					false === strpos( $src, '/wp-includes/' ) &&
 					false === strpos( $src, '/buddyboss-platform/' ) &&
 					false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+					false === strpos( $src, '/buddyboss-addons/' ) &&
 					false === strpos( $src, '/sfwd-lms/' ) &&
 					false === strpos( $src, '/learndash-course-reviews/' ) &&
 					false === strpos( $src, '/instructor-role/' ) &&
@@ -1400,6 +1446,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						false === strpos( $src, '/wp-includes/' ) &&
 						false === strpos( $src, '/buddyboss-platform/' ) &&
 						false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+						false === strpos( $src, '/buddyboss-addons/' ) &&
 						false === strpos( $src, '/sfwd-lms/' ) &&
 						false === strpos( $src, '/instructor-role/' ) &&
 						false === strpos( $src, 'wp-content/plugins/' ) &&
@@ -3237,16 +3284,51 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Return the theme logo option.
 		 *
+		 * When the stored logo carries an attachment ID, the URL is resolved from the
+		 * attachment so it follows the current upload/offload location. If the
+		 * attachment no longer exists, an empty array is returned so templates fall
+		 * back to the site title instead of rendering a broken image. The stored
+		 * option is not modified.
+		 *
 		 * @since BuddyBoss 2.9.00
+		 * @since BuddyBoss 3.7.0 Resolves the URL from the attachment ID and drops deleted attachments.
 		 *
-		 * @param string $key The key of the logo.
+		 * @param string $key The key of the logo (`light` or `dark`).
 		 *
-		 * @return array
+		 * @return array Empty array, or array with `id`, `url`, `alt` and `title` keys.
 		 */
 		public function bb_rl_get_theme_logo( $key ) {
-			$bb_rl_theme_logo = bp_get_option( 'bb_rl_' . $key . '_logo', array() );
+			$raw  = bp_get_option( 'bb_rl_' . sanitize_key( $key ) . '_logo', array() );
+			$logo = array();
 
-			return $bb_rl_theme_logo;
+			if ( is_numeric( $raw ) ) {
+				// Legacy shape: a bare attachment ID.
+				$raw = array( 'id' => (int) $raw );
+			}
+
+			if ( is_array( $raw ) && ! empty( $raw ) ) {
+				$logo = wp_parse_args(
+					$raw,
+					array(
+						'id'    => 0,
+						'url'   => '',
+						'alt'   => '',
+						'title' => '',
+					)
+				);
+
+				$attachment_id = absint( $logo['id'] );
+				if ( $attachment_id > 0 ) {
+					$url         = wp_get_attachment_url( $attachment_id );
+					$logo['url'] = $url ? $url : '';
+				}
+
+				if ( empty( $logo['url'] ) ) {
+					$logo = array();
+				}
+			}
+
+			return $logo;
 		}
 
 		/**
@@ -3469,6 +3551,92 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * Drop the default forum draft pack when ReadyLaunch supplies its own.
+		 *
+		 * Both packs construct their own instance against the same forms and
+		 * each fires its own lazy draft fetch, so the page ran two of
+		 * everything. This was previously attempted with
+		 * `wp_deregister_script()` / `wp_dequeue_script()`, which cannot work
+		 * from anywhere in the enqueue phase, for two independent reasons:
+		 *
+		 *  - The ReadyLaunch enqueue runs on `wp_enqueue_scripts` at priority
+		 *    1, while bbPress enqueues from `bbp_enqueue_scripts` at priority
+		 *    10 — so a dequeue there ran before the handle existed and was a
+		 *    guaranteed no-op.
+		 *  - Raising the priority does not help either. The bbPress theme
+		 *    compat class hooks its `enqueue_scripts()` to **both**
+		 *    `bbp_enqueue_scripts` AND `wp_footer`, and the enqueue goes
+		 *    through `bbp_enqueue_script()`, which calls `wp_register_script()`
+		 *    and `wp_enqueue_script()`. The footer pass therefore re-registers
+		 *    and re-enqueues the handle, undoing any dequeue that ran earlier
+		 *    in the request — including one at `PHP_INT_MAX`.
+		 *
+		 * So the handle is removed before it is ever enqueued instead.
+		 * `bbp_default_scripts` is applied inside `enqueue_scripts()`
+		 * immediately before the enqueue loop, which means it applies on both
+		 * of those invocation paths and the result cannot be undone later.
+		 *
+		 * Gated on the page context and NOT on whether the ReadyLaunch handle
+		 * is already enqueued, which was the first thing tried here and is
+		 * wrong: the decisive pass is the `template_include` one above, and
+		 * ReadyLaunch does not enqueue its own pack until `wp_enqueue_scripts`
+		 * priority 1, which is later. Measured on that pass — the replacement
+		 * reads as not enqueued while the page is unambiguously a ReadyLaunch
+		 * forum, so a `wp_script_is()` gate skips the one call that matters
+		 * and the default pack ships anyway.
+		 *
+		 * `bb_is_readylaunch_forums()` is the same predicate that decides
+		 * whether ReadyLaunch takes the page over at all, so the two decisions
+		 * cannot drift apart. It is read from the main query, captured by
+		 * {@see bb_rl_capture_forum_page_ownership()} before bbPress renders:
+		 * a topic or forum shortcode on an ordinary page also makes bbPress add
+		 * this handle, but that page stays on the theme template and must keep
+		 * the default pack.
+		 *
+		 * @since BuddyBoss 3.7.1
+		 *
+		 * @param array $scripts Handle => attributes map bbPress is about to enqueue.
+		 * @return array
+		 */
+		public function bb_rl_remove_default_topic_reply_draft_script( $scripts ) {
+			if ( ! is_array( $scripts ) || ! isset( $scripts['bb-topic-reply-draft'] ) ) {
+				return $scripts;
+			}
+
+			// A `[bbp-single-topic]` or `[bbp-single-forum]` shortcode on an
+			// ordinary page makes bb_is_readylaunch_forums() true while it renders,
+			// but that page keeps the theme template and never loads the
+			// ReadyLaunch pack. Decide from the main query instead, so such a page
+			// keeps the default pack and its drafts.
+			$readylaunch_owns_page = null === $this->bb_rl_owns_forum_page ? $this->bb_is_readylaunch_forums() : $this->bb_rl_owns_forum_page;
+
+			if ( $readylaunch_owns_page ) {
+				unset( $scripts['bb-topic-reply-draft'] );
+			}
+
+			return $scripts;
+		}
+
+		/**
+		 * Record whether ReadyLaunch owns this request's forum page.
+		 *
+		 * Runs on `template_include` before bbPress renders the page, so the
+		 * check reads the main query. {@see bb_rl_remove_default_topic_reply_draft_script()}
+		 * uses it to keep the default forum draft pack on an ordinary page that
+		 * embeds a topic or forum by shortcode.
+		 *
+		 * @since BuddyBoss 3.7.1
+		 *
+		 * @param string $template Template path.
+		 * @return string Unchanged template path.
+		 */
+		public function bb_rl_capture_forum_page_ownership( $template ) {
+			$this->bb_rl_owns_forum_page = (bool) $this->bb_is_readylaunch_forums();
+
+			return $template;
+		}
+
+		/**
 		 * Enqueue styles and scripts for ReadyLaunch Forums.
 		 *
 		 * @since BuddyBoss 2.9.00
@@ -3515,11 +3683,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( $min ) {
 				wp_style_add_data( 'bb-readylaunch-forums', 'suffix', $min );
 			}
-
-			// Dequeue default bbpress scripts to avoid conflict with readylaunch scripts.
-			// Should load after readylaunch scripts.
-			wp_deregister_script( 'bb-topic-reply-draft' );
-			wp_dequeue_script( 'bb-topic-reply-draft' );
 
 			// Enqueue Topic Reply Draft JavaScript.
 			wp_enqueue_script(

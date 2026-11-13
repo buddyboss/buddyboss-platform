@@ -1185,6 +1185,7 @@ window.bp = window.bp || {};
 
 				var ajaxData = {
 					action      : 'delete_activity',
+					bb_legacy_template : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 					'id'        : activity_id,
 					'_wpnonce'  : parent.getLinkParams( target.prop( 'href' ), '_wpnonce' ),
 					'is_single' : target.closest( '[data-bp-single]' ).length
@@ -1230,7 +1231,11 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.parent_activity_id && response.data.activity ) {
-								$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ).replaceWith( response.data.activity );
+								bp.Nouveau.replaceActivityItem(
+									$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ),
+									response.data.activity,
+									[ '.activity-inner > .bb-activity-media-wrap', '.activity-inner > .bb-activity-video-wrap', '.activity-state' ]
+								);
 							}
 
 							if ( activity_comment_id ) {
@@ -1337,6 +1342,7 @@ window.bp = window.bp || {};
 				parent.ajax(
 					{
 						action : 'get_single_activity_content',
+						bb_legacy_template : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						id     : item_id
 					},
 					'activity'
@@ -1726,6 +1732,7 @@ window.bp = window.bp || {};
 
 				comment_data = {
 					action                        : 'new_activity_comment',
+					bb_legacy_template            : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 					_wpnonce_new_activity_comment : $( '#_wpnonce_new_activity_comment' ).val(),
 					comment_id                    : item_id,
 					form_id                       : activity_id,
@@ -2768,7 +2775,7 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
@@ -2813,6 +2820,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -3025,7 +3034,7 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
@@ -3059,6 +3068,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -3191,6 +3202,10 @@ window.bp = window.bp || {};
 						dictMaxFilesExceeded 		: BP_Nouveau.video.video_dict_file_exceeded,
 						previewTemplate		 		: acCommentVideoTemplate,
 						dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
+						chunking                    : true,
+						chunkSize                   : 30*1024*1024,
+						retryChunks                 : true,
+						retryChunksLimit            : 3,
 					};
 
 					// init dropzone.
@@ -3285,8 +3300,13 @@ window.bp = window.bp || {};
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
 
-							if ( response.data.id ) {
-								file.id                  = response.id;
+							if ( true === file.upload.chunked ) {
+								// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+								response = JSON.parse( file.xhr.response );
+							}
+
+							if ( response.data && response.data.id ) {
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
@@ -3321,6 +3341,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -4264,6 +4286,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				action: 'activity_loadmore_comments',
+				bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				activity_id: activityId,
 				parent_comment_id: parentCommentId,
 				offset: $( e.currentTarget ).parents( '.activity-comments' ).find( 'ul[data-parent_comment_id ="' + parentCommentId + '"] > li.comment-item:not(.bb-recent-comment)' ).length,
@@ -4425,6 +4448,7 @@ window.bp = window.bp || {};
 
 					var data = {
 						action: 'activity_sync_from_modal',
+						bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						activity_id: activityId,
 					};
 
@@ -4434,7 +4458,11 @@ window.bp = window.bp || {};
 								return;
 							} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
 								// success
-								$pageActivityListItem.replaceWith( $.parseHTML( response.data.activity ) );
+								bp.Nouveau.replaceActivityItem(
+									$pageActivityListItem,
+									$.parseHTML( response.data.activity ),
+									[ '.activity-inner > .bb-activity-media-wrap', '.activity-inner > .bb-activity-video-wrap', '.activity-state', '.activity-comments ul[data-activity_id]' ]
+								);
 								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 								jQuery( window ).scroll();
 
