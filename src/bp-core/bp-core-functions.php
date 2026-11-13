@@ -3757,7 +3757,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	 * Return anything other than null to end bp_send_email() here: that value is returned to
 	 * the caller and neither wp_mail() nor the delivery class runs. This fires before the
 	 * transport is chosen, so it behaves the same whichever mail plugin the site uses,
-	 * including plugins that declare their own wp_mail(), where `pre_wp_mail` never fires.
+	 * including plugins that declare their own wp_mail(), which may not apply `pre_wp_mail`.
 	 * Return true when the email was handled another way (for example held for a digest), or
 	 * a WP_Error to report that it was not sent.
 	 *
