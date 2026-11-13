@@ -119,7 +119,7 @@ if ( ! bboss_is_user_messages() && ! bboss_is_user_settings() && ! bboss_is_user
 			$moderation_class = function_exists( 'bboss_moderation_is_user_suspended' ) && bboss_moderation_is_user_suspended( $bp_displayed_user_id ) ? 'bp-user-suspended' : '';
 			$moderation_class = function_exists( 'bboss_moderation_is_user_blocked' ) && bboss_moderation_is_user_blocked( $bp_displayed_user_id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
-			<div id="item-header-avatar" class="<?php echo esc_attr( $moderation_class ); ?>">
+			<div id="item-header-avatar" class="<?php echo esc_attr( $moderation_class ); ?>" tabindex="0">
 				<?php
 				if ( $is_enabled_online_status ) {
 					bboss_user_presence_html( $bp_displayed_user_id );
