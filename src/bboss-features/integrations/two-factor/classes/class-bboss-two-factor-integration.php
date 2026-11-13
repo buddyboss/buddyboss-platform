@@ -39,7 +39,9 @@ class BBoss_Two_Factor_Integration extends BBoss_Integration {
 	public function __construct() {
 		$this->start(
 			'two-factor',
-			__( 'Two-Factor Authentication', 'buddyboss' ),
+			// Internal name, untranslated like the other integrations: this runs on bp_loaded
+			// (plugins_loaded), and translating before init triggers a just-in-time notice.
+			'Two-Factor Authentication',
 			'two-factor',
 			array(
 				'required_plugin' => bboss_two_factor_plugin_basename(),
