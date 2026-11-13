@@ -293,12 +293,18 @@ class BB_Feature_Autoloader {
 	/**
 	 * Build the versioned cache key for feature-config discovery.
 	 *
+	 * The scanned base directory is part of the key, so cached paths are never reused after the
+	 * features directory moves (for example when a site switches between builds of the same
+	 * version that name it differently); such paths fail the base-directory check and no
+	 * feature would load until the transient expired.
+	 *
 	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION] The key includes the scanned base directory.
 	 *
 	 * @return string Transient key.
 	 */
 	private static function bb_get_discovery_cache_key() {
 		$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
-		return 'bb_feature_config_paths_v_' . md5( $version );
+		return 'bb_feature_config_paths_v_' . md5( $version . '|' . buddypress()->plugin_dir . 'bb-features/' );
 	}
 }
