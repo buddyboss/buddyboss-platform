@@ -433,10 +433,12 @@ function bb_admin_settings_register_appearance_settings() {
 		)
 	);
 
+	// Same default as the front end (BB_Readylaunch::bb_rl_is_page_enabled_for_integration() treats a
+	// never-saved option as off): showing Registration ON here would claim a template the site does not use.
 	$enabled_pages_default = bp_get_option(
 		'bb_rl_enabled_pages',
 		array(
-			'registration' => true,
+			'registration' => false,
 			'courses'      => false,
 			'blog'         => false,
 		)

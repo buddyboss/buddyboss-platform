@@ -1109,6 +1109,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					return $theme_bp_template;
 				}
 
+				/*
+				 * Theme compatibility ran while the ReadyLaunch stack was still active, so $template can
+				 * be ReadyLaunch's inner `buddypress.php` (the form without header, styles or footer).
+				 * Without a theme `buddypress.php` (block themes have none) use the theme's page template,
+				 * which renders the register form through the page content.
+				 */
+				if ( false !== strpos( wp_normalize_path( $template ), '/readylaunch/' ) ) {
+					$page_template = get_page_template();
+					if ( $page_template ) {
+						return $page_template;
+					}
+				}
+
 				// Fallback: let WordPress handle it normally.
 				return $template;
 			}
