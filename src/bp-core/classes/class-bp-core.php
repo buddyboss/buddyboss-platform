@@ -404,7 +404,7 @@ class BP_Core extends BP_Component {
 
 		foreach ( $bp->available_integrations as $integration ) {
 			// The loader keeps the original `bp-`/`bb-` name on release; a generated edition renames
-			// the `bp-` one to `bboss-`.
+			// both to `bboss-`.
 			$included = false;
 			foreach ( array( 'bboss-', 'bp-', 'bb-' ) as $file_prefix ) {
 				$file = "{$integration_dir}{$integration}/{$file_prefix}{$integration}-loader.php";
@@ -418,10 +418,14 @@ class BP_Core extends BP_Component {
 				continue;
 			}
 
-			// Check bb-features/integrations/ for migrated integrations.
-			$file = "{$feature_integration_dir}{$integration}/bb-{$integration}-loader.php";
-			if ( file_exists( $file ) ) {
-				include $file;
+			// Check bb-features/integrations/ for migrated integrations (`bb-` on release, `bboss-` in
+			// a generated edition).
+			foreach ( array( 'bboss-', 'bb-' ) as $file_prefix ) {
+				$file = "{$feature_integration_dir}{$integration}/{$file_prefix}{$integration}-loader.php";
+				if ( file_exists( $file ) ) {
+					include $file;
+					break;
+				}
 			}
 		}
 

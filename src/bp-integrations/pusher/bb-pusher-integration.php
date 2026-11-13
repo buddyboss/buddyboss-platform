@@ -51,18 +51,27 @@ class BB_Pusher_Integration extends BP_Integration {
 		// Loop through files to be included.
 		foreach ( (array) $includes as $file ) {
 
-			$paths = array(
+			$paths = array();
 
-				// Passed with no extension.
-				'bb-' . $this->id . '/bb-' . $this->id . '-' . $file . '.php',
-				'bb-' . $this->id . '-' . $file . '.php',
-				'bb-' . $this->id . '/' . $file . '.php',
+			// Files keep the original `bb-` name on release; a generated edition renames them `bboss-`.
+			foreach ( array( 'bboss-', 'bb-' ) as $prefix ) {
+				$paths = array_merge(
+					$paths,
+					array(
+						// Passed with no extension.
+						$prefix . $this->id . '/' . $prefix . $this->id . '-' . $file . '.php',
+						$prefix . $this->id . '-' . $file . '.php',
+						$prefix . $this->id . '/' . $file . '.php',
+					)
+				);
+			}
 
-				// Passed with extension.
-				$file,
-				'bb-' . $this->id . '-' . $file,
-				'bb-' . $this->id . '/' . $file,
-			);
+			// Passed with extension.
+			$paths[] = $file;
+			foreach ( array( 'bboss-', 'bb-' ) as $prefix ) {
+				$paths[] = $prefix . $this->id . '-' . $file;
+				$paths[] = $prefix . $this->id . '/' . $file;
+			}
 
 			foreach ( $paths as $path ) {
 				if ( @is_file( $slashed_path . $path ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
