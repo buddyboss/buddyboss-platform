@@ -25,7 +25,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		$name        = __( '(BB) Who\'s Online', 'buddyboss' );
 		$description = __( 'Profile photos of online users', 'buddyboss' );
 		parent::__construct(
-			false,
+			self::class === static::class ? 'bp_core_whos_online_widget' : false,
 			$name,
 			array(
 				'description'                 => $description,

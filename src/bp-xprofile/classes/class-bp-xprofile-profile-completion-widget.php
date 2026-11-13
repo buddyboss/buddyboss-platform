@@ -31,7 +31,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		// Set up the widget.
 		parent::__construct(
-				false,
+				self::class === static::class ? 'bp_xprofile_profile_completion_widget' : false,
 				__( '(BB) Profile Completion', 'buddyboss' ),
 				$widget_ops
 		);

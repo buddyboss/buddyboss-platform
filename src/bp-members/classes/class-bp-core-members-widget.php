@@ -29,7 +29,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 		// Call WP_Widget constructor.
 		parent::__construct(
-			false,
+			self::class === static::class ? 'bp_core_members_widget' : false,
 			$name,
 			array(
 				'description'                 => $description,

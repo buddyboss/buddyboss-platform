@@ -42,7 +42,7 @@ class BBP_Login_Widget extends WP_Widget {
 			)
 		);
 
-		parent::__construct( false, __( '(BB) Forum Login Widget', 'buddyboss' ), $widget_ops );
+		parent::__construct( self::class === static::class ? 'bbp_login_widget' : false, __( '(BB) Forum Login Widget', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -263,7 +263,7 @@ class BBP_Views_Widget extends WP_Widget {
 			)
 		);
 
-		parent::__construct( false, __( '(BB) Forum Discussion Views List', 'buddyboss' ), $widget_ops );
+		parent::__construct( self::class === static::class ? 'bbp_views_widget' : false, __( '(BB) Forum Discussion Views List', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -428,7 +428,7 @@ class BBP_Search_Widget extends WP_Widget {
 			)
 		);
 
-		parent::__construct( false, __( '(BB) Forum Search Form', 'buddyboss' ), $widget_ops );
+		parent::__construct( self::class === static::class ? 'bbp_search_widget' : false, __( '(BB) Forum Search Form', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -575,7 +575,7 @@ class BBP_Forums_Widget extends WP_Widget {
 			)
 		);
 
-		parent::__construct( false, __( '(BB) Forums List', 'buddyboss' ), $widget_ops );
+		parent::__construct( self::class === static::class ? 'bbp_forums_widget' : false, __( '(BB) Forums List', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -813,7 +813,7 @@ class BBP_Topics_Widget extends WP_Widget {
 			)
 		);
 
-		parent::__construct( false, __( '(BB) Forum Recent Topics', 'buddyboss' ), $widget_ops );
+		parent::__construct( self::class === static::class ? 'bbp_topics_widget' : false, __( '(BB) Forum Recent Topics', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -1152,7 +1152,7 @@ class BBP_Stats_Widget extends WP_Widget {
 			)
 		);
 
-		parent::__construct( false, __( '(BB) Forum Statistics', 'buddyboss' ), $widget_ops );
+		parent::__construct( self::class === static::class ? 'bbp_stats_widget' : false, __( '(BB) Forum Statistics', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -1293,7 +1293,7 @@ class BBP_Replies_Widget extends WP_Widget {
 			)
 		);
 
-		parent::__construct( false, __( '(BB) Forum Recent Replies', 'buddyboss' ), $widget_ops );
+		parent::__construct( self::class === static::class ? 'bbp_replies_widget' : false, __( '(BB) Forum Recent Replies', 'buddyboss' ), $widget_ops );
 	}
 
 	/**

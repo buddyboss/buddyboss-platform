@@ -27,7 +27,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 
 		// Set up the widget
 		parent::__construct(
-			false,
+			self::class === static::class ? 'bp_core_follow_follower_widget' : false,
 			__( '(BB) Members Following Me', 'buddyboss' ),
 			$widget_ops
 		);
