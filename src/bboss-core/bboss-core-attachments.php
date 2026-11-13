@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Check if the current WordPress version is using Plupload 2.1.1
  *
- * Plupload 2.1.1 was introduced in WordPress 3.9. Our bp-plupload.js
+ * Plupload 2.1.1 was introduced in WordPress 3.9. Our bboss-plupload.js
  * script requires it. So we need to make sure the current WordPress
  * match with our needs.
  *

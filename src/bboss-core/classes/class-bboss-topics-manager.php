@@ -147,7 +147,7 @@ class BBoss_Topics_Manager {
 		$min = bboss_core_get_minified_asset_suffix();
 		wp_enqueue_script(
 			'bb-topics-manager',
-			$bp->plugin_url . "bboss-core/js/bb-topics-manager{$min}.js",
+			$bp->plugin_url . "bboss-core/js/bboss-topics-manager{$min}.js",
 			array(
 				'jquery',
 			),

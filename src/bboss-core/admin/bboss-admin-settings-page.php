@@ -89,7 +89,7 @@ function bboss_admin_settings_page() {
 	);
 	wp_enqueue_style(
 		'bb-icons-rl-css',
-		bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
+		bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bboss-icons-rl{$min}.css",
 		array(),
 		$bb_icon_version
 	);

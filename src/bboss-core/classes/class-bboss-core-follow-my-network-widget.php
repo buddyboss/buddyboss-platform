@@ -379,6 +379,6 @@ class BBoss_Core_Follow_My_Network_Widget extends WP_Widget {
 	 */
 	public static function enqueue_scripts() {
 		$min = bboss_core_get_minified_asset_suffix();
-		wp_enqueue_script( 'bb_rl_my_network_widget_js', bboss()->plugin_url . "bboss-core/js/bb-rl-my-network-widget{$min}.js", array( 'jquery', 'wp-ajax-response' ), bboss_get_version(), true );
+		wp_enqueue_script( 'bb_rl_my_network_widget_js', bboss()->plugin_url . "bboss-core/js/bboss-rl-my-network-widget{$min}.js", array( 'jquery', 'wp-ajax-response' ), bboss_get_version(), true );
 	}
 }

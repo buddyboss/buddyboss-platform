@@ -79,7 +79,7 @@ function bboss_admin_integrations_page() {
 	$bb_icon_version = function_exists( 'bboss_icon_font_map_data' ) ? bboss_icon_font_map_data( 'version' ) : bboss_get_version();
 	wp_enqueue_style(
 		'bb-icons-rl-css',
-		bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
+		bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bboss-icons-rl{$min}.css",
 		array(),
 		$bb_icon_version
 	);

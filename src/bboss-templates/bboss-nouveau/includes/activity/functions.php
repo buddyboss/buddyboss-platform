@@ -41,7 +41,7 @@ function bboss_nouveau_activity_register_scripts( $scripts = array() ) {
 				'footer'       => true,
 			),
 			'bp-nouveau-activity-reacted'           => array(
-				'file'         => 'js/bb-activity-reacted%s.js',
+				'file'         => 'js/bboss-activity-reacted%s.js',
 				'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
 				'footer'       => true,
 			),

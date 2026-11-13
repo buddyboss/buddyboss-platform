@@ -544,7 +544,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 		// Enqueue the BB Icons CSS.
 		wp_enqueue_style(
 			'bb-icons-rl-css',
-			bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
+			bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bboss-icons-rl{$min}.css",
 			array(),
 			$asset_data['version']
 		);
