@@ -120,7 +120,7 @@ function _bb_two_factor_tests_include_integration() {
 		return;
 	}
 
-	$dir = trailingslashit( bboss()->plugin_dir ) . 'bb-features/integrations/two-factor/';
+	$dir = trailingslashit( bboss()->plugin_dir ) . 'bboss-features/integrations/two-factor/';
 
 	require_once $dir . 'bboss-two-factor-actions.php';
 	require_once $dir . 'bboss-two-factor-filters.php';

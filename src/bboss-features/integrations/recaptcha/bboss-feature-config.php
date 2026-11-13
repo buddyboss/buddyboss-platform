@@ -3,7 +3,7 @@
  * reCAPTCHA Integration Feature Configuration.
  *
  * Registers the reCAPTCHA integration in the BuddyBoss Feature Registry.
- * Auto-discovered by BBoss_Feature_Autoloader from bb-features/integrations/recaptcha/.
+ * Auto-discovered by BBoss_Feature_Autoloader from bboss-features/integrations/recaptcha/.
  *
  * @package BuddyBoss\Features\Integrations\Recaptcha
  * @since BuddyBoss 3.0.0

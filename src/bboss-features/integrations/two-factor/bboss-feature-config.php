@@ -3,7 +3,7 @@
  * Two-Factor integration feature configuration.
  *
  * Registers the integration in the BuddyBoss Feature Registry. Auto-discovered by
- * BBoss_Feature_Autoloader from bb-features/integrations/two-factor/, so this file
+ * BBoss_Feature_Autoloader from bboss-features/integrations/two-factor/, so this file
  * runs on every request and must stay cheap.
  *
  * @since   BuddyBoss 3.6.0
