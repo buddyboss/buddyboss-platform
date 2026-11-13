@@ -3337,7 +3337,7 @@ function bboss_is_reactions_feature_enabled( $reset = false ) {
 
 	// Backward compatibility: if 'reactions' key not set (e.g. site not yet saved from Settings 2.0),
 	// treat as enabled so existing sites keep reactions. Must match is_active_callback in
-	// bb-features/community/reactions/bb-feature-config.php so feature card and functionality stay in sync.
+	// bboss-features/community/reactions/bboss-feature-config.php so feature card and functionality stay in sync.
 	if ( ! array_key_exists( 'reactions', $active_features ) ) {
 		$is_enabled = true;
 		return $is_enabled;

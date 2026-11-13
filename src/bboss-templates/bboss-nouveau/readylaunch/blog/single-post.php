@@ -3,7 +3,7 @@
  * ReadyLaunch - Blog single post template.
  *
  * The share row and author bio are appended by the `the_content` filter in
- * bb-blogging-functions.php. Related posts are suppressed there and rendered
+ * bboss-blogging-functions.php. Related posts are suppressed there and rendered
  * here instead, as blog cards after the comments — matching the design order.
  *
  * @since   BuddyBoss 3.2.0

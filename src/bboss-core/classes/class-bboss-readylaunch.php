@@ -114,7 +114,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			) {
 				// On wp-login.php with registration disabled, restore the default
 				// template stack so bp_locate_template_asset() finds Platform CSS
-				// (buddypress.css, bb-icons.css) in the standard template directory.
+				// (buddypress.css, bboss-icons.css) in the standard template directory.
 				$this->bb_rl_restore_default_template_stack();
 			}
 
@@ -1251,7 +1251,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 		public function bb_enqueue_scripts() {
 			$min = bboss_core_get_minified_asset_suffix();
 
-			wp_enqueue_script( 'bb-readylaunch-front', bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-select2', 'bp-nouveau' ), bboss_get_version(), true );
+			wp_enqueue_script( 'bb-readylaunch-front', bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-front{$min}.js", array( 'jquery', 'bp-select2', 'bp-nouveau' ), bboss_get_version(), true );
 
 			// Enqueue select2 CSS to ensure it's available for ReadyLaunch.
 			wp_enqueue_style( 'bp-select2' );
@@ -1278,7 +1278,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 				// BB icon version.
 				$bb_icon_version = function_exists( 'bboss_icon_font_map_data' ) ? bboss_icon_font_map_data( 'version' ) : '';
 				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bboss_get_version();
-				wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
+				wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/bboss-icons{$min}.css", array(), $bb_icon_version );
 				wp_enqueue_style( 'bb-readylaunch-bb-icons-map', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 			}
 
@@ -1318,7 +1318,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 				}
 			}
 
-			wp_enqueue_style( 'bb-icons-rl-css', bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bboss_get_version() );
+			wp_enqueue_style( 'bb-icons-rl-css', bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bboss-icons-rl{$min}.css", array(), bboss_get_version() );
 			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
 			if ( $min ) {
 				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
@@ -1332,13 +1332,13 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 					wp_style_add_data( 'bb-readylaunch-blog', 'suffix', $min );
 				}
 
-				wp_enqueue_script( 'bb-readylaunch-blog', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-blog.js', array( 'jquery' ), bboss_get_version(), true );
+				wp_enqueue_script( 'bb-readylaunch-blog', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-blog.js', array( 'jquery' ), bboss_get_version(), true );
 			}
 
 			if ( bboss_is_members_directory() ) {
 				wp_register_script(
 					'bb-rl-members',
-					bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-members{$min}.js",
+					bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-members{$min}.js",
 					array( 'bp-nouveau' ),
 					bboss_get_version(),
 					true
@@ -1387,7 +1387,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 		 */
 		public function bb_admin_enqueue_scripts() {
 			$min = bboss_core_get_minified_asset_suffix();
-			wp_enqueue_style( 'bb-icons-rl-css', bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bboss_get_version() );
+			wp_enqueue_style( 'bb-icons-rl-css', bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bboss-icons-rl{$min}.css", array(), bboss_get_version() );
 			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
 			if ( $min ) {
 				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
@@ -1407,7 +1407,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bboss_get_version();
 
 			// Enqueue BB icons for admin pages.
-			wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
+			wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/bboss-icons{$min}.css", array(), $bb_icon_version );
 			wp_enqueue_style( 'bb-readylaunch-bb-icons-map', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 		}
 
@@ -2211,12 +2211,12 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 				$scripts,
 				array(
 					'bb-rl-groups'              => array(
-						'file'         => bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-groups%s.js',
+						'file'         => bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-groups%s.js',
 						'dependencies' => array( 'bp-nouveau' ),
 						'footer'       => true,
 					),
 					'bb-rl-group-invites'       => array(
-						'file'         => bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-group-invites%s.js',
+						'file'         => bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-group-invites%s.js',
 						'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
 						'footer'       => true,
 					),
@@ -2232,7 +2232,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 						'footer'       => true,
 					),
 					'bb-rl-xprofile'            => array(
-						'file'         => bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-xprofile%s.js',
+						'file'         => bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-xprofile%s.js',
 						'dependencies' => array( 'bp-nouveau', 'jquery-ui-sortable' ),
 						'footer'       => true,
 					),
@@ -2481,7 +2481,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			global $bp;
 			$min = bboss_core_get_minified_asset_suffix();
 			if ( ! empty( $src ) && 'bb-topics-manager' === $handle ) {
-				$src = trailingslashit( $bp->plugin_url ) . "bboss-templates/bboss-nouveau/readylaunch/js/bb-topics-manager{$min}.js";
+				$src = trailingslashit( $bp->plugin_url ) . "bboss-templates/bboss-nouveau/readylaunch/js/bboss-topics-manager{$min}.js";
 			}
 
 			return $src;
@@ -2776,7 +2776,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			wp_enqueue_style( 'bb-rl-login-fonts', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/assets/fonts/fonts.css', array(), bboss_get_version() );
 			wp_enqueue_style( 'bb-rl-login-style', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/css/login.css', array(), bboss_get_version() );
 			wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
-			wp_enqueue_style( 'bb-rl-login-style-icons', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bboss_get_version() );
+			wp_enqueue_style( 'bb-rl-login-style-icons', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/icons/css/bboss-icons-rl.min.css', array(), bboss_get_version() );
 			wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
 		}
 
@@ -3179,7 +3179,7 @@ JS;
 
 			wp_register_style(
 				'bb-icons-rl-css',
-				$plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
+				$plugin_url . "bboss-templates/bboss-nouveau/readylaunch/icons/css/bboss-icons-rl{$min}.css",
 				array(),
 				bboss_get_version()
 			);
@@ -3227,7 +3227,7 @@ JS;
 			// Enqueue our MemberPress Courses helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-meprlms-js',
-				bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-meprlms.js',
+				bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-meprlms.js',
 				array( 'jquery' ),
 				bboss_get_version(),
 				true
@@ -3704,7 +3704,7 @@ JS;
 			// Enqueue Topic Reply Draft JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-topic-reply-draft',
-				bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-topic-reply-draft{$min}.js",
+				bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-topic-reply-draft{$min}.js",
 				array( 'jquery' ),
 				bboss_get_version(),
 				true
@@ -3713,7 +3713,7 @@ JS;
 			// Enqueue our Forum helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-forums-js',
-				bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-forums{$min}.js",
+				bboss()->plugin_url . "bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-forums{$min}.js",
 				array( 'jquery', 'bp-nouveau' ),
 				bboss_get_version(),
 				true

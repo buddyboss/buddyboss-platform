@@ -73,7 +73,7 @@ const rlOnboardingConfig = {
         'rl-onboarding': path.resolve(__dirname, 'rl-onboarding/onboarding.js'),
     },
     output: {
-        path: path.resolve(__dirname, '../../bboss-core/admin/bb-settings/rl-onboarding/build'),
+        path: path.resolve(__dirname, '../../bboss-core/admin/bboss-settings/rl-onboarding/build'),
         filename: '[name].js',
         clean: false, // Prevent cleaning other build directories
     },
@@ -94,7 +94,7 @@ const settingsConfig = withCommonExternal({
         'index': path.resolve(__dirname, 'settings/index.js'),
     },
     output: {
-        path: path.resolve(__dirname, '../../bboss-core/admin/bb-settings/settings/build'),
+        path: path.resolve(__dirname, '../../bboss-core/admin/bboss-settings/settings/build'),
         filename: '[name].js',
         clean: {
             keep: /styles/, // Keep the styles directory (SCSS output)
@@ -119,7 +119,7 @@ const integrationsConfig = withCommonExternal({
         'index': path.resolve(__dirname, 'integrations/index.js'),
     },
     output: {
-        path: path.resolve(__dirname, '../../bboss-core/admin/bb-settings/integrations/build'),
+        path: path.resolve(__dirname, '../../bboss-core/admin/bboss-settings/integrations/build'),
         filename: '[name].js',
         clean: {
             keep: /styles/, // Keep the styles directory (SCSS output)
@@ -143,7 +143,7 @@ const kbStandaloneConfig = withCommonExternal({
         'index': path.resolve(__dirname, 'kb-standalone/index.js'),
     },
     output: {
-        path: path.resolve(__dirname, '../../bboss-core/admin/bb-settings/kb-standalone/build'),
+        path: path.resolve(__dirname, '../../bboss-core/admin/bboss-settings/kb-standalone/build'),
         filename: '[name].js',
         clean: false,
     },
@@ -170,7 +170,7 @@ const commonConfig = {
         index: path.resolve(__dirname, 'common/index.js'),
     },
     output: {
-        path: path.resolve(__dirname, '../../bboss-core/admin/bb-settings/common/build'),
+        path: path.resolve(__dirname, '../../bboss-core/admin/bboss-settings/common/build'),
         filename: '[name].js',
         library: { name: 'bbAdminCommon', type: 'window' },
         clean: { keep: /styles/ },

@@ -159,10 +159,10 @@ class BBoss_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 *
 	 * Uses the platform-api namespace when available so the route lives at
 	 * `buddyboss/v1/integrations/...` — consistent with the rest of the
-	 * BuddyBoss REST surface and with the value `bb-admin-settings-page.php`
+	 * BuddyBoss REST surface and with the value `bboss-admin-settings-page.php`
 	 * localizes into `bbAdminData.apiUrl` (`rest_url( 'buddyboss/v1/' )`).
 	 * Falls back to `buddyboss/v1` when the helpers are absent — matching the
-	 * fallback in bb-admin-integrations-page.php so the registered route and the
+	 * fallback in bboss-admin-integrations-page.php so the registered route and the
 	 * URL the React app calls never diverge.
 	 *
 	 * @since BuddyBoss 3.1.0

@@ -132,7 +132,7 @@ const resolveHelpContentId = (contentId) => {
  * replay; see commit message for full diagnosis).
  *
  * Reads `window.bbAdminData.apiUrl` which is set by
- * `bb-admin-settings-page.php` via `wp_localize_script` to
+ * `bboss-admin-settings-page.php` via `wp_localize_script` to
  * `rest_url( 'buddyboss/v1/' )`. Falls back to the WP-Admin REST root
  * if for some reason the localized data is missing — the controller
  * registers the route under both `buddyboss/v1` (with platform-api)

@@ -8,7 +8,7 @@
  * that does not include the digest. Without it the Emails tab simply has no Email Digest
  * entry and an admin has no way to discover the feature exists.
  *
- * Same shape as the Member Blogging upsell (bb-features/community/blogging/admin/) —
+ * Same shape as the Member Blogging upsell (bboss-features/community/blogging/admin/) —
  * Platform owning the not-yet-available states for an add-on it does not ship.
  *
  * FIVE STATES, resolved from licence facts Platform can read on its own (the add-on's

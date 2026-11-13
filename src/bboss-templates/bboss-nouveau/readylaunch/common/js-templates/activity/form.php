@@ -41,8 +41,8 @@ $template_parts = apply_filters(
 		'parts/bboss-activity-edit-postin',
 		'parts/bboss-activity-edit-postin-header',
 		'parts/bboss-activity-post-privacy-stage-footer',
-		'parts/bb-activity-post-form-topic-selector',
-		'parts/bb-activity-post-form-title',
+		'parts/bboss-activity-post-form-topic-selector',
+		'parts/bboss-activity-post-form-title',
 	)
 );
 

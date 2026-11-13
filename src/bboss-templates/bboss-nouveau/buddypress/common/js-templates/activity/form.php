@@ -39,9 +39,9 @@ $template_parts = apply_filters(
 		'parts/bboss-editor-toolbar',
 		'parts/bboss-activity-post-form-privacy',
 		'parts/bboss-activity-edit-postin',
-		'parts/bb-activity-post-form-topic-selector',
+		'parts/bboss-activity-post-form-topic-selector',
 		'parts/bboss-activity-post-privacy-stage-footer',
-		'parts/bb-activity-post-form-title',
+		'parts/bboss-activity-post-form-title',
 	)
 );
 

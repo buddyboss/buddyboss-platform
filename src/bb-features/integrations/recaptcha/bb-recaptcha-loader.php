@@ -1,22 +1,6 @@
 <?php
-/**
- * BuddyBoss Recaptcha Integration Loader.
- *
- * @package BuddyBoss\Recaptcha
- *
- * @since BuddyBoss 2.5.60
- */
-
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Set up the BB Recaptcha integration.
- *
- * @since BuddyBoss 2.5.60
- */
-function bboss_register_recaptcha_integration() {
-	require_once dirname( __FILE__ ) . '/classes/class-bboss-recaptcha-integration.php';
-	bboss()->integrations['recaptcha'] = new BBoss_Recaptcha_Integration();
-}
-add_action( 'bp_setup_integrations', 'bb_register_recaptcha_integration', 20 );
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-features/integrations/recaptcha/bboss-recaptcha-loader.php (decisions 0009/0011); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+require_once __DIR__ . '/../../../bboss-features/integrations/recaptcha/bboss-recaptcha-loader.php';
+// @bbwt-com-end compat-layer

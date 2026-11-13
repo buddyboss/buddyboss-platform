@@ -143,10 +143,10 @@ function bb_compat_load_functions() {
 		return;
 	}
 	$done = true;
-	require_once __DIR__ . '/bb-compat-functions-bb-features.php';
 	require_once __DIR__ . '/bb-compat-functions-bboss-activity.php';
 	require_once __DIR__ . '/bb-compat-functions-bboss-blogs.php';
 	require_once __DIR__ . '/bb-compat-functions-bboss-core.php';
+	require_once __DIR__ . '/bb-compat-functions-bboss-features.php';
 	require_once __DIR__ . '/bb-compat-functions-bboss-forums.php';
 	require_once __DIR__ . '/bb-compat-functions-bboss-friends.php';
 	require_once __DIR__ . '/bb-compat-functions-bboss-groups.php';

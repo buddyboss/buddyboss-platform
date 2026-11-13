@@ -128,11 +128,11 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			require $this->admin_dir . 'bboss-core-admin-theme-settings.php';
 
 			// Load the BuddyBoss React settings.
-			require $this->admin_dir . 'bb-settings/index.php';
+			require $this->admin_dir . 'bboss-settings/index.php';
 
 			// Standalone Knowledge Base modal helper — lets add-on admin surfaces
 			// (Membership, Courses) mount the shared KB modal via window.bbKb.
-			require $this->admin_dir . 'bb-kb-standalone.php';
+			require $this->admin_dir . 'bboss-kb-standalone.php';
 		}
 
 		/**
@@ -365,7 +365,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// gate — required because the submenu slug no longer exists here.
 
 			// Settings 2.0 replaces the legacy bp-settings submenu at the same menu position.
-			// The 'bb-settings' slug points to the React admin registered in bb-admin-settings-page.php;
+			// The 'bb-settings' slug points to the React admin registered in bboss-admin-settings-page.php;
 			// the label is "Settings" (not "Settings 2.0") so end users don't see transitional naming.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
@@ -495,7 +495,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// gate — required because the submenu slug no longer exists here.
 
 			// Settings 2.0 replaces the legacy bp-settings submenu at the same menu position.
-			// The 'bb-settings' slug points to the React admin registered in bb-admin-settings-page.php;
+			// The 'bb-settings' slug points to the React admin registered in bboss-admin-settings-page.php;
 			// the label is "Settings" (not "Settings 2.0") so end users don't see transitional naming.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
@@ -516,7 +516,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// standalone React page under the new bb-integrations slug. Registered
 			// unconditionally (like bb-settings above): add_submenu_page() only
 			// stores the callback string; WP invokes bb_admin_integrations_page()
-			// at render time, by which point bb-admin-integrations-page.php is loaded.
+			// at render time, by which point bboss-admin-integrations-page.php is loaded.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( 'BuddyBoss Integrations', 'buddyboss' ),

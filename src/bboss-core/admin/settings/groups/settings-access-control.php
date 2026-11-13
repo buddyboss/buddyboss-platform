@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Access Controls side panel, section, and fields for Groups.
  *
- * Called from bb-admin-settings-groups.php after all other panels are
+ * Called from bboss-admin-settings-groups.php after all other panels are
  * registered. Fires a hook so Pro (or third-party) can register
  * additional fields in the same panel.
  *

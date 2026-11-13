@@ -4847,7 +4847,7 @@ function bboss_purge_activity_api_cache_for_comment_access() {
  */
 function bboss_get_addons_required_version() {
 	if ( ! function_exists( 'bboss_platform_3_addons_required_version' ) ) {
-		require_once bboss()->plugin_dir . 'bboss-core/admin/bb-admin-version-compatibility-notices.php';
+		require_once bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-version-compatibility-notices.php';
 	}
 
 	return bboss_platform_3_addons_required_version();

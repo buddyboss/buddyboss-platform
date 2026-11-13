@@ -407,7 +407,7 @@ module.exports = function (grunt) {
 					'!**/bboss-xprofile/**',
 					'!**/bboss-integrations/**',
 					// Reactions REST endpoint lives under the new feature
-					// directory layout (`src/bb-features/community/reactions/classes/`).
+					// directory layout (`src/bboss-features/community/reactions/classes/`).
 					// Excluded here so the flatten-to-bp-core sweep doesn't
 					// recreate a stale duplicate at `bboss-core/classes/`. See
 					// the dedicated `bp_rest_reactions` task below.
@@ -421,14 +421,14 @@ module.exports = function (grunt) {
 				},
 				bp_rest_reactions: {
 					// The reactions feature is the first one fully migrated to the
-					// feature-based architecture (`src/bb-features/community/reactions/`).
+					// feature-based architecture (`src/bboss-features/community/reactions/`).
 					// Its REST controller belongs alongside the rest of the feature's
 					// classes, not in the legacy `bboss-core/classes/` flat namespace.
 					// Source path mirrors where buddyboss-platform-api stores it
 					// today: `bp-components/classes/`. If the API repo moves the file,
 					// update `cwd`/`src` here and the matching exclusion in `bp_rest_core`.
 					cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/bp-components/classes/',
-					dest: SOURCE_DIR + 'bb-features/community/reactions/classes/',
+					dest: SOURCE_DIR + 'bboss-features/community/reactions/classes/',
 					expand: true,
 					flatten: true,
 					filter: 'isFile',
@@ -491,7 +491,7 @@ module.exports = function (grunt) {
 							'!**/endpoints/**/*.js',
 							'!**/js/lib/Chart.js',
 							'!**/js/blocks/**/*.js',
-							'!**/bboss-core/admin/bb-settings/**/*.js',
+							'!**/bboss-core/admin/bboss-settings/**/*.js',
 							'!**/bboss-core/blocks/**/*.js',
 							'!**/js/admin/**/*.js',
 						]
@@ -520,7 +520,7 @@ module.exports = function (grunt) {
 							'!**/readylaunch/**/*.css',
 							'!**/js/blocks/**/*.css',
 							'!**/js/admin/**/*.css',
-							'!**/bboss-core/admin/bb-settings/**/*.css',
+							'!**/bboss-core/admin/bboss-settings/**/*.css',
 							'!**/bboss-core/blocks/**/*.css'
 						]
 					)
@@ -647,13 +647,13 @@ module.exports = function (grunt) {
 					stdout: false
 				},
 				// WP-CLI makepot with header fixing.
-				// Exclude the compiled React bundles under bb-settings/*/build/* — they
+				// Exclude the compiled React bundles under bboss-settings/*/build/* — they
 				// are minified single-line files that blow up WP-CLI's peast JS parser
 				// (memory exhaustion) and contribute no strings to the POT (JS admin i18n
 				// is handled separately; the POT only carries PHP strings). WP_CLI_PHP_ARGS
 				// raises the memory limit as a safety net for other large JS.
 				makepot_wp: {
-					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bboss-core/admin/bb-settings/*/build/*"',
+					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bboss-core/admin/bboss-settings/*/build/*"',
 					cwd: '.',
 					stdout: true
 				},
@@ -682,7 +682,7 @@ module.exports = function (grunt) {
 							'!**/endpoints/**/*.js',
 							'!**/js/lib/Chart.js',
 							'!' + SOURCE_DIR + 'js/**/*.js',
-							'!' + SOURCE_DIR + 'bboss-core/admin/bb-settings/**/*.js',
+							'!' + SOURCE_DIR + 'bboss-core/admin/bboss-settings/**/*.js',
 							'!' + SOURCE_DIR + 'bboss-core/blocks/**/*.js'
 						].concat( BP_EXCLUDED_MISC )
 					}

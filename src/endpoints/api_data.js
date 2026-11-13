@@ -8778,7 +8778,7 @@ define({ "api": [
     "group": "Reactions",
     "description": "<p>Retrieve supported reactions</p>",
     "version": "1.0.0",
-    "filename": "src/bb-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
+    "filename": "src/bboss-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
     "groupTitle": "Reactions"
   },
   {
@@ -9296,7 +9296,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bb-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
+    "filename": "src/bboss-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
     "groupTitle": "User_Reaction"
   },
   {
@@ -9387,7 +9387,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bb-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
+    "filename": "src/bboss-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
     "groupTitle": "User_Reactions"
   },
   {
@@ -9437,7 +9437,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bb-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
+    "filename": "src/bboss-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
     "groupTitle": "User_reaction"
   },
   {
@@ -9466,7 +9466,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bb-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
+    "filename": "src/bboss-features/community/reactions/classes/class-bboss-rest-reactions-endpoint.php",
     "groupTitle": "User_reaction"
   }
 ] });

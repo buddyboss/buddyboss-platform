@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  *
- * @param array $edit_time_options Edit time options array built in bb-admin-settings-activity.php.
+ * @param array $edit_time_options Edit time options array built in bboss-admin-settings-activity.php.
  */
 function bboss_activity_register_settings_panel_fields( $edit_time_options = array() ) {
 

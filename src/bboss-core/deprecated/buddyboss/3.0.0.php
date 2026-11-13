@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 // ──────────────────────────────────────────────────────────────────────────────
 // Search Settings 2.0 deprecated functions and hook compatibility.
 // Legacy settings API functions were removed from bboss-search-settings.php.
-// Search settings are now managed by Settings 2.0 (bb-admin-settings-search.php).
+// Search settings are now managed by Settings 2.0 (bboss-admin-settings-search.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
 if ( ! function_exists( 'bboss_search_get_settings_sections' ) ) {
@@ -2153,7 +2153,7 @@ if ( ! function_exists( 'bboss_activate_notification' ) ) {
 // ──────────────────────────────────────────────────────────────────────────────
 // Moderation Settings 2.0 deprecated functions and hook compatibility.
 // Legacy settings API functions were removed from bboss-moderation-settings.php.
-// Moderation settings are now managed by Settings 2.0 (bb-admin-settings-moderation.php).
+// Moderation settings are now managed by Settings 2.0 (bboss-admin-settings-moderation.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
 if ( ! function_exists( 'bboss_moderation_get_settings_sections' ) ) {
@@ -2284,14 +2284,14 @@ if ( ! function_exists( 'bboss_moderation_admin_category_listing_add_tab' ) ) {
 	 * @deprecated BuddyBoss 3.0.0 Reporting Categories are now managed by Settings 2.0.
 	 */
 	function bboss_moderation_admin_category_listing_add_tab() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Moderation feature (bb-admin-settings-moderation.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Moderation feature (bboss-admin-settings-moderation.php)' );
 	}
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Email Invites Settings 2.0 deprecated functions.
 // Legacy settings render callbacks were removed from bboss-core-admin-settings.php.
-// Invites settings are now managed by Settings 2.0 (bb-admin-settings-invites.php).
+// Invites settings are now managed by Settings 2.0 (bboss-admin-settings-invites.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
 if ( ! function_exists( 'bboss_admin_setting_callback_member_invite_email_subject' ) ) {
@@ -2302,7 +2302,7 @@ if ( ! function_exists( 'bboss_admin_setting_callback_member_invite_email_subjec
 	 * @deprecated BuddyBoss 3.0.0 Invites settings are now managed by Settings 2.0.
 	 */
 	function bboss_admin_setting_callback_member_invite_email_subject() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bboss-admin-settings-invites.php)' );
 	}
 }
 
@@ -2314,7 +2314,7 @@ if ( ! function_exists( 'bboss_admin_setting_callback_member_invite_email_conten
 	 * @deprecated BuddyBoss 3.0.0 Invites settings are now managed by Settings 2.0.
 	 */
 	function bboss_admin_setting_callback_member_invite_email_content() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bboss-admin-settings-invites.php)' );
 	}
 }
 
@@ -2326,7 +2326,7 @@ if ( ! function_exists( 'bboss_admin_setting_callback_member_invite_member_type'
 	 * @deprecated BuddyBoss 3.0.0 Invites settings are now managed by Settings 2.0.
 	 */
 	function bboss_admin_setting_callback_member_invite_member_type() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bboss-admin-settings-invites.php)' );
 	}
 }
 
@@ -2340,7 +2340,7 @@ if ( ! function_exists( 'bboss_admin_setting_callback_enable_send_invite_member_
 	 * @param array $args Field arguments.
 	 */
 	function bboss_admin_setting_callback_enable_send_invite_member_type( $args = array() ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bboss-admin-settings-invites.php)' );
 	}
 }
 
@@ -2352,7 +2352,7 @@ if ( ! function_exists( 'bboss_email_invites_tutorial' ) ) {
 	 * @deprecated BuddyBoss 3.0.0 Invites settings are now managed by Settings 2.0.
 	 */
 	function bboss_email_invites_tutorial() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bboss-admin-settings-invites.php)' );
 	}
 }
 
@@ -2417,7 +2417,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_invites_fire_deprecated_
 // ──────────────────────────────────────────────────────────────────────────────
 // Email Templates Settings 2.0 deprecated functions.
 // Legacy email admin tabs were removed from bboss-core-admin-functions.php.
-// Email Templates are now managed by Settings 2.0 (bb-admin-settings-emails.php).
+// Email Templates are now managed by Settings 2.0 (bboss-admin-settings-emails.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
 if ( ! function_exists( 'bboss_core_admin_emails_tabs' ) ) {
@@ -2430,7 +2430,7 @@ if ( ! function_exists( 'bboss_core_admin_emails_tabs' ) ) {
 	 * @param string $active_tab Name of the active tab.
 	 */
 	function bboss_core_admin_emails_tabs( $active_tab = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Emails feature (bb-admin-settings-emails.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Emails feature (bboss-admin-settings-emails.php)' );
 	}
 }
 
@@ -2445,7 +2445,7 @@ if ( ! function_exists( 'bboss_core_get_emails_admin_tabs' ) ) {
 	 * @return array Empty array (legacy data no longer applicable).
 	 */
 	function bboss_core_get_emails_admin_tabs( $active_tab = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Emails feature (bb-admin-settings-emails.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Emails feature (bboss-admin-settings-emails.php)' );
 		return array();
 	}
 }
@@ -2491,7 +2491,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_registration_fire_deprec
 // ──────────────────────────────────────────────────────────────────────────────
 // Registration Settings 2.0 deprecated render callbacks.
 // Legacy render callbacks were removed from bboss-core-admin-settings.php.
-// Registration settings are now managed by Settings 2.0 (bb-admin-settings-registration.php).
+// Registration settings are now managed by Settings 2.0 (bboss-admin-settings-registration.php).
 // ──────────────────────────────────────────────────────────────────────────────
 
 if ( ! function_exists( 'bboss_admin_setting_callback_register' ) ) {
@@ -2502,7 +2502,7 @@ if ( ! function_exists( 'bboss_admin_setting_callback_register' ) ) {
 	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bboss_admin_setting_callback_register() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bboss-admin-settings-registration.php)' );
 	}
 }
 
@@ -2514,7 +2514,7 @@ if ( ! function_exists( 'bboss_admin_setting_callback_register_show_confirm_emai
 	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bboss_admin_setting_callback_register_show_confirm_email() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bboss-admin-settings-registration.php)' );
 	}
 }
 
@@ -2526,7 +2526,7 @@ if ( ! function_exists( 'bboss_admin_setting_callback_register_show_legal_agreem
 	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bboss_admin_setting_callback_register_show_legal_agreement() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bboss-admin-settings-registration.php)' );
 	}
 }
 
@@ -2538,7 +2538,7 @@ if ( ! function_exists( 'bboss_admin_setting_callback_register_show_confirm_pass
 	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bboss_admin_setting_callback_register_show_confirm_password() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bboss-admin-settings-registration.php)' );
 	}
 }
 
@@ -2550,7 +2550,7 @@ if ( ! function_exists( 'bboss_admin_setting_callback_register_allow_custom_regi
 	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bboss_admin_setting_callback_register_allow_custom_registration() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bboss-admin-settings-registration.php)' );
 	}
 }
 
@@ -2562,7 +2562,7 @@ if ( ! function_exists( 'bboss_admin_setting_callback_register_page_url' ) ) {
 	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bboss_admin_setting_callback_register_page_url() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bboss-admin-settings-registration.php)' );
 	}
 }
 
@@ -2574,7 +2574,7 @@ if ( ! function_exists( 'bboss_admin_registration_setting_tutorial' ) ) {
 	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bboss_admin_registration_setting_tutorial() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bboss-admin-settings-registration.php)' );
 	}
 }
 

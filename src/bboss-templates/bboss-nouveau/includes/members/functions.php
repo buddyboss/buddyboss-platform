@@ -545,7 +545,7 @@ function bboss_nouveau_member_register_scripts( $scripts = array() ) {
 		$scripts,
 		array(
 			'bb-subscriptions' => array(
-				'file'         => 'js/bb-subscriptions%s.js',
+				'file'         => 'js/bboss-subscriptions%s.js',
 				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-api-request' ),
 				'footer'       => true,
 			),

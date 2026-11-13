@@ -1,6 +1,6 @@
 <?php
 // @bbwt-com-start compat-layer
-// bbwt-rename:file-stub — this file now lives at src/bboss-integrations/pusher/bb-pusher-functions.php (decisions 0009/0011); kept so code that
+// bbwt-rename:file-stub — this file now lives at src/bboss-integrations/pusher/bboss-pusher-functions.php (decisions 0009/0011); kept so code that
 // requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
-require_once __DIR__ . '/../../bboss-integrations/pusher/bb-pusher-functions.php';
+require_once __DIR__ . '/../../bboss-integrations/pusher/bboss-pusher-functions.php';
 // @bbwt-com-end compat-layer

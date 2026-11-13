@@ -2827,15 +2827,15 @@ table tbody td .bb-description {
 }
 
 .bb-header-style-outer .bb-header-style .option.opt-left:after {
-  background: url(../../images/bb-group-header-left.png) no-repeat center;
+  background: url(../../images/bboss-group-header-left.png) no-repeat center;
 }
 
 html[dir="rtl"] .bb-header-style-outer .bb-header-style .option.opt-left:after {
-  background: url(../../images/bb-group-header-right.png) no-repeat center;
+  background: url(../../images/bboss-group-header-right.png) no-repeat center;
 }
 
 .bb-header-style-outer .bb-header-style .option.opt-centered:after {
-  background: url(../../images/bb-group-header-center.png) no-repeat center;
+  background: url(../../images/bboss-group-header-center.png) no-repeat center;
 }
 
 .bb-header-style-outer .bb-header-style .option span {
@@ -2900,15 +2900,15 @@ html[dir="rtl"] .bb-header-style-outer .bb-header-style .option.opt-left:after {
 }
 
 .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
-  background: url(../../images/bb-group-directory-left.png) no-repeat center;
+  background: url(../../images/bboss-group-directory-left.png) no-repeat center;
 }
 
 html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
-  background: url(../../images/bb-group-directory-right.png) no-repeat center;
+  background: url(../../images/bboss-group-directory-right.png) no-repeat center;
 }
 
 .bb-grid-style-outer .bb-grid-style .option.opt-centered:after {
-  background: url(../../images/bb-group-directory-center.png) no-repeat center;
+  background: url(../../images/bboss-group-directory-center.png) no-repeat center;
 }
 
 .bb-grid-style-outer .bb-grid-style .option span {
@@ -2969,15 +2969,15 @@ html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
 }
 
 .bb-grid-style-outer .bb-header-style .option.opt-left:after {
-  background: url(../../images/bb-profile-header-left.png) no-repeat center;
+  background: url(../../images/bboss-profile-header-left.png) no-repeat center;
 }
 
 html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
-  background: url(../../images/bb-profile-header-right.png) no-repeat center;
+  background: url(../../images/bboss-profile-header-right.png) no-repeat center;
 }
 
 .bb-grid-style-outer .bb-header-style .option.opt-centered:after {
-  background: url(../../images/bb-profile-header-center.png) no-repeat center;
+  background: url(../../images/bboss-profile-header-center.png) no-repeat center;
 }
 
 .bb-grid-style-outer .bb-header-style .option span {
