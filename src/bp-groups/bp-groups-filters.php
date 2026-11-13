@@ -1488,7 +1488,7 @@ function bb_readylaunch_middle_content_my_groups( $args = array() ) {
 				$group_data['items'][ $group_id ] = array(
 					'title'     => $group->name,
 					'permalink' => bp_get_group_permalink( $group ),
-					'thumbnail' => '<img src="' . $thumbnail_url . '" alt="' . $group->name . '" class="avatar group--avatar avatar-200 photo" width="200" height="200"/>',
+					'thumbnail' => '<img src="' . esc_url( $thumbnail_url ) . '" alt="' . esc_attr( $group->name ) . '" class="avatar group--avatar avatar-200 photo" width="200" height="200"/>',
 				);
 			}
 
