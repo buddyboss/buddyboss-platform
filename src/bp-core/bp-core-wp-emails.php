@@ -1165,7 +1165,14 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 				$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss' ) . '</p>';
 			}
 
-			$email = $email_data['user_email'];
+			// The erasure-fulfillment email passes the recipient as `message_recipient`, not `user_email`.
+			if ( ! empty( $email_data['user_email'] ) ) {
+				$email = $email_data['user_email'];
+			} elseif ( ! empty( $email_data['message_recipient'] ) ) {
+				$email = $email_data['message_recipient'];
+			} else {
+				$email = '';
+			}
 		}
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
@@ -1175,7 +1182,14 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 		return $email_text;
 	}
 
-	add_filter( 'user_confirmed_action_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
+	/*
+	 * WordPress 5.8 split `user_confirmed_action_email_content` (now deprecated) into one filter for the
+	 * administrator's request-confirmed email and one for the member's erasure-fulfillment email.
+	 *
+	 * @since BuddyBoss [BBVERSION] Hooked to the two replacement filters instead of the deprecated one.
+	 */
+	add_filter( 'user_request_confirmed_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
+	add_filter( 'user_erasure_fulfillment_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
 }
 
 if ( ! function_exists( 'bp_email_wp_user_request_action_email_content' ) ) {
