@@ -215,9 +215,11 @@
 							<li class="delete_messages">
 								<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
 							</li>
-							<li class="delete_thread">
-								<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>
-							</li>
+							<?php if ( function_exists( 'bb_messages_user_can_delete_conversation' ) ? bb_messages_user_can_delete_conversation() : bp_current_user_can( 'bp_moderate' ) ) { ?>
+								<li class="delete_thread">
+									<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>
+								</li>
+							<?php } ?>
 						</ul>
 					</div>
 					<div class="bb_more_dropdown_overlay"></div>
@@ -225,10 +227,8 @@
 				<?php
 			} else {
 
-				$old_user = false;
-				if ( class_exists( 'BP_Core_Members_Switching' ) ) {
-					$old_user = BP_Core_Members_Switching::get_old_user();
-				}
+				// Only users the delete conversation handler accepts see the action.
+				$can_delete_conversation = function_exists( 'bb_messages_user_can_delete_conversation' ) && bb_messages_user_can_delete_conversation();
 				?>
 				<div class="message_actions">
 					<a href="#" class="message_action__anchor" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
@@ -306,7 +306,7 @@
 								<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
 							</li>
 							<?php
-							if ( ! empty( $old_user ) ) {
+							if ( $can_delete_conversation ) {
 								?>
 								<li class="delete_thread">
 									<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>

@@ -49,17 +49,21 @@ defined( 'ABSPATH' ) || exit;
 										</a>
 									</div>
 
+									<?php if ( bp_is_active( 'video' ) ) : ?>
 									<div class="bb-rl-post-elements-buttons-item bb-rl-post-video bb-rl-video-support">
 										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="536">
 											<i class="bb-icons-rl-video-camera"></i>
 										</a>
 									</div>
+									<?php endif; ?>
 
+									<?php if ( bp_is_active( 'document' ) ) : ?>
 									<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-document-support">
 										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="536">
 											<i class="bb-icons-rl-paperclip-horizontal"></i>
 										</a>
 									</div>
+									<?php endif; ?>
 
 									<div class="bb-rl-post-elements-buttons-item bb-rl-post-gif">
 										<div class="bb-rl-gif-media-search">

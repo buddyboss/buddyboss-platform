@@ -35,9 +35,11 @@
 	#>
 		<div class="bb-activity-topic-item" data-topic-id="{{topicId}}">
 			<div class="bb-topic-left">
+				<# if ( 'undefined' === typeof bbTopicsManagerVars || bbTopicsManagerVars.can_reorder_topics ) { #>
 				<span class="bb-topic-drag">
 					<i class="bb-icon-grip-v"></i>
 				</span>
+				<# } #>
 				<span class="bb-topic-title">{{topicName}}</span>
 				<# if ( topicData.is_global_activity ) { #>
 					<span class="bb-topic-privacy" data-bp-tooltip="<?php esc_html_e( 'Global', 'buddyboss' ); ?>" data-bp-tooltip-pos="up"><i class="bb-icon-globe"></i></span>

@@ -20,14 +20,14 @@ defined( 'ABSPATH' ) || exit;
 	<?php
 	bp_get_template_part( 'media/theatre' );
 
-	if ( bp_is_group_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 	}
 
 	if ( bp_is_group_document_support_enabled() ) {
 		bp_get_template_part( 'document/theatre' );
 	}
-	if ( bp_is_group_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) {
 		bp_get_template_part( 'video/add-video-thumbnail' );
 	}
 
