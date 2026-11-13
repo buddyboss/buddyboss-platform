@@ -58,7 +58,8 @@ function bb_groups_register_settings_panel_fields() {
 		)
 	);
 
-	// FIELD: Subscriptions (conditional on notifications + activity/forums).
+	// FIELD: Subscriptions (conditional on notifications + activity/forums). Group subscriptions
+	// ship with BuddyBoss Add-ons, which unlocks this field; without it the field shows an upgrade badge.
 	if ( bp_is_active( 'notifications' ) && ( bp_is_active( 'activity' ) || bp_is_active( 'forums' ) ) ) {
 		bb_register_feature_field(
 			'groups',
@@ -70,9 +71,12 @@ function bb_groups_register_settings_panel_fields() {
 				'type'              => 'toggle',
 				'description'       => __( 'Allow members to subscribe to groups', 'buddyboss' ),
 				'help_text'         => __( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss' ),
-				'default'           => function_exists( 'bb_enable_group_subscriptions' ) ? bb_enable_group_subscriptions() : true,
+				'default'           => (int) bp_get_option( 'bb_enable_group_subscriptions', 1 ),
 				'sanitize_callback' => 'absint',
 				'order'             => 20,
+				'pro_only'          => true,
+				// The upgrade popup content comes from the remote field-upgrades catalog
+				// (bb-field-upgrades.json). See bb_admin_addon_upsell_field_names().
 			)
 		);
 	}

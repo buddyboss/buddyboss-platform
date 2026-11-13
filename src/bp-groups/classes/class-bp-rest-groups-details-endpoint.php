@@ -298,6 +298,19 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		// The default tab may name a tab that is not registered (e.g. Videos or Documents
+		// without BuddyBoss Add-ons); fall back to Members, as the group home page does.
+		if ( ! empty( $nav_items ) && 'members' !== $default_tab ) {
+			$nav_slugs = array();
+			foreach ( $nav_items as $nav_item ) {
+				$nav_slugs[] = $nav_item['slug'];
+			}
+
+			if ( ! in_array( $default_tab, $nav_slugs, true ) ) {
+				$default_tab = 'members';
+			}
+		}
+
 		if ( ! empty( $nav_items ) ) {
 			foreach ( $nav_items as $nav ) {
 				$nav = $nav->getArrayCopy();

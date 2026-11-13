@@ -305,8 +305,9 @@ function bb_email_digest_addon_installed_version() {
  * request — it belongs on the lazy `bb_admin_settings_format_field_data` path and inside
  * the update handler, both of which only run for this panel.
  *
- * The version lives at `_embedded.version-latest.number`; the product record carries no
- * top-level version field, and reaching for `->version` silently yields null.
+ * GroundLevel 9.1.2 exposes the release as `$product->version` (`number` / `url`);
+ * {@see \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version()}
+ * reads it, falling back to the older `_embedded.version-latest` location.
  *
  * @since BuddyBoss 3.5.0
  *
@@ -331,11 +332,11 @@ function bb_email_digest_addon_latest_release() {
 		return $none;
 	}
 
-	if ( empty( $product->_embedded->{'version-latest'} ) ) {
+	$release = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version( $product );
+
+	if ( null === $release ) {
 		return $none;
 	}
-
-	$release = $product->_embedded->{'version-latest'};
 
 	return array(
 		'version' => isset( $release->number ) ? (string) $release->number : '',
@@ -404,31 +405,6 @@ function bb_email_digest_placeholder_state() {
 }
 
 /**
- * Content for the Email Digest upgrade dialog.
- *
- * Uses the short key names a `pro_notice.modal` is registered with, not the field-upgrades
- * catalog's `upgrade_*` names. A catalog entry for this panel supersedes the whole payload,
- * which is what lets marketing retarget copy, art and URL without a release.
- *
- * @since BuddyBoss 3.5.0
- *
- * @return array Modal payload.
- */
-function bb_email_digest_upgrade_modal_payload() {
-	return array(
-		'label'       => __( 'Email Digest', 'buddyboss' ),
-		'title'       => __( 'Simplify Email Notifications', 'buddyboss' ),
-		'description' => __( 'Combine multiple community notifications into one organized daily or weekly email while keeping in-app notifications unchanged.', 'buddyboss' ),
-		'tier'        => 'start',
-		'url'         => 'https://buddyboss.com/pricing?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
-		// Platform's own copy of the hero, at the design's native 600x337. The add-on
-		// ships the same file, but this panel exists precisely for sites where the add-on
-		// is not on disk, so it cannot borrow that one.
-		'image_url'   => buddypress()->plugin_url . 'bp-core/images/email-digest-upgrade.png',
-	);
-}
-
-/**
  * Register the stand-in Email Digest panel.
  *
  * Runs at priority 35, behind every real registration (the add-on registers at 30), so the
@@ -482,8 +458,7 @@ function bb_admin_settings_register_email_digest_placeholder() {
 			'show'       => true,
 			'badge_text' => __( 'UPGRADE START', 'buddyboss' ),
 			'badge_icon' => 'bb-icons-rl-crown-simple',
-			'link_url'   => 'https://buddyboss.com/pricing?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
-			'modal'      => bb_email_digest_upgrade_modal_payload(),
+			'link_url'   => 'https://buddyboss.com/ch/web-start/?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
 		);
 	}
 
@@ -515,6 +490,12 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_email_digest_pla
  * @return void
  */
 function bb_admin_settings_register_email_digest_card( $state ) {
+	// GroundLevel 9.1.2 names the add-on AJAX actions after the dynamic plugin ID
+	// (`{plugin_id}_addon_activate` / `_addon_install`); the unscoped `mosh_addon_*`
+	// actions no longer exist. When the resolver is unavailable the action stays null,
+	// so the card falls back to its `button_url` link instead of posting a dead action.
+	$addon_actions = function_exists( 'bb_admin_settings_get_addon_ajax_actions' ) ? bb_admin_settings_get_addon_ajax_actions() : array();
+
 	switch ( $state ) {
 		case 'addon_inactive':
 			// Entitled and already on disk, so an upgrade prompt would be flatly wrong
@@ -536,7 +517,7 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 				'empty_state_description' => __( 'Email Digest is included in your plan. Activate the BuddyBoss Add-ons plugin to configure it.', 'buddyboss' ),
 				'button_label'            => __( 'Activate', 'buddyboss' ),
 				'button_url'              => admin_url( 'plugins.php' ),
-				'addon_action'            => 'mosh_addon_activate',
+				'addon_action'            => isset( $addon_actions['activate'] ) ? $addon_actions['activate'] : null,
 				'addon_slug'              => bb_email_digest_addon_plugin_slug(),
 				'addon_busy_label'        => __( 'Activating…', 'buddyboss' ),
 			);
@@ -579,7 +560,7 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 				'empty_state_description' => __( 'Email Digest is included in your plan. Install the BuddyBoss Add-ons plugin to configure it.', 'buddyboss' ),
 				'button_label'            => __( 'Install & Activate', 'buddyboss' ),
 				'button_url'              => admin_url( 'plugins.php' ),
-				'addon_action'            => 'mosh_addon_install',
+				'addon_action'            => isset( $addon_actions['install'] ) ? $addon_actions['install'] : null,
 				'addon_slug'              => bb_email_digest_addon_plugin_slug(),
 				'addon_busy_label'        => __( 'Installing…', 'buddyboss' ),
 			);
@@ -834,8 +815,6 @@ add_action( 'wp_ajax_bb_email_digest_update_addon', 'bb_email_digest_ajax_update
  * @return void
  */
 function bb_admin_settings_register_email_digest_locked_form() {
-	$modal = bb_email_digest_upgrade_modal_payload();
-
 	/**
 	 * Register one inert field.
 	 *
@@ -883,8 +862,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 				'badge_text' => __( 'START', 'buddyboss' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_icon'  => 'bb-icons-rl bb-icons-rl-play',
-				'link_url'   => 'https://www.buddyboss.com/pricing/',
-				'modal'      => $modal,
+				'link_url'   => 'https://buddyboss.com/ch/web-start/?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
 			),
 		)
 	);

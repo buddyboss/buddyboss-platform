@@ -303,6 +303,52 @@ window.bp = window.bp || {};
 		/** Helpers *******************************************************************/
 
 		/**
+		 * Replace activity cards with fresh server markup after an AJAX action.
+		 *
+		 * The Elementor activity widget renders its own card that follows the widget's display
+		 * settings, so for that card only the given parts are swapped, and only where the card shows them.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery}       $items Activity `li` elements to update.
+		 * @param {string|Array} html   Fresh activity entry markup, or nodes from `$.parseHTML()`.
+		 * @param {Array}        parts  Selectors of the parts to swap inside a widget card.
+		 */
+		replaceActivityItem: function ( $items, html, parts ) {
+			$items.each(
+				function () {
+					var $item = $( this );
+
+					if ( ! $item.hasClass( 'elementor-activity-item' ) ) {
+						$item.replaceWith( html );
+						return;
+					}
+
+					var $fresh = $( '<div></div>' ).append( 'string' === typeof html ? $.parseHTML( html ) : $( html ).clone() );
+
+					$.each(
+						parts || [],
+						function ( index, selector ) {
+							var $current = $item.find( selector ).first();
+
+							// A part the widget hides is not in its card, so it stays hidden.
+							if ( ! $current.length ) {
+								return;
+							}
+
+							var $new = $fresh.find( selector ).first();
+							if ( $new.length ) {
+								$current.replaceWith( $new );
+							} else {
+								$current.remove();
+							}
+						}
+					);
+				}
+			);
+		},
+
+		/**
 		 * [getStorage description]
 		 *
 		 * @param  {[type]} type     [description]
@@ -1983,7 +2029,8 @@ window.bp = window.bp || {};
 									url: action,
 									type: 'post',
 									data: {
-										item_id: id
+										item_id: id,
+										_wpnonce: BP_Nouveau.nonces.invites_revoke
 									}, success: function () {
 										window.location.reload( true );
 									}
@@ -3280,7 +3327,6 @@ window.bp = window.bp || {};
 						midClick: true,
 						callbacks: {
 							open: function () {
-								console.log( 'called' );
 								$( '#notes-error' ).hide();
 								var contentId   = this.currItem.el.data( 'bp-content-id' );
 								var contentType = this.currItem.el.data( 'bp-content-type' );
