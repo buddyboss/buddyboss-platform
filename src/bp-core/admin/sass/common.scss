@@ -1698,7 +1698,9 @@ body .section-repair_community .settings fieldset .checkbox label code {
 	}
 }
 
-.wp-block-embed {
+// Attribute selector on purpose: the block editor copies any admin stylesheet that has a
+// `.wp-block` class selector into its iframe and warns ("added to the iframe incorrectly").
+[class~="wp-block-embed"] {
 	margin: 0;
 
 	iframe {
