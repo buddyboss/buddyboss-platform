@@ -342,6 +342,11 @@
 				top: 50%;
 				margin-top: 7px;
 			}
+
+			.bb-rl-thread-content .bb-rl-thread-excerpt {
+				color: var(--bb-rl-text-color);
+				font-weight: 500;
+			}
 		}
 
 		&:has(.message_action__list.is_visible),
