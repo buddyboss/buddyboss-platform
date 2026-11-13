@@ -386,7 +386,7 @@ class Cache {
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$status = $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_name=%s", $cache_name ) );
+		$status = $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_name=%s OR cache_name LIKE %s", $cache_name, $wpdb->esc_like( $cache_name . '#' ) . '%' ) );
 
 		if ( $status ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
 			// Operation succeeded.
