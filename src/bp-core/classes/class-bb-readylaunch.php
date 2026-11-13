@@ -1052,9 +1052,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_register_readylaunch_menus() {
 
-			// Register the ReadyLaunch menu locations for the block theme.
+			// Register the ReadyLaunch menu locations for the block theme. Keep it once a menu has
+			// been assigned to it: on a block theme it is the only location, and dropping it made
+			// Appearance > Menus fail with "does not support navigation menus".
 			$nav_menu_locations = get_theme_mod( 'nav_menu_locations', array() );
-			if ( empty( $nav_menu_locations ) ) {
+			if ( empty( $nav_menu_locations ) || isset( $nav_menu_locations['bb-readylaunch'] ) ) {
 				register_nav_menus(
 					array( 'bb-readylaunch' => __( 'ReadyLaunch', 'buddyboss' ) )
 				);
