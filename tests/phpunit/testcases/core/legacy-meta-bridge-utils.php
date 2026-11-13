@@ -9,7 +9,7 @@
 /**
  * Regression coverage for PROD-10441: a `toggle_list` checked map whose
  * option values are numeric (post IDs) must normalize to the selected IDs,
- * not to the checked flags, after `json_decode( …, true )` casts the keys.
+ * not to the checked flags, after PHP casts the numeric keys to integers.
  *
  * @group core
  * @group admin
@@ -31,7 +31,7 @@ class BP_Tests_Core_Legacy_Meta_Bridge_Utils extends BP_UnitTestCase {
 	/**
 	 * Load the bridge utilities; they are admin-only and not loaded by the test bootstrap.
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		if ( ! function_exists( 'bb_legacy_normalize_save_value' ) ) {
@@ -40,8 +40,19 @@ class BP_Tests_Core_Legacy_Meta_Bridge_Utils extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Decode a JSON payload exactly the way the Settings 2.0 AJAX save
-	 * handler does, so numeric string keys become integer keys.
+	 * Restore $_POST after each test; the bridge closures write into it.
+	 */
+	public function tearDown(): void {
+		$_POST = array();
+		remove_filter( 'bb_legacy_ajax_select_resolvers', array( $this, 'filter_add_test_resolver' ) );
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Decode a JSON payload into a PHP array with integer-cast numeric keys —
+	 * the same key shape PHP's request parser produces for the FormData
+	 * bracket keys (`field[12]=1`) the Settings 2.0 save posts.
 	 *
 	 * @param string $json JSON payload.
 	 * @return mixed Decoded value.
@@ -164,5 +175,142 @@ class BP_Tests_Core_Legacy_Meta_Bridge_Utils extends BP_UnitTestCase {
 	public function test_non_array_toggle_list_value_passes_through_unchanged() {
 		$this->assertSame( 'scalar', bb_legacy_normalize_save_value( 'toggle_list', $this->parsed, 'scalar' ) );
 		$this->assertNull( bb_legacy_normalize_save_value( 'toggle_list', $this->parsed, null ) );
+	}
+
+	/**
+	 * PROD-10441 end to end through the CPT bridge: the registered
+	 * `save_value` closure of a plain `<select multiple>` (Membership's Access
+	 * Protection box) injects the CHECKED membership IDs into $_POST.
+	 */
+	public function test_cpt_bridge_toggle_list_save_value_injects_checked_ids() {
+		$fields = $this->bridge_test_box();
+		$field  = $this->find_bridged_field( $fields, 'bbtest_memberships' );
+
+		$this->assertSame( 'toggle_list', $field['type'] );
+
+		// Key shape PHP's request parser produces for `…[12]=1&…[15]=1&…[20]=0`.
+		call_user_func( $field['save_value'], null, array( 12 => '1', 15 => '1', 20 => '0' ) );
+
+		$this->assertSame( array( '12', '15' ), $_POST['bbtest_memberships'] );
+	}
+
+	/**
+	 * The bridge must hand an AJAX picker's flat list to the normalizer as
+	 * `ajax_multiselect`. Its captured input type is still `toggle_list`, so
+	 * passing that instead would read the list positions as a checked map and
+	 * inject the indexes (`['0','1']`) in place of the selected ids.
+	 */
+	public function test_cpt_bridge_ajax_multiselect_save_value_injects_selected_ids() {
+		add_filter( 'bb_legacy_ajax_select_resolvers', array( $this, 'filter_add_test_resolver' ) );
+
+		$fields = $this->bridge_test_box();
+		$field  = $this->find_bridged_field( $fields, 'bbtest_tags' );
+
+		$this->assertSame( 'ajax_multiselect', $field['type'] );
+
+		call_user_func( $field['save_value'], null, array( '12', '15' ) );
+
+		$this->assertSame( array( '12', '15' ), $_POST['bbtest_tags'] );
+	}
+
+	/**
+	 * Register a test-only AJAX-select resolver matching the `bbtest-ajax` class.
+	 *
+	 * @param array $resolvers Registered resolvers.
+	 * @return array
+	 */
+	public function filter_add_test_resolver( $resolvers ) {
+		$resolvers['bbtest'] = array(
+			'match'  => 'bbtest-ajax',
+			'search' => '__return_empty_array',
+		);
+
+		return $resolvers;
+	}
+
+	/**
+	 * Run bb_legacy_run_cpt_bridge_box() over a seeded metabox capture and
+	 * return the fields it registered, keyed by field id.
+	 *
+	 * The captured inputs are seeded through the same transient the bridge
+	 * reads, so no metabox HTML needs to be rendered.
+	 *
+	 * @return array
+	 */
+	protected function bridge_test_box() {
+		$box  = array(
+			'id'    => 'bbtest-box',
+			'title' => 'Test Box',
+		);
+		$args = array(
+			'post_type'      => 'forum',
+			'request_param'  => 'forum_id',
+			'canonical_keys' => array(),
+			'tab'            => 'general',
+		);
+
+		$version   = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+		$cache_key = 'bb_legacy_cpt_box_inputs_' . md5( $args['post_type'] . '|' . $box['id'] . '|' . $version . '|v12-multiselect-meta-read' );
+		set_transient(
+			$cache_key,
+			array(
+				array(
+					'name'  => 'bbtest_memberships[]',
+					'type'  => 'toggle_list',
+					'label' => 'Memberships',
+					'class' => '',
+				),
+				array(
+					'name'  => 'bbtest_tags[]',
+					'type'  => 'toggle_list',
+					'label' => 'Tags',
+					'class' => 'select4 bbtest-ajax',
+				),
+			)
+		);
+
+		$registry = new class() {
+			/**
+			 * Registered field args keyed by field id.
+			 *
+			 * @var array
+			 */
+			public $fields = array();
+
+			/**
+			 * Capture a registration.
+			 *
+			 * @param string $component Component.
+			 * @param string $id        Field id.
+			 * @param array  $args      Field args.
+			 */
+			public function register( $component, $id, $args ) {
+				$this->fields[ $id ] = $args;
+			}
+		};
+
+		$order = 0;
+		bb_legacy_run_cpt_bridge_box( $registry, 'forums', $box, $order, array(), $args );
+
+		delete_transient( $cache_key );
+
+		return $registry->fields;
+	}
+
+	/**
+	 * Find a bridged field by the base of its input name.
+	 *
+	 * @param array  $fields Registered fields keyed by id.
+	 * @param string $base   Input name base (e.g. `bbtest_tags`).
+	 * @return array
+	 */
+	protected function find_bridged_field( $fields, $base ) {
+		foreach ( $fields as $id => $field ) {
+			if ( false !== strpos( $id, $base ) ) {
+				return $field;
+			}
+		}
+
+		$this->fail( 'Bridged field not registered: ' . $base . ' (got: ' . implode( ', ', array_keys( $fields ) ) . ')' );
 	}
 }
