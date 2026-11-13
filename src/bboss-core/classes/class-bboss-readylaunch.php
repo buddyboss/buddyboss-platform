@@ -2614,15 +2614,15 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 
 
 			if ( isset( $scripts['bp-avatar'] ) ) {
-				$scripts['bp-avatar']['file'] = "{$url}bb-readylaunch-avatar{$min}.js";
+				$scripts['bp-avatar']['file'] = "{$url}bboss-readylaunch-avatar{$min}.js";
 			}
 
 			if ( isset( $scripts['bp-plupload'] ) ) {
-				$scripts['bp-plupload']['file'] = "{$url}bb-readylaunch-plupload{$min}.js";
+				$scripts['bp-plupload']['file'] = "{$url}bboss-readylaunch-plupload{$min}.js";
 			}
 
 			if ( isset( $scripts['bp-cover-image'] ) ) {
-				$scripts['bp-cover-image']['file'] = "{$url}bb-readylaunch-cover-image{$min}.js";
+				$scripts['bp-cover-image']['file'] = "{$url}bboss-readylaunch-cover-image{$min}.js";
 			}
 
 			return $scripts;
