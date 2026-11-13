@@ -846,6 +846,7 @@ class BP_Notifications_Notification {
 	 * Get a count of total notifications matching a set of arguments.
 	 *
 	 * @since BuddyPress 1.9.0
+	 * @since BuddyBoss [BBVERSION] Caches the count under a hash of the final count SQL plus the user's count incrementor.
 	 *
 	 * @see BP_Notifications_Notification::get() for a description of arguments.
 	 *
@@ -908,11 +909,14 @@ class BP_Notifications_Notification {
 		$sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
 
 		// Set the cache.
+		// The key is built from the final SQL, so differently-filtered counts
+		// for the same user never collide on the same cache slot. See PROD-10344.
 		$cache_group = ( ! empty( $r['is_new'] ) ) ? 'bp_notifications_unread_count' : 'bp_notifications_read_count';
-		$count       = wp_cache_get( $r['user_id'], $cache_group );
+		$cache_key   = bp_notifications_get_count_cache_key( $r['user_id'], $sql );
+		$count       = wp_cache_get( $cache_key, $cache_group );
 		if ( false === $count ) {
 			$count = (int) $wpdb->get_var( $sql );
-			wp_cache_set( $r['user_id'], $count, $cache_group );
+			wp_cache_set( $cache_key, $count, $cache_group );
 		}
 
 		// Return the queried results.
