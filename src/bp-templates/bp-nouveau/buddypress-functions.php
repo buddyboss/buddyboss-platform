@@ -439,9 +439,11 @@ JS;
 		);
 
 		if ( $styles ) {
+			$skipped = array();
 
 			foreach ( $styles as $handle => $style ) {
 				if ( ! isset( $style['file'] ) ) {
+					$skipped[] = $handle;
 					continue;
 				}
 
@@ -456,6 +458,7 @@ JS;
 					$asset = bp_locate_template_asset( $file );
 
 					if ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) {
+						$skipped[] = $handle;
 						continue;
 					}
 
@@ -470,7 +473,17 @@ JS;
 					)
 				);
 
-				wp_enqueue_style( $handle, $file, $data['dependencies'], $data['version'] );
+				// A style skipped above (e.g. buddypress.css when the template stack has none, as under
+				// ReadyLaunch) is never registered; drop it from its dependents, or WordPress reports
+				// an unregistered dependency. Other dependencies are left for WordPress to resolve.
+				$dependencies = array();
+				foreach ( (array) $data['dependencies'] as $dependency ) {
+					if ( ! in_array( $dependency, $skipped, true ) || wp_style_is( $dependency, 'registered' ) ) {
+						$dependencies[] = $dependency;
+					}
+				}
+
+				wp_enqueue_style( $handle, $file, $dependencies, $data['version'] );
 
 				if ( $min ) {
 					wp_style_add_data( $handle, 'suffix', $min );
