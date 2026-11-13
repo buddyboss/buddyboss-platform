@@ -92,8 +92,9 @@ function bboss_moderation_highlight_admin_menu() {
 				var a = items[ i ].querySelector( 'a' );
 				if ( ! a ) continue;
 				var href = a.getAttribute( 'href' ) || '';
-				var isModerationItem = href.indexOf( 'bp-moderation' ) !== -1;
-				var isSettingsItem = href.indexOf( 'bp-settings' ) !== -1;
+				// Moderation and Settings both link to page=bb-settings; Moderation adds tab=moderation.
+				var isModerationItem = href.indexOf( 'tab=moderation' ) !== -1;
+				var isSettingsItem = /[?&]page=bb-settings(&|$)/.test( href ) && href.indexOf( 'tab=' ) === -1;
 				if ( isModeration && isModerationItem ) {
 					items[ i ].classList.add( 'current' );
 					a.classList.add( 'current' );
