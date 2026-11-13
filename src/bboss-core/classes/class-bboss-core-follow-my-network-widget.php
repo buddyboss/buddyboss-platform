@@ -37,7 +37,7 @@ class BBoss_Core_Follow_My_Network_Widget extends WP_Widget {
 
 		// Set up the widget.
 		parent::__construct(
-			false,
+			self::class === static::class ? 'bb_core_follow_my_network_widget' : false,
 			__( '(BB) Members My Network', 'buddyboss-platform' ),
 			$widget_ops
 		);

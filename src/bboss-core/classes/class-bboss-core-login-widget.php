@@ -23,7 +23,7 @@ class BBoss_Core_Login_Widget extends WP_Widget {
 	 */
 	public function __construct() {
 		parent::__construct(
-			false,
+			self::class === static::class ? 'bp_core_login_widget' : false,
 			__( '(BB) Log In', 'buddyboss-platform' ),
 			array(
 				'description'                 => __( 'Show a Log In form to logged-out visitors, and a Log Out link to those who are logged in.', 'buddyboss-platform' ),

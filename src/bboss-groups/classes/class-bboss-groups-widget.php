@@ -27,7 +27,7 @@ class BBoss_Groups_Widget extends WP_Widget {
 			'classname'                   => 'widget_bp_groups_widget buddypress widget',
 			'customize_selective_refresh' => true,
 		);
-		parent::__construct( false, __( '(BB) Social Groups', 'buddyboss-platform' ), $widget_ops );
+		parent::__construct( self::class === static::class ? 'bp_groups_widget' : false, __( '(BB) Social Groups', 'buddyboss-platform' ), $widget_ops );
 
 		if ( is_customize_preview() || is_active_widget( false, false, $this->id_base ) ) {
 			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );

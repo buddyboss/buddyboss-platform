@@ -30,7 +30,7 @@ class BBoss_Core_Network_Posts_Widget extends WP_Widget {
 
 		// Call WP_Widget constructor.
 		parent::__construct(
-			false,
+			self::class === static::class ? 'bp_core_network_posts_widget' : false,
 			$name,
 			array(
 				'description'                 => $description,

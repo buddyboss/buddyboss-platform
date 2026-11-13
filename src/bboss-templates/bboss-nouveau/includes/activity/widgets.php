@@ -37,7 +37,7 @@ class BBoss_Latest_Activities extends WP_Widget {
 			)
 		);
 
-		parent::__construct( false, __( '(BB) Latest Activities', 'buddyboss-platform' ), $widget_ops );
+		parent::__construct( self::class === static::class ? 'bp_latest_activities' : false, __( '(BB) Latest Activities', 'buddyboss-platform' ), $widget_ops );
 	}
 
 	/**

@@ -25,7 +25,7 @@ class BBoss_Core_Recently_Active_Widget extends WP_Widget {
 		$name        = __( '(BB) Recently Active Members', 'buddyboss-platform' );
 		$description = __( 'Profile photos of recently active members', 'buddyboss-platform' );
 		parent::__construct(
-			false,
+			self::class === static::class ? 'bp_core_recently_active_widget' : false,
 			$name,
 			array(
 				'description'                 => $description,
