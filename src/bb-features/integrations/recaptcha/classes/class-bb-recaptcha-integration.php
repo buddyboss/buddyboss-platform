@@ -98,10 +98,14 @@ class BB_Recaptcha_Integration extends BP_Integration {
 				continue;
 			}
 
-			$file_path = $dir . 'bb-recaptcha-' . $file . '.php';
+			// Files keep the original `bb-` name on release; a generated edition renames them `bboss-`.
+			foreach ( array( 'bboss-', 'bb-' ) as $prefix ) {
+				$file_path = $dir . $prefix . 'recaptcha-' . $file . '.php';
 
-			if ( file_exists( $file_path ) ) {
-				require_once $file_path;
+				if ( file_exists( $file_path ) ) {
+					require_once $file_path;
+					break;
+				}
 			}
 		}
 	}
