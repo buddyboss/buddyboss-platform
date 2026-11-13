@@ -5939,6 +5939,17 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 
 			$sym_status = bp_get_option( $key );
 
+			/*
+			 * Symlinks are on but the type was never detected (sites installed before the
+			 * add_option hook existed): detect it once per request instead of producing no link.
+			 */
+			static $bb_symlink_type_checked = false;
+			if ( empty( $sym_status ) && ! $bb_symlink_type_checked && bb_enable_symlinks() && function_exists( 'bb_media_symlink_validate' ) ) {
+				$bb_symlink_type_checked = true;
+				bb_media_symlink_validate( 1 );
+				$sym_status = bp_get_option( $key );
+			}
+
 			if ( 'default' === $sym_status ) {
 				symlink( $output_file_src, $attachment_path );
 			} elseif ( 'relative' === $sym_status ) {
