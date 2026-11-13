@@ -109,7 +109,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 
 		$handler = $scripts->query( 'bb-recaptcha', 'registered' );
 		$this->assertInstanceOf( '_WP_Dependency', $handler );
-		$this->assertStringContainsString( 'bb-features/integrations/recaptcha/assets/js/bb-recaptcha', $handler->src );
+		$this->assertStringContainsString( 'bb-features/integrations/recaptcha/assets/js/bboss-recaptcha', $handler->src );
 		$this->assertContains( 'jquery', $handler->deps );
 		$this->assertContains( 'bb-recaptcha-api', $handler->deps, 'Handler must load after Google api.js.' );
 	}
@@ -289,13 +289,13 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Production loads bb-recaptcha.min.js; a hand-edited source with a stale
+	 * Production loads bboss-recaptcha.min.js; a hand-edited source with a stale
 	 * twin ships the old behaviour while every SCRIPT_DEBUG check looks green.
 	 */
 	public function test_minified_twin_carries_the_submit_time_refresh() {
 		$dir    = bboss()->plugin_dir . 'bb-features/integrations/recaptcha/assets/js/';
 		$source = file_get_contents( $dir . 'bb-recaptcha.js' );
-		$min    = file_get_contents( $dir . 'bb-recaptcha.min.js' );
+		$min    = file_get_contents( $dir . 'bboss-recaptcha.min.js' );
 
 		foreach ( array( 'setupV3', 'v3Submit', 'v3Token', 'requestSubmit', 'bb-recaptcha-notice', 'g-recaptcha-response', 'script_failed', 'token_failed' ) as $marker ) {
 			$this->assertStringContainsString( $marker, $source, "Source lost marker {$marker}." );

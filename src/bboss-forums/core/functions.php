@@ -1062,9 +1062,9 @@ function bboss_bbp_get_empty_datetime() {
  * @return string Return default forum image URL.
  */
 function bboss_get_forum_default_image( $size = 'full' ) {
-	$filename = 'bb-default-forum.png';
+	$filename = 'bboss-default-forum.png';
 	if ( 'full' !== $size ) {
-		$filename = 'bb-default-forum-150.png';
+		$filename = 'bboss-default-forum-150.png';
 	}
 	/**
 	 * Filters default forum image URL.

@@ -12,7 +12,7 @@ import { createRoot } from '@wordpress/element';
 import { App } from './App';
 
 // Styles are compiled separately via the `build:admin:integrations:scss` script
-// and enqueued by bb-admin-integrations-page.php — not bundled through webpack.
+// and enqueued by bboss-admin-integrations-page.php — not bundled through webpack.
 
 const container = document.getElementById( 'bb-admin-integrations' );
 if ( container ) {

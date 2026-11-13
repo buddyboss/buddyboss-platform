@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Autocomplete Settings panel sections and fields.
  *
- * Called from bb-admin-settings-search.php after side panels are registered.
+ * Called from bboss-admin-settings-search.php after side panels are registered.
  *
  * @since BuddyBoss 3.0.0
  */

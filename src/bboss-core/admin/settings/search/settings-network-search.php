@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Network Search panel sections and fields.
  *
- * Called from bb-admin-settings-search.php after side panels are registered.
+ * Called from bboss-admin-settings-search.php after side panels are registered.
  *
  * All component toggles (Members, Forums, Groups, etc.) are registered as
  * fields within a single section so the React UI renders them in one

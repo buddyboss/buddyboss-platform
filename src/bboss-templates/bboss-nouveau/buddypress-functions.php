@@ -403,7 +403,7 @@ JS;
 				'version'      => $this->version,
 			),
 			'bp-nouveau-bb-icons'  => array(
-				'file'         => 'icons/css/bb-icons%1$s%2$s.css',
+				'file'         => 'icons/css/bboss-icons%1$s%2$s.css',
 				'dependencies' => array(),
 				'version'      => $bb_icon_version,
 			),
@@ -828,7 +828,7 @@ JS;
 			'idle_inactive_span'        => bboss_idle_inactive_span(),
 			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
 			'native_presence'           => (bool) bboss_get_option( 'bb_use_core_native_presence', false ),
-			'native_presence_url'       => bboss()->plugin_url . 'bboss-core/bb-core-native-presence.php',
+			'native_presence_url'       => bboss()->plugin_url . 'bboss-core/bboss-core-native-presence.php',
 			'presence_rest_url'         => home_url( 'wp-json/buddyboss/v1/members/presence' ),
 		);
 

@@ -20,8 +20,8 @@ function bboss_setup_core() {
 	bboss()->core = new BBoss_Core();
 
 	// Load Admin Settings 2.0 initialization early.
-	if ( file_exists( bboss()->plugin_dir . 'bboss-core/admin/bb-admin-settings-init.php' ) ) {
-		require_once bboss()->plugin_dir . 'bboss-core/admin/bb-admin-settings-init.php';
+	if ( file_exists( bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-settings-init.php' ) ) {
+		require_once bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-settings-init.php';
 	}
 }
 add_action( 'bp_loaded', 'bboss_setup_core', 0 );

@@ -1278,7 +1278,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 				// BB icon version.
 				$bb_icon_version = function_exists( 'bboss_icon_font_map_data' ) ? bboss_icon_font_map_data( 'version' ) : '';
 				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bboss_get_version();
-				wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
+				wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/bboss-icons{$min}.css", array(), $bb_icon_version );
 				wp_enqueue_style( 'bb-readylaunch-bb-icons-map', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 			}
 
@@ -1332,7 +1332,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 					wp_style_add_data( 'bb-readylaunch-blog', 'suffix', $min );
 				}
 
-				wp_enqueue_script( 'bb-readylaunch-blog', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-blog.js', array( 'jquery' ), bboss_get_version(), true );
+				wp_enqueue_script( 'bb-readylaunch-blog', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-blog.js', array( 'jquery' ), bboss_get_version(), true );
 			}
 
 			if ( bboss_is_members_directory() ) {
@@ -1407,7 +1407,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bboss_get_version();
 
 			// Enqueue BB icons for admin pages.
-			wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
+			wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/bboss-icons{$min}.css", array(), $bb_icon_version );
 			wp_enqueue_style( 'bb-readylaunch-bb-icons-map', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 		}
 
@@ -2776,7 +2776,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			wp_enqueue_style( 'bb-rl-login-fonts', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/assets/fonts/fonts.css', array(), bboss_get_version() );
 			wp_enqueue_style( 'bb-rl-login-style', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/css/login.css', array(), bboss_get_version() );
 			wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
-			wp_enqueue_style( 'bb-rl-login-style-icons', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bboss_get_version() );
+			wp_enqueue_style( 'bb-rl-login-style-icons', bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/icons/css/bboss-icons-rl.min.css', array(), bboss_get_version() );
 			wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
 		}
 
@@ -3227,7 +3227,7 @@ JS;
 			// Enqueue our MemberPress Courses helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-meprlms-js',
-				bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bb-readylaunch-meprlms.js',
+				bboss()->plugin_url . 'bboss-templates/bboss-nouveau/readylaunch/js/bboss-readylaunch-meprlms.js',
 				array( 'jquery' ),
 				bboss_get_version(),
 				true

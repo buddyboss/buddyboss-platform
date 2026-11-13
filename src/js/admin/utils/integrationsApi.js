@@ -45,7 +45,7 @@ const DETAIL_TTL_MS = 3 * 24 * HOUR_IN_MILLIS;
 /**
  * Read the localized admin data for this page.
  *
- * Set by bb-admin-integrations-page.php as `bbIntegrationsData` (apiUrl, nonce,
+ * Set by bboss-admin-integrations-page.php as `bbIntegrationsData` (apiUrl, nonce,
  * version) — a name distinct from the Settings app's `bbAdminData` so the two
  * bundles never read each other's data even if both ever load together.
  *

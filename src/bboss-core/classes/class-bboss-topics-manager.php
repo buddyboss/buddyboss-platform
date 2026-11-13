@@ -179,7 +179,7 @@ class BBoss_Topics_Manager {
 		);
 
 		// Add the JS templates for topics.
-		bboss_get_template_part( 'common/js-templates/bb-topic-lists' );
+		bboss_get_template_part( 'common/js-templates/bboss-topic-lists' );
 	}
 
 	/**

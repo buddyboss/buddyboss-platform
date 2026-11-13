@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Pages & Posts Search panel sections and fields.
  *
- * Called from bb-admin-settings-search.php after side panels are registered.
+ * Called from bboss-admin-settings-search.php after side panels are registered.
  * All standard post types are registered as fields within a single section
  * so the React UI renders them in one continuous card — matching the Figma design.
  * Custom post types are deferred to bboss_search_lazy_register_cpt_fields().

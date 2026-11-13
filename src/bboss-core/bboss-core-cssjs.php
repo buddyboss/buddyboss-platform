@@ -920,7 +920,7 @@ add_action( 'bp_enqueue_scripts', 'bboss_core_enqueue_isInViewPort', 5 );
  * @since BuddyBoss 2.3.60
  */
 function bboss_load_link_preview_js_template() {
-	bboss_get_template_part( 'common/js-templates/members/bb-link-preview' );
+	bboss_get_template_part( 'common/js-templates/members/bboss-link-preview' );
 }
 
 add_action( 'bp_enqueue_scripts', 'bboss_load_link_preview_js_template' );

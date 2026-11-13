@@ -127,7 +127,7 @@ function bbBuildKbCounts( taxonomy ) {
  */
 export function HelpScreen( { onNavigate } ) {
 	// License/tier state drives which upsell promo shows (set server-side in
-	// bb-admin-settings-page.php). No active license -> show the Pro promo;
+	// bboss-admin-settings-page.php). No active license -> show the Pro promo;
 	// active license without the Scale tier -> show the Scale promo; full Scale
 	// plan -> show neither (the user already has everything promoted).
 	var hasActiveLicense = !! ( window.bbAdminData && window.bbAdminData.hasActiveLicense );

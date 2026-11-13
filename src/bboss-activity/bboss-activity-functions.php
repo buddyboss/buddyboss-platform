@@ -6924,7 +6924,7 @@ function bboss_load_reaction_popup_modal_js_template() {
 		bboss_is_reaction_activity_posts_enabled() ||
 		bboss_is_reaction_activity_comments_enabled()
 	) {
-		bboss_get_template_part( 'common/js-templates/activity/parts/bb-activity-reactions-popup' );
+		bboss_get_template_part( 'common/js-templates/activity/parts/bboss-activity-reactions-popup' );
 	}
 }
 

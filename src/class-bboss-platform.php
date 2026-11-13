@@ -559,10 +559,10 @@ class BBoss_Platform {
 		require $this->plugin_dir . 'bboss-core/bboss-core-rest-api.php';
 		require $this->plugin_dir . 'bboss-core/bboss-core-notification.php';
 		require $this->plugin_dir . 'bboss-core/bboss-core-invitation.php';
-		require $this->plugin_dir . 'bboss-core/bb-core-subscriptions.php';
-		require $this->plugin_dir . 'bboss-core/bb-core-bookmarks.php';
-		require $this->plugin_dir . 'bboss-core/bb-core-drafts.php';
-		require $this->plugin_dir . 'bboss-core/bb-core-blocks.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-subscriptions.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-bookmarks.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-drafts.php';
+		require $this->plugin_dir . 'bboss-core/bboss-core-blocks.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
 		if ( ! bboss_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -606,7 +606,7 @@ class BBoss_Platform {
 
 
 		if ( bboss_is_readylaunch_enabled() ) {
-			require $this->plugin_dir . 'bboss-core/bb-core-readylaunch.php';
+			require $this->plugin_dir . 'bboss-core/bboss-core-readylaunch.php';
 		}
 	}
 

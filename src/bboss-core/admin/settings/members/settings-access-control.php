@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Access Controls section and field for Members (Connection Access).
  *
- * Called from bb-admin-settings-members.php after Member Connection panel
+ * Called from bboss-admin-settings-members.php after Member Connection panel
  * fields are registered. Fires a hook so Pro (or third-party) can register
  * additional fields in the same section.
  *

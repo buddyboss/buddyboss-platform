@@ -208,7 +208,7 @@ function AppInner() {
 	// Pairs with `bb_maybe_clear_placeholder_features_cache()` on the PHP
 	// side: when an admin hits `?bb_clear_placeholder_cache=1`, that handler
 	// drops every `bb_help_content_*` server transient AND raises a one-shot
-	// transient that `bb-admin-settings-page.php` reads-and-deletes into
+	// transient that `bboss-admin-settings-page.php` reads-and-deletes into
 	// `bbAdminData.helpContentCacheFlushSignal`. Without this effect the
 	// 3-day localStorage entries written by `fetchHelpContent()` would keep
 	// shadowing the freshly-cleared server cache on the very next help

@@ -2340,7 +2340,7 @@ add_action( 'bb_media_upload', 'bboss_messages_media_save' );
 // The filters below were originally registered in
 // src/bboss-core/admin/settings/media/callbacks.php, but that file is required
 // only when `is_admin() || wp_doing_ajax()` is true (see
-// bb-admin-settings-init.php), so on frontend page loads the filters never
+// bboss-admin-settings-init.php), so on frontend page loads the filters never
 // fired and the master toggles had no effect on, for example, activity
 // streams, forum replies, or message threads. Hosting the filters here —
 // inside the Media component's normal filters file — guarantees they load on

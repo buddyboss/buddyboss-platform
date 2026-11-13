@@ -122,8 +122,8 @@ function _bb_two_factor_tests_include_integration() {
 
 	$dir = trailingslashit( bboss()->plugin_dir ) . 'bb-features/integrations/two-factor/';
 
-	require_once $dir . 'bb-two-factor-actions.php';
-	require_once $dir . 'bb-two-factor-filters.php';
+	require_once $dir . 'bboss-two-factor-actions.php';
+	require_once $dir . 'bboss-two-factor-filters.php';
 }
 
 if ( '' !== _bb_two_factor_tests_plugin_file() ) {

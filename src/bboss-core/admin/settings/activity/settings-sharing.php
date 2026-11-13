@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Single source of truth for the section title used across the section
  * registration branches in this file. The side-panel title (in
- * `bb-admin-settings-activity.php`) is intentionally NOT routed through
+ * `bboss-admin-settings-activity.php`) is intentionally NOT routed through
  * this helper — panel and section titles are conceptually distinct and a
  * future customization might want them to differ.
  *

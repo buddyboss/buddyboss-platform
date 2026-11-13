@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Legacy General callbacks (Toolbar, Privacy, tutorials) removed — migrated to Settings 2.0 Advanced feature.
-// See: bb-admin-settings-advanced.php, settings/advanced/settings-general.php, settings/advanced/settings-privacy.php
+// See: bboss-admin-settings-advanced.php, settings/advanced/settings-general.php, settings/advanced/settings-privacy.php
 
 /** Activity *******************************************************************/
 

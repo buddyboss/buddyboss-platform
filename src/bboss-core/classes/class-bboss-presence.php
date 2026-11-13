@@ -383,7 +383,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 				return;
 			}
 
-			$file_url = trailingslashit( plugin_dir_url( __DIR__ ) ) . 'bb-core-native-presence.php?direct_allow=true';
+			$file_url = trailingslashit( plugin_dir_url( __DIR__ ) ) . 'bboss-core-native-presence.php?direct_allow=true';
 			$response = wp_remote_get( $file_url );
 
 			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {

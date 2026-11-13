@@ -1503,7 +1503,7 @@ function bboss_post_topic_reply_draft() {
 			bboss_draft_mark_evicted_attachments( $trimmed_entries, $user_id );
 
 			foreach ( array_keys( $trimmed_entries ) as $trimmed_inner_key ) {
-				/** This action is documented in bboss-core/bb-core-drafts.php */
+				/** This action is documented in bboss-core/bboss-core-drafts.php */
 				do_action( 'bb_draft_evicted', (int) $user_id, 'bb_user_topic_reply_draft:' . $trimmed_inner_key, 'aggregate_cap' );
 			}
 		}
