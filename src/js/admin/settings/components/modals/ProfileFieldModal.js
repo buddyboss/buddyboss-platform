@@ -196,10 +196,10 @@ export function ProfileFieldModal( {
 		if ( isEditing ) {
 			return 'all';
 		}
-		// New field → default to "No Profile Type Users" so admins
-		// have to explicitly opt-in to wider visibility (matches the
-		// most-restrictive-by-default UX principle).
-		return 'none';
+		// New field → "All Profile Types" (no member_type meta), as the
+		// legacy editor and BuddyPress create it. "No Profile Type Users"
+		// hid a new field from every member who has a profile type.
+		return 'all';
 	} );
 	var memberTypeMode = memberTypeModeState[ 0 ];
 	var setMemberTypeMode = memberTypeModeState[ 1 ];
