@@ -177,7 +177,7 @@ class BBoss_Core extends BBoss_Component {
 
 		// Loop through optional components.
 		foreach ( $bp->optional_components as $component ) {
-			$loader = bboss_is_active( $component ) ? bb_core_component_loader_file( $component ) : '';
+			$loader = bboss_is_active( $component ) ? bboss_core_component_loader_file( $component ) : '';
 			if ( '' !== $loader ) {
 				include $loader;
 			}
@@ -185,7 +185,7 @@ class BBoss_Core extends BBoss_Component {
 
 		// Loop through required components.
 		foreach ( $bp->required_components as $component ) {
-			$loader = bb_core_component_loader_file( $component );
+			$loader = bboss_core_component_loader_file( $component );
 			if ( '' !== $loader ) {
 				include $loader;
 			}

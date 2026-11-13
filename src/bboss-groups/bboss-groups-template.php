@@ -5755,7 +5755,15 @@ function bboss_group_creation_tabs() {
 				<?php
 			}
 
-			echo esc_html( apply_filters( 'bb_group_creation_tab_number', $counter . '. ', $counter ) ) . esc_html( $step['name'] );
+			// The filtered number may carry markup (ReadyLaunch wraps it in a span), so allow only that.
+			echo wp_kses(
+				apply_filters( 'bb_group_creation_tab_number', $counter . '. ', $counter ),
+				array(
+					'span' => array(
+						'class' => true,
+					),
+				)
+			) . esc_html( $step['name'] );
 
 			if ( $is_enabled ) {
 				?>
