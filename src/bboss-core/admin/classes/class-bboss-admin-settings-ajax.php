@@ -685,6 +685,13 @@ class BBoss_Admin_Settings_Ajax {
 		// Sort side panels by order.
 		usort( $formatted_side_panels, 'bboss_sort_by_order' );
 
+		// Builds without paid-plan upsells (the wordpress.org edition) leave out every
+		// section and field still locked behind a plan, instead of showing it badged.
+		$bb_drop_locked = true;
+		if ( $bb_drop_locked ) {
+			$formatted_side_panels = $this->bb_drop_locked_settings( $formatted_side_panels );
+		}
+
 		// Update settings with processed values from formatted fields.
 		foreach ( $formatted_side_panels as $panel ) {
 			foreach ( $panel['sections'] ?? array() as $section ) {
@@ -799,6 +806,73 @@ class BBoss_Admin_Settings_Ajax {
 		if ( isset( $feature['confirm_off_destructive'] ) ) {
 			$formatted['confirm_off_destructive'] = (bool) $feature['confirm_off_destructive'];
 		}
+	}
+
+	/**
+	 * Drop sections and fields that are locked behind a paid plan.
+	 *
+	 * A section or field is locked when its `pro_notice.show` is still true after every
+	 * `bb_admin_settings_format_field_data` / `bb_admin_settings_format_section_data`
+	 * callback has run (an installed add-on unlocks its fields there). A field that
+	 * depends on a dropped field (`parent_field` or `conditional.field`) goes with it,
+	 * and a section or side panel left with nothing to show is dropped too.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $side_panels Formatted side panels.
+	 *
+	 * @return array Side panels without locked sections and fields.
+	 */
+	private function bb_drop_locked_settings( $side_panels ) {
+		$kept_panels = array();
+		$dropped     = array(); // Field names left out, across the whole feature.
+
+		foreach ( $side_panels as $panel ) {
+			$had_sections  = ! empty( $panel['sections'] );
+			$kept_sections = array();
+
+			foreach ( $panel['sections'] ?? array() as $section ) {
+				$had_fields = ! empty( $section['fields'] );
+				$locked     = ! empty( $section['pro_notice']['show'] );
+				$kept       = array();
+
+				// Fields arrive in order, so a parent is normally seen before its children.
+				foreach ( $section['fields'] ?? array() as $field ) {
+					$name   = $field['name'] ?? '';
+					$parent = $field['parent_field'] ?? '';
+					$cond   = is_array( $field['conditional'] ?? null ) ? ( $field['conditional']['field'] ?? '' ) : '';
+
+					if (
+						$locked ||
+						! empty( $field['pro_notice']['show'] ) ||
+						( '' !== $parent && isset( $dropped[ $parent ] ) ) ||
+						( '' !== $cond && isset( $dropped[ $cond ] ) )
+					) {
+						$dropped[ $name ] = true;
+						continue;
+					}
+
+					$kept[] = $field;
+				}
+
+				if ( $locked || ( $had_fields && empty( $kept ) ) ) {
+					continue;
+				}
+
+				$section['fields'] = $kept;
+				unset( $section['pro_notice'] );
+				$kept_sections[] = $section;
+			}
+
+			if ( $had_sections && empty( $kept_sections ) ) {
+				continue;
+			}
+
+			$panel['sections'] = $kept_sections;
+			$kept_panels[]     = $panel;
+		}
+
+		return $kept_panels;
 	}
 
 	/**
