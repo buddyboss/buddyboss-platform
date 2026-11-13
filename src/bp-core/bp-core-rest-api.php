@@ -74,7 +74,7 @@ function bp_rest_api_register_request_script() {
 
 	wp_register_script(
 		'bp-api-request',
-		sprintf( '%1$sbp-core/js/bp-api-request%2$s.js', buddypress()->plugin_url, bp_core_get_minified_asset_suffix() ),
+		buddypress()->plugin_url . 'bp-core/js/bp-api-request' . bp_core_get_minified_asset_suffix() . '.js',
 		$dependencies,
 		bp_get_version(),
 		true
