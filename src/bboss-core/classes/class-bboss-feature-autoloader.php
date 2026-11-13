@@ -182,7 +182,7 @@ class BBoss_Feature_Autoloader {
 	/**
 	 * Discover and load features from the features directory.
 	 *
-	 * Scans bb-features/integrations/ and bb-features/community/ directories
+	 * Scans bboss-features/integrations/ and bboss-features/community/ directories
 	 * for bboss-feature-config.php files and loads them.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -190,7 +190,7 @@ class BBoss_Feature_Autoloader {
 	 * @return void
 	 */
 	public static function bb_discover_features() {
-		$base_dir = bboss()->plugin_dir . 'bb-features/';
+		$base_dir = bboss()->plugin_dir . 'bboss-features/';
 
 		// Allow admins to manually clear the feature discovery cache via query parameter.
 		// Usage: Add ?bb_clear_features_cache=1 to any admin URL.
@@ -305,6 +305,6 @@ class BBoss_Feature_Autoloader {
 	 */
 	private static function bb_get_discovery_cache_key() {
 		$version = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
-		return 'bb_feature_config_paths_v_' . md5( $version . '|' . bboss()->plugin_dir . 'bb-features/' );
+		return 'bb_feature_config_paths_v_' . md5( $version . '|' . bboss()->plugin_dir . 'bboss-features/' );
 	}
 }

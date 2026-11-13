@@ -61,7 +61,7 @@ class BBoss_Recaptcha_Integration extends BBoss_Integration {
 	 * @return string Integration base directory path.
 	 */
 	private function get_integration_dir() {
-		return trailingslashit( bboss()->plugin_dir ) . 'bb-features/integrations/' . $this->id . '/';
+		return trailingslashit( bboss()->plugin_dir ) . 'bboss-features/integrations/' . $this->id . '/';
 	}
 
 	/**
@@ -72,7 +72,7 @@ class BBoss_Recaptcha_Integration extends BBoss_Integration {
 	 * @return string Integration base URL.
 	 */
 	private function get_integration_url() {
-		return trailingslashit( bboss()->plugin_url ) . 'bb-features/integrations/' . $this->id . '/';
+		return trailingslashit( bboss()->plugin_url ) . 'bboss-features/integrations/' . $this->id . '/';
 	}
 
 	/**

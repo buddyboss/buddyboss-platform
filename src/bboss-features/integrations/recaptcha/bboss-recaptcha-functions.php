@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @param string $path Path to recaptcha integration.
  */
 function bboss_recaptcha_integration_url( $path = '' ) {
-	return trailingslashit( bboss()->plugin_url ) . 'bb-features/integrations/recaptcha/' . trim( $path, '/\\' );
+	return trailingslashit( bboss()->plugin_url ) . 'bboss-features/integrations/recaptcha/' . trim( $path, '/\\' );
 }
 
 /**
