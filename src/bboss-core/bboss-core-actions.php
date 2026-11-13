@@ -462,6 +462,24 @@ function bboss_update_media_symlink_support( $old_value, $value ) {
 add_action( 'update_option_bp_media_symlink_support', 'bboss_update_media_symlink_support', 10, 2 );
 
 /**
+ * Check the symlink type default/relative when the symlink option is first added.
+ *
+ * A fresh install stores `bp_media_symlink_support` through add_option(), which never fires
+ * `update_option_bp_media_symlink_support`, so without this the symlink type options stay
+ * empty and no media preview link is ever created.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $option Option name.
+ * @param mixed  $value  The option value.
+ */
+function bboss_add_media_symlink_support( $option, $value ) {
+	bboss_media_symlink_validate( $value );
+}
+
+add_action( 'add_option_bp_media_symlink_support', 'bboss_add_media_symlink_support', 10, 2 );
+
+/**
  * Check and re-start the background process if queue is not empty.
  *
  * @since BuddyBoss 1.8.1

@@ -2527,7 +2527,7 @@ function bboss_core_get_minified_asset_suffix() {
  * @param string $component Component id, e.g. 'activity'.
  * @return string Absolute path, or '' when none of the candidates exists.
  */
-function bb_core_component_loader_file( $component ) {
+function bboss_core_component_loader_file( $component ) {
 	$base = bboss()->plugin_dir;
 	foreach ( array( 'bboss-', 'bp-' ) as $dir_prefix ) {
 		foreach ( array( 'bboss-', 'bp-' ) as $file_prefix ) {
@@ -2562,7 +2562,7 @@ function bboss_is_component_directory_available( $component ) {
 		return $available[ $component ];
 	}
 
-	$exists = '' !== bb_core_component_loader_file( $component );
+	$exists = '' !== bboss_core_component_loader_file( $component );
 
 	/**
 	 * Filters whether a component's code is available to load.
@@ -5932,6 +5932,17 @@ function bboss_core_symlink_generator( $type, $item, $size, $file, $output_file_
 		if ( ! is_link( $attachment_path ) ) {
 
 			$sym_status = bboss_get_option( $key );
+
+			/*
+			 * Symlinks are on but the type was never detected (sites installed before the
+			 * add_option hook existed): detect it once per request instead of producing no link.
+			 */
+			static $bb_symlink_type_checked = false;
+			if ( empty( $sym_status ) && ! $bb_symlink_type_checked && bboss_enable_symlinks() && function_exists( 'bboss_media_symlink_validate' ) ) {
+				$bb_symlink_type_checked = true;
+				bboss_media_symlink_validate( 1 );
+				$sym_status = bboss_get_option( $key );
+			}
 
 			if ( 'default' === $sym_status ) {
 				symlink( $output_file_src, $attachment_path );
