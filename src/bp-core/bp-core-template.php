@@ -119,7 +119,8 @@ function bp_get_options_title() {
 		$bp->bp_options_title = __( 'Options', 'buddyboss' );
 	}
 
-	echo esc_html( apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) ) );
+	// Already escaped before the filter; wp_kses_post() keeps entities as they are instead of encoding them twice.
+	echo wp_kses_post( apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) ) );
 }
 
 /**
