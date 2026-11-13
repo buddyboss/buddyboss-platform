@@ -253,31 +253,35 @@ function bboss_admin_repair_group_count() {
 	$statement = __( 'Repairing total groups count for each member &hellip; %s', 'buddyboss-platform' );
 	$result    = __( 'Failed!', 'buddyboss-platform' );
 
-	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_group_count' );";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql_delete is a static literal: usermeta table name from $wpdb, fixed meta_key, no variable input.
-		return array( 1, sprintf( $statement, $result ) );
-	}
+	$bp            = bboss();
+	$members_table = $bp->groups->table_name_members;
+	$meta_key      = bboss_get_user_meta_key( 'total_group_count' );
 
-	$bp = bboss();
+	// Refresh every member once, in user ID order (keyset paging covers IDs above the user
+	// count too). Counts are overwritten in place, so a run that stops part-way leaves the
+	// rest as they were instead of deleting every count up front.
+	$per_query = 500;
+	$last_id   = 0;
+	do {
+		$users = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$members_table} WHERE is_confirmed = 1 AND is_banned = 0 AND user_id > %d ORDER BY user_id ASC LIMIT %d", $last_id, $per_query ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from buddypress(); values prepared.
 
-	// Walk through all users on the site.
-	$total_users = $wpdb->get_row( "SELECT count(ID) as c FROM {$wpdb->users}" )->c;
+		foreach ( $users as $user_id ) {
+			BBoss_Groups_Member::refresh_total_group_count_for_user( $user_id );
 
-	if ( $total_users > 0 ) {
-		$per_query = 500;
-		$offset    = 0;
-		while ( $offset < $total_users ) {
-			// But only bother to update counts for users that have groups.
-			$users = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$bp->groups->table_name_members} WHERE is_confirmed = 1 AND is_banned = 0 AND user_id > %d AND user_id <= %d", $offset, $offset + $per_query ) );
-
-			foreach ( $users as $user ) {
-				BBoss_Groups_Member::refresh_total_group_count_for_user( $user );
-			}
-
-			$offset += $per_query;
+			// update_user_meta() primes the user's whole meta cache; drop it so memory stays flat.
+			wp_cache_delete( $user_id, 'user_meta' );
 		}
-	} else {
-		return array( 2, sprintf( $statement, $result ) );
+
+		$batch_size = count( $users );
+		if ( $batch_size > 0 ) {
+			$last_id = (int) end( $users );
+		}
+	} while ( $batch_size === $per_query );
+
+	// Remove counts left on users who no longer belong to any group.
+	$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key = %s AND user_id NOT IN ( SELECT user_id FROM {$members_table} WHERE is_confirmed = 1 AND is_banned = 0 )", $meta_key ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table names from $wpdb and buddypress(); value prepared.
+	if ( false === $deleted ) {
+		return array( 1, sprintf( $statement, $result ) );
 	}
 
 	return array(

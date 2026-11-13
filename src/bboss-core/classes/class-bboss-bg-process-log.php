@@ -319,55 +319,59 @@ class BBoss_BG_Process_Log {
 			return;
 		}
 
-		switch ( $callback_function ) {
-			case 'bb_pro_migrate_reactions_callback':
+		// Match on the name without its prefix: a generated edition renames bb_/bp_ callbacks to
+		// bboss_, and the stored job keeps whichever name queued it (TK5).
+		$callback_key = is_string( $callback_function ) ? preg_replace( '/^(?:bboss|bb|bp)_/', '', $callback_function ) : $callback_function;
+
+		switch ( $callback_key ) {
+			case 'pro_migrate_reactions_callback':
 				$component = 'activity';
 				break;
-			case 'bb_remove_duplicate_member_slug' :
-			case 'bb_set_bulk_user_profile_slug' :
-			case 'bb_core_update_repair_member_slug' :
-			case 'bb_core_removed_orphaned_member_slug' :
+			case 'remove_duplicate_member_slug' :
+			case 'set_bulk_user_profile_slug' :
+			case 'core_update_repair_member_slug' :
+			case 'core_removed_orphaned_member_slug' :
 				$component = 'member';
 				break;
-			case 'bb_migrate_member_friends_count_callback' :
+			case 'migrate_member_friends_count_callback' :
 				$component = 'friends';
 				break;
-			case 'bb_update_group_member_count':
-			case 'bb_create_group_member_subscriptions' :
-			case 'bb_update_groups_discussion_subscriptions_background_process' :
-			case 'bb_update_groups_subgroup_membership_background_process' :
-			case 'bb_update_groups_invitation_background_process' :
-			case 'bb_update_groups_members_background_process' :
+			case 'update_group_member_count':
+			case 'create_group_member_subscriptions' :
+			case 'update_groups_discussion_subscriptions_background_process' :
+			case 'update_groups_subgroup_membership_background_process' :
+			case 'update_groups_invitation_background_process' :
+			case 'update_groups_members_background_process' :
 				$component = 'groups';
 				break;
-			case 'bb_migrate_users_forum_topic_subscriptions' :
-			case 'bb_migrate_bbpress_users_post_subscriptions' :
-			case 'bb_migrate_users_topic_favorites' :
+			case 'migrate_users_forum_topic_subscriptions' :
+			case 'migrate_bbpress_users_post_subscriptions' :
+			case 'migrate_users_topic_favorites' :
 				$component = 'forums';
 				break;
-			case 'bb_moderation_bg_update_moderation_data' :
+			case 'moderation_bg_update_moderation_data' :
 			case 'hide_related_content' :
 			case 'unhide_related_content' :
 				$component = 'moderation';
 				break;
 			case 'migrate_notification_preferences' :
-			case 'bb_add_background_notifications' :
+			case 'add_background_notifications' :
 			case 'send_notifications_to_subscribers' :
-			case 'bb_activity_following_post_notification' :
-			case 'bb_email_queue_cron_cb' :
+			case 'activity_following_post_notification' :
+			case 'email_queue_cron_cb' :
 				$component = 'notifications';
 				break;
-			case 'bb_migrate_message_media_document' :
-			case 'bb_render_digest_messages_template' :
-			case 'bb_render_messages_recipients' :
-			case 'bb_send_group_message_background' :
+			case 'migrate_message_media_document' :
+			case 'render_digest_messages_template' :
+			case 'render_messages_recipients' :
+			case 'send_group_message_background' :
 				$component = 'messages';
 				break;
-			case 'bp_video_background_create_thumbnail' :
+			case 'video_background_create_thumbnail' :
 				$component = 'video';
 				break;
-			case 'bb_xprofile_mapping_simple_to_repeater_fields_data' :
-			case 'bb_remove_google_plus_fields' :
+			case 'xprofile_mapping_simple_to_repeater_fields_data' :
+			case 'remove_google_plus_fields' :
 				$component = 'xprofile';
 				break;
 			case 'zoom_groups_meeting_details' :
