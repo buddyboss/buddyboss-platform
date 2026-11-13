@@ -251,7 +251,8 @@ function bboss_nouveau_activity_localize_scripts( $params = array() ) {
 	$activity_strings = array(
 		/* translators: %s: logged-in user display name. */
 		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss' ), bboss_core_get_user_displayname( bboss_loggedin_user_id() ) ),
-		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss' ),
+		// Plain text: the post forms set it as the aria-label attribute, which needs no HTML escaping.
+		'whatsnewLabel'       => __( 'Post what\'s new', 'buddyboss' ),
 		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss' ),
 		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss' ),
 		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss' ),
