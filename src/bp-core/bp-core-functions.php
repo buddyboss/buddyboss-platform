@@ -4911,6 +4911,7 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  *
  * @return array Parsed URL data.
  * @since BuddyBoss 1.3.2
+ * @since BuddyBoss [BBVERSION] Share/short links that redirect to an oEmbed provider URL return that embed.
  */
 function bp_core_parse_url( $url ) {
 
@@ -5010,8 +5011,26 @@ function bp_core_parse_url( $url ) {
 		$response = wp_safe_remote_get( $url, $args );
 		$body     = wp_remote_retrieve_body( $response );
 
-		// if response is not empty.
-		if ( ! is_wp_error( $body ) && ! empty( $body ) ) {
+		// Share/short links (Reddit /s/, vm.tiktok.com, pin.it) redirect to a URL a known oEmbed provider handles.
+		$final_url = ! is_wp_error( $response ) && ! empty( $response['http_response'] ) ? $response['http_response']->get_response_object()->url : '';
+
+		// Pinterest's oEmbed rejects the "/pin/<id>/sent/?…" share URL; use the canonical pin URL.
+		if ( preg_match( '#^https?://(?:[a-z]+\.)?pinterest\.(?:[a-z]{2,3}|co\.[a-z]{2}|com\.[a-z]{2})/pin/(\d+)\b#i', $final_url, $pin ) ) {
+			$final_url = 'https://www.pinterest.com/pin/' . $pin[1] . '/';
+		}
+
+		// Known providers only: discovery would mean another GET to an arbitrary host.
+		if ( ! empty( $final_url ) && $final_url !== $url && $oembed_obj->get_provider( $final_url, array( 'discover' => false ) ) ) {
+			$embed_code = wp_oembed_get( $final_url, array( 'discover' => false ) );
+		}
+
+		if ( ! empty( $embed_code ) ) {
+			$parsed_url_data['title']       = ' ';
+			$parsed_url_data['description'] = $embed_code;
+			$parsed_url_data['images']      = '';
+			$parsed_url_data['error']       = '';
+			$parsed_url_data['wp_embed']    = true;
+		} elseif ( ! is_wp_error( $body ) && ! empty( $body ) ) { // if response is not empty.
 
 			// Load HTML to DOM Object.
 			$dom = new DOMDocument();
