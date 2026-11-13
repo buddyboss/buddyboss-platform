@@ -375,24 +375,37 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 			);
 		};
 
+		/*
+		 * Video and document ship in the BuddyBoss Add-ons plugin, which this suite does
+		 * not load. Cover each type whose code is loaded; media always is.
+		 */
+		$types = array(
+			'media'    => array( 'BP_Media', 'bp_media_add', 'bp_media_ids' ),
+			'video'    => array( 'BP_Video', 'bp_video_add', 'bp_video_ids' ),
+			'document' => array( 'BP_Document', 'bp_document_add', 'bp_document_ids' ),
+		);
+		$types = array_filter(
+			$types,
+			function ( $type ) {
+				return class_exists( $type[0] ) && function_exists( $type[1] );
+			}
+		);
+
 		foreach ( array( 'shared', 'own' ) as $key ) {
-			$items['media'][ $key ]    = bp_media_add( $item_args() );
-			$items['video'][ $key ]    = bp_video_add( $item_args() );
-			$items['document'][ $key ] = bp_document_add( $item_args() );
+			foreach ( $types as $type => $type_args ) {
+				$items[ $type ][ $key ] = call_user_func( $type_args[1], $item_args() );
+			}
 		}
 
-		$meta_keys = array(
-			'media'    => 'bp_media_ids',
-			'video'    => 'bp_video_ids',
-			'document' => 'bp_document_ids',
-		);
+		$meta_keys = wp_list_pluck( $types, 2 );
 		foreach ( $meta_keys as $type => $meta_key ) {
 			bp_messages_update_meta( $message_one->id, $meta_key, $items[ $type ]['shared'] . ',' . $items[ $type ]['own'] );
 			bp_messages_update_meta( $message_two->id, $meta_key, (string) $items[ $type ]['shared'] );
 		}
 
-		$exists = function ( $type, $id ) {
-			$item = 'media' === $type ? new BP_Media( $id ) : ( 'video' === $type ? new BP_Video( $id ) : new BP_Document( $id ) );
+		$exists = function ( $type, $id ) use ( $types ) {
+			$class = $types[ $type ][0];
+			$item  = new $class( $id );
 
 			return ! empty( $item->id );
 		};
