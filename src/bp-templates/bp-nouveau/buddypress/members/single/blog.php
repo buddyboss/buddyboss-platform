@@ -54,7 +54,7 @@ $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query
 			?>
 		</div>
 		<?php
-		// Drop the query string from base; paginate_links() re-appends it (e.g. bb-sort) as &paged= args.
+		// Drop the query string from base; paginate_links() re-adds the current query args (e.g. bb-sort) after ?paged=N.
 		$bb_blog_pagination_links = paginate_links(
 			array(
 				'total'     => (int) $bb_blog_member_query->max_num_pages,
