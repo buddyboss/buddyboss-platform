@@ -116,7 +116,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 	 * Generate WHERE clauses for a first-order clause.
 	 *
 	 * @since BuddyPress 2.2.0
-	 * @since BuddyBoss [BBVERSION] `hide_sitewide = 0` also requires a comment's item to be visible.
+	 * @since BuddyBoss 3.7.1 `hide_sitewide = 0` also requires a comment's item to be visible.
 	 *
 	 * @param  array $clause       Array of arguments belonging to the clause.
 	 * @param  array $parent_query Parent query to which the clause belongs.

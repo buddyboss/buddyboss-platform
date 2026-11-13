@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Query string for the component loops
  * @since BuddyPress 3.0.0
- * @since BuddyBoss [BBVERSION] Builds the query string with http_build_query() so request values stay values.
+ * @since BuddyBoss 3.7.1 Builds the query string with http_build_query() so request values stay values.
  */
 function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	if ( empty( $object ) ) {

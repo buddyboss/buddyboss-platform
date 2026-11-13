@@ -400,7 +400,7 @@ class BP_Activity_Feed {
 	 * Output the RSS feed.
 	 *
 	 * @since BuddyPress 1.8.0
-	 * @since BuddyBoss [BBVERSION] Skips items the current user cannot view.
+	 * @since BuddyBoss 3.7.1 Skips items the current user cannot view.
 	 */
 	protected function output() {
 		$this->http_headers();

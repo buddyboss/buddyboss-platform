@@ -4758,7 +4758,7 @@ function bb_purge_forums_api_cache_for_legacy_embed() {
  * last synchronous slice so the updater firing more than once inside an
  * upgrade window cannot repeat it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return void
  */
@@ -4812,7 +4812,7 @@ function bb_drafts_cleanup_on_upgrade() {
  *
  * `bp-activity` also matches the per-item `bp-activity_<id>` groups.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return void
  */

@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Load the template loop for the current object.
  *
  * @since BuddyPress 3.0.0
- * @since BuddyBoss [BBVERSION] Refuses a single-activity context the current user cannot view.
+ * @since BuddyBoss 3.7.1 Refuses a single-activity context the current user cannot view.
  *
  * @return string Template loop for the specified object.
  */

@@ -391,6 +391,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		foreach ( $activities['activities'] as $activity ) {
+			// Comments listed on their own (e.g. `include` or `display_comments=stream`) skip
+			// the feed's group and privacy scope, so check each against its root activity.
+			// The total is left as counted: lowering it per page made later pages report fewer
+			// pages than the first one and cut pagination short.
+			if ( 'activity_comment' === $activity->type && ! $this->user_can_read_activity( $activity ) ) {
+				continue;
+			}
+
 			$retval[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $activity, $request )
 			);
@@ -1790,7 +1798,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if (
 			! empty( $type ) &&
-			is_user_logged_in() && bb_all_enabled_reactions( $type )
+			is_user_logged_in() && bb_all_enabled_reactions( $type ) &&
+			// The response returns the activity, so the user must be able to read it.
+			// A missing activity is left to the callback, which answers 404 as before.
+			( empty( $activity ) || $this->user_can_read_activity( $activity ) )
 		) {
 			$retval = true;
 		}
@@ -2826,24 +2837,93 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function can_see( $request ) {
-		// Check if the user can read the activity as per privacy settings.
-		if ( ! empty( $request['id'] ) && function_exists( 'bb_validate_activity_privacy' ) ) {
-			$privacy_check = bb_validate_activity_privacy(
-				array(
-					'activity_id'     => $request['id'],
-					'validate_action' => 'view_activity',
-					'user_id'         => bp_loggedin_user_id(),
-				)
-			);
+		$activity = $this->get_activity_object( $request );
 
-			if ( is_wp_error( $privacy_check ) ) {
+		return ( ! empty( $activity ) ? $this->user_can_read_activity( $activity ) : false );
+	}
+
+	/**
+	 * Can the current user read this activity, and every activity it belongs to?
+	 *
+	 * A comment is stored with component 'activity' and no group of its own, so it is
+	 * readable only when its root activity (item_id, also for nested replies) is. A post
+	 * with several photos, videos or documents gives each one a hidden sub-activity
+	 * (privacy media/video/document), so a comment on one of them is readable only when
+	 * the post or comment the sub-activity belongs to (secondary_item_id) is.
+	 *
+	 * @since BuddyBoss 3.7.1
+	 *
+	 * @param BP_Activity_Activity|object $activity Activity object.
+	 *
+	 * @return bool
+	 */
+	public function user_can_read_activity( $activity ) {
+		if ( empty( $activity ) || empty( $activity->id ) ) {
+			return false;
+		}
+
+		$user_id    = bp_loggedin_user_id();
+		$activities = array( $activity );
+		$current    = $activity;
+
+		// Walk up from a comment to its root, and from a sub-activity to its post or comment.
+		// The longest real chain is comment > sub-activity > comment > post.
+		for ( $hop = 0; $hop <= 4; $hop++ ) {
+			$parent_id = 0;
+
+			if ( isset( $current->type ) && 'activity_comment' === $current->type ) {
+				$parent_id = (int) $current->item_id;
+			} elseif (
+				isset( $current->privacy ) &&
+				in_array( $current->privacy, array( 'media', 'video', 'document' ), true ) &&
+				! empty( $current->secondary_item_id ) &&
+				(int) $current->secondary_item_id !== (int) $current->id
+			) {
+				$parent_id = (int) $current->secondary_item_id;
+			}
+
+			if ( empty( $parent_id ) ) {
+				break;
+			}
+
+			// Fail closed when a parent no longer exists, or the chain is longer than any real one.
+			if ( 4 === $hop ) {
+				return false;
+			}
+
+			$current = new BP_Activity_Activity( $parent_id );
+
+			if ( empty( $current->id ) ) {
+				return false;
+			}
+
+			$activities[] = $current;
+		}
+
+		foreach ( $activities as $item ) {
+			// Check if the user can read the activity as per privacy settings. A comment copies its
+			// root's privacy but keeps the commenter as user_id, so its own check would test
+			// friendship with the commenter. The root on the chain decides.
+			if ( 'activity_comment' !== $item->type && function_exists( 'bb_validate_activity_privacy' ) ) {
+				$privacy_check = bb_validate_activity_privacy(
+					array(
+						'activity_id'     => $item->id,
+						'validate_action' => 'view_activity',
+						'user_id'         => $user_id,
+					)
+				);
+
+				if ( is_wp_error( $privacy_check ) ) {
+					return false;
+				}
+			}
+
+			if ( ! bp_activity_user_can_read( $item, $user_id ) ) {
 				return false;
 			}
 		}
 
-		$activity = $this->get_activity_object( $request );
-
-		return ( ! empty( $activity ) ? bp_activity_user_can_read( $activity, bp_loggedin_user_id() ) : false );
+		return true;
 	}
 
 	/**
@@ -3933,7 +4013,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( is_user_logged_in() ) {
+		if (
+			is_user_logged_in() &&
+			// The response returns the activity and its comments, so the user must be able to
+			// read it (PROD-10649). A missing activity is left to the callback as before.
+			( empty( $activity->id ) || $this->user_can_read_activity( $activity ) )
+		) {
 			$retval = true;
 		}
 

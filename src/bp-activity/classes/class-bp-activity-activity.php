@@ -387,7 +387,7 @@ class BP_Activity_Activity {
 	 * @since BuddyPress 1.2.0
 	 * @since BuddyPress 2.4.0 Introduced the `$fields` parameter.
 	 * @since BuddyPress 2.9.0 Introduced the `$order_by` parameter.
-	 * @since BuddyBoss [BBVERSION] Site-wide visibility of a listed comment also requires the item it belongs to be visible.
+	 * @since BuddyBoss 3.7.1 Site-wide visibility of a listed comment also requires the item it belongs to be visible.
 	 *
 	 * @see BP_Activity_Activity::get_filter_sql() for a description of the
 	 *      'filter' parameter.
@@ -2273,7 +2273,7 @@ class BP_Activity_Activity {
 	 * check. A `NOT EXISTS` form is materialized by MariaDB into full scans of the activity
 	 * table, one per scope branch, and doubled the feed query on a 200k-row table.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param string $alias Alias of the activity table in the outer query, without the dot.
 	 *

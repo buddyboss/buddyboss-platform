@@ -958,7 +958,7 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  *
  * @since BuddyPress 1.2.0
  * @since BuddyBoss 2.5.20 Added the `$args` parameter.
- * @since BuddyBoss [BBVERSION] Refuses users who cannot view the activity, such as non-members of a private group.
+ * @since BuddyBoss 3.7.1 Refuses users who cannot view the activity, such as non-members of a private group.
  *
  * @param int   $activity_id ID of the activity item being favorited.
  * @param int   $user_id     ID of the user favoriting the activity item.
@@ -2990,7 +2990,7 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
  * @since BuddyPress 2.5.0 Add a new possible parameter $skip_notification for the array of arguments.
  *              Add the $primary_link parameter for the array of arguments.
  * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
- * @since BuddyBoss [BBVERSION] Refuses a new comment when the user cannot view the root activity or the comment being replied to, or when the parent is not in the root's thread.
+ * @since BuddyBoss 3.7.1 Refuses a new comment when the user cannot view the root activity or the comment being replied to, or when the parent is not in the root's thread.
  *              Also refuses a new comment whose $activity_id is itself a comment.
  *
  * @param array|string $args {
@@ -3956,7 +3956,7 @@ function bp_activity_get_permalink( $activity_id, $activity_obj = false ) {
  * Can a user see a particular activity item?
  *
  * @since BuddyPress 3.0.0
- * @since BuddyBoss [BBVERSION] An activity comment is checked against its root activity.
+ * @since BuddyBoss 3.7.1 An activity comment is checked against its root activity.
  *
  * @param  BP_Activity_Activity $activity Activity object.
  * @param  integer              $user_id  User ID.
@@ -5796,7 +5796,7 @@ function bp_activity_default_scope( $scope = 'all' ) {
  * returns every privacy level. Scopes sent by a visitor (AJAX loops, heartbeat, `?scope=`)
  * go through here so an unknown name falls back to the default 'all' scope (PROD-10649).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string|array $scope Comma-separated scopes, or a list of them, from the request.
  *
@@ -7618,7 +7618,7 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
  * Function to validate activity privacy.
  *
  * @since BuddyBoss 2.6.00
- * @since BuddyBoss [BBVERSION] The `loggedin` check uses the validated user instead of the current request.
+ * @since BuddyBoss 3.7.1 The `loggedin` check uses the validated user instead of the current request.
  *
  * @param array $args Array for argument.
  *
@@ -7687,8 +7687,8 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	 * privacy value, so comments are walked first.
 	 *
 	 * @since BuddyBoss 3.6.2
-	 * @since BuddyBoss [BBVERSION] Walks a comment to its root before the sub-activity hop and skips the privacy check on comment rows.
-	 * @since BuddyBoss [BBVERSION] The moderator bypass checks the given user, not the current one.
+	 * @since BuddyBoss 3.7.1 Walks a comment to its root before the sub-activity hop and skips the privacy check on comment rows.
+	 * @since BuddyBoss 3.7.1 The moderator bypass checks the given user, not the current one.
 	 *
 	 * @param int|BP_Activity_Activity $activity Activity ID or object.
 	 * @param int                      $user_id  User ID. Default the logged-in user.

@@ -1248,7 +1248,7 @@ add_filter( 'bp_activity_set_public_scope_args', 'bp_activity_filter_public_scop
  * Set up activity arguments for use with the 'favorites' scope.
  *
  * @since BuddyPress 2.2.0
- * @since BuddyBoss [BBVERSION] Returns nothing for guests, and hides hidden items of groups the user is not a member of.
+ * @since BuddyBoss 3.7.1 Returns nothing for guests, and hides hidden items of groups the user is not a member of.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1567,7 +1567,7 @@ add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_
  * scope callbacks live in BuddyBoss Add-ons, and older Add-ons versions do not guard them,
  * so apply the same rule as the 'media' scope after them (PROD-10649).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $retval Scope query arguments.
  * @param array $filter Current activity arguments.

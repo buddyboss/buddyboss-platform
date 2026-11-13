@@ -517,7 +517,7 @@ function bp_nouveau_ajax_delete_activity() {
  * Used for the 'Read More' link on long activity items.
  *
  * @since BuddyPress 3.0.0
- * @since BuddyBoss [BBVERSION] Only returns content the user can read, in its group and thread.
+ * @since BuddyBoss 3.7.1 Only returns content the user can read, in its group and thread.
  *
  * @return string JSON reply.
  */
@@ -1346,7 +1346,7 @@ function bp_nouveau_ajax_post_update() {
  *
  * @since BuddyBoss 2.0.4
  * @since BuddyBoss 3.6.1 Only flags or deletes the user's own unsaved draft attachments.
- * @since BuddyBoss [BBVERSION] Added the size caps, the key validation and
+ * @since BuddyBoss 3.7.1 Added the size caps, the key validation and
  *                              the `evicted_draft_keys` response field.
  */
 function bb_nouveau_ajax_post_draft_activity() {
@@ -1450,7 +1450,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				/**
 				 * Fires when a draft save is refused because a newer version is stored.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.7.1
 				 *
 				 * @param int    $user_id  User ID.
 				 * @param string $data_key Draft key ("meta_key" or "meta_key:inner_key").
@@ -1666,7 +1666,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			 * example the Pro feature image or polls data) are intentionally NOT
 			 * listed - only content fields are stripped and sanitized.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.7.1
 			 *
 			 * @param string[] $content_keys Draft data keys holding HTML content.
 			 */
@@ -1735,7 +1735,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			 * draft-collect events hand them to third-party listeners that may render
 			 * them without escaping (M17).
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.7.1
 			 *
 			 * @param string[] $text_keys Draft data keys holding plain text.
 			 */
@@ -1763,7 +1763,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				/**
 				 * Fires when a draft save is rejected by a size cap.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.7.1
 				 *
 				 * @param int    $user_id  User whose draft was rejected.
 				 * @param string $data_key Draft key: the usermeta key for an activity draft,
@@ -1985,7 +1985,7 @@ function bb_nouveau_ajax_post_draft_activity() {
  * capability is deliberately NOT required - a member who lost posting
  * rights must still be able to read their own stored draft.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  */
 function bb_nouveau_ajax_get_draft_activity() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_draft'] ) ), 'post_draft_activity' ) ) {
@@ -2250,7 +2250,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
  * Get more comments.
  *
  * @since BuddyBoss 2.5.80
- * @since BuddyBoss [BBVERSION] The activity and the parent comment must be readable, in their group and thread.
+ * @since BuddyBoss 3.7.1 The activity and the parent comment must be readable, in their group and thread.
  *
  * @return void
  */
@@ -2388,7 +2388,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
  * Get particular activity to sync when activity modal is closed.
  *
  * @since BuddyBoss 2.5.80
- * @since BuddyBoss [BBVERSION] Refuses activities the current user cannot view.
+ * @since BuddyBoss 3.7.1 Refuses activities the current user cannot view.
  *
  * @return void
  */
