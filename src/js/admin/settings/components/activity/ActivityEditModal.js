@@ -16,6 +16,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
+import { getRichTextEditorHtml } from '../common/RichTextEditor';
 import { safeUrl } from '../../utils/sanitize';
 
 /**
@@ -230,12 +231,9 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 
 				var val = registeredValues[ field.id ];
 
-				// For richtext fields, pull latest content from TinyMCE.
-				if ( 'richtext' === field.type && window.tinymce ) {
-					var editorInstance = window.tinymce.get( 'bb-admin-edit-' + field.id + '-' + activity.id );
-					if ( editorInstance ) {
-						val = editorInstance.getContent();
-					}
+				// For richtext fields, pull latest content from the editor, including Code tab edits.
+				if ( 'richtext' === field.type ) {
+					val = getRichTextEditorHtml( 'bb-admin-edit-' + field.id + '-' + activity.id, val );
 				}
 
 				payload[ 'registered_field_' + field.id ] = getRegisteredFieldPostValue( field, val );

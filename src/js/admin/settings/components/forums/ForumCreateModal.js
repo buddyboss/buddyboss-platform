@@ -20,7 +20,7 @@ import { toSlug, groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleF
 import { safeUrl } from '../../utils/sanitize';
 import { useMediaFrame } from '../../hooks/useMediaFrame';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
-import { forceRemoveEditor } from '../common/RichTextEditor';
+import { forceRemoveEditor, getRichTextEditorHtml } from '../common/RichTextEditor';
 
 /**
  * Forum Create Modal Component
@@ -176,6 +176,11 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 				image_id: imageId,    // Custom section, not in registry.
 			}
 		);
+
+		// Keep the forum description stored as HTML, including Code tab edits.
+		if ( undefined !== payload.description ) {
+			payload.description = getRichTextEditorHtml( 'bb-admin-edit-description-0', registeredValues.description || '' );
+		}
 
 		createForum( payload ).then( function ( response ) {
 			if ( ! isMountedRef.current ) {
