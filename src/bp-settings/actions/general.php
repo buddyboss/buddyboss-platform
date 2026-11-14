@@ -19,6 +19,7 @@
  *
  * @since BuddyPress 1.6.0
  * @since BuddyBoss [BBVERSION] An unchanged email address containing an apostrophe or ampersand is no longer treated as changed.
+ *                              The user is only updated when a new password is saved.
  *
  * @global BuddyPress $bp
  */
@@ -173,7 +174,17 @@ function bp_settings_action_general() {
 		// Restrict to send WordPress notification when change password from BuddyBoss.
 		add_filter( 'send_password_change_email', '__return_false' );
 
-		if ( ( empty( $email_error ) ) && ( empty( $pass_error ) ) && ( wp_update_user( $update_user ) ) ) {
+		// Only the password is saved here. A new email address waits for the
+		// verification link, so a save without a new password has nothing to
+		// write. Skipping wp_update_user() then also keeps an address with "&"
+		// as it is: WordPress re-encodes a saved "&amp;" on every update
+		// (https://core.trac.wordpress.org/ticket/16788).
+		if (
+			empty( $email_error ) &&
+			empty( $pass_error ) &&
+			true === $pass_changed &&
+			wp_update_user( $update_user )
+		) {
 			$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
 		}
 
