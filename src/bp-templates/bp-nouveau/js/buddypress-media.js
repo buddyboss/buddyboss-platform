@@ -1156,7 +1156,7 @@ window.bp = window.bp || {};
 									self.removeDeletedActivityComment( activityId );
 								} else {
 									self.removeDeletedItemsFromCommentEditData( activityId, 'document', [ id ] );
-									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									bp.Nouveau.replaceActivityItem( $( 'body #buddypress .activity-list li#activity-' + activityId ), response.data.activity_content, [ '.activity-inner > .bb-activity-media-wrap' ] );
 								}
 							}
 						}
@@ -1662,7 +1662,7 @@ window.bp = window.bp || {};
 								} else {
 									self.removeDeletedItemsFromCommentEditData( activityId, 'media', media );
 									self.refreshKeptCommentAttachments( activityId, '.bb-activity-media-wrap', '.bp-media-move-photo', response.data.media_content );
-									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									bp.Nouveau.replaceActivityItem( $( 'body #buddypress .activity-list li#activity-' + activityId ), response.data.activity_content, [ '.activity-inner > .bb-activity-media-wrap' ] );
 								}
 							}
 						} else if ( fromWhere && fromWhere.length && 'media' === fromWhere ) {
@@ -5011,6 +5011,12 @@ window.bp = window.bp || {};
 			if ( !$currentTarget || $currentTarget.length === 0 ) {
 				// Last resort: find any modal in the context, but this should rarely happen
 				$currentTarget = $contextContainer.find( '.bp-media-move-file' ).first();
+			}
+
+			// Activity move popups are rendered before the document loop, so they share id "bp-media-move-file-0".
+			// Give this one its own id, or the selector below resolves to the first popup on the page.
+			if ( $currentTarget.attr( 'id' ) && 1 < $( '[id="' + $currentTarget.attr( 'id' ) + '"]' ).length ) {
+				$currentTarget.attr( 'id', 'bp-media-move-file-' + _.uniqueId( 'popup-' ) );
 			}
 
 			// Convert to selector string for compatibility with existing code
