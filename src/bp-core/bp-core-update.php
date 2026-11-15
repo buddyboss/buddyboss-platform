@@ -581,17 +581,29 @@ function bp_version_updater() {
 		// then queue the update of an active Add-ons to the version this Platform requires
 		// (PROD-9995). Queuing is cheap: the download runs later, on a regular admin page
 		// load by a user who can update plugins.
-		if ( $raw_db_version < 23641 ) {
+		if ( $raw_db_version < 23631 ) {
 			bb_install_addons_bundle_on_upgrade();
 			bb_queue_addons_bundle_update();
+		}
 
-			// DB version 23632 — the activity REST endpoints now refuse comments whose root
+		// DB version 23633 — rewrite rules regenerated during a BuddyBoss page request were
+		// stored with the post rule ahead of the page rule, so regular pages returned 404
+		// (PROD-10720). This version bump runs the updater on every update path, including
+		// auto-updates and FTP or deploy copies that never flush the rules themselves.
+		// Regenerate them here explicitly, so the repair does not depend on the flush in
+		// bp_core_install().
+		if ( $raw_db_version < 23641 ) {
+			flush_rewrite_rules( false );
+		}
+
+		// DB version 23632 — the activity REST endpoints now refuse comments whose root
 		// activity the user cannot read (PROD-10649). Purge their App API cache so comments
 		// cached before the update are not served for 30 days.
 		// Heal oversized/aggregate-oversized draft usermeta rows and
-			// start the draft retention machinery.
-			// Gated above 23631, the db_version 3.7.0 shipped with, so sites
-			// already on 3.7.0 still run it.
+		// start the draft retention machinery.
+		// Gated above 23631, the db_version 3.7.0 shipped with, so sites
+		// already on 3.7.0 still run it.
+		if ( $raw_db_version < 23641 ) {
 			bb_drafts_cleanup_on_upgrade();
 			bb_purge_activity_api_cache_for_comment_access();
 		}
