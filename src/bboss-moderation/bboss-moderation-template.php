@@ -431,3 +431,168 @@ function bboss_get_moderation_load_more_link() {
 	 */
 	return apply_filters( 'bp_get_moderation_load_more_link', $link, $url, $moderation_template );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_moderation_hide_site_wide' ) && ! function_exists( 'bp_get_moderation_hide_site_wide' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_moderation_hide_site_wide()}.
+	 *
+	 * @deprecated Use bboss_get_moderation_hide_site_wide() instead.
+	 */
+	function bp_get_moderation_hide_site_wide() {
+		return bboss_get_moderation_hide_site_wide();
+	}
+}
+if ( function_exists( 'bboss_get_moderation_id' ) && ! function_exists( 'bp_get_moderation_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_moderation_id()}.
+	 *
+	 * @deprecated Use bboss_get_moderation_id() instead.
+	 */
+	function bp_get_moderation_id() {
+		return bboss_get_moderation_id();
+	}
+}
+if ( function_exists( 'bboss_get_moderation_item_id' ) && ! function_exists( 'bp_get_moderation_item_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_moderation_item_id()}.
+	 *
+	 * @deprecated Use bboss_get_moderation_item_id() instead.
+	 */
+	function bp_get_moderation_item_id() {
+		return bboss_get_moderation_item_id();
+	}
+}
+if ( function_exists( 'bboss_get_moderation_item_type' ) && ! function_exists( 'bp_get_moderation_item_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_moderation_item_type()}.
+	 *
+	 * @deprecated Use bboss_get_moderation_item_type() instead.
+	 */
+	function bp_get_moderation_item_type() {
+		return bboss_get_moderation_item_type();
+	}
+}
+if ( function_exists( 'bboss_get_moderation_last_updated' ) && ! function_exists( 'bp_get_moderation_last_updated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_moderation_last_updated()}.
+	 *
+	 * @deprecated Use bboss_get_moderation_last_updated() instead.
+	 */
+	function bp_get_moderation_last_updated() {
+		return bboss_get_moderation_last_updated();
+	}
+}
+if ( function_exists( 'bboss_get_moderation_load_more_link' ) && ! function_exists( 'bp_get_moderation_load_more_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_moderation_load_more_link()}.
+	 *
+	 * @deprecated Use bboss_get_moderation_load_more_link() instead.
+	 */
+	function bp_get_moderation_load_more_link() {
+		return bboss_get_moderation_load_more_link();
+	}
+}
+if ( function_exists( 'bboss_get_moderation_reported_category' ) && ! function_exists( 'bp_get_moderation_reported_category' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_moderation_reported_category()}.
+	 *
+	 * @deprecated Use bboss_get_moderation_reported_category() instead.
+	 */
+	function bp_get_moderation_reported_category() {
+		return bboss_get_moderation_reported_category();
+	}
+}
+if ( function_exists( 'bboss_get_moderation_root_slug' ) && ! function_exists( 'bp_get_moderation_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_moderation_root_slug()}.
+	 *
+	 * @deprecated Use bboss_get_moderation_root_slug() instead.
+	 */
+	function bp_get_moderation_root_slug() {
+		return bboss_get_moderation_root_slug();
+	}
+}
+if ( function_exists( 'bboss_get_moderation_slug' ) && ! function_exists( 'bp_get_moderation_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_moderation_slug()}.
+	 *
+	 * @deprecated Use bboss_get_moderation_slug() instead.
+	 */
+	function bp_get_moderation_slug() {
+		return bboss_get_moderation_slug();
+	}
+}
+if ( function_exists( 'bboss_has_moderation' ) && ! function_exists( 'bp_has_moderation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_has_moderation()}.
+	 *
+	 * @deprecated Use bboss_has_moderation() instead.
+	 */
+	function bp_has_moderation( $args = '' ) {
+		return bboss_has_moderation( $args );
+	}
+}
+if ( function_exists( 'bboss_moderation' ) && ! function_exists( 'bp_moderation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation()}.
+	 *
+	 * @deprecated Use bboss_moderation() instead.
+	 */
+	function bp_moderation() {
+		return bboss_moderation();
+	}
+}
+if ( function_exists( 'bboss_moderation_has_more_items' ) && ! function_exists( 'bp_moderation_has_more_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_has_more_items()}.
+	 *
+	 * @deprecated Use bboss_moderation_has_more_items() instead.
+	 */
+	function bp_moderation_has_more_items() {
+		return bboss_moderation_has_more_items();
+	}
+}
+if ( function_exists( 'bboss_moderation_load_more_link' ) && ! function_exists( 'bp_moderation_load_more_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_load_more_link()}.
+	 *
+	 * @deprecated Use bboss_moderation_load_more_link() instead.
+	 */
+	function bp_moderation_load_more_link() {
+		return bboss_moderation_load_more_link();
+	}
+}
+if ( function_exists( 'bboss_moderation_root_slug' ) && ! function_exists( 'bp_moderation_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_root_slug()}.
+	 *
+	 * @deprecated Use bboss_moderation_root_slug() instead.
+	 */
+	function bp_moderation_root_slug() {
+		return bboss_moderation_root_slug();
+	}
+}
+if ( function_exists( 'bboss_moderation_slug' ) && ! function_exists( 'bp_moderation_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_slug()}.
+	 *
+	 * @deprecated Use bboss_moderation_slug() instead.
+	 */
+	function bp_moderation_slug() {
+		return bboss_moderation_slug();
+	}
+}
+if ( function_exists( 'bboss_the_moderation' ) && ! function_exists( 'bp_the_moderation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_moderation()}.
+	 *
+	 * @deprecated Use bboss_the_moderation() instead.
+	 */
+	function bp_the_moderation() {
+		return bboss_the_moderation();
+	}
+}
+// @bbwt-com-end compat-layer

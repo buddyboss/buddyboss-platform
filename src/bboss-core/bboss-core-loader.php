@@ -25,3 +25,18 @@ function bboss_setup_core() {
 	}
 }
 add_action( 'bp_loaded', 'bp_setup_core', 0 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_setup_core' ) && ! function_exists( 'bp_setup_core' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_setup_core()}.
+	 *
+	 * @deprecated Use bboss_setup_core() instead.
+	 */
+	function bp_setup_core() {
+		return bboss_setup_core();
+	}
+}
+// @bbwt-com-end compat-layer

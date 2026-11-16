@@ -43,3 +43,28 @@ function bboss_invites_screen_sent_invite() {
 function bboss_invites_sent_invite_screen() {
 	bboss_get_template_part( 'members/single/invites' );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_screen_sent_invite' ) && ! function_exists( 'bp_invites_screen_sent_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_screen_sent_invite()}.
+	 *
+	 * @deprecated Use bboss_invites_screen_sent_invite() instead.
+	 */
+	function bp_invites_screen_sent_invite() {
+		return bboss_invites_screen_sent_invite();
+	}
+}
+if ( function_exists( 'bboss_invites_sent_invite_screen' ) && ! function_exists( 'bp_invites_sent_invite_screen' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_sent_invite_screen()}.
+	 *
+	 * @deprecated Use bboss_invites_sent_invite_screen() instead.
+	 */
+	function bp_invites_sent_invite_screen() {
+		return bboss_invites_sent_invite_screen();
+	}
+}
+// @bbwt-com-end compat-layer

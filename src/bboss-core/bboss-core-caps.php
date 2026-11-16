@@ -444,3 +444,148 @@ function bboss_get_participant_role() {
 function bboss_get_moderator_role() {
 	_doing_it_wrong( 'bboss_get_moderator_role', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss' ), '1.7' );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss__bp_enforce_bp_moderate_cap_for_admins' ) && ! function_exists( '_bp_enforce_bp_moderate_cap_for_admins' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss__bp_enforce_bp_moderate_cap_for_admins()}.
+	 *
+	 * @deprecated Use bboss__bp_enforce_bp_moderate_cap_for_admins() instead.
+	 */
+	function _bp_enforce_bp_moderate_cap_for_admins( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+		return bboss__bp_enforce_bp_moderate_cap_for_admins( $caps, $cap, $user_id, $args );
+	}
+}
+if ( function_exists( 'bboss_add_caps' ) && ! function_exists( 'bp_add_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_add_caps()}.
+	 *
+	 * @deprecated Use bboss_add_caps() instead.
+	 */
+	function bp_add_caps() {
+		return bboss_add_caps();
+	}
+}
+if ( function_exists( 'bboss_add_roles' ) && ! function_exists( 'bp_add_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_add_roles()}.
+	 *
+	 * @deprecated Use bboss_add_roles() instead.
+	 */
+	function bp_add_roles() {
+		return bboss_add_roles();
+	}
+}
+if ( function_exists( 'bboss_current_user_can' ) && ! function_exists( 'bp_current_user_can' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_current_user_can()}.
+	 *
+	 * @deprecated Use bboss_current_user_can() instead.
+	 */
+	function bp_current_user_can( $capability, $args = array() ) {
+		return bboss_current_user_can( $capability, $args );
+	}
+}
+if ( function_exists( 'bboss_get_caps_for_role' ) && ! function_exists( 'bp_get_caps_for_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_caps_for_role()}.
+	 *
+	 * @deprecated Use bboss_get_caps_for_role() instead.
+	 */
+	function bp_get_caps_for_role( $role = '' ) {
+		return bboss_get_caps_for_role( $role );
+	}
+}
+if ( function_exists( 'bboss_get_community_caps' ) && ! function_exists( 'bp_get_community_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_community_caps()}.
+	 *
+	 * @deprecated Use bboss_get_community_caps() instead.
+	 */
+	function bp_get_community_caps() {
+		return bboss_get_community_caps();
+	}
+}
+if ( function_exists( 'bboss_get_current_blog_roles' ) && ! function_exists( 'bp_get_current_blog_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_current_blog_roles()}.
+	 *
+	 * @deprecated Use bboss_get_current_blog_roles() instead.
+	 */
+	function bp_get_current_blog_roles() {
+		return bboss_get_current_blog_roles();
+	}
+}
+if ( function_exists( 'bboss_get_moderator_role' ) && ! function_exists( 'bp_get_moderator_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_moderator_role()}.
+	 *
+	 * @deprecated Use bboss_get_moderator_role() instead.
+	 */
+	function bp_get_moderator_role() {
+		return bboss_get_moderator_role();
+	}
+}
+if ( function_exists( 'bboss_get_participant_role' ) && ! function_exists( 'bp_get_participant_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_participant_role()}.
+	 *
+	 * @deprecated Use bboss_get_participant_role() instead.
+	 */
+	function bp_get_participant_role() {
+		return bboss_get_participant_role();
+	}
+}
+if ( function_exists( 'bboss_map_meta_caps' ) && ! function_exists( 'bp_map_meta_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_map_meta_caps()}.
+	 *
+	 * @deprecated Use bboss_map_meta_caps() instead.
+	 */
+	function bp_map_meta_caps( $caps, $cap, $user_id, $args ) {
+		return bboss_map_meta_caps( $caps, $cap, $user_id, $args );
+	}
+}
+if ( function_exists( 'bboss_remove_caps' ) && ! function_exists( 'bp_remove_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_caps()}.
+	 *
+	 * @deprecated Use bboss_remove_caps() instead.
+	 */
+	function bp_remove_caps() {
+		return bboss_remove_caps();
+	}
+}
+if ( function_exists( 'bboss_remove_roles' ) && ! function_exists( 'bp_remove_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_roles()}.
+	 *
+	 * @deprecated Use bboss_remove_roles() instead.
+	 */
+	function bp_remove_roles() {
+		return bboss_remove_roles();
+	}
+}
+if ( function_exists( 'bboss_set_current_user_default_role' ) && ! function_exists( 'bp_set_current_user_default_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_current_user_default_role()}.
+	 *
+	 * @deprecated Use bboss_set_current_user_default_role() instead.
+	 */
+	function bp_set_current_user_default_role() {
+		return bboss_set_current_user_default_role();
+	}
+}
+if ( function_exists( 'bboss_user_can' ) && ! function_exists( 'bp_user_can' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_can()}.
+	 *
+	 * @deprecated Use bboss_user_can() instead.
+	 */
+	function bp_user_can( $user_id, $capability, $args = array() ) {
+		return bboss_user_can( $user_id, $capability, $args );
+	}
+}
+// @bbwt-com-end compat-layer

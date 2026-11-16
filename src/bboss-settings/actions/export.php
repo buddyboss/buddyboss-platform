@@ -59,3 +59,18 @@ function bboss_settings_action_export() {
 	}
 }
 add_action( 'bp_actions', 'bp_settings_action_export' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_action_export' ) && ! function_exists( 'bp_settings_action_export' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_action_export()}.
+	 *
+	 * @deprecated Use bboss_settings_action_export() instead.
+	 */
+	function bp_settings_action_export() {
+		return bboss_settings_action_export();
+	}
+}
+// @bbwt-com-end compat-layer

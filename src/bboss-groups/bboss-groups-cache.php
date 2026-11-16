@@ -535,3 +535,248 @@ function bboss_groups_clear_restrict_invites_cache( $meta_ids = 0, $user_id = 0,
 add_action( 'added_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );
 add_action( 'updated_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );
 add_action( 'deleted_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_clear_group_type_cache_before_delete' ) && ! function_exists( 'bb_groups_clear_group_type_cache_before_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_group_type_cache_before_delete()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_group_type_cache_before_delete() instead.
+	 */
+	function bb_groups_clear_group_type_cache_before_delete( $post_id ) {
+		return bboss_groups_clear_group_type_cache_before_delete( $post_id );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_restrict_invites_cache' ) && ! function_exists( 'bb_groups_clear_restrict_invites_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_restrict_invites_cache()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_restrict_invites_cache() instead.
+	 */
+	function bb_groups_clear_restrict_invites_cache( $meta_ids = 0, $user_id = 0, $meta_key = '' ) {
+		return bboss_groups_clear_restrict_invites_cache( $meta_ids, $user_id, $meta_key );
+	}
+}
+if ( function_exists( 'bboss_groups_member_reset_cache_incrementor' ) && ! function_exists( 'bb_groups_member_reset_cache_incrementor' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_member_reset_cache_incrementor()}.
+	 *
+	 * @deprecated Use bboss_groups_member_reset_cache_incrementor() instead.
+	 */
+	function bb_groups_member_reset_cache_incrementor() {
+		return bboss_groups_member_reset_cache_incrementor();
+	}
+}
+if ( function_exists( 'bboss_groups_clear_group_administrator_cache_on_member_delete' ) && ! function_exists( 'bp_groups_clear_group_administrator_cache_on_member_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_group_administrator_cache_on_member_delete()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_group_administrator_cache_on_member_delete() instead.
+	 */
+	function bp_groups_clear_group_administrator_cache_on_member_delete( $user_id, $group_id ) {
+		return bboss_groups_clear_group_administrator_cache_on_member_delete( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_group_creator_cache' ) && ! function_exists( 'bp_groups_clear_group_creator_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_group_creator_cache()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_group_creator_cache() instead.
+	 */
+	function bp_groups_clear_group_creator_cache( $group_id, $group_obj ) {
+		return bboss_groups_clear_group_creator_cache( $group_id, $group_obj );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_group_members_caches' ) && ! function_exists( 'bp_groups_clear_group_members_caches' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_group_members_caches()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_group_members_caches() instead.
+	 */
+	function bp_groups_clear_group_members_caches( $group_obj, $user_ids ) {
+		return bboss_groups_clear_group_members_caches( $group_obj, $user_ids );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_invite_count_for_user' ) && ! function_exists( 'bp_groups_clear_invite_count_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_invite_count_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_invite_count_for_user() instead.
+	 */
+	function bp_groups_clear_invite_count_for_user( $user_id, $group_id = 0 ) {
+		return bboss_groups_clear_invite_count_for_user( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_invite_count_on_send' ) && ! function_exists( 'bp_groups_clear_invite_count_on_send' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_invite_count_on_send()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_invite_count_on_send() instead.
+	 */
+	function bp_groups_clear_invite_count_on_send( $group_id, $invited_users ) {
+		return bboss_groups_clear_invite_count_on_send( $group_id, $invited_users );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_invite_count_on_uninvite' ) && ! function_exists( 'bp_groups_clear_invite_count_on_uninvite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_invite_count_on_uninvite()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_invite_count_on_uninvite() instead.
+	 */
+	function bp_groups_clear_invite_count_on_uninvite( $group_id, $user_id ) {
+		return bboss_groups_clear_invite_count_on_uninvite( $group_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_user_group_cache_on_invitation_change' ) && ! function_exists( 'bp_groups_clear_user_group_cache_on_invitation_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_user_group_cache_on_invitation_change()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_user_group_cache_on_invitation_change() instead.
+	 */
+	function bp_groups_clear_user_group_cache_on_invitation_change( $args ) {
+		return bboss_groups_clear_user_group_cache_on_invitation_change( $args );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_user_group_cache_on_invitation_save' ) && ! function_exists( 'bp_groups_clear_user_group_cache_on_invitation_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_user_group_cache_on_invitation_save()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_user_group_cache_on_invitation_save() instead.
+	 */
+	function bp_groups_clear_user_group_cache_on_invitation_save( BBoss_Invitation $invitation ) {
+		return bboss_groups_clear_user_group_cache_on_invitation_save( $invitation );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_user_group_cache_on_membership_save' ) && ! function_exists( 'bp_groups_clear_user_group_cache_on_membership_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_user_group_cache_on_membership_save()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_user_group_cache_on_membership_save() instead.
+	 */
+	function bp_groups_clear_user_group_cache_on_membership_save( BBoss_Groups_Member $member ) {
+		return bboss_groups_clear_user_group_cache_on_membership_save( $member );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_user_group_cache_on_other_events' ) && ! function_exists( 'bp_groups_clear_user_group_cache_on_other_events' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_user_group_cache_on_other_events()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_user_group_cache_on_other_events() instead.
+	 */
+	function bp_groups_clear_user_group_cache_on_other_events( $user_id, $group_id ) {
+		return bboss_groups_clear_user_group_cache_on_other_events( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_delete_group_cache' ) && ! function_exists( 'bp_groups_delete_group_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_group_cache()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_group_cache() instead.
+	 */
+	function bp_groups_delete_group_cache( $group_id = 0 ) {
+		return bboss_groups_delete_group_cache( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_delete_group_cache_on_metadata_change' ) && ! function_exists( 'bp_groups_delete_group_cache_on_metadata_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_group_cache_on_metadata_change()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_group_cache_on_metadata_change() instead.
+	 */
+	function bp_groups_delete_group_cache_on_metadata_change( $meta_id, $group_id ) {
+		return bboss_groups_delete_group_cache_on_metadata_change( $meta_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_reset_cache_incrementor' ) && ! function_exists( 'bp_groups_reset_cache_incrementor' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_reset_cache_incrementor()}.
+	 *
+	 * @deprecated Use bboss_groups_reset_cache_incrementor() instead.
+	 */
+	function bp_groups_reset_cache_incrementor() {
+		return bboss_groups_reset_cache_incrementor();
+	}
+}
+if ( function_exists( 'bboss_groups_reset_cache_incrementor_on_group_term_change' ) && ! function_exists( 'bp_groups_reset_cache_incrementor_on_group_term_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_reset_cache_incrementor_on_group_term_change()}.
+	 *
+	 * @deprecated Use bboss_groups_reset_cache_incrementor_on_group_term_change() instead.
+	 */
+	function bp_groups_reset_cache_incrementor_on_group_term_change( $object_id, $terms, $tt_ids, $taxonomy ) {
+		return bboss_groups_reset_cache_incrementor_on_group_term_change( $object_id, $terms, $tt_ids, $taxonomy );
+	}
+}
+if ( function_exists( 'bboss_groups_reset_cache_incrementor_on_group_term_remove' ) && ! function_exists( 'bp_groups_reset_cache_incrementor_on_group_term_remove' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_reset_cache_incrementor_on_group_term_remove()}.
+	 *
+	 * @deprecated Use bboss_groups_reset_cache_incrementor_on_group_term_remove() instead.
+	 */
+	function bp_groups_reset_cache_incrementor_on_group_term_remove( $object_id, $terms, $taxonomy ) {
+		return bboss_groups_reset_cache_incrementor_on_group_term_remove( $object_id, $terms, $taxonomy );
+	}
+}
+if ( function_exists( 'bboss_groups_update_meta_cache' ) && ! function_exists( 'bp_groups_update_meta_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_update_meta_cache()}.
+	 *
+	 * @deprecated Use bboss_groups_update_meta_cache() instead.
+	 */
+	function bp_groups_update_meta_cache( $group_ids = false ) {
+		return bboss_groups_update_meta_cache( $group_ids );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_group_administrator_cache' ) && ! function_exists( 'groups_clear_group_administrator_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_group_administrator_cache()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_group_administrator_cache() instead.
+	 */
+	function groups_clear_group_administrator_cache( $group_id ) {
+		return bboss_groups_clear_group_administrator_cache( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_group_administrator_cache_on_member_save' ) && ! function_exists( 'groups_clear_group_administrator_cache_on_member_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_group_administrator_cache_on_member_save()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_group_administrator_cache_on_member_save() instead.
+	 */
+	function groups_clear_group_administrator_cache_on_member_save( BBoss_Groups_Member $member ) {
+		return bboss_groups_clear_group_administrator_cache_on_member_save( $member );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_group_object_cache' ) && ! function_exists( 'groups_clear_group_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_group_object_cache()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_group_object_cache() instead.
+	 */
+	function groups_clear_group_object_cache( $group_id ) {
+		return bboss_groups_clear_group_object_cache( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_group_type_cache' ) && ! function_exists( 'groups_clear_group_type_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_group_type_cache()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_group_type_cache() instead.
+	 */
+	function groups_clear_group_type_cache( $group_id = 0 ) {
+		return bboss_groups_clear_group_type_cache( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_group_user_object_cache' ) && ! function_exists( 'groups_clear_group_user_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_group_user_object_cache()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_group_user_object_cache() instead.
+	 */
+	function groups_clear_group_user_object_cache( $group_id, $user_id ) {
+		return bboss_groups_clear_group_user_object_cache( $group_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer

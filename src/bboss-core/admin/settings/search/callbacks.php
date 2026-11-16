@@ -31,3 +31,18 @@ function bboss_search_sanitize_number_of_results( $value ) {
 
 	return $value;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_sanitize_number_of_results' ) && ! function_exists( 'bb_search_sanitize_number_of_results' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_sanitize_number_of_results()}.
+	 *
+	 * @deprecated Use bboss_search_sanitize_number_of_results() instead.
+	 */
+	function bb_search_sanitize_number_of_results( $value ) {
+		return bboss_search_sanitize_number_of_results( $value );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -4014,3 +4014,548 @@ function bboss_bbp_get_non_public_topic_statuses() {
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_non_public_topic_statuses', $statuses );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bb_is_group_forum_topic' ) && ! function_exists( 'bb_is_group_forum_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bb_is_group_forum_topic()}.
+	 *
+	 * @deprecated Use bboss_bb_is_group_forum_topic() instead.
+	 */
+	function bb_is_group_forum_topic( $topic_id ) {
+		return bboss_bb_is_group_forum_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_validate_topic_embed' ) && ! function_exists( 'bb_validate_topic_embed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_validate_topic_embed()}.
+	 *
+	 * @deprecated Use bboss_validate_topic_embed() instead.
+	 */
+	function bb_validate_topic_embed( $content ) {
+		return bboss_validate_topic_embed( $content );
+	}
+}
+if ( function_exists( 'bboss_bbp_bump_topic_reply_count' ) && ! function_exists( 'bbp_bump_topic_reply_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_bump_topic_reply_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_bump_topic_reply_count() instead.
+	 */
+	function bbp_bump_topic_reply_count( $topic_id = 0, $difference = 1 ) {
+		return bboss_bbp_bump_topic_reply_count( $topic_id, $difference );
+	}
+}
+if ( function_exists( 'bboss_bbp_bump_topic_reply_count_hidden' ) && ! function_exists( 'bbp_bump_topic_reply_count_hidden' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_bump_topic_reply_count_hidden()}.
+	 *
+	 * @deprecated Use bboss_bbp_bump_topic_reply_count_hidden() instead.
+	 */
+	function bbp_bump_topic_reply_count_hidden( $topic_id = 0, $difference = 1 ) {
+		return bboss_bbp_bump_topic_reply_count_hidden( $topic_id, $difference );
+	}
+}
+if ( function_exists( 'bboss_bbp_check_topic_edit' ) && ! function_exists( 'bbp_check_topic_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_check_topic_edit()}.
+	 *
+	 * @deprecated Use bboss_bbp_check_topic_edit() instead.
+	 */
+	function bbp_check_topic_edit() {
+		return bboss_bbp_check_topic_edit();
+	}
+}
+if ( function_exists( 'bboss_bbp_check_topic_tag_edit' ) && ! function_exists( 'bbp_check_topic_tag_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_check_topic_tag_edit()}.
+	 *
+	 * @deprecated Use bboss_bbp_check_topic_tag_edit() instead.
+	 */
+	function bbp_check_topic_tag_edit() {
+		return bboss_bbp_check_topic_tag_edit();
+	}
+}
+if ( function_exists( 'bboss_bbp_close_topic' ) && ! function_exists( 'bbp_close_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_close_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_close_topic() instead.
+	 */
+	function bbp_close_topic( $topic_id = 0 ) {
+		return bboss_bbp_close_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_delete_topic' ) && ! function_exists( 'bbp_delete_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_delete_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_delete_topic() instead.
+	 */
+	function bbp_delete_topic( $topic_id = 0 ) {
+		return bboss_bbp_delete_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_deleted_topic' ) && ! function_exists( 'bbp_deleted_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_deleted_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_deleted_topic() instead.
+	 */
+	function bbp_deleted_topic( $topic_id = 0 ) {
+		return bboss_bbp_deleted_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_display_topics_feed_rss2' ) && ! function_exists( 'bbp_display_topics_feed_rss2' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_display_topics_feed_rss2()}.
+	 *
+	 * @deprecated Use bboss_bbp_display_topics_feed_rss2() instead.
+	 */
+	function bbp_display_topics_feed_rss2( $topics_query = array() ) {
+		return bboss_bbp_display_topics_feed_rss2( $topics_query );
+	}
+}
+if ( function_exists( 'bboss_bbp_edit_topic_handler' ) && ! function_exists( 'bbp_edit_topic_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_edit_topic_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_edit_topic_handler() instead.
+	 */
+	function bbp_edit_topic_handler( $action = '' ) {
+		return bboss_bbp_edit_topic_handler( $action );
+	}
+}
+if ( function_exists( 'bboss_bbp_edit_topic_tag_handler' ) && ! function_exists( 'bbp_edit_topic_tag_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_edit_topic_tag_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_edit_topic_tag_handler() instead.
+	 */
+	function bbp_edit_topic_tag_handler( $action = '' ) {
+		return bboss_bbp_edit_topic_tag_handler( $action );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_non_public_topic_statuses' ) && ! function_exists( 'bbp_get_non_public_topic_statuses' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_non_public_topic_statuses()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_non_public_topic_statuses() instead.
+	 */
+	function bbp_get_non_public_topic_statuses() {
+		return bboss_bbp_get_non_public_topic_statuses();
+	}
+}
+if ( function_exists( 'bboss_bbp_get_public_topic_statuses' ) && ! function_exists( 'bbp_get_public_topic_statuses' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_public_topic_statuses()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_public_topic_statuses() instead.
+	 */
+	function bbp_get_public_topic_statuses() {
+		return bboss_bbp_get_public_topic_statuses();
+	}
+}
+if ( function_exists( 'bboss_bbp_get_stickies' ) && ! function_exists( 'bbp_get_stickies' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_stickies()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_stickies() instead.
+	 */
+	function bbp_get_stickies( $forum_id = 0 ) {
+		return bboss_bbp_get_stickies( $forum_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_super_stickies' ) && ! function_exists( 'bbp_get_super_stickies' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_super_stickies()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_super_stickies() instead.
+	 */
+	function bbp_get_super_stickies() {
+		return bboss_bbp_get_super_stickies();
+	}
+}
+if ( function_exists( 'bboss_bbp_get_topic_statuses' ) && ! function_exists( 'bbp_get_topic_statuses' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_statuses()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_statuses() instead.
+	 */
+	function bbp_get_topic_statuses( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_statuses( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_topic_tag_names' ) && ! function_exists( 'bbp_get_topic_tag_names' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_names()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_names() instead.
+	 */
+	function bbp_get_topic_tag_names( $topic_id = 0, $sep = ', ' ) {
+		return bboss_bbp_get_topic_tag_names( $topic_id, $sep );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_topic_types' ) && ! function_exists( 'bbp_get_topic_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_types()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_types() instead.
+	 */
+	function bbp_get_topic_types( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_types( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_topics_per_page' ) && ! function_exists( 'bbp_get_topics_per_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topics_per_page()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topics_per_page() instead.
+	 */
+	function bbp_get_topics_per_page( $default = 15 ) {
+		return bboss_bbp_get_topics_per_page( $default );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_topics_per_rss_page' ) && ! function_exists( 'bbp_get_topics_per_rss_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topics_per_rss_page()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topics_per_rss_page() instead.
+	 */
+	function bbp_get_topics_per_rss_page( $default = 25 ) {
+		return bboss_bbp_get_topics_per_rss_page( $default );
+	}
+}
+if ( function_exists( 'bboss_bbp_insert_topic' ) && ! function_exists( 'bbp_insert_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_insert_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_insert_topic() instead.
+	 */
+	function bbp_insert_topic( $topic_data = array(), $topic_meta = array() ) {
+		return bboss_bbp_insert_topic( $topic_data, $topic_meta );
+	}
+}
+if ( function_exists( 'bboss_bbp_merge_topic_count' ) && ! function_exists( 'bbp_merge_topic_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_merge_topic_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_merge_topic_count() instead.
+	 */
+	function bbp_merge_topic_count( $destination_topic_id, $source_topic_id, $source_topic_forum_id ) {
+		return bboss_bbp_merge_topic_count( $destination_topic_id, $source_topic_id, $source_topic_forum_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_merge_topic_handler' ) && ! function_exists( 'bbp_merge_topic_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_merge_topic_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_merge_topic_handler() instead.
+	 */
+	function bbp_merge_topic_handler( $action = '' ) {
+		return bboss_bbp_merge_topic_handler( $action );
+	}
+}
+if ( function_exists( 'bboss_bbp_move_topic_handler' ) && ! function_exists( 'bbp_move_topic_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_move_topic_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_move_topic_handler() instead.
+	 */
+	function bbp_move_topic_handler( $topic_id, $old_forum_id, $new_forum_id ) {
+		return bboss_bbp_move_topic_handler( $topic_id, $old_forum_id, $new_forum_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_new_topic_handler' ) && ! function_exists( 'bbp_new_topic_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_new_topic_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_new_topic_handler() instead.
+	 */
+	function bbp_new_topic_handler( $action = '' ) {
+		return bboss_bbp_new_topic_handler( $action );
+	}
+}
+if ( function_exists( 'bboss_bbp_open_topic' ) && ! function_exists( 'bbp_open_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_open_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_open_topic() instead.
+	 */
+	function bbp_open_topic( $topic_id = 0 ) {
+		return bboss_bbp_open_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_remove_topic_from_all_favorites' ) && ! function_exists( 'bbp_remove_topic_from_all_favorites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_topic_from_all_favorites()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_topic_from_all_favorites() instead.
+	 */
+	function bbp_remove_topic_from_all_favorites( $topic_id = 0 ) {
+		return bboss_bbp_remove_topic_from_all_favorites( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_remove_topic_from_all_subscriptions' ) && ! function_exists( 'bbp_remove_topic_from_all_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_topic_from_all_subscriptions()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_topic_from_all_subscriptions() instead.
+	 */
+	function bbp_remove_topic_from_all_subscriptions( $topic_id = 0 ) {
+		return bboss_bbp_remove_topic_from_all_subscriptions( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_spam_topic' ) && ! function_exists( 'bbp_spam_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_spam_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_spam_topic() instead.
+	 */
+	function bbp_spam_topic( $topic_id = 0 ) {
+		return bboss_bbp_spam_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_split_topic_count' ) && ! function_exists( 'bbp_split_topic_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_split_topic_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_split_topic_count() instead.
+	 */
+	function bbp_split_topic_count( $from_reply_id, $source_topic_id, $destination_topic_id ) {
+		return bboss_bbp_split_topic_count( $from_reply_id, $source_topic_id, $destination_topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_split_topic_handler' ) && ! function_exists( 'bbp_split_topic_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_split_topic_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_split_topic_handler() instead.
+	 */
+	function bbp_split_topic_handler( $action = '' ) {
+		return bboss_bbp_split_topic_handler( $action );
+	}
+}
+if ( function_exists( 'bboss_bbp_stick_topic' ) && ! function_exists( 'bbp_stick_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_stick_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_stick_topic() instead.
+	 */
+	function bbp_stick_topic( $topic_id = 0, $super = false ) {
+		return bboss_bbp_stick_topic( $topic_id, $super );
+	}
+}
+if ( function_exists( 'bboss_bbp_toggle_topic_handler' ) && ! function_exists( 'bbp_toggle_topic_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_toggle_topic_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_toggle_topic_handler() instead.
+	 */
+	function bbp_toggle_topic_handler( $action = '' ) {
+		return bboss_bbp_toggle_topic_handler( $action );
+	}
+}
+if ( function_exists( 'bboss_bbp_topic_content_autoembed' ) && ! function_exists( 'bbp_topic_content_autoembed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_content_autoembed()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_content_autoembed() instead.
+	 */
+	function bbp_topic_content_autoembed() {
+		return bboss_bbp_topic_content_autoembed();
+	}
+}
+if ( function_exists( 'bboss_bbp_topic_content_autoembed_paragraph' ) && ! function_exists( 'bbp_topic_content_autoembed_paragraph' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_content_autoembed_paragraph()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_content_autoembed_paragraph() instead.
+	 */
+	function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
+		return bboss_bbp_topic_content_autoembed_paragraph( $content, $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_trash_topic' ) && ! function_exists( 'bbp_trash_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_trash_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_trash_topic() instead.
+	 */
+	function bbp_trash_topic( $topic_id = 0 ) {
+		return bboss_bbp_trash_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_trashed_topic' ) && ! function_exists( 'bbp_trashed_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_trashed_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_trashed_topic() instead.
+	 */
+	function bbp_trashed_topic( $topic_id = 0 ) {
+		return bboss_bbp_trashed_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_unspam_topic' ) && ! function_exists( 'bbp_unspam_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_unspam_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_unspam_topic() instead.
+	 */
+	function bbp_unspam_topic( $topic_id = 0 ) {
+		return bboss_bbp_unspam_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_unstick_topic' ) && ! function_exists( 'bbp_unstick_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_unstick_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_unstick_topic() instead.
+	 */
+	function bbp_unstick_topic( $topic_id = 0 ) {
+		return bboss_bbp_unstick_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_untrash_topic' ) && ! function_exists( 'bbp_untrash_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_untrash_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_untrash_topic() instead.
+	 */
+	function bbp_untrash_topic( $topic_id = 0 ) {
+		return bboss_bbp_untrash_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_untrashed_topic' ) && ! function_exists( 'bbp_untrashed_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_untrashed_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_untrashed_topic() instead.
+	 */
+	function bbp_untrashed_topic( $topic_id = 0 ) {
+		return bboss_bbp_untrashed_topic( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic' ) && ! function_exists( 'bbp_update_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic() instead.
+	 */
+	function bbp_update_topic( $topic_id = 0, $forum_id = 0, $anonymous_data = false, $author_id = 0, $is_edit = false ) {
+		return bboss_bbp_update_topic( $topic_id, $forum_id, $anonymous_data, $author_id, $is_edit );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_anonymous_reply_count' ) && ! function_exists( 'bbp_update_topic_anonymous_reply_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_anonymous_reply_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_anonymous_reply_count() instead.
+	 */
+	function bbp_update_topic_anonymous_reply_count( $topic_id = 0 ) {
+		return bboss_bbp_update_topic_anonymous_reply_count( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_forum_id' ) && ! function_exists( 'bbp_update_topic_forum_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_forum_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_forum_id() instead.
+	 */
+	function bbp_update_topic_forum_id( $topic_id = 0, $forum_id = 0 ) {
+		return bboss_bbp_update_topic_forum_id( $topic_id, $forum_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_last_active_id' ) && ! function_exists( 'bbp_update_topic_last_active_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_last_active_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_last_active_id() instead.
+	 */
+	function bbp_update_topic_last_active_id( $topic_id = 0, $active_id = 0 ) {
+		return bboss_bbp_update_topic_last_active_id( $topic_id, $active_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_last_active_time' ) && ! function_exists( 'bbp_update_topic_last_active_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_last_active_time()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_last_active_time() instead.
+	 */
+	function bbp_update_topic_last_active_time( $topic_id = 0, $new_time = '' ) {
+		return bboss_bbp_update_topic_last_active_time( $topic_id, $new_time );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_last_reply_id' ) && ! function_exists( 'bbp_update_topic_last_reply_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_last_reply_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_last_reply_id() instead.
+	 */
+	function bbp_update_topic_last_reply_id( $topic_id = 0, $reply_id = 0 ) {
+		return bboss_bbp_update_topic_last_reply_id( $topic_id, $reply_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_reply_count' ) && ! function_exists( 'bbp_update_topic_reply_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_reply_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_reply_count() instead.
+	 */
+	function bbp_update_topic_reply_count( $topic_id = 0, $reply_count = 0 ) {
+		return bboss_bbp_update_topic_reply_count( $topic_id, $reply_count );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_reply_count_hidden' ) && ! function_exists( 'bbp_update_topic_reply_count_hidden' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_reply_count_hidden()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_reply_count_hidden() instead.
+	 */
+	function bbp_update_topic_reply_count_hidden( $topic_id = 0, $reply_count = 0 ) {
+		return bboss_bbp_update_topic_reply_count_hidden( $topic_id, $reply_count );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_revision_log' ) && ! function_exists( 'bbp_update_topic_revision_log' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_revision_log()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_revision_log() instead.
+	 */
+	function bbp_update_topic_revision_log( $args = '' ) {
+		return bboss_bbp_update_topic_revision_log( $args );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_topic_id' ) && ! function_exists( 'bbp_update_topic_topic_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_topic_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_topic_id() instead.
+	 */
+	function bbp_update_topic_topic_id( $topic_id = 0 ) {
+		return bboss_bbp_update_topic_topic_id( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_voice_count' ) && ! function_exists( 'bbp_update_topic_voice_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_voice_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_voice_count() instead.
+	 */
+	function bbp_update_topic_voice_count( $topic_id = 0 ) {
+		return bboss_bbp_update_topic_voice_count( $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_update_topic_walker' ) && ! function_exists( 'bbp_update_topic_walker' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_walker()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_walker() instead.
+	 */
+	function bbp_update_topic_walker( $topic_id, $last_active_time = '', $forum_id = 0, $reply_id = 0, $refresh = true ) {
+		return bboss_bbp_update_topic_walker( $topic_id, $last_active_time, $forum_id, $reply_id, $refresh );
+	}
+}
+// @bbwt-com-end compat-layer

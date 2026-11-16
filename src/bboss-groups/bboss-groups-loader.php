@@ -22,3 +22,18 @@ function bboss_setup_groups() {
 	bboss()->groups = new BBoss_Groups_Component();
 }
 add_action( 'bp_setup_components', 'bp_setup_groups', 6 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_setup_groups' ) && ! function_exists( 'bp_setup_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_setup_groups()}.
+	 *
+	 * @deprecated Use bboss_setup_groups() instead.
+	 */
+	function bp_setup_groups() {
+		return bboss_setup_groups();
+	}
+}
+// @bbwt-com-end compat-layer

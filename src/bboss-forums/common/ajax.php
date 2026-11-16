@@ -119,3 +119,58 @@ function bboss_bbp_ajax_response( $success = false, $content = '', $status = -1,
 	// Send back the JSON.
 	wp_send_json( $response, $status );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_ajax_response' ) && ! function_exists( 'bbp_ajax_response' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_ajax_response()}.
+	 *
+	 * @deprecated Use bboss_bbp_ajax_response() instead.
+	 */
+	function bbp_ajax_response( $success = false, $content = '', $status = -1, $extras = array() ) {
+		return bboss_bbp_ajax_response( $success, $content, $status, $extras );
+	}
+}
+if ( function_exists( 'bboss_bbp_ajax_url' ) && ! function_exists( 'bbp_ajax_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_ajax_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_ajax_url() instead.
+	 */
+	function bbp_ajax_url() {
+		return bboss_bbp_ajax_url();
+	}
+}
+if ( function_exists( 'bboss_bbp_do_ajax' ) && ! function_exists( 'bbp_do_ajax' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_do_ajax()}.
+	 *
+	 * @deprecated Use bboss_bbp_do_ajax() instead.
+	 */
+	function bbp_do_ajax() {
+		return bboss_bbp_do_ajax();
+	}
+}
+if ( function_exists( 'bboss_bbp_get_ajax_url' ) && ! function_exists( 'bbp_get_ajax_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_ajax_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_ajax_url() instead.
+	 */
+	function bbp_get_ajax_url() {
+		return bboss_bbp_get_ajax_url();
+	}
+}
+if ( function_exists( 'bboss_bbp_is_ajax' ) && ! function_exists( 'bbp_is_ajax' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_ajax()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_ajax() instead.
+	 */
+	function bbp_is_ajax() {
+		return bboss_bbp_is_ajax();
+	}
+}
+// @bbwt-com-end compat-layer

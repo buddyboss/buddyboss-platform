@@ -225,3 +225,48 @@ function bboss_rl_search_enqueue_scripts() {
 
 	wp_localize_script( 'bb-rl-nouveau-search', 'BP_SEARCH', apply_filters( 'bp_search_js_settings', $data ) );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rl_search_enqueue_scripts' ) && ! function_exists( 'bb_rl_search_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_search_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_rl_search_enqueue_scripts() instead.
+	 */
+	function bb_rl_search_enqueue_scripts() {
+		return bboss_rl_search_enqueue_scripts();
+	}
+}
+if ( function_exists( 'bboss_nouveau_search_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_search_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_search_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_search_enqueue_scripts() instead.
+	 */
+	function bp_nouveau_search_enqueue_scripts() {
+		return bboss_nouveau_search_enqueue_scripts();
+	}
+}
+if ( function_exists( 'bboss_nouveau_search_messages_autocomplete_init_jsblock' ) && ! function_exists( 'bp_nouveau_search_messages_autocomplete_init_jsblock' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_search_messages_autocomplete_init_jsblock()}.
+	 *
+	 * @deprecated Use bboss_nouveau_search_messages_autocomplete_init_jsblock() instead.
+	 */
+	function bp_nouveau_search_messages_autocomplete_init_jsblock() {
+		return bboss_nouveau_search_messages_autocomplete_init_jsblock();
+	}
+}
+if ( function_exists( 'bboss_nouveau_search_register_scripts' ) && ! function_exists( 'bp_nouveau_search_register_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_search_register_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_search_register_scripts() instead.
+	 */
+	function bp_nouveau_search_register_scripts( $scripts = array() ) {
+		return bboss_nouveau_search_register_scripts( $scripts );
+	}
+}
+// @bbwt-com-end compat-layer

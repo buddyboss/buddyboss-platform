@@ -355,3 +355,88 @@ function bboss_activity_embed_media() {
 	/** This hook is documented in /bboss-activity/bboss-activity-embeds.php */
 	do_action( 'bp_activity_embed_after_media' );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_embed_add_inline_styles' ) && ! function_exists( 'bp_activity_embed_add_inline_styles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_add_inline_styles()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_add_inline_styles() instead.
+	 */
+	function bp_activity_embed_add_inline_styles() {
+		return bboss_activity_embed_add_inline_styles();
+	}
+}
+if ( function_exists( 'bboss_activity_embed_excerpt' ) && ! function_exists( 'bp_activity_embed_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_excerpt()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_excerpt() instead.
+	 */
+	function bp_activity_embed_excerpt( $content = '' ) {
+		return bboss_activity_embed_excerpt( $content );
+	}
+}
+if ( function_exists( 'bboss_activity_embed_excerpt_onclick_location_filter' ) && ! function_exists( 'bp_activity_embed_excerpt_onclick_location_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_excerpt_onclick_location_filter()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_excerpt_onclick_location_filter() instead.
+	 */
+	function bp_activity_embed_excerpt_onclick_location_filter( $text ) {
+		return bboss_activity_embed_excerpt_onclick_location_filter( $text );
+	}
+}
+if ( function_exists( 'bboss_activity_embed_excerpt_onclick_location_filter_callback' ) && ! function_exists( 'bp_activity_embed_excerpt_onclick_location_filter_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_excerpt_onclick_location_filter_callback()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_excerpt_onclick_location_filter_callback() instead.
+	 */
+	function bp_activity_embed_excerpt_onclick_location_filter_callback( $matches ) {
+		return bboss_activity_embed_excerpt_onclick_location_filter_callback( $matches );
+	}
+}
+if ( function_exists( 'bboss_activity_embed_has_activity' ) && ! function_exists( 'bp_activity_embed_has_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_has_activity()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_has_activity() instead.
+	 */
+	function bp_activity_embed_has_activity( $activity_id = 0 ) {
+		return bboss_activity_embed_has_activity( $activity_id );
+	}
+}
+if ( function_exists( 'bboss_activity_embed_media' ) && ! function_exists( 'bp_activity_embed_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_media()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_media() instead.
+	 */
+	function bp_activity_embed_media() {
+		return bboss_activity_embed_media();
+	}
+}
+if ( function_exists( 'bboss_activity_get_embed_excerpt' ) && ! function_exists( 'bp_activity_get_embed_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_get_embed_excerpt()}.
+	 *
+	 * @deprecated Use bboss_activity_get_embed_excerpt() instead.
+	 */
+	function bp_activity_get_embed_excerpt( $content = '' ) {
+		return bboss_activity_get_embed_excerpt( $content );
+	}
+}
+if ( function_exists( 'bboss_activity_setup_oembed' ) && ! function_exists( 'bp_activity_setup_oembed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_setup_oembed()}.
+	 *
+	 * @deprecated Use bboss_activity_setup_oembed() instead.
+	 */
+	function bp_activity_setup_oembed() {
+		return bboss_activity_setup_oembed();
+	}
+}
+// @bbwt-com-end compat-layer

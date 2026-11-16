@@ -350,3 +350,98 @@ function bboss_xprofile_activity_filter_options() {
 
 	<?php
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_format_activity_action_new_avatar' ) && ! function_exists( 'bp_xprofile_format_activity_action_new_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_format_activity_action_new_avatar()}.
+	 *
+	 * @deprecated Use bboss_xprofile_format_activity_action_new_avatar() instead.
+	 */
+	function bp_xprofile_format_activity_action_new_avatar( $action, $activity ) {
+		return bboss_xprofile_format_activity_action_new_avatar( $action, $activity );
+	}
+}
+if ( function_exists( 'bboss_xprofile_format_activity_action_updated_profile' ) && ! function_exists( 'bp_xprofile_format_activity_action_updated_profile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_format_activity_action_updated_profile()}.
+	 *
+	 * @deprecated Use bboss_xprofile_format_activity_action_updated_profile() instead.
+	 */
+	function bp_xprofile_format_activity_action_updated_profile( $action, $activity ) {
+		return bboss_xprofile_format_activity_action_updated_profile( $action, $activity );
+	}
+}
+if ( function_exists( 'bboss_xprofile_new_avatar_activity' ) && ! function_exists( 'bp_xprofile_new_avatar_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_new_avatar_activity()}.
+	 *
+	 * @deprecated Use bboss_xprofile_new_avatar_activity() instead.
+	 */
+	function bp_xprofile_new_avatar_activity( $user_id = 0 ) {
+		return bboss_xprofile_new_avatar_activity( $user_id );
+	}
+}
+if ( function_exists( 'bboss_xprofile_updated_profile_activity' ) && ! function_exists( 'bp_xprofile_updated_profile_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_updated_profile_activity()}.
+	 *
+	 * @deprecated Use bboss_xprofile_updated_profile_activity() instead.
+	 */
+	function bp_xprofile_updated_profile_activity( $user_id, $field_ids = array(), $errors = false, $old_values = array(), $new_values = array() ) {
+		return bboss_xprofile_updated_profile_activity( $user_id, $field_ids, $errors, $old_values, $new_values );
+	}
+}
+if ( function_exists( 'bboss_xprofile_activity_filter_options' ) && ! function_exists( 'xprofile_activity_filter_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_activity_filter_options()}.
+	 *
+	 * @deprecated Use bboss_xprofile_activity_filter_options() instead.
+	 */
+	function xprofile_activity_filter_options() {
+		return bboss_xprofile_activity_filter_options();
+	}
+}
+if ( function_exists( 'bboss_xprofile_delete_activity' ) && ! function_exists( 'xprofile_delete_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_delete_activity()}.
+	 *
+	 * @deprecated Use bboss_xprofile_delete_activity() instead.
+	 */
+	function xprofile_delete_activity( $args = '' ) {
+		return bboss_xprofile_delete_activity( $args );
+	}
+}
+if ( function_exists( 'bboss_xprofile_record_activity' ) && ! function_exists( 'xprofile_record_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_record_activity()}.
+	 *
+	 * @deprecated Use bboss_xprofile_record_activity() instead.
+	 */
+	function xprofile_record_activity( $args = '' ) {
+		return bboss_xprofile_record_activity( $args );
+	}
+}
+if ( function_exists( 'bboss_xprofile_register_activity_action' ) && ! function_exists( 'xprofile_register_activity_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_register_activity_action()}.
+	 *
+	 * @deprecated Use bboss_xprofile_register_activity_action() instead.
+	 */
+	function xprofile_register_activity_action( $key, $value ) {
+		return bboss_xprofile_register_activity_action( $key, $value );
+	}
+}
+if ( function_exists( 'bboss_xprofile_register_activity_actions' ) && ! function_exists( 'xprofile_register_activity_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_register_activity_actions()}.
+	 *
+	 * @deprecated Use bboss_xprofile_register_activity_actions() instead.
+	 */
+	function xprofile_register_activity_actions() {
+		return bboss_xprofile_register_activity_actions();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -390,3 +390,98 @@ function bboss_messages_filter_starred_message_threads( $r = array() ) {
 
 	return $r;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_messages_starred_slug' ) && ! function_exists( 'bp_get_messages_starred_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_messages_starred_slug()}.
+	 *
+	 * @deprecated Use bboss_get_messages_starred_slug() instead.
+	 */
+	function bp_get_messages_starred_slug() {
+		return bboss_get_messages_starred_slug();
+	}
+}
+if ( function_exists( 'bboss_get_the_message_star_action_link' ) && ! function_exists( 'bp_get_the_message_star_action_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_message_star_action_link()}.
+	 *
+	 * @deprecated Use bboss_get_the_message_star_action_link() instead.
+	 */
+	function bp_get_the_message_star_action_link( $args = array() ) {
+		return bboss_get_the_message_star_action_link( $args );
+	}
+}
+if ( function_exists( 'bboss_messages_filter_starred_message_threads' ) && ! function_exists( 'bp_messages_filter_starred_message_threads' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_filter_starred_message_threads()}.
+	 *
+	 * @deprecated Use bboss_messages_filter_starred_message_threads() instead.
+	 */
+	function bp_messages_filter_starred_message_threads( $r = array() ) {
+		return bboss_messages_filter_starred_message_threads( $r );
+	}
+}
+if ( function_exists( 'bboss_messages_is_message_starred' ) && ! function_exists( 'bp_messages_is_message_starred' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_is_message_starred()}.
+	 *
+	 * @deprecated Use bboss_messages_is_message_starred() instead.
+	 */
+	function bp_messages_is_message_starred( $mid = 0, $user_id = 0 ) {
+		return bboss_messages_is_message_starred( $mid, $user_id );
+	}
+}
+if ( function_exists( 'bboss_messages_star_bulk_management_dropdown' ) && ! function_exists( 'bp_messages_star_bulk_management_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_star_bulk_management_dropdown()}.
+	 *
+	 * @deprecated Use bboss_messages_star_bulk_management_dropdown() instead.
+	 */
+	function bp_messages_star_bulk_management_dropdown() {
+		return bboss_messages_star_bulk_management_dropdown();
+	}
+}
+if ( function_exists( 'bboss_messages_star_enqueue_scripts' ) && ! function_exists( 'bp_messages_star_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_star_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_messages_star_enqueue_scripts() instead.
+	 */
+	function bp_messages_star_enqueue_scripts() {
+		return bboss_messages_star_enqueue_scripts();
+	}
+}
+if ( function_exists( 'bboss_messages_star_message_css_class' ) && ! function_exists( 'bp_messages_star_message_css_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_star_message_css_class()}.
+	 *
+	 * @deprecated Use bboss_messages_star_message_css_class() instead.
+	 */
+	function bp_messages_star_message_css_class( $retval = array() ) {
+		return bboss_messages_star_message_css_class( $retval );
+	}
+}
+if ( function_exists( 'bboss_messages_star_set_action' ) && ! function_exists( 'bp_messages_star_set_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_star_set_action()}.
+	 *
+	 * @deprecated Use bboss_messages_star_set_action() instead.
+	 */
+	function bp_messages_star_set_action( $args = array() ) {
+		return bboss_messages_star_set_action( $args );
+	}
+}
+if ( function_exists( 'bboss_the_message_star_action_link' ) && ! function_exists( 'bp_the_message_star_action_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_message_star_action_link()}.
+	 *
+	 * @deprecated Use bboss_the_message_star_action_link() instead.
+	 */
+	function bp_the_message_star_action_link( $args = array() ) {
+		return bboss_the_message_star_action_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -329,4 +329,19 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 
 </div>
 
-<?php endif; ?>
+<?php endif; 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rl_add_topic_type_dropdown_attributes' ) && ! function_exists( 'bb_rl_add_topic_type_dropdown_attributes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_add_topic_type_dropdown_attributes()}.
+	 *
+	 * @deprecated Use bboss_rl_add_topic_type_dropdown_attributes() instead.
+	 */
+	function bb_rl_add_topic_type_dropdown_attributes( $output, $r ) {
+		return bboss_rl_add_topic_type_dropdown_attributes( $output, $r );
+	}
+}
+// @bbwt-com-end compat-layer
+?>

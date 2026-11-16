@@ -95,3 +95,28 @@ function bboss_messages_reschedule_cron_after_save( $feature_id, $settings, $sav
 	}
 }
 add_action( 'bb_admin_save_feature_settings_after', 'bb_messages_reschedule_cron_after_save', 10, 3 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_reschedule_cron_after_save' ) && ! function_exists( 'bb_messages_reschedule_cron_after_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_reschedule_cron_after_save()}.
+	 *
+	 * @deprecated Use bboss_messages_reschedule_cron_after_save() instead.
+	 */
+	function bb_messages_reschedule_cron_after_save( $feature_id, $settings, $saved ) {
+		return bboss_messages_reschedule_cron_after_save( $feature_id, $settings, $saved );
+	}
+}
+if ( function_exists( 'bboss_messages_sanitize_delay_time' ) && ! function_exists( 'bb_messages_sanitize_delay_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_sanitize_delay_time()}.
+	 *
+	 * @deprecated Use bboss_messages_sanitize_delay_time() instead.
+	 */
+	function bb_messages_sanitize_delay_time( $value ) {
+		return bboss_messages_sanitize_delay_time( $value );
+	}
+}
+// @bbwt-com-end compat-layer

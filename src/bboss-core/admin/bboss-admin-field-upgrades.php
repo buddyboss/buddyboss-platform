@@ -578,3 +578,138 @@ function bboss_register_field_upgrades_license_hooks() {
 	}
 }
 add_action( 'admin_init', 'bb_register_field_upgrades_license_hooks' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_build_upgrade_media' ) && ! function_exists( 'bb_admin_build_upgrade_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_build_upgrade_media()}.
+	 *
+	 * @deprecated Use bboss_admin_build_upgrade_media() instead.
+	 */
+	function bb_admin_build_upgrade_media( $video_url, $image_url ) {
+		return bboss_admin_build_upgrade_media( $video_url, $image_url );
+	}
+}
+if ( function_exists( 'bboss_detect_upgrade_video_provider' ) && ! function_exists( 'bb_detect_upgrade_video_provider' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_detect_upgrade_video_provider()}.
+	 *
+	 * @deprecated Use bboss_detect_upgrade_video_provider() instead.
+	 */
+	function bb_detect_upgrade_video_provider( $url ) {
+		return bboss_detect_upgrade_video_provider( $url );
+	}
+}
+if ( function_exists( 'bboss_field_upgrade_to_modal_payload' ) && ! function_exists( 'bb_field_upgrade_to_modal_payload' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_upgrade_to_modal_payload()}.
+	 *
+	 * @deprecated Use bboss_field_upgrade_to_modal_payload() instead.
+	 */
+	function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
+		return bboss_field_upgrade_to_modal_payload( $entry, $fallback_label );
+	}
+}
+if ( function_exists( 'bboss_field_upgrades_transient_key' ) && ! function_exists( 'bb_field_upgrades_transient_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_upgrades_transient_key()}.
+	 *
+	 * @deprecated Use bboss_field_upgrades_transient_key() instead.
+	 */
+	function bb_field_upgrades_transient_key() {
+		return bboss_field_upgrades_transient_key();
+	}
+}
+if ( function_exists( 'bboss_flush_field_upgrades_cache' ) && ! function_exists( 'bb_flush_field_upgrades_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_flush_field_upgrades_cache()}.
+	 *
+	 * @deprecated Use bboss_flush_field_upgrades_cache() instead.
+	 */
+	function bb_flush_field_upgrades_cache() {
+		return bboss_flush_field_upgrades_cache();
+	}
+}
+if ( function_exists( 'bboss_flush_field_upgrades_cache_full' ) && ! function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_flush_field_upgrades_cache_full()}.
+	 *
+	 * @deprecated Use bboss_flush_field_upgrades_cache_full() instead.
+	 */
+	function bb_flush_field_upgrades_cache_full() {
+		return bboss_flush_field_upgrades_cache_full();
+	}
+}
+if ( function_exists( 'bboss_get_field_upgrade_for' ) && ! function_exists( 'bb_get_field_upgrade_for' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_field_upgrade_for()}.
+	 *
+	 * @deprecated Use bboss_get_field_upgrade_for() instead.
+	 */
+	function bb_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id = '', $field_name = '' ) {
+		return bboss_get_field_upgrade_for( $feature_id, $panel_id, $section_id, $field_name );
+	}
+}
+if ( function_exists( 'bboss_get_field_upgrades_data' ) && ! function_exists( 'bb_get_field_upgrades_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_field_upgrades_data()}.
+	 *
+	 * @deprecated Use bboss_get_field_upgrades_data() instead.
+	 */
+	function bb_get_field_upgrades_data() {
+		return bboss_get_field_upgrades_data();
+	}
+}
+if ( function_exists( 'bboss_refresh_field_upgrades_data' ) && ! function_exists( 'bb_refresh_field_upgrades_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_refresh_field_upgrades_data()}.
+	 *
+	 * @deprecated Use bboss_refresh_field_upgrades_data() instead.
+	 */
+	function bb_refresh_field_upgrades_data() {
+		return bboss_refresh_field_upgrades_data();
+	}
+}
+if ( function_exists( 'bboss_register_field_upgrades_license_hooks' ) && ! function_exists( 'bb_register_field_upgrades_license_hooks' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_field_upgrades_license_hooks()}.
+	 *
+	 * @deprecated Use bboss_register_field_upgrades_license_hooks() instead.
+	 */
+	function bb_register_field_upgrades_license_hooks() {
+		return bboss_register_field_upgrades_license_hooks();
+	}
+}
+if ( function_exists( 'bboss_reset_field_upgrades_index' ) && ! function_exists( 'bb_reset_field_upgrades_index' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_reset_field_upgrades_index()}.
+	 *
+	 * @deprecated Use bboss_reset_field_upgrades_index() instead.
+	 */
+	function bb_reset_field_upgrades_index() {
+		return bboss_reset_field_upgrades_index();
+	}
+}
+if ( function_exists( 'bboss_schedule_field_upgrades_daily_refresh' ) && ! function_exists( 'bb_schedule_field_upgrades_daily_refresh' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_schedule_field_upgrades_daily_refresh()}.
+	 *
+	 * @deprecated Use bboss_schedule_field_upgrades_daily_refresh() instead.
+	 */
+	function bb_schedule_field_upgrades_daily_refresh() {
+		return bboss_schedule_field_upgrades_daily_refresh();
+	}
+}
+if ( function_exists( 'bboss_schedule_field_upgrades_refresh' ) && ! function_exists( 'bb_schedule_field_upgrades_refresh' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_schedule_field_upgrades_refresh()}.
+	 *
+	 * @deprecated Use bboss_schedule_field_upgrades_refresh() instead.
+	 */
+	function bb_schedule_field_upgrades_refresh() {
+		return bboss_schedule_field_upgrades_refresh();
+	}
+}
+// @bbwt-com-end compat-layer

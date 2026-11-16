@@ -32,3 +32,18 @@ function bboss_moderation_screen() {
 	 */
 	bboss_core_load_template( apply_filters( 'moderation_template_content', 'members/single/home' ) );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_screen' ) && ! function_exists( 'bp_moderation_screen' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_screen()}.
+	 *
+	 * @deprecated Use bboss_moderation_screen() instead.
+	 */
+	function bp_moderation_screen() {
+		return bboss_moderation_screen();
+	}
+}
+// @bbwt-com-end compat-layer

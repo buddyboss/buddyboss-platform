@@ -364,3 +364,28 @@ function bboss_bbp_filter_dashboard_glance_items( $elements = array() ) {
 	// Filter & return.
 	return apply_filters( 'bbp_dashboard_at_a_glance', $elements, $r );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_dashboard_widget_right_now' ) && ! function_exists( 'bbp_dashboard_widget_right_now' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_dashboard_widget_right_now()}.
+	 *
+	 * @deprecated Use bboss_bbp_dashboard_widget_right_now() instead.
+	 */
+	function bbp_dashboard_widget_right_now() {
+		return bboss_bbp_dashboard_widget_right_now();
+	}
+}
+if ( function_exists( 'bboss_bbp_filter_dashboard_glance_items' ) && ! function_exists( 'bbp_filter_dashboard_glance_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_filter_dashboard_glance_items()}.
+	 *
+	 * @deprecated Use bboss_bbp_filter_dashboard_glance_items() instead.
+	 */
+	function bbp_filter_dashboard_glance_items( $elements = array() ) {
+		return bboss_bbp_filter_dashboard_glance_items( $elements );
+	}
+}
+// @bbwt-com-end compat-layer

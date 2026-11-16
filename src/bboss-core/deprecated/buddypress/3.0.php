@@ -190,3 +190,78 @@ function bboss_core_action_delete_user() {
 		}
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_action_delete_user' ) && ! function_exists( 'bp_core_action_delete_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_action_delete_user()}.
+	 *
+	 * @deprecated Use bboss_core_action_delete_user() instead.
+	 */
+	function bp_core_action_delete_user() {
+		return bboss_core_action_delete_user();
+	}
+}
+if ( function_exists( 'bboss_core_action_set_spammer_status' ) && ! function_exists( 'bp_core_action_set_spammer_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_action_set_spammer_status()}.
+	 *
+	 * @deprecated Use bboss_core_action_set_spammer_status() instead.
+	 */
+	function bp_core_action_set_spammer_status( $user_id = 0 ) {
+		return bboss_core_action_set_spammer_status( $user_id );
+	}
+}
+if ( function_exists( 'bboss_get_group_new_topic_button' ) && ! function_exists( 'bp_get_group_new_topic_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_new_topic_button()}.
+	 *
+	 * @deprecated Use bboss_get_group_new_topic_button() instead.
+	 */
+	function bp_get_group_new_topic_button( $group = false ) {
+		return bboss_get_group_new_topic_button( $group );
+	}
+}
+if ( function_exists( 'bboss_group_new_topic_button' ) && ! function_exists( 'bp_group_new_topic_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_new_topic_button()}.
+	 *
+	 * @deprecated Use bboss_group_new_topic_button() instead.
+	 */
+	function bp_group_new_topic_button( $group = false ) {
+		return bboss_group_new_topic_button( $group );
+	}
+}
+if ( function_exists( 'bboss_is_group_forum' ) && ! function_exists( 'bp_is_group_forum' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_forum()}.
+	 *
+	 * @deprecated Use bboss_is_group_forum() instead.
+	 */
+	function bp_is_group_forum() {
+		return bboss_is_group_forum();
+	}
+}
+if ( function_exists( 'bboss_is_group_forums_active' ) && ! function_exists( 'bp_is_group_forums_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_forums_active()}.
+	 *
+	 * @deprecated Use bboss_is_group_forums_active() instead.
+	 */
+	function bp_is_group_forums_active( $default = false ) {
+		return bboss_is_group_forums_active( $default );
+	}
+}
+if ( function_exists( 'bboss_is_user_forums' ) && ! function_exists( 'bp_is_user_forums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_forums()}.
+	 *
+	 * @deprecated Use bboss_is_user_forums() instead.
+	 */
+	function bp_is_user_forums() {
+		return bboss_is_user_forums();
+	}
+}
+// @bbwt-com-end compat-layer

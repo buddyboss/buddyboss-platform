@@ -30,3 +30,18 @@ function bboss_xprofile_get_user_progress_data( $profile_groups, $profile_photot
 	return bboss_xprofile_get_user_profile_progress_data( $settings );
 
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_get_user_progress_data' ) && ! function_exists( 'bp_xprofile_get_user_progress_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_get_user_progress_data()}.
+	 *
+	 * @deprecated Use bboss_xprofile_get_user_progress_data() instead.
+	 */
+	function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype, $widget_id ) {
+		return bboss_xprofile_get_user_progress_data( $profile_groups, $profile_phototype, $widget_id );
+	}
+}
+// @bbwt-com-end compat-layer

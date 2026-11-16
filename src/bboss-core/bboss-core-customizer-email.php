@@ -601,3 +601,108 @@ function bboss_email_customizer_default_avatar( $avatar = '' ) {
 
 add_filter( 'bp_email_customizer_default_avatar', 'bb_email_customizer_default_avatar', 10 );
 add_filter( 'bp_email_default_avatar', 'bb_email_customizer_default_avatar', 10 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_customizer_default_avatar' ) && ! function_exists( 'bb_email_customizer_default_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_customizer_default_avatar()}.
+	 *
+	 * @deprecated Use bboss_email_customizer_default_avatar() instead.
+	 */
+	function bb_email_customizer_default_avatar( $avatar = '' ) {
+		return bboss_email_customizer_default_avatar( $avatar );
+	}
+}
+if ( function_exists( 'bboss_email_customizer_hide_sections' ) && ! function_exists( 'bp_email_customizer_hide_sections' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_customizer_hide_sections()}.
+	 *
+	 * @deprecated Use bboss_email_customizer_hide_sections() instead.
+	 */
+	function bp_email_customizer_hide_sections( $active, $section ) {
+		return bboss_email_customizer_hide_sections( $active, $section );
+	}
+}
+if ( function_exists( 'bboss_email_get_customizer_controls' ) && ! function_exists( 'bp_email_get_customizer_controls' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_get_customizer_controls()}.
+	 *
+	 * @deprecated Use bboss_email_get_customizer_controls() instead.
+	 */
+	function bp_email_get_customizer_controls() {
+		return bboss_email_get_customizer_controls();
+	}
+}
+if ( function_exists( 'bboss_email_get_customizer_sections' ) && ! function_exists( 'bp_email_get_customizer_sections' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_get_customizer_sections()}.
+	 *
+	 * @deprecated Use bboss_email_get_customizer_sections() instead.
+	 */
+	function bp_email_get_customizer_sections() {
+		return bboss_email_get_customizer_sections();
+	}
+}
+if ( function_exists( 'bboss_email_get_customizer_settings' ) && ! function_exists( 'bp_email_get_customizer_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_get_customizer_settings()}.
+	 *
+	 * @deprecated Use bboss_email_get_customizer_settings() instead.
+	 */
+	function bp_email_get_customizer_settings() {
+		return bboss_email_get_customizer_settings();
+	}
+}
+if ( function_exists( 'bboss_email_get_redirect_to_customizer_url' ) && ! function_exists( 'bp_email_get_redirect_to_customizer_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_get_redirect_to_customizer_url()}.
+	 *
+	 * @deprecated Use bboss_email_get_redirect_to_customizer_url() instead.
+	 */
+	function bp_email_get_redirect_to_customizer_url() {
+		return bboss_email_get_redirect_to_customizer_url();
+	}
+}
+if ( function_exists( 'bboss_email_init_customizer' ) && ! function_exists( 'bp_email_init_customizer' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_init_customizer()}.
+	 *
+	 * @deprecated Use bboss_email_init_customizer() instead.
+	 */
+	function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
+		return bboss_email_init_customizer( $wp_customize );
+	}
+}
+if ( function_exists( 'bboss_email_redirect_to_customizer' ) && ! function_exists( 'bp_email_redirect_to_customizer' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_redirect_to_customizer()}.
+	 *
+	 * @deprecated Use bboss_email_redirect_to_customizer() instead.
+	 */
+	function bp_email_redirect_to_customizer() {
+		return bboss_email_redirect_to_customizer();
+	}
+}
+if ( function_exists( 'bboss_email_remove_widgets_panel' ) && ! function_exists( 'bp_email_remove_widgets_panel' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_remove_widgets_panel()}.
+	 *
+	 * @deprecated Use bboss_email_remove_widgets_panel() instead.
+	 */
+	function bp_email_remove_widgets_panel( $components ) {
+		return bboss_email_remove_widgets_panel( $components );
+	}
+}
+if ( function_exists( 'bboss_is_email_customizer' ) && ! function_exists( 'bp_is_email_customizer' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_email_customizer()}.
+	 *
+	 * @deprecated Use bboss_is_email_customizer() instead.
+	 */
+	function bp_is_email_customizer() {
+		return bboss_is_email_customizer();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -439,3 +439,128 @@ function bboss_recaptcha_verify_settings_2() {
 	);
 }
 add_action( 'wp_ajax_bb_recaptcha_verify_settings_2', 'bb_recaptcha_verify_settings_2' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_admin_get_combined_version' ) && ! function_exists( 'bb_recaptcha_admin_get_combined_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_admin_get_combined_version()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_admin_get_combined_version() instead.
+	 */
+	function bb_recaptcha_admin_get_combined_version( $settings = array() ) {
+		return bboss_recaptcha_admin_get_combined_version( $settings );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_admin_get_version_description' ) && ! function_exists( 'bb_recaptcha_admin_get_version_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_admin_get_version_description()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_admin_get_version_description() instead.
+	 */
+	function bb_recaptcha_admin_get_version_description( $version = '' ) {
+		return bboss_recaptcha_admin_get_version_description( $version );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_sanitize_badge_position' ) && ! function_exists( 'bb_recaptcha_sanitize_badge_position' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_sanitize_badge_position()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_sanitize_badge_position() instead.
+	 */
+	function bb_recaptcha_sanitize_badge_position( $value ) {
+		return bboss_recaptcha_sanitize_badge_position( $value );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_sanitize_bypass_text' ) && ! function_exists( 'bb_recaptcha_sanitize_bypass_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_sanitize_bypass_text()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_sanitize_bypass_text() instead.
+	 */
+	function bb_recaptcha_sanitize_bypass_text( $value ) {
+		return bboss_recaptcha_sanitize_bypass_text( $value );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_sanitize_enabled_for' ) && ! function_exists( 'bb_recaptcha_sanitize_enabled_for' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_sanitize_enabled_for()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_sanitize_enabled_for() instead.
+	 */
+	function bb_recaptcha_sanitize_enabled_for( $value ) {
+		return bboss_recaptcha_sanitize_enabled_for( $value );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_sanitize_score_threshold' ) && ! function_exists( 'bb_recaptcha_sanitize_score_threshold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_sanitize_score_threshold()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_sanitize_score_threshold() instead.
+	 */
+	function bb_recaptcha_sanitize_score_threshold( $value ) {
+		return bboss_recaptcha_sanitize_score_threshold( $value );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_sanitize_size' ) && ! function_exists( 'bb_recaptcha_sanitize_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_sanitize_size()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_sanitize_size() instead.
+	 */
+	function bb_recaptcha_sanitize_size( $value ) {
+		return bboss_recaptcha_sanitize_size( $value );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_sanitize_theme' ) && ! function_exists( 'bb_recaptcha_sanitize_theme' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_sanitize_theme()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_sanitize_theme() instead.
+	 */
+	function bb_recaptcha_sanitize_theme( $value ) {
+		return bboss_recaptcha_sanitize_theme( $value );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_sanitize_version' ) && ! function_exists( 'bb_recaptcha_sanitize_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_sanitize_version()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_sanitize_version() instead.
+	 */
+	function bb_recaptcha_sanitize_version( $value ) {
+		return bboss_recaptcha_sanitize_version( $value );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_split_combined_version' ) && ! function_exists( 'bb_recaptcha_split_combined_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_split_combined_version()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_split_combined_version() instead.
+	 */
+	function bb_recaptcha_split_combined_version( $combined_version ) {
+		return bboss_recaptcha_split_combined_version( $combined_version );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_verify_settings_2' ) && ! function_exists( 'bb_recaptcha_verify_settings_2' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_verify_settings_2()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_verify_settings_2() instead.
+	 */
+	function bb_recaptcha_verify_settings_2() {
+		return bboss_recaptcha_verify_settings_2();
+	}
+}
+if ( function_exists( 'bboss_recaptcha_write_back_serialized_option' ) && ! function_exists( 'bb_recaptcha_write_back_serialized_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_write_back_serialized_option()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_write_back_serialized_option() instead.
+	 */
+	function bb_recaptcha_write_back_serialized_option( $feature_id, $settings, $saved ) {
+		return bboss_recaptcha_write_back_serialized_option( $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer

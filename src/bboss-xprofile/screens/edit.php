@@ -298,3 +298,18 @@ function bboss_xprofile_screen_edit_profile() {
 	 */
 	bboss_core_load_template( apply_filters( 'xprofile_template_edit_profile', 'members/single/home' ) );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_screen_edit_profile' ) && ! function_exists( 'xprofile_screen_edit_profile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_screen_edit_profile()}.
+	 *
+	 * @deprecated Use bboss_xprofile_screen_edit_profile() instead.
+	 */
+	function xprofile_screen_edit_profile() {
+		return bboss_xprofile_screen_edit_profile();
+	}
+}
+// @bbwt-com-end compat-layer

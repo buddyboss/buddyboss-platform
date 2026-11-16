@@ -172,3 +172,58 @@ function bboss_registration_sanitize_redirect_url( $value ) {
 
 	return ! empty( $validated ) ? $validated : '';
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_registration_sanitize_domain_restrictions' ) && ! function_exists( 'bb_registration_sanitize_domain_restrictions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_registration_sanitize_domain_restrictions()}.
+	 *
+	 * @deprecated Use bboss_registration_sanitize_domain_restrictions() instead.
+	 */
+	function bb_registration_sanitize_domain_restrictions( $value ) {
+		return bboss_registration_sanitize_domain_restrictions( $value );
+	}
+}
+if ( function_exists( 'bboss_registration_sanitize_email_restrictions' ) && ! function_exists( 'bb_registration_sanitize_email_restrictions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_registration_sanitize_email_restrictions()}.
+	 *
+	 * @deprecated Use bboss_registration_sanitize_email_restrictions() instead.
+	 */
+	function bb_registration_sanitize_email_restrictions( $value ) {
+		return bboss_registration_sanitize_email_restrictions( $value );
+	}
+}
+if ( function_exists( 'bboss_registration_sanitize_form_type' ) && ! function_exists( 'bb_registration_sanitize_form_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_registration_sanitize_form_type()}.
+	 *
+	 * @deprecated Use bboss_registration_sanitize_form_type() instead.
+	 */
+	function bb_registration_sanitize_form_type( $value ) {
+		return bboss_registration_sanitize_form_type( $value );
+	}
+}
+if ( function_exists( 'bboss_registration_sanitize_redirect_url' ) && ! function_exists( 'bb_registration_sanitize_redirect_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_registration_sanitize_redirect_url()}.
+	 *
+	 * @deprecated Use bboss_registration_sanitize_redirect_url() instead.
+	 */
+	function bb_registration_sanitize_redirect_url( $value ) {
+		return bboss_registration_sanitize_redirect_url( $value );
+	}
+}
+if ( function_exists( 'bboss_registration_sanitize_redirection' ) && ! function_exists( 'bb_registration_sanitize_redirection' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_registration_sanitize_redirection()}.
+	 *
+	 * @deprecated Use bboss_registration_sanitize_redirection() instead.
+	 */
+	function bb_registration_sanitize_redirection( $value ) {
+		return bboss_registration_sanitize_redirection( $value );
+	}
+}
+// @bbwt-com-end compat-layer

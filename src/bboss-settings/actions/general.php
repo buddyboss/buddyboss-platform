@@ -385,3 +385,28 @@ function bboss_settings_verify_email_change() {
 	}
 }
 add_action( 'bp_actions', 'bp_settings_verify_email_change' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_action_general' ) && ! function_exists( 'bp_settings_action_general' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_action_general()}.
+	 *
+	 * @deprecated Use bboss_settings_action_general() instead.
+	 */
+	function bp_settings_action_general() {
+		return bboss_settings_action_general();
+	}
+}
+if ( function_exists( 'bboss_settings_verify_email_change' ) && ! function_exists( 'bp_settings_verify_email_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_verify_email_change()}.
+	 *
+	 * @deprecated Use bboss_settings_verify_email_change() instead.
+	 */
+	function bp_settings_verify_email_change() {
+		return bboss_settings_verify_email_change();
+	}
+}
+// @bbwt-com-end compat-layer

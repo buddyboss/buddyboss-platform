@@ -762,3 +762,168 @@ function bboss_bbp_is_valid_role( $role = '' ) {
 	// Filter & return
 	return (bool) apply_filters( 'bbp_is_valid_role', $retval, $role );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_blog_role' ) && ! function_exists( 'bbp_get_user_blog_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_blog_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_blog_role() instead.
+	 */
+	function bbp_get_user_blog_role( $user_id = 0 ) {
+		return bboss_bbp_get_user_blog_role( $user_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_user_role' ) && ! function_exists( 'bbp_get_user_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_role() instead.
+	 */
+	function bbp_get_user_role( $user_id = 0 ) {
+		return bboss_bbp_get_user_role( $user_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_user_role_map' ) && ! function_exists( 'bbp_get_user_role_map' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_role_map()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_role_map() instead.
+	 */
+	function bbp_get_user_role_map() {
+		return bboss_bbp_get_user_role_map();
+	}
+}
+if ( function_exists( 'bboss_bbp_is_user_active' ) && ! function_exists( 'bbp_is_user_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_active()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_active() instead.
+	 */
+	function bbp_is_user_active( $user_id = 0 ) {
+		return bboss_bbp_is_user_active( $user_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_is_user_deleted' ) && ! function_exists( 'bbp_is_user_deleted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_deleted()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_deleted() instead.
+	 */
+	function bbp_is_user_deleted( $user_id = 0 ) {
+		return bboss_bbp_is_user_deleted( $user_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_is_user_inactive' ) && ! function_exists( 'bbp_is_user_inactive' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_inactive()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_inactive() instead.
+	 */
+	function bbp_is_user_inactive( $user_id = 0 ) {
+		return bboss_bbp_is_user_inactive( $user_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_is_user_keymaster' ) && ! function_exists( 'bbp_is_user_keymaster' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_keymaster()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_keymaster() instead.
+	 */
+	function bbp_is_user_keymaster( $user_id = 0 ) {
+		return bboss_bbp_is_user_keymaster( $user_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_is_user_spammer' ) && ! function_exists( 'bbp_is_user_spammer' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_spammer()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_spammer() instead.
+	 */
+	function bbp_is_user_spammer( $user_id = 0 ) {
+		return bboss_bbp_is_user_spammer( $user_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_is_valid_role' ) && ! function_exists( 'bbp_is_valid_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_valid_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_valid_role() instead.
+	 */
+	function bbp_is_valid_role( $role = '' ) {
+		return bboss_bbp_is_valid_role( $role );
+	}
+}
+if ( function_exists( 'bboss_bbp_make_ham_user' ) && ! function_exists( 'bbp_make_ham_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_ham_user()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_ham_user() instead.
+	 */
+	function bbp_make_ham_user( $user_id = 0 ) {
+		return bboss_bbp_make_ham_user( $user_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_make_spam_user' ) && ! function_exists( 'bbp_make_spam_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_spam_user()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_spam_user() instead.
+	 */
+	function bbp_make_spam_user( $user_id = 0 ) {
+		return bboss_bbp_make_spam_user( $user_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_map_primary_meta_caps' ) && ! function_exists( 'bbp_map_primary_meta_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_map_primary_meta_caps()}.
+	 *
+	 * @deprecated Use bboss_bbp_map_primary_meta_caps() instead.
+	 */
+	function bbp_map_primary_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+		return bboss_bbp_map_primary_meta_caps( $caps, $cap, $user_id, $args );
+	}
+}
+if ( function_exists( 'bboss_bbp_profile_update_role' ) && ! function_exists( 'bbp_profile_update_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_profile_update_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_profile_update_role() instead.
+	 */
+	function bbp_profile_update_role( $user_id = 0 ) {
+		return bboss_bbp_profile_update_role( $user_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_set_current_user_default_role' ) && ! function_exists( 'bbp_set_current_user_default_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_set_current_user_default_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_set_current_user_default_role() instead.
+	 */
+	function bbp_set_current_user_default_role() {
+		return bboss_bbp_set_current_user_default_role();
+	}
+}
+if ( function_exists( 'bboss_bbp_set_user_role' ) && ! function_exists( 'bbp_set_user_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_set_user_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_set_user_role() instead.
+	 */
+	function bbp_set_user_role( $user_id = 0, $new_role = '' ) {
+		return bboss_bbp_set_user_role( $user_id, $new_role );
+	}
+}
+if ( function_exists( 'bboss_bbp_user_has_profile' ) && ! function_exists( 'bbp_user_has_profile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_user_has_profile()}.
+	 *
+	 * @deprecated Use bboss_bbp_user_has_profile() instead.
+	 */
+	function bbp_user_has_profile( $user_id = 0 ) {
+		return bboss_bbp_user_has_profile( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer

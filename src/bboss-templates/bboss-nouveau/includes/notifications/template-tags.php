@@ -121,3 +121,48 @@ function bboss_nouveau_notifications_bulk_management_dropdown() {
 	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 	<?php
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_notifications_filters' ) && ! function_exists( 'bp_nouveau_get_notifications_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_notifications_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_notifications_filters() instead.
+	 */
+	function bp_nouveau_get_notifications_filters() {
+		return bboss_nouveau_get_notifications_filters();
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_bulk_management_dropdown' ) && ! function_exists( 'bp_nouveau_notifications_bulk_management_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_bulk_management_dropdown()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_bulk_management_dropdown() instead.
+	 */
+	function bp_nouveau_notifications_bulk_management_dropdown() {
+		return bboss_nouveau_notifications_bulk_management_dropdown();
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_filters' ) && ! function_exists( 'bp_nouveau_notifications_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_filters() instead.
+	 */
+	function bp_nouveau_notifications_filters() {
+		return bboss_nouveau_notifications_filters();
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_sort_order_links' ) && ! function_exists( 'bp_nouveau_notifications_sort_order_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_sort_order_links()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_sort_order_links() instead.
+	 */
+	function bp_nouveau_notifications_sort_order_links() {
+		return bboss_nouveau_notifications_sort_order_links();
+	}
+}
+// @bbwt-com-end compat-layer

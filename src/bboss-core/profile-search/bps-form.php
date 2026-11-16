@@ -214,3 +214,28 @@ function bboss_profile_search_escaped_form_data( $form = false ) {
 
 	return $F;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_search_escaped_form_data' ) && ! function_exists( 'bp_profile_search_escaped_form_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_search_escaped_form_data()}.
+	 *
+	 * @deprecated Use bboss_profile_search_escaped_form_data() instead.
+	 */
+	function bp_profile_search_escaped_form_data( $form = false ) {
+		return bboss_profile_search_escaped_form_data( $form );
+	}
+}
+if ( function_exists( 'bboss_profile_search_show_form' ) && ! function_exists( 'bp_profile_search_show_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_search_show_form()}.
+	 *
+	 * @deprecated Use bboss_profile_search_show_form() instead.
+	 */
+	function bp_profile_search_show_form() {
+		return bboss_profile_search_show_form();
+	}
+}
+// @bbwt-com-end compat-layer

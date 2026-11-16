@@ -745,3 +745,18 @@ function bboss_bbp_admin() {
 	// migrate to BB_Tools_BBP_Converter or rely on the legacy class_alias in
 	// bboss-core/deprecated/buddyboss/3.0.0.php.
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_admin' ) && ! function_exists( 'bbp_admin' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_admin()}.
+	 *
+	 * @deprecated Use bboss_bbp_admin() instead.
+	 */
+	function bbp_admin() {
+		return bboss_bbp_admin();
+	}
+}
+// @bbwt-com-end compat-layer

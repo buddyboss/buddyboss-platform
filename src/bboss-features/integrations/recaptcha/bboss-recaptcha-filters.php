@@ -175,3 +175,38 @@ function bboss_recaptcha_validate_activate( $retval ) {
 
 	return $retval;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_recaptcha_class' ) && ! function_exists( 'bb_admin_recaptcha_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_recaptcha_class()}.
+	 *
+	 * @deprecated Use bboss_admin_recaptcha_class() instead.
+	 */
+	function bb_admin_recaptcha_class( $classes ) {
+		return bboss_admin_recaptcha_class( $classes );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_validate_activate' ) && ! function_exists( 'bb_recaptcha_validate_activate' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_validate_activate()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_validate_activate() instead.
+	 */
+	function bb_recaptcha_validate_activate( $retval ) {
+		return bboss_recaptcha_validate_activate( $retval );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_validate_login' ) && ! function_exists( 'bb_recaptcha_validate_login' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_validate_login()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_validate_login() instead.
+	 */
+	function bb_recaptcha_validate_login( $user ) {
+		return bboss_recaptcha_validate_login( $user );
+	}
+}
+// @bbwt-com-end compat-layer

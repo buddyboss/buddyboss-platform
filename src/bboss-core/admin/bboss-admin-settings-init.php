@@ -670,3 +670,88 @@ function bboss_sanitize_access_control_fallback( $value ) {
 
 	return $sanitized;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_init' ) && ! function_exists( 'bb_admin_settings_init' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_init()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_init() instead.
+	 */
+	function bb_admin_settings_init() {
+		return bboss_admin_settings_init();
+	}
+}
+if ( function_exists( 'bboss_flush_feature_caches_on_plugin_change' ) && ! function_exists( 'bb_flush_feature_caches_on_plugin_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_flush_feature_caches_on_plugin_change()}.
+	 *
+	 * @deprecated Use bboss_flush_feature_caches_on_plugin_change() instead.
+	 */
+	function bb_flush_feature_caches_on_plugin_change() {
+		return bboss_flush_feature_caches_on_plugin_change();
+	}
+}
+if ( function_exists( 'bboss_integration_bridge_early_init' ) && ! function_exists( 'bb_integration_bridge_early_init' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_integration_bridge_early_init()}.
+	 *
+	 * @deprecated Use bboss_integration_bridge_early_init() instead.
+	 */
+	function bb_integration_bridge_early_init() {
+		return bboss_integration_bridge_early_init();
+	}
+}
+if ( function_exists( 'bboss_purge_json_catalogs_on_upgrade' ) && ! function_exists( 'bb_purge_json_catalogs_on_upgrade' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_purge_json_catalogs_on_upgrade()}.
+	 *
+	 * @deprecated Use bboss_purge_json_catalogs_on_upgrade() instead.
+	 */
+	function bb_purge_json_catalogs_on_upgrade( $upgrader, $options ) {
+		return bboss_purge_json_catalogs_on_upgrade( $upgrader, $options );
+	}
+}
+if ( function_exists( 'bboss_register_help_content_rest_route' ) && ! function_exists( 'bb_register_help_content_rest_route' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_help_content_rest_route()}.
+	 *
+	 * @deprecated Use bboss_register_help_content_rest_route() instead.
+	 */
+	function bb_register_help_content_rest_route() {
+		return bboss_register_help_content_rest_route();
+	}
+}
+if ( function_exists( 'bboss_register_integrations_rest_route' ) && ! function_exists( 'bb_register_integrations_rest_route' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_integrations_rest_route()}.
+	 *
+	 * @deprecated Use bboss_register_integrations_rest_route() instead.
+	 */
+	function bb_register_integrations_rest_route() {
+		return bboss_register_integrations_rest_route();
+	}
+}
+if ( function_exists( 'bboss_reverse_sync_components_to_features' ) && ! function_exists( 'bb_reverse_sync_components_to_features' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_reverse_sync_components_to_features()}.
+	 *
+	 * @deprecated Use bboss_reverse_sync_components_to_features() instead.
+	 */
+	function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
+		return bboss_reverse_sync_components_to_features( $old_value, $new_value );
+	}
+}
+if ( function_exists( 'bboss_sanitize_access_control_fallback' ) && ! function_exists( 'bb_sanitize_access_control_fallback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_sanitize_access_control_fallback()}.
+	 *
+	 * @deprecated Use bboss_sanitize_access_control_fallback() instead.
+	 */
+	function bb_sanitize_access_control_fallback( $value ) {
+		return bboss_sanitize_access_control_fallback( $value );
+	}
+}
+// @bbwt-com-end compat-layer

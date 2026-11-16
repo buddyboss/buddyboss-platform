@@ -347,3 +347,58 @@ function bboss_core_current_user_ua() {
 	 */
 	return apply_filters( 'bp_core_current_user_ua', $retval );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_check_for_blacklist' ) && ! function_exists( 'bp_core_check_for_blacklist' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_check_for_blacklist()}.
+	 *
+	 * @deprecated Use bboss_core_check_for_blacklist() instead.
+	 */
+	function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', $error_type = 'bool' ) {
+		return bboss_core_check_for_blacklist( $user_id, $title, $content, $error_type );
+	}
+}
+if ( function_exists( 'bboss_core_check_for_flood' ) && ! function_exists( 'bp_core_check_for_flood' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_check_for_flood()}.
+	 *
+	 * @deprecated Use bboss_core_check_for_flood() instead.
+	 */
+	function bp_core_check_for_flood( $user_id = 0 ) {
+		return bboss_core_check_for_flood( $user_id );
+	}
+}
+if ( function_exists( 'bboss_core_check_for_moderation' ) && ! function_exists( 'bp_core_check_for_moderation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_check_for_moderation()}.
+	 *
+	 * @deprecated Use bboss_core_check_for_moderation() instead.
+	 */
+	function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '', $error_type = 'bool' ) {
+		return bboss_core_check_for_moderation( $user_id, $title, $content, $error_type );
+	}
+}
+if ( function_exists( 'bboss_core_current_user_ip' ) && ! function_exists( 'bp_core_current_user_ip' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_current_user_ip()}.
+	 *
+	 * @deprecated Use bboss_core_current_user_ip() instead.
+	 */
+	function bp_core_current_user_ip() {
+		return bboss_core_current_user_ip();
+	}
+}
+if ( function_exists( 'bboss_core_current_user_ua' ) && ! function_exists( 'bp_core_current_user_ua' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_current_user_ua()}.
+	 *
+	 * @deprecated Use bboss_core_current_user_ua() instead.
+	 */
+	function bp_core_current_user_ua() {
+		return bboss_core_current_user_ua();
+	}
+}
+// @bbwt-com-end compat-layer

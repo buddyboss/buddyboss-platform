@@ -287,3 +287,28 @@ function bboss_notifications_register_web_push_pro_placeholder_fields() {
 		)
 	);
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_register_web_push_panel_fields' ) && ! function_exists( 'bb_notifications_register_web_push_panel_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_register_web_push_panel_fields()}.
+	 *
+	 * @deprecated Use bboss_notifications_register_web_push_panel_fields() instead.
+	 */
+	function bb_notifications_register_web_push_panel_fields() {
+		return bboss_notifications_register_web_push_panel_fields();
+	}
+}
+if ( function_exists( 'bboss_notifications_register_web_push_pro_placeholder_fields' ) && ! function_exists( 'bb_notifications_register_web_push_pro_placeholder_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_register_web_push_pro_placeholder_fields()}.
+	 *
+	 * @deprecated Use bboss_notifications_register_web_push_pro_placeholder_fields() instead.
+	 */
+	function bb_notifications_register_web_push_pro_placeholder_fields() {
+		return bboss_notifications_register_web_push_pro_placeholder_fields();
+	}
+}
+// @bbwt-com-end compat-layer

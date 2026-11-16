@@ -45,3 +45,28 @@ function bboss_activity_reset_my_new_mentions() {
 	}
 }
 add_action( 'bp_activity_screen_mentions', 'bp_activity_reset_my_new_mentions' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_reset_my_new_mentions' ) && ! function_exists( 'bp_activity_reset_my_new_mentions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_reset_my_new_mentions()}.
+	 *
+	 * @deprecated Use bboss_activity_reset_my_new_mentions() instead.
+	 */
+	function bp_activity_reset_my_new_mentions() {
+		return bboss_activity_reset_my_new_mentions();
+	}
+}
+if ( function_exists( 'bboss_activity_screen_mentions' ) && ! function_exists( 'bp_activity_screen_mentions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_screen_mentions()}.
+	 *
+	 * @deprecated Use bboss_activity_screen_mentions() instead.
+	 */
+	function bp_activity_screen_mentions() {
+		return bboss_activity_screen_mentions();
+	}
+}
+// @bbwt-com-end compat-layer

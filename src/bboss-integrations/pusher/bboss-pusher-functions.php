@@ -22,11 +22,11 @@ function bboss_pusher_integration_url( $path = '' ) {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
 if ( function_exists( 'bboss_pusher_integration_url' ) && ! function_exists( 'bb_pusher_integration_url' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_pusher_integration_url()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_pusher_integration_url()}.
 	 *
 	 * @deprecated Use bboss_pusher_integration_url() instead.
 	 */

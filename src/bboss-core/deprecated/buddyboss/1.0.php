@@ -813,3 +813,208 @@ function bboss_bbp_get_single_forum_description( $args = '' ) {
 	// Return filtered result
 	return apply_filters( 'bbp_get_single_forum_description', $retstr, $r );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_single_forum_description' ) && ! function_exists( 'bbp_get_single_forum_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_single_forum_description()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_single_forum_description() instead.
+	 */
+	function bbp_get_single_forum_description( $args = '' ) {
+		return bboss_bbp_get_single_forum_description( $args );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_single_topic_description' ) && ! function_exists( 'bbp_get_single_topic_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_single_topic_description()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_single_topic_description() instead.
+	 */
+	function bbp_get_single_topic_description( $args = '' ) {
+		return bboss_bbp_get_single_topic_description( $args );
+	}
+}
+if ( function_exists( 'bboss_bbp_single_forum_description' ) && ! function_exists( 'bbp_single_forum_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_single_forum_description()}.
+	 *
+	 * @deprecated Use bboss_bbp_single_forum_description() instead.
+	 */
+	function bbp_single_forum_description( $args = '' ) {
+		return bboss_bbp_single_forum_description( $args );
+	}
+}
+if ( function_exists( 'bboss_bbp_single_topic_description' ) && ! function_exists( 'bbp_single_topic_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_single_topic_description()}.
+	 *
+	 * @deprecated Use bboss_bbp_single_topic_description() instead.
+	 */
+	function bbp_single_topic_description( $args = '' ) {
+		return bboss_bbp_single_topic_description( $args );
+	}
+}
+if ( function_exists( 'bboss_admin_setting_callback_theme_package_id' ) && ! function_exists( 'bp_admin_setting_callback_theme_package_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_setting_callback_theme_package_id()}.
+	 *
+	 * @deprecated Use bboss_admin_setting_callback_theme_package_id() instead.
+	 */
+	function bp_admin_setting_callback_theme_package_id() {
+		return bboss_admin_setting_callback_theme_package_id();
+	}
+}
+if ( function_exists( 'bboss_do_register_theme_directory' ) && ! function_exists( 'bp_do_register_theme_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_do_register_theme_directory()}.
+	 *
+	 * @deprecated Use bboss_do_register_theme_directory() instead.
+	 */
+	function bp_do_register_theme_directory() {
+		return bboss_do_register_theme_directory();
+	}
+}
+if ( function_exists( 'bboss_get_member_latest_update' ) && ! function_exists( 'bp_get_member_latest_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_member_latest_update()}.
+	 *
+	 * @deprecated Use bboss_get_member_latest_update() instead.
+	 */
+	function bp_get_member_latest_update( $args = '' ) {
+		return bboss_get_member_latest_update( $args );
+	}
+}
+if ( function_exists( 'bboss_get_send_public_message_button' ) && ! function_exists( 'bp_get_send_public_message_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_send_public_message_button()}.
+	 *
+	 * @deprecated Use bboss_get_send_public_message_button() instead.
+	 */
+	function bp_get_send_public_message_button( $args = '' ) {
+		return bboss_get_send_public_message_button( $args );
+	}
+}
+if ( function_exists( 'bboss_is_messages_sentbox' ) && ! function_exists( 'bp_is_messages_sentbox' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_messages_sentbox()}.
+	 *
+	 * @deprecated Use bboss_is_messages_sentbox() instead.
+	 */
+	function bp_is_messages_sentbox() {
+		return bboss_is_messages_sentbox();
+	}
+}
+if ( function_exists( 'bboss_member_latest_update' ) && ! function_exists( 'bp_member_latest_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_latest_update()}.
+	 *
+	 * @deprecated Use bboss_member_latest_update() instead.
+	 */
+	function bp_member_latest_update( $args = '' ) {
+		return bboss_member_latest_update( $args );
+	}
+}
+if ( function_exists( 'bboss_nouveau_get_group_description_excerpt' ) && ! function_exists( 'bp_nouveau_get_group_description_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_group_description_excerpt()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_group_description_excerpt() instead.
+	 */
+	function bp_nouveau_get_group_description_excerpt( $group = null, $length = null ) {
+		return bboss_nouveau_get_group_description_excerpt( $group, $length );
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_description_excerpt' ) && ! function_exists( 'bp_nouveau_group_description_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_description_excerpt()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_description_excerpt() instead.
+	 */
+	function bp_nouveau_group_description_excerpt( $group = null, $length = null ) {
+		return bboss_nouveau_group_description_excerpt( $group, $length );
+	}
+}
+if ( function_exists( 'bboss_nouveau_member_description' ) && ! function_exists( 'bp_nouveau_member_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_description()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_description() instead.
+	 */
+	function bp_nouveau_member_description( $user_id = 0 ) {
+		return bboss_nouveau_member_description( $user_id );
+	}
+}
+if ( function_exists( 'bboss_nouveau_member_description_edit_link' ) && ! function_exists( 'bp_nouveau_member_description_edit_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_description_edit_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_description_edit_link() instead.
+	 */
+	function bp_nouveau_member_description_edit_link() {
+		return bboss_nouveau_member_description_edit_link();
+	}
+}
+if ( function_exists( 'bboss_nouveau_member_get_description_edit_link' ) && ! function_exists( 'bp_nouveau_member_get_description_edit_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_get_description_edit_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_get_description_edit_link() instead.
+	 */
+	function bp_nouveau_member_get_description_edit_link() {
+		return bboss_nouveau_member_get_description_edit_link();
+	}
+}
+if ( function_exists( 'bboss_nouveau_members_wp_bio_info' ) && ! function_exists( 'bp_nouveau_members_wp_bio_info' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_members_wp_bio_info()}.
+	 *
+	 * @deprecated Use bboss_nouveau_members_wp_bio_info() instead.
+	 */
+	function bp_nouveau_members_wp_bio_info() {
+		return bboss_nouveau_members_wp_bio_info();
+	}
+}
+if ( function_exists( 'bboss_register_theme_compat_default_features' ) && ! function_exists( 'bp_register_theme_compat_default_features' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_theme_compat_default_features()}.
+	 *
+	 * @deprecated Use bboss_register_theme_compat_default_features() instead.
+	 */
+	function bp_register_theme_compat_default_features() {
+		return bboss_register_theme_compat_default_features();
+	}
+}
+if ( function_exists( 'bboss_register_theme_directory' ) && ! function_exists( 'bp_register_theme_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_theme_directory()}.
+	 *
+	 * @deprecated Use bboss_register_theme_directory() instead.
+	 */
+	function bp_register_theme_directory() {
+		return bboss_register_theme_directory();
+	}
+}
+if ( function_exists( 'bboss_send_public_message_button' ) && ! function_exists( 'bp_send_public_message_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_send_public_message_button()}.
+	 *
+	 * @deprecated Use bboss_send_public_message_button() instead.
+	 */
+	function bp_send_public_message_button( $args = '' ) {
+		return bboss_send_public_message_button( $args );
+	}
+}
+if ( function_exists( 'bboss_messages_screen_sentbox' ) && ! function_exists( 'messages_screen_sentbox' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_screen_sentbox()}.
+	 *
+	 * @deprecated Use bboss_messages_screen_sentbox() instead.
+	 */
+	function messages_screen_sentbox() {
+		return bboss_messages_screen_sentbox();
+	}
+}
+// @bbwt-com-end compat-layer

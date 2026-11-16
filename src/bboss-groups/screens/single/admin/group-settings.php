@@ -150,3 +150,18 @@ function bboss_groups_screen_group_admin_settings() {
 	bboss_core_load_template( apply_filters( 'groups_template_group_admin_settings', 'groups/single/home' ) );
 }
 add_action( 'bp_screens', 'groups_screen_group_admin_settings' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_screen_group_admin_settings' ) && ! function_exists( 'groups_screen_group_admin_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_screen_group_admin_settings()}.
+	 *
+	 * @deprecated Use bboss_groups_screen_group_admin_settings() instead.
+	 */
+	function groups_screen_group_admin_settings() {
+		return bboss_groups_screen_group_admin_settings();
+	}
+}
+// @bbwt-com-end compat-layer

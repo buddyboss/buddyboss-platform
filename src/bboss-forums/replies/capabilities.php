@@ -184,3 +184,28 @@ function bboss_bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0
 
 	return apply_filters( 'bbp_map_reply_meta_caps', $caps, $cap, $user_id, $args );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_reply_caps' ) && ! function_exists( 'bbp_get_reply_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_reply_caps()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_reply_caps() instead.
+	 */
+	function bbp_get_reply_caps() {
+		return bboss_bbp_get_reply_caps();
+	}
+}
+if ( function_exists( 'bboss_bbp_map_reply_meta_caps' ) && ! function_exists( 'bbp_map_reply_meta_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_map_reply_meta_caps()}.
+	 *
+	 * @deprecated Use bboss_bbp_map_reply_meta_caps() instead.
+	 */
+	function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+		return bboss_bbp_map_reply_meta_caps( $caps, $cap, $user_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -941,3 +941,18 @@ if ( ! class_exists( 'BBoss_Forums' ) ) :
 	}
 
 endif; // class_exists check
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_forums' ) && ! function_exists( 'bbpress' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_forums()}.
+	 *
+	 * @deprecated Use bboss_forums() instead.
+	 */
+	function bbpress() {
+		return bboss_forums();
+	}
+}
+// @bbwt-com-end compat-layer

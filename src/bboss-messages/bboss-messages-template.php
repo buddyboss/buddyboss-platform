@@ -2835,3 +2835,1378 @@ function bboss_member_loop_show_message_button( $enabled_message_action, $member
 }
 
 add_filter( 'bb_member_loop_show_message_button', 'bb_member_loop_show_message_button', 10, 3 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_message_archived_thread_view_link' ) && ! function_exists( 'bb_get_message_archived_thread_view_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_archived_thread_view_link()}.
+	 *
+	 * @deprecated Use bboss_get_message_archived_thread_view_link() instead.
+	 */
+	function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
+		return bboss_get_message_archived_thread_view_link( $thread_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_get_messages_archived_slug' ) && ! function_exists( 'bb_get_messages_archived_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_messages_archived_slug()}.
+	 *
+	 * @deprecated Use bboss_get_messages_archived_slug() instead.
+	 */
+	function bb_get_messages_archived_slug() {
+		return bboss_get_messages_archived_slug();
+	}
+}
+if ( function_exists( 'bboss_get_messages_archived_url' ) && ! function_exists( 'bb_get_messages_archived_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_messages_archived_url()}.
+	 *
+	 * @deprecated Use bboss_get_messages_archived_url() instead.
+	 */
+	function bb_get_messages_archived_url() {
+		return bboss_get_messages_archived_url();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_excerpt' ) && ! function_exists( 'bb_get_the_thread_message_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_excerpt()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_excerpt() instead.
+	 */
+	function bb_get_the_thread_message_excerpt() {
+		return bboss_get_the_thread_message_excerpt();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_sent_time' ) && ! function_exists( 'bb_get_the_thread_message_sent_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_sent_time()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_sent_time() instead.
+	 */
+	function bb_get_the_thread_message_sent_time() {
+		return bboss_get_the_thread_message_sent_time();
+	}
+}
+if ( function_exists( 'bboss_get_thread_sent_date' ) && ! function_exists( 'bb_get_thread_sent_date' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_thread_sent_date()}.
+	 *
+	 * @deprecated Use bboss_get_thread_sent_date() instead.
+	 */
+	function bb_get_thread_sent_date( $last_message_date = false ) {
+		return bboss_get_thread_sent_date( $last_message_date );
+	}
+}
+if ( function_exists( 'bboss_get_thread_start_date' ) && ! function_exists( 'bb_get_thread_start_date' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_thread_start_date()}.
+	 *
+	 * @deprecated Use bboss_get_thread_start_date() instead.
+	 */
+	function bb_get_thread_start_date( $thread_start_date = false, $show_week_days = true ) {
+		return bboss_get_thread_start_date( $thread_start_date, $show_week_days );
+	}
+}
+if ( function_exists( 'bboss_get_thread_total_recipients_count' ) && ! function_exists( 'bb_get_thread_total_recipients_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_thread_total_recipients_count()}.
+	 *
+	 * @deprecated Use bboss_get_thread_total_recipients_count() instead.
+	 */
+	function bb_get_thread_total_recipients_count() {
+		return bboss_get_thread_total_recipients_count();
+	}
+}
+if ( function_exists( 'bboss_member_loop_show_message_button' ) && ! function_exists( 'bb_member_loop_show_message_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_loop_show_message_button()}.
+	 *
+	 * @deprecated Use bboss_member_loop_show_message_button() instead.
+	 */
+	function bb_member_loop_show_message_button( $enabled_message_action, $member_id, $current_user_id ) {
+		return bboss_member_loop_show_message_button( $enabled_message_action, $member_id, $current_user_id );
+	}
+}
+if ( function_exists( 'bboss_message_archived_thread_view_link' ) && ! function_exists( 'bb_message_archived_thread_view_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_archived_thread_view_link()}.
+	 *
+	 * @deprecated Use bboss_message_archived_thread_view_link() instead.
+	 */
+	function bb_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
+		return bboss_message_archived_thread_view_link( $thread_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_messages_archived_slug' ) && ! function_exists( 'bb_messages_archived_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_archived_slug()}.
+	 *
+	 * @deprecated Use bboss_messages_archived_slug() instead.
+	 */
+	function bb_messages_archived_slug() {
+		return bboss_messages_archived_slug();
+	}
+}
+if ( function_exists( 'bboss_messages_archived_url' ) && ! function_exists( 'bb_messages_archived_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_archived_url()}.
+	 *
+	 * @deprecated Use bboss_messages_archived_url() instead.
+	 */
+	function bb_messages_archived_url() {
+		return bboss_messages_archived_url();
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_excerpt' ) && ! function_exists( 'bb_the_thread_message_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_excerpt()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_excerpt() instead.
+	 */
+	function bb_the_thread_message_excerpt() {
+		return bboss_the_thread_message_excerpt();
+	}
+}
+if ( function_exists( 'bboss_embed_message_cache' ) && ! function_exists( 'bp_embed_message_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_embed_message_cache()}.
+	 *
+	 * @deprecated Use bboss_embed_message_cache() instead.
+	 */
+	function bp_embed_message_cache( $cache, $id, $cachekey ) {
+		return bboss_embed_message_cache( $cache, $id, $cachekey );
+	}
+}
+if ( function_exists( 'bboss_embed_message_save_cache' ) && ! function_exists( 'bp_embed_message_save_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_embed_message_save_cache()}.
+	 *
+	 * @deprecated Use bboss_embed_message_save_cache() instead.
+	 */
+	function bp_embed_message_save_cache( $cache, $cachekey, $id ) {
+		return bboss_embed_message_save_cache( $cache, $cachekey, $id );
+	}
+}
+if ( function_exists( 'bboss_get_max_thread_recipients_to_list' ) && ! function_exists( 'bp_get_max_thread_recipients_to_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_max_thread_recipients_to_list()}.
+	 *
+	 * @deprecated Use bboss_get_max_thread_recipients_to_list() instead.
+	 */
+	function bp_get_max_thread_recipients_to_list() {
+		return bboss_get_max_thread_recipients_to_list();
+	}
+}
+if ( function_exists( 'bboss_get_message_activate_deactivate_link' ) && ! function_exists( 'bp_get_message_activate_deactivate_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_activate_deactivate_link()}.
+	 *
+	 * @deprecated Use bboss_get_message_activate_deactivate_link() instead.
+	 */
+	function bp_get_message_activate_deactivate_link() {
+		return bboss_get_message_activate_deactivate_link();
+	}
+}
+if ( function_exists( 'bboss_get_message_activate_deactivate_text' ) && ! function_exists( 'bp_get_message_activate_deactivate_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_activate_deactivate_text()}.
+	 *
+	 * @deprecated Use bboss_get_message_activate_deactivate_text() instead.
+	 */
+	function bp_get_message_activate_deactivate_text() {
+		return bboss_get_message_activate_deactivate_text();
+	}
+}
+if ( function_exists( 'bboss_get_message_css_class' ) && ! function_exists( 'bp_get_message_css_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_css_class()}.
+	 *
+	 * @deprecated Use bboss_get_message_css_class() instead.
+	 */
+	function bp_get_message_css_class() {
+		return bboss_get_message_css_class();
+	}
+}
+if ( function_exists( 'bboss_get_message_get_recipient_usernames' ) && ! function_exists( 'bp_get_message_get_recipient_usernames' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_get_recipient_usernames()}.
+	 *
+	 * @deprecated Use bboss_get_message_get_recipient_usernames() instead.
+	 */
+	function bp_get_message_get_recipient_usernames() {
+		return bboss_get_message_get_recipient_usernames();
+	}
+}
+if ( function_exists( 'bboss_get_message_is_active_notice' ) && ! function_exists( 'bp_get_message_is_active_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_is_active_notice()}.
+	 *
+	 * @deprecated Use bboss_get_message_is_active_notice() instead.
+	 */
+	function bp_get_message_is_active_notice() {
+		return bboss_get_message_is_active_notice();
+	}
+}
+if ( function_exists( 'bboss_get_message_loading_image_src' ) && ! function_exists( 'bp_get_message_loading_image_src' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_loading_image_src()}.
+	 *
+	 * @deprecated Use bboss_get_message_loading_image_src() instead.
+	 */
+	function bp_get_message_loading_image_src() {
+		return bboss_get_message_loading_image_src();
+	}
+}
+if ( function_exists( 'bboss_get_message_notice_delete_link' ) && ! function_exists( 'bp_get_message_notice_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_notice_delete_link()}.
+	 *
+	 * @deprecated Use bboss_get_message_notice_delete_link() instead.
+	 */
+	function bp_get_message_notice_delete_link() {
+		return bboss_get_message_notice_delete_link();
+	}
+}
+if ( function_exists( 'bboss_get_message_notice_id' ) && ! function_exists( 'bp_get_message_notice_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_notice_id()}.
+	 *
+	 * @deprecated Use bboss_get_message_notice_id() instead.
+	 */
+	function bp_get_message_notice_id() {
+		return bboss_get_message_notice_id();
+	}
+}
+if ( function_exists( 'bboss_get_message_notice_post_date' ) && ! function_exists( 'bp_get_message_notice_post_date' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_notice_post_date()}.
+	 *
+	 * @deprecated Use bboss_get_message_notice_post_date() instead.
+	 */
+	function bp_get_message_notice_post_date() {
+		return bboss_get_message_notice_post_date();
+	}
+}
+if ( function_exists( 'bboss_get_message_notice_subject' ) && ! function_exists( 'bp_get_message_notice_subject' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_notice_subject()}.
+	 *
+	 * @deprecated Use bboss_get_message_notice_subject() instead.
+	 */
+	function bp_get_message_notice_subject() {
+		return bboss_get_message_notice_subject();
+	}
+}
+if ( function_exists( 'bboss_get_message_notice_text' ) && ! function_exists( 'bp_get_message_notice_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_notice_text()}.
+	 *
+	 * @deprecated Use bboss_get_message_notice_text() instead.
+	 */
+	function bp_get_message_notice_text() {
+		return bboss_get_message_notice_text();
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_avatar' ) && ! function_exists( 'bp_get_message_thread_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_avatar()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_avatar() instead.
+	 */
+	function bp_get_message_thread_avatar( $args = '' ) {
+		return bboss_get_message_thread_avatar( $args );
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_content' ) && ! function_exists( 'bp_get_message_thread_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_content()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_content() instead.
+	 */
+	function bp_get_message_thread_content() {
+		return bboss_get_message_thread_content();
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_delete_link' ) && ! function_exists( 'bp_get_message_thread_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_delete_link()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_delete_link() instead.
+	 */
+	function bp_get_message_thread_delete_link( $user_id = null ) {
+		return bboss_get_message_thread_delete_link( $user_id );
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_excerpt' ) && ! function_exists( 'bp_get_message_thread_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_excerpt()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_excerpt() instead.
+	 */
+	function bp_get_message_thread_excerpt() {
+		return bboss_get_message_thread_excerpt();
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_from' ) && ! function_exists( 'bp_get_message_thread_from' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_from()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_from() instead.
+	 */
+	function bp_get_message_thread_from() {
+		return bboss_get_message_thread_from();
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_id' ) && ! function_exists( 'bp_get_message_thread_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_id()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_id() instead.
+	 */
+	function bp_get_message_thread_id() {
+		return bboss_get_message_thread_id();
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_last_post_date' ) && ! function_exists( 'bp_get_message_thread_last_post_date' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_last_post_date()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_last_post_date() instead.
+	 */
+	function bp_get_message_thread_last_post_date() {
+		return bboss_get_message_thread_last_post_date();
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_last_post_date_raw' ) && ! function_exists( 'bp_get_message_thread_last_post_date_raw' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_last_post_date_raw()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_last_post_date_raw() instead.
+	 */
+	function bp_get_message_thread_last_post_date_raw() {
+		return bboss_get_message_thread_last_post_date_raw();
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_subject' ) && ! function_exists( 'bp_get_message_thread_subject' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_subject()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_subject() instead.
+	 */
+	function bp_get_message_thread_subject() {
+		return bboss_get_message_thread_subject();
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_to' ) && ! function_exists( 'bp_get_message_thread_to' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_to()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_to() instead.
+	 */
+	function bp_get_message_thread_to() {
+		return bboss_get_message_thread_to();
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_total_and_unread_count' ) && ! function_exists( 'bp_get_message_thread_total_and_unread_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_total_and_unread_count()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_total_and_unread_count() instead.
+	 */
+	function bp_get_message_thread_total_and_unread_count( $thread_id = false ) {
+		return bboss_get_message_thread_total_and_unread_count( $thread_id );
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_total_count' ) && ! function_exists( 'bp_get_message_thread_total_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_total_count()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_total_count() instead.
+	 */
+	function bp_get_message_thread_total_count( $thread_id = false ) {
+		return bboss_get_message_thread_total_count( $thread_id );
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_unread_count' ) && ! function_exists( 'bp_get_message_thread_unread_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_unread_count()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_unread_count() instead.
+	 */
+	function bp_get_message_thread_unread_count() {
+		return bboss_get_message_thread_unread_count();
+	}
+}
+if ( function_exists( 'bboss_get_message_thread_view_link' ) && ! function_exists( 'bp_get_message_thread_view_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_thread_view_link()}.
+	 *
+	 * @deprecated Use bboss_get_message_thread_view_link() instead.
+	 */
+	function bp_get_message_thread_view_link( $thread_id = 0, $user_id = null ) {
+		return bboss_get_message_thread_view_link( $thread_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_get_messages_content_value' ) && ! function_exists( 'bp_get_messages_content_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_messages_content_value()}.
+	 *
+	 * @deprecated Use bboss_get_messages_content_value() instead.
+	 */
+	function bp_get_messages_content_value() {
+		return bboss_get_messages_content_value();
+	}
+}
+if ( function_exists( 'bboss_get_messages_form_action' ) && ! function_exists( 'bp_get_messages_form_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_messages_form_action()}.
+	 *
+	 * @deprecated Use bboss_get_messages_form_action() instead.
+	 */
+	function bp_get_messages_form_action() {
+		return bboss_get_messages_form_action();
+	}
+}
+if ( function_exists( 'bboss_get_messages_pagination' ) && ! function_exists( 'bp_get_messages_pagination' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_messages_pagination()}.
+	 *
+	 * @deprecated Use bboss_get_messages_pagination() instead.
+	 */
+	function bp_get_messages_pagination() {
+		return bboss_get_messages_pagination();
+	}
+}
+if ( function_exists( 'bboss_get_messages_slug' ) && ! function_exists( 'bp_get_messages_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_messages_slug()}.
+	 *
+	 * @deprecated Use bboss_get_messages_slug() instead.
+	 */
+	function bp_get_messages_slug() {
+		return bboss_get_messages_slug();
+	}
+}
+if ( function_exists( 'bboss_get_messages_subject_value' ) && ! function_exists( 'bp_get_messages_subject_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_messages_subject_value()}.
+	 *
+	 * @deprecated Use bboss_get_messages_subject_value() instead.
+	 */
+	function bp_get_messages_subject_value() {
+		return bboss_get_messages_subject_value();
+	}
+}
+if ( function_exists( 'bboss_get_messages_username_value' ) && ! function_exists( 'bp_get_messages_username_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_messages_username_value()}.
+	 *
+	 * @deprecated Use bboss_get_messages_username_value() instead.
+	 */
+	function bp_get_messages_username_value() {
+		return bboss_get_messages_username_value();
+	}
+}
+if ( function_exists( 'bboss_get_send_message_button' ) && ! function_exists( 'bp_get_send_message_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_send_message_button()}.
+	 *
+	 * @deprecated Use bboss_get_send_message_button() instead.
+	 */
+	function bp_get_send_message_button( $args = '' ) {
+		return bboss_get_send_message_button( $args );
+	}
+}
+if ( function_exists( 'bboss_get_send_private_message_link' ) && ! function_exists( 'bp_get_send_private_message_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_send_private_message_link()}.
+	 *
+	 * @deprecated Use bboss_get_send_private_message_link() instead.
+	 */
+	function bp_get_send_private_message_link() {
+		return bboss_get_send_private_message_link();
+	}
+}
+if ( function_exists( 'bboss_get_the_message_thread_mark_read_url' ) && ! function_exists( 'bp_get_the_message_thread_mark_read_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_message_thread_mark_read_url()}.
+	 *
+	 * @deprecated Use bboss_get_the_message_thread_mark_read_url() instead.
+	 */
+	function bp_get_the_message_thread_mark_read_url( $user_id = null ) {
+		return bboss_get_the_message_thread_mark_read_url( $user_id );
+	}
+}
+if ( function_exists( 'bboss_get_the_message_thread_mark_unread_url' ) && ! function_exists( 'bp_get_the_message_thread_mark_unread_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_message_thread_mark_unread_url()}.
+	 *
+	 * @deprecated Use bboss_get_the_message_thread_mark_unread_url() instead.
+	 */
+	function bp_get_the_message_thread_mark_unread_url( $user_id = null ) {
+		return bboss_get_the_message_thread_mark_unread_url( $user_id );
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_delete_link' ) && ! function_exists( 'bp_get_the_thread_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_delete_link()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_delete_link() instead.
+	 */
+	function bp_get_the_thread_delete_link() {
+		return bboss_get_the_thread_delete_link();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_id' ) && ! function_exists( 'bp_get_the_thread_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_id()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_id() instead.
+	 */
+	function bp_get_the_thread_id() {
+		return bboss_get_the_thread_id();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_alt_class' ) && ! function_exists( 'bp_get_the_thread_message_alt_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_alt_class()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_alt_class() instead.
+	 */
+	function bp_get_the_thread_message_alt_class() {
+		return bboss_get_the_thread_message_alt_class();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_content' ) && ! function_exists( 'bp_get_the_thread_message_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_content()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_content() instead.
+	 */
+	function bp_get_the_thread_message_content() {
+		return bboss_get_the_thread_message_content();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_css_class' ) && ! function_exists( 'bp_get_the_thread_message_css_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_css_class()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_css_class() instead.
+	 */
+	function bp_get_the_thread_message_css_class() {
+		return bboss_get_the_thread_message_css_class();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_date_sent' ) && ! function_exists( 'bp_get_the_thread_message_date_sent' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_date_sent()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_date_sent() instead.
+	 */
+	function bp_get_the_thread_message_date_sent() {
+		return bboss_get_the_thread_message_date_sent();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_id' ) && ! function_exists( 'bp_get_the_thread_message_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_id()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_id() instead.
+	 */
+	function bp_get_the_thread_message_id() {
+		return bboss_get_the_thread_message_id();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_sender_avatar_thumb' ) && ! function_exists( 'bp_get_the_thread_message_sender_avatar_thumb' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_sender_avatar_thumb()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_sender_avatar_thumb() instead.
+	 */
+	function bp_get_the_thread_message_sender_avatar_thumb( $args = '' ) {
+		return bboss_get_the_thread_message_sender_avatar_thumb( $args );
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_sender_id' ) && ! function_exists( 'bp_get_the_thread_message_sender_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_sender_id()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_sender_id() instead.
+	 */
+	function bp_get_the_thread_message_sender_id() {
+		return bboss_get_the_thread_message_sender_id();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_sender_link' ) && ! function_exists( 'bp_get_the_thread_message_sender_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_sender_link()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_sender_link() instead.
+	 */
+	function bp_get_the_thread_message_sender_link() {
+		return bboss_get_the_thread_message_sender_link();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_sender_name' ) && ! function_exists( 'bp_get_the_thread_message_sender_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_sender_name()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_sender_name() instead.
+	 */
+	function bp_get_the_thread_message_sender_name() {
+		return bboss_get_the_thread_message_sender_name();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_message_time_since' ) && ! function_exists( 'bp_get_the_thread_message_time_since' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_message_time_since()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_message_time_since() instead.
+	 */
+	function bp_get_the_thread_message_time_since() {
+		return bboss_get_the_thread_message_time_since();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_recipients' ) && ! function_exists( 'bp_get_the_thread_recipients' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_recipients()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_recipients() instead.
+	 */
+	function bp_get_the_thread_recipients() {
+		return bboss_get_the_thread_recipients();
+	}
+}
+if ( function_exists( 'bboss_get_the_thread_subject' ) && ! function_exists( 'bp_get_the_thread_subject' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_thread_subject()}.
+	 *
+	 * @deprecated Use bboss_get_the_thread_subject() instead.
+	 */
+	function bp_get_the_thread_subject() {
+		return bboss_get_the_thread_subject();
+	}
+}
+if ( function_exists( 'bboss_get_thread' ) && ! function_exists( 'bp_get_thread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_thread()}.
+	 *
+	 * @deprecated Use bboss_get_thread() instead.
+	 */
+	function bp_get_thread( $args = '' ) {
+		return bboss_get_thread( $args );
+	}
+}
+if ( function_exists( 'bboss_get_thread_messages_order' ) && ! function_exists( 'bp_get_thread_messages_order' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_thread_messages_order()}.
+	 *
+	 * @deprecated Use bboss_get_thread_messages_order() instead.
+	 */
+	function bp_get_thread_messages_order() {
+		return bboss_get_thread_messages_order();
+	}
+}
+if ( function_exists( 'bboss_get_thread_recipients_count' ) && ! function_exists( 'bp_get_thread_recipients_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_thread_recipients_count()}.
+	 *
+	 * @deprecated Use bboss_get_thread_recipients_count() instead.
+	 */
+	function bp_get_thread_recipients_count() {
+		return bboss_get_thread_recipients_count();
+	}
+}
+if ( function_exists( 'bboss_get_thread_recipients_list' ) && ! function_exists( 'bp_get_thread_recipients_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_thread_recipients_list()}.
+	 *
+	 * @deprecated Use bboss_get_thread_recipients_list() instead.
+	 */
+	function bp_get_thread_recipients_list() {
+		return bboss_get_thread_recipients_list();
+	}
+}
+if ( function_exists( 'bboss_get_total_unread_messages_count' ) && ! function_exists( 'bp_get_total_unread_messages_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_total_unread_messages_count()}.
+	 *
+	 * @deprecated Use bboss_get_total_unread_messages_count() instead.
+	 */
+	function bp_get_total_unread_messages_count( $user_id = 0 ) {
+		return bboss_get_total_unread_messages_count( $user_id );
+	}
+}
+if ( function_exists( 'bboss_has_message_threads' ) && ! function_exists( 'bp_has_message_threads' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_has_message_threads()}.
+	 *
+	 * @deprecated Use bboss_has_message_threads() instead.
+	 */
+	function bp_has_message_threads( $args = array() ) {
+		return bboss_has_message_threads( $args );
+	}
+}
+if ( function_exists( 'bboss_message_activate_deactivate_link' ) && ! function_exists( 'bp_message_activate_deactivate_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_activate_deactivate_link()}.
+	 *
+	 * @deprecated Use bboss_message_activate_deactivate_link() instead.
+	 */
+	function bp_message_activate_deactivate_link() {
+		return bboss_message_activate_deactivate_link();
+	}
+}
+if ( function_exists( 'bboss_message_activate_deactivate_text' ) && ! function_exists( 'bp_message_activate_deactivate_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_activate_deactivate_text()}.
+	 *
+	 * @deprecated Use bboss_message_activate_deactivate_text() instead.
+	 */
+	function bp_message_activate_deactivate_text() {
+		return bboss_message_activate_deactivate_text();
+	}
+}
+if ( function_exists( 'bboss_message_css_class' ) && ! function_exists( 'bp_message_css_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_css_class()}.
+	 *
+	 * @deprecated Use bboss_message_css_class() instead.
+	 */
+	function bp_message_css_class() {
+		return bboss_message_css_class();
+	}
+}
+if ( function_exists( 'bboss_message_get_notices' ) && ! function_exists( 'bp_message_get_notices' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_get_notices()}.
+	 *
+	 * @deprecated Use bboss_message_get_notices() instead.
+	 */
+	function bp_message_get_notices() {
+		return bboss_message_get_notices();
+	}
+}
+if ( function_exists( 'bboss_message_get_recipient_tabs' ) && ! function_exists( 'bp_message_get_recipient_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_get_recipient_tabs()}.
+	 *
+	 * @deprecated Use bboss_message_get_recipient_tabs() instead.
+	 */
+	function bp_message_get_recipient_tabs() {
+		return bboss_message_get_recipient_tabs();
+	}
+}
+if ( function_exists( 'bboss_message_get_recipient_usernames' ) && ! function_exists( 'bp_message_get_recipient_usernames' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_get_recipient_usernames()}.
+	 *
+	 * @deprecated Use bboss_message_get_recipient_usernames() instead.
+	 */
+	function bp_message_get_recipient_usernames() {
+		return bboss_message_get_recipient_usernames();
+	}
+}
+if ( function_exists( 'bboss_message_is_active_notice' ) && ! function_exists( 'bp_message_is_active_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_is_active_notice()}.
+	 *
+	 * @deprecated Use bboss_message_is_active_notice() instead.
+	 */
+	function bp_message_is_active_notice() {
+		return bboss_message_is_active_notice();
+	}
+}
+if ( function_exists( 'bboss_message_loading_image_src' ) && ! function_exists( 'bp_message_loading_image_src' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_loading_image_src()}.
+	 *
+	 * @deprecated Use bboss_message_loading_image_src() instead.
+	 */
+	function bp_message_loading_image_src() {
+		return bboss_message_loading_image_src();
+	}
+}
+if ( function_exists( 'bboss_message_notice_delete_link' ) && ! function_exists( 'bp_message_notice_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_notice_delete_link()}.
+	 *
+	 * @deprecated Use bboss_message_notice_delete_link() instead.
+	 */
+	function bp_message_notice_delete_link() {
+		return bboss_message_notice_delete_link();
+	}
+}
+if ( function_exists( 'bboss_message_notice_id' ) && ! function_exists( 'bp_message_notice_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_notice_id()}.
+	 *
+	 * @deprecated Use bboss_message_notice_id() instead.
+	 */
+	function bp_message_notice_id() {
+		return bboss_message_notice_id();
+	}
+}
+if ( function_exists( 'bboss_message_notice_post_date' ) && ! function_exists( 'bp_message_notice_post_date' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_notice_post_date()}.
+	 *
+	 * @deprecated Use bboss_message_notice_post_date() instead.
+	 */
+	function bp_message_notice_post_date() {
+		return bboss_message_notice_post_date();
+	}
+}
+if ( function_exists( 'bboss_message_notice_subject' ) && ! function_exists( 'bp_message_notice_subject' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_notice_subject()}.
+	 *
+	 * @deprecated Use bboss_message_notice_subject() instead.
+	 */
+	function bp_message_notice_subject() {
+		return bboss_message_notice_subject();
+	}
+}
+if ( function_exists( 'bboss_message_notice_text' ) && ! function_exists( 'bp_message_notice_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_notice_text()}.
+	 *
+	 * @deprecated Use bboss_message_notice_text() instead.
+	 */
+	function bp_message_notice_text() {
+		return bboss_message_notice_text();
+	}
+}
+if ( function_exists( 'bboss_message_search_form' ) && ! function_exists( 'bp_message_search_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_search_form()}.
+	 *
+	 * @deprecated Use bboss_message_search_form() instead.
+	 */
+	function bp_message_search_form() {
+		return bboss_message_search_form();
+	}
+}
+if ( function_exists( 'bboss_message_thread' ) && ! function_exists( 'bp_message_thread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread()}.
+	 *
+	 * @deprecated Use bboss_message_thread() instead.
+	 */
+	function bp_message_thread() {
+		return bboss_message_thread();
+	}
+}
+if ( function_exists( 'bboss_message_thread_avatar' ) && ! function_exists( 'bp_message_thread_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_avatar()}.
+	 *
+	 * @deprecated Use bboss_message_thread_avatar() instead.
+	 */
+	function bp_message_thread_avatar( $args = '' ) {
+		return bboss_message_thread_avatar( $args );
+	}
+}
+if ( function_exists( 'bboss_message_thread_content' ) && ! function_exists( 'bp_message_thread_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_content()}.
+	 *
+	 * @deprecated Use bboss_message_thread_content() instead.
+	 */
+	function bp_message_thread_content() {
+		return bboss_message_thread_content();
+	}
+}
+if ( function_exists( 'bboss_message_thread_delete_link' ) && ! function_exists( 'bp_message_thread_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_delete_link()}.
+	 *
+	 * @deprecated Use bboss_message_thread_delete_link() instead.
+	 */
+	function bp_message_thread_delete_link( $user_id = null ) {
+		return bboss_message_thread_delete_link( $user_id );
+	}
+}
+if ( function_exists( 'bboss_message_thread_excerpt' ) && ! function_exists( 'bp_message_thread_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_excerpt()}.
+	 *
+	 * @deprecated Use bboss_message_thread_excerpt() instead.
+	 */
+	function bp_message_thread_excerpt() {
+		return bboss_message_thread_excerpt();
+	}
+}
+if ( function_exists( 'bboss_message_thread_from' ) && ! function_exists( 'bp_message_thread_from' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_from()}.
+	 *
+	 * @deprecated Use bboss_message_thread_from() instead.
+	 */
+	function bp_message_thread_from() {
+		return bboss_message_thread_from();
+	}
+}
+if ( function_exists( 'bboss_message_thread_has_unread' ) && ! function_exists( 'bp_message_thread_has_unread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_has_unread()}.
+	 *
+	 * @deprecated Use bboss_message_thread_has_unread() instead.
+	 */
+	function bp_message_thread_has_unread() {
+		return bboss_message_thread_has_unread();
+	}
+}
+if ( function_exists( 'bboss_message_thread_id' ) && ! function_exists( 'bp_message_thread_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_id()}.
+	 *
+	 * @deprecated Use bboss_message_thread_id() instead.
+	 */
+	function bp_message_thread_id() {
+		return bboss_message_thread_id();
+	}
+}
+if ( function_exists( 'bboss_message_thread_last_post_date' ) && ! function_exists( 'bp_message_thread_last_post_date' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_last_post_date()}.
+	 *
+	 * @deprecated Use bboss_message_thread_last_post_date() instead.
+	 */
+	function bp_message_thread_last_post_date() {
+		return bboss_message_thread_last_post_date();
+	}
+}
+if ( function_exists( 'bboss_message_thread_last_post_date_raw' ) && ! function_exists( 'bp_message_thread_last_post_date_raw' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_last_post_date_raw()}.
+	 *
+	 * @deprecated Use bboss_message_thread_last_post_date_raw() instead.
+	 */
+	function bp_message_thread_last_post_date_raw() {
+		return bboss_message_thread_last_post_date_raw();
+	}
+}
+if ( function_exists( 'bboss_message_thread_subject' ) && ! function_exists( 'bp_message_thread_subject' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_subject()}.
+	 *
+	 * @deprecated Use bboss_message_thread_subject() instead.
+	 */
+	function bp_message_thread_subject() {
+		return bboss_message_thread_subject();
+	}
+}
+if ( function_exists( 'bboss_message_thread_to' ) && ! function_exists( 'bp_message_thread_to' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_to()}.
+	 *
+	 * @deprecated Use bboss_message_thread_to() instead.
+	 */
+	function bp_message_thread_to() {
+		return bboss_message_thread_to();
+	}
+}
+if ( function_exists( 'bboss_message_thread_total_and_unread_count' ) && ! function_exists( 'bp_message_thread_total_and_unread_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_total_and_unread_count()}.
+	 *
+	 * @deprecated Use bboss_message_thread_total_and_unread_count() instead.
+	 */
+	function bp_message_thread_total_and_unread_count( $thread_id = false ) {
+		return bboss_message_thread_total_and_unread_count( $thread_id );
+	}
+}
+if ( function_exists( 'bboss_message_thread_total_count' ) && ! function_exists( 'bp_message_thread_total_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_total_count()}.
+	 *
+	 * @deprecated Use bboss_message_thread_total_count() instead.
+	 */
+	function bp_message_thread_total_count( $thread_id = false ) {
+		return bboss_message_thread_total_count( $thread_id );
+	}
+}
+if ( function_exists( 'bboss_message_thread_unread_count' ) && ! function_exists( 'bp_message_thread_unread_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_unread_count()}.
+	 *
+	 * @deprecated Use bboss_message_thread_unread_count() instead.
+	 */
+	function bp_message_thread_unread_count() {
+		return bboss_message_thread_unread_count();
+	}
+}
+if ( function_exists( 'bboss_message_thread_view_link' ) && ! function_exists( 'bp_message_thread_view_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_thread_view_link()}.
+	 *
+	 * @deprecated Use bboss_message_thread_view_link() instead.
+	 */
+	function bp_message_thread_view_link( $thread_id = 0, $user_id = null ) {
+		return bboss_message_thread_view_link( $thread_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_message_threads' ) && ! function_exists( 'bp_message_threads' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_threads()}.
+	 *
+	 * @deprecated Use bboss_message_threads() instead.
+	 */
+	function bp_message_threads() {
+		return bboss_message_threads();
+	}
+}
+if ( function_exists( 'bboss_messages_bulk_management_dropdown' ) && ! function_exists( 'bp_messages_bulk_management_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_bulk_management_dropdown()}.
+	 *
+	 * @deprecated Use bboss_messages_bulk_management_dropdown() instead.
+	 */
+	function bp_messages_bulk_management_dropdown() {
+		return bboss_messages_bulk_management_dropdown();
+	}
+}
+if ( function_exists( 'bboss_messages_content_value' ) && ! function_exists( 'bp_messages_content_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_content_value()}.
+	 *
+	 * @deprecated Use bboss_messages_content_value() instead.
+	 */
+	function bp_messages_content_value() {
+		return bboss_messages_content_value();
+	}
+}
+if ( function_exists( 'bboss_messages_embed' ) && ! function_exists( 'bp_messages_embed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_embed()}.
+	 *
+	 * @deprecated Use bboss_messages_embed() instead.
+	 */
+	function bp_messages_embed() {
+		return bboss_messages_embed();
+	}
+}
+if ( function_exists( 'bboss_messages_form_action' ) && ! function_exists( 'bp_messages_form_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_form_action()}.
+	 *
+	 * @deprecated Use bboss_messages_form_action() instead.
+	 */
+	function bp_messages_form_action() {
+		return bboss_messages_form_action();
+	}
+}
+if ( function_exists( 'bboss_messages_is_active_notice' ) && ! function_exists( 'bp_messages_is_active_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_is_active_notice()}.
+	 *
+	 * @deprecated Use bboss_messages_is_active_notice() instead.
+	 */
+	function bp_messages_is_active_notice() {
+		return bboss_messages_is_active_notice();
+	}
+}
+if ( function_exists( 'bboss_messages_options' ) && ! function_exists( 'bp_messages_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_options()}.
+	 *
+	 * @deprecated Use bboss_messages_options() instead.
+	 */
+	function bp_messages_options() {
+		return bboss_messages_options();
+	}
+}
+if ( function_exists( 'bboss_messages_pagination' ) && ! function_exists( 'bp_messages_pagination' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_pagination()}.
+	 *
+	 * @deprecated Use bboss_messages_pagination() instead.
+	 */
+	function bp_messages_pagination() {
+		return bboss_messages_pagination();
+	}
+}
+if ( function_exists( 'bboss_messages_pagination_count' ) && ! function_exists( 'bp_messages_pagination_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_pagination_count()}.
+	 *
+	 * @deprecated Use bboss_messages_pagination_count() instead.
+	 */
+	function bp_messages_pagination_count() {
+		return bboss_messages_pagination_count();
+	}
+}
+if ( function_exists( 'bboss_messages_slug' ) && ! function_exists( 'bp_messages_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_slug()}.
+	 *
+	 * @deprecated Use bboss_messages_slug() instead.
+	 */
+	function bp_messages_slug() {
+		return bboss_messages_slug();
+	}
+}
+if ( function_exists( 'bboss_messages_subject_value' ) && ! function_exists( 'bp_messages_subject_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_subject_value()}.
+	 *
+	 * @deprecated Use bboss_messages_subject_value() instead.
+	 */
+	function bp_messages_subject_value() {
+		return bboss_messages_subject_value();
+	}
+}
+if ( function_exists( 'bboss_messages_username_value' ) && ! function_exists( 'bp_messages_username_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_username_value()}.
+	 *
+	 * @deprecated Use bboss_messages_username_value() instead.
+	 */
+	function bp_messages_username_value() {
+		return bboss_messages_username_value();
+	}
+}
+if ( function_exists( 'bboss_send_message_button' ) && ! function_exists( 'bp_send_message_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_send_message_button()}.
+	 *
+	 * @deprecated Use bboss_send_message_button() instead.
+	 */
+	function bp_send_message_button( $args = '' ) {
+		return bboss_send_message_button( $args );
+	}
+}
+if ( function_exists( 'bboss_send_private_message_button' ) && ! function_exists( 'bp_send_private_message_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_send_private_message_button()}.
+	 *
+	 * @deprecated Use bboss_send_private_message_button() instead.
+	 */
+	function bp_send_private_message_button() {
+		return bboss_send_private_message_button();
+	}
+}
+if ( function_exists( 'bboss_send_private_message_link' ) && ! function_exists( 'bp_send_private_message_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_send_private_message_link()}.
+	 *
+	 * @deprecated Use bboss_send_private_message_link() instead.
+	 */
+	function bp_send_private_message_link() {
+		return bboss_send_private_message_link();
+	}
+}
+if ( function_exists( 'bboss_the_message_thread_mark_read_url' ) && ! function_exists( 'bp_the_message_thread_mark_read_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_message_thread_mark_read_url()}.
+	 *
+	 * @deprecated Use bboss_the_message_thread_mark_read_url() instead.
+	 */
+	function bp_the_message_thread_mark_read_url( $user_id = null ) {
+		return bboss_the_message_thread_mark_read_url( $user_id );
+	}
+}
+if ( function_exists( 'bboss_the_message_thread_mark_unread_url' ) && ! function_exists( 'bp_the_message_thread_mark_unread_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_message_thread_mark_unread_url()}.
+	 *
+	 * @deprecated Use bboss_the_message_thread_mark_unread_url() instead.
+	 */
+	function bp_the_message_thread_mark_unread_url( $user_id = null ) {
+		return bboss_the_message_thread_mark_unread_url( $user_id );
+	}
+}
+if ( function_exists( 'bboss_the_thread_delete_link' ) && ! function_exists( 'bp_the_thread_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_delete_link()}.
+	 *
+	 * @deprecated Use bboss_the_thread_delete_link() instead.
+	 */
+	function bp_the_thread_delete_link() {
+		return bboss_the_thread_delete_link();
+	}
+}
+if ( function_exists( 'bboss_the_thread_id' ) && ! function_exists( 'bp_the_thread_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_id()}.
+	 *
+	 * @deprecated Use bboss_the_thread_id() instead.
+	 */
+	function bp_the_thread_id() {
+		return bboss_the_thread_id();
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_alt_class' ) && ! function_exists( 'bp_the_thread_message_alt_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_alt_class()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_alt_class() instead.
+	 */
+	function bp_the_thread_message_alt_class() {
+		return bboss_the_thread_message_alt_class();
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_content' ) && ! function_exists( 'bp_the_thread_message_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_content()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_content() instead.
+	 */
+	function bp_the_thread_message_content() {
+		return bboss_the_thread_message_content();
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_css_class' ) && ! function_exists( 'bp_the_thread_message_css_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_css_class()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_css_class() instead.
+	 */
+	function bp_the_thread_message_css_class() {
+		return bboss_the_thread_message_css_class();
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_date_sent' ) && ! function_exists( 'bp_the_thread_message_date_sent' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_date_sent()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_date_sent() instead.
+	 */
+	function bp_the_thread_message_date_sent() {
+		return bboss_the_thread_message_date_sent();
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_id' ) && ! function_exists( 'bp_the_thread_message_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_id()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_id() instead.
+	 */
+	function bp_the_thread_message_id() {
+		return bboss_the_thread_message_id();
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_sender_avatar' ) && ! function_exists( 'bp_the_thread_message_sender_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_sender_avatar()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_sender_avatar() instead.
+	 */
+	function bp_the_thread_message_sender_avatar( $args = '' ) {
+		return bboss_the_thread_message_sender_avatar( $args );
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_sender_id' ) && ! function_exists( 'bp_the_thread_message_sender_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_sender_id()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_sender_id() instead.
+	 */
+	function bp_the_thread_message_sender_id() {
+		return bboss_the_thread_message_sender_id();
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_sender_link' ) && ! function_exists( 'bp_the_thread_message_sender_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_sender_link()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_sender_link() instead.
+	 */
+	function bp_the_thread_message_sender_link() {
+		return bboss_the_thread_message_sender_link();
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_sender_name' ) && ! function_exists( 'bp_the_thread_message_sender_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_sender_name()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_sender_name() instead.
+	 */
+	function bp_the_thread_message_sender_name() {
+		return bboss_the_thread_message_sender_name();
+	}
+}
+if ( function_exists( 'bboss_the_thread_message_time_since' ) && ! function_exists( 'bp_the_thread_message_time_since' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_message_time_since()}.
+	 *
+	 * @deprecated Use bboss_the_thread_message_time_since() instead.
+	 */
+	function bp_the_thread_message_time_since() {
+		return bboss_the_thread_message_time_since();
+	}
+}
+if ( function_exists( 'bboss_the_thread_recipients_list' ) && ! function_exists( 'bp_the_thread_recipients_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_recipients_list()}.
+	 *
+	 * @deprecated Use bboss_the_thread_recipients_list() instead.
+	 */
+	function bp_the_thread_recipients_list() {
+		return bboss_the_thread_recipients_list();
+	}
+}
+if ( function_exists( 'bboss_the_thread_subject' ) && ! function_exists( 'bp_the_thread_subject' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_thread_subject()}.
+	 *
+	 * @deprecated Use bboss_the_thread_subject() instead.
+	 */
+	function bp_the_thread_subject() {
+		return bboss_the_thread_subject();
+	}
+}
+if ( function_exists( 'bboss_thread_has_messages' ) && ! function_exists( 'bp_thread_has_messages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_thread_has_messages()}.
+	 *
+	 * @deprecated Use bboss_thread_has_messages() instead.
+	 */
+	function bp_thread_has_messages( $args = '' ) {
+		return bboss_thread_has_messages( $args );
+	}
+}
+if ( function_exists( 'bboss_thread_messages' ) && ! function_exists( 'bp_thread_messages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_thread_messages()}.
+	 *
+	 * @deprecated Use bboss_thread_messages() instead.
+	 */
+	function bp_thread_messages() {
+		return bboss_thread_messages();
+	}
+}
+if ( function_exists( 'bboss_thread_messages_order' ) && ! function_exists( 'bp_thread_messages_order' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_thread_messages_order()}.
+	 *
+	 * @deprecated Use bboss_thread_messages_order() instead.
+	 */
+	function bp_thread_messages_order() {
+		return bboss_thread_messages_order();
+	}
+}
+if ( function_exists( 'bboss_thread_the_message' ) && ! function_exists( 'bp_thread_the_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_thread_the_message()}.
+	 *
+	 * @deprecated Use bboss_thread_the_message() instead.
+	 */
+	function bp_thread_the_message() {
+		return bboss_thread_the_message();
+	}
+}
+if ( function_exists( 'bboss_total_unread_messages_count' ) && ! function_exists( 'bp_total_unread_messages_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_total_unread_messages_count()}.
+	 *
+	 * @deprecated Use bboss_total_unread_messages_count() instead.
+	 */
+	function bp_total_unread_messages_count( $user_id = 0 ) {
+		return bboss_total_unread_messages_count( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer

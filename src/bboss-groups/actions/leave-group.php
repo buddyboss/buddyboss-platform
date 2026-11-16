@@ -93,3 +93,28 @@ function bboss_groups_action_clean_up_invites_requests( $user_id, $group_id ) {
 	}
 }
 add_action( 'bp_groups_member_after_delete', 'groups_action_clean_up_invites_requests', 10, 2 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_action_clean_up_invites_requests' ) && ! function_exists( 'groups_action_clean_up_invites_requests' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_action_clean_up_invites_requests()}.
+	 *
+	 * @deprecated Use bboss_groups_action_clean_up_invites_requests() instead.
+	 */
+	function groups_action_clean_up_invites_requests( $user_id, $group_id ) {
+		return bboss_groups_action_clean_up_invites_requests( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_action_leave_group' ) && ! function_exists( 'groups_action_leave_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_action_leave_group()}.
+	 *
+	 * @deprecated Use bboss_groups_action_leave_group() instead.
+	 */
+	function groups_action_leave_group() {
+		return bboss_groups_action_leave_group();
+	}
+}
+// @bbwt-com-end compat-layer

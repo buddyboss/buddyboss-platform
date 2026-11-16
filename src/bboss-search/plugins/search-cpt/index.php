@@ -123,3 +123,38 @@ function bboss_search_label_search_type_cpts( $search_type_label ) {
 	}
 	return $search_type_label;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_helpers_cpts' ) && ! function_exists( 'bp_search_helpers_cpts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_helpers_cpts()}.
+	 *
+	 * @deprecated Use bboss_search_helpers_cpts() instead.
+	 */
+	function bp_search_helpers_cpts( $helpers ) {
+		return bboss_search_helpers_cpts( $helpers );
+	}
+}
+if ( function_exists( 'bboss_search_label_search_type_cpts' ) && ! function_exists( 'bp_search_label_search_type_cpts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_label_search_type_cpts()}.
+	 *
+	 * @deprecated Use bboss_search_label_search_type_cpts() instead.
+	 */
+	function bp_search_label_search_type_cpts( $search_type_label ) {
+		return bboss_search_label_search_type_cpts( $search_type_label );
+	}
+}
+if ( function_exists( 'bboss_search_option_cpt_search' ) && ! function_exists( 'bp_search_option_cpt_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_option_cpt_search()}.
+	 *
+	 * @deprecated Use bboss_search_option_cpt_search() instead.
+	 */
+	function bp_search_option_cpt_search( $items_to_search ) {
+		return bboss_search_option_cpt_search( $items_to_search );
+	}
+}
+// @bbwt-com-end compat-layer

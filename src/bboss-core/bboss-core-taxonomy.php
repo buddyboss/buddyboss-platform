@@ -285,3 +285,78 @@ function bboss_get_term_by( $field, $value, $taxonomy = '', $output = OBJECT, $f
 
 	return $term;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_object_terms' ) && ! function_exists( 'bp_get_object_terms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_object_terms()}.
+	 *
+	 * @deprecated Use bboss_get_object_terms() instead.
+	 */
+	function bp_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
+		return bboss_get_object_terms( $object_ids, $taxonomies, $args );
+	}
+}
+if ( function_exists( 'bboss_get_objects_in_term' ) && ! function_exists( 'bp_get_objects_in_term' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_objects_in_term()}.
+	 *
+	 * @deprecated Use bboss_get_objects_in_term() instead.
+	 */
+	function bp_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
+		return bboss_get_objects_in_term( $term_ids, $taxonomies, $args );
+	}
+}
+if ( function_exists( 'bboss_get_taxonomy_term_site_id' ) && ! function_exists( 'bp_get_taxonomy_term_site_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_taxonomy_term_site_id()}.
+	 *
+	 * @deprecated Use bboss_get_taxonomy_term_site_id() instead.
+	 */
+	function bp_get_taxonomy_term_site_id( $taxonomy = '' ) {
+		return bboss_get_taxonomy_term_site_id( $taxonomy );
+	}
+}
+if ( function_exists( 'bboss_get_term_by' ) && ! function_exists( 'bp_get_term_by' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_term_by()}.
+	 *
+	 * @deprecated Use bboss_get_term_by() instead.
+	 */
+	function bp_get_term_by( $field, $value, $taxonomy = '', $output = OBJECT, $filter = 'raw' ) {
+		return bboss_get_term_by( $field, $value, $taxonomy, $output, $filter );
+	}
+}
+if ( function_exists( 'bboss_register_default_taxonomies' ) && ! function_exists( 'bp_register_default_taxonomies' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_default_taxonomies()}.
+	 *
+	 * @deprecated Use bboss_register_default_taxonomies() instead.
+	 */
+	function bp_register_default_taxonomies() {
+		return bboss_register_default_taxonomies();
+	}
+}
+if ( function_exists( 'bboss_remove_object_terms' ) && ! function_exists( 'bp_remove_object_terms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_object_terms()}.
+	 *
+	 * @deprecated Use bboss_remove_object_terms() instead.
+	 */
+	function bp_remove_object_terms( $object_id, $terms, $taxonomy ) {
+		return bboss_remove_object_terms( $object_id, $terms, $taxonomy );
+	}
+}
+if ( function_exists( 'bboss_set_object_terms' ) && ! function_exists( 'bp_set_object_terms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_object_terms()}.
+	 *
+	 * @deprecated Use bboss_set_object_terms() instead.
+	 */
+	function bp_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) {
+		return bboss_set_object_terms( $object_id, $terms, $taxonomy, $append );
+	}
+}
+// @bbwt-com-end compat-layer

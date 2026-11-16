@@ -800,3 +800,109 @@ function bboss_legacy_groups_auto_enqueue_widget_scripts() {
 	}
 }
 add_action( 'admin_enqueue_scripts', 'bb_legacy_groups_auto_enqueue_widget_scripts', 99 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_capture_box_html' ) && ! function_exists( 'bb_legacy_capture_box_html' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_capture_box_html()}.
+	 *
+	 * @deprecated Use bboss_legacy_capture_box_html() instead.
+	 */
+	function bb_legacy_capture_box_html( $box, $group ) {
+		return bboss_legacy_capture_box_html( $box, $group );
+	}
+}
+if ( function_exists( 'bboss_legacy_get_registered_group_extensions' ) && ! function_exists( 'bb_legacy_get_registered_group_extensions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_get_registered_group_extensions()}.
+	 *
+	 * @deprecated Use bboss_legacy_get_registered_group_extensions() instead.
+	 */
+	function bb_legacy_get_registered_group_extensions() {
+		return bboss_legacy_get_registered_group_extensions();
+	}
+}
+if ( function_exists( 'bboss_legacy_groups_auto_enqueue_widget_scripts' ) && ! function_exists( 'bb_legacy_groups_auto_enqueue_widget_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_auto_enqueue_widget_scripts()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_auto_enqueue_widget_scripts() instead.
+	 */
+	function bb_legacy_groups_auto_enqueue_widget_scripts() {
+		return bboss_legacy_groups_auto_enqueue_widget_scripts();
+	}
+}
+if ( function_exists( 'bboss_legacy_groups_bridge_box' ) && ! function_exists( 'bb_legacy_groups_bridge_box' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_bridge_box()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_bridge_box() instead.
+	 */
+	function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
+		return bboss_legacy_groups_bridge_box( $registry, $component, $box, $order );
+	}
+}
+if ( function_exists( 'bboss_legacy_groups_bridge_state' ) && ! function_exists( 'bb_legacy_groups_bridge_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_bridge_state()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_bridge_state() instead.
+	 */
+	function &bb_legacy_groups_bridge_state() {
+		$bb_ref = &bboss_legacy_groups_bridge_state();
+		return $bb_ref;
+	}
+}
+if ( function_exists( 'bboss_legacy_groups_clear_bridge_cache' ) && ! function_exists( 'bb_legacy_groups_clear_bridge_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_clear_bridge_cache()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_clear_bridge_cache() instead.
+	 */
+	function bb_legacy_groups_clear_bridge_cache() {
+		return bboss_legacy_groups_clear_bridge_cache();
+	}
+}
+if ( function_exists( 'bboss_legacy_groups_meta_bridge_register' ) && ! function_exists( 'bb_legacy_groups_meta_bridge_register' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_meta_bridge_register()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_meta_bridge_register() instead.
+	 */
+	function bb_legacy_groups_meta_bridge_register( $registry, $component ) {
+		return bboss_legacy_groups_meta_bridge_register( $registry, $component );
+	}
+}
+if ( function_exists( 'bboss_legacy_groups_meta_bridge_register_inner' ) && ! function_exists( 'bb_legacy_groups_meta_bridge_register_inner' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_meta_bridge_register_inner()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_meta_bridge_register_inner() instead.
+	 */
+	function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
+		return bboss_legacy_groups_meta_bridge_register_inner( $registry, $component );
+	}
+}
+if ( function_exists( 'bboss_legacy_groups_run_extension_saves' ) && ! function_exists( 'bb_legacy_groups_run_extension_saves' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_run_extension_saves()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_run_extension_saves() instead.
+	 */
+	function bb_legacy_groups_run_extension_saves( $group_id, $group ) {
+		return bboss_legacy_groups_run_extension_saves( $group_id, $group );
+	}
+}
+if ( function_exists( 'bboss_legacy_make_get_value' ) && ! function_exists( 'bb_legacy_make_get_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_make_get_value()}.
+	 *
+	 * @deprecated Use bboss_legacy_make_get_value() instead.
+	 */
+	function bb_legacy_make_get_value( $box, $name, $type ) {
+		return bboss_legacy_make_get_value( $box, $name, $type );
+	}
+}
+// @bbwt-com-end compat-layer

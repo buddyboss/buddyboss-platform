@@ -104,3 +104,18 @@ function bboss_nouveau_notifications( $bp_nouveau = null ) {
 	$bp_nouveau->notifications = new BBoss_Nouveau_Notifications();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_notifications', 10, 1 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications' ) && ! function_exists( 'bp_nouveau_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications() instead.
+	 */
+	function bp_nouveau_notifications( $bp_nouveau = null ) {
+		return bboss_nouveau_notifications( $bp_nouveau );
+	}
+}
+// @bbwt-com-end compat-layer

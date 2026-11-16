@@ -119,3 +119,28 @@ function bboss_core_ajax_widget_friends() {
 }
 add_action( 'wp_ajax_widget_friends', 'bp_core_ajax_widget_friends' );
 add_action( 'wp_ajax_nopriv_widget_friends', 'bp_core_ajax_widget_friends' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_ajax_widget_friends' ) && ! function_exists( 'bp_core_ajax_widget_friends' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_ajax_widget_friends()}.
+	 *
+	 * @deprecated Use bboss_core_ajax_widget_friends() instead.
+	 */
+	function bp_core_ajax_widget_friends() {
+		return bboss_core_ajax_widget_friends();
+	}
+}
+if ( function_exists( 'bboss_friends_register_widgets' ) && ! function_exists( 'bp_friends_register_widgets' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_register_widgets()}.
+	 *
+	 * @deprecated Use bboss_friends_register_widgets() instead.
+	 */
+	function bp_friends_register_widgets() {
+		return bboss_friends_register_widgets();
+	}
+}
+// @bbwt-com-end compat-layer

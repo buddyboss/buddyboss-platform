@@ -670,3 +670,109 @@ function bboss_legacy_activity_auto_enqueue_widget_scripts() {
 	}
 }
 add_action( 'admin_enqueue_scripts', 'bb_legacy_activity_auto_enqueue_widget_scripts', 99 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_activity_auto_enqueue_widget_scripts' ) && ! function_exists( 'bb_legacy_activity_auto_enqueue_widget_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_activity_auto_enqueue_widget_scripts()}.
+	 *
+	 * @deprecated Use bboss_legacy_activity_auto_enqueue_widget_scripts() instead.
+	 */
+	function bb_legacy_activity_auto_enqueue_widget_scripts() {
+		return bboss_legacy_activity_auto_enqueue_widget_scripts();
+	}
+}
+if ( function_exists( 'bboss_legacy_activity_bridge_box' ) && ! function_exists( 'bb_legacy_activity_bridge_box' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_activity_bridge_box()}.
+	 *
+	 * @deprecated Use bboss_legacy_activity_bridge_box() instead.
+	 */
+	function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $existing_ids = array() ) {
+		return bboss_legacy_activity_bridge_box( $registry, $component, $box, $order, $existing_ids );
+	}
+}
+if ( function_exists( 'bboss_legacy_activity_bridge_state' ) && ! function_exists( 'bb_legacy_activity_bridge_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_activity_bridge_state()}.
+	 *
+	 * @deprecated Use bboss_legacy_activity_bridge_state() instead.
+	 */
+	function &bb_legacy_activity_bridge_state() {
+		$bb_ref = &bboss_legacy_activity_bridge_state();
+		return $bb_ref;
+	}
+}
+if ( function_exists( 'bboss_legacy_activity_capture_box_html' ) && ! function_exists( 'bb_legacy_activity_capture_box_html' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_activity_capture_box_html()}.
+	 *
+	 * @deprecated Use bboss_legacy_activity_capture_box_html() instead.
+	 */
+	function bb_legacy_activity_capture_box_html( $box, $activity ) {
+		return bboss_legacy_activity_capture_box_html( $box, $activity );
+	}
+}
+if ( function_exists( 'bboss_legacy_activity_clear_bridge_cache' ) && ! function_exists( 'bb_legacy_activity_clear_bridge_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_activity_clear_bridge_cache()}.
+	 *
+	 * @deprecated Use bboss_legacy_activity_clear_bridge_cache() instead.
+	 */
+	function bb_legacy_activity_clear_bridge_cache() {
+		return bboss_legacy_activity_clear_bridge_cache();
+	}
+}
+if ( function_exists( 'bboss_legacy_activity_make_get_value' ) && ! function_exists( 'bb_legacy_activity_make_get_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_activity_make_get_value()}.
+	 *
+	 * @deprecated Use bboss_legacy_activity_make_get_value() instead.
+	 */
+	function bb_legacy_activity_make_get_value( $box, $name, $type ) {
+		return bboss_legacy_activity_make_get_value( $box, $name, $type );
+	}
+}
+if ( function_exists( 'bboss_legacy_activity_meta_bridge_register' ) && ! function_exists( 'bb_legacy_activity_meta_bridge_register' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_activity_meta_bridge_register()}.
+	 *
+	 * @deprecated Use bboss_legacy_activity_meta_bridge_register() instead.
+	 */
+	function bb_legacy_activity_meta_bridge_register( $registry, $component ) {
+		return bboss_legacy_activity_meta_bridge_register( $registry, $component );
+	}
+}
+if ( function_exists( 'bboss_legacy_activity_meta_bridge_register_inner' ) && ! function_exists( 'bb_legacy_activity_meta_bridge_register_inner' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_activity_meta_bridge_register_inner()}.
+	 *
+	 * @deprecated Use bboss_legacy_activity_meta_bridge_register_inner() instead.
+	 */
+	function bb_legacy_activity_meta_bridge_register_inner( $registry, $component ) {
+		return bboss_legacy_activity_meta_bridge_register_inner( $registry, $component );
+	}
+}
+if ( function_exists( 'bboss_legacy_canonical_activity_keys' ) && ! function_exists( 'bb_legacy_canonical_activity_keys' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_canonical_activity_keys()}.
+	 *
+	 * @deprecated Use bboss_legacy_canonical_activity_keys() instead.
+	 */
+	function bb_legacy_canonical_activity_keys() {
+		return bboss_legacy_canonical_activity_keys();
+	}
+}
+if ( function_exists( 'bboss_legacy_is_safe_activity_post_key' ) && ! function_exists( 'bb_legacy_is_safe_activity_post_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_is_safe_activity_post_key()}.
+	 *
+	 * @deprecated Use bboss_legacy_is_safe_activity_post_key() instead.
+	 */
+	function bb_legacy_is_safe_activity_post_key( $name ) {
+		return bboss_legacy_is_safe_activity_post_key( $name );
+	}
+}
+// @bbwt-com-end compat-layer

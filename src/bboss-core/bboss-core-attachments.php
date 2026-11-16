@@ -1925,3 +1925,258 @@ function bboss_attachment_get_cover_image_class( $item_id = 0, $item = 'user' ) 
 	 */
 	return apply_filters( 'bb_attachment_get_cover_image_class', $cover_image_class, $item_id, $item );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachment_get_cover_image_class' ) && ! function_exists( 'bb_attachment_get_cover_image_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachment_get_cover_image_class()}.
+	 *
+	 * @deprecated Use bboss_attachment_get_cover_image_class() instead.
+	 */
+	function bb_attachment_get_cover_image_class( $item_id = 0, $item = 'user' ) {
+		return bboss_attachment_get_cover_image_class( $item_id, $item );
+	}
+}
+if ( function_exists( 'bboss_attachments_check_filetype' ) && ! function_exists( 'bp_attachments_check_filetype' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_check_filetype()}.
+	 *
+	 * @deprecated Use bboss_attachments_check_filetype() instead.
+	 */
+	function bp_attachments_check_filetype( $file, $filename, $allowed_mimes ) {
+		return bboss_attachments_check_filetype( $file, $filename, $allowed_mimes );
+	}
+}
+if ( function_exists( 'bboss_attachments_cover_image_ajax_delete' ) && ! function_exists( 'bp_attachments_cover_image_ajax_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_cover_image_ajax_delete()}.
+	 *
+	 * @deprecated Use bboss_attachments_cover_image_ajax_delete() instead.
+	 */
+	function bp_attachments_cover_image_ajax_delete() {
+		return bboss_attachments_cover_image_ajax_delete();
+	}
+}
+if ( function_exists( 'bboss_attachments_cover_image_ajax_upload' ) && ! function_exists( 'bp_attachments_cover_image_ajax_upload' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_cover_image_ajax_upload()}.
+	 *
+	 * @deprecated Use bboss_attachments_cover_image_ajax_upload() instead.
+	 */
+	function bp_attachments_cover_image_ajax_upload() {
+		return bboss_attachments_cover_image_ajax_upload();
+	}
+}
+if ( function_exists( 'bboss_attachments_cover_image_generate_file' ) && ! function_exists( 'bp_attachments_cover_image_generate_file' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_cover_image_generate_file()}.
+	 *
+	 * @deprecated Use bboss_attachments_cover_image_generate_file() instead.
+	 */
+	function bp_attachments_cover_image_generate_file( $args = array(), $cover_image_class = null ) {
+		return bboss_attachments_cover_image_generate_file( $args, $cover_image_class );
+	}
+}
+if ( function_exists( 'bboss_attachments_cover_image_is_edit' ) && ! function_exists( 'bp_attachments_cover_image_is_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_cover_image_is_edit()}.
+	 *
+	 * @deprecated Use bboss_attachments_cover_image_is_edit() instead.
+	 */
+	function bp_attachments_cover_image_is_edit() {
+		return bboss_attachments_cover_image_is_edit();
+	}
+}
+if ( function_exists( 'bboss_attachments_cover_image_upload_dir' ) && ! function_exists( 'bp_attachments_cover_image_upload_dir' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_cover_image_upload_dir()}.
+	 *
+	 * @deprecated Use bboss_attachments_cover_image_upload_dir() instead.
+	 */
+	function bp_attachments_cover_image_upload_dir( $args = array() ) {
+		return bboss_attachments_cover_image_upload_dir( $args );
+	}
+}
+if ( function_exists( 'bboss_attachments_create_item_type' ) && ! function_exists( 'bp_attachments_create_item_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_create_item_type()}.
+	 *
+	 * @deprecated Use bboss_attachments_create_item_type() instead.
+	 */
+	function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
+		return bboss_attachments_create_item_type( $type, $args );
+	}
+}
+if ( function_exists( 'bboss_attachments_current_user_can' ) && ! function_exists( 'bp_attachments_current_user_can' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_current_user_can()}.
+	 *
+	 * @deprecated Use bboss_attachments_current_user_can() instead.
+	 */
+	function bp_attachments_current_user_can( $capability, $args = array() ) {
+		return bboss_attachments_current_user_can( $capability, $args );
+	}
+}
+if ( function_exists( 'bboss_attachments_delete_file' ) && ! function_exists( 'bp_attachments_delete_file' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_delete_file()}.
+	 *
+	 * @deprecated Use bboss_attachments_delete_file() instead.
+	 */
+	function bp_attachments_delete_file( $args = array() ) {
+		return bboss_attachments_delete_file( $args );
+	}
+}
+if ( function_exists( 'bboss_attachments_enqueue_scripts' ) && ! function_exists( 'bp_attachments_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_attachments_enqueue_scripts() instead.
+	 */
+	function bp_attachments_enqueue_scripts( $class = '' ) {
+		return bboss_attachments_enqueue_scripts( $class );
+	}
+}
+if ( function_exists( 'bboss_attachments_get_allowed_mimes' ) && ! function_exists( 'bp_attachments_get_allowed_mimes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_allowed_mimes()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_allowed_mimes() instead.
+	 */
+	function bp_attachments_get_allowed_mimes( $type = '', $allowed_types = array() ) {
+		return bboss_attachments_get_allowed_mimes( $type, $allowed_types );
+	}
+}
+if ( function_exists( 'bboss_attachments_get_allowed_types' ) && ! function_exists( 'bp_attachments_get_allowed_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_allowed_types()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_allowed_types() instead.
+	 */
+	function bp_attachments_get_allowed_types( $type = 'avatar' ) {
+		return bboss_attachments_get_allowed_types( $type );
+	}
+}
+if ( function_exists( 'bboss_attachments_get_attachment' ) && ! function_exists( 'bp_attachments_get_attachment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_attachment()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_attachment() instead.
+	 */
+	function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
+		return bboss_attachments_get_attachment( $data, $args );
+	}
+}
+if ( function_exists( 'bboss_attachments_get_cover_image_dimensions' ) && ! function_exists( 'bp_attachments_get_cover_image_dimensions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_cover_image_dimensions()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_cover_image_dimensions() instead.
+	 */
+	function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
+		return bboss_attachments_get_cover_image_dimensions( $component );
+	}
+}
+if ( function_exists( 'bboss_attachments_get_cover_image_settings' ) && ! function_exists( 'bp_attachments_get_cover_image_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_cover_image_settings()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_cover_image_settings() instead.
+	 */
+	function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
+		return bboss_attachments_get_cover_image_settings( $component );
+	}
+}
+if ( function_exists( 'bboss_attachments_get_group_has_cover_image' ) && ! function_exists( 'bp_attachments_get_group_has_cover_image' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_group_has_cover_image()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_group_has_cover_image() instead.
+	 */
+	function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
+		return bboss_attachments_get_group_has_cover_image( $group_id );
+	}
+}
+if ( function_exists( 'bboss_attachments_get_max_upload_file_size' ) && ! function_exists( 'bp_attachments_get_max_upload_file_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_max_upload_file_size()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_max_upload_file_size() instead.
+	 */
+	function bp_attachments_get_max_upload_file_size( $type = '' ) {
+		return bboss_attachments_get_max_upload_file_size( $type );
+	}
+}
+if ( function_exists( 'bboss_attachments_get_plupload_default_settings' ) && ! function_exists( 'bp_attachments_get_plupload_default_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_plupload_default_settings()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_plupload_default_settings() instead.
+	 */
+	function bp_attachments_get_plupload_default_settings() {
+		return bboss_attachments_get_plupload_default_settings();
+	}
+}
+if ( function_exists( 'bboss_attachments_get_plupload_l10n' ) && ! function_exists( 'bp_attachments_get_plupload_l10n' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_plupload_l10n()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_plupload_l10n() instead.
+	 */
+	function bp_attachments_get_plupload_l10n() {
+		return bboss_attachments_get_plupload_l10n();
+	}
+}
+if ( function_exists( 'bboss_attachments_get_template_part' ) && ! function_exists( 'bp_attachments_get_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_template_part()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_template_part() instead.
+	 */
+	function bp_attachments_get_template_part( $slug ) {
+		return bboss_attachments_get_template_part( $slug );
+	}
+}
+if ( function_exists( 'bboss_attachments_get_user_has_cover_image' ) && ! function_exists( 'bp_attachments_get_user_has_cover_image' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_user_has_cover_image()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_user_has_cover_image() instead.
+	 */
+	function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
+		return bboss_attachments_get_user_has_cover_image( $user_id );
+	}
+}
+if ( function_exists( 'bboss_attachments_is_wp_version_supported' ) && ! function_exists( 'bp_attachments_is_wp_version_supported' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_is_wp_version_supported()}.
+	 *
+	 * @deprecated Use bboss_attachments_is_wp_version_supported() instead.
+	 */
+	function bp_attachments_is_wp_version_supported() {
+		return bboss_attachments_is_wp_version_supported();
+	}
+}
+if ( function_exists( 'bboss_attachments_json_response' ) && ! function_exists( 'bp_attachments_json_response' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_json_response()}.
+	 *
+	 * @deprecated Use bboss_attachments_json_response() instead.
+	 */
+	function bp_attachments_json_response( $success, $is_html4 = false, $data = null ) {
+		return bboss_attachments_json_response( $success, $is_html4, $data );
+	}
+}
+if ( function_exists( 'bboss_attachments_uploads_dir_get' ) && ! function_exists( 'bp_attachments_uploads_dir_get' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_uploads_dir_get()}.
+	 *
+	 * @deprecated Use bboss_attachments_uploads_dir_get() instead.
+	 */
+	function bp_attachments_uploads_dir_get( $data = '' ) {
+		return bboss_attachments_uploads_dir_get( $data );
+	}
+}
+// @bbwt-com-end compat-layer

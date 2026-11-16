@@ -42,3 +42,28 @@ function bboss_settings_remove_email_subnav() {
 	}
 }
 add_action( 'bp_actions', 'bp_settings_remove_email_subnav' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_remove_email_subnav' ) && ! function_exists( 'bp_settings_remove_email_subnav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_remove_email_subnav()}.
+	 *
+	 * @deprecated Use bboss_settings_remove_email_subnav() instead.
+	 */
+	function bp_settings_remove_email_subnav() {
+		return bboss_settings_remove_email_subnav();
+	}
+}
+if ( function_exists( 'bboss_settings_screen_general' ) && ! function_exists( 'bp_settings_screen_general' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_screen_general()}.
+	 *
+	 * @deprecated Use bboss_settings_screen_general() instead.
+	 */
+	function bp_settings_screen_general() {
+		return bboss_settings_screen_general();
+	}
+}
+// @bbwt-com-end compat-layer

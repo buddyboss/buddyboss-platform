@@ -232,3 +232,18 @@ function bboss_activity_register_comments_panel_fields( $edit_time_options ) {
 		)
 	);
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_register_comments_panel_fields' ) && ! function_exists( 'bb_activity_register_comments_panel_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_register_comments_panel_fields()}.
+	 *
+	 * @deprecated Use bboss_activity_register_comments_panel_fields() instead.
+	 */
+	function bb_activity_register_comments_panel_fields( $edit_time_options ) {
+		return bboss_activity_register_comments_panel_fields( $edit_time_options );
+	}
+}
+// @bbwt-com-end compat-layer

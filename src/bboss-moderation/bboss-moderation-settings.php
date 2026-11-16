@@ -49,3 +49,28 @@ function bboss_moderation_get_setting( $option, $default = '' ) {
 function bboss_moderation_setting( $option, $default = '' ) {
 	echo esc_attr( bboss_moderation_get_setting( $option, $default ) );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_setting' ) && ! function_exists( 'bp_moderation_get_setting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_setting()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_setting() instead.
+	 */
+	function bp_moderation_get_setting( $option, $default = '' ) {
+		return bboss_moderation_get_setting( $option, $default );
+	}
+}
+if ( function_exists( 'bboss_moderation_setting' ) && ! function_exists( 'bp_moderation_setting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_setting()}.
+	 *
+	 * @deprecated Use bboss_moderation_setting() instead.
+	 */
+	function bp_moderation_setting( $option, $default = '' ) {
+		return bboss_moderation_setting( $option, $default );
+	}
+}
+// @bbwt-com-end compat-layer

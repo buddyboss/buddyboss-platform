@@ -69,3 +69,18 @@ function bboss_notifications_action_bulk_manage() {
 	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_notifications_slug() . '/' . bboss_current_action() . '/' );
 }
 add_action( 'bp_actions', 'bp_notifications_action_bulk_manage' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_action_bulk_manage' ) && ! function_exists( 'bp_notifications_action_bulk_manage' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_action_bulk_manage()}.
+	 *
+	 * @deprecated Use bboss_notifications_action_bulk_manage() instead.
+	 */
+	function bp_notifications_action_bulk_manage() {
+		return bboss_notifications_action_bulk_manage();
+	}
+}
+// @bbwt-com-end compat-layer

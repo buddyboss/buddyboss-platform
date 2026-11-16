@@ -104,3 +104,28 @@ function bboss_groups_ajax_widget_groups_list() {
 }
 add_action( 'wp_ajax_widget_groups_list', 'groups_ajax_widget_groups_list' );
 add_action( 'wp_ajax_nopriv_widget_groups_list', 'groups_ajax_widget_groups_list' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_ajax_widget_groups_list' ) && ! function_exists( 'groups_ajax_widget_groups_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_ajax_widget_groups_list()}.
+	 *
+	 * @deprecated Use bboss_groups_ajax_widget_groups_list() instead.
+	 */
+	function groups_ajax_widget_groups_list() {
+		return bboss_groups_ajax_widget_groups_list();
+	}
+}
+if ( function_exists( 'bboss_groups_register_widgets' ) && ! function_exists( 'groups_register_widgets' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_register_widgets()}.
+	 *
+	 * @deprecated Use bboss_groups_register_widgets() instead.
+	 */
+	function groups_register_widgets() {
+		return bboss_groups_register_widgets();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -88,3 +88,18 @@ add_action( 'bb_feature_activated', 'bb_blog_seed_default_options' );
 if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 	require_once __DIR__ . '/admin/settings.php';
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_seed_default_options' ) && ! function_exists( 'bb_blog_seed_default_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_seed_default_options()}.
+	 *
+	 * @deprecated Use bboss_blog_seed_default_options() instead.
+	 */
+	function bb_blog_seed_default_options( $feature_id ) {
+		return bboss_blog_seed_default_options( $feature_id );
+	}
+}
+// @bbwt-com-end compat-layer

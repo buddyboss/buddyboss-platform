@@ -179,3 +179,48 @@ function bboss_settings_get_registered_notification_keys() {
 function bboss_settings_supports_notification_subnav() {
 	return true;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_supports_notification_subnav' ) && ! function_exists( 'bb_settings_supports_notification_subnav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_supports_notification_subnav()}.
+	 *
+	 * @deprecated Use bboss_settings_supports_notification_subnav() instead.
+	 */
+	function bb_settings_supports_notification_subnav() {
+		return bboss_settings_supports_notification_subnav();
+	}
+}
+if ( function_exists( 'bboss_settings_get_registered_notification_keys' ) && ! function_exists( 'bp_settings_get_registered_notification_keys' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_get_registered_notification_keys()}.
+	 *
+	 * @deprecated Use bboss_settings_get_registered_notification_keys() instead.
+	 */
+	function bp_settings_get_registered_notification_keys() {
+		return bboss_settings_get_registered_notification_keys();
+	}
+}
+if ( function_exists( 'bboss_settings_sanitize_notification_settings' ) && ! function_exists( 'bp_settings_sanitize_notification_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_sanitize_notification_settings()}.
+	 *
+	 * @deprecated Use bboss_settings_sanitize_notification_settings() instead.
+	 */
+	function bp_settings_sanitize_notification_settings( $settings = array() ) {
+		return bboss_settings_sanitize_notification_settings( $settings );
+	}
+}
+if ( function_exists( 'bboss_settings_update_notification_settings' ) && ! function_exists( 'bp_settings_update_notification_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_update_notification_settings()}.
+	 *
+	 * @deprecated Use bboss_settings_update_notification_settings() instead.
+	 */
+	function bp_settings_update_notification_settings( $user_id, $settings ) {
+		return bboss_settings_update_notification_settings( $user_id, $settings );
+	}
+}
+// @bbwt-com-end compat-layer

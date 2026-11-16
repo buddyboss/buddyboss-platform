@@ -143,8 +143,8 @@ class BBoss_Rest_BBP_Walker_Reply extends Walker {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
 if ( ( class_exists( 'BBoss_Rest_BBP_Walker_Reply', false ) || interface_exists( 'BBoss_Rest_BBP_Walker_Reply', false ) || trait_exists( 'BBoss_Rest_BBP_Walker_Reply', false ) ) && ! class_exists( 'Rest_BBP_Walker_Reply', false ) && ! interface_exists( 'Rest_BBP_Walker_Reply', false ) ) {
 	class_alias( 'BBoss_Rest_BBP_Walker_Reply', 'Rest_BBP_Walker_Reply' ); // Backward-compatible name (also declared by another BuddyBoss product).
 }

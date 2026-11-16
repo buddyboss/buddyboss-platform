@@ -40,3 +40,18 @@ function bboss_groups_screen_group_members() {
 
 	bboss_core_redirect( bboss_get_group_permalink( bboss_groups_get_current_group() ) . 'members/all-members/' );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_screen_group_members' ) && ! function_exists( 'groups_screen_group_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_screen_group_members()}.
+	 *
+	 * @deprecated Use bboss_groups_screen_group_members() instead.
+	 */
+	function groups_screen_group_members() {
+		return bboss_groups_screen_group_members();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -420,3 +420,28 @@ function bboss_signup_check_email_username() {
 }
 
 add_action( 'wp_ajax_nopriv_check_email', 'bp_signup_check_email_username' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_screen_signup' ) && ! function_exists( 'bp_core_screen_signup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_screen_signup()}.
+	 *
+	 * @deprecated Use bboss_core_screen_signup() instead.
+	 */
+	function bp_core_screen_signup() {
+		return bboss_core_screen_signup();
+	}
+}
+if ( function_exists( 'bboss_signup_check_email_username' ) && ! function_exists( 'bp_signup_check_email_username' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_signup_check_email_username()}.
+	 *
+	 * @deprecated Use bboss_signup_check_email_username() instead.
+	 */
+	function bp_signup_check_email_username() {
+		return bboss_signup_check_email_username();
+	}
+}
+// @bbwt-com-end compat-layer

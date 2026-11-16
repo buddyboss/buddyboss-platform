@@ -791,3 +791,158 @@ function bboss_register_placeholder_cache_clear_hooks() {
 	}
 }
 add_action( 'admin_init', 'bb_register_placeholder_cache_clear_hooks' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_inject_placeholder_features' ) && ! function_exists( 'bb_admin_inject_placeholder_features' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_inject_placeholder_features()}.
+	 *
+	 * @deprecated Use bboss_admin_inject_placeholder_features() instead.
+	 */
+	function bb_admin_inject_placeholder_features( $features ) {
+		return bboss_admin_inject_placeholder_features( $features );
+	}
+}
+if ( function_exists( 'bboss_admin_mark_drm_locked_features' ) && ! function_exists( 'bb_admin_mark_drm_locked_features' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_mark_drm_locked_features()}.
+	 *
+	 * @deprecated Use bboss_admin_mark_drm_locked_features() instead.
+	 */
+	function bb_admin_mark_drm_locked_features( $features ) {
+		return bboss_admin_mark_drm_locked_features( $features );
+	}
+}
+if ( function_exists( 'bboss_admin_sort_features_response' ) && ! function_exists( 'bb_admin_sort_features_response' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_sort_features_response()}.
+	 *
+	 * @deprecated Use bboss_admin_sort_features_response() instead.
+	 */
+	function bb_admin_sort_features_response( $features ) {
+		return bboss_admin_sort_features_response( $features );
+	}
+}
+if ( function_exists( 'bboss_clear_help_content_transients' ) && ! function_exists( 'bb_clear_help_content_transients' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_clear_help_content_transients()}.
+	 *
+	 * @deprecated Use bboss_clear_help_content_transients() instead.
+	 */
+	function bb_clear_help_content_transients() {
+		return bboss_clear_help_content_transients();
+	}
+}
+if ( function_exists( 'bboss_clear_placeholder_cache_on_license_change' ) && ! function_exists( 'bb_clear_placeholder_cache_on_license_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_clear_placeholder_cache_on_license_change()}.
+	 *
+	 * @deprecated Use bboss_clear_placeholder_cache_on_license_change() instead.
+	 */
+	function bb_clear_placeholder_cache_on_license_change() {
+		return bboss_clear_placeholder_cache_on_license_change();
+	}
+}
+if ( function_exists( 'bboss_get_placeholder_features_data' ) && ! function_exists( 'bb_get_placeholder_features_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_placeholder_features_data()}.
+	 *
+	 * @deprecated Use bboss_get_placeholder_features_data() instead.
+	 */
+	function bb_get_placeholder_features_data() {
+		return bboss_get_placeholder_features_data();
+	}
+}
+if ( function_exists( 'bboss_get_placeholder_plugin_status' ) && ! function_exists( 'bb_get_placeholder_plugin_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_placeholder_plugin_status()}.
+	 *
+	 * @deprecated Use bboss_get_placeholder_plugin_status() instead.
+	 */
+	function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
+		return bboss_get_placeholder_plugin_status( $item, $active_plugins );
+	}
+}
+if ( function_exists( 'bboss_get_placeholder_product_slug' ) && ! function_exists( 'bb_get_placeholder_product_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_placeholder_product_slug()}.
+	 *
+	 * @deprecated Use bboss_get_placeholder_product_slug() instead.
+	 */
+	function bb_get_placeholder_product_slug( $item ) {
+		return bboss_get_placeholder_product_slug( $item );
+	}
+}
+if ( function_exists( 'bboss_maybe_clear_placeholder_features_cache' ) && ! function_exists( 'bb_maybe_clear_placeholder_features_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_maybe_clear_placeholder_features_cache()}.
+	 *
+	 * @deprecated Use bboss_maybe_clear_placeholder_features_cache() instead.
+	 */
+	function bb_maybe_clear_placeholder_features_cache() {
+		return bboss_maybe_clear_placeholder_features_cache();
+	}
+}
+if ( function_exists( 'bboss_placeholder_features_transient_key' ) && ! function_exists( 'bb_placeholder_features_transient_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_placeholder_features_transient_key()}.
+	 *
+	 * @deprecated Use bboss_placeholder_features_transient_key() instead.
+	 */
+	function bb_placeholder_features_transient_key() {
+		return bboss_placeholder_features_transient_key();
+	}
+}
+if ( function_exists( 'bboss_placeholder_requirements_met' ) && ! function_exists( 'bb_placeholder_requirements_met' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_placeholder_requirements_met()}.
+	 *
+	 * @deprecated Use bboss_placeholder_requirements_met() instead.
+	 */
+	function bb_placeholder_requirements_met( $requires, $active_plugins ) {
+		return bboss_placeholder_requirements_met( $requires, $active_plugins );
+	}
+}
+if ( function_exists( 'bboss_refresh_placeholder_features_data' ) && ! function_exists( 'bb_refresh_placeholder_features_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_refresh_placeholder_features_data()}.
+	 *
+	 * @deprecated Use bboss_refresh_placeholder_features_data() instead.
+	 */
+	function bb_refresh_placeholder_features_data() {
+		return bboss_refresh_placeholder_features_data();
+	}
+}
+if ( function_exists( 'bboss_register_placeholder_cache_clear_hooks' ) && ! function_exists( 'bb_register_placeholder_cache_clear_hooks' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_placeholder_cache_clear_hooks()}.
+	 *
+	 * @deprecated Use bboss_register_placeholder_cache_clear_hooks() instead.
+	 */
+	function bb_register_placeholder_cache_clear_hooks() {
+		return bboss_register_placeholder_cache_clear_hooks();
+	}
+}
+if ( function_exists( 'bboss_schedule_placeholder_features_daily_refresh' ) && ! function_exists( 'bb_schedule_placeholder_features_daily_refresh' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_schedule_placeholder_features_daily_refresh()}.
+	 *
+	 * @deprecated Use bboss_schedule_placeholder_features_daily_refresh() instead.
+	 */
+	function bb_schedule_placeholder_features_daily_refresh() {
+		return bboss_schedule_placeholder_features_daily_refresh();
+	}
+}
+if ( function_exists( 'bboss_schedule_placeholder_features_refresh' ) && ! function_exists( 'bb_schedule_placeholder_features_refresh' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_schedule_placeholder_features_refresh()}.
+	 *
+	 * @deprecated Use bboss_schedule_placeholder_features_refresh() instead.
+	 */
+	function bb_schedule_placeholder_features_refresh() {
+		return bboss_schedule_placeholder_features_refresh();
+	}
+}
+// @bbwt-com-end compat-layer

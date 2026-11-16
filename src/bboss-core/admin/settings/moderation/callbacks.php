@@ -104,3 +104,38 @@ function bboss_moderation_sync_content_reporting_to_legacy( $feature_id, $settin
 	}
 }
 add_action( 'bb_admin_save_feature_settings_after', 'bb_moderation_sync_content_reporting_to_legacy', 10, 3 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_sanitize_auto_hide_threshold' ) && ! function_exists( 'bb_moderation_sanitize_auto_hide_threshold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_sanitize_auto_hide_threshold()}.
+	 *
+	 * @deprecated Use bboss_moderation_sanitize_auto_hide_threshold() instead.
+	 */
+	function bb_moderation_sanitize_auto_hide_threshold( $value ) {
+		return bboss_moderation_sanitize_auto_hide_threshold( $value );
+	}
+}
+if ( function_exists( 'bboss_moderation_sanitize_auto_suspend_threshold' ) && ! function_exists( 'bb_moderation_sanitize_auto_suspend_threshold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_sanitize_auto_suspend_threshold()}.
+	 *
+	 * @deprecated Use bboss_moderation_sanitize_auto_suspend_threshold() instead.
+	 */
+	function bb_moderation_sanitize_auto_suspend_threshold( $value ) {
+		return bboss_moderation_sanitize_auto_suspend_threshold( $value );
+	}
+}
+if ( function_exists( 'bboss_moderation_sync_content_reporting_to_legacy' ) && ! function_exists( 'bb_moderation_sync_content_reporting_to_legacy' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_sync_content_reporting_to_legacy()}.
+	 *
+	 * @deprecated Use bboss_moderation_sync_content_reporting_to_legacy() instead.
+	 */
+	function bb_moderation_sync_content_reporting_to_legacy( $feature_id, $settings, $saved ) {
+		return bboss_moderation_sync_content_reporting_to_legacy( $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer

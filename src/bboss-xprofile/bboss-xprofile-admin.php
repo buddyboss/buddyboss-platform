@@ -154,3 +154,48 @@ function bboss_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $grou
 		}
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_before_save_xprofile_group_details' ) && ! function_exists( 'bb_xprofile_before_save_xprofile_group_details' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_before_save_xprofile_group_details()}.
+	 *
+	 * @deprecated Use bboss_xprofile_before_save_xprofile_group_details() instead.
+	 */
+	function bb_xprofile_before_save_xprofile_group_details( $xprofile ) {
+		return bboss_xprofile_before_save_xprofile_group_details( $xprofile );
+	}
+}
+if ( function_exists( 'bboss_xprofile_mapping_simple_to_repeater_fields_data' ) && ! function_exists( 'bb_xprofile_mapping_simple_to_repeater_fields_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_mapping_simple_to_repeater_fields_data()}.
+	 *
+	 * @deprecated Use bboss_xprofile_mapping_simple_to_repeater_fields_data() instead.
+	 */
+	function bb_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $group_id ) {
+		return bboss_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $group_id );
+	}
+}
+if ( function_exists( 'bboss_xprofile_migrate_simple_to_repeater_fields_data' ) && ! function_exists( 'bb_xprofile_migrate_simple_to_repeater_fields_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_migrate_simple_to_repeater_fields_data()}.
+	 *
+	 * @deprecated Use bboss_xprofile_migrate_simple_to_repeater_fields_data() instead.
+	 */
+	function bb_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
+		return bboss_xprofile_migrate_simple_to_repeater_fields_data( $xprofile );
+	}
+}
+if ( function_exists( 'bboss_xprofile_add_admin_menu' ) && ! function_exists( 'xprofile_add_admin_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_add_admin_menu()}.
+	 *
+	 * @deprecated Use bboss_xprofile_add_admin_menu() instead.
+	 */
+	function xprofile_add_admin_menu() {
+		return bboss_xprofile_add_admin_menu();
+	}
+}
+// @bbwt-com-end compat-layer

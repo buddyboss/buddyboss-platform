@@ -138,3 +138,28 @@ function bboss_kb_enqueue_standalone( $args = array() ) {
 		)
 	);
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_kb_enqueue_standalone' ) && ! function_exists( 'bb_kb_enqueue_standalone' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_kb_enqueue_standalone()}.
+	 *
+	 * @deprecated Use bboss_kb_enqueue_standalone() instead.
+	 */
+	function bb_kb_enqueue_standalone( $args = array() ) {
+		return bboss_kb_enqueue_standalone( $args );
+	}
+}
+if ( function_exists( 'bboss_kb_standalone_asset' ) && ! function_exists( 'bb_kb_standalone_asset' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_kb_standalone_asset()}.
+	 *
+	 * @deprecated Use bboss_kb_standalone_asset() instead.
+	 */
+	function bb_kb_standalone_asset() {
+		return bboss_kb_standalone_asset();
+	}
+}
+// @bbwt-com-end compat-layer

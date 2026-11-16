@@ -68,3 +68,18 @@ function bboss_friends_screen_requests() {
 	 */
 	bboss_core_load_template( apply_filters( 'friends_template_requests', 'members/single/home' ) );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_screen_requests' ) && ! function_exists( 'friends_screen_requests' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_screen_requests()}.
+	 *
+	 * @deprecated Use bboss_friends_screen_requests() instead.
+	 */
+	function friends_screen_requests() {
+		return bboss_friends_screen_requests();
+	}
+}
+// @bbwt-com-end compat-layer

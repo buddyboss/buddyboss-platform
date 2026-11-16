@@ -32,3 +32,18 @@ function bboss_blogs_redirect_to_random_blog() {
 	}
 }
 add_action( 'bp_actions', 'bp_blogs_redirect_to_random_blog' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_redirect_to_random_blog' ) && ! function_exists( 'bp_blogs_redirect_to_random_blog' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_redirect_to_random_blog()}.
+	 *
+	 * @deprecated Use bboss_blogs_redirect_to_random_blog() instead.
+	 */
+	function bp_blogs_redirect_to_random_blog() {
+		return bboss_blogs_redirect_to_random_blog();
+	}
+}
+// @bbwt-com-end compat-layer

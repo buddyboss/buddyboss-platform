@@ -180,3 +180,58 @@ function bboss_nouveau_blog_loop_item_has_lastest_post( $classes ) {
 	return $classes;
 }
 add_filter( 'bp_get_blog_class', 'bp_nouveau_blog_loop_item_has_lastest_post' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_blog_loop_item_has_lastest_post' ) && ! function_exists( 'bp_nouveau_blog_loop_item_has_lastest_post' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_blog_loop_item_has_lastest_post()}.
+	 *
+	 * @deprecated Use bboss_nouveau_blog_loop_item_has_lastest_post() instead.
+	 */
+	function bp_nouveau_blog_loop_item_has_lastest_post( $classes ) {
+		return bboss_nouveau_blog_loop_item_has_lastest_post( $classes );
+	}
+}
+if ( function_exists( 'bboss_nouveau_blogs_catch_button_args' ) && ! function_exists( 'bp_nouveau_blogs_catch_button_args' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_blogs_catch_button_args()}.
+	 *
+	 * @deprecated Use bboss_nouveau_blogs_catch_button_args() instead.
+	 */
+	function bp_nouveau_blogs_catch_button_args( $button = array() ) {
+		return bboss_nouveau_blogs_catch_button_args( $button );
+	}
+}
+if ( function_exists( 'bboss_nouveau_get_blog_signup_inline_script' ) && ! function_exists( 'bp_nouveau_get_blog_signup_inline_script' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_blog_signup_inline_script()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_blog_signup_inline_script() instead.
+	 */
+	function bp_nouveau_get_blog_signup_inline_script() {
+		return bboss_nouveau_get_blog_signup_inline_script();
+	}
+}
+if ( function_exists( 'bboss_nouveau_get_blogs_directory_nav_items' ) && ! function_exists( 'bp_nouveau_get_blogs_directory_nav_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_blogs_directory_nav_items()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_blogs_directory_nav_items() instead.
+	 */
+	function bp_nouveau_get_blogs_directory_nav_items() {
+		return bboss_nouveau_get_blogs_directory_nav_items();
+	}
+}
+if ( function_exists( 'bboss_nouveau_get_blogs_filters' ) && ! function_exists( 'bp_nouveau_get_blogs_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_blogs_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_blogs_filters() instead.
+	 */
+	function bp_nouveau_get_blogs_filters( $context = '' ) {
+		return bboss_nouveau_get_blogs_filters( $context );
+	}
+}
+// @bbwt-com-end compat-layer

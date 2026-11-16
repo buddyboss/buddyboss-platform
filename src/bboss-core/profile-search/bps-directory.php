@@ -222,3 +222,78 @@ function bboss_ps_directory_members_item() {
 		bp_ps_call_template( 'members/bps-field-value', array( $name, $value ) );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_clear_directory' ) && ! function_exists( 'bp_ps_clear_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_clear_directory()}.
+	 *
+	 * @deprecated Use bboss_ps_clear_directory() instead.
+	 */
+	function bp_ps_clear_directory() {
+		return bboss_ps_clear_directory();
+	}
+}
+if ( function_exists( 'bboss_ps_directories' ) && ! function_exists( 'bp_ps_directories' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_directories()}.
+	 *
+	 * @deprecated Use bboss_ps_directories() instead.
+	 */
+	function bp_ps_directories() {
+		return bboss_ps_directories();
+	}
+}
+if ( function_exists( 'bboss_ps_directory_members_item' ) && ! function_exists( 'bp_ps_directory_members_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_directory_members_item()}.
+	 *
+	 * @deprecated Use bboss_ps_directory_members_item() instead.
+	 */
+	function bp_ps_directory_members_item() {
+		return bboss_ps_directory_members_item();
+	}
+}
+if ( function_exists( 'bboss_ps_display_sort_options' ) && ! function_exists( 'bp_ps_display_sort_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_display_sort_options()}.
+	 *
+	 * @deprecated Use bboss_ps_display_sort_options() instead.
+	 */
+	function bp_ps_display_sort_options() {
+		return bboss_ps_display_sort_options();
+	}
+}
+if ( function_exists( 'bboss_ps_set_sort_options' ) && ! function_exists( 'bp_ps_set_sort_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_set_sort_options()}.
+	 *
+	 * @deprecated Use bboss_ps_set_sort_options() instead.
+	 */
+	function bp_ps_set_sort_options( $options ) {
+		return bboss_ps_set_sort_options( $options );
+	}
+}
+if ( function_exists( 'bboss_ps_show_directory' ) && ! function_exists( 'bp_ps_show_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_show_directory()}.
+	 *
+	 * @deprecated Use bboss_ps_show_directory() instead.
+	 */
+	function bp_ps_show_directory( $attr, $content ) {
+		return bboss_ps_show_directory( $attr, $content );
+	}
+}
+if ( function_exists( 'bboss_ps_uid_clauses' ) && ! function_exists( 'bp_ps_uid_clauses' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_uid_clauses()}.
+	 *
+	 * @deprecated Use bboss_ps_uid_clauses() instead.
+	 */
+	function bp_ps_uid_clauses( $sql, $object ) {
+		return bboss_ps_uid_clauses( $sql, $object );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -84,3 +84,18 @@ function bboss_activity_action_spam_activity( $activity_id = 0 ) {
 	}
 }
 add_action( 'bp_actions', 'bp_activity_action_spam_activity' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_action_spam_activity' ) && ! function_exists( 'bp_activity_action_spam_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_action_spam_activity()}.
+	 *
+	 * @deprecated Use bboss_activity_action_spam_activity() instead.
+	 */
+	function bp_activity_action_spam_activity( $activity_id = 0 ) {
+		return bboss_activity_action_spam_activity( $activity_id );
+	}
+}
+// @bbwt-com-end compat-layer

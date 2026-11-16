@@ -1496,3 +1496,288 @@ function bboss_core_install_xprofile_visibility() {
 	 */
 	do_action( 'bb_core_install_xprofile_visibility' );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_install_bookmarks' ) && ! function_exists( 'bb_core_install_bookmarks' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_bookmarks()}.
+	 *
+	 * @deprecated Use bboss_core_install_bookmarks() instead.
+	 */
+	function bb_core_install_bookmarks() {
+		return bboss_core_install_bookmarks();
+	}
+}
+if ( function_exists( 'bboss_core_install_subscription' ) && ! function_exists( 'bb_core_install_subscription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_subscription()}.
+	 *
+	 * @deprecated Use bboss_core_install_subscription() instead.
+	 */
+	function bb_core_install_subscription() {
+		return bboss_core_install_subscription();
+	}
+}
+if ( function_exists( 'bboss_core_install_xprofile_visibility' ) && ! function_exists( 'bb_core_install_xprofile_visibility' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_xprofile_visibility()}.
+	 *
+	 * @deprecated Use bboss_core_install_xprofile_visibility() instead.
+	 */
+	function bb_core_install_xprofile_visibility() {
+		return bboss_core_install_xprofile_visibility();
+	}
+}
+if ( function_exists( 'bboss_core_install' ) && ! function_exists( 'bp_core_install' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install()}.
+	 *
+	 * @deprecated Use bboss_core_install() instead.
+	 */
+	function bp_core_install( $active_components = false ) {
+		return bboss_core_install( $active_components );
+	}
+}
+if ( function_exists( 'bboss_core_install_activity_streams' ) && ! function_exists( 'bp_core_install_activity_streams' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_activity_streams()}.
+	 *
+	 * @deprecated Use bboss_core_install_activity_streams() instead.
+	 */
+	function bp_core_install_activity_streams() {
+		return bboss_core_install_activity_streams();
+	}
+}
+if ( function_exists( 'bboss_core_install_bbp_emails' ) && ! function_exists( 'bp_core_install_bbp_emails' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_bbp_emails()}.
+	 *
+	 * @deprecated Use bboss_core_install_bbp_emails() instead.
+	 */
+	function bp_core_install_bbp_emails() {
+		return bboss_core_install_bbp_emails();
+	}
+}
+if ( function_exists( 'bboss_core_install_blog_tracking' ) && ! function_exists( 'bp_core_install_blog_tracking' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_blog_tracking()}.
+	 *
+	 * @deprecated Use bboss_core_install_blog_tracking() instead.
+	 */
+	function bp_core_install_blog_tracking() {
+		return bboss_core_install_blog_tracking();
+	}
+}
+if ( function_exists( 'bboss_core_install_default_profiles_fields' ) && ! function_exists( 'bp_core_install_default_profiles_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_default_profiles_fields()}.
+	 *
+	 * @deprecated Use bboss_core_install_default_profiles_fields() instead.
+	 */
+	function bp_core_install_default_profiles_fields() {
+		return bboss_core_install_default_profiles_fields();
+	}
+}
+if ( function_exists( 'bboss_core_install_discussion_forums' ) && ! function_exists( 'bp_core_install_discussion_forums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_discussion_forums()}.
+	 *
+	 * @deprecated Use bboss_core_install_discussion_forums() instead.
+	 */
+	function bp_core_install_discussion_forums() {
+		return bboss_core_install_discussion_forums();
+	}
+}
+if ( function_exists( 'bboss_core_install_document' ) && ! function_exists( 'bp_core_install_document' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_document()}.
+	 *
+	 * @deprecated Use bboss_core_install_document() instead.
+	 */
+	function bp_core_install_document() {
+		return bboss_core_install_document();
+	}
+}
+if ( function_exists( 'bboss_core_install_emails' ) && ! function_exists( 'bp_core_install_emails' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_emails()}.
+	 *
+	 * @deprecated Use bboss_core_install_emails() instead.
+	 */
+	function bp_core_install_emails() {
+		return bboss_core_install_emails();
+	}
+}
+if ( function_exists( 'bboss_core_install_extended_profiles' ) && ! function_exists( 'bp_core_install_extended_profiles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_extended_profiles()}.
+	 *
+	 * @deprecated Use bboss_core_install_extended_profiles() instead.
+	 */
+	function bp_core_install_extended_profiles() {
+		return bboss_core_install_extended_profiles();
+	}
+}
+if ( function_exists( 'bboss_core_install_follow' ) && ! function_exists( 'bp_core_install_follow' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_follow()}.
+	 *
+	 * @deprecated Use bboss_core_install_follow() instead.
+	 */
+	function bp_core_install_follow() {
+		return bboss_core_install_follow();
+	}
+}
+if ( function_exists( 'bboss_core_install_friends' ) && ! function_exists( 'bp_core_install_friends' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_friends()}.
+	 *
+	 * @deprecated Use bboss_core_install_friends() instead.
+	 */
+	function bp_core_install_friends() {
+		return bboss_core_install_friends();
+	}
+}
+if ( function_exists( 'bboss_core_install_group_message_email' ) && ! function_exists( 'bp_core_install_group_message_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_group_message_email()}.
+	 *
+	 * @deprecated Use bboss_core_install_group_message_email() instead.
+	 */
+	function bp_core_install_group_message_email() {
+		return bboss_core_install_group_message_email();
+	}
+}
+if ( function_exists( 'bboss_core_install_groups' ) && ! function_exists( 'bp_core_install_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_groups()}.
+	 *
+	 * @deprecated Use bboss_core_install_groups() instead.
+	 */
+	function bp_core_install_groups() {
+		return bboss_core_install_groups();
+	}
+}
+if ( function_exists( 'bboss_core_install_invitations' ) && ! function_exists( 'bp_core_install_invitations' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_invitations()}.
+	 *
+	 * @deprecated Use bboss_core_install_invitations() instead.
+	 */
+	function bp_core_install_invitations() {
+		return bboss_core_install_invitations();
+	}
+}
+if ( function_exists( 'bboss_core_install_invites_email' ) && ! function_exists( 'bp_core_install_invites_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_invites_email()}.
+	 *
+	 * @deprecated Use bboss_core_install_invites_email() instead.
+	 */
+	function bp_core_install_invites_email() {
+		return bboss_core_install_invites_email();
+	}
+}
+if ( function_exists( 'bboss_core_install_media' ) && ! function_exists( 'bp_core_install_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_media()}.
+	 *
+	 * @deprecated Use bboss_core_install_media() instead.
+	 */
+	function bp_core_install_media() {
+		return bboss_core_install_media();
+	}
+}
+if ( function_exists( 'bboss_core_install_moderation' ) && ! function_exists( 'bp_core_install_moderation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_moderation()}.
+	 *
+	 * @deprecated Use bboss_core_install_moderation() instead.
+	 */
+	function bp_core_install_moderation() {
+		return bboss_core_install_moderation();
+	}
+}
+if ( function_exists( 'bboss_core_install_moderation_emails' ) && ! function_exists( 'bp_core_install_moderation_emails' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_moderation_emails()}.
+	 *
+	 * @deprecated Use bboss_core_install_moderation_emails() instead.
+	 */
+	function bp_core_install_moderation_emails() {
+		return bboss_core_install_moderation_emails();
+	}
+}
+if ( function_exists( 'bboss_core_install_notifications' ) && ! function_exists( 'bp_core_install_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_notifications()}.
+	 *
+	 * @deprecated Use bboss_core_install_notifications() instead.
+	 */
+	function bp_core_install_notifications() {
+		return bboss_core_install_notifications();
+	}
+}
+if ( function_exists( 'bboss_core_install_private_messaging' ) && ! function_exists( 'bp_core_install_private_messaging' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_private_messaging()}.
+	 *
+	 * @deprecated Use bboss_core_install_private_messaging() instead.
+	 */
+	function bp_core_install_private_messaging() {
+		return bboss_core_install_private_messaging();
+	}
+}
+if ( function_exists( 'bboss_core_install_signups' ) && ! function_exists( 'bp_core_install_signups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_signups()}.
+	 *
+	 * @deprecated Use bboss_core_install_signups() instead.
+	 */
+	function bp_core_install_signups() {
+		return bboss_core_install_signups();
+	}
+}
+if ( function_exists( 'bboss_core_install_suspend' ) && ! function_exists( 'bp_core_install_suspend' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_install_suspend()}.
+	 *
+	 * @deprecated Use bboss_core_install_suspend() instead.
+	 */
+	function bp_core_install_suspend() {
+		return bboss_core_install_suspend();
+	}
+}
+if ( function_exists( 'bboss_core_uninstall' ) && ! function_exists( 'bp_core_uninstall' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_uninstall()}.
+	 *
+	 * @deprecated Use bboss_core_uninstall() instead.
+	 */
+	function bp_core_uninstall( $uninstalled_components ) {
+		return bboss_core_uninstall( $uninstalled_components );
+	}
+}
+if ( function_exists( 'bboss_core_uninstall_discussion_forums' ) && ! function_exists( 'bp_core_uninstall_discussion_forums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_uninstall_discussion_forums()}.
+	 *
+	 * @deprecated Use bboss_core_uninstall_discussion_forums() instead.
+	 */
+	function bp_core_uninstall_discussion_forums() {
+		return bboss_core_uninstall_discussion_forums();
+	}
+}
+if ( function_exists( 'bboss_core_upgrade_signups' ) && ! function_exists( 'bp_core_upgrade_signups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_upgrade_signups()}.
+	 *
+	 * @deprecated Use bboss_core_upgrade_signups() instead.
+	 */
+	function bp_core_upgrade_signups() {
+		return bboss_core_upgrade_signups();
+	}
+}
+// @bbwt-com-end compat-layer

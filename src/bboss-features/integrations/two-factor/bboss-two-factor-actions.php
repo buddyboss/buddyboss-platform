@@ -305,3 +305,78 @@ function bboss_two_factor_skip_social_login_challenge() {
 	remove_action( 'wp_login', array( 'Two_Factor_Core', 'wp_login' ), PHP_INT_MAX );
 }
 add_action( 'bb_sso_before_wp_login', 'bb_two_factor_skip_social_login_challenge' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_guard_totp_enable' ) && ! function_exists( 'bb_two_factor_guard_totp_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_guard_totp_enable()}.
+	 *
+	 * @deprecated Use bboss_two_factor_guard_totp_enable() instead.
+	 */
+	function bb_two_factor_guard_totp_enable( $response, $handler, $request ) {
+		return bboss_two_factor_guard_totp_enable( $response, $handler, $request );
+	}
+}
+if ( function_exists( 'bboss_two_factor_keep_revalidation_return' ) && ! function_exists( 'bb_two_factor_keep_revalidation_return' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_keep_revalidation_return()}.
+	 *
+	 * @deprecated Use bboss_two_factor_keep_revalidation_return() instead.
+	 */
+	function bb_two_factor_keep_revalidation_return( $user ) {
+		return bboss_two_factor_keep_revalidation_return( $user );
+	}
+}
+if ( function_exists( 'bboss_two_factor_screen_security' ) && ! function_exists( 'bb_two_factor_screen_security' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_screen_security()}.
+	 *
+	 * @deprecated Use bboss_two_factor_screen_security() instead.
+	 */
+	function bb_two_factor_screen_security() {
+		return bboss_two_factor_screen_security();
+	}
+}
+if ( function_exists( 'bboss_two_factor_settings_save' ) && ! function_exists( 'bb_two_factor_settings_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_settings_save()}.
+	 *
+	 * @deprecated Use bboss_two_factor_settings_save() instead.
+	 */
+	function bb_two_factor_settings_save() {
+		return bboss_two_factor_settings_save();
+	}
+}
+if ( function_exists( 'bboss_two_factor_setup_nav' ) && ! function_exists( 'bb_two_factor_setup_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_setup_nav()}.
+	 *
+	 * @deprecated Use bboss_two_factor_setup_nav() instead.
+	 */
+	function bb_two_factor_setup_nav() {
+		return bboss_two_factor_setup_nav();
+	}
+}
+if ( function_exists( 'bboss_two_factor_skip_social_login_challenge' ) && ! function_exists( 'bb_two_factor_skip_social_login_challenge' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_skip_social_login_challenge()}.
+	 *
+	 * @deprecated Use bboss_two_factor_skip_social_login_challenge() instead.
+	 */
+	function bb_two_factor_skip_social_login_challenge() {
+		return bboss_two_factor_skip_social_login_challenge();
+	}
+}
+if ( function_exists( 'bboss_two_factor_template_title' ) && ! function_exists( 'bb_two_factor_template_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_template_title()}.
+	 *
+	 * @deprecated Use bboss_two_factor_template_title() instead.
+	 */
+	function bb_two_factor_template_title() {
+		return bboss_two_factor_template_title();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -487,3 +487,108 @@ function bboss_moved_media_features_dismiss_notice() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_dismiss_moved_media_features_notice', 'bb_moved_media_features_dismiss_notice' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moved_media_features_clear_stored_counts' ) && ! function_exists( 'bb_moved_media_features_clear_stored_counts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_clear_stored_counts()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_clear_stored_counts() instead.
+	 */
+	function bb_moved_media_features_clear_stored_counts() {
+		return bboss_moved_media_features_clear_stored_counts();
+	}
+}
+if ( function_exists( 'bboss_moved_media_features_dismiss_notice' ) && ! function_exists( 'bb_moved_media_features_dismiss_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_dismiss_notice()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_dismiss_notice() instead.
+	 */
+	function bb_moved_media_features_dismiss_notice() {
+		return bboss_moved_media_features_dismiss_notice();
+	}
+}
+if ( function_exists( 'bboss_moved_media_features_get_addons_state' ) && ! function_exists( 'bb_moved_media_features_get_addons_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_get_addons_state()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_get_addons_state() instead.
+	 */
+	function bb_moved_media_features_get_addons_state() {
+		return bboss_moved_media_features_get_addons_state();
+	}
+}
+if ( function_exists( 'bboss_moved_media_features_get_hidden_content' ) && ! function_exists( 'bb_moved_media_features_get_hidden_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_get_hidden_content()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_get_hidden_content() instead.
+	 */
+	function bb_moved_media_features_get_hidden_content() {
+		return bboss_moved_media_features_get_hidden_content();
+	}
+}
+if ( function_exists( 'bboss_moved_media_features_get_stored_counts' ) && ! function_exists( 'bb_moved_media_features_get_stored_counts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_get_stored_counts()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_get_stored_counts() instead.
+	 */
+	function bb_moved_media_features_get_stored_counts() {
+		return bboss_moved_media_features_get_stored_counts();
+	}
+}
+if ( function_exists( 'bboss_moved_media_features_get_upgrade_url' ) && ! function_exists( 'bb_moved_media_features_get_upgrade_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_get_upgrade_url()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_get_upgrade_url() instead.
+	 */
+	function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
+		return bboss_moved_media_features_get_upgrade_url( $content );
+	}
+}
+if ( function_exists( 'bboss_moved_media_features_is_entitled_from_cache' ) && ! function_exists( 'bb_moved_media_features_is_entitled_from_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_is_entitled_from_cache()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_is_entitled_from_cache() instead.
+	 */
+	function bb_moved_media_features_is_entitled_from_cache() {
+		return bboss_moved_media_features_is_entitled_from_cache();
+	}
+}
+if ( function_exists( 'bboss_moved_media_features_notice_is_snoozed' ) && ! function_exists( 'bb_moved_media_features_notice_is_snoozed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_notice_is_snoozed()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_notice_is_snoozed() instead.
+	 */
+	function bb_moved_media_features_notice_is_snoozed() {
+		return bboss_moved_media_features_notice_is_snoozed();
+	}
+}
+if ( function_exists( 'bboss_moved_media_features_render_notice' ) && ! function_exists( 'bb_moved_media_features_render_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_render_notice()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_render_notice() instead.
+	 */
+	function bb_moved_media_features_render_notice() {
+		return bboss_moved_media_features_render_notice();
+	}
+}
+if ( function_exists( 'bboss_moved_media_features_table_exists' ) && ! function_exists( 'bb_moved_media_features_table_exists' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_table_exists()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_table_exists() instead.
+	 */
+	function bb_moved_media_features_table_exists( $table ) {
+		return bboss_moved_media_features_table_exists( $table );
+	}
+}
+// @bbwt-com-end compat-layer

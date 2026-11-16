@@ -290,3 +290,108 @@ function bboss_check_column_exists( $opdb, $table_name, $column_name ) {
 
 	return false;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_check_column_exists' ) && ! function_exists( 'bb_check_column_exists' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_check_column_exists()}.
+	 *
+	 * @deprecated Use bboss_check_column_exists() instead.
+	 */
+	function bb_check_column_exists( $opdb, $table_name, $column_name ) {
+		return bboss_check_column_exists( $opdb, $table_name, $column_name );
+	}
+}
+if ( function_exists( 'bboss_check_table_exists' ) && ! function_exists( 'bb_check_table_exists' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_check_table_exists()}.
+	 *
+	 * @deprecated Use bboss_check_table_exists() instead.
+	 */
+	function bb_check_table_exists( $opdb, $table_name ) {
+		return bboss_check_table_exists( $opdb, $table_name );
+	}
+}
+if ( function_exists( 'bboss_bbp_admin_custom_menu_order' ) && ! function_exists( 'bbp_admin_custom_menu_order' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_admin_custom_menu_order()}.
+	 *
+	 * @deprecated Use bboss_bbp_admin_custom_menu_order() instead.
+	 */
+	function bbp_admin_custom_menu_order( $menu_order = false ) {
+		return bboss_bbp_admin_custom_menu_order( $menu_order );
+	}
+}
+if ( function_exists( 'bboss_bbp_admin_menu_order' ) && ! function_exists( 'bbp_admin_menu_order' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_admin_menu_order()}.
+	 *
+	 * @deprecated Use bboss_bbp_admin_menu_order() instead.
+	 */
+	function bbp_admin_menu_order( $menu_order ) {
+		return bboss_bbp_admin_menu_order( $menu_order );
+	}
+}
+if ( function_exists( 'bboss_bbp_admin_separator' ) && ! function_exists( 'bbp_admin_separator' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_admin_separator()}.
+	 *
+	 * @deprecated Use bboss_bbp_admin_separator() instead.
+	 */
+	function bbp_admin_separator() {
+		return bboss_bbp_admin_separator();
+	}
+}
+if ( function_exists( 'bboss_bbp_do_uninstall' ) && ! function_exists( 'bbp_do_uninstall' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_do_uninstall()}.
+	 *
+	 * @deprecated Use bboss_bbp_do_uninstall() instead.
+	 */
+	function bbp_do_uninstall( $site_id = 0 ) {
+		return bboss_bbp_do_uninstall( $site_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_tools_admin_tabs' ) && ! function_exists( 'bbp_get_tools_admin_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_tools_admin_tabs()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_tools_admin_tabs() instead.
+	 */
+	function bbp_get_tools_admin_tabs( $active_tab = '' ) {
+		return bboss_bbp_get_tools_admin_tabs( $active_tab );
+	}
+}
+if ( function_exists( 'bboss_bbp_sanitize_slug' ) && ! function_exists( 'bbp_sanitize_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_sanitize_slug()}.
+	 *
+	 * @deprecated Use bboss_bbp_sanitize_slug() instead.
+	 */
+	function bbp_sanitize_slug( $slug = '' ) {
+		return bboss_bbp_sanitize_slug( $slug );
+	}
+}
+if ( function_exists( 'bboss_bbp_tools_admin_tabs' ) && ! function_exists( 'bbp_tools_admin_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_tools_admin_tabs()}.
+	 *
+	 * @deprecated Use bboss_bbp_tools_admin_tabs() instead.
+	 */
+	function bbp_tools_admin_tabs( $active_tab = '' ) {
+		return bboss_bbp_tools_admin_tabs( $active_tab );
+	}
+}
+if ( function_exists( 'bboss_bbp_tools_modify_menu_highlight' ) && ! function_exists( 'bbp_tools_modify_menu_highlight' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_tools_modify_menu_highlight()}.
+	 *
+	 * @deprecated Use bboss_bbp_tools_modify_menu_highlight() instead.
+	 */
+	function bbp_tools_modify_menu_highlight() {
+		return bboss_bbp_tools_modify_menu_highlight();
+	}
+}
+// @bbwt-com-end compat-layer

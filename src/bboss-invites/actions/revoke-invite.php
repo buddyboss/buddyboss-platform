@@ -65,3 +65,18 @@ function bboss_member_revoke_invite() {
 
 }
 add_action( 'bp_actions', 'bp_member_revoke_invite' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_member_revoke_invite' ) && ! function_exists( 'bp_member_revoke_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_revoke_invite()}.
+	 *
+	 * @deprecated Use bboss_member_revoke_invite() instead.
+	 */
+	function bp_member_revoke_invite() {
+		return bboss_member_revoke_invite();
+	}
+}
+// @bbwt-com-end compat-layer

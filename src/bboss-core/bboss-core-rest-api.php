@@ -473,11 +473,21 @@ function bboss_rest_before_rest_request( $response, $handler, $request ) {
 add_filter( 'rest_request_before_callbacks', 'bb_rest_before_rest_request', 10, 3 );
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_input_clean' ) && ! function_exists( 'bb_input_clean' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_input_clean()}.
+	 *
+	 * @deprecated Use bboss_input_clean() instead.
+	 */
+	function bb_input_clean( $var ) {
+		return bboss_input_clean( $var );
+	}
+}
 if ( function_exists( 'bboss_is_rest' ) && ! function_exists( 'bb_is_rest' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_is_rest()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_is_rest()}.
 	 *
 	 * @deprecated Use bboss_is_rest() instead.
 	 */
@@ -485,9 +495,19 @@ if ( function_exists( 'bboss_is_rest' ) && ! function_exists( 'bb_is_rest' ) ) {
 		return bboss_is_rest();
 	}
 }
+if ( function_exists( 'bboss_rest_before_rest_request' ) && ! function_exists( 'bb_rest_before_rest_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_before_rest_request()}.
+	 *
+	 * @deprecated Use bboss_rest_before_rest_request() instead.
+	 */
+	function bb_rest_before_rest_request( $response, $handler, $request ) {
+		return bboss_rest_before_rest_request( $response, $handler, $request );
+	}
+}
 if ( function_exists( 'bboss_rest_raw_content' ) && ! function_exists( 'bb_rest_raw_content' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_raw_content()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_raw_content()}.
 	 *
 	 * @deprecated Use bboss_rest_raw_content() instead.
 	 */
@@ -495,9 +515,29 @@ if ( function_exists( 'bboss_rest_raw_content' ) && ! function_exists( 'bb_rest_
 		return bboss_rest_raw_content( $content );
 	}
 }
+if ( function_exists( 'bboss_rest_api_is_available' ) && ! function_exists( 'bp_rest_api_is_available' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_api_is_available()}.
+	 *
+	 * @deprecated Use bboss_rest_api_is_available() instead.
+	 */
+	function bp_rest_api_is_available() {
+		return bboss_rest_api_is_available();
+	}
+}
+if ( function_exists( 'bboss_rest_api_register_request_script' ) && ! function_exists( 'bp_rest_api_register_request_script' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_api_register_request_script()}.
+	 *
+	 * @deprecated Use bboss_rest_api_register_request_script() instead.
+	 */
+	function bp_rest_api_register_request_script() {
+		return bboss_rest_api_register_request_script();
+	}
+}
 if ( function_exists( 'bboss_rest_get_user' ) && ! function_exists( 'bp_rest_get_user' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_get_user()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_get_user()}.
 	 *
 	 * @deprecated Use bboss_rest_get_user() instead.
 	 */
@@ -507,7 +547,7 @@ if ( function_exists( 'bboss_rest_get_user' ) && ! function_exists( 'bp_rest_get
 }
 if ( function_exists( 'bboss_rest_get_user_url' ) && ! function_exists( 'bp_rest_get_user_url' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_get_user_url()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_get_user_url()}.
 	 *
 	 * @deprecated Use bboss_rest_get_user_url() instead.
 	 */
@@ -515,9 +555,29 @@ if ( function_exists( 'bboss_rest_get_user_url' ) && ! function_exists( 'bp_rest
 		return bboss_rest_get_user_url( $user_ids );
 	}
 }
+if ( function_exists( 'bboss_rest_in_buddypress' ) && ! function_exists( 'bp_rest_in_buddypress' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_in_buddypress()}.
+	 *
+	 * @deprecated Use bboss_rest_in_buddypress() instead.
+	 */
+	function bp_rest_in_buddypress() {
+		return bboss_rest_in_buddypress();
+	}
+}
+if ( function_exists( 'bboss_rest_is_plugin_active' ) && ! function_exists( 'bp_rest_is_plugin_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_is_plugin_active()}.
+	 *
+	 * @deprecated Use bboss_rest_is_plugin_active() instead.
+	 */
+	function bp_rest_is_plugin_active() {
+		return bboss_rest_is_plugin_active();
+	}
+}
 if ( function_exists( 'bboss_rest_namespace' ) && ! function_exists( 'bp_rest_namespace' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_namespace()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_namespace()}.
 	 *
 	 * @deprecated Use bboss_rest_namespace() instead.
 	 */
@@ -527,7 +587,7 @@ if ( function_exists( 'bboss_rest_namespace' ) && ! function_exists( 'bp_rest_na
 }
 if ( function_exists( 'bboss_rest_prepare_date_response' ) && ! function_exists( 'bp_rest_prepare_date_response' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_prepare_date_response()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_prepare_date_response()}.
 	 *
 	 * @deprecated Use bboss_rest_prepare_date_response() instead.
 	 */
@@ -537,7 +597,7 @@ if ( function_exists( 'bboss_rest_prepare_date_response' ) && ! function_exists(
 }
 if ( function_exists( 'bboss_rest_register_field' ) && ! function_exists( 'bp_rest_register_field' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_register_field()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_register_field()}.
 	 *
 	 * @deprecated Use bboss_rest_register_field() instead.
 	 */
@@ -547,7 +607,7 @@ if ( function_exists( 'bboss_rest_register_field' ) && ! function_exists( 'bp_re
 }
 if ( function_exists( 'bboss_rest_response_add_total_headers' ) && ! function_exists( 'bp_rest_response_add_total_headers' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_response_add_total_headers()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_response_add_total_headers()}.
 	 *
 	 * @deprecated Use bboss_rest_response_add_total_headers() instead.
 	 */
@@ -557,7 +617,7 @@ if ( function_exists( 'bboss_rest_response_add_total_headers' ) && ! function_ex
 }
 if ( function_exists( 'bboss_rest_sanitize_group_types' ) && ! function_exists( 'bp_rest_sanitize_group_types' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_sanitize_group_types()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_sanitize_group_types()}.
 	 *
 	 * @deprecated Use bboss_rest_sanitize_group_types() instead.
 	 */
@@ -567,7 +627,7 @@ if ( function_exists( 'bboss_rest_sanitize_group_types' ) && ! function_exists( 
 }
 if ( function_exists( 'bboss_rest_sanitize_member_types' ) && ! function_exists( 'bp_rest_sanitize_member_types' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_sanitize_member_types()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_sanitize_member_types()}.
 	 *
 	 * @deprecated Use bboss_rest_sanitize_member_types() instead.
 	 */
@@ -577,7 +637,7 @@ if ( function_exists( 'bboss_rest_sanitize_member_types' ) && ! function_exists(
 }
 if ( function_exists( 'bboss_rest_sanitize_string_list' ) && ! function_exists( 'bp_rest_sanitize_string_list' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_sanitize_string_list()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_sanitize_string_list()}.
 	 *
 	 * @deprecated Use bboss_rest_sanitize_string_list() instead.
 	 */
@@ -587,7 +647,7 @@ if ( function_exists( 'bboss_rest_sanitize_string_list' ) && ! function_exists( 
 }
 if ( function_exists( 'bboss_rest_validate_group_types' ) && ! function_exists( 'bp_rest_validate_group_types' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_validate_group_types()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_validate_group_types()}.
 	 *
 	 * @deprecated Use bboss_rest_validate_group_types() instead.
 	 */
@@ -597,7 +657,7 @@ if ( function_exists( 'bboss_rest_validate_group_types' ) && ! function_exists( 
 }
 if ( function_exists( 'bboss_rest_validate_member_types' ) && ! function_exists( 'bp_rest_validate_member_types' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_validate_member_types()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_validate_member_types()}.
 	 *
 	 * @deprecated Use bboss_rest_validate_member_types() instead.
 	 */
@@ -607,7 +667,7 @@ if ( function_exists( 'bboss_rest_validate_member_types' ) && ! function_exists(
 }
 if ( function_exists( 'bboss_rest_version' ) && ! function_exists( 'bp_rest_version' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_version()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_version()}.
 	 *
 	 * @deprecated Use bboss_rest_version() instead.
 	 */

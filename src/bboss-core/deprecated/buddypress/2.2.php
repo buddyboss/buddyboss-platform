@@ -113,3 +113,78 @@ function bboss_message_add_meta( $message_id, $meta_key, $meta_value, $unique = 
 	_deprecated_function( __FUNCTION__, '2.3.0', 'bp_messages_add_meta()' );
 	return bboss_messages_add_meta( $message_id, $meta_key, $meta_value, $unique );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_catch_transition_post_status' ) && ! function_exists( 'bp_blogs_catch_transition_post_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_catch_transition_post_status()}.
+	 *
+	 * @deprecated Use bboss_blogs_catch_transition_post_status() instead.
+	 */
+	function bp_blogs_catch_transition_post_status( $new_status, $old_status, $post ) {
+		return bboss_blogs_catch_transition_post_status( $new_status, $old_status, $post );
+	}
+}
+if ( function_exists( 'bboss_blogs_format_clear_blog_cache' ) && ! function_exists( 'bp_blogs_format_clear_blog_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_format_clear_blog_cache()}.
+	 *
+	 * @deprecated Use bboss_blogs_format_clear_blog_cache() instead.
+	 */
+	function bp_blogs_format_clear_blog_cache( $recorded_blog_obj ) {
+		return bboss_blogs_format_clear_blog_cache( $recorded_blog_obj );
+	}
+}
+if ( function_exists( 'bboss_blogs_record_post' ) && ! function_exists( 'bp_blogs_record_post' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_record_post()}.
+	 *
+	 * @deprecated Use bboss_blogs_record_post() instead.
+	 */
+	function bp_blogs_record_post( $post_id, $post, $user_id = 0 ) {
+		return bboss_blogs_record_post( $post_id, $post, $user_id );
+	}
+}
+if ( function_exists( 'bboss_blogs_update_post' ) && ! function_exists( 'bp_blogs_update_post' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_post()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_post() instead.
+	 */
+	function bp_blogs_update_post( $post ) {
+		return bboss_blogs_update_post( $post );
+	}
+}
+if ( function_exists( 'bboss_core_add_global_group' ) && ! function_exists( 'bp_core_add_global_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_global_group()}.
+	 *
+	 * @deprecated Use bboss_core_add_global_group() instead.
+	 */
+	function bp_core_add_global_group() {
+		return bboss_core_add_global_group();
+	}
+}
+if ( function_exists( 'bboss_message_add_meta' ) && ! function_exists( 'bp_message_add_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_add_meta()}.
+	 *
+	 * @deprecated Use bboss_message_add_meta() instead.
+	 */
+	function bp_message_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
+		return bboss_message_add_meta( $message_id, $meta_key, $meta_value, $unique );
+	}
+}
+if ( function_exists( 'bboss_xprofile_format_activity_action_new_member' ) && ! function_exists( 'bp_xprofile_format_activity_action_new_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_format_activity_action_new_member()}.
+	 *
+	 * @deprecated Use bboss_xprofile_format_activity_action_new_member() instead.
+	 */
+	function bp_xprofile_format_activity_action_new_member( $action, $activity ) {
+		return bboss_xprofile_format_activity_action_new_member( $action, $activity );
+	}
+}
+// @bbwt-com-end compat-layer

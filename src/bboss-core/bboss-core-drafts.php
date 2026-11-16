@@ -6307,3 +6307,1008 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		}
 	);
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_acquire_lock' ) && ! function_exists( 'bb_draft_acquire_lock' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_acquire_lock()}.
+	 *
+	 * @deprecated Use bboss_draft_acquire_lock() instead.
+	 */
+	function bb_draft_acquire_lock( $key, $timeout, $network = false ) {
+		return bboss_draft_acquire_lock( $key, $timeout, $network );
+	}
+}
+if ( function_exists( 'bboss_draft_acquire_stamp_sweep_lock' ) && ! function_exists( 'bb_draft_acquire_stamp_sweep_lock' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_acquire_stamp_sweep_lock()}.
+	 *
+	 * @deprecated Use bboss_draft_acquire_stamp_sweep_lock() instead.
+	 */
+	function bb_draft_acquire_stamp_sweep_lock( $timeout ) {
+		return bboss_draft_acquire_stamp_sweep_lock( $timeout );
+	}
+}
+if ( function_exists( 'bboss_draft_activity_publish_key' ) && ! function_exists( 'bb_draft_activity_publish_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_activity_publish_key()}.
+	 *
+	 * @deprecated Use bboss_draft_activity_publish_key() instead.
+	 */
+	function bb_draft_activity_publish_key( $fallback_key, $user_id ) {
+		return bboss_draft_activity_publish_key( $fallback_key, $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_attachment_is_eviction_protected' ) && ! function_exists( 'bb_draft_attachment_is_eviction_protected' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_attachment_is_eviction_protected()}.
+	 *
+	 * @deprecated Use bboss_draft_attachment_is_eviction_protected() instead.
+	 */
+	function bb_draft_attachment_is_eviction_protected( $attachment_id ) {
+		return bboss_draft_attachment_is_eviction_protected( $attachment_id );
+	}
+}
+if ( function_exists( 'bboss_draft_base_matches' ) && ! function_exists( 'bb_draft_base_matches' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_base_matches()}.
+	 *
+	 * @deprecated Use bboss_draft_base_matches() instead.
+	 */
+	function bb_draft_base_matches( $stored, $base ) {
+		return bboss_draft_base_matches( $stored, $base );
+	}
+}
+if ( function_exists( 'bboss_draft_batch_max_bytes' ) && ! function_exists( 'bb_draft_batch_max_bytes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_batch_max_bytes()}.
+	 *
+	 * @deprecated Use bboss_draft_batch_max_bytes() instead.
+	 */
+	function bb_draft_batch_max_bytes() {
+		return bboss_draft_batch_max_bytes();
+	}
+}
+if ( function_exists( 'bboss_draft_collect_attachment_ids' ) && ! function_exists( 'bb_draft_collect_attachment_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_collect_attachment_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_collect_attachment_ids() instead.
+	 */
+	function bb_draft_collect_attachment_ids( $draft ) {
+		return bboss_draft_collect_attachment_ids( $draft );
+	}
+}
+if ( function_exists( 'bboss_draft_collect_other_referenced_ids' ) && ! function_exists( 'bb_draft_collect_other_referenced_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_collect_other_referenced_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_collect_other_referenced_ids() instead.
+	 */
+	function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude_inner = '' ) {
+		return bboss_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude_inner );
+	}
+}
+if ( function_exists( 'bboss_draft_collect_other_row_referenced_ids' ) && ! function_exists( 'bb_draft_collect_other_row_referenced_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_collect_other_row_referenced_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_collect_other_row_referenced_ids() instead.
+	 */
+	function bb_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key ) {
+		return bboss_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key );
+	}
+}
+if ( function_exists( 'bboss_draft_conflict_message' ) && ! function_exists( 'bb_draft_conflict_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_conflict_message()}.
+	 *
+	 * @deprecated Use bboss_draft_conflict_message() instead.
+	 */
+	function bb_draft_conflict_message() {
+		return bboss_draft_conflict_message();
+	}
+}
+if ( function_exists( 'bboss_draft_delete_user_evicted_hold' ) && ! function_exists( 'bb_draft_delete_user_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_delete_user_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_delete_user_evicted_hold() instead.
+	 */
+	function bb_draft_delete_user_evicted_hold( $user_id ) {
+		return bboss_draft_delete_user_evicted_hold( $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_dispose' ) && ! function_exists( 'bb_draft_dispose' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_dispose()}.
+	 *
+	 * @deprecated Use bboss_draft_dispose() instead.
+	 */
+	function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachment_release = false ) {
+		return bboss_draft_dispose( $user_id, $meta_key, $inner_key, $defer_attachment_release );
+	}
+}
+if ( function_exists( 'bboss_draft_dispose_forum_inner_keys' ) && ! function_exists( 'bb_draft_dispose_forum_inner_keys' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_dispose_forum_inner_keys()}.
+	 *
+	 * @deprecated Use bboss_draft_dispose_forum_inner_keys() instead.
+	 */
+	function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attachment_release = false ) {
+		return bboss_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attachment_release );
+	}
+}
+if ( function_exists( 'bboss_draft_drop_settled_evicted' ) && ! function_exists( 'bb_draft_drop_settled_evicted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_drop_settled_evicted()}.
+	 *
+	 * @deprecated Use bboss_draft_drop_settled_evicted() instead.
+	 */
+	function bb_draft_drop_settled_evicted( $user_id, $hold, $acked = array() ) {
+		return bboss_draft_drop_settled_evicted( $user_id, $hold, $acked );
+	}
+}
+if ( function_exists( 'bboss_draft_enforce_user_budget' ) && ! function_exists( 'bb_draft_enforce_user_budget' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_enforce_user_budget()}.
+	 *
+	 * @deprecated Use bboss_draft_enforce_user_budget() instead.
+	 */
+	function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $context = 'save' ) {
+		return bboss_draft_enforce_user_budget( $user_id, $current_key, $new_size, $context );
+	}
+}
+if ( function_exists( 'bboss_draft_evicted_hold_option' ) && ! function_exists( 'bb_draft_evicted_hold_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_evicted_hold_option()}.
+	 *
+	 * @deprecated Use bboss_draft_evicted_hold_option() instead.
+	 */
+	function bb_draft_evicted_hold_option( $user_id ) {
+		return bboss_draft_evicted_hold_option( $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_evicted_hold_seconds' ) && ! function_exists( 'bb_draft_evicted_hold_seconds' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_evicted_hold_seconds()}.
+	 *
+	 * @deprecated Use bboss_draft_evicted_hold_seconds() instead.
+	 */
+	function bb_draft_evicted_hold_seconds() {
+		return bboss_draft_evicted_hold_seconds();
+	}
+}
+if ( function_exists( 'bboss_draft_evicted_overflow_keys_option' ) && ! function_exists( 'bb_draft_evicted_overflow_keys_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_evicted_overflow_keys_option()}.
+	 *
+	 * @deprecated Use bboss_draft_evicted_overflow_keys_option() instead.
+	 */
+	function bb_draft_evicted_overflow_keys_option( $user_id ) {
+		return bboss_draft_evicted_overflow_keys_option( $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_evicted_overflow_option' ) && ! function_exists( 'bb_draft_evicted_overflow_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_evicted_overflow_option()}.
+	 *
+	 * @deprecated Use bboss_draft_evicted_overflow_option() instead.
+	 */
+	function bb_draft_evicted_overflow_option( $user_id ) {
+		return bboss_draft_evicted_overflow_option( $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_eviction_file_ledger_option' ) && ! function_exists( 'bb_draft_eviction_file_ledger_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_eviction_file_ledger_option()}.
+	 *
+	 * @deprecated Use bboss_draft_eviction_file_ledger_option() instead.
+	 */
+	function bb_draft_eviction_file_ledger_option() {
+		return bboss_draft_eviction_file_ledger_option();
+	}
+}
+if ( function_exists( 'bboss_draft_flush_user_meta_sizes' ) && ! function_exists( 'bb_draft_flush_user_meta_sizes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_flush_user_meta_sizes()}.
+	 *
+	 * @deprecated Use bboss_draft_flush_user_meta_sizes() instead.
+	 */
+	function bb_draft_flush_user_meta_sizes( $user_id ) {
+		return bboss_draft_flush_user_meta_sizes( $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_fresh_value' ) && ! function_exists( 'bb_draft_fresh_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_fresh_value()}.
+	 *
+	 * @deprecated Use bboss_draft_fresh_value() instead.
+	 */
+	function bb_draft_fresh_value( $user_id, $meta_key, $refresh_cache = false ) {
+		return bboss_draft_fresh_value( $user_id, $meta_key, $refresh_cache );
+	}
+}
+if ( function_exists( 'bboss_draft_get_evicted_attachment_ledger_ids' ) && ! function_exists( 'bb_draft_get_evicted_attachment_ledger_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_evicted_attachment_ledger_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_get_evicted_attachment_ledger_ids() instead.
+	 */
+	function bb_draft_get_evicted_attachment_ledger_ids() {
+		return bboss_draft_get_evicted_attachment_ledger_ids();
+	}
+}
+if ( function_exists( 'bboss_draft_get_evicted_hold' ) && ! function_exists( 'bb_draft_get_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_get_evicted_hold() instead.
+	 */
+	function bb_draft_get_evicted_hold( $user_id ) {
+		return bboss_draft_get_evicted_hold( $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_get_evicted_overflow' ) && ! function_exists( 'bb_draft_get_evicted_overflow' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_evicted_overflow()}.
+	 *
+	 * @deprecated Use bboss_draft_get_evicted_overflow() instead.
+	 */
+	function bb_draft_get_evicted_overflow( $user_id, $force = false ) {
+		return bboss_draft_get_evicted_overflow( $user_id, $force );
+	}
+}
+if ( function_exists( 'bboss_draft_get_evicted_overflow_keys' ) && ! function_exists( 'bb_draft_get_evicted_overflow_keys' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_evicted_overflow_keys()}.
+	 *
+	 * @deprecated Use bboss_draft_get_evicted_overflow_keys() instead.
+	 */
+	function bb_draft_get_evicted_overflow_keys( $user_id ) {
+		return bboss_draft_get_evicted_overflow_keys( $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_get_held_entry' ) && ! function_exists( 'bb_draft_get_held_entry' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_held_entry()}.
+	 *
+	 * @deprecated Use bboss_draft_get_held_entry() instead.
+	 */
+	function bb_draft_get_held_entry( $user_id, $key ) {
+		return bboss_draft_get_held_entry( $user_id, $key );
+	}
+}
+if ( function_exists( 'bboss_draft_get_referenced_cache_token' ) && ! function_exists( 'bb_draft_get_referenced_cache_token' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_referenced_cache_token()}.
+	 *
+	 * @deprecated Use bboss_draft_get_referenced_cache_token() instead.
+	 */
+	function bb_draft_get_referenced_cache_token() {
+		return bboss_draft_get_referenced_cache_token();
+	}
+}
+if ( function_exists( 'bboss_draft_get_rows_batch' ) && ! function_exists( 'bb_draft_get_rows_batch' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_rows_batch()}.
+	 *
+	 * @deprecated Use bboss_draft_get_rows_batch() instead.
+	 */
+	function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values = true, $max_bytes = 0 ) {
+		return bboss_draft_get_rows_batch( $last_umeta_id, $limit, $with_values, $max_bytes );
+	}
+}
+if ( function_exists( 'bboss_draft_get_user_meta_sizes' ) && ! function_exists( 'bb_draft_get_user_meta_sizes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_user_meta_sizes()}.
+	 *
+	 * @deprecated Use bboss_draft_get_user_meta_sizes() instead.
+	 */
+	function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
+		return bboss_draft_get_user_meta_sizes( $user_id, $flush );
+	}
+}
+if ( function_exists( 'bboss_draft_handback' ) && ! function_exists( 'bb_draft_handback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_handback()}.
+	 *
+	 * @deprecated Use bboss_draft_handback() instead.
+	 */
+	function bb_draft_handback( $user_id, $fresh = array() ) {
+		return bboss_draft_handback( $user_id, $fresh );
+	}
+}
+if ( function_exists( 'bboss_draft_handback_for_key' ) && ! function_exists( 'bb_draft_handback_for_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_handback_for_key()}.
+	 *
+	 * @deprecated Use bboss_draft_handback_for_key() instead.
+	 */
+	function bb_draft_handback_for_key( $user_id, $evicted_key ) {
+		return bboss_draft_handback_for_key( $user_id, $evicted_key );
+	}
+}
+if ( function_exists( 'bboss_draft_heal_forum_row' ) && ! function_exists( 'bb_draft_heal_forum_row' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_heal_forum_row()}.
+	 *
+	 * @deprecated Use bboss_draft_heal_forum_row() instead.
+	 */
+	function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) {
+		return bboss_draft_heal_forum_row( $user_id, $defer_attachment_release );
+	}
+}
+if ( function_exists( 'bboss_draft_hold_evicted' ) && ! function_exists( 'bb_draft_hold_evicted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_hold_evicted()}.
+	 *
+	 * @deprecated Use bboss_draft_hold_evicted() instead.
+	 */
+	function bb_draft_hold_evicted( $user_id, $entries ) {
+		return bboss_draft_hold_evicted( $user_id, $entries );
+	}
+}
+if ( function_exists( 'bboss_draft_hold_oversized_draft' ) && ! function_exists( 'bb_draft_hold_oversized_draft' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_hold_oversized_draft()}.
+	 *
+	 * @deprecated Use bboss_draft_hold_oversized_draft() instead.
+	 */
+	function bb_draft_hold_oversized_draft( $user_id, $meta_key ) {
+		return bboss_draft_hold_oversized_draft( $user_id, $meta_key );
+	}
+}
+if ( function_exists( 'bboss_draft_invalidate_referenced_cache' ) && ! function_exists( 'bb_draft_invalidate_referenced_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_invalidate_referenced_cache()}.
+	 *
+	 * @deprecated Use bboss_draft_invalidate_referenced_cache() instead.
+	 */
+	function bb_draft_invalidate_referenced_cache( $kept_attachment_ids = null ) {
+		return bboss_draft_invalidate_referenced_cache( $kept_attachment_ids );
+	}
+}
+if ( function_exists( 'bboss_draft_is_beacon_request' ) && ! function_exists( 'bb_draft_is_beacon_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_is_beacon_request()}.
+	 *
+	 * @deprecated Use bboss_draft_is_beacon_request() instead.
+	 */
+	function bb_draft_is_beacon_request() {
+		return bboss_draft_is_beacon_request();
+	}
+}
+if ( function_exists( 'bboss_draft_is_draft_meta_key' ) && ! function_exists( 'bb_draft_is_draft_meta_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_is_draft_meta_key()}.
+	 *
+	 * @deprecated Use bboss_draft_is_draft_meta_key() instead.
+	 */
+	function bb_draft_is_draft_meta_key( $meta_key ) {
+		return bboss_draft_is_draft_meta_key( $meta_key );
+	}
+}
+if ( function_exists( 'bboss_draft_lock_evicted_hold' ) && ! function_exists( 'bb_draft_lock_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_lock_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_lock_evicted_hold() instead.
+	 */
+	function bb_draft_lock_evicted_hold( $user_id ) {
+		return bboss_draft_lock_evicted_hold( $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_logical_meta_key' ) && ! function_exists( 'bb_draft_logical_meta_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_logical_meta_key()}.
+	 *
+	 * @deprecated Use bboss_draft_logical_meta_key() instead.
+	 */
+	function bb_draft_logical_meta_key( $stored_key ) {
+		return bboss_draft_logical_meta_key( $stored_key );
+	}
+}
+if ( function_exists( 'bboss_draft_mark_evicted_attachments' ) && ! function_exists( 'bb_draft_mark_evicted_attachments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_mark_evicted_attachments()}.
+	 *
+	 * @deprecated Use bboss_draft_mark_evicted_attachments() instead.
+	 */
+	function bb_draft_mark_evicted_attachments( $entries, $user_id ) {
+		return bboss_draft_mark_evicted_attachments( $entries, $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_max_attachments_per_type' ) && ! function_exists( 'bb_draft_max_attachments_per_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_max_attachments_per_type()}.
+	 *
+	 * @deprecated Use bboss_draft_max_attachments_per_type() instead.
+	 */
+	function bb_draft_max_attachments_per_type( $type = 'media' ) {
+		return bboss_draft_max_attachments_per_type( $type );
+	}
+}
+if ( function_exists( 'bboss_draft_max_size' ) && ! function_exists( 'bb_draft_max_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_max_size()}.
+	 *
+	 * @deprecated Use bboss_draft_max_size() instead.
+	 */
+	function bb_draft_max_size() {
+		return bboss_draft_max_size();
+	}
+}
+if ( function_exists( 'bboss_draft_meta_key_sql' ) && ! function_exists( 'bb_draft_meta_key_sql' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_meta_key_sql()}.
+	 *
+	 * @deprecated Use bboss_draft_meta_key_sql() instead.
+	 */
+	function bb_draft_meta_key_sql() {
+		return bboss_draft_meta_key_sql();
+	}
+}
+if ( function_exists( 'bboss_draft_meta_key_wrap' ) && ! function_exists( 'bb_draft_meta_key_wrap' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_meta_key_wrap()}.
+	 *
+	 * @deprecated Use bboss_draft_meta_key_wrap() instead.
+	 */
+	function bb_draft_meta_key_wrap() {
+		return bboss_draft_meta_key_wrap();
+	}
+}
+if ( function_exists( 'bboss_draft_oneshot_schedule' ) && ! function_exists( 'bb_draft_oneshot_schedule' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_oneshot_schedule()}.
+	 *
+	 * @deprecated Use bboss_draft_oneshot_schedule() instead.
+	 */
+	function bb_draft_oneshot_schedule( $delay ) {
+		return bboss_draft_oneshot_schedule( $delay );
+	}
+}
+if ( function_exists( 'bboss_draft_oneshot_unschedule' ) && ! function_exists( 'bb_draft_oneshot_unschedule' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_oneshot_unschedule()}.
+	 *
+	 * @deprecated Use bboss_draft_oneshot_unschedule() instead.
+	 */
+	function bb_draft_oneshot_unschedule() {
+		return bboss_draft_oneshot_unschedule();
+	}
+}
+if ( function_exists( 'bboss_draft_parse_base' ) && ! function_exists( 'bb_draft_parse_base' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_parse_base()}.
+	 *
+	 * @deprecated Use bboss_draft_parse_base() instead.
+	 */
+	function bb_draft_parse_base( $raw ) {
+		return bboss_draft_parse_base( $raw );
+	}
+}
+if ( function_exists( 'bboss_draft_peek_pending_reference_ids' ) && ! function_exists( 'bb_draft_peek_pending_reference_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_peek_pending_reference_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_peek_pending_reference_ids() instead.
+	 */
+	function bb_draft_peek_pending_reference_ids() {
+		return bboss_draft_peek_pending_reference_ids();
+	}
+}
+if ( function_exists( 'bboss_draft_pending_evicted' ) && ! function_exists( 'bb_draft_pending_evicted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_pending_evicted()}.
+	 *
+	 * @deprecated Use bboss_draft_pending_evicted() instead.
+	 */
+	function bb_draft_pending_evicted( $user_id, $acked = array() ) {
+		return bboss_draft_pending_evicted( $user_id, $acked );
+	}
+}
+if ( function_exists( 'bboss_draft_post_accepts_drafts' ) && ! function_exists( 'bb_draft_post_accepts_drafts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_post_accepts_drafts()}.
+	 *
+	 * @deprecated Use bboss_draft_post_accepts_drafts() instead.
+	 */
+	function bb_draft_post_accepts_drafts( $post ) {
+		return bboss_draft_post_accepts_drafts( $post );
+	}
+}
+if ( function_exists( 'bboss_draft_prime_topic_reply_key_posts' ) && ! function_exists( 'bb_draft_prime_topic_reply_key_posts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_prime_topic_reply_key_posts()}.
+	 *
+	 * @deprecated Use bboss_draft_prime_topic_reply_key_posts() instead.
+	 */
+	function bb_draft_prime_topic_reply_key_posts( $data_keys ) {
+		return bboss_draft_prime_topic_reply_key_posts( $data_keys );
+	}
+}
+if ( function_exists( 'bboss_draft_promote_evicted' ) && ! function_exists( 'bb_draft_promote_evicted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_promote_evicted()}.
+	 *
+	 * @deprecated Use bboss_draft_promote_evicted() instead.
+	 */
+	function bb_draft_promote_evicted( $user_id, $wanted ) {
+		return bboss_draft_promote_evicted( $user_id, $wanted );
+	}
+}
+if ( function_exists( 'bboss_draft_protect_evicted_attachments' ) && ! function_exists( 'bb_draft_protect_evicted_attachments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_protect_evicted_attachments()}.
+	 *
+	 * @deprecated Use bboss_draft_protect_evicted_attachments() instead.
+	 */
+	function bb_draft_protect_evicted_attachments( $entries, $user_id, $from_root = false ) {
+		return bboss_draft_protect_evicted_attachments( $entries, $user_id, $from_root );
+	}
+}
+if ( function_exists( 'bboss_draft_protect_payload_attachments' ) && ! function_exists( 'bb_draft_protect_payload_attachments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_protect_payload_attachments()}.
+	 *
+	 * @deprecated Use bboss_draft_protect_payload_attachments() instead.
+	 */
+	function bb_draft_protect_payload_attachments( $lists, $user_id ) {
+		return bboss_draft_protect_payload_attachments( $lists, $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_prune_expired_hold_entries' ) && ! function_exists( 'bb_draft_prune_expired_hold_entries' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_prune_expired_hold_entries()}.
+	 *
+	 * @deprecated Use bboss_draft_prune_expired_hold_entries() instead.
+	 */
+	function bb_draft_prune_expired_hold_entries( $hold, $cutoff ) {
+		return bboss_draft_prune_expired_hold_entries( $hold, $cutoff );
+	}
+}
+if ( function_exists( 'bboss_draft_record_pending_reference_ids' ) && ! function_exists( 'bb_draft_record_pending_reference_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_record_pending_reference_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_record_pending_reference_ids() instead.
+	 */
+	function bb_draft_record_pending_reference_ids( $attachment_ids ) {
+		return bboss_draft_record_pending_reference_ids( $attachment_ids );
+	}
+}
+if ( function_exists( 'bboss_draft_reference_scan_begin' ) && ! function_exists( 'bb_draft_reference_scan_begin' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reference_scan_begin()}.
+	 *
+	 * @deprecated Use bboss_draft_reference_scan_begin() instead.
+	 */
+	function bb_draft_reference_scan_begin() {
+		return bboss_draft_reference_scan_begin();
+	}
+}
+if ( function_exists( 'bboss_draft_reference_scan_end' ) && ! function_exists( 'bb_draft_reference_scan_end' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reference_scan_end()}.
+	 *
+	 * @deprecated Use bboss_draft_reference_scan_end() instead.
+	 */
+	function bb_draft_reference_scan_end( $token = '' ) {
+		return bboss_draft_reference_scan_end( $token );
+	}
+}
+if ( function_exists( 'bboss_draft_reference_scan_is_active' ) && ! function_exists( 'bb_draft_reference_scan_is_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reference_scan_is_active()}.
+	 *
+	 * @deprecated Use bboss_draft_reference_scan_is_active() instead.
+	 */
+	function bb_draft_reference_scan_is_active() {
+		return bboss_draft_reference_scan_is_active();
+	}
+}
+if ( function_exists( 'bboss_draft_reference_scan_refresh' ) && ! function_exists( 'bb_draft_reference_scan_refresh' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reference_scan_refresh()}.
+	 *
+	 * @deprecated Use bboss_draft_reference_scan_refresh() instead.
+	 */
+	function bb_draft_reference_scan_refresh( $token ) {
+		return bboss_draft_reference_scan_refresh( $token );
+	}
+}
+if ( function_exists( 'bboss_draft_reference_scan_token' ) && ! function_exists( 'bb_draft_reference_scan_token' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reference_scan_token()}.
+	 *
+	 * @deprecated Use bboss_draft_reference_scan_token() instead.
+	 */
+	function bb_draft_reference_scan_token() {
+		return bboss_draft_reference_scan_token();
+	}
+}
+if ( function_exists( 'bboss_draft_release_lock' ) && ! function_exists( 'bb_draft_release_lock' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_release_lock()}.
+	 *
+	 * @deprecated Use bboss_draft_release_lock() instead.
+	 */
+	function bb_draft_release_lock( $key, $network = false ) {
+		return bboss_draft_release_lock( $key, $network );
+	}
+}
+if ( function_exists( 'bboss_draft_release_replaced_attachments' ) && ! function_exists( 'bb_draft_release_replaced_attachments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_release_replaced_attachments()}.
+	 *
+	 * @deprecated Use bboss_draft_release_replaced_attachments() instead.
+	 */
+	function bb_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries = array(), $retain_ids = array() ) {
+		return bboss_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries, $retain_ids );
+	}
+}
+if ( function_exists( 'bboss_draft_request_acked_evictions' ) && ! function_exists( 'bb_draft_request_acked_evictions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_request_acked_evictions()}.
+	 *
+	 * @deprecated Use bboss_draft_request_acked_evictions() instead.
+	 */
+	function bb_draft_request_acked_evictions() {
+		return bboss_draft_request_acked_evictions();
+	}
+}
+if ( function_exists( 'bboss_draft_request_base' ) && ! function_exists( 'bb_draft_request_base' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_request_base()}.
+	 *
+	 * @deprecated Use bboss_draft_request_base() instead.
+	 */
+	function bb_draft_request_base() {
+		return bboss_draft_request_base();
+	}
+}
+if ( function_exists( 'bboss_draft_reschedule_stamp_sweep' ) && ! function_exists( 'bb_draft_reschedule_stamp_sweep' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reschedule_stamp_sweep()}.
+	 *
+	 * @deprecated Use bboss_draft_reschedule_stamp_sweep() instead.
+	 */
+	function bb_draft_reschedule_stamp_sweep() {
+		return bboss_draft_reschedule_stamp_sweep();
+	}
+}
+if ( function_exists( 'bboss_draft_retention_days' ) && ! function_exists( 'bb_draft_retention_days' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_retention_days()}.
+	 *
+	 * @deprecated Use bboss_draft_retention_days() instead.
+	 */
+	function bb_draft_retention_days() {
+		return bboss_draft_retention_days();
+	}
+}
+if ( function_exists( 'bboss_draft_retention_seconds' ) && ! function_exists( 'bb_draft_retention_seconds' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_retention_seconds()}.
+	 *
+	 * @deprecated Use bboss_draft_retention_seconds() instead.
+	 */
+	function bb_draft_retention_seconds() {
+		return bboss_draft_retention_seconds();
+	}
+}
+if ( function_exists( 'bboss_draft_row_unchanged' ) && ! function_exists( 'bb_draft_row_unchanged' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_row_unchanged()}.
+	 *
+	 * @deprecated Use bboss_draft_row_unchanged() instead.
+	 */
+	function bb_draft_row_unchanged( $user_id, $meta_key, $read ) {
+		return bboss_draft_row_unchanged( $user_id, $meta_key, $read );
+	}
+}
+if ( function_exists( 'bboss_draft_safe_unserialize' ) && ! function_exists( 'bb_draft_safe_unserialize' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_safe_unserialize()}.
+	 *
+	 * @deprecated Use bboss_draft_safe_unserialize() instead.
+	 */
+	function bb_draft_safe_unserialize( $value ) {
+		return bboss_draft_safe_unserialize( $value );
+	}
+}
+if ( function_exists( 'bboss_draft_salvage_oversized_draft' ) && ! function_exists( 'bb_draft_salvage_oversized_draft' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_salvage_oversized_draft()}.
+	 *
+	 * @deprecated Use bboss_draft_salvage_oversized_draft() instead.
+	 */
+	function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
+		return bboss_draft_salvage_oversized_draft( $user_id, $meta_key );
+	}
+}
+if ( function_exists( 'bboss_draft_sanitize_rev' ) && ! function_exists( 'bb_draft_sanitize_rev' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_sanitize_rev()}.
+	 *
+	 * @deprecated Use bboss_draft_sanitize_rev() instead.
+	 */
+	function bb_draft_sanitize_rev( $rev ) {
+		return bboss_draft_sanitize_rev( $rev );
+	}
+}
+if ( function_exists( 'bboss_draft_save_waits_for_handback' ) && ! function_exists( 'bb_draft_save_waits_for_handback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_save_waits_for_handback()}.
+	 *
+	 * @deprecated Use bboss_draft_save_waits_for_handback() instead.
+	 */
+	function bb_draft_save_waits_for_handback( $user_id, $evicted_key ) {
+		return bboss_draft_save_waits_for_handback( $user_id, $evicted_key );
+	}
+}
+if ( function_exists( 'bboss_draft_serialized_key_bytes' ) && ! function_exists( 'bb_draft_serialized_key_bytes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_serialized_key_bytes()}.
+	 *
+	 * @deprecated Use bboss_draft_serialized_key_bytes() instead.
+	 */
+	function bb_draft_serialized_key_bytes( $key ) {
+		return bboss_draft_serialized_key_bytes( $key );
+	}
+}
+if ( function_exists( 'bboss_draft_set_evicted_hold' ) && ! function_exists( 'bb_draft_set_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_set_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_set_evicted_hold() instead.
+	 */
+	function bb_draft_set_evicted_hold( $user_id, $hold, $overflow = null ) {
+		return bboss_draft_set_evicted_hold( $user_id, $hold, $overflow );
+	}
+}
+if ( function_exists( 'bboss_draft_shed_preview_frames' ) && ! function_exists( 'bb_draft_shed_preview_frames' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_shed_preview_frames()}.
+	 *
+	 * @deprecated Use bboss_draft_shed_preview_frames() instead.
+	 */
+	function bb_draft_shed_preview_frames( $draft ) {
+		return bboss_draft_shed_preview_frames( $draft );
+	}
+}
+if ( function_exists( 'bboss_draft_shed_user_drafts' ) && ! function_exists( 'bb_draft_shed_user_drafts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_shed_user_drafts()}.
+	 *
+	 * @deprecated Use bboss_draft_shed_user_drafts() instead.
+	 */
+	function bb_draft_shed_user_drafts( $user_id ) {
+		return bboss_draft_shed_user_drafts( $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_split_evicted_hold' ) && ! function_exists( 'bb_draft_split_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_split_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_split_evicted_hold() instead.
+	 */
+	function bb_draft_split_evicted_hold( $hold ) {
+		return bboss_draft_split_evicted_hold( $hold );
+	}
+}
+if ( function_exists( 'bboss_draft_stamp_handback_revs' ) && ! function_exists( 'bb_draft_stamp_handback_revs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_stamp_handback_revs()}.
+	 *
+	 * @deprecated Use bboss_draft_stamp_handback_revs() instead.
+	 */
+	function bb_draft_stamp_handback_revs( $entries ) {
+		return bboss_draft_stamp_handback_revs( $entries );
+	}
+}
+if ( function_exists( 'bboss_draft_store_evicted_hold' ) && ! function_exists( 'bb_draft_store_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_store_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_store_evicted_hold() instead.
+	 */
+	function bb_draft_store_evicted_hold( $user_id, $held ) {
+		return bboss_draft_store_evicted_hold( $user_id, $held );
+	}
+}
+if ( function_exists( 'bboss_draft_strip_data_urls' ) && ! function_exists( 'bb_draft_strip_data_urls' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_strip_data_urls()}.
+	 *
+	 * @deprecated Use bboss_draft_strip_data_urls() instead.
+	 */
+	function bb_draft_strip_data_urls( $content ) {
+		return bboss_draft_strip_data_urls( $content );
+	}
+}
+if ( function_exists( 'bboss_draft_strip_document_render_fields' ) && ! function_exists( 'bb_draft_strip_document_render_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_strip_document_render_fields()}.
+	 *
+	 * @deprecated Use bboss_draft_strip_document_render_fields() instead.
+	 */
+	function bb_draft_strip_document_render_fields( $draft ) {
+		return bboss_draft_strip_document_render_fields( $draft );
+	}
+}
+if ( function_exists( 'bboss_draft_topic_reply_entry_has_payload' ) && ! function_exists( 'bb_draft_topic_reply_entry_has_payload' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_topic_reply_entry_has_payload()}.
+	 *
+	 * @deprecated Use bboss_draft_topic_reply_entry_has_payload() instead.
+	 */
+	function bb_draft_topic_reply_entry_has_payload( $entry ) {
+		return bboss_draft_topic_reply_entry_has_payload( $entry );
+	}
+}
+if ( function_exists( 'bboss_draft_topic_reply_key_context' ) && ! function_exists( 'bb_draft_topic_reply_key_context' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_topic_reply_key_context()}.
+	 *
+	 * @deprecated Use bboss_draft_topic_reply_key_context() instead.
+	 */
+	function bb_draft_topic_reply_key_context( $data_key ) {
+		return bboss_draft_topic_reply_key_context( $data_key );
+	}
+}
+if ( function_exists( 'bboss_draft_unlock_evicted_hold' ) && ! function_exists( 'bb_draft_unlock_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_unlock_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_unlock_evicted_hold() instead.
+	 */
+	function bb_draft_unlock_evicted_hold( $user_id, $locked ) {
+		return bboss_draft_unlock_evicted_hold( $user_id, $locked );
+	}
+}
+if ( function_exists( 'bboss_draft_unstamp_attachments' ) && ! function_exists( 'bb_draft_unstamp_attachments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_unstamp_attachments()}.
+	 *
+	 * @deprecated Use bboss_draft_unstamp_attachments() instead.
+	 */
+	function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array(), $retain_ids = array() ) {
+		return bboss_draft_unstamp_attachments( $draft, $user_id, $retain_entries, $retain_ids );
+	}
+}
+if ( function_exists( 'bboss_draft_user_can_save_topic_reply_draft' ) && ! function_exists( 'bb_draft_user_can_save_topic_reply_draft' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_user_can_save_topic_reply_draft()}.
+	 *
+	 * @deprecated Use bboss_draft_user_can_save_topic_reply_draft() instead.
+	 */
+	function bb_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
+		return bboss_draft_user_can_save_topic_reply_draft( $key_context, $user_id );
+	}
+}
+if ( function_exists( 'bboss_draft_user_meta_budget' ) && ! function_exists( 'bb_draft_user_meta_budget' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_user_meta_budget()}.
+	 *
+	 * @deprecated Use bboss_draft_user_meta_budget() instead.
+	 */
+	function bb_draft_user_meta_budget() {
+		return bboss_draft_user_meta_budget();
+	}
+}
+if ( function_exists( 'bboss_draft_user_total_max_size' ) && ! function_exists( 'bb_draft_user_total_max_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_user_total_max_size()}.
+	 *
+	 * @deprecated Use bboss_draft_user_total_max_size() instead.
+	 */
+	function bb_draft_user_total_max_size() {
+		return bboss_draft_user_total_max_size();
+	}
+}
+if ( function_exists( 'bboss_draft_validate_activity_data_key' ) && ! function_exists( 'bb_draft_validate_activity_data_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_validate_activity_data_key()}.
+	 *
+	 * @deprecated Use bboss_draft_validate_activity_data_key() instead.
+	 */
+	function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id, $user_id, $context = 'save' ) {
+		return bboss_draft_validate_activity_data_key( $data_key, $draft_object, $item_id, $user_id, $context );
+	}
+}
+if ( function_exists( 'bboss_draft_withhold_request_ack' ) && ! function_exists( 'bb_draft_withhold_request_ack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_withhold_request_ack()}.
+	 *
+	 * @deprecated Use bboss_draft_withhold_request_ack() instead.
+	 */
+	function bb_draft_withhold_request_ack( $evicted_key ) {
+		return bboss_draft_withhold_request_ack( $evicted_key );
+	}
+}
+if ( function_exists( 'bboss_drafts_collect_held_attachment_ids' ) && ! function_exists( 'bb_drafts_collect_held_attachment_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_collect_held_attachment_ids()}.
+	 *
+	 * @deprecated Use bboss_drafts_collect_held_attachment_ids() instead.
+	 */
+	function bb_drafts_collect_held_attachment_ids() {
+		return bboss_drafts_collect_held_attachment_ids();
+	}
+}
+if ( function_exists( 'bboss_drafts_collect_referenced_attachment_ids' ) && ! function_exists( 'bb_drafts_collect_referenced_attachment_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_collect_referenced_attachment_ids()}.
+	 *
+	 * @deprecated Use bboss_drafts_collect_referenced_attachment_ids() instead.
+	 */
+	function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started_at = 0, $keep_alive = null ) {
+		return bboss_drafts_collect_referenced_attachment_ids( $time_budget, $started_at, $keep_alive );
+	}
+}
+if ( function_exists( 'bboss_drafts_delete_expired' ) && ! function_exists( 'bb_drafts_delete_expired' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_delete_expired()}.
+	 *
+	 * @deprecated Use bboss_drafts_delete_expired() instead.
+	 */
+	function bb_drafts_delete_expired( $time_budget = 10 ) {
+		return bboss_drafts_delete_expired( $time_budget );
+	}
+}
+if ( function_exists( 'bboss_drafts_oneshot_batch' ) && ! function_exists( 'bb_drafts_oneshot_batch' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_oneshot_batch()}.
+	 *
+	 * @deprecated Use bboss_drafts_oneshot_batch() instead.
+	 */
+	function bb_drafts_oneshot_batch( $time_budget = 10 ) {
+		return bboss_drafts_oneshot_batch( $time_budget );
+	}
+}
+if ( function_exists( 'bboss_drafts_prune_evicted_holds' ) && ! function_exists( 'bb_drafts_prune_evicted_holds' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_prune_evicted_holds()}.
+	 *
+	 * @deprecated Use bboss_drafts_prune_evicted_holds() instead.
+	 */
+	function bb_drafts_prune_evicted_holds() {
+		return bboss_drafts_prune_evicted_holds();
+	}
+}
+if ( function_exists( 'bboss_drafts_release_orphaned_draft_stamps' ) && ! function_exists( 'bb_drafts_release_orphaned_draft_stamps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_release_orphaned_draft_stamps()}.
+	 *
+	 * @deprecated Use bboss_drafts_release_orphaned_draft_stamps() instead.
+	 */
+	function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
+		return bboss_drafts_release_orphaned_draft_stamps( $time_budget );
+	}
+}
+if ( function_exists( 'bboss_drafts_schedule_cleanup' ) && ! function_exists( 'bb_drafts_schedule_cleanup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_schedule_cleanup()}.
+	 *
+	 * @deprecated Use bboss_drafts_schedule_cleanup() instead.
+	 */
+	function bb_drafts_schedule_cleanup() {
+		return bboss_drafts_schedule_cleanup();
+	}
+}
+if ( function_exists( 'bboss_drafts_unschedule_cleanup' ) && ! function_exists( 'bb_drafts_unschedule_cleanup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_unschedule_cleanup()}.
+	 *
+	 * @deprecated Use bboss_drafts_unschedule_cleanup() instead.
+	 */
+	function bb_drafts_unschedule_cleanup() {
+		return bboss_drafts_unschedule_cleanup();
+	}
+}
+// @bbwt-com-end compat-layer

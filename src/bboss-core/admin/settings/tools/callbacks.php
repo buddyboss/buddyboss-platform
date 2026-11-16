@@ -285,3 +285,68 @@ function bboss_tools_ajax_install_plugin() {
 }
 add_action( 'wp_ajax_bb_tools_install_plugin', 'bb_tools_ajax_install_plugin' );
 // @bbwt-com-end installers
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_tools_ajax_activate_plugin' ) && ! function_exists( 'bb_tools_ajax_activate_plugin' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_tools_ajax_activate_plugin()}.
+	 *
+	 * @deprecated Use bboss_tools_ajax_activate_plugin() instead.
+	 */
+	function bb_tools_ajax_activate_plugin() {
+		return bboss_tools_ajax_activate_plugin();
+	}
+}
+if ( function_exists( 'bboss_tools_ajax_check_plugin_state' ) && ! function_exists( 'bb_tools_ajax_check_plugin_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_tools_ajax_check_plugin_state()}.
+	 *
+	 * @deprecated Use bboss_tools_ajax_check_plugin_state() instead.
+	 */
+	function bb_tools_ajax_check_plugin_state() {
+		return bboss_tools_ajax_check_plugin_state();
+	}
+}
+if ( function_exists( 'bboss_tools_ajax_install_plugin' ) && ! function_exists( 'bb_tools_ajax_install_plugin' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_tools_ajax_install_plugin()}.
+	 *
+	 * @deprecated Use bboss_tools_ajax_install_plugin() instead.
+	 */
+	function bb_tools_ajax_install_plugin() {
+		return bboss_tools_ajax_install_plugin();
+	}
+}
+if ( function_exists( 'bboss_tools_get_license_url' ) && ! function_exists( 'bb_tools_get_license_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_tools_get_license_url()}.
+	 *
+	 * @deprecated Use bboss_tools_get_license_url() instead.
+	 */
+	function bb_tools_get_license_url() {
+		return bboss_tools_get_license_url();
+	}
+}
+if ( function_exists( 'bboss_tools_is_license_active' ) && ! function_exists( 'bb_tools_is_license_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_tools_is_license_active()}.
+	 *
+	 * @deprecated Use bboss_tools_is_license_active() instead.
+	 */
+	function bb_tools_is_license_active() {
+		return bboss_tools_is_license_active();
+	}
+}
+if ( function_exists( 'bboss_tools_mothership_available' ) && ! function_exists( 'bb_tools_mothership_available' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_tools_mothership_available()}.
+	 *
+	 * @deprecated Use bboss_tools_mothership_available() instead.
+	 */
+	function bb_tools_mothership_available() {
+		return bboss_tools_mothership_available();
+	}
+}
+// @bbwt-com-end compat-layer

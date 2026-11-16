@@ -262,3 +262,38 @@ function bboss_nouveau_customizer_user_profile_actions() {
 
 	return $buttons;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_customize_register' ) && ! function_exists( 'bp_nouveau_customize_register' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_customize_register()}.
+	 *
+	 * @deprecated Use bboss_nouveau_customize_register() instead.
+	 */
+	function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
+		return bboss_nouveau_customize_register( $wp_customize );
+	}
+}
+if ( function_exists( 'bboss_nouveau_customizer_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_customizer_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_customizer_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_customizer_enqueue_scripts() instead.
+	 */
+	function bp_nouveau_customizer_enqueue_scripts() {
+		return bboss_nouveau_customizer_enqueue_scripts();
+	}
+}
+if ( function_exists( 'bboss_nouveau_customizer_user_profile_actions' ) && ! function_exists( 'bp_nouveau_customizer_user_profile_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_customizer_user_profile_actions()}.
+	 *
+	 * @deprecated Use bboss_nouveau_customizer_user_profile_actions() instead.
+	 */
+	function bp_nouveau_customizer_user_profile_actions() {
+		return bboss_nouveau_customizer_user_profile_actions();
+	}
+}
+// @bbwt-com-end compat-layer

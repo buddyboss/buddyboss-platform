@@ -469,3 +469,38 @@ function bboss_admin_repair_categorize_item( $item_id ) {
 
 	return 'connections';
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_repair_categorize_item' ) && ! function_exists( 'bb_admin_repair_categorize_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_repair_categorize_item()}.
+	 *
+	 * @deprecated Use bboss_admin_repair_categorize_item() instead.
+	 */
+	function bb_admin_repair_categorize_item( $item_id ) {
+		return bboss_admin_repair_categorize_item( $item_id );
+	}
+}
+if ( function_exists( 'bboss_admin_settings_localize_tools_repair_config' ) && ! function_exists( 'bb_admin_settings_localize_tools_repair_config' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_localize_tools_repair_config()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_localize_tools_repair_config() instead.
+	 */
+	function bb_admin_settings_localize_tools_repair_config() {
+		return bboss_admin_settings_localize_tools_repair_config();
+	}
+}
+if ( function_exists( 'bboss_admin_settings_register_tools_feature' ) && ! function_exists( 'bb_admin_settings_register_tools_feature' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_tools_feature()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_tools_feature() instead.
+	 */
+	function bb_admin_settings_register_tools_feature() {
+		return bboss_admin_settings_register_tools_feature();
+	}
+}
+// @bbwt-com-end compat-layer

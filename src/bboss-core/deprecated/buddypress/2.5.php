@@ -918,3 +918,68 @@ function bboss_blogs_remove_comment( $comment_id ) {
 	_deprecated_function( __FUNCTION__, '2.5.0', 'bp_activity_post_type_remove_comment()' );
 	bboss_activity_post_type_remove_comment( $comment_id );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_record_comment' ) && ! function_exists( 'bp_blogs_record_comment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_record_comment()}.
+	 *
+	 * @deprecated Use bboss_blogs_record_comment() instead.
+	 */
+	function bp_blogs_record_comment( $comment_id, $is_approved = true ) {
+		return bboss_blogs_record_comment( $comment_id, $is_approved );
+	}
+}
+if ( function_exists( 'bboss_blogs_remove_comment' ) && ! function_exists( 'bp_blogs_remove_comment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_remove_comment()}.
+	 *
+	 * @deprecated Use bboss_blogs_remove_comment() instead.
+	 */
+	function bp_blogs_remove_comment( $comment_id ) {
+		return bboss_blogs_remove_comment( $comment_id );
+	}
+}
+if ( function_exists( 'bboss_blogs_transition_activity_status' ) && ! function_exists( 'bp_blogs_transition_activity_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_transition_activity_status()}.
+	 *
+	 * @deprecated Use bboss_blogs_transition_activity_status() instead.
+	 */
+	function bp_blogs_transition_activity_status( $new_status, $old_status, $comment ) {
+		return bboss_blogs_transition_activity_status( $new_status, $old_status, $comment );
+	}
+}
+if ( function_exists( 'bboss_core_deprecated_email_actions' ) && ! function_exists( 'bp_core_deprecated_email_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_deprecated_email_actions()}.
+	 *
+	 * @deprecated Use bboss_core_deprecated_email_actions() instead.
+	 */
+	function bp_core_deprecated_email_actions( $delivery_status, $email ) {
+		return bboss_core_deprecated_email_actions( $delivery_status, $email );
+	}
+}
+if ( function_exists( 'bboss_core_deprecated_email_filters' ) && ! function_exists( 'bp_core_deprecated_email_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_deprecated_email_filters()}.
+	 *
+	 * @deprecated Use bboss_core_deprecated_email_filters() instead.
+	 */
+	function bp_core_deprecated_email_filters( $value, $property, $transform, $email ) {
+		return bboss_core_deprecated_email_filters( $value, $property, $transform, $email );
+	}
+}
+if ( function_exists( 'bboss_core_email_from_name_filter' ) && ! function_exists( 'bp_core_email_from_name_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_email_from_name_filter()}.
+	 *
+	 * @deprecated Use bboss_core_email_from_name_filter() instead.
+	 */
+	function bp_core_email_from_name_filter() {
+		return bboss_core_email_from_name_filter();
+	}
+}
+// @bbwt-com-end compat-layer

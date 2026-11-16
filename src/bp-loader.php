@@ -28,6 +28,17 @@ defined( 'ABSPATH' ) || exit;
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-loader — backward compatibility for third-party code that uses the
 // pre-rename (BuddyPress-style) function, class and constant names. buddyboss.com build only.
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
+// pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
+if ( function_exists( 'bp_core_load_buddypress_textdomain' ) && ! function_exists( 'bboss_core_load_buddypress_textdomain' ) ) {
+	// Pluggable: bp_core_load_buddypress_textdomain() was defined first (bp-custom.php, a plugin); bboss_core_load_buddypress_textdomain() delegates to it.
+	function bboss_core_load_buddypress_textdomain() {
+		return bp_core_load_buddypress_textdomain();
+	}
+}
+// @bbwt-com-end compat-layer
+
 if ( file_exists( __DIR__ . '/bb-compat/bb-compat-loader.php' ) ) {
 	require_once __DIR__ . '/bb-compat/bb-compat-loader.php';
 }
@@ -431,13 +442,6 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		return;
 	} else {
-		// @bbwt-com-start compat-layer
-		// bbwt-rename:compat-functions — the old function names, declared only now that Platform runs
-		// (not when it stands down for BuddyPress/bbPress). buddyboss.com build only.
-		if ( function_exists( 'bb_compat_load_functions' ) ) {
-			bb_compat_load_functions();
-		}
-		// @bbwt-com-end compat-layer
 		require dirname( __FILE__ ) . '/class-bboss-platform.php';
 
 		/**
@@ -937,5 +941,110 @@ if ( ! function_exists( 'bboss_core_load_buddypress_textdomain' ) ) {
 // for plugins that check them at file-include time.
 if ( function_exists( 'bb_compat_sweep' ) ) {
 	bb_compat_sweep();
+}
+// @bbwt-com-end compat-layer
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_active_plugin_is' ) && ! function_exists( 'bp_core_active_plugin_is' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_active_plugin_is()}.
+	 *
+	 * @deprecated Use bboss_core_active_plugin_is() instead.
+	 */
+	function bp_core_active_plugin_is( $plugin, $name ) {
+		return bboss_core_active_plugin_is( $plugin, $name );
+	}
+}
+if ( function_exists( 'bboss_core_load_buddypress_textdomain' ) && ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_load_buddypress_textdomain()}.
+	 *
+	 * @deprecated Use bboss_core_load_buddypress_textdomain() instead.
+	 */
+	function bp_core_load_buddypress_textdomain() {
+		return bboss_core_load_buddypress_textdomain();
+	}
+}
+if ( function_exists( 'bboss_core_set_bbpress_buddypress_active' ) && ! function_exists( 'bp_core_set_bbpress_buddypress_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_set_bbpress_buddypress_active()}.
+	 *
+	 * @deprecated Use bboss_core_set_bbpress_buddypress_active() instead.
+	 */
+	function bp_core_set_bbpress_buddypress_active( $value = array() ) {
+		return bboss_core_set_bbpress_buddypress_active( $value );
+	}
+}
+if ( function_exists( 'bboss_core_set_bbpress_buddypress_on_admin_notices' ) && ! function_exists( 'bp_core_set_bbpress_buddypress_on_admin_notices' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_set_bbpress_buddypress_on_admin_notices()}.
+	 *
+	 * @deprecated Use bboss_core_set_bbpress_buddypress_on_admin_notices() instead.
+	 */
+	function bp_core_set_bbpress_buddypress_on_admin_notices() {
+		return bboss_core_set_bbpress_buddypress_on_admin_notices();
+	}
+}
+if ( function_exists( 'bboss_core_unset_bbpress_buddypress_active' ) && ! function_exists( 'bp_core_unset_bbpress_buddypress_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_unset_bbpress_buddypress_active()}.
+	 *
+	 * @deprecated Use bboss_core_unset_bbpress_buddypress_active() instead.
+	 */
+	function bp_core_unset_bbpress_buddypress_active() {
+		return bboss_core_unset_bbpress_buddypress_active();
+	}
+}
+if ( function_exists( 'bboss_core_unset_bbpress_buddypress_active_all_plugins' ) && ! function_exists( 'bp_core_unset_bbpress_buddypress_active_all_plugins' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_unset_bbpress_buddypress_active_all_plugins()}.
+	 *
+	 * @deprecated Use bboss_core_unset_bbpress_buddypress_active_all_plugins() instead.
+	 */
+	function bp_core_unset_bbpress_buddypress_active_all_plugins( $plugins ) {
+		return bboss_core_unset_bbpress_buddypress_active_all_plugins( $plugins );
+	}
+}
+if ( function_exists( 'bboss_duplicate_notice' ) && ! function_exists( 'bp_duplicate_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_duplicate_notice()}.
+	 *
+	 * @deprecated Use bboss_duplicate_notice() instead.
+	 */
+	function bp_duplicate_notice() {
+		return bboss_duplicate_notice();
+	}
+}
+if ( function_exists( 'bboss_php_requirements_notice' ) && ! function_exists( 'bp_php_requirements_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_php_requirements_notice()}.
+	 *
+	 * @deprecated Use bboss_php_requirements_notice() instead.
+	 */
+	function bp_php_requirements_notice() {
+		return bboss_php_requirements_notice();
+	}
+}
+if ( function_exists( 'bboss_pre_update_option_active_plugins' ) && ! function_exists( 'bp_pre_update_option_active_plugins' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_pre_update_option_active_plugins()}.
+	 *
+	 * @deprecated Use bboss_pre_update_option_active_plugins() instead.
+	 */
+	function bp_pre_update_option_active_plugins( $value ) {
+		return bboss_pre_update_option_active_plugins( $value );
+	}
+}
+if ( function_exists( 'bboss' ) && ! function_exists( 'buddypress' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss()}.
+	 *
+	 * @deprecated Use bboss() instead.
+	 */
+	function buddypress() {
+		return bboss();
+	}
 }
 // @bbwt-com-end compat-layer

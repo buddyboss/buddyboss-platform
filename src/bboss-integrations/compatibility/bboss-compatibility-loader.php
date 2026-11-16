@@ -61,3 +61,28 @@ function bboss_register_compatibility_integration() {
 	bboss()->integrations['compatibility'] = new BBoss_Compatibility_Integration();
 }
 add_action( 'bp_setup_integrations', 'bp_register_compatibility_integration' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_compatibility_do_settings_sections' ) && ! function_exists( 'bp_core_compatibility_do_settings_sections' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_compatibility_do_settings_sections()}.
+	 *
+	 * @deprecated Use bboss_core_compatibility_do_settings_sections() instead.
+	 */
+	function bp_core_compatibility_do_settings_sections( $page ) {
+		return bboss_core_compatibility_do_settings_sections( $page );
+	}
+}
+if ( function_exists( 'bboss_register_compatibility_integration' ) && ! function_exists( 'bp_register_compatibility_integration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_compatibility_integration()}.
+	 *
+	 * @deprecated Use bboss_register_compatibility_integration() instead.
+	 */
+	function bp_register_compatibility_integration() {
+		return bboss_register_compatibility_integration();
+	}
+}
+// @bbwt-com-end compat-layer

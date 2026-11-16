@@ -90,3 +90,17 @@ function bboss_activity_register_access_control_fields() {
 	do_action( 'bb_activity_access_control_after_register_fields' );
 }
 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_register_access_control_fields' ) && ! function_exists( 'bb_activity_register_access_control_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_register_access_control_fields()}.
+	 *
+	 * @deprecated Use bboss_activity_register_access_control_fields() instead.
+	 */
+	function bb_activity_register_access_control_fields() {
+		return bboss_activity_register_access_control_fields();
+	}
+}
+// @bbwt-com-end compat-layer

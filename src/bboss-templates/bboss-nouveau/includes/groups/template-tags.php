@@ -1592,3 +1592,298 @@ function bboss_nouveau_add_notify_group_members_checkbox() {
 
 }
 add_action( 'groups_custom_group_fields_editable', 'bp_nouveau_add_notify_group_members_checkbox', 20 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_groups_bubble_buttons' ) && ! function_exists( 'bb_nouveau_get_groups_bubble_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_groups_bubble_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_groups_bubble_buttons() instead.
+	 */
+	function bb_nouveau_get_groups_bubble_buttons( $args = array() ) {
+		return bboss_nouveau_get_groups_bubble_buttons( $args );
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_header_bubble_buttons' ) && ! function_exists( 'bb_nouveau_group_header_bubble_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_header_bubble_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_header_bubble_buttons() instead.
+	 */
+	function bb_nouveau_group_header_bubble_buttons( $args = array() ) {
+		return bboss_nouveau_group_header_bubble_buttons( $args );
+	}
+}
+if ( function_exists( 'bboss_nouveau_add_notify_group_members_checkbox' ) && ! function_exists( 'bp_nouveau_add_notify_group_members_checkbox' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_add_notify_group_members_checkbox()}.
+	 *
+	 * @deprecated Use bboss_nouveau_add_notify_group_members_checkbox() instead.
+	 */
+	function bp_nouveau_add_notify_group_members_checkbox() {
+		return bboss_nouveau_add_notify_group_members_checkbox();
+	}
+}
+if ( function_exists( 'bboss_nouveau_after_groups_directory_content' ) && ! function_exists( 'bp_nouveau_after_groups_directory_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_after_groups_directory_content()}.
+	 *
+	 * @deprecated Use bboss_nouveau_after_groups_directory_content() instead.
+	 */
+	function bp_nouveau_after_groups_directory_content() {
+		return bboss_nouveau_after_groups_directory_content();
+	}
+}
+if ( function_exists( 'bboss_nouveau_before_groups_directory_content' ) && ! function_exists( 'bp_nouveau_before_groups_directory_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_before_groups_directory_content()}.
+	 *
+	 * @deprecated Use bboss_nouveau_before_groups_directory_content() instead.
+	 */
+	function bp_nouveau_before_groups_directory_content() {
+		return bboss_nouveau_before_groups_directory_content();
+	}
+}
+if ( function_exists( 'bboss_nouveau_get_group_meta' ) && ! function_exists( 'bp_nouveau_get_group_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_group_meta()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_group_meta() instead.
+	 */
+	function bp_nouveau_get_group_meta() {
+		return bboss_nouveau_get_group_meta();
+	}
+}
+if ( function_exists( 'bboss_nouveau_get_groups_buttons' ) && ! function_exists( 'bp_nouveau_get_groups_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_groups_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_groups_buttons() instead.
+	 */
+	function bp_nouveau_get_groups_buttons( $args = array() ) {
+		return bboss_nouveau_get_groups_buttons( $args );
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_creation_screen' ) && ! function_exists( 'bp_nouveau_group_creation_screen' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_creation_screen()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_creation_screen() instead.
+	 */
+	function bp_nouveau_group_creation_screen() {
+		return bboss_nouveau_group_creation_screen();
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_creation_tabs' ) && ! function_exists( 'bp_nouveau_group_creation_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_creation_tabs()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_creation_tabs() instead.
+	 */
+	function bp_nouveau_group_creation_tabs() {
+		return bboss_nouveau_group_creation_tabs();
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_has_meta' ) && ! function_exists( 'bp_nouveau_group_has_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_has_meta()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_has_meta() instead.
+	 */
+	function bp_nouveau_group_has_meta( $meta_key = '' ) {
+		return bboss_nouveau_group_has_meta( $meta_key );
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_has_meta_extra' ) && ! function_exists( 'bp_nouveau_group_has_meta_extra' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_has_meta_extra()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_has_meta_extra() instead.
+	 */
+	function bp_nouveau_group_has_meta_extra() {
+		return bboss_nouveau_group_has_meta_extra();
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_header_buttons' ) && ! function_exists( 'bp_nouveau_group_header_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_header_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_header_buttons() instead.
+	 */
+	function bp_nouveau_group_header_buttons( $args = array() ) {
+		return bboss_nouveau_group_header_buttons( $args );
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_header_template_part' ) && ! function_exists( 'bp_nouveau_group_header_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_header_template_part()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_header_template_part() instead.
+	 */
+	function bp_nouveau_group_header_template_part() {
+		return bboss_nouveau_group_header_template_part();
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_hook' ) && ! function_exists( 'bp_nouveau_group_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_hook() instead.
+	 */
+	function bp_nouveau_group_hook( $when = '', $suffix = '' ) {
+		return bboss_nouveau_group_hook( $when, $suffix );
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_invites_interface' ) && ! function_exists( 'bp_nouveau_group_invites_interface' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_invites_interface()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_invites_interface() instead.
+	 */
+	function bp_nouveau_group_invites_interface() {
+		return bboss_nouveau_group_invites_interface();
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_manage_screen' ) && ! function_exists( 'bp_nouveau_group_manage_screen' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_manage_screen()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_manage_screen() instead.
+	 */
+	function bp_nouveau_group_manage_screen() {
+		return bboss_nouveau_group_manage_screen();
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_meta' ) && ! function_exists( 'bp_nouveau_group_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_meta()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_meta() instead.
+	 */
+	function bp_nouveau_group_meta() {
+		return bboss_nouveau_group_meta();
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_template_part' ) && ! function_exists( 'bp_nouveau_group_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_template_part()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_template_part() instead.
+	 */
+	function bp_nouveau_group_template_part() {
+		return bboss_nouveau_group_template_part();
+	}
+}
+if ( function_exists( 'bboss_nouveau_group_type_checked' ) && ! function_exists( 'bp_nouveau_group_type_checked' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_type_checked()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_type_checked() instead.
+	 */
+	function bp_nouveau_group_type_checked( $type = null ) {
+		return bboss_nouveau_group_type_checked( $type );
+	}
+}
+if ( function_exists( 'bboss_nouveau_groups_activity_post_form' ) && ! function_exists( 'bp_nouveau_groups_activity_post_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_activity_post_form()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_activity_post_form() instead.
+	 */
+	function bp_nouveau_groups_activity_post_form() {
+		return bboss_nouveau_groups_activity_post_form();
+	}
+}
+if ( function_exists( 'bboss_nouveau_groups_create_hook' ) && ! function_exists( 'bp_nouveau_groups_create_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_create_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_create_hook() instead.
+	 */
+	function bp_nouveau_groups_create_hook( $when = '', $suffix = '' ) {
+		return bboss_nouveau_groups_create_hook( $when, $suffix );
+	}
+}
+if ( function_exists( 'bboss_nouveau_groups_get_customizer_option_link' ) && ! function_exists( 'bp_nouveau_groups_get_customizer_option_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_get_customizer_option_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_get_customizer_option_link() instead.
+	 */
+	function bp_nouveau_groups_get_customizer_option_link() {
+		return bboss_nouveau_groups_get_customizer_option_link();
+	}
+}
+if ( function_exists( 'bboss_nouveau_groups_get_customizer_widgets_link' ) && ! function_exists( 'bp_nouveau_groups_get_customizer_widgets_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_get_customizer_widgets_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_get_customizer_widgets_link() instead.
+	 */
+	function bp_nouveau_groups_get_customizer_widgets_link() {
+		return bboss_nouveau_groups_get_customizer_widgets_link();
+	}
+}
+if ( function_exists( 'bboss_nouveau_groups_get_group_invites_setting' ) && ! function_exists( 'bp_nouveau_groups_get_group_invites_setting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_get_group_invites_setting()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_get_group_invites_setting() instead.
+	 */
+	function bp_nouveau_groups_get_group_invites_setting( $user_id = 0 ) {
+		return bboss_nouveau_groups_get_group_invites_setting( $user_id );
+	}
+}
+if ( function_exists( 'bboss_nouveau_groups_invite_buttons' ) && ! function_exists( 'bp_nouveau_groups_invite_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_invite_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_invite_buttons() instead.
+	 */
+	function bp_nouveau_groups_invite_buttons( $args = array() ) {
+		return bboss_nouveau_groups_invite_buttons( $args );
+	}
+}
+if ( function_exists( 'bboss_nouveau_groups_loop_buttons' ) && ! function_exists( 'bp_nouveau_groups_loop_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_loop_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_loop_buttons() instead.
+	 */
+	function bp_nouveau_groups_loop_buttons( $args = array() ) {
+		return bboss_nouveau_groups_loop_buttons( $args );
+	}
+}
+if ( function_exists( 'bboss_nouveau_groups_loop_item' ) && ! function_exists( 'bp_nouveau_groups_loop_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_loop_item()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_loop_item() instead.
+	 */
+	function bp_nouveau_groups_loop_item() {
+		return bboss_nouveau_groups_loop_item();
+	}
+}
+if ( function_exists( 'bboss_nouveau_groups_manage_members_buttons' ) && ! function_exists( 'bp_nouveau_groups_manage_members_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_manage_members_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_manage_members_buttons() instead.
+	 */
+	function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
+		return bboss_nouveau_groups_manage_members_buttons( $args );
+	}
+}
+if ( function_exists( 'bboss_nouveau_groups_request_buttons' ) && ! function_exists( 'bp_nouveau_groups_request_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_request_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_request_buttons() instead.
+	 */
+	function bp_nouveau_groups_request_buttons( $args = array() ) {
+		return bboss_nouveau_groups_request_buttons( $args );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -649,3 +649,228 @@ function bboss_bbp_admin_convert_code_to_pre_and_apply_encoding( $content ) {
 
 	return $content;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_admin_convert_code_to_pre_and_apply_encoding' ) && ! function_exists( 'bbp_admin_convert_code_to_pre_and_apply_encoding' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_admin_convert_code_to_pre_and_apply_encoding()}.
+	 *
+	 * @deprecated Use bboss_bbp_admin_convert_code_to_pre_and_apply_encoding() instead.
+	 */
+	function bbp_admin_convert_code_to_pre_and_apply_encoding( $content ) {
+		return bboss_bbp_admin_convert_code_to_pre_and_apply_encoding( $content );
+	}
+}
+if ( function_exists( 'bboss_bbp_code_trick' ) && ! function_exists( 'bbp_code_trick' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_code_trick()}.
+	 *
+	 * @deprecated Use bboss_bbp_code_trick() instead.
+	 */
+	function bbp_code_trick( $content = '' ) {
+		return bboss_bbp_code_trick( $content );
+	}
+}
+if ( function_exists( 'bboss_bbp_code_trick_reverse' ) && ! function_exists( 'bbp_code_trick_reverse' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_code_trick_reverse()}.
+	 *
+	 * @deprecated Use bboss_bbp_code_trick_reverse() instead.
+	 */
+	function bbp_code_trick_reverse( $content = '' ) {
+		return bboss_bbp_code_trick_reverse( $content );
+	}
+}
+if ( function_exists( 'bboss_bbp_convert_mentions' ) && ! function_exists( 'bbp_convert_mentions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_convert_mentions()}.
+	 *
+	 * @deprecated Use bboss_bbp_convert_mentions() instead.
+	 */
+	function bbp_convert_mentions( $data ) {
+		return bboss_bbp_convert_mentions( $data );
+	}
+}
+if ( function_exists( 'bboss_bbp_decode_callback' ) && ! function_exists( 'bbp_decode_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_decode_callback()}.
+	 *
+	 * @deprecated Use bboss_bbp_decode_callback() instead.
+	 */
+	function bbp_decode_callback( $matches = array() ) {
+		return bboss_bbp_decode_callback( $matches );
+	}
+}
+if ( function_exists( 'bboss_bbp_encode_bad' ) && ! function_exists( 'bbp_encode_bad' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_encode_bad()}.
+	 *
+	 * @deprecated Use bboss_bbp_encode_bad() instead.
+	 */
+	function bbp_encode_bad( $content = '' ) {
+		return bboss_bbp_encode_bad( $content );
+	}
+}
+if ( function_exists( 'bboss_bbp_encode_callback' ) && ! function_exists( 'bbp_encode_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_encode_callback()}.
+	 *
+	 * @deprecated Use bboss_bbp_encode_callback() instead.
+	 */
+	function bbp_encode_callback( $matches = array() ) {
+		return bboss_bbp_encode_callback( $matches );
+	}
+}
+if ( function_exists( 'bboss_bbp_encode_content_if_needed' ) && ! function_exists( 'bbp_encode_content_if_needed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_encode_content_if_needed()}.
+	 *
+	 * @deprecated Use bboss_bbp_encode_content_if_needed() instead.
+	 */
+	function bbp_encode_content_if_needed( $content ) {
+		return bboss_bbp_encode_content_if_needed( $content );
+	}
+}
+if ( function_exists( 'bboss_bbp_encode_empty_callback' ) && ! function_exists( 'bbp_encode_empty_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_encode_empty_callback()}.
+	 *
+	 * @deprecated Use bboss_bbp_encode_empty_callback() instead.
+	 */
+	function bbp_encode_empty_callback( &$content = '', $key = '', $preg = '' ) {
+		return bboss_bbp_encode_empty_callback( $content, $key, $preg );
+	}
+}
+if ( function_exists( 'bboss_bbp_encode_normal_callback' ) && ! function_exists( 'bbp_encode_normal_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_encode_normal_callback()}.
+	 *
+	 * @deprecated Use bboss_bbp_encode_normal_callback() instead.
+	 */
+	function bbp_encode_normal_callback( &$content = '', $key = '', $preg = '' ) {
+		return bboss_bbp_encode_normal_callback( $content, $key, $preg );
+	}
+}
+if ( function_exists( 'bboss_bbp_filter_kses' ) && ! function_exists( 'bbp_filter_kses' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_filter_kses()}.
+	 *
+	 * @deprecated Use bboss_bbp_filter_kses() instead.
+	 */
+	function bbp_filter_kses( $data = '' ) {
+		return bboss_bbp_filter_kses( $data );
+	}
+}
+if ( function_exists( 'bboss_bbp_kses_allowed_tags' ) && ! function_exists( 'bbp_kses_allowed_tags' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_kses_allowed_tags()}.
+	 *
+	 * @deprecated Use bboss_bbp_kses_allowed_tags() instead.
+	 */
+	function bbp_kses_allowed_tags() {
+		return bboss_bbp_kses_allowed_tags();
+	}
+}
+if ( function_exists( 'bboss_bbp_kses_data' ) && ! function_exists( 'bbp_kses_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_kses_data()}.
+	 *
+	 * @deprecated Use bboss_bbp_kses_data() instead.
+	 */
+	function bbp_kses_data( $data = '' ) {
+		return bboss_bbp_kses_data( $data );
+	}
+}
+if ( function_exists( 'bboss_bbp_make_clickable' ) && ! function_exists( 'bbp_make_clickable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_clickable()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_clickable() instead.
+	 */
+	function bbp_make_clickable( $text ) {
+		return bboss_bbp_make_clickable( $text );
+	}
+}
+if ( function_exists( 'bboss_bbp_make_emails_clickable' ) && ! function_exists( 'bbp_make_emails_clickable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_emails_clickable()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_emails_clickable() instead.
+	 */
+	function bbp_make_emails_clickable( $text = '' ) {
+		return bboss_bbp_make_emails_clickable( $text );
+	}
+}
+if ( function_exists( 'bboss_bbp_make_ftps_clickable' ) && ! function_exists( 'bbp_make_ftps_clickable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_ftps_clickable()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_ftps_clickable() instead.
+	 */
+	function bbp_make_ftps_clickable( $text = '' ) {
+		return bboss_bbp_make_ftps_clickable( $text );
+	}
+}
+if ( function_exists( 'bboss_bbp_make_mentions_clickable' ) && ! function_exists( 'bbp_make_mentions_clickable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_mentions_clickable()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_mentions_clickable() instead.
+	 */
+	function bbp_make_mentions_clickable( $text = '' ) {
+		return bboss_bbp_make_mentions_clickable( $text );
+	}
+}
+if ( function_exists( 'bboss_bbp_make_mentions_clickable_callback' ) && ! function_exists( 'bbp_make_mentions_clickable_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_mentions_clickable_callback()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_mentions_clickable_callback() instead.
+	 */
+	function bbp_make_mentions_clickable_callback( $matches = array() ) {
+		return bboss_bbp_make_mentions_clickable_callback( $matches );
+	}
+}
+if ( function_exists( 'bboss_bbp_make_urls_clickable' ) && ! function_exists( 'bbp_make_urls_clickable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_urls_clickable()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_urls_clickable() instead.
+	 */
+	function bbp_make_urls_clickable( $text = '' ) {
+		return bboss_bbp_make_urls_clickable( $text );
+	}
+}
+if ( function_exists( 'bboss_bbp_rel_nofollow' ) && ! function_exists( 'bbp_rel_nofollow' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_rel_nofollow()}.
+	 *
+	 * @deprecated Use bboss_bbp_rel_nofollow() instead.
+	 */
+	function bbp_rel_nofollow( $text = '' ) {
+		return bboss_bbp_rel_nofollow( $text );
+	}
+}
+if ( function_exists( 'bboss_bbp_rel_nofollow_callback' ) && ! function_exists( 'bbp_rel_nofollow_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_rel_nofollow_callback()}.
+	 *
+	 * @deprecated Use bboss_bbp_rel_nofollow_callback() instead.
+	 */
+	function bbp_rel_nofollow_callback( $matches = array() ) {
+		return bboss_bbp_rel_nofollow_callback( $matches );
+	}
+}
+if ( function_exists( 'bboss_bbp_remove_html_tags' ) && ! function_exists( 'bbp_remove_html_tags' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_html_tags()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_html_tags() instead.
+	 */
+	function bbp_remove_html_tags( $content ) {
+		return bboss_bbp_remove_html_tags( $content );
+	}
+}
+// @bbwt-com-end compat-layer

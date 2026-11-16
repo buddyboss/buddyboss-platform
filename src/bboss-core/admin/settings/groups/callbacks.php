@@ -545,3 +545,178 @@ function bboss_groups_maybe_migrate_subgroup_members( $feature_id, $settings, $s
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_groups_maybe_migrate_subgroup_members', 10, 3 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_capture_pre_save_state' ) && ! function_exists( 'bb_groups_capture_pre_save_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_capture_pre_save_state()}.
+	 *
+	 * @deprecated Use bboss_groups_capture_pre_save_state() instead.
+	 */
+	function bb_groups_capture_pre_save_state( $feature_id, $settings ) {
+		return bboss_groups_capture_pre_save_state( $feature_id, $settings );
+	}
+}
+if ( function_exists( 'bboss_groups_enrich_avatar_upload_help_text' ) && ! function_exists( 'bb_groups_enrich_avatar_upload_help_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_enrich_avatar_upload_help_text()}.
+	 *
+	 * @deprecated Use bboss_groups_enrich_avatar_upload_help_text() instead.
+	 */
+	function bb_groups_enrich_avatar_upload_help_text( $field_data, $field, $feature_id ) {
+		return bboss_groups_enrich_avatar_upload_help_text( $field_data, $field, $feature_id );
+	}
+}
+if ( function_exists( 'bboss_groups_enrich_cover_upload_help_text' ) && ! function_exists( 'bb_groups_enrich_cover_upload_help_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_enrich_cover_upload_help_text()}.
+	 *
+	 * @deprecated Use bboss_groups_enrich_cover_upload_help_text() instead.
+	 */
+	function bb_groups_enrich_cover_upload_help_text( $field_data, $field, $feature_id ) {
+		return bboss_groups_enrich_cover_upload_help_text( $field_data, $field, $feature_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_pre_save_state' ) && ! function_exists( 'bb_groups_get_pre_save_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_pre_save_state()}.
+	 *
+	 * @deprecated Use bboss_groups_get_pre_save_state() instead.
+	 */
+	function bb_groups_get_pre_save_state( $state = null ) {
+		return bboss_groups_get_pre_save_state( $state );
+	}
+}
+if ( function_exists( 'bboss_groups_maybe_migrate_subgroup_members' ) && ! function_exists( 'bb_groups_maybe_migrate_subgroup_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_maybe_migrate_subgroup_members()}.
+	 *
+	 * @deprecated Use bboss_groups_maybe_migrate_subgroup_members() instead.
+	 */
+	function bb_groups_maybe_migrate_subgroup_members( $feature_id, $settings, $saved ) {
+		return bboss_groups_maybe_migrate_subgroup_members( $feature_id, $settings, $saved );
+	}
+}
+if ( function_exists( 'bboss_groups_sanitize_avatar_type' ) && ! function_exists( 'bb_groups_sanitize_avatar_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_sanitize_avatar_type()}.
+	 *
+	 * @deprecated Use bboss_groups_sanitize_avatar_type() instead.
+	 */
+	function bb_groups_sanitize_avatar_type( $value ) {
+		return bboss_groups_sanitize_avatar_type( $value );
+	}
+}
+if ( function_exists( 'bboss_groups_sanitize_cover_height' ) && ! function_exists( 'bb_groups_sanitize_cover_height' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_sanitize_cover_height()}.
+	 *
+	 * @deprecated Use bboss_groups_sanitize_cover_height() instead.
+	 */
+	function bb_groups_sanitize_cover_height( $value ) {
+		return bboss_groups_sanitize_cover_height( $value );
+	}
+}
+if ( function_exists( 'bboss_groups_sanitize_cover_type' ) && ! function_exists( 'bb_groups_sanitize_cover_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_sanitize_cover_type()}.
+	 *
+	 * @deprecated Use bboss_groups_sanitize_cover_type() instead.
+	 */
+	function bb_groups_sanitize_cover_type( $value ) {
+		return bboss_groups_sanitize_cover_type( $value );
+	}
+}
+if ( function_exists( 'bboss_groups_sanitize_cover_width' ) && ! function_exists( 'bb_groups_sanitize_cover_width' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_sanitize_cover_width()}.
+	 *
+	 * @deprecated Use bboss_groups_sanitize_cover_width() instead.
+	 */
+	function bb_groups_sanitize_cover_width( $value ) {
+		return bboss_groups_sanitize_cover_width( $value );
+	}
+}
+if ( function_exists( 'bboss_groups_sanitize_default_format' ) && ! function_exists( 'bb_groups_sanitize_default_format' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_sanitize_default_format()}.
+	 *
+	 * @deprecated Use bboss_groups_sanitize_default_format() instead.
+	 */
+	function bb_groups_sanitize_default_format( $value ) {
+		return bboss_groups_sanitize_default_format( $value );
+	}
+}
+if ( function_exists( 'bboss_groups_sanitize_grid_style' ) && ! function_exists( 'bb_groups_sanitize_grid_style' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_sanitize_grid_style()}.
+	 *
+	 * @deprecated Use bboss_groups_sanitize_grid_style() instead.
+	 */
+	function bb_groups_sanitize_grid_style( $value ) {
+		return bboss_groups_sanitize_grid_style( $value );
+	}
+}
+if ( function_exists( 'bboss_groups_sanitize_header_style' ) && ! function_exists( 'bb_groups_sanitize_header_style' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_sanitize_header_style()}.
+	 *
+	 * @deprecated Use bboss_groups_sanitize_header_style() instead.
+	 */
+	function bb_groups_sanitize_header_style( $value ) {
+		return bboss_groups_sanitize_header_style( $value );
+	}
+}
+if ( function_exists( 'bboss_groups_sanitize_layout_format' ) && ! function_exists( 'bb_groups_sanitize_layout_format' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_sanitize_layout_format()}.
+	 *
+	 * @deprecated Use bboss_groups_sanitize_layout_format() instead.
+	 */
+	function bb_groups_sanitize_layout_format( $value ) {
+		return bboss_groups_sanitize_layout_format( $value );
+	}
+}
+if ( function_exists( 'bboss_groups_sanitize_toggle_list' ) && ! function_exists( 'bb_groups_sanitize_toggle_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_sanitize_toggle_list()}.
+	 *
+	 * @deprecated Use bboss_groups_sanitize_toggle_list() instead.
+	 */
+	function bb_groups_sanitize_toggle_list( $value ) {
+		return bboss_groups_sanitize_toggle_list( $value );
+	}
+}
+if ( function_exists( 'bboss_groups_sync_reverted_image_values' ) && ! function_exists( 'bb_groups_sync_reverted_image_values' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_sync_reverted_image_values()}.
+	 *
+	 * @deprecated Use bboss_groups_sync_reverted_image_values() instead.
+	 */
+	function bb_groups_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved ) {
+		return bboss_groups_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved );
+	}
+}
+if ( function_exists( 'bboss_groups_validate_image_settings_after_save' ) && ! function_exists( 'bb_groups_validate_image_settings_after_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_validate_image_settings_after_save()}.
+	 *
+	 * @deprecated Use bboss_groups_validate_image_settings_after_save() instead.
+	 */
+	function bb_groups_validate_image_settings_after_save( $feature_id, $settings, $saved ) {
+		return bboss_groups_validate_image_settings_after_save( $feature_id, $settings, $saved );
+	}
+}
+if ( function_exists( 'bboss_sanitize_group_nav_order' ) && ! function_exists( 'bb_sanitize_group_nav_order' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_sanitize_group_nav_order()}.
+	 *
+	 * @deprecated Use bboss_sanitize_group_nav_order() instead.
+	 */
+	function bb_sanitize_group_nav_order( $value ) {
+		return bboss_sanitize_group_nav_order( $value );
+	}
+}
+// @bbwt-com-end compat-layer

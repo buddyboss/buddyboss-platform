@@ -534,3 +534,168 @@ function bboss_two_factor_render_section() {
 	</form>
 	<?php
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_check_recovery_method' ) && ! function_exists( 'bb_two_factor_check_recovery_method' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_check_recovery_method()}.
+	 *
+	 * @deprecated Use bboss_two_factor_check_recovery_method() instead.
+	 */
+	function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
+		return bboss_two_factor_check_recovery_method( $user_id, $provider_ids );
+	}
+}
+if ( function_exists( 'bboss_two_factor_current_user_can_manage' ) && ! function_exists( 'bb_two_factor_current_user_can_manage' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_current_user_can_manage()}.
+	 *
+	 * @deprecated Use bboss_two_factor_current_user_can_manage() instead.
+	 */
+	function bb_two_factor_current_user_can_manage( $context = 'display' ) {
+		return bboss_two_factor_current_user_can_manage( $context );
+	}
+}
+if ( function_exists( 'bboss_two_factor_drain_errors' ) && ! function_exists( 'bb_two_factor_drain_errors' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_drain_errors()}.
+	 *
+	 * @deprecated Use bboss_two_factor_drain_errors() instead.
+	 */
+	function bb_two_factor_drain_errors() {
+		return bboss_two_factor_drain_errors();
+	}
+}
+if ( function_exists( 'bboss_two_factor_feature_is_on' ) && ! function_exists( 'bb_two_factor_feature_is_on' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_feature_is_on()}.
+	 *
+	 * @deprecated Use bboss_two_factor_feature_is_on() instead.
+	 */
+	function bb_two_factor_feature_is_on() {
+		return bboss_two_factor_feature_is_on();
+	}
+}
+if ( function_exists( 'bboss_two_factor_filter_plugin_strings' ) && ! function_exists( 'bb_two_factor_filter_plugin_strings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_filter_plugin_strings()}.
+	 *
+	 * @deprecated Use bboss_two_factor_filter_plugin_strings() instead.
+	 */
+	function bb_two_factor_filter_plugin_strings( $translation, $text, $domain ) {
+		return bboss_two_factor_filter_plugin_strings( $translation, $text, $domain );
+	}
+}
+if ( function_exists( 'bboss_two_factor_get_broken_config' ) && ! function_exists( 'bb_two_factor_get_broken_config' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_get_broken_config()}.
+	 *
+	 * @deprecated Use bboss_two_factor_get_broken_config() instead.
+	 */
+	function bb_two_factor_get_broken_config( $user_id ) {
+		return bboss_two_factor_get_broken_config( $user_id );
+	}
+}
+if ( function_exists( 'bboss_two_factor_get_recovery_providers' ) && ! function_exists( 'bb_two_factor_get_recovery_providers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_get_recovery_providers()}.
+	 *
+	 * @deprecated Use bboss_two_factor_get_recovery_providers() instead.
+	 */
+	function bb_two_factor_get_recovery_providers() {
+		return bboss_two_factor_get_recovery_providers();
+	}
+}
+if ( function_exists( 'bboss_two_factor_get_settings_url' ) && ! function_exists( 'bb_two_factor_get_settings_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_get_settings_url()}.
+	 *
+	 * @deprecated Use bboss_two_factor_get_settings_url() instead.
+	 */
+	function bb_two_factor_get_settings_url( $user_id = 0 ) {
+		return bboss_two_factor_get_settings_url( $user_id );
+	}
+}
+if ( function_exists( 'bboss_two_factor_is_active' ) && ! function_exists( 'bb_two_factor_is_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_is_active()}.
+	 *
+	 * @deprecated Use bboss_two_factor_is_active() instead.
+	 */
+	function bb_two_factor_is_active() {
+		return bboss_two_factor_is_active();
+	}
+}
+if ( function_exists( 'bboss_two_factor_is_supported' ) && ! function_exists( 'bb_two_factor_is_supported' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_is_supported()}.
+	 *
+	 * @deprecated Use bboss_two_factor_is_supported() instead.
+	 */
+	function bb_two_factor_is_supported() {
+		return bboss_two_factor_is_supported();
+	}
+}
+if ( function_exists( 'bboss_two_factor_plugin_is_active' ) && ! function_exists( 'bb_two_factor_plugin_is_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_plugin_is_active()}.
+	 *
+	 * @deprecated Use bboss_two_factor_plugin_is_active() instead.
+	 */
+	function bb_two_factor_plugin_is_active() {
+		return bboss_two_factor_plugin_is_active();
+	}
+}
+if ( function_exists( 'bboss_two_factor_plugin_version' ) && ! function_exists( 'bb_two_factor_plugin_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_plugin_version()}.
+	 *
+	 * @deprecated Use bboss_two_factor_plugin_version() instead.
+	 */
+	function bb_two_factor_plugin_version() {
+		return bboss_two_factor_plugin_version();
+	}
+}
+if ( function_exists( 'bboss_two_factor_render_options' ) && ! function_exists( 'bb_two_factor_render_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_render_options()}.
+	 *
+	 * @deprecated Use bboss_two_factor_render_options() instead.
+	 */
+	function bb_two_factor_render_options( $user ) {
+		return bboss_two_factor_render_options( $user );
+	}
+}
+if ( function_exists( 'bboss_two_factor_render_section' ) && ! function_exists( 'bb_two_factor_render_section' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_render_section()}.
+	 *
+	 * @deprecated Use bboss_two_factor_render_section() instead.
+	 */
+	function bb_two_factor_render_section() {
+		return bboss_two_factor_render_section();
+	}
+}
+if ( function_exists( 'bboss_two_factor_set_revalidate_return' ) && ! function_exists( 'bb_two_factor_set_revalidate_return' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_set_revalidate_return()}.
+	 *
+	 * @deprecated Use bboss_two_factor_set_revalidate_return() instead.
+	 */
+	function bb_two_factor_set_revalidate_return( $html, $return_url ) {
+		return bboss_two_factor_set_revalidate_return( $html, $return_url );
+	}
+}
+if ( function_exists( 'bboss_two_factor_validate_recovery_method' ) && ! function_exists( 'bb_two_factor_validate_recovery_method' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_validate_recovery_method()}.
+	 *
+	 * @deprecated Use bboss_two_factor_validate_recovery_method() instead.
+	 */
+	function bb_two_factor_validate_recovery_method( $user_id ) {
+		return bboss_two_factor_validate_recovery_method( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer

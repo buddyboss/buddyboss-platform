@@ -347,3 +347,18 @@ if ( ! class_exists( 'BBoss_Forums_Legacy' ) ) {
 
 	bboss_forum_legacy_subscription();
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_forum_legacy_subscription' ) && ! function_exists( 'bb_forum_legacy_subscription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_forum_legacy_subscription()}.
+	 *
+	 * @deprecated Use bboss_forum_legacy_subscription() instead.
+	 */
+	function bb_forum_legacy_subscription() {
+		return bboss_forum_legacy_subscription();
+	}
+}
+// @bbwt-com-end compat-layer

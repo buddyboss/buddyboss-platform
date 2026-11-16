@@ -125,3 +125,28 @@ function bboss_xprofile_action_settings() {
 	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/profile' );
 }
 add_action( 'bp_actions', 'bp_xprofile_action_settings' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_action_settings' ) && ! function_exists( 'bp_xprofile_action_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_action_settings()}.
+	 *
+	 * @deprecated Use bboss_xprofile_action_settings() instead.
+	 */
+	function bp_xprofile_action_settings() {
+		return bboss_xprofile_action_settings();
+	}
+}
+if ( function_exists( 'bboss_xprofile_screen_settings' ) && ! function_exists( 'bp_xprofile_screen_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_screen_settings()}.
+	 *
+	 * @deprecated Use bboss_xprofile_screen_settings() instead.
+	 */
+	function bp_xprofile_screen_settings() {
+		return bboss_xprofile_screen_settings();
+	}
+}
+// @bbwt-com-end compat-layer

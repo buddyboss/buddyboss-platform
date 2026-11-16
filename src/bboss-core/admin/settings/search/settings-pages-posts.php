@@ -268,3 +268,48 @@ function bboss_search_lazy_register_cpt_fields( $feature_id ) {
 	}
 }
 add_action( 'bb_admin_settings_before_get_feature', 'bb_search_lazy_register_cpt_fields' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_lazy_register_cpt_fields' ) && ! function_exists( 'bb_search_lazy_register_cpt_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_lazy_register_cpt_fields()}.
+	 *
+	 * @deprecated Use bboss_search_lazy_register_cpt_fields() instead.
+	 */
+	function bb_search_lazy_register_cpt_fields( $feature_id ) {
+		return bboss_search_lazy_register_cpt_fields( $feature_id );
+	}
+}
+if ( function_exists( 'bboss_search_register_meta_field' ) && ! function_exists( 'bb_search_register_meta_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_register_meta_field()}.
+	 *
+	 * @deprecated Use bboss_search_register_meta_field() instead.
+	 */
+	function bb_search_register_meta_field( $post_type, $base_order = 10, $taxonomy_count = 0 ) {
+		return bboss_search_register_meta_field( $post_type, $base_order, $taxonomy_count );
+	}
+}
+if ( function_exists( 'bboss_search_register_pages_posts_fields' ) && ! function_exists( 'bb_search_register_pages_posts_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_register_pages_posts_fields()}.
+	 *
+	 * @deprecated Use bboss_search_register_pages_posts_fields() instead.
+	 */
+	function bb_search_register_pages_posts_fields() {
+		return bboss_search_register_pages_posts_fields();
+	}
+}
+if ( function_exists( 'bboss_search_register_taxonomy_fields' ) && ! function_exists( 'bb_search_register_taxonomy_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_register_taxonomy_fields()}.
+	 *
+	 * @deprecated Use bboss_search_register_taxonomy_fields() instead.
+	 */
+	function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
+		return bboss_search_register_taxonomy_fields( $post_type, $base_order );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -846,3 +846,238 @@ function bboss_network_search_allowed_tags( $tags ) {
 
 	return $tags;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_gs_create_group_searchstring' ) && ! function_exists( 'bb_gs_create_group_searchstring' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_gs_create_group_searchstring()}.
+	 *
+	 * @deprecated Use bboss_gs_create_group_searchstring() instead.
+	 */
+	function bb_gs_create_group_searchstring( $groupid ) {
+		return bboss_gs_create_group_searchstring( $groupid );
+	}
+}
+if ( function_exists( 'bboss_gs_create_searchstring' ) && ! function_exists( 'bb_gs_create_searchstring' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_gs_create_searchstring()}.
+	 *
+	 * @deprecated Use bboss_gs_create_searchstring() instead.
+	 */
+	function bb_gs_create_searchstring( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+		return bboss_gs_create_searchstring( $user_id, $posted_field_ids, $errors, $old_values, $new_values );
+	}
+}
+if ( function_exists( 'bboss_network_search_allowed_tags' ) && ! function_exists( 'bb_network_search_allowed_tags' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_network_search_allowed_tags()}.
+	 *
+	 * @deprecated Use bboss_network_search_allowed_tags() instead.
+	 */
+	function bb_network_search_allowed_tags( $tags ) {
+		return bboss_network_search_allowed_tags( $tags );
+	}
+}
+if ( function_exists( 'bboss_search_get_search_keywords_by_term' ) && ! function_exists( 'bb_search_get_search_keywords_by_term' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_get_search_keywords_by_term()}.
+	 *
+	 * @deprecated Use bboss_search_get_search_keywords_by_term() instead.
+	 */
+	function bb_search_get_search_keywords_by_term( $search_term = '', $post_type = '' ) {
+		return bboss_search_get_search_keywords_by_term( $search_term, $post_type );
+	}
+}
+if ( function_exists( 'bboss_search_get_search_stopwords' ) && ! function_exists( 'bb_search_get_search_stopwords' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_get_search_stopwords()}.
+	 *
+	 * @deprecated Use bboss_search_get_search_stopwords() instead.
+	 */
+	function bb_search_get_search_stopwords() {
+		return bboss_search_get_search_stopwords();
+	}
+}
+if ( function_exists( 'bboss_search_parse_search_terms' ) && ! function_exists( 'bb_search_parse_search_terms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_parse_search_terms()}.
+	 *
+	 * @deprecated Use bboss_search_parse_search_terms() instead.
+	 */
+	function bb_search_parse_search_terms( $terms = array() ) {
+		return bboss_search_parse_search_terms( $terms );
+	}
+}
+if ( function_exists( 'bboss_get_search_user_fields' ) && ! function_exists( 'bp_get_search_user_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_search_user_fields()}.
+	 *
+	 * @deprecated Use bboss_get_search_user_fields() instead.
+	 */
+	function bp_get_search_user_fields() {
+		return bboss_get_search_user_fields();
+	}
+}
+if ( function_exists( 'bboss_search_activity_intro' ) && ! function_exists( 'bp_search_activity_intro' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_activity_intro()}.
+	 *
+	 * @deprecated Use bboss_search_activity_intro() instead.
+	 */
+	function bp_search_activity_intro( $character_limit = 50 ) {
+		return bboss_search_activity_intro( $character_limit );
+	}
+}
+if ( function_exists( 'bboss_search_ajax_search_form_shortcode' ) && ! function_exists( 'bp_search_ajax_search_form_shortcode' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_ajax_search_form_shortcode()}.
+	 *
+	 * @deprecated Use bboss_search_ajax_search_form_shortcode() instead.
+	 */
+	function bp_search_ajax_search_form_shortcode( $atts ) {
+		return bboss_search_ajax_search_form_shortcode( $atts );
+	}
+}
+if ( function_exists( 'bboss_search_body_class' ) && ! function_exists( 'bp_search_body_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_body_class()}.
+	 *
+	 * @deprecated Use bboss_search_body_class() instead.
+	 */
+	function bp_search_body_class( $wp_classes ) {
+		return bboss_search_body_class( $wp_classes );
+	}
+}
+if ( function_exists( 'bboss_search_get_post_thumbnail_default' ) && ! function_exists( 'bp_search_get_post_thumbnail_default' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_get_post_thumbnail_default()}.
+	 *
+	 * @deprecated Use bboss_search_get_post_thumbnail_default() instead.
+	 */
+	function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) {
+		return bboss_search_get_post_thumbnail_default( $post_type, $icon_type );
+	}
+}
+if ( function_exists( 'bboss_search_is_post_restricted' ) && ! function_exists( 'bp_search_is_post_restricted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_is_post_restricted()}.
+	 *
+	 * @deprecated Use bboss_search_is_post_restricted() instead.
+	 */
+	function bp_search_is_post_restricted( $post_id = 0, $user_id = 0, $type = 'post' ) {
+		return bboss_search_is_post_restricted( $post_id, $user_id, $type );
+	}
+}
+if ( function_exists( 'bboss_search_is_search' ) && ! function_exists( 'bp_search_is_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_is_search()}.
+	 *
+	 * @deprecated Use bboss_search_is_search() instead.
+	 */
+	function bp_search_is_search() {
+		return bboss_search_is_search();
+	}
+}
+if ( function_exists( 'bboss_search_items' ) && ! function_exists( 'bp_search_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_items()}.
+	 *
+	 * @deprecated Use bboss_search_items() instead.
+	 */
+	function bp_search_items() {
+		return bboss_search_items();
+	}
+}
+if ( function_exists( 'bboss_search_pagination' ) && ! function_exists( 'bp_search_pagination' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_pagination()}.
+	 *
+	 * @deprecated Use bboss_search_pagination() instead.
+	 */
+	function bp_search_pagination( $total_items, $items_per_page, $curr_paged, $slug, $links_on_each_side = 2, $hashlink = '', $param_key = 'list' ) {
+		return bboss_search_pagination( $total_items, $items_per_page, $curr_paged, $slug, $links_on_each_side, $hashlink, $param_key );
+	}
+}
+if ( function_exists( 'bboss_search_pagination_page_counts' ) && ! function_exists( 'bp_search_pagination_page_counts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_pagination_page_counts()}.
+	 *
+	 * @deprecated Use bboss_search_pagination_page_counts() instead.
+	 */
+	function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_paged ) {
+		return bboss_search_pagination_page_counts( $total_items, $items_per_page, $curr_paged );
+	}
+}
+if ( function_exists( 'bboss_search_reply_intro' ) && ! function_exists( 'bp_search_reply_intro' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_reply_intro()}.
+	 *
+	 * @deprecated Use bboss_search_reply_intro() instead.
+	 */
+	function bp_search_reply_intro( $character_limit = 50 ) {
+		return bboss_search_reply_intro( $character_limit );
+	}
+}
+if ( function_exists( 'bboss_search_result_intro' ) && ! function_exists( 'bp_search_result_intro' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_result_intro()}.
+	 *
+	 * @deprecated Use bboss_search_result_intro() instead.
+	 */
+	function bp_search_result_intro( $content, $character_limit = 50 ) {
+		return bboss_search_result_intro( $content, $character_limit );
+	}
+}
+if ( function_exists( 'bboss_search_result_match' ) && ! function_exists( 'bp_search_result_match' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_result_match()}.
+	 *
+	 * @deprecated Use bboss_search_result_match() instead.
+	 */
+	function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
+		return bboss_search_result_match( $in, $wordToFind, $numWordsToWrap );
+	}
+}
+if ( function_exists( 'bboss_bps_current_page' ) && ! function_exists( 'bps_current_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bps_current_page()}.
+	 *
+	 * @deprecated Use bboss_bps_current_page() instead.
+	 */
+	function bps_current_page() {
+		return bboss_bps_current_page();
+	}
+}
+if ( function_exists( 'bboss_bps_get_directory_data' ) && ! function_exists( 'bps_get_directory_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bps_get_directory_data()}.
+	 *
+	 * @deprecated Use bboss_bps_get_directory_data() instead.
+	 */
+	function bps_get_directory_data() {
+		return bboss_bps_get_directory_data();
+	}
+}
+if ( function_exists( 'bboss_bps_get_hidden_filters' ) && ! function_exists( 'bps_get_hidden_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bps_get_hidden_filters()}.
+	 *
+	 * @deprecated Use bboss_bps_get_hidden_filters() instead.
+	 */
+	function bps_get_hidden_filters() {
+		return bboss_bps_get_hidden_filters();
+	}
+}
+if ( function_exists( 'bboss_bps_get_request' ) && ! function_exists( 'bps_get_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bps_get_request()}.
+	 *
+	 * @deprecated Use bboss_bps_get_request() instead.
+	 */
+	function bps_get_request( $type, $form = 0 ) {
+		return bboss_bps_get_request( $type, $form );
+	}
+}
+// @bbwt-com-end compat-layer

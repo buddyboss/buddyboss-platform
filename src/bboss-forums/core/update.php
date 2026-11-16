@@ -346,3 +346,98 @@ function bboss_bbp_make_current_user_keymaster() {
 	// Reload the current user so caps apply immediately
 	wp_get_current_user();
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_create_initial_content' ) && ! function_exists( 'bbp_create_initial_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_create_initial_content()}.
+	 *
+	 * @deprecated Use bboss_bbp_create_initial_content() instead.
+	 */
+	function bbp_create_initial_content( $args = array() ) {
+		return bboss_bbp_create_initial_content( $args );
+	}
+}
+if ( function_exists( 'bboss_bbp_is_activation' ) && ! function_exists( 'bbp_is_activation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_activation()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_activation() instead.
+	 */
+	function bbp_is_activation( $basename = '' ) {
+		return bboss_bbp_is_activation( $basename );
+	}
+}
+if ( function_exists( 'bboss_bbp_is_deactivation' ) && ! function_exists( 'bbp_is_deactivation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_deactivation()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_deactivation() instead.
+	 */
+	function bbp_is_deactivation( $basename = '' ) {
+		return bboss_bbp_is_deactivation( $basename );
+	}
+}
+if ( function_exists( 'bboss_bbp_is_install' ) && ! function_exists( 'bbp_is_install' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_install()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_install() instead.
+	 */
+	function bbp_is_install() {
+		return bboss_bbp_is_install();
+	}
+}
+if ( function_exists( 'bboss_bbp_is_update' ) && ! function_exists( 'bbp_is_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_update()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_update() instead.
+	 */
+	function bbp_is_update() {
+		return bboss_bbp_is_update();
+	}
+}
+if ( function_exists( 'bboss_bbp_make_current_user_keymaster' ) && ! function_exists( 'bbp_make_current_user_keymaster' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_current_user_keymaster()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_current_user_keymaster() instead.
+	 */
+	function bbp_make_current_user_keymaster() {
+		return bboss_bbp_make_current_user_keymaster();
+	}
+}
+if ( function_exists( 'bboss_bbp_setup_updater' ) && ! function_exists( 'bbp_setup_updater' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_setup_updater()}.
+	 *
+	 * @deprecated Use bboss_bbp_setup_updater() instead.
+	 */
+	function bbp_setup_updater() {
+		return bboss_bbp_setup_updater();
+	}
+}
+if ( function_exists( 'bboss_bbp_version_bump' ) && ! function_exists( 'bbp_version_bump' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_version_bump()}.
+	 *
+	 * @deprecated Use bboss_bbp_version_bump() instead.
+	 */
+	function bbp_version_bump() {
+		return bboss_bbp_version_bump();
+	}
+}
+if ( function_exists( 'bboss_bbp_version_updater' ) && ! function_exists( 'bbp_version_updater' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_version_updater()}.
+	 *
+	 * @deprecated Use bboss_bbp_version_updater() instead.
+	 */
+	function bbp_version_updater() {
+		return bboss_bbp_version_updater();
+	}
+}
+// @bbwt-com-end compat-layer

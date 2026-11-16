@@ -153,3 +153,38 @@ JS;
 }
 
 add_action( 'admin_head', 'bp_moderation_highlight_admin_menu' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_add_admin_menu' ) && ! function_exists( 'bp_moderation_add_admin_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_add_admin_menu()}.
+	 *
+	 * @deprecated Use bboss_moderation_add_admin_menu() instead.
+	 */
+	function bp_moderation_add_admin_menu() {
+		return bboss_moderation_add_admin_menu();
+	}
+}
+if ( function_exists( 'bboss_moderation_admin_menu_order' ) && ! function_exists( 'bp_moderation_admin_menu_order' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_admin_menu_order()}.
+	 *
+	 * @deprecated Use bboss_moderation_admin_menu_order() instead.
+	 */
+	function bp_moderation_admin_menu_order( $custom_menus = array() ) {
+		return bboss_moderation_admin_menu_order( $custom_menus );
+	}
+}
+if ( function_exists( 'bboss_moderation_highlight_admin_menu' ) && ! function_exists( 'bp_moderation_highlight_admin_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_highlight_admin_menu()}.
+	 *
+	 * @deprecated Use bboss_moderation_highlight_admin_menu() instead.
+	 */
+	function bp_moderation_highlight_admin_menu() {
+		return bboss_moderation_highlight_admin_menu();
+	}
+}
+// @bbwt-com-end compat-layer

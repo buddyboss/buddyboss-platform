@@ -129,3 +129,38 @@ function bboss_xprofile_remove_bp_xprofile_change_field_visibility( $user_can, $
 	return $user_can;
 }
 add_filter( 'bp_user_can', 'bp_xprofile_remove_bp_xprofile_change_field_visibility', 10, 3 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_users' ) && ! function_exists( 'bp_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_users' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_users()}.
+	 *
+	 * @deprecated Use bboss_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_users() instead.
+	 */
+	function bp_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_users( $user_can, $user_id, $capability ) {
+		return bboss_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_users( $user_can, $user_id, $capability );
+	}
+}
+if ( function_exists( 'bboss_xprofile_map_meta_caps' ) && ! function_exists( 'bp_xprofile_map_meta_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_map_meta_caps()}.
+	 *
+	 * @deprecated Use bboss_xprofile_map_meta_caps() instead.
+	 */
+	function bp_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
+		return bboss_xprofile_map_meta_caps( $caps, $cap, $user_id, $args );
+	}
+}
+if ( function_exists( 'bboss_xprofile_remove_bp_xprofile_change_field_visibility' ) && ! function_exists( 'bp_xprofile_remove_bp_xprofile_change_field_visibility' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_remove_bp_xprofile_change_field_visibility()}.
+	 *
+	 * @deprecated Use bboss_xprofile_remove_bp_xprofile_change_field_visibility() instead.
+	 */
+	function bp_xprofile_remove_bp_xprofile_change_field_visibility( $user_can, $user_id, $capability ) {
+		return bboss_xprofile_remove_bp_xprofile_change_field_visibility( $user_can, $user_id, $capability );
+	}
+}
+// @bbwt-com-end compat-layer

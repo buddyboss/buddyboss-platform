@@ -43,3 +43,28 @@ function bboss_register_two_factor_integration() {
 	bboss()->integrations['two-factor'] = new BBoss_Two_Factor_Integration();
 }
 add_action( 'bp_setup_integrations', 'bb_register_two_factor_integration', 20 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_register_two_factor_integration' ) && ! function_exists( 'bb_register_two_factor_integration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_two_factor_integration()}.
+	 *
+	 * @deprecated Use bboss_register_two_factor_integration() instead.
+	 */
+	function bb_register_two_factor_integration() {
+		return bboss_register_two_factor_integration();
+	}
+}
+if ( function_exists( 'bboss_two_factor_register_managed_integration' ) && ! function_exists( 'bb_two_factor_register_managed_integration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_register_managed_integration()}.
+	 *
+	 * @deprecated Use bboss_two_factor_register_managed_integration() instead.
+	 */
+	function bb_two_factor_register_managed_integration() {
+		return bboss_two_factor_register_managed_integration();
+	}
+}
+// @bbwt-com-end compat-layer

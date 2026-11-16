@@ -47,3 +47,18 @@ function bboss_messages_star_action_handler() {
 	die();
 }
 add_action( 'bp_actions', 'bp_messages_star_action_handler' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_star_action_handler' ) && ! function_exists( 'bp_messages_star_action_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_star_action_handler()}.
+	 *
+	 * @deprecated Use bboss_messages_star_action_handler() instead.
+	 */
+	function bp_messages_star_action_handler() {
+		return bboss_messages_star_action_handler();
+	}
+}
+// @bbwt-com-end compat-layer

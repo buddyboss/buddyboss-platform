@@ -168,3 +168,68 @@ function bboss_profile_search_add_main_form() {
 }
 
 // Legacy admin tab and submenu highlight functions removed — now managed via Settings 2.0.
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_search_add_main_form' ) && ! function_exists( 'bp_profile_search_add_main_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_search_add_main_form()}.
+	 *
+	 * @deprecated Use bboss_profile_search_add_main_form() instead.
+	 */
+	function bp_profile_search_add_main_form() {
+		return bboss_profile_search_add_main_form();
+	}
+}
+if ( function_exists( 'bboss_profile_search_main_form' ) && ! function_exists( 'bp_profile_search_main_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_search_main_form()}.
+	 *
+	 * @deprecated Use bboss_profile_search_main_form() instead.
+	 */
+	function bp_profile_search_main_form() {
+		return bboss_profile_search_main_form();
+	}
+}
+if ( function_exists( 'bboss_profile_search_prevent_delete' ) && ! function_exists( 'bp_profile_search_prevent_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_search_prevent_delete()}.
+	 *
+	 * @deprecated Use bboss_profile_search_prevent_delete() instead.
+	 */
+	function bp_profile_search_prevent_delete() {
+		return bboss_profile_search_prevent_delete();
+	}
+}
+if ( function_exists( 'bboss_profile_search_register_post_type' ) && ! function_exists( 'bp_profile_search_register_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_search_register_post_type()}.
+	 *
+	 * @deprecated Use bboss_profile_search_register_post_type() instead.
+	 */
+	function bp_profile_search_register_post_type() {
+		return bboss_profile_search_register_post_type();
+	}
+}
+if ( function_exists( 'bboss_ps_get_option' ) && ! function_exists( 'bp_ps_get_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_get_option()}.
+	 *
+	 * @deprecated Use bboss_ps_get_option() instead.
+	 */
+	function bp_ps_get_option( $name, $default ) {
+		return bboss_ps_get_option( $name, $default );
+	}
+}
+if ( function_exists( 'bboss_ps_meta' ) && ! function_exists( 'bp_ps_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_meta()}.
+	 *
+	 * @deprecated Use bboss_ps_meta() instead.
+	 */
+	function bp_ps_meta( $form ) {
+		return bboss_ps_meta( $form );
+	}
+}
+// @bbwt-com-end compat-layer

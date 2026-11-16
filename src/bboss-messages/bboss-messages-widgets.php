@@ -23,3 +23,18 @@ function bboss_messages_register_widgets() {
 	);
 }
 add_action( 'bp_register_widgets', 'bp_messages_register_widgets' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_register_widgets' ) && ! function_exists( 'bp_messages_register_widgets' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_register_widgets()}.
+	 *
+	 * @deprecated Use bboss_messages_register_widgets() instead.
+	 */
+	function bp_messages_register_widgets() {
+		return bboss_messages_register_widgets();
+	}
+}
+// @bbwt-com-end compat-layer

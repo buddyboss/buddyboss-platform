@@ -309,3 +309,78 @@ function bboss_nouveau_blogs_loop_buttons( $args = array() ) {
 function bboss_nouveau_blog_has_latest_post() {
 	return (bool) bboss_get_blog_latest_post_title();
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_after_blogs_directory_content' ) && ! function_exists( 'bp_nouveau_after_blogs_directory_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_after_blogs_directory_content()}.
+	 *
+	 * @deprecated Use bboss_nouveau_after_blogs_directory_content() instead.
+	 */
+	function bp_nouveau_after_blogs_directory_content() {
+		return bboss_nouveau_after_blogs_directory_content();
+	}
+}
+if ( function_exists( 'bboss_nouveau_before_blogs_directory_content' ) && ! function_exists( 'bp_nouveau_before_blogs_directory_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_before_blogs_directory_content()}.
+	 *
+	 * @deprecated Use bboss_nouveau_before_blogs_directory_content() instead.
+	 */
+	function bp_nouveau_before_blogs_directory_content() {
+		return bboss_nouveau_before_blogs_directory_content();
+	}
+}
+if ( function_exists( 'bboss_nouveau_blog_has_latest_post' ) && ! function_exists( 'bp_nouveau_blog_has_latest_post' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_blog_has_latest_post()}.
+	 *
+	 * @deprecated Use bboss_nouveau_blog_has_latest_post() instead.
+	 */
+	function bp_nouveau_blog_has_latest_post() {
+		return bboss_nouveau_blog_has_latest_post();
+	}
+}
+if ( function_exists( 'bboss_nouveau_blogs_create_hook' ) && ! function_exists( 'bp_nouveau_blogs_create_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_blogs_create_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_blogs_create_hook() instead.
+	 */
+	function bp_nouveau_blogs_create_hook( $when = '', $suffix = '' ) {
+		return bboss_nouveau_blogs_create_hook( $when, $suffix );
+	}
+}
+if ( function_exists( 'bboss_nouveau_blogs_loop_buttons' ) && ! function_exists( 'bp_nouveau_blogs_loop_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_blogs_loop_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_blogs_loop_buttons() instead.
+	 */
+	function bp_nouveau_blogs_loop_buttons( $args = array() ) {
+		return bboss_nouveau_blogs_loop_buttons( $args );
+	}
+}
+if ( function_exists( 'bboss_nouveau_blogs_loop_item' ) && ! function_exists( 'bp_nouveau_blogs_loop_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_blogs_loop_item()}.
+	 *
+	 * @deprecated Use bboss_nouveau_blogs_loop_item() instead.
+	 */
+	function bp_nouveau_blogs_loop_item() {
+		return bboss_nouveau_blogs_loop_item();
+	}
+}
+if ( function_exists( 'bboss_nouveau_get_blogs_buttons' ) && ! function_exists( 'bp_nouveau_get_blogs_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_blogs_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_blogs_buttons() instead.
+	 */
+	function bp_nouveau_get_blogs_buttons( $args ) {
+		return bboss_nouveau_get_blogs_buttons( $args );
+	}
+}
+// @bbwt-com-end compat-layer

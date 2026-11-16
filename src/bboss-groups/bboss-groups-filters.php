@@ -1505,11 +1505,101 @@ function bboss_readylaunch_middle_content_my_groups( $args = array() ) {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_add_subgroups_args_single_home' ) && ! function_exists( 'bb_add_subgroups_args_single_home' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_add_subgroups_args_single_home()}.
+	 *
+	 * @deprecated Use bboss_add_subgroups_args_single_home() instead.
+	 */
+	function bb_add_subgroups_args_single_home( $args ) {
+		return bboss_add_subgroups_args_single_home( $args );
+	}
+}
+if ( function_exists( 'bboss_after_group_body_callback' ) && ! function_exists( 'bb_after_group_body_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_after_group_body_callback()}.
+	 *
+	 * @deprecated Use bboss_after_group_body_callback() instead.
+	 */
+	function bb_after_group_body_callback() {
+		return bboss_after_group_body_callback();
+	}
+}
+if ( function_exists( 'bboss_before_group_body_callback' ) && ! function_exists( 'bb_before_group_body_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_before_group_body_callback()}.
+	 *
+	 * @deprecated Use bboss_before_group_body_callback() instead.
+	 */
+	function bb_before_group_body_callback() {
+		return bboss_before_group_body_callback();
+	}
+}
+if ( function_exists( 'bboss_delete_group_activity_topic' ) && ! function_exists( 'bb_delete_group_activity_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_delete_group_activity_topic()}.
+	 *
+	 * @deprecated Use bboss_delete_group_activity_topic() instead.
+	 */
+	function bb_delete_group_activity_topic( $group_id ) {
+		return bboss_delete_group_activity_topic( $group_id );
+	}
+}
+if ( function_exists( 'bboss_group_add_unsuspended_user' ) && ! function_exists( 'bb_group_add_unsuspended_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_add_unsuspended_user()}.
+	 *
+	 * @deprecated Use bboss_group_add_unsuspended_user() instead.
+	 */
+	function bb_group_add_unsuspended_user( $user_id ) {
+		return bboss_group_add_unsuspended_user( $user_id );
+	}
+}
+if ( function_exists( 'bboss_group_card_template' ) && ! function_exists( 'bb_group_card_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_card_template()}.
+	 *
+	 * @deprecated Use bboss_group_card_template() instead.
+	 */
+	function bb_group_card_template() {
+		return bboss_group_card_template();
+	}
+}
+if ( function_exists( 'bboss_group_join_groups_record_activity_unsuspend_users' ) && ! function_exists( 'bb_group_join_groups_record_activity_unsuspend_users' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_join_groups_record_activity_unsuspend_users()}.
+	 *
+	 * @deprecated Use bboss_group_join_groups_record_activity_unsuspend_users() instead.
+	 */
+	function bb_group_join_groups_record_activity_unsuspend_users() {
+		return bboss_group_join_groups_record_activity_unsuspend_users();
+	}
+}
+if ( function_exists( 'bboss_group_member_query_group_message_member_ids' ) && ! function_exists( 'bb_group_member_query_group_message_member_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_member_query_group_message_member_ids()}.
+	 *
+	 * @deprecated Use bboss_group_member_query_group_message_member_ids() instead.
+	 */
+	function bb_group_member_query_group_message_member_ids( $group_member_ids, $group_member_query_object ) {
+		return bboss_group_member_query_group_message_member_ids( $group_member_ids, $group_member_query_object );
+	}
+}
+if ( function_exists( 'bboss_group_remove_suspended_user' ) && ! function_exists( 'bb_group_remove_suspended_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_remove_suspended_user()}.
+	 *
+	 * @deprecated Use bboss_group_remove_suspended_user() instead.
+	 */
+	function bb_group_remove_suspended_user( $user_id ) {
+		return bboss_group_remove_suspended_user( $user_id );
+	}
+}
 if ( function_exists( 'bboss_group_single_center_header_actions' ) && ! function_exists( 'bb_group_single_center_header_actions' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_group_single_center_header_actions()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_group_single_center_header_actions()}.
 	 *
 	 * @deprecated Use bboss_group_single_center_header_actions() instead.
 	 */
@@ -1519,7 +1609,7 @@ if ( function_exists( 'bboss_group_single_center_header_actions' ) && ! function
 }
 if ( function_exists( 'bboss_group_single_left_header_actions' ) && ! function_exists( 'bb_group_single_left_header_actions' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_group_single_left_header_actions()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_group_single_left_header_actions()}.
 	 *
 	 * @deprecated Use bboss_group_single_left_header_actions() instead.
 	 */
@@ -1527,14 +1617,184 @@ if ( function_exists( 'bboss_group_single_left_header_actions' ) && ! function_e
 		return bboss_group_single_left_header_actions();
 	}
 }
+if ( function_exists( 'bboss_groups_count_update_where_sql' ) && ! function_exists( 'bb_groups_count_update_where_sql' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_count_update_where_sql()}.
+	 *
+	 * @deprecated Use bboss_groups_count_update_where_sql() instead.
+	 */
+	function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) {
+		return bboss_groups_count_update_where_sql( $where_conditions, $args );
+	}
+}
 if ( function_exists( 'bboss_groups_unsubscribe_group_forums_topic' ) && ! function_exists( 'bb_groups_unsubscribe_group_forums_topic' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_groups_unsubscribe_group_forums_topic()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_groups_unsubscribe_group_forums_topic()}.
 	 *
 	 * @deprecated Use bboss_groups_unsubscribe_group_forums_topic() instead.
 	 */
 	function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 		return bboss_groups_unsubscribe_group_forums_topic( $group_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_load_group_type_label_custom_css' ) && ! function_exists( 'bb_load_group_type_label_custom_css' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_load_group_type_label_custom_css()}.
+	 *
+	 * @deprecated Use bboss_load_group_type_label_custom_css() instead.
+	 */
+	function bb_load_group_type_label_custom_css() {
+		return bboss_load_group_type_label_custom_css();
+	}
+}
+if ( function_exists( 'bboss_load_groups_notifications' ) && ! function_exists( 'bb_load_groups_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_load_groups_notifications()}.
+	 *
+	 * @deprecated Use bboss_load_groups_notifications() instead.
+	 */
+	function bb_load_groups_notifications() {
+		return bboss_load_groups_notifications();
+	}
+}
+if ( function_exists( 'bboss_my_group_menu_url' ) && ! function_exists( 'bb_my_group_menu_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_my_group_menu_url()}.
+	 *
+	 * @deprecated Use bboss_my_group_menu_url() instead.
+	 */
+	function bb_my_group_menu_url( $sorted_menu_objects, $args ) {
+		return bboss_my_group_menu_url( $sorted_menu_objects, $args );
+	}
+}
+if ( function_exists( 'bboss_readylaunch_middle_content_my_groups' ) && ! function_exists( 'bb_readylaunch_middle_content_my_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_readylaunch_middle_content_my_groups()}.
+	 *
+	 * @deprecated Use bboss_readylaunch_middle_content_my_groups() instead.
+	 */
+	function bb_readylaunch_middle_content_my_groups( $args = array() ) {
+		return bboss_readylaunch_middle_content_my_groups( $args );
+	}
+}
+if ( function_exists( 'bboss_groups_allow_mods_to_delete_activity' ) && ! function_exists( 'bp_groups_allow_mods_to_delete_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_allow_mods_to_delete_activity()}.
+	 *
+	 * @deprecated Use bboss_groups_allow_mods_to_delete_activity() instead.
+	 */
+	function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
+		return bboss_groups_allow_mods_to_delete_activity( $can_delete, $activity );
+	}
+}
+if ( function_exists( 'bboss_groups_disable_at_mention_forums_notification_for_non_public_groups' ) && ! function_exists( 'bp_groups_disable_at_mention_forums_notification_for_non_public_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_disable_at_mention_forums_notification_for_non_public_groups()}.
+	 *
+	 * @deprecated Use bboss_groups_disable_at_mention_forums_notification_for_non_public_groups() instead.
+	 */
+	function bp_groups_disable_at_mention_forums_notification_for_non_public_groups( $send, $usernames, $user_id, $forum_id ) {
+		return bboss_groups_disable_at_mention_forums_notification_for_non_public_groups( $send, $usernames, $user_id, $forum_id );
+	}
+}
+if ( function_exists( 'bboss_groups_disable_at_mention_notification_for_non_public_groups' ) && ! function_exists( 'bp_groups_disable_at_mention_notification_for_non_public_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_disable_at_mention_notification_for_non_public_groups()}.
+	 *
+	 * @deprecated Use bboss_groups_disable_at_mention_notification_for_non_public_groups() instead.
+	 */
+	function bp_groups_disable_at_mention_notification_for_non_public_groups( $send, $usernames, $user_id, $activity ) {
+		return bboss_groups_disable_at_mention_notification_for_non_public_groups( $send, $usernames, $user_id, $activity );
+	}
+}
+if ( function_exists( 'bboss_groups_exclude_forums_by_group_type_args' ) && ! function_exists( 'bp_groups_exclude_forums_by_group_type_args' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_exclude_forums_by_group_type_args()}.
+	 *
+	 * @deprecated Use bboss_groups_exclude_forums_by_group_type_args() instead.
+	 */
+	function bp_groups_exclude_forums_by_group_type_args( $args_forum ) {
+		return bboss_groups_exclude_forums_by_group_type_args( $args_forum );
+	}
+}
+if ( function_exists( 'bboss_groups_exclude_forums_topics_by_group_type_args' ) && ! function_exists( 'bp_groups_exclude_forums_topics_by_group_type_args' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_exclude_forums_topics_by_group_type_args()}.
+	 *
+	 * @deprecated Use bboss_groups_exclude_forums_topics_by_group_type_args() instead.
+	 */
+	function bp_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
+		return bboss_groups_exclude_forums_topics_by_group_type_args( $args_topic );
+	}
+}
+if ( function_exists( 'bboss_groups_filter_document_scope' ) && ! function_exists( 'bp_groups_filter_document_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_filter_document_scope()}.
+	 *
+	 * @deprecated Use bboss_groups_filter_document_scope() instead.
+	 */
+	function bp_groups_filter_document_scope( $retval = array(), $filter = array() ) {
+		return bboss_groups_filter_document_scope( $retval, $filter );
+	}
+}
+if ( function_exists( 'bboss_groups_filter_folder_scope' ) && ! function_exists( 'bp_groups_filter_folder_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_filter_folder_scope()}.
+	 *
+	 * @deprecated Use bboss_groups_filter_folder_scope() instead.
+	 */
+	function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
+		return bboss_groups_filter_folder_scope( $retval, $filter );
+	}
+}
+if ( function_exists( 'bboss_groups_filter_kses' ) && ! function_exists( 'bp_groups_filter_kses' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_filter_kses()}.
+	 *
+	 * @deprecated Use bboss_groups_filter_kses() instead.
+	 */
+	function bp_groups_filter_kses( $content = '' ) {
+		return bboss_groups_filter_kses( $content );
+	}
+}
+if ( function_exists( 'bboss_groups_filter_media_scope' ) && ! function_exists( 'bp_groups_filter_media_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_filter_media_scope()}.
+	 *
+	 * @deprecated Use bboss_groups_filter_media_scope() instead.
+	 */
+	function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
+		return bboss_groups_filter_media_scope( $retval, $filter );
+	}
+}
+if ( function_exists( 'bboss_groups_filter_video_scope' ) && ! function_exists( 'bp_groups_filter_video_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_filter_video_scope()}.
+	 *
+	 * @deprecated Use bboss_groups_filter_video_scope() instead.
+	 */
+	function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
+		return bboss_groups_filter_video_scope( $retval, $filter );
+	}
+}
+if ( function_exists( 'bboss_groups_maybe_load_mentions_scripts' ) && ! function_exists( 'bp_groups_maybe_load_mentions_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_maybe_load_mentions_scripts()}.
+	 *
+	 * @deprecated Use bboss_groups_maybe_load_mentions_scripts() instead.
+	 */
+	function bp_groups_maybe_load_mentions_scripts( $load_mentions, $mentions_enabled ) {
+		return bboss_groups_maybe_load_mentions_scripts( $load_mentions, $mentions_enabled );
+	}
+}
+if ( function_exists( 'bboss_groups_user_can_filter' ) && ! function_exists( 'bp_groups_user_can_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_user_can_filter()}.
+	 *
+	 * @deprecated Use bboss_groups_user_can_filter() instead.
+	 */
+	function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $args ) {
+		return bboss_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $args );
 	}
 }
 // @bbwt-com-end compat-layer

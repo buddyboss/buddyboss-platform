@@ -250,3 +250,58 @@ function bboss_admin_register_banner_ajax_mark_registered() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_register_banner_mark_registered', 'bb_admin_register_banner_ajax_mark_registered' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_register_banner_ajax_mark_registered' ) && ! function_exists( 'bb_admin_register_banner_ajax_mark_registered' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_register_banner_ajax_mark_registered()}.
+	 *
+	 * @deprecated Use bboss_admin_register_banner_ajax_mark_registered() instead.
+	 */
+	function bb_admin_register_banner_ajax_mark_registered() {
+		return bboss_admin_register_banner_ajax_mark_registered();
+	}
+}
+if ( function_exists( 'bboss_admin_register_banner_enqueue' ) && ! function_exists( 'bb_admin_register_banner_enqueue' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_register_banner_enqueue()}.
+	 *
+	 * @deprecated Use bboss_admin_register_banner_enqueue() instead.
+	 */
+	function bb_admin_register_banner_enqueue() {
+		return bboss_admin_register_banner_enqueue();
+	}
+}
+if ( function_exists( 'bboss_admin_register_banner_mode' ) && ! function_exists( 'bb_admin_register_banner_mode' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_register_banner_mode()}.
+	 *
+	 * @deprecated Use bboss_admin_register_banner_mode() instead.
+	 */
+	function bb_admin_register_banner_mode() {
+		return bboss_admin_register_banner_mode();
+	}
+}
+if ( function_exists( 'bboss_admin_register_banner_products_installed' ) && ! function_exists( 'bb_admin_register_banner_products_installed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_register_banner_products_installed()}.
+	 *
+	 * @deprecated Use bboss_admin_register_banner_products_installed() instead.
+	 */
+	function bb_admin_register_banner_products_installed() {
+		return bboss_admin_register_banner_products_installed();
+	}
+}
+if ( function_exists( 'bboss_admin_render_register_banner' ) && ! function_exists( 'bb_admin_render_register_banner' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_render_register_banner()}.
+	 *
+	 * @deprecated Use bboss_admin_render_register_banner() instead.
+	 */
+	function bb_admin_render_register_banner() {
+		return bboss_admin_render_register_banner();
+	}
+}
+// @bbwt-com-end compat-layer

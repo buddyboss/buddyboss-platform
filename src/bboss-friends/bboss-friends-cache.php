@@ -154,3 +154,78 @@ add_action( 'friends_friendship_rejected', 'bp_core_clear_cache' );
 add_action( 'friends_friendship_accepted', 'bp_core_clear_cache' );
 add_action( 'friends_friendship_deleted', 'bp_core_clear_cache' );
 add_action( 'friends_friendship_requested', 'bp_core_clear_cache' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_clear_bp_friends_friendships_cache' ) && ! function_exists( 'bp_friends_clear_bp_friends_friendships_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_bp_friends_friendships_cache()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_bp_friends_friendships_cache() instead.
+	 */
+	function bp_friends_clear_bp_friends_friendships_cache( $friendship_id, $initiator_user_id, $friend_user_id ) {
+		return bboss_friends_clear_bp_friends_friendships_cache( $friendship_id, $initiator_user_id, $friend_user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_clear_bp_friends_friendships_cache_remove' ) && ! function_exists( 'bp_friends_clear_bp_friends_friendships_cache_remove' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_bp_friends_friendships_cache_remove()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_bp_friends_friendships_cache_remove() instead.
+	 */
+	function bp_friends_clear_bp_friends_friendships_cache_remove( $friendship_id, BBoss_Friends_Friendship $friendship ) {
+		return bboss_friends_clear_bp_friends_friendships_cache_remove( $friendship_id, $friendship );
+	}
+}
+if ( function_exists( 'bboss_friends_clear_request_cache' ) && ! function_exists( 'bp_friends_clear_request_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_request_cache()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_request_cache() instead.
+	 */
+	function bp_friends_clear_request_cache( $friend_user_id ) {
+		return bboss_friends_clear_request_cache( $friend_user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_clear_request_cache_on_remove' ) && ! function_exists( 'bp_friends_clear_request_cache_on_remove' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_request_cache_on_remove()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_request_cache_on_remove() instead.
+	 */
+	function bp_friends_clear_request_cache_on_remove( $friendship_id, BBoss_Friends_Friendship $friendship ) {
+		return bboss_friends_clear_request_cache_on_remove( $friendship_id, $friendship );
+	}
+}
+if ( function_exists( 'bboss_friends_clear_request_cache_on_save' ) && ! function_exists( 'bp_friends_clear_request_cache_on_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_request_cache_on_save()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_request_cache_on_save() instead.
+	 */
+	function bp_friends_clear_request_cache_on_save( $friendship_id, $initiator_user_id, $friend_user_id ) {
+		return bboss_friends_clear_request_cache_on_save( $friendship_id, $initiator_user_id, $friend_user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_delete_cached_friendships_on_friendship_save' ) && ! function_exists( 'bp_friends_delete_cached_friendships_on_friendship_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_delete_cached_friendships_on_friendship_save()}.
+	 *
+	 * @deprecated Use bboss_friends_delete_cached_friendships_on_friendship_save() instead.
+	 */
+	function bp_friends_delete_cached_friendships_on_friendship_save( $friendship ) {
+		return bboss_friends_delete_cached_friendships_on_friendship_save( $friendship );
+	}
+}
+if ( function_exists( 'bboss_friends_clear_friend_object_cache' ) && ! function_exists( 'friends_clear_friend_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_friend_object_cache()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_friend_object_cache() instead.
+	 */
+	function friends_clear_friend_object_cache( $friendship_id ) {
+		return bboss_friends_clear_friend_object_cache( $friendship_id );
+	}
+}
+// @bbwt-com-end compat-layer

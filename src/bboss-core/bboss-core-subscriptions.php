@@ -2300,16 +2300,296 @@ function bboss_subscriptions_sweep_stale_fanout_cursors() {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_create_subscription' ) && ! function_exists( 'bb_create_subscription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_create_subscription()}.
+	 *
+	 * @deprecated Use bboss_create_subscription() instead.
+	 */
+	function bb_create_subscription( $args = array() ) {
+		return bboss_create_subscription( $args );
+	}
+}
 if ( function_exists( 'bboss_delete_group_forum_topic_subscriptions' ) && ! function_exists( 'bb_delete_group_forum_topic_subscriptions' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_delete_group_forum_topic_subscriptions()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_delete_group_forum_topic_subscriptions()}.
 	 *
 	 * @deprecated Use bboss_delete_group_forum_topic_subscriptions() instead.
 	 */
 	function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 		return bboss_delete_group_forum_topic_subscriptions( $group_id );
+	}
+}
+if ( function_exists( 'bboss_delete_subscription' ) && ! function_exists( 'bb_delete_subscription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_delete_subscription()}.
+	 *
+	 * @deprecated Use bboss_delete_subscription() instead.
+	 */
+	function bb_delete_subscription( $subscription_id ) {
+		return bboss_delete_subscription( $subscription_id );
+	}
+}
+if ( function_exists( 'bboss_delete_subscriptions_by_item' ) && ! function_exists( 'bb_delete_subscriptions_by_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_delete_subscriptions_by_item()}.
+	 *
+	 * @deprecated Use bboss_delete_subscriptions_by_item() instead.
+	 */
+	function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
+		return bboss_delete_subscriptions_by_item( $type, $item_id, $blog_id );
+	}
+}
+if ( function_exists( 'bboss_get_subscription_users' ) && ! function_exists( 'bb_get_subscription_users' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_subscription_users()}.
+	 *
+	 * @deprecated Use bboss_get_subscription_users() instead.
+	 */
+	function bb_get_subscription_users( $args = array(), $force_cache = false ) {
+		return bboss_get_subscription_users( $args, $force_cache );
+	}
+}
+if ( function_exists( 'bboss_get_subscriptions' ) && ! function_exists( 'bb_get_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_subscriptions()}.
+	 *
+	 * @deprecated Use bboss_get_subscriptions() instead.
+	 */
+	function bb_get_subscriptions( $args = array(), $force_cache = false ) {
+		return bboss_get_subscriptions( $args, $force_cache );
+	}
+}
+if ( function_exists( 'bboss_get_subscriptions_types' ) && ! function_exists( 'bb_get_subscriptions_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_subscriptions_types()}.
+	 *
+	 * @deprecated Use bboss_get_subscriptions_types() instead.
+	 */
+	function bb_get_subscriptions_types( $singular = false ) {
+		return bboss_get_subscriptions_types( $singular );
+	}
+}
+if ( function_exists( 'bboss_is_enabled_subscription' ) && ! function_exists( 'bb_is_enabled_subscription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_enabled_subscription()}.
+	 *
+	 * @deprecated Use bboss_is_enabled_subscription() instead.
+	 */
+	function bb_is_enabled_subscription( $type, $notification_type = '' ) {
+		return bboss_is_enabled_subscription( $type, $notification_type );
+	}
+}
+if ( function_exists( 'bboss_migrate_bbpress_users_post_subscriptions' ) && ! function_exists( 'bb_migrate_bbpress_users_post_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_migrate_bbpress_users_post_subscriptions()}.
+	 *
+	 * @deprecated Use bboss_migrate_bbpress_users_post_subscriptions() instead.
+	 */
+	function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog_id = 0, $offset = 0, $is_background = true ) {
+		return bboss_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog_id, $offset, $is_background );
+	}
+}
+if ( function_exists( 'bboss_migrate_users_forum_topic_subscriptions' ) && ! function_exists( 'bb_migrate_users_forum_topic_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_migrate_users_forum_topic_subscriptions()}.
+	 *
+	 * @deprecated Use bboss_migrate_users_forum_topic_subscriptions() instead.
+	 */
+	function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offset = 0, $is_background = true ) {
+		return bboss_migrate_users_forum_topic_subscriptions( $subscription_users, $offset, $is_background );
+	}
+}
+if ( function_exists( 'bboss_register_subscriptions_types' ) && ! function_exists( 'bb_register_subscriptions_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_subscriptions_types()}.
+	 *
+	 * @deprecated Use bboss_register_subscriptions_types() instead.
+	 */
+	function bb_register_subscriptions_types( $type = '' ) {
+		return bboss_register_subscriptions_types( $type );
+	}
+}
+if ( function_exists( 'bboss_send_notifications_to_subscribers' ) && ! function_exists( 'bb_send_notifications_to_subscribers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_send_notifications_to_subscribers()}.
+	 *
+	 * @deprecated Use bboss_send_notifications_to_subscribers() instead.
+	 */
+	function bb_send_notifications_to_subscribers( $args ) {
+		return bboss_send_notifications_to_subscribers( $args );
+	}
+}
+if ( function_exists( 'bboss_send_notifications_to_subscribers_batch' ) && ! function_exists( 'bb_send_notifications_to_subscribers_batch' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_send_notifications_to_subscribers_batch()}.
+	 *
+	 * @deprecated Use bboss_send_notifications_to_subscribers_batch() instead.
+	 */
+	function bb_send_notifications_to_subscribers_batch( $args ) {
+		return bboss_send_notifications_to_subscribers_batch( $args );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_claim_notification_chunk' ) && ! function_exists( 'bb_subscriptions_claim_notification_chunk' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_claim_notification_chunk()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_claim_notification_chunk() instead.
+	 */
+	function bb_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) {
+		return bboss_subscriptions_claim_notification_chunk( $args, $chunk_key );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_compact_notification_data' ) && ! function_exists( 'bb_subscriptions_compact_notification_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_compact_notification_data()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_compact_notification_data() instead.
+	 */
+	function bb_subscriptions_compact_notification_data( $data ) {
+		return bboss_subscriptions_compact_notification_data( $data );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_complete_notification_chunk' ) && ! function_exists( 'bb_subscriptions_complete_notification_chunk' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_complete_notification_chunk()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_complete_notification_chunk() instead.
+	 */
+	function bb_subscriptions_complete_notification_chunk( $args, $chunk_key = '' ) {
+		return bboss_subscriptions_complete_notification_chunk( $args, $chunk_key );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_get_fanout_cursor_last_id' ) && ! function_exists( 'bb_subscriptions_get_fanout_cursor_last_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_get_fanout_cursor_last_id()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_get_fanout_cursor_last_id() instead.
+	 */
+	function bb_subscriptions_get_fanout_cursor_last_id( $cursor ) {
+		return bboss_subscriptions_get_fanout_cursor_last_id( $cursor );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_get_notification_chunk_claim_ttl' ) && ! function_exists( 'bb_subscriptions_get_notification_chunk_claim_ttl' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_get_notification_chunk_claim_ttl()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_get_notification_chunk_claim_ttl() instead.
+	 */
+	function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
+		return bboss_subscriptions_get_notification_chunk_claim_ttl( $args );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_get_notification_chunk_key' ) && ! function_exists( 'bb_subscriptions_get_notification_chunk_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_get_notification_chunk_key()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_get_notification_chunk_key() instead.
+	 */
+	function bb_subscriptions_get_notification_chunk_key( $args ) {
+		return bboss_subscriptions_get_notification_chunk_key( $args );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_get_subscription' ) && ! function_exists( 'bb_subscriptions_get_subscription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_get_subscription()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_get_subscription() instead.
+	 */
+	function bb_subscriptions_get_subscription( $subscription_id ) {
+		return bboss_subscriptions_get_subscription( $subscription_id );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_migrate_bbpress_users_forum_topic' ) && ! function_exists( 'bb_subscriptions_migrate_bbpress_users_forum_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_migrate_bbpress_users_forum_topic()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_migrate_bbpress_users_forum_topic() instead.
+	 */
+	function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = false, $blog_id = 0 ) {
+		return bboss_subscriptions_migrate_bbpress_users_forum_topic( $is_background, $blog_id );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_migrate_users_forum_topic' ) && ! function_exists( 'bb_subscriptions_migrate_users_forum_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_migrate_users_forum_topic()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_migrate_users_forum_topic() instead.
+	 */
+	function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is_updater = false ) {
+		return bboss_subscriptions_migrate_users_forum_topic( $is_background, $is_updater );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_migrating_bbpress_users_subscriptions' ) && ! function_exists( 'bb_subscriptions_migrating_bbpress_users_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_migrating_bbpress_users_subscriptions()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_migrating_bbpress_users_subscriptions() instead.
+	 */
+	function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background = false, $blog_id = 0 ) {
+		return bboss_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $blog_id );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_rehydrate_notification_data' ) && ! function_exists( 'bb_subscriptions_rehydrate_notification_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_rehydrate_notification_data()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_rehydrate_notification_data() instead.
+	 */
+	function bb_subscriptions_rehydrate_notification_data( $data ) {
+		return bboss_subscriptions_rehydrate_notification_data( $data );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_release_notification_chunk_claim' ) && ! function_exists( 'bb_subscriptions_release_notification_chunk_claim' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_release_notification_chunk_claim()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_release_notification_chunk_claim() instead.
+	 */
+	function bb_subscriptions_release_notification_chunk_claim( $args, $chunk_key = '' ) {
+		return bboss_subscriptions_release_notification_chunk_claim( $args, $chunk_key );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_send_notification_chunk' ) && ! function_exists( 'bb_subscriptions_send_notification_chunk' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_send_notification_chunk()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_send_notification_chunk() instead.
+	 */
+	function bb_subscriptions_send_notification_chunk( $args ) {
+		return bboss_subscriptions_send_notification_chunk( $args );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_sweep_stale_fanout_cursors' ) && ! function_exists( 'bb_subscriptions_sweep_stale_fanout_cursors' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_sweep_stale_fanout_cursors()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_sweep_stale_fanout_cursors() instead.
+	 */
+	function bb_subscriptions_sweep_stale_fanout_cursors() {
+		return bboss_subscriptions_sweep_stale_fanout_cursors();
+	}
+}
+if ( function_exists( 'bboss_subscriptions_touch_notification_chunk_claim' ) && ! function_exists( 'bb_subscriptions_touch_notification_chunk_claim' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_touch_notification_chunk_claim()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_touch_notification_chunk_claim() instead.
+	 */
+	function bb_subscriptions_touch_notification_chunk_claim( $args, $chunk_key = '' ) {
+		return bboss_subscriptions_touch_notification_chunk_claim( $args, $chunk_key );
+	}
+}
+if ( function_exists( 'bboss_subscriptions_update_subscriptions_status' ) && ! function_exists( 'bb_subscriptions_update_subscriptions_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_update_subscriptions_status()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_update_subscriptions_status() instead.
+	 */
+	function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id = 0 ) {
+		return bboss_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id );
 	}
 }
 // @bbwt-com-end compat-layer

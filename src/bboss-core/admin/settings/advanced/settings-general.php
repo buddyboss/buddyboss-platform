@@ -260,3 +260,18 @@ function bboss_advanced_register_general_fields() {
 		)
 	);
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_advanced_register_general_fields' ) && ! function_exists( 'bb_advanced_register_general_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_register_general_fields()}.
+	 *
+	 * @deprecated Use bboss_advanced_register_general_fields() instead.
+	 */
+	function bb_advanced_register_general_fields() {
+		return bboss_advanced_register_general_fields();
+	}
+}
+// @bbwt-com-end compat-layer

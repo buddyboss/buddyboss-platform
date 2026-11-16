@@ -436,3 +436,88 @@ function bboss_nouveau_object_template_results_members_followers_scope( $queryst
 
 	return http_build_query( $querystring );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_object_template_results_members_followers_scope' ) && ! function_exists( 'bb_nouveau_object_template_results_members_followers_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_followers_scope()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_members_followers_scope() instead.
+	 */
+	function bb_nouveau_object_template_results_members_followers_scope( $querystring, $object ) {
+		return bboss_nouveau_object_template_results_members_followers_scope( $querystring, $object );
+	}
+}
+if ( function_exists( 'bboss_nouveau_ajax_object_template_loader' ) && ! function_exists( 'bp_nouveau_ajax_object_template_loader' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_object_template_loader()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_object_template_loader() instead.
+	 */
+	function bp_nouveau_ajax_object_template_loader() {
+		return bboss_nouveau_ajax_object_template_loader();
+	}
+}
+if ( function_exists( 'bboss_nouveau_ajax_save_cover_position' ) && ! function_exists( 'bp_nouveau_ajax_save_cover_position' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_save_cover_position()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_save_cover_position() instead.
+	 */
+	function bp_nouveau_ajax_save_cover_position() {
+		return bboss_nouveau_ajax_save_cover_position();
+	}
+}
+if ( function_exists( 'bboss_nouveau_object_template_results_groups_personal_scope' ) && ! function_exists( 'bp_nouveau_object_template_results_groups_personal_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_groups_personal_scope()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_groups_personal_scope() instead.
+	 */
+	function bp_nouveau_object_template_results_groups_personal_scope( $querystring, $object ) {
+		return bboss_nouveau_object_template_results_groups_personal_scope( $querystring, $object );
+	}
+}
+if ( function_exists( 'bboss_nouveau_object_template_results_groups_tabs' ) && ! function_exists( 'bp_nouveau_object_template_results_groups_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_groups_tabs()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_groups_tabs() instead.
+	 */
+	function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
+		return bboss_nouveau_object_template_results_groups_tabs( $results, $object );
+	}
+}
+if ( function_exists( 'bboss_nouveau_object_template_results_members_following_scope' ) && ! function_exists( 'bp_nouveau_object_template_results_members_following_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_following_scope()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_members_following_scope() instead.
+	 */
+	function bp_nouveau_object_template_results_members_following_scope( $querystring, $object ) {
+		return bboss_nouveau_object_template_results_members_following_scope( $querystring, $object );
+	}
+}
+if ( function_exists( 'bboss_nouveau_object_template_results_members_personal_scope' ) && ! function_exists( 'bp_nouveau_object_template_results_members_personal_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_personal_scope()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_members_personal_scope() instead.
+	 */
+	function bp_nouveau_object_template_results_members_personal_scope( $querystring, $object ) {
+		return bboss_nouveau_object_template_results_members_personal_scope( $querystring, $object );
+	}
+}
+if ( function_exists( 'bboss_nouveau_object_template_results_members_tabs' ) && ! function_exists( 'bp_nouveau_object_template_results_members_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_tabs()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_members_tabs() instead.
+	 */
+	function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
+		return bboss_nouveau_object_template_results_members_tabs( $results, $object );
+	}
+}
+// @bbwt-com-end compat-layer

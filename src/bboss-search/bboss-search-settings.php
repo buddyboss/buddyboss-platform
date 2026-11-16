@@ -265,3 +265,178 @@ function bboss_is_search_activity_comments_enable( $default = 1 ) {
 function bboss_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) {
 	return (bool) apply_filters( 'bp_is_search_post_type_taxonomy_enable', (bool) get_option( "bp_search_{$post_type}_tax_{$taxonomy}" ) );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_search_activity_comments_enable' ) && ! function_exists( 'bp_is_search_activity_comments_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_activity_comments_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_activity_comments_enable() instead.
+	 */
+	function bp_is_search_activity_comments_enable( $default = 1 ) {
+		return bboss_is_search_activity_comments_enable( $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_activity_enable' ) && ! function_exists( 'bp_is_search_activity_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_activity_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_activity_enable() instead.
+	 */
+	function bp_is_search_activity_enable( $default = 1 ) {
+		return bboss_is_search_activity_enable( $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_albums_enable' ) && ! function_exists( 'bp_is_search_albums_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_albums_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_albums_enable() instead.
+	 */
+	function bp_is_search_albums_enable( $default = 0 ) {
+		return bboss_is_search_albums_enable( $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_autocomplete_enable' ) && ! function_exists( 'bp_is_search_autocomplete_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_autocomplete_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_autocomplete_enable() instead.
+	 */
+	function bp_is_search_autocomplete_enable( $default = 1 ) {
+		return bboss_is_search_autocomplete_enable( $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_documents_enable' ) && ! function_exists( 'bp_is_search_documents_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_documents_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_documents_enable() instead.
+	 */
+	function bp_is_search_documents_enable( $default = 0 ) {
+		return bboss_is_search_documents_enable( $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_folders_enable' ) && ! function_exists( 'bp_is_search_folders_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_folders_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_folders_enable() instead.
+	 */
+	function bp_is_search_folders_enable( $default = 0 ) {
+		return bboss_is_search_folders_enable( $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_groups_enable' ) && ! function_exists( 'bp_is_search_groups_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_groups_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_groups_enable() instead.
+	 */
+	function bp_is_search_groups_enable( $default = 1 ) {
+		return bboss_is_search_groups_enable( $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_members_enable' ) && ! function_exists( 'bp_is_search_members_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_members_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_members_enable() instead.
+	 */
+	function bp_is_search_members_enable( $default = 1 ) {
+		return bboss_is_search_members_enable( $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_photos_enable' ) && ! function_exists( 'bp_is_search_photos_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_photos_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_photos_enable() instead.
+	 */
+	function bp_is_search_photos_enable( $default = 0 ) {
+		return bboss_is_search_photos_enable( $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_post_type_enable' ) && ! function_exists( 'bp_is_search_post_type_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_post_type_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_post_type_enable() instead.
+	 */
+	function bp_is_search_post_type_enable( $post_type, $default = 1 ) {
+		return bboss_is_search_post_type_enable( $post_type, $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_post_type_meta_enable' ) && ! function_exists( 'bp_is_search_post_type_meta_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_post_type_meta_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_post_type_meta_enable() instead.
+	 */
+	function bp_is_search_post_type_meta_enable( $post_type ) {
+		return bboss_is_search_post_type_meta_enable( $post_type );
+	}
+}
+if ( function_exists( 'bboss_is_search_post_type_taxonomy_enable' ) && ! function_exists( 'bp_is_search_post_type_taxonomy_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_post_type_taxonomy_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_post_type_taxonomy_enable() instead.
+	 */
+	function bp_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) {
+		return bboss_is_search_post_type_taxonomy_enable( $taxonomy, $post_type );
+	}
+}
+if ( function_exists( 'bboss_is_search_user_field_enable' ) && ! function_exists( 'bp_is_search_user_field_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_user_field_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_user_field_enable() instead.
+	 */
+	function bp_is_search_user_field_enable( $id ) {
+		return bboss_is_search_user_field_enable( $id );
+	}
+}
+if ( function_exists( 'bboss_is_search_videos_enable' ) && ! function_exists( 'bp_is_search_videos_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_videos_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_videos_enable() instead.
+	 */
+	function bp_is_search_videos_enable( $default = 0 ) {
+		return bboss_is_search_videos_enable( $default );
+	}
+}
+if ( function_exists( 'bboss_is_search_xprofile_enable' ) && ! function_exists( 'bp_is_search_xprofile_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_search_xprofile_enable()}.
+	 *
+	 * @deprecated Use bboss_is_search_xprofile_enable() instead.
+	 */
+	function bp_is_search_xprofile_enable( $id ) {
+		return bboss_is_search_xprofile_enable( $id );
+	}
+}
+if ( function_exists( 'bboss_search_form_option' ) && ! function_exists( 'bp_search_form_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_form_option()}.
+	 *
+	 * @deprecated Use bboss_search_form_option() instead.
+	 */
+	function bp_search_form_option( $option, $default = '', $slug = false ) {
+		return bboss_search_form_option( $option, $default, $slug );
+	}
+}
+if ( function_exists( 'bboss_search_get_form_option' ) && ! function_exists( 'bp_search_get_form_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_get_form_option()}.
+	 *
+	 * @deprecated Use bboss_search_get_form_option() instead.
+	 */
+	function bp_search_get_form_option( $option, $default = '', $slug = false ) {
+		return bboss_search_get_form_option( $option, $default, $slug );
+	}
+}
+// @bbwt-com-end compat-layer

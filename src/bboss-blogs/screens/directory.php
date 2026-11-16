@@ -29,3 +29,18 @@ function bboss_blogs_screen_index() {
 	}
 }
 add_action( 'bp_screens', 'bp_blogs_screen_index', 2 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_screen_index' ) && ! function_exists( 'bp_blogs_screen_index' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_screen_index()}.
+	 *
+	 * @deprecated Use bboss_blogs_screen_index() instead.
+	 */
+	function bp_blogs_screen_index() {
+		return bboss_blogs_screen_index();
+	}
+}
+// @bbwt-com-end compat-layer

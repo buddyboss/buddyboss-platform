@@ -134,3 +134,38 @@ function bboss_generate_member_profile_links_on_update() {
 		}
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_generate_member_profile_links_on_update' ) && ! function_exists( 'bb_generate_member_profile_links_on_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_generate_member_profile_links_on_update()}.
+	 *
+	 * @deprecated Use bboss_generate_member_profile_links_on_update() instead.
+	 */
+	function bb_generate_member_profile_links_on_update() {
+		return bboss_generate_member_profile_links_on_update();
+	}
+}
+if ( function_exists( 'bboss_remove_duplicate_member_slug' ) && ! function_exists( 'bb_remove_duplicate_member_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_duplicate_member_slug()}.
+	 *
+	 * @deprecated Use bboss_remove_duplicate_member_slug() instead.
+	 */
+	function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
+		return bboss_remove_duplicate_member_slug( $user_ids, $paged );
+	}
+}
+if ( function_exists( 'bboss_repair_member_unique_slug' ) && ! function_exists( 'bb_repair_member_unique_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_repair_member_unique_slug()}.
+	 *
+	 * @deprecated Use bboss_repair_member_unique_slug() instead.
+	 */
+	function bb_repair_member_unique_slug( $paged = 1 ) {
+		return bboss_repair_member_unique_slug( $paged );
+	}
+}
+// @bbwt-com-end compat-layer

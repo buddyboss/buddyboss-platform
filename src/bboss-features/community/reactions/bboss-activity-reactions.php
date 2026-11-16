@@ -1036,3 +1036,178 @@ function bboss_get_reaction_button_settings() {
 
 	return $args;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_get_reacted_users_data' ) && ! function_exists( 'bb_activity_get_reacted_users_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_get_reacted_users_data()}.
+	 *
+	 * @deprecated Use bboss_activity_get_reacted_users_data() instead.
+	 */
+	function bb_activity_get_reacted_users_data( $args ) {
+		return bboss_activity_get_reacted_users_data( $args );
+	}
+}
+if ( function_exists( 'bboss_activity_get_reaction_button' ) && ! function_exists( 'bb_activity_get_reaction_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_get_reaction_button()}.
+	 *
+	 * @deprecated Use bboss_activity_get_reaction_button() instead.
+	 */
+	function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
+		return bboss_activity_get_reaction_button( $reaction_id, $has_reacted );
+	}
+}
+if ( function_exists( 'bboss_activity_get_user_reacted_item_ids' ) && ! function_exists( 'bb_activity_get_user_reacted_item_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_get_user_reacted_item_ids()}.
+	 *
+	 * @deprecated Use bboss_activity_get_user_reacted_item_ids() instead.
+	 */
+	function bb_activity_get_user_reacted_item_ids( $user_id = 0, $activity_type = 'activity' ) {
+		return bboss_activity_get_user_reacted_item_ids( $user_id, $activity_type );
+	}
+}
+if ( function_exists( 'bboss_activity_get_user_reaction_by_item' ) && ! function_exists( 'bb_activity_get_user_reaction_by_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_get_user_reaction_by_item()}.
+	 *
+	 * @deprecated Use bboss_activity_get_user_reaction_by_item() instead.
+	 */
+	function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity', $user_id = 0 ) {
+		return bboss_activity_get_user_reaction_by_item( $item_id, $item_type, $user_id );
+	}
+}
+if ( function_exists( 'bboss_activity_is_item_favorite' ) && ! function_exists( 'bb_activity_is_item_favorite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_is_item_favorite()}.
+	 *
+	 * @deprecated Use bboss_activity_is_item_favorite() instead.
+	 */
+	function bb_activity_is_item_favorite( $item_id, $item_type = 'activity', $user_id = 0 ) {
+		return bboss_activity_is_item_favorite( $item_id, $item_type, $user_id );
+	}
+}
+if ( function_exists( 'bboss_activity_prepare_emotion_icon' ) && ! function_exists( 'bb_activity_prepare_emotion_icon' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_prepare_emotion_icon()}.
+	 *
+	 * @deprecated Use bboss_activity_prepare_emotion_icon() instead.
+	 */
+	function bb_activity_prepare_emotion_icon( $reaction_id ) {
+		return bboss_activity_prepare_emotion_icon( $reaction_id );
+	}
+}
+if ( function_exists( 'bboss_activity_prepare_web_emotions' ) && ! function_exists( 'bb_activity_prepare_web_emotions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_prepare_web_emotions()}.
+	 *
+	 * @deprecated Use bboss_activity_prepare_web_emotions() instead.
+	 */
+	function bb_activity_prepare_web_emotions() {
+		return bboss_activity_prepare_web_emotions();
+	}
+}
+if ( function_exists( 'bboss_activity_reaction_names_and_count' ) && ! function_exists( 'bb_activity_reaction_names_and_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_reaction_names_and_count()}.
+	 *
+	 * @deprecated Use bboss_activity_reaction_names_and_count() instead.
+	 */
+	function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'activity', $name_count = 2 ) {
+		return bboss_activity_reaction_names_and_count( $activity_id, $activity_type, $name_count );
+	}
+}
+if ( function_exists( 'bboss_activity_remove_activity_post_reactions' ) && ! function_exists( 'bb_activity_remove_activity_post_reactions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_remove_activity_post_reactions()}.
+	 *
+	 * @deprecated Use bboss_activity_remove_activity_post_reactions() instead.
+	 */
+	function bb_activity_remove_activity_post_reactions( $activities ) {
+		return bboss_activity_remove_activity_post_reactions( $activities );
+	}
+}
+if ( function_exists( 'bboss_format_reaction_count' ) && ! function_exists( 'bb_format_reaction_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_format_reaction_count()}.
+	 *
+	 * @deprecated Use bboss_format_reaction_count() instead.
+	 */
+	function bb_format_reaction_count( $count ) {
+		return bboss_format_reaction_count( $count );
+	}
+}
+if ( function_exists( 'bboss_get_activity_most_reactions' ) && ! function_exists( 'bb_get_activity_most_reactions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_activity_most_reactions()}.
+	 *
+	 * @deprecated Use bboss_get_activity_most_reactions() instead.
+	 */
+	function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', $no_of_reactions = 0 ) {
+		return bboss_get_activity_most_reactions( $item_id, $item_type, $no_of_reactions );
+	}
+}
+if ( function_exists( 'bboss_get_activity_post_comment_emotions_popup' ) && ! function_exists( 'bb_get_activity_post_comment_emotions_popup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_activity_post_comment_emotions_popup()}.
+	 *
+	 * @deprecated Use bboss_get_activity_post_comment_emotions_popup() instead.
+	 */
+	function bb_get_activity_post_comment_emotions_popup() {
+		return bboss_get_activity_post_comment_emotions_popup();
+	}
+}
+if ( function_exists( 'bboss_get_activity_post_emotions_popup' ) && ! function_exists( 'bb_get_activity_post_emotions_popup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_activity_post_emotions_popup()}.
+	 *
+	 * @deprecated Use bboss_get_activity_post_emotions_popup() instead.
+	 */
+	function bb_get_activity_post_emotions_popup() {
+		return bboss_get_activity_post_emotions_popup();
+	}
+}
+if ( function_exists( 'bboss_get_activity_post_reaction_button_html' ) && ! function_exists( 'bb_get_activity_post_reaction_button_html' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_activity_post_reaction_button_html()}.
+	 *
+	 * @deprecated Use bboss_get_activity_post_reaction_button_html() instead.
+	 */
+	function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'activity', $reaction_id = 0, $has_reacted = false ) {
+		return bboss_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, $has_reacted );
+	}
+}
+if ( function_exists( 'bboss_get_activity_post_user_reactions_html' ) && ! function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_activity_post_user_reactions_html()}.
+	 *
+	 * @deprecated Use bboss_get_activity_post_user_reactions_html() instead.
+	 */
+	function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'activity', $is_popup = true ) {
+		return bboss_get_activity_post_user_reactions_html( $activity_id, $item_type, $is_popup );
+	}
+}
+if ( function_exists( 'bboss_get_activity_reaction_ajax_callback' ) && ! function_exists( 'bb_get_activity_reaction_ajax_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_activity_reaction_ajax_callback()}.
+	 *
+	 * @deprecated Use bboss_get_activity_reaction_ajax_callback() instead.
+	 */
+	function bb_get_activity_reaction_ajax_callback() {
+		return bboss_get_activity_reaction_ajax_callback();
+	}
+}
+if ( function_exists( 'bboss_get_reaction_button_settings' ) && ! function_exists( 'bb_get_reaction_button_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_reaction_button_settings()}.
+	 *
+	 * @deprecated Use bboss_get_reaction_button_settings() instead.
+	 */
+	function bb_get_reaction_button_settings() {
+		return bboss_get_reaction_button_settings();
+	}
+}
+// @bbwt-com-end compat-layer

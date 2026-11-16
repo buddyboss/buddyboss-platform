@@ -304,3 +304,98 @@ if ( function_exists( 'bboss_feature_registry' ) && bboss_feature_registry()->bb
 	add_action( 'added_option', 'bb_blog_sync_platform_option_added', 10, 2 );
 	add_action( 'update_option_buddyboss_theme_options', 'bb_blog_sync_theme_options_to_platform', 10, 2 );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_page_settings_is_available' ) && ! function_exists( 'bb_blog_page_settings_is_available' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_page_settings_is_available()}.
+	 *
+	 * @deprecated Use bboss_blog_page_settings_is_available() instead.
+	 */
+	function bb_blog_page_settings_is_available() {
+		return bboss_blog_page_settings_is_available();
+	}
+}
+if ( function_exists( 'bboss_blog_sanitize_social_links' ) && ! function_exists( 'bb_blog_sanitize_social_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_sanitize_social_links()}.
+	 *
+	 * @deprecated Use bboss_blog_sanitize_social_links() instead.
+	 */
+	function bb_blog_sanitize_social_links( $value ) {
+		return bboss_blog_sanitize_social_links( $value );
+	}
+}
+if ( function_exists( 'bboss_blog_social_link_platforms' ) && ! function_exists( 'bb_blog_social_link_platforms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_social_link_platforms()}.
+	 *
+	 * @deprecated Use bboss_blog_social_link_platforms() instead.
+	 */
+	function bb_blog_social_link_platforms() {
+		return bboss_blog_social_link_platforms();
+	}
+}
+if ( function_exists( 'bboss_blog_sync_platform_option_added' ) && ! function_exists( 'bb_blog_sync_platform_option_added' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_sync_platform_option_added()}.
+	 *
+	 * @deprecated Use bboss_blog_sync_platform_option_added() instead.
+	 */
+	function bb_blog_sync_platform_option_added( $option, $value ) {
+		return bboss_blog_sync_platform_option_added( $option, $value );
+	}
+}
+if ( function_exists( 'bboss_blog_sync_platform_option_to_theme' ) && ! function_exists( 'bb_blog_sync_platform_option_to_theme' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_sync_platform_option_to_theme()}.
+	 *
+	 * @deprecated Use bboss_blog_sync_platform_option_to_theme() instead.
+	 */
+	function bb_blog_sync_platform_option_to_theme( $option, $value ) {
+		return bboss_blog_sync_platform_option_to_theme( $option, $value );
+	}
+}
+if ( function_exists( 'bboss_blog_sync_platform_option_updated' ) && ! function_exists( 'bb_blog_sync_platform_option_updated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_sync_platform_option_updated()}.
+	 *
+	 * @deprecated Use bboss_blog_sync_platform_option_updated() instead.
+	 */
+	function bb_blog_sync_platform_option_updated( $option, $old_value, $value ) {
+		return bboss_blog_sync_platform_option_updated( $option, $old_value, $value );
+	}
+}
+if ( function_exists( 'bboss_blog_sync_theme_options_to_platform' ) && ! function_exists( 'bb_blog_sync_theme_options_to_platform' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_sync_theme_options_to_platform()}.
+	 *
+	 * @deprecated Use bboss_blog_sync_theme_options_to_platform() instead.
+	 */
+	function bb_blog_sync_theme_options_to_platform( $old_value, $value ) {
+		return bboss_blog_sync_theme_options_to_platform( $old_value, $value );
+	}
+}
+if ( function_exists( 'bboss_blog_theme_sync_in_progress' ) && ! function_exists( 'bb_blog_theme_sync_in_progress' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_theme_sync_in_progress()}.
+	 *
+	 * @deprecated Use bboss_blog_theme_sync_in_progress() instead.
+	 */
+	function bb_blog_theme_sync_in_progress( $set = null ) {
+		return bboss_blog_theme_sync_in_progress( $set );
+	}
+}
+if ( function_exists( 'bboss_blog_theme_sync_map' ) && ! function_exists( 'bb_blog_theme_sync_map' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_theme_sync_map()}.
+	 *
+	 * @deprecated Use bboss_blog_theme_sync_map() instead.
+	 */
+	function bb_blog_theme_sync_map() {
+		return bboss_blog_theme_sync_map();
+	}
+}
+// @bbwt-com-end compat-layer

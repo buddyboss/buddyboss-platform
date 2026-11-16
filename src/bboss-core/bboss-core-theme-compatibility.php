@@ -932,3 +932,278 @@ function bboss_check_theme_template_pack_dependency() {
 		return;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_check_theme_template_pack_dependency' ) && ! function_exists( 'bp_check_theme_template_pack_dependency' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_check_theme_template_pack_dependency()}.
+	 *
+	 * @deprecated Use bboss_check_theme_template_pack_dependency() instead.
+	 */
+	function bp_check_theme_template_pack_dependency() {
+		return bboss_check_theme_template_pack_dependency();
+	}
+}
+if ( function_exists( 'bboss_comments_open' ) && ! function_exists( 'bp_comments_open' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_comments_open()}.
+	 *
+	 * @deprecated Use bboss_comments_open() instead.
+	 */
+	function bp_comments_open( $open, $post_id = 0 ) {
+		return bboss_comments_open( $open, $post_id );
+	}
+}
+if ( function_exists( 'bboss_detect_theme_compat_with_current_theme' ) && ! function_exists( 'bp_detect_theme_compat_with_current_theme' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_detect_theme_compat_with_current_theme()}.
+	 *
+	 * @deprecated Use bboss_detect_theme_compat_with_current_theme() instead.
+	 */
+	function bp_detect_theme_compat_with_current_theme() {
+		return bboss_detect_theme_compat_with_current_theme();
+	}
+}
+if ( function_exists( 'bboss_do_theme_compat' ) && ! function_exists( 'bp_do_theme_compat' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_do_theme_compat()}.
+	 *
+	 * @deprecated Use bboss_do_theme_compat() instead.
+	 */
+	function bp_do_theme_compat() {
+		return bboss_do_theme_compat();
+	}
+}
+if ( function_exists( 'bboss_get_theme_compat_dir' ) && ! function_exists( 'bp_get_theme_compat_dir' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_theme_compat_dir()}.
+	 *
+	 * @deprecated Use bboss_get_theme_compat_dir() instead.
+	 */
+	function bp_get_theme_compat_dir() {
+		return bboss_get_theme_compat_dir();
+	}
+}
+if ( function_exists( 'bboss_get_theme_compat_feature' ) && ! function_exists( 'bp_get_theme_compat_feature' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_theme_compat_feature()}.
+	 *
+	 * @deprecated Use bboss_get_theme_compat_feature() instead.
+	 */
+	function bp_get_theme_compat_feature( $feature = '' ) {
+		return bboss_get_theme_compat_feature( $feature );
+	}
+}
+if ( function_exists( 'bboss_get_theme_compat_id' ) && ! function_exists( 'bp_get_theme_compat_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_theme_compat_id()}.
+	 *
+	 * @deprecated Use bboss_get_theme_compat_id() instead.
+	 */
+	function bp_get_theme_compat_id() {
+		return bboss_get_theme_compat_id();
+	}
+}
+if ( function_exists( 'bboss_get_theme_compat_name' ) && ! function_exists( 'bp_get_theme_compat_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_theme_compat_name()}.
+	 *
+	 * @deprecated Use bboss_get_theme_compat_name() instead.
+	 */
+	function bp_get_theme_compat_name() {
+		return bboss_get_theme_compat_name();
+	}
+}
+if ( function_exists( 'bboss_get_theme_compat_url' ) && ! function_exists( 'bp_get_theme_compat_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_theme_compat_url()}.
+	 *
+	 * @deprecated Use bboss_get_theme_compat_url() instead.
+	 */
+	function bp_get_theme_compat_url() {
+		return bboss_get_theme_compat_url();
+	}
+}
+if ( function_exists( 'bboss_get_theme_compat_version' ) && ! function_exists( 'bp_get_theme_compat_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_theme_compat_version()}.
+	 *
+	 * @deprecated Use bboss_get_theme_compat_version() instead.
+	 */
+	function bp_get_theme_compat_version() {
+		return bboss_get_theme_compat_version();
+	}
+}
+if ( function_exists( 'bboss_is_theme_compat_active' ) && ! function_exists( 'bp_is_theme_compat_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_theme_compat_active()}.
+	 *
+	 * @deprecated Use bboss_is_theme_compat_active() instead.
+	 */
+	function bp_is_theme_compat_active() {
+		return bboss_is_theme_compat_active();
+	}
+}
+if ( function_exists( 'bboss_is_theme_compat_original_template' ) && ! function_exists( 'bp_is_theme_compat_original_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_theme_compat_original_template()}.
+	 *
+	 * @deprecated Use bboss_is_theme_compat_original_template() instead.
+	 */
+	function bp_is_theme_compat_original_template( $template = '' ) {
+		return bboss_is_theme_compat_original_template( $template );
+	}
+}
+if ( function_exists( 'bboss_register_theme_package' ) && ! function_exists( 'bp_register_theme_package' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_theme_package()}.
+	 *
+	 * @deprecated Use bboss_register_theme_package() instead.
+	 */
+	function bp_register_theme_package( $theme = array(), $override = true ) {
+		return bboss_register_theme_package( $theme, $override );
+	}
+}
+if ( function_exists( 'bboss_remove_all_filters' ) && ! function_exists( 'bp_remove_all_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_all_filters()}.
+	 *
+	 * @deprecated Use bboss_remove_all_filters() instead.
+	 */
+	function bp_remove_all_filters( $tag, $priority = false ) {
+		return bboss_remove_all_filters( $tag, $priority );
+	}
+}
+if ( function_exists( 'bboss_replace_the_content' ) && ! function_exists( 'bp_replace_the_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_replace_the_content()}.
+	 *
+	 * @deprecated Use bboss_replace_the_content() instead.
+	 */
+	function bp_replace_the_content( $content = '' ) {
+		return bboss_replace_the_content( $content );
+	}
+}
+if ( function_exists( 'bboss_restore_all_filters' ) && ! function_exists( 'bp_restore_all_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_restore_all_filters()}.
+	 *
+	 * @deprecated Use bboss_restore_all_filters() instead.
+	 */
+	function bp_restore_all_filters( $tag, $priority = false ) {
+		return bboss_restore_all_filters( $tag, $priority );
+	}
+}
+if ( function_exists( 'bboss_set_theme_compat_active' ) && ! function_exists( 'bp_set_theme_compat_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_theme_compat_active()}.
+	 *
+	 * @deprecated Use bboss_set_theme_compat_active() instead.
+	 */
+	function bp_set_theme_compat_active( $set = true ) {
+		return bboss_set_theme_compat_active( $set );
+	}
+}
+if ( function_exists( 'bboss_set_theme_compat_feature' ) && ! function_exists( 'bp_set_theme_compat_feature' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_theme_compat_feature()}.
+	 *
+	 * @deprecated Use bboss_set_theme_compat_feature() instead.
+	 */
+	function bp_set_theme_compat_feature( $theme_id, $feature = array() ) {
+		return bboss_set_theme_compat_feature( $theme_id, $feature );
+	}
+}
+if ( function_exists( 'bboss_set_theme_compat_original_template' ) && ! function_exists( 'bp_set_theme_compat_original_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_theme_compat_original_template()}.
+	 *
+	 * @deprecated Use bboss_set_theme_compat_original_template() instead.
+	 */
+	function bp_set_theme_compat_original_template( $template = '' ) {
+		return bboss_set_theme_compat_original_template( $template );
+	}
+}
+if ( function_exists( 'bboss_set_theme_compat_template' ) && ! function_exists( 'bp_set_theme_compat_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_theme_compat_template()}.
+	 *
+	 * @deprecated Use bboss_set_theme_compat_template() instead.
+	 */
+	function bp_set_theme_compat_template( $template = '' ) {
+		return bboss_set_theme_compat_template( $template );
+	}
+}
+if ( function_exists( 'bboss_set_theme_compat_templates' ) && ! function_exists( 'bp_set_theme_compat_templates' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_theme_compat_templates()}.
+	 *
+	 * @deprecated Use bboss_set_theme_compat_templates() instead.
+	 */
+	function bp_set_theme_compat_templates( $templates = array() ) {
+		return bboss_set_theme_compat_templates( $templates );
+	}
+}
+if ( function_exists( 'bboss_setup_theme_compat' ) && ! function_exists( 'bp_setup_theme_compat' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_setup_theme_compat()}.
+	 *
+	 * @deprecated Use bboss_setup_theme_compat() instead.
+	 */
+	function bp_setup_theme_compat( $theme = '' ) {
+		return bboss_setup_theme_compat( $theme );
+	}
+}
+if ( function_exists( 'bboss_template_include_theme_compat' ) && ! function_exists( 'bp_template_include_theme_compat' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_template_include_theme_compat()}.
+	 *
+	 * @deprecated Use bboss_template_include_theme_compat() instead.
+	 */
+	function bp_template_include_theme_compat( $template = '' ) {
+		return bboss_template_include_theme_compat( $template );
+	}
+}
+if ( function_exists( 'bboss_theme_compat_loop_end' ) && ! function_exists( 'bp_theme_compat_loop_end' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_theme_compat_loop_end()}.
+	 *
+	 * @deprecated Use bboss_theme_compat_loop_end() instead.
+	 */
+	function bp_theme_compat_loop_end( $query ) {
+		return bboss_theme_compat_loop_end( $query );
+	}
+}
+if ( function_exists( 'bboss_theme_compat_reset_post' ) && ! function_exists( 'bp_theme_compat_reset_post' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_theme_compat_reset_post()}.
+	 *
+	 * @deprecated Use bboss_theme_compat_reset_post() instead.
+	 */
+	function bp_theme_compat_reset_post( $args = array() ) {
+		return bboss_theme_compat_reset_post( $args );
+	}
+}
+if ( function_exists( 'bboss_theme_compat_toggle_is_page' ) && ! function_exists( 'bp_theme_compat_toggle_is_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_theme_compat_toggle_is_page()}.
+	 *
+	 * @deprecated Use bboss_theme_compat_toggle_is_page() instead.
+	 */
+	function bp_theme_compat_toggle_is_page( $retval = '' ) {
+		return bboss_theme_compat_toggle_is_page( $retval );
+	}
+}
+if ( function_exists( 'bboss_use_theme_compat_with_current_theme' ) && ! function_exists( 'bp_use_theme_compat_with_current_theme' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_use_theme_compat_with_current_theme()}.
+	 *
+	 * @deprecated Use bboss_use_theme_compat_with_current_theme() instead.
+	 */
+	function bp_use_theme_compat_with_current_theme() {
+		return bboss_use_theme_compat_with_current_theme();
+	}
+}
+// @bbwt-com-end compat-layer

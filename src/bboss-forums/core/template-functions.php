@@ -760,3 +760,148 @@ function bboss_bbp_parse_query( $posts_query ) {
 		$posts_query->set( 'posts_per_page', bboss_bbp_get_topics_per_page() );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_add_template_stack_locations' ) && ! function_exists( 'bbp_add_template_stack_locations' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_add_template_stack_locations()}.
+	 *
+	 * @deprecated Use bboss_bbp_add_template_stack_locations() instead.
+	 */
+	function bbp_add_template_stack_locations( $stacks = array() ) {
+		return bboss_bbp_add_template_stack_locations( $stacks );
+	}
+}
+if ( function_exists( 'bboss_bbp_buffer_template_part' ) && ! function_exists( 'bbp_buffer_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_buffer_template_part()}.
+	 *
+	 * @deprecated Use bboss_bbp_buffer_template_part() instead.
+	 */
+	function bbp_buffer_template_part( $slug, $name = null, $echo = true ) {
+		return bboss_bbp_buffer_template_part( $slug, $name, $echo );
+	}
+}
+if ( function_exists( 'bboss_bbp_deregister_template_stack' ) && ! function_exists( 'bbp_deregister_template_stack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_deregister_template_stack()}.
+	 *
+	 * @deprecated Use bboss_bbp_deregister_template_stack() instead.
+	 */
+	function bbp_deregister_template_stack( $location_callback = '', $priority = 10 ) {
+		return bboss_bbp_deregister_template_stack( $location_callback, $priority );
+	}
+}
+if ( function_exists( 'bboss_bbp_enqueue_script' ) && ! function_exists( 'bbp_enqueue_script' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_enqueue_script()}.
+	 *
+	 * @deprecated Use bboss_bbp_enqueue_script() instead.
+	 */
+	function bbp_enqueue_script( $handle = '', $file = '', $deps = array(), $ver = false, $in_footer = 'all' ) {
+		return bboss_bbp_enqueue_script( $handle, $file, $deps, $ver, $in_footer );
+	}
+}
+if ( function_exists( 'bboss_bbp_enqueue_style' ) && ! function_exists( 'bbp_enqueue_style' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_enqueue_style()}.
+	 *
+	 * @deprecated Use bboss_bbp_enqueue_style() instead.
+	 */
+	function bbp_enqueue_style( $handle = '', $file = '', $deps = array(), $ver = false, $media = 'all' ) {
+		return bboss_bbp_enqueue_style( $handle, $file, $deps, $ver, $media );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_query_template' ) && ! function_exists( 'bbp_get_query_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_query_template()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_query_template() instead.
+	 */
+	function bbp_get_query_template( $type, $templates = array() ) {
+		return bboss_bbp_get_query_template( $type, $templates );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_template_locations' ) && ! function_exists( 'bbp_get_template_locations' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_template_locations()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_template_locations() instead.
+	 */
+	function bbp_get_template_locations( $templates = array() ) {
+		return bboss_bbp_get_template_locations( $templates );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_template_part' ) && ! function_exists( 'bbp_get_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_template_part()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_template_part() instead.
+	 */
+	function bbp_get_template_part( $slug, $name = null ) {
+		return bboss_bbp_get_template_part( $slug, $name );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_template_stack' ) && ! function_exists( 'bbp_get_template_stack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_template_stack()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_template_stack() instead.
+	 */
+	function bbp_get_template_stack() {
+		return bboss_bbp_get_template_stack();
+	}
+}
+if ( function_exists( 'bboss_bbp_locate_enqueueable' ) && ! function_exists( 'bbp_locate_enqueueable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_locate_enqueueable()}.
+	 *
+	 * @deprecated Use bboss_bbp_locate_enqueueable() instead.
+	 */
+	function bbp_locate_enqueueable( $file = '' ) {
+		return bboss_bbp_locate_enqueueable( $file );
+	}
+}
+if ( function_exists( 'bboss_bbp_locate_template' ) && ! function_exists( 'bbp_locate_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_locate_template()}.
+	 *
+	 * @deprecated Use bboss_bbp_locate_template() instead.
+	 */
+	function bbp_locate_template( $template_names, $load = false, $require_once = true ) {
+		return bboss_bbp_locate_template( $template_names, $load, $require_once );
+	}
+}
+if ( function_exists( 'bboss_bbp_parse_query' ) && ! function_exists( 'bbp_parse_query' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_parse_query()}.
+	 *
+	 * @deprecated Use bboss_bbp_parse_query() instead.
+	 */
+	function bbp_parse_query( $posts_query ) {
+		return bboss_bbp_parse_query( $posts_query );
+	}
+}
+if ( function_exists( 'bboss_bbp_register_template_stack' ) && ! function_exists( 'bbp_register_template_stack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_register_template_stack()}.
+	 *
+	 * @deprecated Use bboss_bbp_register_template_stack() instead.
+	 */
+	function bbp_register_template_stack( $location_callback = '', $priority = 10 ) {
+		return bboss_bbp_register_template_stack( $location_callback, $priority );
+	}
+}
+if ( function_exists( 'bboss_bbp_urlize_enqueueable' ) && ! function_exists( 'bbp_urlize_enqueueable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_urlize_enqueueable()}.
+	 *
+	 * @deprecated Use bboss_bbp_urlize_enqueueable() instead.
+	 */
+	function bbp_urlize_enqueueable( $file = '' ) {
+		return bboss_bbp_urlize_enqueueable( $file );
+	}
+}
+// @bbwt-com-end compat-layer

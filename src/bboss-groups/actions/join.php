@@ -60,3 +60,18 @@ function bboss_groups_action_join_group() {
 	bboss_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
 }
 add_action( 'bp_actions', 'groups_action_join_group' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_action_join_group' ) && ! function_exists( 'groups_action_join_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_action_join_group()}.
+	 *
+	 * @deprecated Use bboss_groups_action_join_group() instead.
+	 */
+	function groups_action_join_group() {
+		return bboss_groups_action_join_group();
+	}
+}
+// @bbwt-com-end compat-layer

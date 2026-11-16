@@ -124,3 +124,58 @@ function bboss_invitation_add_invitemeta( $invite_id, $meta_key, $meta_value, $u
 
 	return $retval;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invite_setup_globals' ) && ! function_exists( 'bb_invite_setup_globals' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invite_setup_globals()}.
+	 *
+	 * @deprecated Use bboss_invite_setup_globals() instead.
+	 */
+	function bb_invite_setup_globals() {
+		return bboss_invite_setup_globals();
+	}
+}
+if ( function_exists( 'bboss_invitation_add_invitemeta' ) && ! function_exists( 'invitation_add_invitemeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invitation_add_invitemeta()}.
+	 *
+	 * @deprecated Use bboss_invitation_add_invitemeta() instead.
+	 */
+	function invitation_add_invitemeta( $invite_id, $meta_key, $meta_value, $unique = false ) {
+		return bboss_invitation_add_invitemeta( $invite_id, $meta_key, $meta_value, $unique );
+	}
+}
+if ( function_exists( 'bboss_invitation_delete_invitemeta' ) && ! function_exists( 'invitation_delete_invitemeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invitation_delete_invitemeta()}.
+	 *
+	 * @deprecated Use bboss_invitation_delete_invitemeta() instead.
+	 */
+	function invitation_delete_invitemeta( $invite_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
+		return bboss_invitation_delete_invitemeta( $invite_id, $meta_key, $meta_value, $delete_all );
+	}
+}
+if ( function_exists( 'bboss_invitation_get_invitemeta' ) && ! function_exists( 'invitation_get_invitemeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invitation_get_invitemeta()}.
+	 *
+	 * @deprecated Use bboss_invitation_get_invitemeta() instead.
+	 */
+	function invitation_get_invitemeta( $invite_id, $meta_key = '', $single = true ) {
+		return bboss_invitation_get_invitemeta( $invite_id, $meta_key, $single );
+	}
+}
+if ( function_exists( 'bboss_invitation_update_invitemeta' ) && ! function_exists( 'invitation_update_invitemeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invitation_update_invitemeta()}.
+	 *
+	 * @deprecated Use bboss_invitation_update_invitemeta() instead.
+	 */
+	function invitation_update_invitemeta( $invite_id, $meta_key, $meta_value, $prev_value = '' ) {
+		return bboss_invitation_update_invitemeta( $invite_id, $meta_key, $meta_value, $prev_value );
+	}
+}
+// @bbwt-com-end compat-layer

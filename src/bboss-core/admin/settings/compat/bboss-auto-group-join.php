@@ -570,3 +570,108 @@ function bboss_legacy_bpagj_dispatch_existing_users_enrollment( $group_id, $grou
 	}
 }
 add_action( 'bb_admin_after_save_group', 'bb_legacy_bpagj_dispatch_existing_users_enrollment', 50, 2 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_bpagj_dispatch_existing_users_enrollment' ) && ! function_exists( 'bb_legacy_bpagj_dispatch_existing_users_enrollment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_bpagj_dispatch_existing_users_enrollment()}.
+	 *
+	 * @deprecated Use bboss_legacy_bpagj_dispatch_existing_users_enrollment() instead.
+	 */
+	function bb_legacy_bpagj_dispatch_existing_users_enrollment( $group_id, $group ) {
+		return bboss_legacy_bpagj_dispatch_existing_users_enrollment( $group_id, $group );
+	}
+}
+if ( function_exists( 'bboss_legacy_bpagj_member_type_options' ) && ! function_exists( 'bb_legacy_bpagj_member_type_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_bpagj_member_type_options()}.
+	 *
+	 * @deprecated Use bboss_legacy_bpagj_member_type_options() instead.
+	 */
+	function bb_legacy_bpagj_member_type_options() {
+		return bboss_legacy_bpagj_member_type_options();
+	}
+}
+if ( function_exists( 'bboss_legacy_bpagj_member_types' ) && ! function_exists( 'bb_legacy_bpagj_member_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_bpagj_member_types()}.
+	 *
+	 * @deprecated Use bboss_legacy_bpagj_member_types() instead.
+	 */
+	function bb_legacy_bpagj_member_types() {
+		return bboss_legacy_bpagj_member_types();
+	}
+}
+if ( function_exists( 'bboss_legacy_bpagj_member_types_enabled' ) && ! function_exists( 'bb_legacy_bpagj_member_types_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_bpagj_member_types_enabled()}.
+	 *
+	 * @deprecated Use bboss_legacy_bpagj_member_types_enabled() instead.
+	 */
+	function bb_legacy_bpagj_member_types_enabled() {
+		return bboss_legacy_bpagj_member_types_enabled();
+	}
+}
+if ( function_exists( 'bboss_legacy_bpagj_meta_to_toggle_list' ) && ! function_exists( 'bb_legacy_bpagj_meta_to_toggle_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_bpagj_meta_to_toggle_list()}.
+	 *
+	 * @deprecated Use bboss_legacy_bpagj_meta_to_toggle_list() instead.
+	 */
+	function bb_legacy_bpagj_meta_to_toggle_list( $stored ) {
+		return bboss_legacy_bpagj_meta_to_toggle_list( $stored );
+	}
+}
+if ( function_exists( 'bboss_legacy_bpagj_register_fields' ) && ! function_exists( 'bb_legacy_bpagj_register_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_bpagj_register_fields()}.
+	 *
+	 * @deprecated Use bboss_legacy_bpagj_register_fields() instead.
+	 */
+	function bb_legacy_bpagj_register_fields( $registry, $component ) {
+		return bboss_legacy_bpagj_register_fields( $registry, $component );
+	}
+}
+if ( function_exists( 'bboss_legacy_bpagj_sanitize_member_types' ) && ! function_exists( 'bb_legacy_bpagj_sanitize_member_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_bpagj_sanitize_member_types()}.
+	 *
+	 * @deprecated Use bboss_legacy_bpagj_sanitize_member_types() instead.
+	 */
+	function bb_legacy_bpagj_sanitize_member_types( $raw ) {
+		return bboss_legacy_bpagj_sanitize_member_types( $raw );
+	}
+}
+if ( function_exists( 'bboss_legacy_bpagj_sanitize_policy' ) && ! function_exists( 'bb_legacy_bpagj_sanitize_policy' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_bpagj_sanitize_policy()}.
+	 *
+	 * @deprecated Use bboss_legacy_bpagj_sanitize_policy() instead.
+	 */
+	function bb_legacy_bpagj_sanitize_policy( $raw ) {
+		return bboss_legacy_bpagj_sanitize_policy( $raw );
+	}
+}
+if ( function_exists( 'bboss_legacy_bpagj_skip_auto_bridge' ) && ! function_exists( 'bb_legacy_bpagj_skip_auto_bridge' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_bpagj_skip_auto_bridge()}.
+	 *
+	 * @deprecated Use bboss_legacy_bpagj_skip_auto_bridge() instead.
+	 */
+	function bb_legacy_bpagj_skip_auto_bridge( $skip ) {
+		return bboss_legacy_bpagj_skip_auto_bridge( $skip );
+	}
+}
+if ( function_exists( 'bboss_legacy_bpagj_toggle_list_to_meta' ) && ! function_exists( 'bb_legacy_bpagj_toggle_list_to_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_bpagj_toggle_list_to_meta()}.
+	 *
+	 * @deprecated Use bboss_legacy_bpagj_toggle_list_to_meta() instead.
+	 */
+	function bb_legacy_bpagj_toggle_list_to_meta( $raw ) {
+		return bboss_legacy_bpagj_toggle_list_to_meta( $raw );
+	}
+}
+// @bbwt-com-end compat-layer

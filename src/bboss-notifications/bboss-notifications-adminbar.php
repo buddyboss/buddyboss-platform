@@ -95,3 +95,18 @@ function bboss_notifications_toolbar_menu() {
 
 }
 add_action( 'admin_bar_menu', 'bp_members_admin_bar_notifications_menu', 90 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_toolbar_menu' ) && ! function_exists( 'bp_notifications_toolbar_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_toolbar_menu()}.
+	 *
+	 * @deprecated Use bboss_notifications_toolbar_menu() instead.
+	 */
+	function bp_notifications_toolbar_menu() {
+		return bboss_notifications_toolbar_menu();
+	}
+}
+// @bbwt-com-end compat-layer

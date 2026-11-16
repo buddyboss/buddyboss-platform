@@ -83,3 +83,18 @@ function bboss_settings_action_capabilities() {
 	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/capabilities/' );
 }
 add_action( 'bp_actions', 'bp_settings_action_capabilities' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_action_capabilities' ) && ! function_exists( 'bp_settings_action_capabilities' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_action_capabilities()}.
+	 *
+	 * @deprecated Use bboss_settings_action_capabilities() instead.
+	 */
+	function bp_settings_action_capabilities() {
+		return bboss_settings_action_capabilities();
+	}
+}
+// @bbwt-com-end compat-layer

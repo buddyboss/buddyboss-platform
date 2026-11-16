@@ -226,3 +226,58 @@ function bboss_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 remove_action( 'admin_bar_menu', 'wp_admin_bar_my_account_menu', 0 );
 // User related, aligned right.
 add_action( 'admin_bar_menu', 'bp_wp_admin_bar_my_account_menu', 99999999 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_bar_my_account_root' ) && ! function_exists( 'bp_admin_bar_my_account_root' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_bar_my_account_root()}.
+	 *
+	 * @deprecated Use bboss_admin_bar_my_account_root() instead.
+	 */
+	function bp_admin_bar_my_account_root() {
+		return bboss_admin_bar_my_account_root();
+	}
+}
+if ( function_exists( 'bboss_core_enqueue_admin_bar_css' ) && ! function_exists( 'bp_core_enqueue_admin_bar_css' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_enqueue_admin_bar_css()}.
+	 *
+	 * @deprecated Use bboss_core_enqueue_admin_bar_css() instead.
+	 */
+	function bp_core_enqueue_admin_bar_css() {
+		return bboss_core_enqueue_admin_bar_css();
+	}
+}
+if ( function_exists( 'bboss_core_load_admin_bar' ) && ! function_exists( 'bp_core_load_admin_bar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_load_admin_bar()}.
+	 *
+	 * @deprecated Use bboss_core_load_admin_bar() instead.
+	 */
+	function bp_core_load_admin_bar() {
+		return bboss_core_load_admin_bar();
+	}
+}
+if ( function_exists( 'bboss_core_load_admin_bar_css' ) && ! function_exists( 'bp_core_load_admin_bar_css' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_load_admin_bar_css()}.
+	 *
+	 * @deprecated Use bboss_core_load_admin_bar_css() instead.
+	 */
+	function bp_core_load_admin_bar_css() {
+		return bboss_core_load_admin_bar_css();
+	}
+}
+if ( function_exists( 'bboss_wp_admin_bar_my_account_menu' ) && ! function_exists( 'bp_wp_admin_bar_my_account_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_wp_admin_bar_my_account_menu()}.
+	 *
+	 * @deprecated Use bboss_wp_admin_bar_my_account_menu() instead.
+	 */
+	function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
+		return bboss_wp_admin_bar_my_account_menu( $wp_admin_bar );
+	}
+}
+// @bbwt-com-end compat-layer

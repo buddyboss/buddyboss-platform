@@ -296,3 +296,98 @@ function bboss_recaptcha_activate_form() {
 function bboss_recaptcha_add_scripts_login_footer() {
 	wp_enqueue_script( 'bb-recaptcha' );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_activate_form' ) && ! function_exists( 'bb_recaptcha_activate_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_activate_form()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_activate_form() instead.
+	 */
+	function bb_recaptcha_activate_form() {
+		return bboss_recaptcha_activate_form();
+	}
+}
+if ( function_exists( 'bboss_recaptcha_add_scripts_login_footer' ) && ! function_exists( 'bb_recaptcha_add_scripts_login_footer' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_add_scripts_login_footer()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_add_scripts_login_footer() instead.
+	 */
+	function bb_recaptcha_add_scripts_login_footer() {
+		return bboss_recaptcha_add_scripts_login_footer();
+	}
+}
+if ( function_exists( 'bboss_recaptcha_login' ) && ! function_exists( 'bb_recaptcha_login' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_login()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_login() instead.
+	 */
+	function bb_recaptcha_login() {
+		return bboss_recaptcha_login();
+	}
+}
+if ( function_exists( 'bboss_recaptcha_lost_password' ) && ! function_exists( 'bb_recaptcha_lost_password' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_lost_password()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_lost_password() instead.
+	 */
+	function bb_recaptcha_lost_password() {
+		return bboss_recaptcha_lost_password();
+	}
+}
+if ( function_exists( 'bboss_recaptcha_registration' ) && ! function_exists( 'bb_recaptcha_registration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_registration()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_registration() instead.
+	 */
+	function bb_recaptcha_registration() {
+		return bboss_recaptcha_registration();
+	}
+}
+if ( function_exists( 'bboss_recaptcha_validate_lost_password' ) && ! function_exists( 'bb_recaptcha_validate_lost_password' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_validate_lost_password()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_validate_lost_password() instead.
+	 */
+	function bb_recaptcha_validate_lost_password( $errors, $user_data = false ) {
+		return bboss_recaptcha_validate_lost_password( $errors, $user_data );
+	}
+}
+if ( function_exists( 'bboss_recaptcha_validate_registration' ) && ! function_exists( 'bb_recaptcha_validate_registration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_validate_registration()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_validate_registration() instead.
+	 */
+	function bb_recaptcha_validate_registration() {
+		return bboss_recaptcha_validate_registration();
+	}
+}
+if ( function_exists( 'bboss_recaptcha_verification_admin_settings' ) && ! function_exists( 'bb_recaptcha_verification_admin_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_verification_admin_settings()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_verification_admin_settings() instead.
+	 */
+	function bb_recaptcha_verification_admin_settings() {
+		return bboss_recaptcha_verification_admin_settings();
+	}
+}
+if ( function_exists( 'bboss_recaptcha_wp_login_form' ) && ! function_exists( 'bb_recaptcha_wp_login_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_wp_login_form()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_wp_login_form() instead.
+	 */
+	function bb_recaptcha_wp_login_form( $content ) {
+		return bboss_recaptcha_wp_login_form( $content );
+	}
+}
+// @bbwt-com-end compat-layer

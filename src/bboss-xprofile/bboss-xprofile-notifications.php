@@ -54,3 +54,18 @@ function bboss_xprofile_format_notifications( $action, $item_id, $secondary_item
 
 	return false;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_format_notifications' ) && ! function_exists( 'xprofile_format_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_format_notifications()}.
+	 *
+	 * @deprecated Use bboss_xprofile_format_notifications() instead.
+	 */
+	function xprofile_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
+		return bboss_xprofile_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format );
+	}
+}
+// @bbwt-com-end compat-layer

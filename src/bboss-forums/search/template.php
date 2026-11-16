@@ -507,3 +507,168 @@ function bboss_bbp_get_search_pagination_links() {
 
 	return apply_filters( 'bbp_get_search_pagination_links', $bbp->search_query->pagination_links );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_search_pagination_base' ) && ! function_exists( 'bbp_get_search_pagination_base' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_search_pagination_base()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_search_pagination_base() instead.
+	 */
+	function bbp_get_search_pagination_base() {
+		return bboss_bbp_get_search_pagination_base();
+	}
+}
+if ( function_exists( 'bboss_bbp_get_search_pagination_count' ) && ! function_exists( 'bbp_get_search_pagination_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_search_pagination_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_search_pagination_count() instead.
+	 */
+	function bbp_get_search_pagination_count() {
+		return bboss_bbp_get_search_pagination_count();
+	}
+}
+if ( function_exists( 'bboss_bbp_get_search_pagination_links' ) && ! function_exists( 'bbp_get_search_pagination_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_search_pagination_links()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_search_pagination_links() instead.
+	 */
+	function bbp_get_search_pagination_links() {
+		return bboss_bbp_get_search_pagination_links();
+	}
+}
+if ( function_exists( 'bboss_bbp_get_search_results_url' ) && ! function_exists( 'bbp_get_search_results_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_search_results_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_search_results_url() instead.
+	 */
+	function bbp_get_search_results_url() {
+		return bboss_bbp_get_search_results_url();
+	}
+}
+if ( function_exists( 'bboss_bbp_get_search_terms' ) && ! function_exists( 'bbp_get_search_terms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_search_terms()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_search_terms() instead.
+	 */
+	function bbp_get_search_terms( $passed_terms = '' ) {
+		return bboss_bbp_get_search_terms( $passed_terms );
+	}
+}
+if ( function_exists( 'bboss_bbp_get_search_title' ) && ! function_exists( 'bbp_get_search_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_search_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_search_title() instead.
+	 */
+	function bbp_get_search_title() {
+		return bboss_bbp_get_search_title();
+	}
+}
+if ( function_exists( 'bboss_bbp_get_search_url' ) && ! function_exists( 'bbp_get_search_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_search_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_search_url() instead.
+	 */
+	function bbp_get_search_url( $default = true ) {
+		return bboss_bbp_get_search_url( $default );
+	}
+}
+if ( function_exists( 'bboss_bbp_has_search_results' ) && ! function_exists( 'bbp_has_search_results' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_has_search_results()}.
+	 *
+	 * @deprecated Use bboss_bbp_has_search_results() instead.
+	 */
+	function bbp_has_search_results( $args = '' ) {
+		return bboss_bbp_has_search_results( $args );
+	}
+}
+if ( function_exists( 'bboss_bbp_search_pagination_count' ) && ! function_exists( 'bbp_search_pagination_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_search_pagination_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_search_pagination_count() instead.
+	 */
+	function bbp_search_pagination_count() {
+		return bboss_bbp_search_pagination_count();
+	}
+}
+if ( function_exists( 'bboss_bbp_search_pagination_links' ) && ! function_exists( 'bbp_search_pagination_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_search_pagination_links()}.
+	 *
+	 * @deprecated Use bboss_bbp_search_pagination_links() instead.
+	 */
+	function bbp_search_pagination_links() {
+		return bboss_bbp_search_pagination_links();
+	}
+}
+if ( function_exists( 'bboss_bbp_search_results' ) && ! function_exists( 'bbp_search_results' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_search_results()}.
+	 *
+	 * @deprecated Use bboss_bbp_search_results() instead.
+	 */
+	function bbp_search_results() {
+		return bboss_bbp_search_results();
+	}
+}
+if ( function_exists( 'bboss_bbp_search_results_url' ) && ! function_exists( 'bbp_search_results_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_search_results_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_search_results_url() instead.
+	 */
+	function bbp_search_results_url() {
+		return bboss_bbp_search_results_url();
+	}
+}
+if ( function_exists( 'bboss_bbp_search_terms' ) && ! function_exists( 'bbp_search_terms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_search_terms()}.
+	 *
+	 * @deprecated Use bboss_bbp_search_terms() instead.
+	 */
+	function bbp_search_terms( $search_terms = '' ) {
+		return bboss_bbp_search_terms( $search_terms );
+	}
+}
+if ( function_exists( 'bboss_bbp_search_title' ) && ! function_exists( 'bbp_search_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_search_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_search_title() instead.
+	 */
+	function bbp_search_title() {
+		return bboss_bbp_search_title();
+	}
+}
+if ( function_exists( 'bboss_bbp_search_url' ) && ! function_exists( 'bbp_search_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_search_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_search_url() instead.
+	 */
+	function bbp_search_url() {
+		return bboss_bbp_search_url();
+	}
+}
+if ( function_exists( 'bboss_bbp_the_search_result' ) && ! function_exists( 'bbp_the_search_result' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_the_search_result()}.
+	 *
+	 * @deprecated Use bboss_bbp_the_search_result() instead.
+	 */
+	function bbp_the_search_result() {
+		return bboss_bbp_the_search_result();
+	}
+}
+// @bbwt-com-end compat-layer

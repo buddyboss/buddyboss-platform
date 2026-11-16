@@ -11,6 +11,35 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
+// pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
+if ( function_exists( 'bb_is_allowed_endpoint_mu_cache' ) && ! function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) ) {
+	// Pluggable: bb_is_allowed_endpoint_mu_cache() was defined first (bp-custom.php, a plugin); bboss_is_allowed_endpoint_mu_cache() delegates to it.
+	function bboss_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) {
+		return bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url );
+	}
+}
+if ( function_exists( 'bb_restricate_rest_api_mu_cache' ) && ! function_exists( 'bboss_restricate_rest_api_mu_cache' ) ) {
+	// Pluggable: bb_restricate_rest_api_mu_cache() was defined first (bp-custom.php, a plugin); bboss_restricate_rest_api_mu_cache() delegates to it.
+	function bboss_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints ) {
+		return bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );
+	}
+}
+if ( function_exists( 'bp_performance_loaded' ) && ! function_exists( 'bboss_performance_loaded' ) ) {
+	// Pluggable: bp_performance_loaded() was defined first (bp-custom.php, a plugin); bboss_performance_loaded() delegates to it.
+	function bboss_performance_loaded() {
+		return bp_performance_loaded();
+	}
+}
+if ( function_exists( 'rest_post_dispatch_cache_callback' ) && ! function_exists( 'bboss_rest_post_dispatch_cache_callback' ) ) {
+	// Pluggable: rest_post_dispatch_cache_callback() was defined first (bp-custom.php, a plugin); bboss_rest_post_dispatch_cache_callback() delegates to it.
+	function bboss_rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint ) {
+		return rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint );
+	}
+}
+// @bbwt-com-end compat-layer
+
 if ( ! function_exists( 'bboss_performance_loaded' ) ) {
 	/**
 	 * Load Performance instance.
@@ -185,11 +214,11 @@ if ( ! function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) ) {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
 if ( function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) && ! function_exists( 'bb_is_allowed_endpoint_mu_cache' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_is_allowed_endpoint_mu_cache()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_is_allowed_endpoint_mu_cache()}.
 	 *
 	 * @deprecated Use bboss_is_allowed_endpoint_mu_cache() instead.
 	 */
@@ -199,7 +228,7 @@ if ( function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) && ! function_exist
 }
 if ( function_exists( 'bboss_restricate_rest_api_mu_cache' ) && ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_restricate_rest_api_mu_cache()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_restricate_rest_api_mu_cache()}.
 	 *
 	 * @deprecated Use bboss_restricate_rest_api_mu_cache() instead.
 	 */
@@ -207,9 +236,19 @@ if ( function_exists( 'bboss_restricate_rest_api_mu_cache' ) && ! function_exist
 		return bboss_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );
 	}
 }
+if ( function_exists( 'bboss_performance_loaded' ) && ! function_exists( 'bp_performance_loaded' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_performance_loaded()}.
+	 *
+	 * @deprecated Use bboss_performance_loaded() instead.
+	 */
+	function bp_performance_loaded() {
+		return bboss_performance_loaded();
+	}
+}
 if ( function_exists( 'bboss_rest_post_dispatch_cache_callback' ) && ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_rest_post_dispatch_cache_callback()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_rest_post_dispatch_cache_callback()}.
 	 *
 	 * @deprecated Use bboss_rest_post_dispatch_cache_callback() instead.
 	 */

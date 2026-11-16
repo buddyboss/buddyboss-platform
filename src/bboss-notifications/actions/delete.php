@@ -44,3 +44,18 @@ function bboss_notifications_action_delete() {
 	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_notifications_slug() . '/' . bboss_current_action() . '/' );
 }
 add_action( 'bp_actions', 'bp_notifications_action_delete' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_action_delete' ) && ! function_exists( 'bp_notifications_action_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_action_delete()}.
+	 *
+	 * @deprecated Use bboss_notifications_action_delete() instead.
+	 */
+	function bp_notifications_action_delete() {
+		return bboss_notifications_action_delete();
+	}
+}
+// @bbwt-com-end compat-layer

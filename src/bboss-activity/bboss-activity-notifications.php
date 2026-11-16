@@ -719,3 +719,128 @@ function bboss_activity_follow_withdraw_notifications( $follower ) {
 	);
 }
 add_action( 'bp_stop_following', 'bb_activity_follow_withdraw_notifications', 10, 1 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_add_notification_metas' ) && ! function_exists( 'bb_activity_add_notification_metas' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_add_notification_metas()}.
+	 *
+	 * @deprecated Use bboss_activity_add_notification_metas() instead.
+	 */
+	function bb_activity_add_notification_metas( $notification ) {
+		return bboss_activity_add_notification_metas( $notification );
+	}
+}
+if ( function_exists( 'bboss_activity_follow_withdraw_notifications' ) && ! function_exists( 'bb_activity_follow_withdraw_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_follow_withdraw_notifications()}.
+	 *
+	 * @deprecated Use bboss_activity_follow_withdraw_notifications() instead.
+	 */
+	function bb_activity_follow_withdraw_notifications( $follower ) {
+		return bboss_activity_follow_withdraw_notifications( $follower );
+	}
+}
+if ( function_exists( 'bboss_activity_add_notification_for_synced_blog_comment' ) && ! function_exists( 'bp_activity_add_notification_for_synced_blog_comment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_add_notification_for_synced_blog_comment()}.
+	 *
+	 * @deprecated Use bboss_activity_add_notification_for_synced_blog_comment() instead.
+	 */
+	function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $post_type_comment, $activity_args, $activity_post_object ) {
+		return bboss_activity_add_notification_for_synced_blog_comment( $activity_id, $post_type_comment, $activity_args, $activity_post_object );
+	}
+}
+if ( function_exists( 'bboss_activity_at_mention_add_notification' ) && ! function_exists( 'bp_activity_at_mention_add_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_at_mention_add_notification()}.
+	 *
+	 * @deprecated Use bboss_activity_at_mention_add_notification() instead.
+	 */
+	function bp_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id ) {
+		return bboss_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id );
+	}
+}
+if ( function_exists( 'bboss_activity_at_mention_delete_notification' ) && ! function_exists( 'bp_activity_at_mention_delete_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_at_mention_delete_notification()}.
+	 *
+	 * @deprecated Use bboss_activity_at_mention_delete_notification() instead.
+	 */
+	function bp_activity_at_mention_delete_notification( $activity_ids_deleted = array() ) {
+		return bboss_activity_at_mention_delete_notification( $activity_ids_deleted );
+	}
+}
+if ( function_exists( 'bboss_activity_comment_reply_add_notification' ) && ! function_exists( 'bp_activity_comment_reply_add_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_comment_reply_add_notification()}.
+	 *
+	 * @deprecated Use bboss_activity_comment_reply_add_notification() instead.
+	 */
+	function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id, $params ) {
+		return bboss_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id, $params );
+	}
+}
+if ( function_exists( 'bboss_activity_format_notifications' ) && ! function_exists( 'bp_activity_format_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_format_notifications()}.
+	 *
+	 * @deprecated Use bboss_activity_format_notifications() instead.
+	 */
+	function bp_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $id = 0, $screen = 'web' ) {
+		return bboss_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format, $id, $screen );
+	}
+}
+if ( function_exists( 'bboss_activity_remove_screen_notifications' ) && ! function_exists( 'bp_activity_remove_screen_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications()}.
+	 *
+	 * @deprecated Use bboss_activity_remove_screen_notifications() instead.
+	 */
+	function bp_activity_remove_screen_notifications( $user_id = 0 ) {
+		return bboss_activity_remove_screen_notifications( $user_id );
+	}
+}
+if ( function_exists( 'bboss_activity_remove_screen_notifications_for_non_mentions' ) && ! function_exists( 'bp_activity_remove_screen_notifications_for_non_mentions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications_for_non_mentions()}.
+	 *
+	 * @deprecated Use bboss_activity_remove_screen_notifications_for_non_mentions() instead.
+	 */
+	function bp_activity_remove_screen_notifications_for_non_mentions() {
+		return bboss_activity_remove_screen_notifications_for_non_mentions();
+	}
+}
+if ( function_exists( 'bboss_activity_remove_screen_notifications_single_activity_permalink' ) && ! function_exists( 'bp_activity_remove_screen_notifications_single_activity_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications_single_activity_permalink()}.
+	 *
+	 * @deprecated Use bboss_activity_remove_screen_notifications_single_activity_permalink() instead.
+	 */
+	function bp_activity_remove_screen_notifications_single_activity_permalink( $activity ) {
+		return bboss_activity_remove_screen_notifications_single_activity_permalink( $activity );
+	}
+}
+if ( function_exists( 'bboss_activity_remove_screen_notifications_single_post' ) && ! function_exists( 'bp_activity_remove_screen_notifications_single_post' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications_single_post()}.
+	 *
+	 * @deprecated Use bboss_activity_remove_screen_notifications_single_post() instead.
+	 */
+	function bp_activity_remove_screen_notifications_single_post() {
+		return bboss_activity_remove_screen_notifications_single_post();
+	}
+}
+if ( function_exists( 'bboss_activity_update_reply_add_notification' ) && ! function_exists( 'bp_activity_update_reply_add_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_update_reply_add_notification()}.
+	 *
+	 * @deprecated Use bboss_activity_update_reply_add_notification() instead.
+	 */
+	function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params ) {
+		return bboss_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params );
+	}
+}
+// @bbwt-com-end compat-layer

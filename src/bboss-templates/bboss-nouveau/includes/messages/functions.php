@@ -612,3 +612,178 @@ function bboss_nouveau_messages_catch_hook_content( $hooks = array() ) {
 
 	return $content;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_add_notice_notification_for_user' ) && ! function_exists( 'bp_nouveau_add_notice_notification_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_add_notice_notification_for_user()}.
+	 *
+	 * @deprecated Use bboss_nouveau_add_notice_notification_for_user() instead.
+	 */
+	function bp_nouveau_add_notice_notification_for_user( $notifications, $user_id ) {
+		return bboss_nouveau_add_notice_notification_for_user( $notifications, $user_id );
+	}
+}
+if ( function_exists( 'bboss_nouveau_format_notice_notification_for_user' ) && ! function_exists( 'bp_nouveau_format_notice_notification_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_format_notice_notification_for_user()}.
+	 *
+	 * @deprecated Use bboss_nouveau_format_notice_notification_for_user() instead.
+	 */
+	function bp_nouveau_format_notice_notification_for_user( $array ) {
+		return bboss_nouveau_format_notice_notification_for_user( $array );
+	}
+}
+if ( function_exists( 'bboss_nouveau_get_message_date' ) && ! function_exists( 'bp_nouveau_get_message_date' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_message_date()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_message_date() instead.
+	 */
+	function bp_nouveau_get_message_date( $date, $date_format = '' ) {
+		return bboss_nouveau_get_message_date( $date, $date_format );
+	}
+}
+if ( function_exists( 'bboss_nouveau_invites_mce_buttons' ) && ! function_exists( 'bp_nouveau_invites_mce_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_invites_mce_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_invites_mce_buttons() instead.
+	 */
+	function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
+		return bboss_nouveau_invites_mce_buttons( $buttons );
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_adjust_admin_nav' ) && ! function_exists( 'bp_nouveau_messages_adjust_admin_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_adjust_admin_nav()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_adjust_admin_nav() instead.
+	 */
+	function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
+		return bboss_nouveau_messages_adjust_admin_nav( $admin_nav );
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_adjust_nav' ) && ! function_exists( 'bp_nouveau_messages_adjust_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_adjust_nav()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_adjust_nav() instead.
+	 */
+	function bp_nouveau_messages_adjust_nav() {
+		return bboss_nouveau_messages_adjust_nav();
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_at_on_tinymce_init' ) && ! function_exists( 'bp_nouveau_messages_at_on_tinymce_init' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_at_on_tinymce_init()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_at_on_tinymce_init() instead.
+	 */
+	function bp_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
+		return bboss_nouveau_messages_at_on_tinymce_init( $settings, $editor_id );
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_catch_hook_content' ) && ! function_exists( 'bp_nouveau_messages_catch_hook_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_catch_hook_content()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_catch_hook_content() instead.
+	 */
+	function bp_nouveau_messages_catch_hook_content( $hooks = array() ) {
+		return bboss_nouveau_messages_catch_hook_content( $hooks );
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_messages_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_enqueue_scripts() instead.
+	 */
+	function bp_nouveau_messages_enqueue_scripts() {
+		return bboss_nouveau_messages_enqueue_scripts();
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_enqueue_styles' ) && ! function_exists( 'bp_nouveau_messages_enqueue_styles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_enqueue_styles()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_enqueue_styles() instead.
+	 */
+	function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
+		return bboss_nouveau_messages_enqueue_styles( $styles );
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_get_bulk_actions' ) && ! function_exists( 'bp_nouveau_messages_get_bulk_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_get_bulk_actions()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_get_bulk_actions() instead.
+	 */
+	function bp_nouveau_messages_get_bulk_actions() {
+		return bboss_nouveau_messages_get_bulk_actions();
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_localize_scripts' ) && ! function_exists( 'bp_nouveau_messages_localize_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_localize_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_localize_scripts() instead.
+	 */
+	function bp_nouveau_messages_localize_scripts( $params = array() ) {
+		return bboss_nouveau_messages_localize_scripts( $params );
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_mce_buttons' ) && ! function_exists( 'bp_nouveau_messages_mce_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_mce_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_mce_buttons() instead.
+	 */
+	function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
+		return bboss_nouveau_messages_mce_buttons( $buttons );
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_notification_filters' ) && ! function_exists( 'bp_nouveau_messages_notification_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_notification_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_notification_filters() instead.
+	 */
+	function bp_nouveau_messages_notification_filters() {
+		return bboss_nouveau_messages_notification_filters();
+	}
+}
+if ( function_exists( 'bboss_nouveau_messages_register_scripts' ) && ! function_exists( 'bp_nouveau_messages_register_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_register_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_register_scripts() instead.
+	 */
+	function bp_nouveau_messages_register_scripts( $scripts = array() ) {
+		return bboss_nouveau_messages_register_scripts( $scripts );
+	}
+}
+if ( function_exists( 'bboss_nouveau_push_sitewide_notices' ) && ! function_exists( 'bp_nouveau_push_sitewide_notices' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_push_sitewide_notices()}.
+	 *
+	 * @deprecated Use bboss_nouveau_push_sitewide_notices() instead.
+	 */
+	function bp_nouveau_push_sitewide_notices() {
+		return bboss_nouveau_push_sitewide_notices();
+	}
+}
+if ( function_exists( 'bboss_nouveau_unregister_notices_widget' ) && ! function_exists( 'bp_nouveau_unregister_notices_widget' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_unregister_notices_widget()}.
+	 *
+	 * @deprecated Use bboss_nouveau_unregister_notices_widget() instead.
+	 */
+	function bp_nouveau_unregister_notices_widget() {
+		return bboss_nouveau_unregister_notices_widget();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -1205,3 +1205,208 @@ function bboss_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_apply_legacy_tab_mapping_to_url' ) && ! function_exists( 'bb_apply_legacy_tab_mapping_to_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_apply_legacy_tab_mapping_to_url()}.
+	 *
+	 * @deprecated Use bboss_apply_legacy_tab_mapping_to_url() instead.
+	 */
+	function bb_apply_legacy_tab_mapping_to_url( $target, $mapping ) {
+		return bboss_apply_legacy_tab_mapping_to_url( $target, $mapping );
+	}
+}
+if ( function_exists( 'bboss_check_user_nickname' ) && ! function_exists( 'bb_check_user_nickname' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_check_user_nickname()}.
+	 *
+	 * @deprecated Use bboss_check_user_nickname() instead.
+	 */
+	function bb_check_user_nickname( &$errors, $update, &$user ) {
+		return bboss_check_user_nickname( $errors, $update, $user );
+	}
+}
+if ( function_exists( 'bboss_core_settings_saved_notice' ) && ! function_exists( 'bb_core_settings_saved_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_settings_saved_notice()}.
+	 *
+	 * @deprecated Use bboss_core_settings_saved_notice() instead.
+	 */
+	function bb_core_settings_saved_notice() {
+		return bboss_core_settings_saved_notice();
+	}
+}
+if ( function_exists( 'bboss_force_redirect_bare_bp_settings' ) && ! function_exists( 'bb_force_redirect_bare_bp_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_force_redirect_bare_bp_settings()}.
+	 *
+	 * @deprecated Use bboss_force_redirect_bare_bp_settings() instead.
+	 */
+	function bb_force_redirect_bare_bp_settings() {
+		return bboss_force_redirect_bare_bp_settings();
+	}
+}
+if ( function_exists( 'bboss_get_legacy_settings_tabs_mapping' ) && ! function_exists( 'bb_get_legacy_settings_tabs_mapping' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_legacy_settings_tabs_mapping()}.
+	 *
+	 * @deprecated Use bboss_get_legacy_settings_tabs_mapping() instead.
+	 */
+	function bb_get_legacy_settings_tabs_mapping() {
+		return bboss_get_legacy_settings_tabs_mapping();
+	}
+}
+if ( function_exists( 'bboss_redirect_bp_settings_before_permission_check' ) && ! function_exists( 'bb_redirect_bp_settings_before_permission_check' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_redirect_bp_settings_before_permission_check()}.
+	 *
+	 * @deprecated Use bboss_redirect_bp_settings_before_permission_check() instead.
+	 */
+	function bb_redirect_bp_settings_before_permission_check() {
+		return bboss_redirect_bp_settings_before_permission_check();
+	}
+}
+if ( function_exists( 'bboss_redirect_legacy_settings_to_settings_2' ) && ! function_exists( 'bb_redirect_legacy_settings_to_settings_2' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_redirect_legacy_settings_to_settings_2()}.
+	 *
+	 * @deprecated Use bboss_redirect_legacy_settings_to_settings_2() instead.
+	 */
+	function bb_redirect_legacy_settings_to_settings_2() {
+		return bboss_redirect_legacy_settings_to_settings_2();
+	}
+}
+if ( function_exists( 'bboss_render_admin_header' ) && ! function_exists( 'bb_render_admin_header' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_render_admin_header()}.
+	 *
+	 * @deprecated Use bboss_render_admin_header() instead.
+	 */
+	function bb_render_admin_header() {
+		return bboss_render_admin_header();
+	}
+}
+if ( function_exists( 'bboss_validate_restricted_email_on_profile_update' ) && ! function_exists( 'bb_validate_restricted_email_on_profile_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_validate_restricted_email_on_profile_update()}.
+	 *
+	 * @deprecated Use bboss_validate_restricted_email_on_profile_update() instead.
+	 */
+	function bb_validate_restricted_email_on_profile_update( $user_id ) {
+		return bboss_validate_restricted_email_on_profile_update( $user_id );
+	}
+}
+if ( function_exists( 'bboss_validate_restricted_email_on_registration' ) && ! function_exists( 'bb_validate_restricted_email_on_registration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_validate_restricted_email_on_registration()}.
+	 *
+	 * @deprecated Use bboss_validate_restricted_email_on_registration() instead.
+	 */
+	function bb_validate_restricted_email_on_registration( $errors, $update, $user ) {
+		return bboss_validate_restricted_email_on_registration( $errors, $update, $user );
+	}
+}
+if ( function_exists( 'bboss_admin_enqueue_scripts' ) && ! function_exists( 'bp_admin_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_admin_enqueue_scripts() instead.
+	 */
+	function bp_admin_enqueue_scripts( $hook_suffix = '' ) {
+		return bboss_admin_enqueue_scripts( $hook_suffix );
+	}
+}
+if ( function_exists( 'bboss_admin_head' ) && ! function_exists( 'bp_admin_head' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_head()}.
+	 *
+	 * @deprecated Use bboss_admin_head() instead.
+	 */
+	function bp_admin_head() {
+		return bboss_admin_head();
+	}
+}
+if ( function_exists( 'bboss_admin_init' ) && ! function_exists( 'bp_admin_init' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_init()}.
+	 *
+	 * @deprecated Use bboss_admin_init() instead.
+	 */
+	function bp_admin_init() {
+		return bboss_admin_init();
+	}
+}
+if ( function_exists( 'bboss_admin_menu' ) && ! function_exists( 'bp_admin_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_menu()}.
+	 *
+	 * @deprecated Use bboss_admin_menu() instead.
+	 */
+	function bp_admin_menu() {
+		return bboss_admin_menu();
+	}
+}
+if ( function_exists( 'bboss_admin_notices' ) && ! function_exists( 'bp_admin_notices' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_notices()}.
+	 *
+	 * @deprecated Use bboss_admin_notices() instead.
+	 */
+	function bp_admin_notices() {
+		return bboss_admin_notices();
+	}
+}
+if ( function_exists( 'bboss_new_site' ) && ! function_exists( 'bp_new_site' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_new_site()}.
+	 *
+	 * @deprecated Use bboss_new_site() instead.
+	 */
+	function bp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+		return bboss_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta );
+	}
+}
+if ( function_exists( 'bboss_register_admin_integrations' ) && ! function_exists( 'bp_register_admin_integrations' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_admin_integrations()}.
+	 *
+	 * @deprecated Use bboss_register_admin_integrations() instead.
+	 */
+	function bp_register_admin_integrations() {
+		return bboss_register_admin_integrations();
+	}
+}
+if ( function_exists( 'bboss_register_admin_settings' ) && ! function_exists( 'bp_register_admin_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_admin_settings()}.
+	 *
+	 * @deprecated Use bboss_register_admin_settings() instead.
+	 */
+	function bp_register_admin_settings() {
+		return bboss_register_admin_settings();
+	}
+}
+if ( function_exists( 'bboss_register_admin_style' ) && ! function_exists( 'bp_register_admin_style' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_admin_style()}.
+	 *
+	 * @deprecated Use bboss_register_admin_style() instead.
+	 */
+	function bp_register_admin_style() {
+		return bboss_register_admin_style();
+	}
+}
+if ( function_exists( 'bboss_register_importers' ) && ! function_exists( 'bp_register_importers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_importers()}.
+	 *
+	 * @deprecated Use bboss_register_importers() instead.
+	 */
+	function bp_register_importers() {
+		return bboss_register_importers();
+	}
+}
+// @bbwt-com-end compat-layer

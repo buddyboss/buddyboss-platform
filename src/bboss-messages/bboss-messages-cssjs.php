@@ -42,3 +42,38 @@ function bboss_messages_add_autocomplete_css() {
  */
 function bboss_messages_autocomplete_init_jsblock() {
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_add_autocomplete_css' ) && ! function_exists( 'messages_add_autocomplete_css' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_add_autocomplete_css()}.
+	 *
+	 * @deprecated Use bboss_messages_add_autocomplete_css() instead.
+	 */
+	function messages_add_autocomplete_css() {
+		return bboss_messages_add_autocomplete_css();
+	}
+}
+if ( function_exists( 'bboss_messages_add_autocomplete_js' ) && ! function_exists( 'messages_add_autocomplete_js' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_add_autocomplete_js()}.
+	 *
+	 * @deprecated Use bboss_messages_add_autocomplete_js() instead.
+	 */
+	function messages_add_autocomplete_js() {
+		return bboss_messages_add_autocomplete_js();
+	}
+}
+if ( function_exists( 'bboss_messages_autocomplete_init_jsblock' ) && ! function_exists( 'messages_autocomplete_init_jsblock' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_autocomplete_init_jsblock()}.
+	 *
+	 * @deprecated Use bboss_messages_autocomplete_init_jsblock() instead.
+	 */
+	function messages_autocomplete_init_jsblock() {
+		return bboss_messages_autocomplete_init_jsblock();
+	}
+}
+// @bbwt-com-end compat-layer

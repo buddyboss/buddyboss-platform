@@ -738,3 +738,148 @@ function bboss_ps_xprofile_email_users_search( $f ) {
 
 	return $wpdb->get_col( $sql_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- literal SELECT on $wpdb->users plus the WHERE clause from $wpdb->prepare() (email value bound as %s).
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_email_setup' ) && ! function_exists( 'bb_ps_email_setup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_email_setup()}.
+	 *
+	 * @deprecated Use bboss_ps_email_setup() instead.
+	 */
+	function bb_ps_email_setup( $fields ) {
+		return bboss_ps_email_setup( $fields );
+	}
+}
+if ( function_exists( 'bboss_ps_xprofile_email_users_search' ) && ! function_exists( 'bb_ps_xprofile_email_users_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_email_users_search()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_email_users_search() instead.
+	 */
+	function bb_ps_xprofile_email_users_search( $f ) {
+		return bboss_ps_xprofile_email_users_search( $f );
+	}
+}
+if ( function_exists( 'bboss_ps_anyfield_search' ) && ! function_exists( 'bp_ps_anyfield_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_anyfield_search()}.
+	 *
+	 * @deprecated Use bboss_ps_anyfield_search() instead.
+	 */
+	function bp_ps_anyfield_search( $f ) {
+		return bboss_ps_anyfield_search( $f );
+	}
+}
+if ( function_exists( 'bboss_ps_anyfield_setup' ) && ! function_exists( 'bp_ps_anyfield_setup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_anyfield_setup()}.
+	 *
+	 * @deprecated Use bboss_ps_anyfield_setup() instead.
+	 */
+	function bp_ps_anyfield_setup( $fields ) {
+		return bboss_ps_anyfield_setup( $fields );
+	}
+}
+if ( function_exists( 'bboss_ps_gender_setup' ) && ! function_exists( 'bp_ps_gender_setup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_gender_setup()}.
+	 *
+	 * @deprecated Use bboss_ps_gender_setup() instead.
+	 */
+	function bp_ps_gender_setup( $fields ) {
+		return bboss_ps_gender_setup( $fields );
+	}
+}
+if ( function_exists( 'bboss_ps_heading_field_setup' ) && ! function_exists( 'bp_ps_heading_field_setup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_heading_field_setup()}.
+	 *
+	 * @deprecated Use bboss_ps_heading_field_setup() instead.
+	 */
+	function bp_ps_heading_field_setup( $fields ) {
+		return bboss_ps_heading_field_setup( $fields );
+	}
+}
+if ( function_exists( 'bboss_ps_search_dummy_fields' ) && ! function_exists( 'bp_ps_search_dummy_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_search_dummy_fields()}.
+	 *
+	 * @deprecated Use bboss_ps_search_dummy_fields() instead.
+	 */
+	function bp_ps_search_dummy_fields( $f ) {
+		return bboss_ps_search_dummy_fields( $f );
+	}
+}
+if ( function_exists( 'bboss_ps_xprofile_format' ) && ! function_exists( 'bp_ps_xprofile_format' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_format()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_format() instead.
+	 */
+	function bp_ps_xprofile_format( $type, $field_id ) {
+		return bboss_ps_xprofile_format( $type, $field_id );
+	}
+}
+if ( function_exists( 'bboss_ps_xprofile_gender_users_search' ) && ! function_exists( 'bp_ps_xprofile_gender_users_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_gender_users_search()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_gender_users_search() instead.
+	 */
+	function bp_ps_xprofile_gender_users_search( $f ) {
+		return bboss_ps_xprofile_gender_users_search( $f );
+	}
+}
+if ( function_exists( 'bboss_ps_xprofile_get_value' ) && ! function_exists( 'bp_ps_xprofile_get_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_get_value()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_get_value() instead.
+	 */
+	function bp_ps_xprofile_get_value( $f ) {
+		return bboss_ps_xprofile_get_value( $f );
+	}
+}
+if ( function_exists( 'bboss_ps_xprofile_options' ) && ! function_exists( 'bp_ps_xprofile_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_options()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_options() instead.
+	 */
+	function bp_ps_xprofile_options( $field_id ) {
+		return bboss_ps_xprofile_options( $field_id );
+	}
+}
+if ( function_exists( 'bboss_ps_xprofile_search' ) && ! function_exists( 'bp_ps_xprofile_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_search()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_search() instead.
+	 */
+	function bp_ps_xprofile_search( $f ) {
+		return bboss_ps_xprofile_search( $f );
+	}
+}
+if ( function_exists( 'bboss_ps_xprofile_setup' ) && ! function_exists( 'bp_ps_xprofile_setup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_setup()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_setup() instead.
+	 */
+	function bp_ps_xprofile_setup( $fields ) {
+		return bboss_ps_xprofile_setup( $fields );
+	}
+}
+if ( function_exists( 'bboss_ps_xprofile_sort_directory' ) && ! function_exists( 'bp_ps_xprofile_sort_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_sort_directory()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_sort_directory() instead.
+	 */
+	function bp_ps_xprofile_sort_directory( $sql, $object, $f, $order ) {
+		return bboss_ps_xprofile_sort_directory( $sql, $object, $f, $order );
+	}
+}
+// @bbwt-com-end compat-layer

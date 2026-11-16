@@ -371,3 +371,128 @@ function bboss_active_member_type_by_type( $type_id ) {
 	}
 	return $member_ids;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_active_member_type_by_type' ) && ! function_exists( 'bp_active_member_type_by_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_active_member_type_by_type()}.
+	 *
+	 * @deprecated Use bboss_active_member_type_by_type() instead.
+	 */
+	function bp_active_member_type_by_type( $type_id ) {
+		return bboss_active_member_type_by_type( $type_id );
+	}
+}
+if ( function_exists( 'bboss_get_group_type_key' ) && ! function_exists( 'bp_get_group_type_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_type_key()}.
+	 *
+	 * @deprecated Use bboss_get_group_type_key() instead.
+	 */
+	function bp_get_group_type_key( $post_id ) {
+		return bboss_get_group_type_key( $post_id );
+	}
+}
+if ( function_exists( 'bboss_get_group_type_post_id' ) && ! function_exists( 'bp_get_group_type_post_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_type_post_id()}.
+	 *
+	 * @deprecated Use bboss_get_group_type_post_id() instead.
+	 */
+	function bp_get_group_type_post_id( $group_type = '' ) {
+		return bboss_get_group_type_post_id( $group_type );
+	}
+}
+if ( function_exists( 'bboss_get_group_type_post_type' ) && ! function_exists( 'bp_get_group_type_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_type_post_type()}.
+	 *
+	 * @deprecated Use bboss_get_group_type_post_type() instead.
+	 */
+	function bp_get_group_type_post_type() {
+		return bboss_get_group_type_post_type();
+	}
+}
+if ( function_exists( 'bboss_get_group_type_post_type_labels' ) && ! function_exists( 'bp_get_group_type_post_type_labels' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_type_post_type_labels()}.
+	 *
+	 * @deprecated Use bboss_get_group_type_post_type_labels() instead.
+	 */
+	function bp_get_group_type_post_type_labels() {
+		return bboss_get_group_type_post_type_labels();
+	}
+}
+if ( function_exists( 'bboss_get_group_type_post_type_supports' ) && ! function_exists( 'bp_get_group_type_post_type_supports' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_type_post_type_supports()}.
+	 *
+	 * @deprecated Use bboss_get_group_type_post_type_supports() instead.
+	 */
+	function bp_get_group_type_post_type_supports() {
+		return bboss_get_group_type_post_type_supports();
+	}
+}
+if ( function_exists( 'bboss_get_groups_of_removed_group_types' ) && ! function_exists( 'bp_get_groups_of_removed_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_groups_of_removed_group_types()}.
+	 *
+	 * @deprecated Use bboss_get_groups_of_removed_group_types() instead.
+	 */
+	function bp_get_groups_of_removed_group_types() {
+		return bboss_get_groups_of_removed_group_types();
+	}
+}
+if ( function_exists( 'bboss_get_removed_group_types' ) && ! function_exists( 'bp_get_removed_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_removed_group_types()}.
+	 *
+	 * @deprecated Use bboss_get_removed_group_types() instead.
+	 */
+	function bp_get_removed_group_types() {
+		return bboss_get_removed_group_types();
+	}
+}
+if ( function_exists( 'bboss_get_total_count_by_group_types' ) && ! function_exists( 'bp_get_total_count_by_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_total_count_by_group_types()}.
+	 *
+	 * @deprecated Use bboss_get_total_count_by_group_types() instead.
+	 */
+	function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_group_type' ) {
+		return bboss_get_total_count_by_group_types( $group_type, $taxonomy );
+	}
+}
+if ( function_exists( 'bboss_group_type_exclude_groups_from_directory_and_searches' ) && ! function_exists( 'bp_group_type_exclude_groups_from_directory_and_searches' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_type_exclude_groups_from_directory_and_searches()}.
+	 *
+	 * @deprecated Use bboss_group_type_exclude_groups_from_directory_and_searches() instead.
+	 */
+	function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $object=false ) {
+		return bboss_group_type_exclude_groups_from_directory_and_searches( $qs, $object );
+	}
+}
+if ( function_exists( 'bboss_group_type_post_type' ) && ! function_exists( 'bp_group_type_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_type_post_type()}.
+	 *
+	 * @deprecated Use bboss_group_type_post_type() instead.
+	 */
+	function bp_group_type_post_type() {
+		return bboss_group_type_post_type();
+	}
+}
+if ( function_exists( 'bboss_member_type_type_id' ) && ! function_exists( 'bp_member_type_type_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_type_type_id()}.
+	 *
+	 * @deprecated Use bboss_member_type_type_id() instead.
+	 */
+	function bp_member_type_type_id( $type_name ) {
+		return bboss_member_type_type_id( $type_name );
+	}
+}
+// @bbwt-com-end compat-layer

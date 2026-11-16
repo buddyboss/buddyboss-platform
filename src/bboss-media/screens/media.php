@@ -37,3 +37,18 @@ function bboss_media_screen() {
 	 */
 	bboss_core_load_template( apply_filters( 'media_template', 'members/single/home' ) );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_screen' ) && ! function_exists( 'media_screen' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_screen()}.
+	 *
+	 * @deprecated Use bboss_media_screen() instead.
+	 */
+	function media_screen() {
+		return bboss_media_screen();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -68,3 +68,28 @@ function bboss_notifications_action_mark_unread() {
 	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_notifications_slug() . '/read/' );
 }
 add_action( 'bp_actions', 'bp_notifications_action_mark_unread' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_action_mark_unread' ) && ! function_exists( 'bp_notifications_action_mark_unread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_action_mark_unread()}.
+	 *
+	 * @deprecated Use bboss_notifications_action_mark_unread() instead.
+	 */
+	function bp_notifications_action_mark_unread() {
+		return bboss_notifications_action_mark_unread();
+	}
+}
+if ( function_exists( 'bboss_notifications_screen_read' ) && ! function_exists( 'bp_notifications_screen_read' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_screen_read()}.
+	 *
+	 * @deprecated Use bboss_notifications_screen_read() instead.
+	 */
+	function bp_notifications_screen_read() {
+		return bboss_notifications_screen_read();
+	}
+}
+// @bbwt-com-end compat-layer

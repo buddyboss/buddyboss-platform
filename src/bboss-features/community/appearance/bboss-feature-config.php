@@ -91,3 +91,18 @@ if (
 ) {
 	require_once __DIR__ . '/admin/settings.php';
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_set_readylaunch_default_on_install' ) && ! function_exists( 'bb_appearance_set_readylaunch_default_on_install' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_set_readylaunch_default_on_install()}.
+	 *
+	 * @deprecated Use bboss_appearance_set_readylaunch_default_on_install() instead.
+	 */
+	function bb_appearance_set_readylaunch_default_on_install() {
+		return bboss_appearance_set_readylaunch_default_on_install();
+	}
+}
+// @bbwt-com-end compat-layer

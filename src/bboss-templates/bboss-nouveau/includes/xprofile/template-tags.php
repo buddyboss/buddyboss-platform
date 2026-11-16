@@ -76,3 +76,38 @@ function bboss_nouveau_base_account_has_xprofile() {
 
 	return (bool) bboss_has_profile( $args );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_base_account_has_xprofile' ) && ! function_exists( 'bp_nouveau_base_account_has_xprofile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_base_account_has_xprofile()}.
+	 *
+	 * @deprecated Use bboss_nouveau_base_account_has_xprofile() instead.
+	 */
+	function bp_nouveau_base_account_has_xprofile() {
+		return bboss_nouveau_base_account_has_xprofile();
+	}
+}
+if ( function_exists( 'bboss_nouveau_xprofile_edit_visibilty' ) && ! function_exists( 'bp_nouveau_xprofile_edit_visibilty' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_xprofile_edit_visibilty()}.
+	 *
+	 * @deprecated Use bboss_nouveau_xprofile_edit_visibilty() instead.
+	 */
+	function bp_nouveau_xprofile_edit_visibilty() {
+		return bboss_nouveau_xprofile_edit_visibilty();
+	}
+}
+if ( function_exists( 'bboss_nouveau_xprofile_hook' ) && ! function_exists( 'bp_nouveau_xprofile_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_xprofile_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_xprofile_hook() instead.
+	 */
+	function bp_nouveau_xprofile_hook( $when = '', $suffix = '' ) {
+		return bboss_nouveau_xprofile_hook( $when, $suffix );
+	}
+}
+// @bbwt-com-end compat-layer

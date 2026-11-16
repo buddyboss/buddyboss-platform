@@ -78,3 +78,28 @@ function bboss_search_remove_search_types_for_guests( $search_types ) {
 
 	return $search_types;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_global_search_default_items_to_search' ) && ! function_exists( 'bb_global_search_default_items_to_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_global_search_default_items_to_search()}.
+	 *
+	 * @deprecated Use bboss_global_search_default_items_to_search() instead.
+	 */
+	function bb_global_search_default_items_to_search( $value ) {
+		return bboss_global_search_default_items_to_search( $value );
+	}
+}
+if ( function_exists( 'bboss_search_remove_search_types_for_guests' ) && ! function_exists( 'bp_search_remove_search_types_for_guests' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_remove_search_types_for_guests()}.
+	 *
+	 * @deprecated Use bboss_search_remove_search_types_for_guests() instead.
+	 */
+	function bp_search_remove_search_types_for_guests( $search_types ) {
+		return bboss_search_remove_search_types_for_guests( $search_types );
+	}
+}
+// @bbwt-com-end compat-layer

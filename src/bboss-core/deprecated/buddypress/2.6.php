@@ -48,3 +48,38 @@ function bboss_core_sort_nav_items() {
 function bboss_core_sort_subnav_items() {
 	_deprecated_function( __FUNCTION__, '2.6' );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_print_generation_time' ) && ! function_exists( 'bp_core_print_generation_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_print_generation_time()}.
+	 *
+	 * @deprecated Use bboss_core_print_generation_time() instead.
+	 */
+	function bp_core_print_generation_time() {
+		return bboss_core_print_generation_time();
+	}
+}
+if ( function_exists( 'bboss_core_sort_nav_items' ) && ! function_exists( 'bp_core_sort_nav_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_sort_nav_items()}.
+	 *
+	 * @deprecated Use bboss_core_sort_nav_items() instead.
+	 */
+	function bp_core_sort_nav_items() {
+		return bboss_core_sort_nav_items();
+	}
+}
+if ( function_exists( 'bboss_core_sort_subnav_items' ) && ! function_exists( 'bp_core_sort_subnav_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_sort_subnav_items()}.
+	 *
+	 * @deprecated Use bboss_core_sort_subnav_items() instead.
+	 */
+	function bp_core_sort_subnav_items() {
+		return bboss_core_sort_subnav_items();
+	}
+}
+// @bbwt-com-end compat-layer

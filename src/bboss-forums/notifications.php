@@ -900,3 +900,98 @@ function bboss_delete_forum_topic_reply_notification( $post_data ) {
 }
 add_action( 'bbp_toggle_reply_handler', 'bb_delete_forum_topic_reply_notification', 1 );
 add_action( 'bbp_toggle_topic_handler', 'bb_delete_forum_topic_reply_notification', 1 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_delete_forum_topic_reply_notification' ) && ! function_exists( 'bb_delete_forum_topic_reply_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_delete_forum_topic_reply_notification()}.
+	 *
+	 * @deprecated Use bboss_delete_forum_topic_reply_notification() instead.
+	 */
+	function bb_delete_forum_topic_reply_notification( $post_data ) {
+		return bboss_delete_forum_topic_reply_notification( $post_data );
+	}
+}
+if ( function_exists( 'bboss_forums_add_notification_metas' ) && ! function_exists( 'bb_forums_add_notification_metas' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_forums_add_notification_metas()}.
+	 *
+	 * @deprecated Use bboss_forums_add_notification_metas() instead.
+	 */
+	function bb_forums_add_notification_metas( $notification ) {
+		return bboss_forums_add_notification_metas( $notification );
+	}
+}
+if ( function_exists( 'bboss_forums_remove_screen_notifications' ) && ! function_exists( 'bb_forums_remove_screen_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_forums_remove_screen_notifications()}.
+	 *
+	 * @deprecated Use bboss_forums_remove_screen_notifications() instead.
+	 */
+	function bb_forums_remove_screen_notifications() {
+		return bboss_forums_remove_screen_notifications();
+	}
+}
+if ( function_exists( 'bboss_mark_modern_notifications' ) && ! function_exists( 'bb_mark_modern_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_mark_modern_notifications()}.
+	 *
+	 * @deprecated Use bboss_mark_modern_notifications() instead.
+	 */
+	function bb_mark_modern_notifications( $success, $user_id, $topic_id ) {
+		return bboss_mark_modern_notifications( $success, $user_id, $topic_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_buddypress_add_notification' ) && ! function_exists( 'bbp_buddypress_add_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_buddypress_add_notification()}.
+	 *
+	 * @deprecated Use bboss_bbp_buddypress_add_notification() instead.
+	 */
+	function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymous_data = false, $author_id = 0, $is_edit = false, $reply_to = 0 ) {
+		return bboss_bbp_buddypress_add_notification( $reply_id, $topic_id, $forum_id, $anonymous_data, $author_id, $is_edit, $reply_to );
+	}
+}
+if ( function_exists( 'bboss_bbp_buddypress_add_topic_notification' ) && ! function_exists( 'bbp_buddypress_add_topic_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_buddypress_add_topic_notification()}.
+	 *
+	 * @deprecated Use bboss_bbp_buddypress_add_topic_notification() instead.
+	 */
+	function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
+		return bboss_bbp_buddypress_add_topic_notification( $topic_id, $forum_id );
+	}
+}
+if ( function_exists( 'bboss_bbp_buddypress_mark_notifications' ) && ! function_exists( 'bbp_buddypress_mark_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_buddypress_mark_notifications()}.
+	 *
+	 * @deprecated Use bboss_bbp_buddypress_mark_notifications() instead.
+	 */
+	function bbp_buddypress_mark_notifications( $action = '' ) {
+		return bboss_bbp_buddypress_mark_notifications( $action );
+	}
+}
+if ( function_exists( 'bboss_bbp_filter_notifications_get_registered_components' ) && ! function_exists( 'bbp_filter_notifications_get_registered_components' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_filter_notifications_get_registered_components()}.
+	 *
+	 * @deprecated Use bboss_bbp_filter_notifications_get_registered_components() instead.
+	 */
+	function bbp_filter_notifications_get_registered_components( $component_names = array() ) {
+		return bboss_bbp_filter_notifications_get_registered_components( $component_names );
+	}
+}
+if ( function_exists( 'bboss_bbp_format_buddypress_notifications' ) && ! function_exists( 'bbp_format_buddypress_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_format_buddypress_notifications()}.
+	 *
+	 * @deprecated Use bboss_bbp_format_buddypress_notifications() instead.
+	 */
+	function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name = '', $name = '', $id = 0, $screen = 'web' ) {
+		return bboss_bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format, $action_name, $name, $id, $screen );
+	}
+}
+// @bbwt-com-end compat-layer

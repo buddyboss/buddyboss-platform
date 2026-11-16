@@ -9,6 +9,113 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
+// pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
+if ( function_exists( 'bp_email_network_admin_email_change_email' ) && ! function_exists( 'bboss_email_network_admin_email_change_email' ) ) {
+	// Pluggable: bp_email_network_admin_email_change_email() was defined first (bp-custom.php, a plugin); bboss_email_network_admin_email_change_email() delegates to it.
+	function bboss_email_network_admin_email_change_email( $email_change_email, $old_email, $new_email, $network_id ) {
+		return bp_email_network_admin_email_change_email( $email_change_email, $old_email, $new_email, $network_id );
+	}
+}
+if ( function_exists( 'bp_email_new_network_admin_email_content' ) && ! function_exists( 'bboss_email_new_network_admin_email_content' ) ) {
+	// Pluggable: bp_email_new_network_admin_email_content() was defined first (bp-custom.php, a plugin); bboss_email_new_network_admin_email_content() delegates to it.
+	function bboss_email_new_network_admin_email_content( $email_text, $new_admin_email ) {
+		return bp_email_new_network_admin_email_content( $email_text, $new_admin_email );
+	}
+}
+if ( function_exists( 'bp_email_newblog_notify_siteadmin' ) && ! function_exists( 'bboss_email_newblog_notify_siteadmin' ) ) {
+	// Pluggable: bp_email_newblog_notify_siteadmin() was defined first (bp-custom.php, a plugin); bboss_email_newblog_notify_siteadmin() delegates to it.
+	function bboss_email_newblog_notify_siteadmin( $msg ) {
+		return bp_email_newblog_notify_siteadmin( $msg );
+	}
+}
+if ( function_exists( 'bp_email_newuser_notify_siteadmin' ) && ! function_exists( 'bboss_email_newuser_notify_siteadmin' ) ) {
+	// Pluggable: bp_email_newuser_notify_siteadmin() was defined first (bp-custom.php, a plugin); bboss_email_newuser_notify_siteadmin() delegates to it.
+	function bboss_email_newuser_notify_siteadmin( $msg, $user ) {
+		return bp_email_newuser_notify_siteadmin( $msg, $user );
+	}
+}
+if ( function_exists( 'bp_email_retrieve_password_message' ) && ! function_exists( 'bboss_email_retrieve_password_message' ) ) {
+	// Pluggable: bp_email_retrieve_password_message() was defined first (bp-custom.php, a plugin); bboss_email_retrieve_password_message() delegates to it.
+	function bboss_email_retrieve_password_message( $message, $key, $user_login, $user_data ) {
+		return bp_email_retrieve_password_message( $message, $key, $user_login, $user_data );
+	}
+}
+if ( function_exists( 'bp_email_site_admin_email_change_email' ) && ! function_exists( 'bboss_email_site_admin_email_change_email' ) ) {
+	// Pluggable: bp_email_site_admin_email_change_email() was defined first (bp-custom.php, a plugin); bboss_email_site_admin_email_change_email() delegates to it.
+	function bboss_email_site_admin_email_change_email( $email_change_email, $old_email, $new_email ) {
+		return bp_email_site_admin_email_change_email( $email_change_email, $old_email, $new_email );
+	}
+}
+if ( function_exists( 'bp_email_update_welcome_email' ) && ! function_exists( 'bboss_email_update_welcome_email' ) ) {
+	// Pluggable: bp_email_update_welcome_email() was defined first (bp-custom.php, a plugin); bboss_email_update_welcome_email() delegates to it.
+	function bboss_email_update_welcome_email( $welcome_email, $blog_id, $user_id, $password, $title, $meta ) {
+		return bp_email_update_welcome_email( $welcome_email, $blog_id, $user_id, $password, $title, $meta );
+	}
+}
+if ( function_exists( 'bp_email_update_welcome_user_email' ) && ! function_exists( 'bboss_email_update_welcome_user_email' ) ) {
+	// Pluggable: bp_email_update_welcome_user_email() was defined first (bp-custom.php, a plugin); bboss_email_update_welcome_user_email() delegates to it.
+	function bboss_email_update_welcome_user_email( $welcome_email, $user_id, $password, $meta ) {
+		return bp_email_update_welcome_user_email( $welcome_email, $user_id, $password, $meta );
+	}
+}
+if ( function_exists( 'bp_email_wp_email_change_email' ) && ! function_exists( 'bboss_email_wp_email_change_email' ) ) {
+	// Pluggable: bp_email_wp_email_change_email() was defined first (bp-custom.php, a plugin); bboss_email_wp_email_change_email() delegates to it.
+	function bboss_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
+		return bp_email_wp_email_change_email( $email_change_email, $user, $userdata );
+	}
+}
+if ( function_exists( 'bp_email_wp_new_admin_email_content' ) && ! function_exists( 'bboss_email_wp_new_admin_email_content' ) ) {
+	// Pluggable: bp_email_wp_new_admin_email_content() was defined first (bp-custom.php, a plugin); bboss_email_wp_new_admin_email_content() delegates to it.
+	function bboss_email_wp_new_admin_email_content( $email_text, $new_admin_email ) {
+		return bp_email_wp_new_admin_email_content( $email_text, $new_admin_email );
+	}
+}
+if ( function_exists( 'bp_email_wp_new_user_email_content' ) && ! function_exists( 'bboss_email_wp_new_user_email_content' ) ) {
+	// Pluggable: bp_email_wp_new_user_email_content() was defined first (bp-custom.php, a plugin); bboss_email_wp_new_user_email_content() delegates to it.
+	function bboss_email_wp_new_user_email_content( $email_text, $new_user_email ) {
+		return bp_email_wp_new_user_email_content( $email_text, $new_user_email );
+	}
+}
+if ( function_exists( 'bp_email_wp_password_change_email' ) && ! function_exists( 'bboss_email_wp_password_change_email' ) ) {
+	// Pluggable: bp_email_wp_password_change_email() was defined first (bp-custom.php, a plugin); bboss_email_wp_password_change_email() delegates to it.
+	function bboss_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
+		return bp_email_wp_password_change_email( $pass_change_email, $user, $userdata );
+	}
+}
+if ( function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) && ! function_exists( 'bboss_email_wp_privacy_personal_data_email_content' ) ) {
+	// Pluggable: bp_email_wp_privacy_personal_data_email_content() was defined first (bp-custom.php, a plugin); bboss_email_wp_privacy_personal_data_email_content() delegates to it.
+	function bboss_email_wp_privacy_personal_data_email_content( $email_text, $request_id ) {
+		return bp_email_wp_privacy_personal_data_email_content( $email_text, $request_id );
+	}
+}
+if ( function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) && ! function_exists( 'bboss_email_wp_user_confirmed_action_email_content' ) ) {
+	// Pluggable: bp_email_wp_user_confirmed_action_email_content() was defined first (bp-custom.php, a plugin); bboss_email_wp_user_confirmed_action_email_content() delegates to it.
+	function bboss_email_wp_user_confirmed_action_email_content( $email_text, $email_data ) {
+		return bp_email_wp_user_confirmed_action_email_content( $email_text, $email_data );
+	}
+}
+if ( function_exists( 'bp_email_wp_user_request_action_email_content' ) && ! function_exists( 'bboss_email_wp_user_request_action_email_content' ) ) {
+	// Pluggable: bp_email_wp_user_request_action_email_content() was defined first (bp-custom.php, a plugin); bboss_email_wp_user_request_action_email_content() delegates to it.
+	function bboss_email_wp_user_request_action_email_content( $email_text, $email_data ) {
+		return bp_email_wp_user_request_action_email_content( $email_text, $email_data );
+	}
+}
+if ( function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) && ! function_exists( 'bboss_email_wpmu_signup_blog_notification_email' ) ) {
+	// Pluggable: bp_email_wpmu_signup_blog_notification_email() was defined first (bp-custom.php, a plugin); bboss_email_wpmu_signup_blog_notification_email() delegates to it.
+	function bboss_email_wpmu_signup_blog_notification_email( $content, $domain, $path, $title, $user_login, $user_email, $key, $meta ) {
+		return bp_email_wpmu_signup_blog_notification_email( $content, $domain, $path, $title, $user_login, $user_email, $key, $meta );
+	}
+}
+if ( function_exists( 'bp_email_wpmu_signup_user_notification_email' ) && ! function_exists( 'bboss_email_wpmu_signup_user_notification_email' ) ) {
+	// Pluggable: bp_email_wpmu_signup_user_notification_email() was defined first (bp-custom.php, a plugin); bboss_email_wpmu_signup_user_notification_email() delegates to it.
+	function bboss_email_wpmu_signup_user_notification_email( $content, $user_login, $user_email, $key, $meta ) {
+		return bp_email_wpmu_signup_user_notification_email( $content, $user_login, $user_email, $key, $meta );
+	}
+}
+// @bbwt-com-end compat-layer
+
 if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 	/**
 	 * Notify an author (and/or others) of a comment/trackback/pingback on a post.
@@ -1654,3 +1761,178 @@ if ( ! function_exists( 'bboss_email_wp_privacy_personal_data_email_content' ) )
 
 	add_filter( 'wp_privacy_personal_data_email_content', 'bp_email_wp_privacy_personal_data_email_content', 10, 2 );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_network_admin_email_change_email' ) && ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_network_admin_email_change_email()}.
+	 *
+	 * @deprecated Use bboss_email_network_admin_email_change_email() instead.
+	 */
+	function bp_email_network_admin_email_change_email( $email_change_email, $old_email, $new_email, $network_id ) {
+		return bboss_email_network_admin_email_change_email( $email_change_email, $old_email, $new_email, $network_id );
+	}
+}
+if ( function_exists( 'bboss_email_new_network_admin_email_content' ) && ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_new_network_admin_email_content()}.
+	 *
+	 * @deprecated Use bboss_email_new_network_admin_email_content() instead.
+	 */
+	function bp_email_new_network_admin_email_content( $email_text, $new_admin_email ) {
+		return bboss_email_new_network_admin_email_content( $email_text, $new_admin_email );
+	}
+}
+if ( function_exists( 'bboss_email_newblog_notify_siteadmin' ) && ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_newblog_notify_siteadmin()}.
+	 *
+	 * @deprecated Use bboss_email_newblog_notify_siteadmin() instead.
+	 */
+	function bp_email_newblog_notify_siteadmin( $msg ) {
+		return bboss_email_newblog_notify_siteadmin( $msg );
+	}
+}
+if ( function_exists( 'bboss_email_newuser_notify_siteadmin' ) && ! function_exists( 'bp_email_newuser_notify_siteadmin' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_newuser_notify_siteadmin()}.
+	 *
+	 * @deprecated Use bboss_email_newuser_notify_siteadmin() instead.
+	 */
+	function bp_email_newuser_notify_siteadmin( $msg, $user ) {
+		return bboss_email_newuser_notify_siteadmin( $msg, $user );
+	}
+}
+if ( function_exists( 'bboss_email_retrieve_password_message' ) && ! function_exists( 'bp_email_retrieve_password_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_retrieve_password_message()}.
+	 *
+	 * @deprecated Use bboss_email_retrieve_password_message() instead.
+	 */
+	function bp_email_retrieve_password_message( $message, $key, $user_login, $user_data ) {
+		return bboss_email_retrieve_password_message( $message, $key, $user_login, $user_data );
+	}
+}
+if ( function_exists( 'bboss_email_site_admin_email_change_email' ) && ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_site_admin_email_change_email()}.
+	 *
+	 * @deprecated Use bboss_email_site_admin_email_change_email() instead.
+	 */
+	function bp_email_site_admin_email_change_email( $email_change_email, $old_email, $new_email ) {
+		return bboss_email_site_admin_email_change_email( $email_change_email, $old_email, $new_email );
+	}
+}
+if ( function_exists( 'bboss_email_update_welcome_email' ) && ! function_exists( 'bp_email_update_welcome_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_update_welcome_email()}.
+	 *
+	 * @deprecated Use bboss_email_update_welcome_email() instead.
+	 */
+	function bp_email_update_welcome_email( $welcome_email, $blog_id, $user_id, $password, $title, $meta ) {
+		return bboss_email_update_welcome_email( $welcome_email, $blog_id, $user_id, $password, $title, $meta );
+	}
+}
+if ( function_exists( 'bboss_email_update_welcome_user_email' ) && ! function_exists( 'bp_email_update_welcome_user_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_update_welcome_user_email()}.
+	 *
+	 * @deprecated Use bboss_email_update_welcome_user_email() instead.
+	 */
+	function bp_email_update_welcome_user_email( $welcome_email, $user_id, $password, $meta ) {
+		return bboss_email_update_welcome_user_email( $welcome_email, $user_id, $password, $meta );
+	}
+}
+if ( function_exists( 'bboss_email_wp_email_change_email' ) && ! function_exists( 'bp_email_wp_email_change_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_wp_email_change_email()}.
+	 *
+	 * @deprecated Use bboss_email_wp_email_change_email() instead.
+	 */
+	function bp_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
+		return bboss_email_wp_email_change_email( $email_change_email, $user, $userdata );
+	}
+}
+if ( function_exists( 'bboss_email_wp_new_admin_email_content' ) && ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_wp_new_admin_email_content()}.
+	 *
+	 * @deprecated Use bboss_email_wp_new_admin_email_content() instead.
+	 */
+	function bp_email_wp_new_admin_email_content( $email_text, $new_admin_email ) {
+		return bboss_email_wp_new_admin_email_content( $email_text, $new_admin_email );
+	}
+}
+if ( function_exists( 'bboss_email_wp_new_user_email_content' ) && ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_wp_new_user_email_content()}.
+	 *
+	 * @deprecated Use bboss_email_wp_new_user_email_content() instead.
+	 */
+	function bp_email_wp_new_user_email_content( $email_text, $new_user_email ) {
+		return bboss_email_wp_new_user_email_content( $email_text, $new_user_email );
+	}
+}
+if ( function_exists( 'bboss_email_wp_password_change_email' ) && ! function_exists( 'bp_email_wp_password_change_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_wp_password_change_email()}.
+	 *
+	 * @deprecated Use bboss_email_wp_password_change_email() instead.
+	 */
+	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
+		return bboss_email_wp_password_change_email( $pass_change_email, $user, $userdata );
+	}
+}
+if ( function_exists( 'bboss_email_wp_privacy_personal_data_email_content' ) && ! function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_wp_privacy_personal_data_email_content()}.
+	 *
+	 * @deprecated Use bboss_email_wp_privacy_personal_data_email_content() instead.
+	 */
+	function bp_email_wp_privacy_personal_data_email_content( $email_text, $request_id ) {
+		return bboss_email_wp_privacy_personal_data_email_content( $email_text, $request_id );
+	}
+}
+if ( function_exists( 'bboss_email_wp_user_confirmed_action_email_content' ) && ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_wp_user_confirmed_action_email_content()}.
+	 *
+	 * @deprecated Use bboss_email_wp_user_confirmed_action_email_content() instead.
+	 */
+	function bp_email_wp_user_confirmed_action_email_content( $email_text, $email_data ) {
+		return bboss_email_wp_user_confirmed_action_email_content( $email_text, $email_data );
+	}
+}
+if ( function_exists( 'bboss_email_wp_user_request_action_email_content' ) && ! function_exists( 'bp_email_wp_user_request_action_email_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_wp_user_request_action_email_content()}.
+	 *
+	 * @deprecated Use bboss_email_wp_user_request_action_email_content() instead.
+	 */
+	function bp_email_wp_user_request_action_email_content( $email_text, $email_data ) {
+		return bboss_email_wp_user_request_action_email_content( $email_text, $email_data );
+	}
+}
+if ( function_exists( 'bboss_email_wpmu_signup_blog_notification_email' ) && ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_wpmu_signup_blog_notification_email()}.
+	 *
+	 * @deprecated Use bboss_email_wpmu_signup_blog_notification_email() instead.
+	 */
+	function bp_email_wpmu_signup_blog_notification_email( $content, $domain, $path, $title, $user_login, $user_email, $key, $meta ) {
+		return bboss_email_wpmu_signup_blog_notification_email( $content, $domain, $path, $title, $user_login, $user_email, $key, $meta );
+	}
+}
+if ( function_exists( 'bboss_email_wpmu_signup_user_notification_email' ) && ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_wpmu_signup_user_notification_email()}.
+	 *
+	 * @deprecated Use bboss_email_wpmu_signup_user_notification_email() instead.
+	 */
+	function bp_email_wpmu_signup_user_notification_email( $content, $user_login, $user_email, $key, $meta ) {
+		return bboss_email_wpmu_signup_user_notification_email( $content, $user_login, $user_email, $key, $meta );
+	}
+}
+// @bbwt-com-end compat-layer

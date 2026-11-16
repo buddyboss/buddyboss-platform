@@ -364,3 +364,78 @@ function bboss_block_render_readylaunch_header_block( $attributes = array() ) {
 	<?php
 	return ob_get_clean();
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_block_render_readylaunch_header_block' ) && ! function_exists( 'bb_block_render_readylaunch_header_block' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_block_render_readylaunch_header_block()}.
+	 *
+	 * @deprecated Use bboss_block_render_readylaunch_header_block() instead.
+	 */
+	function bb_block_render_readylaunch_header_block( $attributes = array() ) {
+		return bboss_block_render_readylaunch_header_block( $attributes );
+	}
+}
+if ( function_exists( 'bboss_blocks_editor_settings' ) && ! function_exists( 'bb_blocks_editor_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blocks_editor_settings()}.
+	 *
+	 * @deprecated Use bboss_blocks_editor_settings() instead.
+	 */
+	function bb_blocks_editor_settings( $editor_settings = array() ) {
+		return bboss_blocks_editor_settings( $editor_settings );
+	}
+}
+if ( function_exists( 'bboss_blocks_get_widget_block_classnames' ) && ! function_exists( 'bb_blocks_get_widget_block_classnames' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blocks_get_widget_block_classnames()}.
+	 *
+	 * @deprecated Use bboss_blocks_get_widget_block_classnames() instead.
+	 */
+	function bb_blocks_get_widget_block_classnames( $block_name = '' ) {
+		return bboss_blocks_get_widget_block_classnames( $block_name );
+	}
+}
+if ( function_exists( 'bboss_enqueue_block_editor_assets' ) && ! function_exists( 'bb_enqueue_block_editor_assets' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_enqueue_block_editor_assets()}.
+	 *
+	 * @deprecated Use bboss_enqueue_block_editor_assets() instead.
+	 */
+	function bb_enqueue_block_editor_assets() {
+		return bboss_enqueue_block_editor_assets();
+	}
+}
+if ( function_exists( 'bboss_register_block' ) && ! function_exists( 'bb_register_block' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_block()}.
+	 *
+	 * @deprecated Use bboss_register_block() instead.
+	 */
+	function bb_register_block( $args = array() ) {
+		return bboss_register_block( $args );
+	}
+}
+if ( function_exists( 'bboss_support_blocks' ) && ! function_exists( 'bb_support_blocks' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_support_blocks()}.
+	 *
+	 * @deprecated Use bboss_support_blocks() instead.
+	 */
+	function bb_support_blocks() {
+		return bboss_support_blocks();
+	}
+}
+if ( function_exists( 'bboss_widget_block_dynamic_classname' ) && ! function_exists( 'bb_widget_block_dynamic_classname' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_widget_block_dynamic_classname()}.
+	 *
+	 * @deprecated Use bboss_widget_block_dynamic_classname() instead.
+	 */
+	function bb_widget_block_dynamic_classname( $classname, $block_name ) {
+		return bboss_widget_block_dynamic_classname( $classname, $block_name );
+	}
+}
+// @bbwt-com-end compat-layer

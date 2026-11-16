@@ -893,3 +893,278 @@ function bboss_friends_auto_follow( $friendship_id, $initiator_user_id, $friend_
 	}
 }
 add_action( 'friends_friendship_accepted', 'bb_friends_auto_follow', 10, 3 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_auto_follow' ) && ! function_exists( 'bb_friends_auto_follow' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_auto_follow()}.
+	 *
+	 * @deprecated Use bboss_friends_auto_follow() instead.
+	 */
+	function bb_friends_auto_follow( $friendship_id, $initiator_user_id, $friend_user_id ) {
+		return bboss_friends_auto_follow( $friendship_id, $initiator_user_id, $friend_user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_accept_friendship' ) && ! function_exists( 'friends_accept_friendship' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_accept_friendship()}.
+	 *
+	 * @deprecated Use bboss_friends_accept_friendship() instead.
+	 */
+	function friends_accept_friendship( $friendship_id ) {
+		return bboss_friends_accept_friendship( $friendship_id );
+	}
+}
+if ( function_exists( 'bboss_friends_add_friend' ) && ! function_exists( 'friends_add_friend' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_add_friend()}.
+	 *
+	 * @deprecated Use bboss_friends_add_friend() instead.
+	 */
+	function friends_add_friend( $initiator_userid, $friend_userid, $force_accept = false ) {
+		return bboss_friends_add_friend( $initiator_userid, $friend_userid, $force_accept );
+	}
+}
+if ( function_exists( 'bboss_friends_check_friendship' ) && ! function_exists( 'friends_check_friendship' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_check_friendship()}.
+	 *
+	 * @deprecated Use bboss_friends_check_friendship() instead.
+	 */
+	function friends_check_friendship( $user_id, $possible_friend_id ) {
+		return bboss_friends_check_friendship( $user_id, $possible_friend_id );
+	}
+}
+if ( function_exists( 'bboss_friends_check_friendship_status' ) && ! function_exists( 'friends_check_friendship_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_check_friendship_status()}.
+	 *
+	 * @deprecated Use bboss_friends_check_friendship_status() instead.
+	 */
+	function friends_check_friendship_status( $user_id, $possible_friend_id ) {
+		return bboss_friends_check_friendship_status( $user_id, $possible_friend_id );
+	}
+}
+if ( function_exists( 'bboss_friends_check_user_has_friends' ) && ! function_exists( 'friends_check_user_has_friends' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_check_user_has_friends()}.
+	 *
+	 * @deprecated Use bboss_friends_check_user_has_friends() instead.
+	 */
+	function friends_check_user_has_friends( $user_id ) {
+		return bboss_friends_check_user_has_friends( $user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_count_invitable_friends' ) && ! function_exists( 'friends_count_invitable_friends' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_count_invitable_friends()}.
+	 *
+	 * @deprecated Use bboss_friends_count_invitable_friends() instead.
+	 */
+	function friends_count_invitable_friends( $user_id, $group_id ) {
+		return bboss_friends_count_invitable_friends( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_friends_get_alphabetically' ) && ! function_exists( 'friends_get_alphabetically' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_get_alphabetically()}.
+	 *
+	 * @deprecated Use bboss_friends_get_alphabetically() instead.
+	 */
+	function friends_get_alphabetically( $user_id, $per_page = 0, $page = 0, $filter = '' ) {
+		return bboss_friends_get_alphabetically( $user_id, $per_page, $page, $filter );
+	}
+}
+if ( function_exists( 'bboss_friends_get_bulk_last_active' ) && ! function_exists( 'friends_get_bulk_last_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_get_bulk_last_active()}.
+	 *
+	 * @deprecated Use bboss_friends_get_bulk_last_active() instead.
+	 */
+	function friends_get_bulk_last_active( $friend_ids ) {
+		return bboss_friends_get_bulk_last_active( $friend_ids );
+	}
+}
+if ( function_exists( 'bboss_friends_get_friend_count_for_user' ) && ! function_exists( 'friends_get_friend_count_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_get_friend_count_for_user()}.
+	 *
+	 * @deprecated Use bboss_friends_get_friend_count_for_user() instead.
+	 */
+	function friends_get_friend_count_for_user( $user_id ) {
+		return bboss_friends_get_friend_count_for_user( $user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_get_friend_user_ids' ) && ! function_exists( 'friends_get_friend_user_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_get_friend_user_ids()}.
+	 *
+	 * @deprecated Use bboss_friends_get_friend_user_ids() instead.
+	 */
+	function friends_get_friend_user_ids( $user_id, $friend_requests_only = false, $assoc_arr = false ) {
+		return bboss_friends_get_friend_user_ids( $user_id, $friend_requests_only, $assoc_arr );
+	}
+}
+if ( function_exists( 'bboss_friends_get_friends_invite_list' ) && ! function_exists( 'friends_get_friends_invite_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_get_friends_invite_list()}.
+	 *
+	 * @deprecated Use bboss_friends_get_friends_invite_list() instead.
+	 */
+	function friends_get_friends_invite_list( $user_id = 0, $group_id = 0 ) {
+		return bboss_friends_get_friends_invite_list( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_friends_get_friendship_id' ) && ! function_exists( 'friends_get_friendship_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_get_friendship_id()}.
+	 *
+	 * @deprecated Use bboss_friends_get_friendship_id() instead.
+	 */
+	function friends_get_friendship_id( $initiator_user_id, $friend_user_id ) {
+		return bboss_friends_get_friendship_id( $initiator_user_id, $friend_user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_get_friendship_request_user_ids' ) && ! function_exists( 'friends_get_friendship_request_user_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_get_friendship_request_user_ids()}.
+	 *
+	 * @deprecated Use bboss_friends_get_friendship_request_user_ids() instead.
+	 */
+	function friends_get_friendship_request_user_ids( $user_id ) {
+		return bboss_friends_get_friendship_request_user_ids( $user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_get_newest' ) && ! function_exists( 'friends_get_newest' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_get_newest()}.
+	 *
+	 * @deprecated Use bboss_friends_get_newest() instead.
+	 */
+	function friends_get_newest( $user_id, $per_page = 0, $page = 0, $filter = '' ) {
+		return bboss_friends_get_newest( $user_id, $per_page, $page, $filter );
+	}
+}
+if ( function_exists( 'bboss_friends_get_recently_active' ) && ! function_exists( 'friends_get_recently_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_get_recently_active()}.
+	 *
+	 * @deprecated Use bboss_friends_get_recently_active() instead.
+	 */
+	function friends_get_recently_active( $user_id, $per_page = 0, $page = 0, $filter = '' ) {
+		return bboss_friends_get_recently_active( $user_id, $per_page, $page, $filter );
+	}
+}
+if ( function_exists( 'bboss_friends_get_total_friend_count' ) && ! function_exists( 'friends_get_total_friend_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_get_total_friend_count()}.
+	 *
+	 * @deprecated Use bboss_friends_get_total_friend_count() instead.
+	 */
+	function friends_get_total_friend_count( $user_id = 0 ) {
+		return bboss_friends_get_total_friend_count( $user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_is_friendship_confirmed' ) && ! function_exists( 'friends_is_friendship_confirmed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_is_friendship_confirmed()}.
+	 *
+	 * @deprecated Use bboss_friends_is_friendship_confirmed() instead.
+	 */
+	function friends_is_friendship_confirmed( $friendship_id ) {
+		return bboss_friends_is_friendship_confirmed( $friendship_id );
+	}
+}
+if ( function_exists( 'bboss_friends_notification_accepted_request' ) && ! function_exists( 'friends_notification_accepted_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_notification_accepted_request()}.
+	 *
+	 * @deprecated Use bboss_friends_notification_accepted_request() instead.
+	 */
+	function friends_notification_accepted_request( $friendship_id, $initiator_id, $friend_id ) {
+		return bboss_friends_notification_accepted_request( $friendship_id, $initiator_id, $friend_id );
+	}
+}
+if ( function_exists( 'bboss_friends_notification_new_request' ) && ! function_exists( 'friends_notification_new_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_notification_new_request()}.
+	 *
+	 * @deprecated Use bboss_friends_notification_new_request() instead.
+	 */
+	function friends_notification_new_request( $friendship_id, $initiator_id, $friend_id ) {
+		return bboss_friends_notification_new_request( $friendship_id, $initiator_id, $friend_id );
+	}
+}
+if ( function_exists( 'bboss_friends_reject_friendship' ) && ! function_exists( 'friends_reject_friendship' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_reject_friendship()}.
+	 *
+	 * @deprecated Use bboss_friends_reject_friendship() instead.
+	 */
+	function friends_reject_friendship( $friendship_id ) {
+		return bboss_friends_reject_friendship( $friendship_id );
+	}
+}
+if ( function_exists( 'bboss_friends_remove_data' ) && ! function_exists( 'friends_remove_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_remove_data()}.
+	 *
+	 * @deprecated Use bboss_friends_remove_data() instead.
+	 */
+	function friends_remove_data( $user_id ) {
+		return bboss_friends_remove_data( $user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_remove_friend' ) && ! function_exists( 'friends_remove_friend' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_remove_friend()}.
+	 *
+	 * @deprecated Use bboss_friends_remove_friend() instead.
+	 */
+	function friends_remove_friend( $initiator_userid, $friend_userid ) {
+		return bboss_friends_remove_friend( $initiator_userid, $friend_userid );
+	}
+}
+if ( function_exists( 'bboss_friends_search_friends' ) && ! function_exists( 'friends_search_friends' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_search_friends()}.
+	 *
+	 * @deprecated Use bboss_friends_search_friends() instead.
+	 */
+	function friends_search_friends( $search_terms, $user_id, $pag_num = 10, $pag_page = 1 ) {
+		return bboss_friends_search_friends( $search_terms, $user_id, $pag_num, $pag_page );
+	}
+}
+if ( function_exists( 'bboss_friends_search_users' ) && ! function_exists( 'friends_search_users' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_search_users()}.
+	 *
+	 * @deprecated Use bboss_friends_search_users() instead.
+	 */
+	function friends_search_users( $search_terms, $user_id, $pag_num = 0, $pag_page = 0 ) {
+		return bboss_friends_search_users( $search_terms, $user_id, $pag_num, $pag_page );
+	}
+}
+if ( function_exists( 'bboss_friends_update_friend_totals' ) && ! function_exists( 'friends_update_friend_totals' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_update_friend_totals()}.
+	 *
+	 * @deprecated Use bboss_friends_update_friend_totals() instead.
+	 */
+	function friends_update_friend_totals( $initiator_user_id, $friend_user_id, $status = 'add' ) {
+		return bboss_friends_update_friend_totals( $initiator_user_id, $friend_user_id, $status );
+	}
+}
+if ( function_exists( 'bboss_friends_withdraw_friendship' ) && ! function_exists( 'friends_withdraw_friendship' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_withdraw_friendship()}.
+	 *
+	 * @deprecated Use bboss_friends_withdraw_friendship() instead.
+	 */
+	function friends_withdraw_friendship( $initiator_userid, $friend_userid ) {
+		return bboss_friends_withdraw_friendship( $initiator_userid, $friend_userid );
+	}
+}
+// @bbwt-com-end compat-layer

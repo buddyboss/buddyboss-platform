@@ -96,3 +96,38 @@ function bboss_core_new_user_activity( $user ) {
 	);
 }
 add_action( 'bp_core_activated_user', 'bp_core_new_user_activity' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_new_user_activity' ) && ! function_exists( 'bp_core_new_user_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_new_user_activity()}.
+	 *
+	 * @deprecated Use bboss_core_new_user_activity() instead.
+	 */
+	function bp_core_new_user_activity( $user ) {
+		return bboss_core_new_user_activity( $user );
+	}
+}
+if ( function_exists( 'bboss_members_format_activity_action_new_member' ) && ! function_exists( 'bp_members_format_activity_action_new_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_format_activity_action_new_member()}.
+	 *
+	 * @deprecated Use bboss_members_format_activity_action_new_member() instead.
+	 */
+	function bp_members_format_activity_action_new_member( $action, $activity ) {
+		return bboss_members_format_activity_action_new_member( $action, $activity );
+	}
+}
+if ( function_exists( 'bboss_members_register_activity_actions' ) && ! function_exists( 'bp_members_register_activity_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_register_activity_actions()}.
+	 *
+	 * @deprecated Use bboss_members_register_activity_actions() instead.
+	 */
+	function bp_members_register_activity_actions() {
+		return bboss_members_register_activity_actions();
+	}
+}
+// @bbwt-com-end compat-layer

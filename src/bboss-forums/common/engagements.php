@@ -1015,3 +1015,18 @@ class BBoss_BBP_User_Engagements_User extends BBoss_BBP_User_Engagements_Base {
 		return bboss_bbp_parse_args( $args, array(), $context_key );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_user_engagements_interface' ) && ! function_exists( 'bbp_user_engagements_interface' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_user_engagements_interface()}.
+	 *
+	 * @deprecated Use bboss_bbp_user_engagements_interface() instead.
+	 */
+	function bbp_user_engagements_interface( $rel_key = '', $rel_type = 'post' ) {
+		return bboss_bbp_user_engagements_interface( $rel_key, $rel_type );
+	}
+}
+// @bbwt-com-end compat-layer

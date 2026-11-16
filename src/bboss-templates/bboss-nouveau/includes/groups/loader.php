@@ -184,3 +184,18 @@ function bboss_nouveau_groups( $bp_nouveau = null ) {
 	$bp_nouveau->groups = new BBoss_Nouveau_Groups();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_groups', 10, 1 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups' ) && ! function_exists( 'bp_nouveau_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups() instead.
+	 */
+	function bp_nouveau_groups( $bp_nouveau = null ) {
+		return bboss_nouveau_groups( $bp_nouveau );
+	}
+}
+// @bbwt-com-end compat-layer

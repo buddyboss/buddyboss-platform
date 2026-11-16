@@ -147,3 +147,27 @@ function bboss_core_ajax_widget_members() {
 add_action( 'wp_ajax_widget_members', 'bp_core_ajax_widget_members' );
 add_action( 'wp_ajax_nopriv_widget_members', 'bp_core_ajax_widget_members' );
 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_ajax_widget_members' ) && ! function_exists( 'bp_core_ajax_widget_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_ajax_widget_members()}.
+	 *
+	 * @deprecated Use bboss_core_ajax_widget_members() instead.
+	 */
+	function bp_core_ajax_widget_members() {
+		return bboss_core_ajax_widget_members();
+	}
+}
+if ( function_exists( 'bboss_members_register_widgets' ) && ! function_exists( 'bp_members_register_widgets' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_register_widgets()}.
+	 *
+	 * @deprecated Use bboss_members_register_widgets() instead.
+	 */
+	function bp_members_register_widgets() {
+		return bboss_members_register_widgets();
+	}
+}
+// @bbwt-com-end compat-layer

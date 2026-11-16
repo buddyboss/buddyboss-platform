@@ -54,3 +54,28 @@ function bboss_bbp_dummy_role_names() {
 	/* translators: user role */
 	__( 'Blocked', 'buddyboss' );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_dummy_role_names' ) && ! function_exists( 'bbp_dummy_role_names' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_dummy_role_names()}.
+	 *
+	 * @deprecated Use bboss_bbp_dummy_role_names() instead.
+	 */
+	function bbp_dummy_role_names() {
+		return bboss_bbp_dummy_role_names();
+	}
+}
+if ( function_exists( 'bboss_bbp_translate_user_role' ) && ! function_exists( 'bbp_translate_user_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_translate_user_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_translate_user_role() instead.
+	 */
+	function bbp_translate_user_role( $name ) {
+		return bboss_bbp_translate_user_role( $name );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -28,3 +28,18 @@ function bboss_core_fetch_avatar_filter( $avatar, $user, $size, $default, $alt =
 	_deprecated_function( __FUNCTION__, '2.9' );
 	return $avatar;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_fetch_avatar_filter' ) && ! function_exists( 'bp_core_fetch_avatar_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_fetch_avatar_filter()}.
+	 *
+	 * @deprecated Use bboss_core_fetch_avatar_filter() instead.
+	 */
+	function bp_core_fetch_avatar_filter( $avatar, $user, $size, $default, $alt = '', $args = array() ) {
+		return bboss_core_fetch_avatar_filter( $avatar, $user, $size, $default, $alt, $args );
+	}
+}
+// @bbwt-com-end compat-layer

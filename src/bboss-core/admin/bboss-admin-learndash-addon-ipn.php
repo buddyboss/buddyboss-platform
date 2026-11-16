@@ -237,3 +237,58 @@ function bboss_learndash_addon_sync_ipn() {
 	// @bbwt-com-end drm
 }
 add_action( 'admin_init', 'bb_learndash_addon_sync_ipn', 30 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_learndash_addon_has_active_license' ) && ! function_exists( 'bb_learndash_addon_has_active_license' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_learndash_addon_has_active_license()}.
+	 *
+	 * @deprecated Use bboss_learndash_addon_has_active_license() instead.
+	 */
+	function bb_learndash_addon_has_active_license() {
+		return bboss_learndash_addon_has_active_license();
+	}
+}
+if ( function_exists( 'bboss_learndash_addon_is_active' ) && ! function_exists( 'bb_learndash_addon_is_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_learndash_addon_is_active()}.
+	 *
+	 * @deprecated Use bboss_learndash_addon_is_active() instead.
+	 */
+	function bb_learndash_addon_is_active() {
+		return bboss_learndash_addon_is_active();
+	}
+}
+if ( function_exists( 'bboss_learndash_addon_license_is_lite' ) && ! function_exists( 'bb_learndash_addon_license_is_lite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_learndash_addon_license_is_lite()}.
+	 *
+	 * @deprecated Use bboss_learndash_addon_license_is_lite() instead.
+	 */
+	function bb_learndash_addon_license_is_lite() {
+		return bboss_learndash_addon_license_is_lite();
+	}
+}
+if ( function_exists( 'bboss_learndash_addon_site_uses_learndash' ) && ! function_exists( 'bb_learndash_addon_site_uses_learndash' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_learndash_addon_site_uses_learndash()}.
+	 *
+	 * @deprecated Use bboss_learndash_addon_site_uses_learndash() instead.
+	 */
+	function bb_learndash_addon_site_uses_learndash() {
+		return bboss_learndash_addon_site_uses_learndash();
+	}
+}
+if ( function_exists( 'bboss_learndash_addon_sync_ipn' ) && ! function_exists( 'bb_learndash_addon_sync_ipn' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_learndash_addon_sync_ipn()}.
+	 *
+	 * @deprecated Use bboss_learndash_addon_sync_ipn() instead.
+	 */
+	function bb_learndash_addon_sync_ipn() {
+		return bboss_learndash_addon_sync_ipn();
+	}
+}
+// @bbwt-com-end compat-layer

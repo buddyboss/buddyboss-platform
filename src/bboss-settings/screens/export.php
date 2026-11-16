@@ -30,3 +30,18 @@ function bboss_settings_screen_export_data() {
 	 */
 	bboss_core_load_template( apply_filters( 'bp_settings_screen_export_data_settings', 'members/single/settings/export-data' ) );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_screen_export_data' ) && ! function_exists( 'bp_settings_screen_export_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_screen_export_data()}.
+	 *
+	 * @deprecated Use bboss_settings_screen_export_data() instead.
+	 */
+	function bp_settings_screen_export_data() {
+		return bboss_settings_screen_export_data();
+	}
+}
+// @bbwt-com-end compat-layer

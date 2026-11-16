@@ -184,3 +184,28 @@ function bboss_activity_screen_single_activity_permalink() {
 	bboss_core_load_template( $template );
 }
 add_action( 'bp_screens', 'bp_activity_screen_single_activity_permalink' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_action_permalink_router' ) && ! function_exists( 'bp_activity_action_permalink_router' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_action_permalink_router()}.
+	 *
+	 * @deprecated Use bboss_activity_action_permalink_router() instead.
+	 */
+	function bp_activity_action_permalink_router() {
+		return bboss_activity_action_permalink_router();
+	}
+}
+if ( function_exists( 'bboss_activity_screen_single_activity_permalink' ) && ! function_exists( 'bp_activity_screen_single_activity_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_screen_single_activity_permalink()}.
+	 *
+	 * @deprecated Use bboss_activity_screen_single_activity_permalink() instead.
+	 */
+	function bp_activity_screen_single_activity_permalink() {
+		return bboss_activity_screen_single_activity_permalink();
+	}
+}
+// @bbwt-com-end compat-layer

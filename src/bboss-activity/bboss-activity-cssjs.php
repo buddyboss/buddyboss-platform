@@ -74,3 +74,28 @@ function bboss_add_mentions_on_tinymce_init( $settings, $editor_id ) {
 
 	return $settings;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_mentions_script' ) && ! function_exists( 'bp_activity_mentions_script' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_mentions_script()}.
+	 *
+	 * @deprecated Use bboss_activity_mentions_script() instead.
+	 */
+	function bp_activity_mentions_script() {
+		return bboss_activity_mentions_script();
+	}
+}
+if ( function_exists( 'bboss_add_mentions_on_tinymce_init' ) && ! function_exists( 'bp_add_mentions_on_tinymce_init' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_add_mentions_on_tinymce_init()}.
+	 *
+	 * @deprecated Use bboss_add_mentions_on_tinymce_init() instead.
+	 */
+	function bp_add_mentions_on_tinymce_init( $settings, $editor_id ) {
+		return bboss_add_mentions_on_tinymce_init( $settings, $editor_id );
+	}
+}
+// @bbwt-com-end compat-layer

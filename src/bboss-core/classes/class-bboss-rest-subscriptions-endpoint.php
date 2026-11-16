@@ -1208,8 +1208,8 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
 if ( ( class_exists( 'BBoss_REST_Subscriptions_Endpoint', false ) || interface_exists( 'BBoss_REST_Subscriptions_Endpoint', false ) || trait_exists( 'BBoss_REST_Subscriptions_Endpoint', false ) ) && ! class_exists( 'BB_REST_Subscriptions_Endpoint', false ) && ! interface_exists( 'BB_REST_Subscriptions_Endpoint', false ) ) {
 	class_alias( 'BBoss_REST_Subscriptions_Endpoint', 'BB_REST_Subscriptions_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
 }

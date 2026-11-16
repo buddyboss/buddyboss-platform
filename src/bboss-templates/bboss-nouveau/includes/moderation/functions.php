@@ -61,3 +61,38 @@ function bboss_nouveau_moderation_localize_scripts( $params = array() ) {
 
 	return $params;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_moderation_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_moderation_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_moderation_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_moderation_enqueue_scripts() instead.
+	 */
+	function bp_nouveau_moderation_enqueue_scripts() {
+		return bboss_nouveau_moderation_enqueue_scripts();
+	}
+}
+if ( function_exists( 'bboss_nouveau_moderation_localize_scripts' ) && ! function_exists( 'bp_nouveau_moderation_localize_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_moderation_localize_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_moderation_localize_scripts() instead.
+	 */
+	function bp_nouveau_moderation_localize_scripts( $params = array() ) {
+		return bboss_nouveau_moderation_localize_scripts( $params );
+	}
+}
+if ( function_exists( 'bboss_nouveau_moderation_register_scripts' ) && ! function_exists( 'bp_nouveau_moderation_register_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_moderation_register_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_moderation_register_scripts() instead.
+	 */
+	function bp_nouveau_moderation_register_scripts( $scripts = array() ) {
+		return bboss_nouveau_moderation_register_scripts( $scripts );
+	}
+}
+// @bbwt-com-end compat-layer

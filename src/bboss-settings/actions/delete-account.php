@@ -58,3 +58,18 @@ function bboss_settings_action_delete_account() {
 	}
 }
 add_action( 'bp_actions', 'bp_settings_action_delete_account' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_action_delete_account' ) && ! function_exists( 'bp_settings_action_delete_account' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_action_delete_account()}.
+	 *
+	 * @deprecated Use bboss_settings_action_delete_account() instead.
+	 */
+	function bp_settings_action_delete_account() {
+		return bboss_settings_action_delete_account();
+	}
+}
+// @bbwt-com-end compat-layer

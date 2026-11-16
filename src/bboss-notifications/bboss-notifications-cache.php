@@ -119,3 +119,58 @@ function bboss_notifications_clear_all_for_user_cache_before_update( $update_arg
 	}
 }
 add_action( 'bp_notification_before_update', 'bp_notifications_clear_all_for_user_cache_before_update', 10, 2 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_clear_all_for_user_cache' ) && ! function_exists( 'bp_notifications_clear_all_for_user_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_clear_all_for_user_cache()}.
+	 *
+	 * @deprecated Use bboss_notifications_clear_all_for_user_cache() instead.
+	 */
+	function bp_notifications_clear_all_for_user_cache( $user_id = 0 ) {
+		return bboss_notifications_clear_all_for_user_cache( $user_id );
+	}
+}
+if ( function_exists( 'bboss_notifications_clear_all_for_user_cache_after_save' ) && ! function_exists( 'bp_notifications_clear_all_for_user_cache_after_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_clear_all_for_user_cache_after_save()}.
+	 *
+	 * @deprecated Use bboss_notifications_clear_all_for_user_cache_after_save() instead.
+	 */
+	function bp_notifications_clear_all_for_user_cache_after_save( BBoss_Notifications_Notification $n ) {
+		return bboss_notifications_clear_all_for_user_cache_after_save( $n );
+	}
+}
+if ( function_exists( 'bboss_notifications_clear_all_for_user_cache_before_delete' ) && ! function_exists( 'bp_notifications_clear_all_for_user_cache_before_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_clear_all_for_user_cache_before_delete()}.
+	 *
+	 * @deprecated Use bboss_notifications_clear_all_for_user_cache_before_delete() instead.
+	 */
+	function bp_notifications_clear_all_for_user_cache_before_delete( $args ) {
+		return bboss_notifications_clear_all_for_user_cache_before_delete( $args );
+	}
+}
+if ( function_exists( 'bboss_notifications_clear_all_for_user_cache_before_update' ) && ! function_exists( 'bp_notifications_clear_all_for_user_cache_before_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_clear_all_for_user_cache_before_update()}.
+	 *
+	 * @deprecated Use bboss_notifications_clear_all_for_user_cache_before_update() instead.
+	 */
+	function bp_notifications_clear_all_for_user_cache_before_update( $update_args, $where_args ) {
+		return bboss_notifications_clear_all_for_user_cache_before_update( $update_args, $where_args );
+	}
+}
+if ( function_exists( 'bboss_notifications_update_meta_cache' ) && ! function_exists( 'bp_notifications_update_meta_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_update_meta_cache()}.
+	 *
+	 * @deprecated Use bboss_notifications_update_meta_cache() instead.
+	 */
+	function bp_notifications_update_meta_cache( $notification_ids = false ) {
+		return bboss_notifications_update_meta_cache( $notification_ids );
+	}
+}
+// @bbwt-com-end compat-layer

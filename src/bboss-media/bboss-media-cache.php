@@ -279,3 +279,138 @@ function bboss_media_clear_album_group_object_cache_on_delete( $albums ) {
 	}
 }
 add_action( 'bp_media_album_before_delete', 'bp_media_clear_album_group_object_cache_on_delete', 10 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_album_reset_cache_incrementor' ) && ! function_exists( 'bp_media_album_reset_cache_incrementor' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_album_reset_cache_incrementor()}.
+	 *
+	 * @deprecated Use bboss_media_album_reset_cache_incrementor() instead.
+	 */
+	function bp_media_album_reset_cache_incrementor() {
+		return bboss_media_album_reset_cache_incrementor();
+	}
+}
+if ( function_exists( 'bboss_media_clear_album_group_object_cache' ) && ! function_exists( 'bp_media_clear_album_group_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_clear_album_group_object_cache()}.
+	 *
+	 * @deprecated Use bboss_media_clear_album_group_object_cache() instead.
+	 */
+	function bp_media_clear_album_group_object_cache( $album ) {
+		return bboss_media_clear_album_group_object_cache( $album );
+	}
+}
+if ( function_exists( 'bboss_media_clear_album_group_object_cache_on_delete' ) && ! function_exists( 'bp_media_clear_album_group_object_cache_on_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_clear_album_group_object_cache_on_delete()}.
+	 *
+	 * @deprecated Use bboss_media_clear_album_group_object_cache_on_delete() instead.
+	 */
+	function bp_media_clear_album_group_object_cache_on_delete( $albums ) {
+		return bboss_media_clear_album_group_object_cache_on_delete( $albums );
+	}
+}
+if ( function_exists( 'bboss_media_clear_cache_for_album' ) && ! function_exists( 'bp_media_clear_cache_for_album' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_clear_cache_for_album()}.
+	 *
+	 * @deprecated Use bboss_media_clear_cache_for_album() instead.
+	 */
+	function bp_media_clear_cache_for_album( $album ) {
+		return bboss_media_clear_cache_for_album( $album );
+	}
+}
+if ( function_exists( 'bboss_media_clear_cache_for_deleted_album' ) && ! function_exists( 'bp_media_clear_cache_for_deleted_album' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_clear_cache_for_deleted_album()}.
+	 *
+	 * @deprecated Use bboss_media_clear_cache_for_deleted_album() instead.
+	 */
+	function bp_media_clear_cache_for_deleted_album( $deleted_ids ) {
+		return bboss_media_clear_cache_for_deleted_album( $deleted_ids );
+	}
+}
+if ( function_exists( 'bboss_media_clear_cache_for_deleted_media' ) && ! function_exists( 'bp_media_clear_cache_for_deleted_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_clear_cache_for_deleted_media()}.
+	 *
+	 * @deprecated Use bboss_media_clear_cache_for_deleted_media() instead.
+	 */
+	function bp_media_clear_cache_for_deleted_media( $deleted_ids ) {
+		return bboss_media_clear_cache_for_deleted_media( $deleted_ids );
+	}
+}
+if ( function_exists( 'bboss_media_clear_cache_for_media' ) && ! function_exists( 'bp_media_clear_cache_for_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_clear_cache_for_media()}.
+	 *
+	 * @deprecated Use bboss_media_clear_cache_for_media() instead.
+	 */
+	function bp_media_clear_cache_for_media( $media ) {
+		return bboss_media_clear_cache_for_media( $media );
+	}
+}
+if ( function_exists( 'bboss_media_clear_media_group_object_cache' ) && ! function_exists( 'bp_media_clear_media_group_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_clear_media_group_object_cache()}.
+	 *
+	 * @deprecated Use bboss_media_clear_media_group_object_cache() instead.
+	 */
+	function bp_media_clear_media_group_object_cache( $media ) {
+		return bboss_media_clear_media_group_object_cache( $media );
+	}
+}
+if ( function_exists( 'bboss_media_clear_media_group_object_cache_on_delete' ) && ! function_exists( 'bp_media_clear_media_group_object_cache_on_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_clear_media_group_object_cache_on_delete()}.
+	 *
+	 * @deprecated Use bboss_media_clear_media_group_object_cache_on_delete() instead.
+	 */
+	function bp_media_clear_media_group_object_cache_on_delete( $medias ) {
+		return bboss_media_clear_media_group_object_cache_on_delete( $medias );
+	}
+}
+if ( function_exists( 'bboss_media_clear_media_user_object_cache' ) && ! function_exists( 'bp_media_clear_media_user_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_clear_media_user_object_cache()}.
+	 *
+	 * @deprecated Use bboss_media_clear_media_user_object_cache() instead.
+	 */
+	function bp_media_clear_media_user_object_cache( $media ) {
+		return bboss_media_clear_media_user_object_cache( $media );
+	}
+}
+if ( function_exists( 'bboss_media_clear_media_user_object_cache_on_delete' ) && ! function_exists( 'bp_media_clear_media_user_object_cache_on_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_clear_media_user_object_cache_on_delete()}.
+	 *
+	 * @deprecated Use bboss_media_clear_media_user_object_cache_on_delete() instead.
+	 */
+	function bp_media_clear_media_user_object_cache_on_delete( $medias ) {
+		return bboss_media_clear_media_user_object_cache_on_delete( $medias );
+	}
+}
+if ( function_exists( 'bboss_media_remove_all_user_object_cache_data' ) && ! function_exists( 'bp_media_remove_all_user_object_cache_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_remove_all_user_object_cache_data()}.
+	 *
+	 * @deprecated Use bboss_media_remove_all_user_object_cache_data() instead.
+	 */
+	function bp_media_remove_all_user_object_cache_data( $user_id ) {
+		return bboss_media_remove_all_user_object_cache_data( $user_id );
+	}
+}
+if ( function_exists( 'bboss_media_reset_cache_incrementor' ) && ! function_exists( 'bp_media_reset_cache_incrementor' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_reset_cache_incrementor()}.
+	 *
+	 * @deprecated Use bboss_media_reset_cache_incrementor() instead.
+	 */
+	function bp_media_reset_cache_incrementor() {
+		return bboss_media_reset_cache_incrementor();
+	}
+}
+// @bbwt-com-end compat-layer

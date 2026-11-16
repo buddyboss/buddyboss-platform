@@ -1754,3 +1754,18 @@ function bboss_register_group_extension( $group_extension_class = '' ) {
 		11
 	);
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_register_group_extension' ) && ! function_exists( 'bp_register_group_extension' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_group_extension()}.
+	 *
+	 * @deprecated Use bboss_register_group_extension() instead.
+	 */
+	function bp_register_group_extension( $group_extension_class = '' ) {
+		return bboss_register_group_extension( $group_extension_class );
+	}
+}
+// @bbwt-com-end compat-layer

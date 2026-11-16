@@ -115,3 +115,58 @@ function bboss_nouveau_media_timestamp() {
 		 */
 		return apply_filters( 'bp_nouveau_get_media_timestamp', strtotime( bboss_get_media_date_created() ) );
 	}
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_after_media_directory_content' ) && ! function_exists( 'bp_nouveau_after_media_directory_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_after_media_directory_content()}.
+	 *
+	 * @deprecated Use bboss_nouveau_after_media_directory_content() instead.
+	 */
+	function bp_nouveau_after_media_directory_content() {
+		return bboss_nouveau_after_media_directory_content();
+	}
+}
+if ( function_exists( 'bboss_nouveau_before_media_directory_content' ) && ! function_exists( 'bp_nouveau_before_media_directory_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_before_media_directory_content()}.
+	 *
+	 * @deprecated Use bboss_nouveau_before_media_directory_content() instead.
+	 */
+	function bp_nouveau_before_media_directory_content() {
+		return bboss_nouveau_before_media_directory_content();
+	}
+}
+if ( function_exists( 'bboss_nouveau_get_media_timestamp' ) && ! function_exists( 'bp_nouveau_get_media_timestamp' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_media_timestamp()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_media_timestamp() instead.
+	 */
+	function bp_nouveau_get_media_timestamp() {
+		return bboss_nouveau_get_media_timestamp();
+	}
+}
+if ( function_exists( 'bboss_nouveau_media_hook' ) && ! function_exists( 'bp_nouveau_media_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_media_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_media_hook() instead.
+	 */
+	function bp_nouveau_media_hook( $when = '', $suffix = '' ) {
+		return bboss_nouveau_media_hook( $when, $suffix );
+	}
+}
+if ( function_exists( 'bboss_nouveau_media_timestamp' ) && ! function_exists( 'bp_nouveau_media_timestamp' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_media_timestamp()}.
+	 *
+	 * @deprecated Use bboss_nouveau_media_timestamp() instead.
+	 */
+	function bp_nouveau_media_timestamp() {
+		return bboss_nouveau_media_timestamp();
+	}
+}
+// @bbwt-com-end compat-layer

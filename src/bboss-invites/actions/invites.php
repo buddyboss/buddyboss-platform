@@ -397,3 +397,78 @@ function bboss_invites_kses_allowed_tags() {
 		)
 	);
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_kses_allowed_tags' ) && ! function_exists( 'bp_invites_kses_allowed_tags' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_kses_allowed_tags()}.
+	 *
+	 * @deprecated Use bboss_invites_kses_allowed_tags() instead.
+	 */
+	function bp_invites_kses_allowed_tags() {
+		return bboss_invites_kses_allowed_tags();
+	}
+}
+if ( function_exists( 'bboss_invites_member_invite_filter_content' ) && ! function_exists( 'bp_invites_member_invite_filter_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_filter_content()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_filter_content() instead.
+	 */
+	function bp_invites_member_invite_filter_content( $content, $email ) {
+		return bboss_invites_member_invite_filter_content( $content, $email );
+	}
+}
+if ( function_exists( 'bboss_invites_member_invite_filter_content_plaintext' ) && ! function_exists( 'bp_invites_member_invite_filter_content_plaintext' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_filter_content_plaintext()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_filter_content_plaintext() instead.
+	 */
+	function bp_invites_member_invite_filter_content_plaintext( $content, $email ) {
+		return bboss_invites_member_invite_filter_content_plaintext( $content, $email );
+	}
+}
+if ( function_exists( 'bboss_invites_member_invite_filter_subject' ) && ! function_exists( 'bp_invites_member_invite_filter_subject' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_filter_subject()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_filter_subject() instead.
+	 */
+	function bp_invites_member_invite_filter_subject( $subject, $email ) {
+		return bboss_invites_member_invite_filter_subject( $subject, $email );
+	}
+}
+if ( function_exists( 'bboss_invites_member_invite_set_email_avatar' ) && ! function_exists( 'bp_invites_member_invite_set_email_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_set_email_avatar()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_set_email_avatar() instead.
+	 */
+	function bp_invites_member_invite_set_email_avatar( $avatar, $data ) {
+		return bboss_invites_member_invite_set_email_avatar( $avatar, $data );
+	}
+}
+if ( function_exists( 'bboss_invites_member_invite_set_email_user_name' ) && ! function_exists( 'bp_invites_member_invite_set_email_user_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_set_email_user_name()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_set_email_user_name() instead.
+	 */
+	function bp_invites_member_invite_set_email_user_name( $name, $data ) {
+		return bboss_invites_member_invite_set_email_user_name( $name, $data );
+	}
+}
+if ( function_exists( 'bboss_member_invite_submit' ) && ! function_exists( 'bp_member_invite_submit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_invite_submit()}.
+	 *
+	 * @deprecated Use bboss_member_invite_submit() instead.
+	 */
+	function bp_member_invite_submit() {
+		return bboss_member_invite_submit();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -935,3 +935,138 @@ function bboss_get_admin_bar_pref( $context, $user = 0 ) {
 
 	return 'true' === $pref;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_create_nav_link' ) && ! function_exists( 'bp_core_create_nav_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_create_nav_link()}.
+	 *
+	 * @deprecated Use bboss_core_create_nav_link() instead.
+	 */
+	function bp_core_create_nav_link( $args = '', $component = 'members' ) {
+		return bboss_core_create_nav_link( $args, $component );
+	}
+}
+if ( function_exists( 'bboss_core_create_subnav_link' ) && ! function_exists( 'bp_core_create_subnav_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_create_subnav_link()}.
+	 *
+	 * @deprecated Use bboss_core_create_subnav_link() instead.
+	 */
+	function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
+		return bboss_core_create_subnav_link( $args, $component );
+	}
+}
+if ( function_exists( 'bboss_core_maybe_hook_new_subnav_screen_function' ) && ! function_exists( 'bp_core_maybe_hook_new_subnav_screen_function' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_maybe_hook_new_subnav_screen_function()}.
+	 *
+	 * @deprecated Use bboss_core_maybe_hook_new_subnav_screen_function() instead.
+	 */
+	function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component = 'members' ) {
+		return bboss_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component );
+	}
+}
+if ( function_exists( 'bboss_core_new_nav_default' ) && ! function_exists( 'bp_core_new_nav_default' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_new_nav_default()}.
+	 *
+	 * @deprecated Use bboss_core_new_nav_default() instead.
+	 */
+	function bp_core_new_nav_default( $args = '' ) {
+		return bboss_core_new_nav_default( $args );
+	}
+}
+if ( function_exists( 'bboss_core_new_nav_item' ) && ! function_exists( 'bp_core_new_nav_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_new_nav_item()}.
+	 *
+	 * @deprecated Use bboss_core_new_nav_item() instead.
+	 */
+	function bp_core_new_nav_item( $args, $component = 'members' ) {
+		return bboss_core_new_nav_item( $args, $component );
+	}
+}
+if ( function_exists( 'bboss_core_new_subnav_item' ) && ! function_exists( 'bp_core_new_subnav_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_new_subnav_item()}.
+	 *
+	 * @deprecated Use bboss_core_new_subnav_item() instead.
+	 */
+	function bp_core_new_subnav_item( $args, $component = null ) {
+		return bboss_core_new_subnav_item( $args, $component );
+	}
+}
+if ( function_exists( 'bboss_core_register_nav_screen_function' ) && ! function_exists( 'bp_core_register_nav_screen_function' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_register_nav_screen_function()}.
+	 *
+	 * @deprecated Use bboss_core_register_nav_screen_function() instead.
+	 */
+	function bp_core_register_nav_screen_function( $args = '' ) {
+		return bboss_core_register_nav_screen_function( $args );
+	}
+}
+if ( function_exists( 'bboss_core_register_subnav_screen_function' ) && ! function_exists( 'bp_core_register_subnav_screen_function' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_register_subnav_screen_function()}.
+	 *
+	 * @deprecated Use bboss_core_register_subnav_screen_function() instead.
+	 */
+	function bp_core_register_subnav_screen_function( $args = '', $component = 'members' ) {
+		return bboss_core_register_subnav_screen_function( $args, $component );
+	}
+}
+if ( function_exists( 'bboss_core_remove_nav_item' ) && ! function_exists( 'bp_core_remove_nav_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_remove_nav_item()}.
+	 *
+	 * @deprecated Use bboss_core_remove_nav_item() instead.
+	 */
+	function bp_core_remove_nav_item( $slug, $component = null ) {
+		return bboss_core_remove_nav_item( $slug, $component );
+	}
+}
+if ( function_exists( 'bboss_core_remove_subnav_item' ) && ! function_exists( 'bp_core_remove_subnav_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_remove_subnav_item()}.
+	 *
+	 * @deprecated Use bboss_core_remove_subnav_item() instead.
+	 */
+	function bp_core_remove_subnav_item( $parent_slug, $slug, $component = null ) {
+		return bboss_core_remove_subnav_item( $parent_slug, $slug, $component );
+	}
+}
+if ( function_exists( 'bboss_core_reset_subnav_items' ) && ! function_exists( 'bp_core_reset_subnav_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_reset_subnav_items()}.
+	 *
+	 * @deprecated Use bboss_core_reset_subnav_items() instead.
+	 */
+	function bp_core_reset_subnav_items( $parent_slug, $component = 'members' ) {
+		return bboss_core_reset_subnav_items( $parent_slug, $component );
+	}
+}
+if ( function_exists( 'bboss_get_admin_bar_pref' ) && ! function_exists( 'bp_get_admin_bar_pref' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_admin_bar_pref()}.
+	 *
+	 * @deprecated Use bboss_get_admin_bar_pref() instead.
+	 */
+	function bp_get_admin_bar_pref( $context, $user = 0 ) {
+		return bboss_get_admin_bar_pref( $context, $user );
+	}
+}
+if ( function_exists( 'bboss_nav_item_has_subnav' ) && ! function_exists( 'bp_nav_item_has_subnav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nav_item_has_subnav()}.
+	 *
+	 * @deprecated Use bboss_nav_item_has_subnav() instead.
+	 */
+	function bp_nav_item_has_subnav( $nav_item = '', $component = 'members' ) {
+		return bboss_nav_item_has_subnav( $nav_item, $component );
+	}
+}
+// @bbwt-com-end compat-layer

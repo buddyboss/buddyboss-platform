@@ -429,3 +429,108 @@ function bboss_ps_search( $request, $users = null ) {
 function bboss_ps_esc_like( $text ) {
 	return addcslashes( $text, '_%\\' );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_current_page' ) && ! function_exists( 'bp_ps_current_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_current_page()}.
+	 *
+	 * @deprecated Use bboss_ps_current_page() instead.
+	 */
+	function bp_ps_current_page() {
+		return bboss_ps_current_page();
+	}
+}
+if ( function_exists( 'bboss_ps_debug' ) && ! function_exists( 'bp_ps_debug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_debug()}.
+	 *
+	 * @deprecated Use bboss_ps_debug() instead.
+	 */
+	function bp_ps_debug() {
+		return bboss_ps_debug();
+	}
+}
+if ( function_exists( 'bboss_ps_display_filters' ) && ! function_exists( 'bp_ps_display_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_display_filters()}.
+	 *
+	 * @deprecated Use bboss_ps_display_filters() instead.
+	 */
+	function bp_ps_display_filters() {
+		return bboss_ps_display_filters();
+	}
+}
+if ( function_exists( 'bboss_ps_esc_like' ) && ! function_exists( 'bp_ps_esc_like' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_esc_like()}.
+	 *
+	 * @deprecated Use bboss_ps_esc_like() instead.
+	 */
+	function bp_ps_esc_like( $text ) {
+		return bboss_ps_esc_like( $text );
+	}
+}
+if ( function_exists( 'bboss_ps_filter_members' ) && ! function_exists( 'bp_ps_filter_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_filter_members()}.
+	 *
+	 * @deprecated Use bboss_ps_filter_members() instead.
+	 */
+	function bp_ps_filter_members( $qs, $object ) {
+		return bboss_ps_filter_members( $qs, $object );
+	}
+}
+if ( function_exists( 'bboss_ps_get_request' ) && ! function_exists( 'bp_ps_get_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_get_request()}.
+	 *
+	 * @deprecated Use bboss_ps_get_request() instead.
+	 */
+	function bp_ps_get_request( $type, $form = 0 ) {
+		return bboss_ps_get_request( $type, $form );
+	}
+}
+if ( function_exists( 'bboss_ps_hidden_filters' ) && ! function_exists( 'bp_ps_hidden_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_hidden_filters()}.
+	 *
+	 * @deprecated Use bboss_ps_hidden_filters() instead.
+	 */
+	function bp_ps_hidden_filters() {
+		return bboss_ps_hidden_filters();
+	}
+}
+if ( function_exists( 'bboss_ps_save_hidden_filters' ) && ! function_exists( 'bp_ps_save_hidden_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_save_hidden_filters()}.
+	 *
+	 * @deprecated Use bboss_ps_save_hidden_filters() instead.
+	 */
+	function bp_ps_save_hidden_filters( $attr, $content ) {
+		return bboss_ps_save_hidden_filters( $attr, $content );
+	}
+}
+if ( function_exists( 'bboss_ps_search' ) && ! function_exists( 'bp_ps_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_search()}.
+	 *
+	 * @deprecated Use bboss_ps_search() instead.
+	 */
+	function bp_ps_search( $request, $users = null ) {
+		return bboss_ps_search( $request, $users );
+	}
+}
+if ( function_exists( 'bboss_ps_set_request' ) && ! function_exists( 'bp_ps_set_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_set_request()}.
+	 *
+	 * @deprecated Use bboss_ps_set_request() instead.
+	 */
+	function bp_ps_set_request() {
+		return bboss_ps_set_request();
+	}
+}
+// @bbwt-com-end compat-layer

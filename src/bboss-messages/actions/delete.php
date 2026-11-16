@@ -39,3 +39,18 @@ function bboss_messages_action_delete_message() {
 	}
 }
 add_action( 'bp_actions', 'messages_action_delete_message' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_action_delete_message' ) && ! function_exists( 'messages_action_delete_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_action_delete_message()}.
+	 *
+	 * @deprecated Use bboss_messages_action_delete_message() instead.
+	 */
+	function messages_action_delete_message() {
+		return bboss_messages_action_delete_message();
+	}
+}
+// @bbwt-com-end compat-layer

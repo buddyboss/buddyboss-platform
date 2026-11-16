@@ -108,3 +108,58 @@ function bboss_settings_pending_email_notice() {
 	<?php
 }
 add_action( 'bp_before_member_settings_template', 'bp_settings_pending_email_notice' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_settings_root_slug' ) && ! function_exists( 'bp_get_settings_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_settings_root_slug()}.
+	 *
+	 * @deprecated Use bboss_get_settings_root_slug() instead.
+	 */
+	function bp_get_settings_root_slug() {
+		return bboss_get_settings_root_slug();
+	}
+}
+if ( function_exists( 'bboss_get_settings_slug' ) && ! function_exists( 'bp_get_settings_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_settings_slug()}.
+	 *
+	 * @deprecated Use bboss_get_settings_slug() instead.
+	 */
+	function bp_get_settings_slug() {
+		return bboss_get_settings_slug();
+	}
+}
+if ( function_exists( 'bboss_settings_pending_email_notice' ) && ! function_exists( 'bp_settings_pending_email_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_pending_email_notice()}.
+	 *
+	 * @deprecated Use bboss_settings_pending_email_notice() instead.
+	 */
+	function bp_settings_pending_email_notice() {
+		return bboss_settings_pending_email_notice();
+	}
+}
+if ( function_exists( 'bboss_settings_root_slug' ) && ! function_exists( 'bp_settings_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_root_slug()}.
+	 *
+	 * @deprecated Use bboss_settings_root_slug() instead.
+	 */
+	function bp_settings_root_slug() {
+		return bboss_settings_root_slug();
+	}
+}
+if ( function_exists( 'bboss_settings_slug' ) && ! function_exists( 'bp_settings_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_slug()}.
+	 *
+	 * @deprecated Use bboss_settings_slug() instead.
+	 */
+	function bp_settings_slug() {
+		return bboss_settings_slug();
+	}
+}
+// @bbwt-com-end compat-layer

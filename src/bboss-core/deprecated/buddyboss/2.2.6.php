@@ -155,3 +155,28 @@ function bboss_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
 		}
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_pre_notify_forum_subscribers' ) && ! function_exists( 'bb_pre_notify_forum_subscribers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_pre_notify_forum_subscribers()}.
+	 *
+	 * @deprecated Use bboss_pre_notify_forum_subscribers() instead.
+	 */
+	function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
+		return bboss_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids );
+	}
+}
+if ( function_exists( 'bboss_pre_notify_reply_subscribers' ) && ! function_exists( 'bb_pre_notify_reply_subscribers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_pre_notify_reply_subscribers()}.
+	 *
+	 * @deprecated Use bboss_pre_notify_reply_subscribers() instead.
+	 */
+	function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
+		return bboss_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids );
+	}
+}
+// @bbwt-com-end compat-layer

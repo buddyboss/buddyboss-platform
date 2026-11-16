@@ -1032,3 +1032,168 @@ function bboss_admin_settings_register_email_digest_locked_form() {
 		)
 	);
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_register_email_digest_card' ) && ! function_exists( 'bb_admin_settings_register_email_digest_card' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_card()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_email_digest_card() instead.
+	 */
+	function bb_admin_settings_register_email_digest_card( $state ) {
+		return bboss_admin_settings_register_email_digest_card( $state );
+	}
+}
+if ( function_exists( 'bboss_admin_settings_register_email_digest_locked_form' ) && ! function_exists( 'bb_admin_settings_register_email_digest_locked_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_locked_form()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_email_digest_locked_form() instead.
+	 */
+	function bb_admin_settings_register_email_digest_locked_form() {
+		return bboss_admin_settings_register_email_digest_locked_form();
+	}
+}
+if ( function_exists( 'bboss_admin_settings_register_email_digest_placeholder' ) && ! function_exists( 'bb_admin_settings_register_email_digest_placeholder' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_placeholder()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_email_digest_placeholder() instead.
+	 */
+	function bb_admin_settings_register_email_digest_placeholder() {
+		return bboss_admin_settings_register_email_digest_placeholder();
+	}
+}
+if ( function_exists( 'bboss_admin_settings_register_email_digest_signpost' ) && ! function_exists( 'bb_admin_settings_register_email_digest_signpost' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_signpost()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_email_digest_signpost() instead.
+	 */
+	function bb_admin_settings_register_email_digest_signpost() {
+		return bboss_admin_settings_register_email_digest_signpost();
+	}
+}
+if ( function_exists( 'bboss_email_digest_addon_installed_version' ) && ! function_exists( 'bb_email_digest_addon_installed_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_addon_installed_version()}.
+	 *
+	 * @deprecated Use bboss_email_digest_addon_installed_version() instead.
+	 */
+	function bb_email_digest_addon_installed_version() {
+		return bboss_email_digest_addon_installed_version();
+	}
+}
+if ( function_exists( 'bboss_email_digest_addon_latest_release' ) && ! function_exists( 'bb_email_digest_addon_latest_release' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_addon_latest_release()}.
+	 *
+	 * @deprecated Use bboss_email_digest_addon_latest_release() instead.
+	 */
+	function bb_email_digest_addon_latest_release() {
+		return bboss_email_digest_addon_latest_release();
+	}
+}
+if ( function_exists( 'bboss_email_digest_addon_plugin_file' ) && ! function_exists( 'bb_email_digest_addon_plugin_file' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_addon_plugin_file()}.
+	 *
+	 * @deprecated Use bboss_email_digest_addon_plugin_file() instead.
+	 */
+	function bb_email_digest_addon_plugin_file() {
+		return bboss_email_digest_addon_plugin_file();
+	}
+}
+if ( function_exists( 'bboss_email_digest_addon_plugin_slug' ) && ! function_exists( 'bb_email_digest_addon_plugin_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_addon_plugin_slug()}.
+	 *
+	 * @deprecated Use bboss_email_digest_addon_plugin_slug() instead.
+	 */
+	function bb_email_digest_addon_plugin_slug() {
+		return bboss_email_digest_addon_plugin_slug();
+	}
+}
+if ( function_exists( 'bboss_email_digest_addon_update_available' ) && ! function_exists( 'bb_email_digest_addon_update_available' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_addon_update_available()}.
+	 *
+	 * @deprecated Use bboss_email_digest_addon_update_available() instead.
+	 */
+	function bb_email_digest_addon_update_available() {
+		return bboss_email_digest_addon_update_available();
+	}
+}
+if ( function_exists( 'bboss_email_digest_ajax_update_addon' ) && ! function_exists( 'bb_email_digest_ajax_update_addon' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_ajax_update_addon()}.
+	 *
+	 * @deprecated Use bboss_email_digest_ajax_update_addon() instead.
+	 */
+	function bb_email_digest_ajax_update_addon() {
+		return bboss_email_digest_ajax_update_addon();
+	}
+}
+if ( function_exists( 'bboss_email_digest_get_placeholder_state' ) && ! function_exists( 'bb_email_digest_get_placeholder_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_get_placeholder_state()}.
+	 *
+	 * @deprecated Use bboss_email_digest_get_placeholder_state() instead.
+	 */
+	function bb_email_digest_get_placeholder_state() {
+		return bboss_email_digest_get_placeholder_state();
+	}
+}
+if ( function_exists( 'bboss_email_digest_is_license_active' ) && ! function_exists( 'bb_email_digest_is_license_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_is_license_active()}.
+	 *
+	 * @deprecated Use bboss_email_digest_is_license_active() instead.
+	 */
+	function bb_email_digest_is_license_active() {
+		return bboss_email_digest_is_license_active();
+	}
+}
+if ( function_exists( 'bboss_email_digest_licensed_plan_sku' ) && ! function_exists( 'bb_email_digest_licensed_plan_sku' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_licensed_plan_sku()}.
+	 *
+	 * @deprecated Use bboss_email_digest_licensed_plan_sku() instead.
+	 */
+	function bb_email_digest_licensed_plan_sku() {
+		return bboss_email_digest_licensed_plan_sku();
+	}
+}
+if ( function_exists( 'bboss_email_digest_placeholder_state' ) && ! function_exists( 'bb_email_digest_placeholder_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_placeholder_state()}.
+	 *
+	 * @deprecated Use bboss_email_digest_placeholder_state() instead.
+	 */
+	function bb_email_digest_placeholder_state() {
+		return bboss_email_digest_placeholder_state();
+	}
+}
+if ( function_exists( 'bboss_email_digest_required_plans' ) && ! function_exists( 'bb_email_digest_required_plans' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_required_plans()}.
+	 *
+	 * @deprecated Use bboss_email_digest_required_plans() instead.
+	 */
+	function bb_email_digest_required_plans() {
+		return bboss_email_digest_required_plans();
+	}
+}
+if ( function_exists( 'bboss_email_digest_soften_stale_update_card' ) && ! function_exists( 'bb_email_digest_soften_stale_update_card' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_soften_stale_update_card()}.
+	 *
+	 * @deprecated Use bboss_email_digest_soften_stale_update_card() instead.
+	 */
+	function bb_email_digest_soften_stale_update_card( $field_data, $field, $feature_id ) {
+		return bboss_email_digest_soften_stale_update_card( $field_data, $field, $feature_id );
+	}
+}
+// @bbwt-com-end compat-layer

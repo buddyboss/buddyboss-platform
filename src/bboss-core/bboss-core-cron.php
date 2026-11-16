@@ -36,3 +36,28 @@ function bboss_core_schedule_cron( $hook, $callback, $recurrence = 'bb_schedule_
 	// Add cron to schedule.
 	return bboss_core_cron()->add( $hook, $callback, $recurrence );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_cron' ) && ! function_exists( 'bp_core_cron' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_cron()}.
+	 *
+	 * @deprecated Use bboss_core_cron() instead.
+	 */
+	function bp_core_cron() {
+		return bboss_core_cron();
+	}
+}
+if ( function_exists( 'bboss_core_schedule_cron' ) && ! function_exists( 'bp_core_schedule_cron' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_schedule_cron()}.
+	 *
+	 * @deprecated Use bboss_core_schedule_cron() instead.
+	 */
+	function bp_core_schedule_cron( $hook, $callback, $recurrence = 'bb_schedule_5min' ) {
+		return bboss_core_schedule_cron( $hook, $callback, $recurrence );
+	}
+}
+// @bbwt-com-end compat-layer

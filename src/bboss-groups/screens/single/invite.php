@@ -137,3 +137,38 @@ function bboss_groups_remove_group_invite() {
 	bboss_core_redirect( $redirect );
 }
 add_action( 'bp_screens', 'groups_remove_group_invite' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_send_invite_screen_content' ) && ! function_exists( 'bp_groups_send_invite_screen_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_send_invite_screen_content()}.
+	 *
+	 * @deprecated Use bboss_groups_send_invite_screen_content() instead.
+	 */
+	function bp_groups_send_invite_screen_content() {
+		return bboss_groups_send_invite_screen_content();
+	}
+}
+if ( function_exists( 'bboss_groups_remove_group_invite' ) && ! function_exists( 'groups_remove_group_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_remove_group_invite()}.
+	 *
+	 * @deprecated Use bboss_groups_remove_group_invite() instead.
+	 */
+	function groups_remove_group_invite() {
+		return bboss_groups_remove_group_invite();
+	}
+}
+if ( function_exists( 'bboss_groups_screen_group_invite' ) && ! function_exists( 'groups_screen_group_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_screen_group_invite()}.
+	 *
+	 * @deprecated Use bboss_groups_screen_group_invite() instead.
+	 */
+	function groups_screen_group_invite() {
+		return bboss_groups_screen_group_invite();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -322,3 +322,88 @@ function bboss_platform_3_render_addon_compat_notice() {
 }
 add_action( 'admin_notices', 'bb_platform_3_render_addon_compat_notice' );
 add_action( 'network_admin_notices', 'bb_platform_3_render_addon_compat_notice' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_platform_3_addons_required_version' ) && ! function_exists( 'bb_platform_3_addons_required_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_platform_3_addons_required_version()}.
+	 *
+	 * @deprecated Use bboss_platform_3_addons_required_version() instead.
+	 */
+	function bb_platform_3_addons_required_version() {
+		return bboss_platform_3_addons_required_version();
+	}
+}
+if ( function_exists( 'bboss_platform_3_get_addon_version' ) && ! function_exists( 'bb_platform_3_get_addon_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_platform_3_get_addon_version()}.
+	 *
+	 * @deprecated Use bboss_platform_3_get_addon_version() instead.
+	 */
+	function bb_platform_3_get_addon_version( $plugin_file ) {
+		return bboss_platform_3_get_addon_version( $plugin_file );
+	}
+}
+if ( function_exists( 'bboss_platform_3_get_lagging_addons' ) && ! function_exists( 'bb_platform_3_get_lagging_addons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_platform_3_get_lagging_addons()}.
+	 *
+	 * @deprecated Use bboss_platform_3_get_lagging_addons() instead.
+	 */
+	function bb_platform_3_get_lagging_addons() {
+		return bboss_platform_3_get_lagging_addons();
+	}
+}
+if ( function_exists( 'bboss_platform_3_offload_media_required_version' ) && ! function_exists( 'bb_platform_3_offload_media_required_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_platform_3_offload_media_required_version()}.
+	 *
+	 * @deprecated Use bboss_platform_3_offload_media_required_version() instead.
+	 */
+	function bb_platform_3_offload_media_required_version() {
+		return bboss_platform_3_offload_media_required_version();
+	}
+}
+if ( function_exists( 'bboss_platform_3_pro_required_version' ) && ! function_exists( 'bb_platform_3_pro_required_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_platform_3_pro_required_version()}.
+	 *
+	 * @deprecated Use bboss_platform_3_pro_required_version() instead.
+	 */
+	function bb_platform_3_pro_required_version() {
+		return bboss_platform_3_pro_required_version();
+	}
+}
+if ( function_exists( 'bboss_platform_3_render_addon_compat_notice' ) && ! function_exists( 'bb_platform_3_render_addon_compat_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_platform_3_render_addon_compat_notice()}.
+	 *
+	 * @deprecated Use bboss_platform_3_render_addon_compat_notice() instead.
+	 */
+	function bb_platform_3_render_addon_compat_notice() {
+		return bboss_platform_3_render_addon_compat_notice();
+	}
+}
+if ( function_exists( 'bboss_platform_3_required_addons' ) && ! function_exists( 'bb_platform_3_required_addons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_platform_3_required_addons()}.
+	 *
+	 * @deprecated Use bboss_platform_3_required_addons() instead.
+	 */
+	function bb_platform_3_required_addons() {
+		return bboss_platform_3_required_addons();
+	}
+}
+if ( function_exists( 'bboss_platform_3_required_themes' ) && ! function_exists( 'bb_platform_3_required_themes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_platform_3_required_themes()}.
+	 *
+	 * @deprecated Use bboss_platform_3_required_themes() instead.
+	 */
+	function bb_platform_3_required_themes() {
+		return bboss_platform_3_required_themes();
+	}
+}
+// @bbwt-com-end compat-layer

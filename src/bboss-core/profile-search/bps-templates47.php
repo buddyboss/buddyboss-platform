@@ -502,3 +502,68 @@ function bboss_ps_unique_id( $id ) {
 
 	return $k[ $id ] ? $id . '_' . $k[ $id ] : $id;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_autocomplete_script' ) && ! function_exists( 'bp_ps_autocomplete_script' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_autocomplete_script()}.
+	 *
+	 * @deprecated Use bboss_ps_autocomplete_script() instead.
+	 */
+	function bp_ps_autocomplete_script( $f ) {
+		return bboss_ps_autocomplete_script( $f );
+	}
+}
+if ( function_exists( 'bboss_ps_escaped_filters_data47' ) && ! function_exists( 'bp_ps_escaped_filters_data47' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_escaped_filters_data47()}.
+	 *
+	 * @deprecated Use bboss_ps_escaped_filters_data47() instead.
+	 */
+	function bp_ps_escaped_filters_data47() {
+		return bboss_ps_escaped_filters_data47();
+	}
+}
+if ( function_exists( 'bboss_ps_escaped_form_data47' ) && ! function_exists( 'bp_ps_escaped_form_data47' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_escaped_form_data47()}.
+	 *
+	 * @deprecated Use bboss_ps_escaped_form_data47() instead.
+	 */
+	function bp_ps_escaped_form_data47( $version ) {
+		return bboss_ps_escaped_form_data47( $version );
+	}
+}
+if ( function_exists( 'bboss_ps_full_label' ) && ! function_exists( 'bp_ps_full_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_full_label()}.
+	 *
+	 * @deprecated Use bboss_ps_full_label() instead.
+	 */
+	function bp_ps_full_label( $f ) {
+		return bboss_ps_full_label( $f );
+	}
+}
+if ( function_exists( 'bboss_ps_print_filter' ) && ! function_exists( 'bp_ps_print_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_print_filter()}.
+	 *
+	 * @deprecated Use bboss_ps_print_filter() instead.
+	 */
+	function bp_ps_print_filter( $f ) {
+		return bboss_ps_print_filter( $f );
+	}
+}
+if ( function_exists( 'bboss_ps_unique_id' ) && ! function_exists( 'bp_ps_unique_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_unique_id()}.
+	 *
+	 * @deprecated Use bboss_ps_unique_id() instead.
+	 */
+	function bp_ps_unique_id( $id ) {
+		return bboss_ps_unique_id( $id );
+	}
+}
+// @bbwt-com-end compat-layer

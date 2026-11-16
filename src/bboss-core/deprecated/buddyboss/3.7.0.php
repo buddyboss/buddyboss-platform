@@ -9,6 +9,17 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
+// pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
+if ( function_exists( 'bb_enable_group_subscriptions' ) && ! function_exists( 'bboss_enable_group_subscriptions' ) ) {
+	// Pluggable: bb_enable_group_subscriptions() was defined first (bp-custom.php, a plugin); bboss_enable_group_subscriptions() delegates to it.
+	function bboss_enable_group_subscriptions( $default = true ) {
+		return bb_enable_group_subscriptions( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 if ( ! function_exists( 'bboss_enable_group_subscriptions' ) ) {
 	/**
 	 * Is group subscription turned off?
@@ -42,11 +53,11 @@ if ( ! function_exists( 'bboss_enable_group_subscriptions' ) ) {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
 if ( function_exists( 'bboss_enable_group_subscriptions' ) && ! function_exists( 'bb_enable_group_subscriptions' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_enable_group_subscriptions()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_enable_group_subscriptions()}.
 	 *
 	 * @deprecated Use bboss_enable_group_subscriptions() instead.
 	 */

@@ -301,3 +301,128 @@ function bboss_activity_reset_cache_incrementor_on_privacy_change( $activity ) {
 	bboss_activity_reset_cache_incrementor();
 }
 add_action( 'bp_activity_after_save', 'bb_activity_reset_cache_incrementor_on_privacy_change' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_clear_cache_after_deleted_activity' ) && ! function_exists( 'bb_activity_clear_cache_after_deleted_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_clear_cache_after_deleted_activity()}.
+	 *
+	 * @deprecated Use bboss_activity_clear_cache_after_deleted_activity() instead.
+	 */
+	function bb_activity_clear_cache_after_deleted_activity( $activities ) {
+		return bboss_activity_clear_cache_after_deleted_activity( $activities );
+	}
+}
+if ( function_exists( 'bboss_activity_clear_metadata' ) && ! function_exists( 'bb_activity_clear_metadata' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_clear_metadata()}.
+	 *
+	 * @deprecated Use bboss_activity_clear_metadata() instead.
+	 */
+	function bb_activity_clear_metadata( $meta_ids, $activity_id ) {
+		return bboss_activity_clear_metadata( $meta_ids, $activity_id );
+	}
+}
+if ( function_exists( 'bboss_activity_comment_reset_count' ) && ! function_exists( 'bb_activity_comment_reset_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_comment_reset_count()}.
+	 *
+	 * @deprecated Use bboss_activity_comment_reset_count() instead.
+	 */
+	function bb_activity_comment_reset_count( $activities ) {
+		return bboss_activity_comment_reset_count( $activities );
+	}
+}
+if ( function_exists( 'bboss_activity_reset_cache_incrementor_on_privacy_change' ) && ! function_exists( 'bb_activity_reset_cache_incrementor_on_privacy_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_reset_cache_incrementor_on_privacy_change()}.
+	 *
+	 * @deprecated Use bboss_activity_reset_cache_incrementor_on_privacy_change() instead.
+	 */
+	function bb_activity_reset_cache_incrementor_on_privacy_change( $activity ) {
+		return bboss_activity_reset_cache_incrementor_on_privacy_change( $activity );
+	}
+}
+if ( function_exists( 'bboss_activity_clear_cache_for_activity' ) && ! function_exists( 'bp_activity_clear_cache_for_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_clear_cache_for_activity()}.
+	 *
+	 * @deprecated Use bboss_activity_clear_cache_for_activity() instead.
+	 */
+	function bp_activity_clear_cache_for_activity( $activity ) {
+		return bboss_activity_clear_cache_for_activity( $activity );
+	}
+}
+if ( function_exists( 'bboss_activity_clear_cache_for_deleted_activity' ) && ! function_exists( 'bp_activity_clear_cache_for_deleted_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_clear_cache_for_deleted_activity()}.
+	 *
+	 * @deprecated Use bboss_activity_clear_cache_for_deleted_activity() instead.
+	 */
+	function bp_activity_clear_cache_for_deleted_activity( $deleted_ids ) {
+		return bboss_activity_clear_cache_for_deleted_activity( $deleted_ids );
+	}
+}
+if ( function_exists( 'bboss_activity_follow_clear_user_object_cache' ) && ! function_exists( 'bp_activity_follow_clear_user_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_follow_clear_user_object_cache()}.
+	 *
+	 * @deprecated Use bboss_activity_follow_clear_user_object_cache() instead.
+	 */
+	function bp_activity_follow_clear_user_object_cache( $user_id ) {
+		return bboss_activity_follow_clear_user_object_cache( $user_id );
+	}
+}
+if ( function_exists( 'bboss_activity_follow_delete_follow_ids_object_cache' ) && ! function_exists( 'bp_activity_follow_delete_follow_ids_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_follow_delete_follow_ids_object_cache()}.
+	 *
+	 * @deprecated Use bboss_activity_follow_delete_follow_ids_object_cache() instead.
+	 */
+	function bp_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
+		return bboss_activity_follow_delete_follow_ids_object_cache( $user_id, $ids );
+	}
+}
+if ( function_exists( 'bboss_activity_follow_delete_object_cache' ) && ! function_exists( 'bp_activity_follow_delete_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_follow_delete_object_cache()}.
+	 *
+	 * @deprecated Use bboss_activity_follow_delete_object_cache() instead.
+	 */
+	function bp_activity_follow_delete_object_cache( $follow ) {
+		return bboss_activity_follow_delete_object_cache( $follow );
+	}
+}
+if ( function_exists( 'bboss_activity_follow_reset_cache_incrementor' ) && ! function_exists( 'bp_activity_follow_reset_cache_incrementor' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_follow_reset_cache_incrementor()}.
+	 *
+	 * @deprecated Use bboss_activity_follow_reset_cache_incrementor() instead.
+	 */
+	function bp_activity_follow_reset_cache_incrementor( $follow ) {
+		return bboss_activity_follow_reset_cache_incrementor( $follow );
+	}
+}
+if ( function_exists( 'bboss_activity_reset_cache_incrementor' ) && ! function_exists( 'bp_activity_reset_cache_incrementor' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_reset_cache_incrementor()}.
+	 *
+	 * @deprecated Use bboss_activity_reset_cache_incrementor() instead.
+	 */
+	function bp_activity_reset_cache_incrementor() {
+		return bboss_activity_reset_cache_incrementor();
+	}
+}
+if ( function_exists( 'bboss_activity_update_meta_cache' ) && ! function_exists( 'bp_activity_update_meta_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_update_meta_cache()}.
+	 *
+	 * @deprecated Use bboss_activity_update_meta_cache() instead.
+	 */
+	function bp_activity_update_meta_cache( $activity_ids = false ) {
+		return bboss_activity_update_meta_cache( $activity_ids );
+	}
+}
+// @bbwt-com-end compat-layer

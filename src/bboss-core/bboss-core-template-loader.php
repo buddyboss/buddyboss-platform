@@ -717,3 +717,188 @@ function bboss_show_hide_toolbar() {
 	}
 
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_add_template_stack_locations' ) && ! function_exists( 'bp_add_template_stack_locations' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_add_template_stack_locations()}.
+	 *
+	 * @deprecated Use bboss_add_template_stack_locations() instead.
+	 */
+	function bp_add_template_stack_locations( $stacks = array() ) {
+		return bboss_add_template_stack_locations( $stacks );
+	}
+}
+if ( function_exists( 'bboss_buffer_template_part' ) && ! function_exists( 'bp_buffer_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_buffer_template_part()}.
+	 *
+	 * @deprecated Use bboss_buffer_template_part() instead.
+	 */
+	function bp_buffer_template_part( $slug, $name = null, $echo = true, $args = array() ) {
+		return bboss_buffer_template_part( $slug, $name, $echo, $args );
+	}
+}
+if ( function_exists( 'bboss_deregister_template_stack' ) && ! function_exists( 'bp_deregister_template_stack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_deregister_template_stack()}.
+	 *
+	 * @deprecated Use bboss_deregister_template_stack() instead.
+	 */
+	function bp_deregister_template_stack( $location_callback = '', $priority = 10 ) {
+		return bboss_deregister_template_stack( $location_callback, $priority );
+	}
+}
+if ( function_exists( 'bboss_get_asset_template_part' ) && ! function_exists( 'bp_get_asset_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_asset_template_part()}.
+	 *
+	 * @deprecated Use bboss_get_asset_template_part() instead.
+	 */
+	function bp_get_asset_template_part( $slug, $name = null, $args = array() ) {
+		return bboss_get_asset_template_part( $slug, $name, $args );
+	}
+}
+if ( function_exists( 'bboss_get_query_template' ) && ! function_exists( 'bp_get_query_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_query_template()}.
+	 *
+	 * @deprecated Use bboss_get_query_template() instead.
+	 */
+	function bp_get_query_template( $type, $templates = array() ) {
+		return bboss_get_query_template( $type, $templates );
+	}
+}
+if ( function_exists( 'bboss_get_template_locations' ) && ! function_exists( 'bp_get_template_locations' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_template_locations()}.
+	 *
+	 * @deprecated Use bboss_get_template_locations() instead.
+	 */
+	function bp_get_template_locations( $templates = array() ) {
+		return bboss_get_template_locations( $templates );
+	}
+}
+if ( function_exists( 'bboss_get_template_part' ) && ! function_exists( 'bp_get_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_template_part()}.
+	 *
+	 * @deprecated Use bboss_get_template_part() instead.
+	 */
+	function bp_get_template_part( $slug, $name = null, $args = array() ) {
+		return bboss_get_template_part( $slug, $name, $args );
+	}
+}
+if ( function_exists( 'bboss_get_template_stack' ) && ! function_exists( 'bp_get_template_stack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_template_stack()}.
+	 *
+	 * @deprecated Use bboss_get_template_stack() instead.
+	 */
+	function bp_get_template_stack() {
+		return bboss_get_template_stack();
+	}
+}
+if ( function_exists( 'bboss_get_theme_compat_templates' ) && ! function_exists( 'bp_get_theme_compat_templates' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_theme_compat_templates()}.
+	 *
+	 * @deprecated Use bboss_get_theme_compat_templates() instead.
+	 */
+	function bp_get_theme_compat_templates() {
+		return bboss_get_theme_compat_templates();
+	}
+}
+if ( function_exists( 'bboss_is_template_included' ) && ! function_exists( 'bp_is_template_included' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_template_included()}.
+	 *
+	 * @deprecated Use bboss_is_template_included() instead.
+	 */
+	function bp_is_template_included() {
+		return bboss_is_template_included();
+	}
+}
+if ( function_exists( 'bboss_load_theme_functions' ) && ! function_exists( 'bp_load_theme_functions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_load_theme_functions()}.
+	 *
+	 * @deprecated Use bboss_load_theme_functions() instead.
+	 */
+	function bp_load_theme_functions() {
+		return bboss_load_theme_functions();
+	}
+}
+if ( function_exists( 'bboss_locate_template' ) && ! function_exists( 'bp_locate_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_locate_template()}.
+	 *
+	 * @deprecated Use bboss_locate_template() instead.
+	 */
+	function bp_locate_template( $template_names, $load = false, $require_once = true, $args = array() ) {
+		return bboss_locate_template( $template_names, $load, $require_once, $args );
+	}
+}
+if ( function_exists( 'bboss_locate_template_asset' ) && ! function_exists( 'bp_locate_template_asset' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_locate_template_asset()}.
+	 *
+	 * @deprecated Use bboss_locate_template_asset() instead.
+	 */
+	function bp_locate_template_asset( $filename ) {
+		return bboss_locate_template_asset( $filename );
+	}
+}
+if ( function_exists( 'bboss_parse_query' ) && ! function_exists( 'bp_parse_query' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_parse_query()}.
+	 *
+	 * @deprecated Use bboss_parse_query() instead.
+	 */
+	function bp_parse_query( $posts_query ) {
+		return bboss_parse_query( $posts_query );
+	}
+}
+if ( function_exists( 'bboss_register_template_stack' ) && ! function_exists( 'bp_register_template_stack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_template_stack()}.
+	 *
+	 * @deprecated Use bboss_register_template_stack() instead.
+	 */
+	function bp_register_template_stack( $location_callback = '', $priority = 10 ) {
+		return bboss_register_template_stack( $location_callback, $priority );
+	}
+}
+if ( function_exists( 'bboss_set_template_included' ) && ! function_exists( 'bp_set_template_included' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_template_included()}.
+	 *
+	 * @deprecated Use bboss_set_template_included() instead.
+	 */
+	function bp_set_template_included( $template = false ) {
+		return bboss_set_template_included( $template );
+	}
+}
+if ( function_exists( 'bboss_show_hide_toolbar' ) && ! function_exists( 'bp_show_hide_toolbar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_show_hide_toolbar()}.
+	 *
+	 * @deprecated Use bboss_show_hide_toolbar() instead.
+	 */
+	function bp_show_hide_toolbar() {
+		return bboss_show_hide_toolbar();
+	}
+}
+if ( function_exists( 'bboss_template_include_theme_supports' ) && ! function_exists( 'bp_template_include_theme_supports' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_template_include_theme_supports()}.
+	 *
+	 * @deprecated Use bboss_template_include_theme_supports() instead.
+	 */
+	function bp_template_include_theme_supports( $template = '' ) {
+		return bboss_template_include_theme_supports( $template );
+	}
+}
+// @bbwt-com-end compat-layer

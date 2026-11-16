@@ -49,3 +49,18 @@ function bboss_messages_action_mark_unread() {
 	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() );
 }
 add_action( 'bp_actions', 'bp_messages_action_mark_unread' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_action_mark_unread' ) && ! function_exists( 'bp_messages_action_mark_unread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_action_mark_unread()}.
+	 *
+	 * @deprecated Use bboss_messages_action_mark_unread() instead.
+	 */
+	function bp_messages_action_mark_unread() {
+		return bboss_messages_action_mark_unread();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -21,6 +21,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
+// pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
+if ( function_exists( 'bb_rl_get_normalized_file_type' ) && ! function_exists( 'bboss_rl_get_normalized_file_type' ) ) {
+	// Pluggable: bb_rl_get_normalized_file_type() was defined first (bp-custom.php, a plugin); bboss_rl_get_normalized_file_type() delegates to it.
+	function bboss_rl_get_normalized_file_type( $file_type ) {
+		return bb_rl_get_normalized_file_type( $file_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 function bboss_rl_register_single_widget( $widget_class, $widget_file ) {
 	if ( ! file_exists( $widget_file ) ) {
 		return;
@@ -407,3 +418,118 @@ if ( ! function_exists( 'bboss_rl_get_normalized_file_type' ) ) {
 		return isset( $normalized[ $subtype ] ) ? $normalized[ $subtype ] : $subtype;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rl_add_mentions_selectors' ) && ! function_exists( 'bb_rl_add_mentions_selectors' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_add_mentions_selectors()}.
+	 *
+	 * @deprecated Use bboss_rl_add_mentions_selectors() instead.
+	 */
+	function bb_rl_add_mentions_selectors( $options ) {
+		return bboss_rl_add_mentions_selectors( $options );
+	}
+}
+if ( function_exists( 'bboss_rl_clear_cache_on_field_type_change' ) && ! function_exists( 'bb_rl_clear_cache_on_field_type_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_clear_cache_on_field_type_change()}.
+	 *
+	 * @deprecated Use bboss_rl_clear_cache_on_field_type_change() instead.
+	 */
+	function bb_rl_clear_cache_on_field_type_change( $field = null ) {
+		return bboss_rl_clear_cache_on_field_type_change( $field );
+	}
+}
+if ( function_exists( 'bboss_rl_clear_social_networks_field_cache' ) && ! function_exists( 'bb_rl_clear_social_networks_field_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_clear_social_networks_field_cache()}.
+	 *
+	 * @deprecated Use bboss_rl_clear_social_networks_field_cache() instead.
+	 */
+	function bb_rl_clear_social_networks_field_cache() {
+		return bboss_rl_clear_social_networks_field_cache();
+	}
+}
+if ( function_exists( 'bboss_rl_get_normalized_file_type' ) && ! function_exists( 'bb_rl_get_normalized_file_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_get_normalized_file_type()}.
+	 *
+	 * @deprecated Use bboss_rl_get_normalized_file_type() instead.
+	 */
+	function bb_rl_get_normalized_file_type( $file_type ) {
+		return bboss_rl_get_normalized_file_type( $file_type );
+	}
+}
+if ( function_exists( 'bboss_rl_get_user_social_networks_field_id' ) && ! function_exists( 'bb_rl_get_user_social_networks_field_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_get_user_social_networks_field_id()}.
+	 *
+	 * @deprecated Use bboss_rl_get_user_social_networks_field_id() instead.
+	 */
+	function bb_rl_get_user_social_networks_field_id() {
+		return bboss_rl_get_user_social_networks_field_id();
+	}
+}
+if ( function_exists( 'bboss_rl_get_user_social_networks_urls' ) && ! function_exists( 'bb_rl_get_user_social_networks_urls' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_get_user_social_networks_urls()}.
+	 *
+	 * @deprecated Use bboss_rl_get_user_social_networks_urls() instead.
+	 */
+	function bb_rl_get_user_social_networks_urls( $user_id = null ) {
+		return bboss_rl_get_user_social_networks_urls( $user_id );
+	}
+}
+if ( function_exists( 'bboss_rl_modify_existing_widget_output' ) && ! function_exists( 'bb_rl_modify_existing_widget_output' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_modify_existing_widget_output()}.
+	 *
+	 * @deprecated Use bboss_rl_modify_existing_widget_output() instead.
+	 */
+	function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
+		return bboss_rl_modify_existing_widget_output( $instance, $widget, $args );
+	}
+}
+if ( function_exists( 'bboss_rl_mpcs_get_course_category_names' ) && ! function_exists( 'bb_rl_mpcs_get_course_category_names' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_mpcs_get_course_category_names()}.
+	 *
+	 * @deprecated Use bboss_rl_mpcs_get_course_category_names() instead.
+	 */
+	function bb_rl_mpcs_get_course_category_names( $course_id ) {
+		return bboss_rl_mpcs_get_course_category_names( $course_id );
+	}
+}
+if ( function_exists( 'bboss_rl_register_single_widget' ) && ! function_exists( 'bb_rl_register_single_widget' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_register_single_widget()}.
+	 *
+	 * @deprecated Use bboss_rl_register_single_widget() instead.
+	 */
+	function bb_rl_register_single_widget( $widget_class, $widget_file ) {
+		return bboss_rl_register_single_widget( $widget_class, $widget_file );
+	}
+}
+if ( function_exists( 'bboss_rl_register_widgets' ) && ! function_exists( 'bb_rl_register_widgets' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_register_widgets()}.
+	 *
+	 * @deprecated Use bboss_rl_register_widgets() instead.
+	 */
+	function bb_rl_register_widgets() {
+		return bboss_rl_register_widgets();
+	}
+}
+if ( function_exists( 'bboss_rl_view_profile_repeaters_print_group_html_start' ) && ! function_exists( 'bb_rl_view_profile_repeaters_print_group_html_start' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rl_view_profile_repeaters_print_group_html_start()}.
+	 *
+	 * @deprecated Use bboss_rl_view_profile_repeaters_print_group_html_start() instead.
+	 */
+	function bb_rl_view_profile_repeaters_print_group_html_start() {
+		return bboss_rl_view_profile_repeaters_print_group_html_start();
+	}
+}
+// @bbwt-com-end compat-layer

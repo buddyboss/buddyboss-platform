@@ -750,3 +750,178 @@ function bboss_media_sanitize_access_control( $value ) {
 
 	return map_deep( $value, 'sanitize_text_field' );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_ajax_check_direct_access' ) && ! function_exists( 'bb_media_ajax_check_direct_access' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_ajax_check_direct_access()}.
+	 *
+	 * @deprecated Use bboss_media_ajax_check_direct_access() instead.
+	 */
+	function bb_media_ajax_check_direct_access() {
+		return bboss_media_ajax_check_direct_access();
+	}
+}
+if ( function_exists( 'bboss_media_ajax_check_ffmpeg_status' ) && ! function_exists( 'bb_media_ajax_check_ffmpeg_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_ajax_check_ffmpeg_status()}.
+	 *
+	 * @deprecated Use bboss_media_ajax_check_ffmpeg_status() instead.
+	 */
+	function bb_media_ajax_check_ffmpeg_status() {
+		return bboss_media_ajax_check_ffmpeg_status();
+	}
+}
+if ( function_exists( 'bboss_media_ajax_check_symlink_status' ) && ! function_exists( 'bb_media_ajax_check_symlink_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_ajax_check_symlink_status()}.
+	 *
+	 * @deprecated Use bboss_media_ajax_check_symlink_status() instead.
+	 */
+	function bb_media_ajax_check_symlink_status() {
+		return bboss_media_ajax_check_symlink_status();
+	}
+}
+if ( function_exists( 'bboss_media_build_context_description' ) && ! function_exists( 'bb_media_build_context_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_build_context_description()}.
+	 *
+	 * @deprecated Use bboss_media_build_context_description() instead.
+	 */
+	function bb_media_build_context_description( $prefix, $contexts ) {
+		return bboss_media_build_context_description( $prefix, $contexts );
+	}
+}
+if ( function_exists( 'bboss_media_create_test_upload' ) && ! function_exists( 'bb_media_create_test_upload' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_create_test_upload()}.
+	 *
+	 * @deprecated Use bboss_media_create_test_upload() instead.
+	 */
+	function bb_media_create_test_upload() {
+		return bboss_media_create_test_upload();
+	}
+}
+if ( function_exists( 'bboss_media_format_icon_class' ) && ! function_exists( 'bb_media_format_icon_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_format_icon_class()}.
+	 *
+	 * @deprecated Use bboss_media_format_icon_class() instead.
+	 */
+	function bb_media_format_icon_class( $icon_value ) {
+		return bboss_media_format_icon_class( $icon_value );
+	}
+}
+if ( function_exists( 'bboss_media_get_extension_data' ) && ! function_exists( 'bb_media_get_extension_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_get_extension_data()}.
+	 *
+	 * @deprecated Use bboss_media_get_extension_data() instead.
+	 */
+	function bb_media_get_extension_data( $option_name ) {
+		return bboss_media_get_extension_data( $option_name );
+	}
+}
+if ( function_exists( 'bboss_media_get_extension_options' ) && ! function_exists( 'bb_media_get_extension_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_get_extension_options()}.
+	 *
+	 * @deprecated Use bboss_media_get_extension_options() instead.
+	 */
+	function bb_media_get_extension_options( $option_name, $include_default = false ) {
+		return bboss_media_get_extension_options( $option_name, $include_default );
+	}
+}
+if ( function_exists( 'bboss_media_get_group_context_description' ) && ! function_exists( 'bb_media_get_group_context_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_get_group_context_description()}.
+	 *
+	 * @deprecated Use bboss_media_get_group_context_description() instead.
+	 */
+	function bb_media_get_group_context_description( $prefix ) {
+		return bboss_media_get_group_context_description( $prefix );
+	}
+}
+if ( function_exists( 'bboss_media_get_server_max_upload_size' ) && ! function_exists( 'bb_media_get_server_max_upload_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_get_server_max_upload_size()}.
+	 *
+	 * @deprecated Use bboss_media_get_server_max_upload_size() instead.
+	 */
+	function bb_media_get_server_max_upload_size() {
+		return bboss_media_get_server_max_upload_size();
+	}
+}
+if ( function_exists( 'bboss_media_sanitize_access_control' ) && ! function_exists( 'bb_media_sanitize_access_control' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_sanitize_access_control()}.
+	 *
+	 * @deprecated Use bboss_media_sanitize_access_control() instead.
+	 */
+	function bb_media_sanitize_access_control( $value ) {
+		return bboss_media_sanitize_access_control( $value );
+	}
+}
+if ( function_exists( 'bboss_media_sanitize_document_extensions' ) && ! function_exists( 'bb_media_sanitize_document_extensions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_sanitize_document_extensions()}.
+	 *
+	 * @deprecated Use bboss_media_sanitize_document_extensions() instead.
+	 */
+	function bb_media_sanitize_document_extensions( $value ) {
+		return bboss_media_sanitize_document_extensions( $value );
+	}
+}
+if ( function_exists( 'bboss_media_sanitize_extensions' ) && ! function_exists( 'bb_media_sanitize_extensions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_sanitize_extensions()}.
+	 *
+	 * @deprecated Use bboss_media_sanitize_extensions() instead.
+	 */
+	function bb_media_sanitize_extensions( $value, $option_name = '' ) {
+		return bboss_media_sanitize_extensions( $value, $option_name );
+	}
+}
+if ( function_exists( 'bboss_media_sanitize_symlink_support' ) && ! function_exists( 'bb_media_sanitize_symlink_support' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_sanitize_symlink_support()}.
+	 *
+	 * @deprecated Use bboss_media_sanitize_symlink_support() instead.
+	 */
+	function bb_media_sanitize_symlink_support( $value ) {
+		return bboss_media_sanitize_symlink_support( $value );
+	}
+}
+if ( function_exists( 'bboss_media_sanitize_upload_limit' ) && ! function_exists( 'bb_media_sanitize_upload_limit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_sanitize_upload_limit()}.
+	 *
+	 * @deprecated Use bboss_media_sanitize_upload_limit() instead.
+	 */
+	function bb_media_sanitize_upload_limit( $value ) {
+		return bboss_media_sanitize_upload_limit( $value );
+	}
+}
+if ( function_exists( 'bboss_media_sanitize_upload_size' ) && ! function_exists( 'bb_media_sanitize_upload_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_sanitize_upload_size()}.
+	 *
+	 * @deprecated Use bboss_media_sanitize_upload_size() instead.
+	 */
+	function bb_media_sanitize_upload_size( $value ) {
+		return bboss_media_sanitize_upload_size( $value );
+	}
+}
+if ( function_exists( 'bboss_media_sanitize_video_extensions' ) && ! function_exists( 'bb_media_sanitize_video_extensions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_sanitize_video_extensions()}.
+	 *
+	 * @deprecated Use bboss_media_sanitize_video_extensions() instead.
+	 */
+	function bb_media_sanitize_video_extensions( $value ) {
+		return bboss_media_sanitize_video_extensions( $value );
+	}
+}
+// @bbwt-com-end compat-layer

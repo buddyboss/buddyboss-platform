@@ -136,3 +136,48 @@ function bboss_member_type_shortcode_filter( $query_string, $object ) {
 
 	return $query_string;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_fixed_all_member_type_count' ) && ! function_exists( 'bp_fixed_all_member_type_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_fixed_all_member_type_count()}.
+	 *
+	 * @deprecated Use bboss_fixed_all_member_type_count() instead.
+	 */
+	function bp_fixed_all_member_type_count( $count ) {
+		return bboss_fixed_all_member_type_count( $count );
+	}
+}
+if ( function_exists( 'bboss_member_type_exclude_users_from_directory_and_searches' ) && ! function_exists( 'bp_member_type_exclude_users_from_directory_and_searches' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_type_exclude_users_from_directory_and_searches()}.
+	 *
+	 * @deprecated Use bboss_member_type_exclude_users_from_directory_and_searches() instead.
+	 */
+	function bp_member_type_exclude_users_from_directory_and_searches( $qs = false, $object = false ) {
+		return bboss_member_type_exclude_users_from_directory_and_searches( $qs, $object );
+	}
+}
+if ( function_exists( 'bboss_member_type_query' ) && ! function_exists( 'bp_member_type_query' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_type_query()}.
+	 *
+	 * @deprecated Use bboss_member_type_query() instead.
+	 */
+	function bp_member_type_query( $query ) {
+		return bboss_member_type_query( $query );
+	}
+}
+if ( function_exists( 'bboss_member_type_shortcode_filter' ) && ! function_exists( 'bp_member_type_shortcode_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_type_shortcode_filter()}.
+	 *
+	 * @deprecated Use bboss_member_type_shortcode_filter() instead.
+	 */
+	function bp_member_type_shortcode_filter( $query_string, $object ) {
+		return bboss_member_type_shortcode_filter( $query_string, $object );
+	}
+}
+// @bbwt-com-end compat-layer

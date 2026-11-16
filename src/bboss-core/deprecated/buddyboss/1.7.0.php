@@ -174,3 +174,67 @@ function bboss_document_get_preview_image_url( $document_id, $extension, $previe
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
 }
 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_document_get_preview_image_url' ) && ! function_exists( 'bp_document_get_preview_image_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_document_get_preview_image_url()}.
+	 *
+	 * @deprecated Use bboss_document_get_preview_image_url() instead.
+	 */
+	function bp_document_get_preview_image_url( $document_id, $extension, $preview_attachment_id ) {
+		return bboss_document_get_preview_image_url( $document_id, $extension, $preview_attachment_id );
+	}
+}
+if ( function_exists( 'bboss_document_scaled_image_path' ) && ! function_exists( 'bp_document_scaled_image_path' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_document_scaled_image_path()}.
+	 *
+	 * @deprecated Use bboss_document_scaled_image_path() instead.
+	 */
+	function bp_document_scaled_image_path( $attachment_id ) {
+		return bboss_document_scaled_image_path( $attachment_id );
+	}
+}
+if ( function_exists( 'bboss_document_user_can_manage_document' ) && ! function_exists( 'bp_document_user_can_manage_document' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_document_user_can_manage_document()}.
+	 *
+	 * @deprecated Use bboss_document_user_can_manage_document() instead.
+	 */
+	function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) {
+		return bboss_document_user_can_manage_document( $document_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_document_user_can_manage_folder' ) && ! function_exists( 'bp_document_user_can_manage_folder' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_document_user_can_manage_folder()}.
+	 *
+	 * @deprecated Use bboss_document_user_can_manage_folder() instead.
+	 */
+	function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
+		return bboss_document_user_can_manage_folder( $folder_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_media_user_can_manage_album' ) && ! function_exists( 'bp_media_user_can_manage_album' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_user_can_manage_album()}.
+	 *
+	 * @deprecated Use bboss_media_user_can_manage_album() instead.
+	 */
+	function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
+		return bboss_media_user_can_manage_album( $album_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_media_user_can_manage_media' ) && ! function_exists( 'bp_media_user_can_manage_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_user_can_manage_media()}.
+	 *
+	 * @deprecated Use bboss_media_user_can_manage_media() instead.
+	 */
+	function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
+		return bboss_media_user_can_manage_media( $media_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -111,3 +111,18 @@ function bboss_core_default_install_emails( $default_components ) {
 	}
 
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_default_install_emails' ) && ! function_exists( 'bb_core_default_install_emails' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_default_install_emails()}.
+	 *
+	 * @deprecated Use bboss_core_default_install_emails() instead.
+	 */
+	function bb_core_default_install_emails( $default_components ) {
+		return bboss_core_default_install_emails( $default_components );
+	}
+}
+// @bbwt-com-end compat-layer

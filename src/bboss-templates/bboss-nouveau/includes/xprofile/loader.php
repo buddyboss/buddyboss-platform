@@ -92,3 +92,18 @@ function bboss_nouveau_xprofile( $bp_nouveau = null ) {
 	$bp_nouveau->xprofile = new BBoss_Nouveau_xProfile();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_xprofile', 10, 1 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_xprofile' ) && ! function_exists( 'bp_nouveau_xprofile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_xprofile()}.
+	 *
+	 * @deprecated Use bboss_nouveau_xprofile() instead.
+	 */
+	function bp_nouveau_xprofile( $bp_nouveau = null ) {
+		return bboss_nouveau_xprofile( $bp_nouveau );
+	}
+}
+// @bbwt-com-end compat-layer

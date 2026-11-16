@@ -315,3 +315,48 @@ function bboss_admin_settings_register_moderation_feature() {
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_moderation_feature', 20 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_register_moderation_feature' ) && ! function_exists( 'bb_admin_settings_register_moderation_feature' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_moderation_feature()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_moderation_feature() instead.
+	 */
+	function bb_admin_settings_register_moderation_feature() {
+		return bboss_admin_settings_register_moderation_feature();
+	}
+}
+if ( function_exists( 'bboss_moderation_bypass_suspend_filters' ) && ! function_exists( 'bb_moderation_bypass_suspend_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_bypass_suspend_filters()}.
+	 *
+	 * @deprecated Use bboss_moderation_bypass_suspend_filters() instead.
+	 */
+	function bb_moderation_bypass_suspend_filters() {
+		return bboss_moderation_bypass_suspend_filters();
+	}
+}
+if ( function_exists( 'bboss_moderation_get_admin_user_ids' ) && ! function_exists( 'bb_moderation_get_admin_user_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_admin_user_ids()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_admin_user_ids() instead.
+	 */
+	function bb_moderation_get_admin_user_ids() {
+		return bboss_moderation_get_admin_user_ids();
+	}
+}
+if ( function_exists( 'bboss_moderation_restore_suspend_filters' ) && ! function_exists( 'bb_moderation_restore_suspend_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_restore_suspend_filters()}.
+	 *
+	 * @deprecated Use bboss_moderation_restore_suspend_filters() instead.
+	 */
+	function bb_moderation_restore_suspend_filters() {
+		return bboss_moderation_restore_suspend_filters();
+	}
+}
+// @bbwt-com-end compat-layer

@@ -51,3 +51,18 @@ function bboss_friends_action_add_friend() {
 	return false;
 }
 add_action( 'bp_actions', 'friends_action_add_friend' );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_action_add_friend' ) && ! function_exists( 'friends_action_add_friend' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_action_add_friend()}.
+	 *
+	 * @deprecated Use bboss_friends_action_add_friend() instead.
+	 */
+	function friends_action_add_friend() {
+		return bboss_friends_action_add_friend();
+	}
+}
+// @bbwt-com-end compat-layer

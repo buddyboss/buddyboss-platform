@@ -116,3 +116,18 @@ function bboss_nouveau_activity( $bp_nouveau = null ) {
 	$bp_nouveau->activity = new BBoss_Nouveau_Activity();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_activity', 10, 1 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_activity' ) && ! function_exists( 'bp_nouveau_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_activity()}.
+	 *
+	 * @deprecated Use bboss_nouveau_activity() instead.
+	 */
+	function bp_nouveau_activity( $bp_nouveau = null ) {
+		return bboss_nouveau_activity( $bp_nouveau );
+	}
+}
+// @bbwt-com-end compat-layer

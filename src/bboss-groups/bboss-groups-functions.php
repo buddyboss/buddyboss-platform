@@ -5726,16 +5726,1266 @@ function bboss_groups_record_subscription_gap( $group_id, $user_id, $action, $is
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
-// defined only when this file's renamed declaration exists (same timing as before the rename).
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_all_members_for_groups' ) && ! function_exists( 'bb_get_all_members_for_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_all_members_for_groups()}.
+	 *
+	 * @deprecated Use bboss_get_all_members_for_groups() instead.
+	 */
+	function bb_get_all_members_for_groups( $args = array() ) {
+		return bboss_get_all_members_for_groups( $args );
+	}
+}
+if ( function_exists( 'bboss_get_group_cover_image_height' ) && ! function_exists( 'bb_get_group_cover_image_height' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_cover_image_height()}.
+	 *
+	 * @deprecated Use bboss_get_group_cover_image_height() instead.
+	 */
+	function bb_get_group_cover_image_height( $default = 'small' ) {
+		return bboss_get_group_cover_image_height( $default );
+	}
+}
+if ( function_exists( 'bboss_get_group_cover_image_width' ) && ! function_exists( 'bb_get_group_cover_image_width' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_cover_image_width()}.
+	 *
+	 * @deprecated Use bboss_get_group_cover_image_width() instead.
+	 */
+	function bb_get_group_cover_image_width( $default = 'default' ) {
+		return bboss_get_group_cover_image_width( $default );
+	}
+}
+if ( function_exists( 'bboss_get_group_type_label_colors' ) && ! function_exists( 'bb_get_group_type_label_colors' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_type_label_colors()}.
+	 *
+	 * @deprecated Use bboss_get_group_type_label_colors() instead.
+	 */
+	function bb_get_group_type_label_colors( $type ) {
+		return bboss_get_group_type_label_colors( $type );
+	}
+}
+if ( function_exists( 'bboss_get_parent_group_ids' ) && ! function_exists( 'bb_get_parent_group_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_parent_group_ids()}.
+	 *
+	 * @deprecated Use bboss_get_parent_group_ids() instead.
+	 */
+	function bb_get_parent_group_ids( $group_id ) {
+		return bboss_get_parent_group_ids( $group_id );
+	}
+}
+if ( function_exists( 'bboss_group_migration' ) && ! function_exists( 'bb_group_migration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_migration()}.
+	 *
+	 * @deprecated Use bboss_group_migration() instead.
+	 */
+	function bb_group_migration() {
+		return bboss_group_migration();
+	}
+}
 if ( function_exists( 'bboss_group_single_header_actions' ) && ! function_exists( 'bb_group_single_header_actions' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_group_single_header_actions()} (also declared by another BuddyBoss product).
+	 * Backward-compatible alias of {@see bboss_group_single_header_actions()}.
 	 *
 	 * @deprecated Use bboss_group_single_header_actions() instead.
 	 */
 	function bb_group_single_header_actions() {
 		return bboss_group_single_header_actions();
+	}
+}
+if ( function_exists( 'bboss_group_type_shortcode_resolve_key' ) && ! function_exists( 'bb_group_type_shortcode_resolve_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_type_shortcode_resolve_key()}.
+	 *
+	 * @deprecated Use bboss_group_type_shortcode_resolve_key() instead.
+	 */
+	function bb_group_type_shortcode_resolve_key( $type ) {
+		return bboss_group_type_shortcode_resolve_key( $type );
+	}
+}
+if ( function_exists( 'bboss_groups_add_subgroup_members' ) && ! function_exists( 'bb_groups_add_subgroup_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_add_subgroup_members()}.
+	 *
+	 * @deprecated Use bboss_groups_add_subgroup_members() instead.
+	 */
+	function bb_groups_add_subgroup_members( $group_id, $parent_group_ids ) {
+		return bboss_groups_add_subgroup_members( $group_id, $parent_group_ids );
+	}
+}
+if ( function_exists( 'bboss_groups_get_settings_status' ) && ! function_exists( 'bb_groups_get_settings_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_settings_status()}.
+	 *
+	 * @deprecated Use bboss_groups_get_settings_status() instead.
+	 */
+	function bb_groups_get_settings_status( $setting_type ) {
+		return bboss_groups_get_settings_status( $setting_type );
+	}
+}
+if ( function_exists( 'bboss_groups_loop_members' ) && ! function_exists( 'bb_groups_loop_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_loop_members()}.
+	 *
+	 * @deprecated Use bboss_groups_loop_members() instead.
+	 */
+	function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 'admin' ) ) {
+		return bboss_groups_loop_members( $group_id, $role );
+	}
+}
+if ( function_exists( 'bboss_groups_members' ) && ! function_exists( 'bb_groups_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_members()}.
+	 *
+	 * @deprecated Use bboss_groups_members() instead.
+	 */
+	function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admin' ) ) {
+		return bboss_groups_members( $group_id, $role );
+	}
+}
+if ( function_exists( 'bboss_groups_migrate_subgroup_member' ) && ! function_exists( 'bb_groups_migrate_subgroup_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_migrate_subgroup_member()}.
+	 *
+	 * @deprecated Use bboss_groups_migrate_subgroup_member() instead.
+	 */
+	function bb_groups_migrate_subgroup_member() {
+		return bboss_groups_migrate_subgroup_member();
+	}
+}
+if ( function_exists( 'bboss_groups_record_subscription_gap' ) && ! function_exists( 'bb_groups_record_subscription_gap' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_record_subscription_gap()}.
+	 *
+	 * @deprecated Use bboss_groups_record_subscription_gap() instead.
+	 */
+	function bb_groups_record_subscription_gap( $group_id, $user_id, $action, $is_member_add = false, $is_confirmed = 0, $is_banned = 0 ) {
+		return bboss_groups_record_subscription_gap( $group_id, $user_id, $action, $is_member_add, $is_confirmed, $is_banned );
+	}
+}
+if ( function_exists( 'bboss_groups_settings_default_fallback' ) && ! function_exists( 'bb_groups_settings_default_fallback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_settings_default_fallback()}.
+	 *
+	 * @deprecated Use bboss_groups_settings_default_fallback() instead.
+	 */
+	function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
+		return bboss_groups_settings_default_fallback( $setting_type, $val );
+	}
+}
+if ( function_exists( 'bboss_groups_should_record_subscription_gap' ) && ! function_exists( 'bb_groups_should_record_subscription_gap' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_should_record_subscription_gap()}.
+	 *
+	 * @deprecated Use bboss_groups_should_record_subscription_gap() instead.
+	 */
+	function bb_groups_should_record_subscription_gap() {
+		return bboss_groups_should_record_subscription_gap();
+	}
+}
+if ( function_exists( 'bboss_update_group_member_count' ) && ! function_exists( 'bb_update_group_member_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_update_group_member_count()}.
+	 *
+	 * @deprecated Use bboss_update_group_member_count() instead.
+	 */
+	function bb_update_group_member_count( $group_ids = array() ) {
+		return bboss_update_group_member_count( $group_ids );
+	}
+}
+if ( function_exists( 'bboss_update_groups_invitation_background_process' ) && ! function_exists( 'bb_update_groups_invitation_background_process' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_update_groups_invitation_background_process()}.
+	 *
+	 * @deprecated Use bboss_update_groups_invitation_background_process() instead.
+	 */
+	function bb_update_groups_invitation_background_process() {
+		return bboss_update_groups_invitation_background_process();
+	}
+}
+if ( function_exists( 'bboss_update_groups_members_background_process' ) && ! function_exists( 'bb_update_groups_members_background_process' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_update_groups_members_background_process()}.
+	 *
+	 * @deprecated Use bboss_update_groups_members_background_process() instead.
+	 */
+	function bb_update_groups_members_background_process( $group_id, $parent_id ) {
+		return bboss_update_groups_members_background_process( $group_id, $parent_id );
+	}
+}
+if ( function_exists( 'bboss_update_groups_subgroup_membership_background_process' ) && ! function_exists( 'bb_update_groups_subgroup_membership_background_process' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_update_groups_subgroup_membership_background_process()}.
+	 *
+	 * @deprecated Use bboss_update_groups_subgroup_membership_background_process() instead.
+	 */
+	function bb_update_groups_subgroup_membership_background_process() {
+		return bboss_update_groups_subgroup_membership_background_process();
+	}
+}
+if ( function_exists( 'bboss_get_active_group_types' ) && ! function_exists( 'bp_get_active_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_active_group_types()}.
+	 *
+	 * @deprecated Use bboss_get_active_group_types() instead.
+	 */
+	function bp_get_active_group_types( $args = array() ) {
+		return bboss_get_active_group_types( $args );
+	}
+}
+if ( function_exists( 'bboss_get_current_group_directory_type' ) && ! function_exists( 'bp_get_current_group_directory_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_current_group_directory_type()}.
+	 *
+	 * @deprecated Use bboss_get_current_group_directory_type() instead.
+	 */
+	function bp_get_current_group_directory_type() {
+		return bboss_get_current_group_directory_type();
+	}
+}
+if ( function_exists( 'bboss_get_group_ids_by_group_types' ) && ! function_exists( 'bp_get_group_ids_by_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_ids_by_group_types()}.
+	 *
+	 * @deprecated Use bboss_get_group_ids_by_group_types() instead.
+	 */
+	function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_group_type' ) {
+		return bboss_get_group_ids_by_group_types( $group_type, $taxonomy );
+	}
+}
+if ( function_exists( 'bboss_get_user_group_role_title' ) && ! function_exists( 'bp_get_user_group_role_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_user_group_role_title()}.
+	 *
+	 * @deprecated Use bboss_get_user_group_role_title() instead.
+	 */
+	function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
+		return bboss_get_user_group_role_title( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_get_user_groups' ) && ! function_exists( 'bp_get_user_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_user_groups()}.
+	 *
+	 * @deprecated Use bboss_get_user_groups() instead.
+	 */
+	function bp_get_user_groups( $user_id, $args = array() ) {
+		return bboss_get_user_groups( $user_id, $args );
+	}
+}
+if ( function_exists( 'bboss_group_directory_page_content' ) && ! function_exists( 'bp_group_directory_page_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_directory_page_content()}.
+	 *
+	 * @deprecated Use bboss_group_directory_page_content() instead.
+	 */
+	function bp_group_directory_page_content() {
+		return bboss_group_directory_page_content();
+	}
+}
+if ( function_exists( 'bboss_group_get_count_by_group_type' ) && ! function_exists( 'bp_group_get_count_by_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_get_count_by_group_type()}.
+	 *
+	 * @deprecated Use bboss_group_get_count_by_group_type() instead.
+	 */
+	function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_group_type' ) {
+		return bboss_group_get_count_by_group_type( $group_type, $taxonomy );
+	}
+}
+if ( function_exists( 'bboss_group_get_group_type_id' ) && ! function_exists( 'bp_group_get_group_type_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_get_group_type_id()}.
+	 *
+	 * @deprecated Use bboss_group_get_group_type_id() instead.
+	 */
+	function bp_group_get_group_type_id( $group_type = '' ) {
+		return bboss_group_get_group_type_id( $group_type );
+	}
+}
+if ( function_exists( 'bboss_group_get_group_type_key' ) && ! function_exists( 'bp_group_get_group_type_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_get_group_type_key()}.
+	 *
+	 * @deprecated Use bboss_group_get_group_type_key() instead.
+	 */
+	function bp_group_get_group_type_key( $post_id ) {
+		return bboss_group_get_group_type_key( $post_id );
+	}
+}
+if ( function_exists( 'bboss_group_ids_array_flatten' ) && ! function_exists( 'bp_group_ids_array_flatten' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_ids_array_flatten()}.
+	 *
+	 * @deprecated Use bboss_group_ids_array_flatten() instead.
+	 */
+	function bp_group_ids_array_flatten( $array ) {
+		return bboss_group_ids_array_flatten( $array );
+	}
+}
+if ( function_exists( 'bboss_group_object_template_results_groups_all_scope' ) && ! function_exists( 'bp_group_object_template_results_groups_all_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_object_template_results_groups_all_scope()}.
+	 *
+	 * @deprecated Use bboss_group_object_template_results_groups_all_scope() instead.
+	 */
+	function bp_group_object_template_results_groups_all_scope( $querystring, $object ) {
+		return bboss_group_object_template_results_groups_all_scope( $querystring, $object );
+	}
+}
+if ( function_exists( 'bboss_group_type_short_code_add_body_class' ) && ! function_exists( 'bp_group_type_short_code_add_body_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_type_short_code_add_body_class()}.
+	 *
+	 * @deprecated Use bboss_group_type_short_code_add_body_class() instead.
+	 */
+	function bp_group_type_short_code_add_body_class( $class ) {
+		return bboss_group_type_short_code_add_body_class( $class );
+	}
+}
+if ( function_exists( 'bboss_group_type_short_code_callback' ) && ! function_exists( 'bp_group_type_short_code_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_type_short_code_callback()}.
+	 *
+	 * @deprecated Use bboss_group_type_short_code_callback() instead.
+	 */
+	function bp_group_type_short_code_callback( $atts ) {
+		return bboss_group_type_short_code_callback( $atts );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_invite_message_for_user' ) && ! function_exists( 'bp_groups_clear_invite_message_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_invite_message_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_invite_message_for_user() instead.
+	 */
+	function bp_groups_clear_invite_message_for_user( $user_id, $group_id ) {
+		return bboss_groups_clear_invite_message_for_user( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_clear_invite_message_on_uninvite' ) && ! function_exists( 'bp_groups_clear_invite_message_on_uninvite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_invite_message_on_uninvite()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_invite_message_on_uninvite() instead.
+	 */
+	function bp_groups_clear_invite_message_on_uninvite( $group_id, $user_id ) {
+		return bboss_groups_clear_invite_message_on_uninvite( $group_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_groups_exclude_group_type' ) && ! function_exists( 'bp_groups_exclude_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_exclude_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_exclude_group_type() instead.
+	 */
+	function bp_groups_exclude_group_type( $qs = false, $object = false ) {
+		return bboss_groups_exclude_group_type( $qs, $object );
+	}
+}
+if ( function_exists( 'bboss_groups_get_excluded_group_ids_by_type' ) && ! function_exists( 'bp_groups_get_excluded_group_ids_by_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_excluded_group_ids_by_type()}.
+	 *
+	 * @deprecated Use bboss_groups_get_excluded_group_ids_by_type() instead.
+	 */
+	function bp_groups_get_excluded_group_ids_by_type() {
+		return bboss_groups_get_excluded_group_ids_by_type();
+	}
+}
+if ( function_exists( 'bboss_groups_get_excluded_group_types' ) && ! function_exists( 'bp_groups_get_excluded_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_excluded_group_types()}.
+	 *
+	 * @deprecated Use bboss_groups_get_excluded_group_types() instead.
+	 */
+	function bp_groups_get_excluded_group_types() {
+		return bboss_groups_get_excluded_group_types();
+	}
+}
+if ( function_exists( 'bboss_groups_get_group_roles' ) && ! function_exists( 'bp_groups_get_group_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_roles()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_roles() instead.
+	 */
+	function bp_groups_get_group_roles() {
+		return bboss_groups_get_group_roles();
+	}
+}
+if ( function_exists( 'bboss_groups_get_group_type' ) && ! function_exists( 'bp_groups_get_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_type() instead.
+	 */
+	function bp_groups_get_group_type( $group_id, $single = true ) {
+		return bboss_groups_get_group_type( $group_id, $single );
+	}
+}
+if ( function_exists( 'bboss_groups_get_group_type_object' ) && ! function_exists( 'bp_groups_get_group_type_object' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_type_object()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_type_object() instead.
+	 */
+	function bp_groups_get_group_type_object( $group_type ) {
+		return bboss_groups_get_group_type_object( $group_type );
+	}
+}
+if ( function_exists( 'bboss_groups_get_group_type_post_type' ) && ! function_exists( 'bp_groups_get_group_type_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_type_post_type()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_type_post_type() instead.
+	 */
+	function bp_groups_get_group_type_post_type() {
+		return bboss_groups_get_group_type_post_type();
+	}
+}
+if ( function_exists( 'bboss_groups_get_group_type_post_type_labels' ) && ! function_exists( 'bp_groups_get_group_type_post_type_labels' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_type_post_type_labels()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_type_post_type_labels() instead.
+	 */
+	function bp_groups_get_group_type_post_type_labels() {
+		return bboss_groups_get_group_type_post_type_labels();
+	}
+}
+if ( function_exists( 'bboss_groups_get_group_type_post_type_supports' ) && ! function_exists( 'bp_groups_get_group_type_post_type_supports' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_type_post_type_supports()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_type_post_type_supports() instead.
+	 */
+	function bp_groups_get_group_type_post_type_supports() {
+		return bboss_groups_get_group_type_post_type_supports();
+	}
+}
+if ( function_exists( 'bboss_groups_get_group_types' ) && ! function_exists( 'bp_groups_get_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_types()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_types() instead.
+	 */
+	function bp_groups_get_group_types( $args = array(), $output = 'names', $operator = 'and' ) {
+		return bboss_groups_get_group_types( $args, $output, $operator );
+	}
+}
+if ( function_exists( 'bboss_groups_get_invite_messsage_for_user' ) && ! function_exists( 'bp_groups_get_invite_messsage_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invite_messsage_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invite_messsage_for_user() instead.
+	 */
+	function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
+		return bboss_groups_get_invite_messsage_for_user( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_invited_by' ) && ! function_exists( 'bp_groups_get_invited_by' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invited_by()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invited_by() instead.
+	 */
+	function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
+		return bboss_groups_get_invited_by( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_group_type_post_type' ) && ! function_exists( 'bp_groups_group_type_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_group_type_post_type()}.
+	 *
+	 * @deprecated Use bboss_groups_group_type_post_type() instead.
+	 */
+	function bp_groups_group_type_post_type() {
+		return bboss_groups_group_type_post_type();
+	}
+}
+if ( function_exists( 'bboss_groups_has_directory' ) && ! function_exists( 'bp_groups_has_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_has_directory()}.
+	 *
+	 * @deprecated Use bboss_groups_has_directory() instead.
+	 */
+	function bp_groups_has_directory() {
+		return bboss_groups_has_directory();
+	}
+}
+if ( function_exists( 'bboss_groups_has_group_type' ) && ! function_exists( 'bp_groups_has_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_has_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_has_group_type() instead.
+	 */
+	function bp_groups_has_group_type( $group_id, $group_type ) {
+		return bboss_groups_has_group_type( $group_id, $group_type );
+	}
+}
+if ( function_exists( 'bboss_groups_migrate_invitations' ) && ! function_exists( 'bp_groups_migrate_invitations' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_migrate_invitations()}.
+	 *
+	 * @deprecated Use bboss_groups_migrate_invitations() instead.
+	 */
+	function bp_groups_migrate_invitations() {
+		return bboss_groups_migrate_invitations();
+	}
+}
+if ( function_exists( 'bboss_groups_prime_mentions_results' ) && ! function_exists( 'bp_groups_prime_mentions_results' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_prime_mentions_results()}.
+	 *
+	 * @deprecated Use bboss_groups_prime_mentions_results() instead.
+	 */
+	function bp_groups_prime_mentions_results() {
+		return bboss_groups_prime_mentions_results();
+	}
+}
+if ( function_exists( 'bboss_groups_register_group_type' ) && ! function_exists( 'bp_groups_register_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_register_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_register_group_type() instead.
+	 */
+	function bp_groups_register_group_type( $group_type, $args = array() ) {
+		return bboss_groups_register_group_type( $group_type, $args );
+	}
+}
+if ( function_exists( 'bboss_groups_register_group_types' ) && ! function_exists( 'bp_groups_register_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_register_group_types()}.
+	 *
+	 * @deprecated Use bboss_groups_register_group_types() instead.
+	 */
+	function bp_groups_register_group_types() {
+		return bboss_groups_register_group_types();
+	}
+}
+if ( function_exists( 'bboss_groups_remove_group_type' ) && ! function_exists( 'bp_groups_remove_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_remove_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_remove_group_type() instead.
+	 */
+	function bp_groups_remove_group_type( $group_id, $group_type ) {
+		return bboss_groups_remove_group_type( $group_id, $group_type );
+	}
+}
+if ( function_exists( 'bboss_groups_reset_cover_image_position' ) && ! function_exists( 'bp_groups_reset_cover_image_position' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_reset_cover_image_position()}.
+	 *
+	 * @deprecated Use bboss_groups_reset_cover_image_position() instead.
+	 */
+	function bp_groups_reset_cover_image_position( $group_id ) {
+		return bboss_groups_reset_cover_image_position( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_set_group_type' ) && ! function_exists( 'bp_groups_set_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_set_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_set_group_type() instead.
+	 */
+	function bp_groups_set_group_type( $group_id, $group_type, $append = false ) {
+		return bboss_groups_set_group_type( $group_id, $group_type, $append );
+	}
+}
+if ( function_exists( 'bboss_groups_update_orphaned_groups_on_group_delete' ) && ! function_exists( 'bp_groups_update_orphaned_groups_on_group_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_update_orphaned_groups_on_group_delete()}.
+	 *
+	 * @deprecated Use bboss_groups_update_orphaned_groups_on_group_delete() instead.
+	 */
+	function bp_groups_update_orphaned_groups_on_group_delete( $group ) {
+		return bboss_groups_update_orphaned_groups_on_group_delete( $group );
+	}
+}
+if ( function_exists( 'bboss_is_my_groups_view' ) && ! function_exists( 'bp_is_my_groups_view' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_my_groups_view()}.
+	 *
+	 * @deprecated Use bboss_is_my_groups_view() instead.
+	 */
+	function bp_is_my_groups_view() {
+		return bboss_is_my_groups_view();
+	}
+}
+if ( function_exists( 'bboss_register_active_group_types' ) && ! function_exists( 'bp_register_active_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_active_group_types()}.
+	 *
+	 * @deprecated Use bboss_register_active_group_types() instead.
+	 */
+	function bp_register_active_group_types() {
+		return bboss_register_active_group_types();
+	}
+}
+if ( function_exists( 'bboss_remove_group_type_on_group_delete' ) && ! function_exists( 'bp_remove_group_type_on_group_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_group_type_on_group_delete()}.
+	 *
+	 * @deprecated Use bboss_remove_group_type_on_group_delete() instead.
+	 */
+	function bp_remove_group_type_on_group_delete( $group_id = 0 ) {
+		return bboss_remove_group_type_on_group_delete( $group_id );
+	}
+}
+if ( function_exists( 'bboss_get_group_role_label' ) && ! function_exists( 'get_group_role_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_role_label()}.
+	 *
+	 * @deprecated Use bboss_get_group_role_label() instead.
+	 */
+	function get_group_role_label( $group_id, $label_name ) {
+		return bboss_get_group_role_label( $group_id, $label_name );
+	}
+}
+if ( function_exists( 'bboss_groups_accept_all_pending_membership_requests' ) && ! function_exists( 'groups_accept_all_pending_membership_requests' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_accept_all_pending_membership_requests()}.
+	 *
+	 * @deprecated Use bboss_groups_accept_all_pending_membership_requests() instead.
+	 */
+	function groups_accept_all_pending_membership_requests( $group_id = 0 ) {
+		return bboss_groups_accept_all_pending_membership_requests( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_accept_invite' ) && ! function_exists( 'groups_accept_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_accept_invite()}.
+	 *
+	 * @deprecated Use bboss_groups_accept_invite() instead.
+	 */
+	function groups_accept_invite( $user_id, $group_id ) {
+		return bboss_groups_accept_invite( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_accept_membership_request' ) && ! function_exists( 'groups_accept_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_accept_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_accept_membership_request() instead.
+	 */
+	function groups_accept_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
+		return bboss_groups_accept_membership_request( $membership_id, $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_add_groupmeta' ) && ! function_exists( 'groups_add_groupmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_add_groupmeta()}.
+	 *
+	 * @deprecated Use bboss_groups_add_groupmeta() instead.
+	 */
+	function groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique = false ) {
+		return bboss_groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique );
+	}
+}
+if ( function_exists( 'bboss_groups_avatar_upload_dir' ) && ! function_exists( 'groups_avatar_upload_dir' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_avatar_upload_dir()}.
+	 *
+	 * @deprecated Use bboss_groups_avatar_upload_dir() instead.
+	 */
+	function groups_avatar_upload_dir( $group_id = 0 ) {
+		return bboss_groups_avatar_upload_dir( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_ban_member' ) && ! function_exists( 'groups_ban_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_ban_member()}.
+	 *
+	 * @deprecated Use bboss_groups_ban_member() instead.
+	 */
+	function groups_ban_member( $user_id, $group_id ) {
+		return bboss_groups_ban_member( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_check_for_membership_request' ) && ! function_exists( 'groups_check_for_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_check_for_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_check_for_membership_request() instead.
+	 */
+	function groups_check_for_membership_request( $user_id, $group_id ) {
+		return bboss_groups_check_for_membership_request( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_check_has_invite_from_user' ) && ! function_exists( 'groups_check_has_invite_from_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_check_has_invite_from_user()}.
+	 *
+	 * @deprecated Use bboss_groups_check_has_invite_from_user() instead.
+	 */
+	function groups_check_has_invite_from_user( $user_id, $group_id, $inviter_id = false, $type = 'sent' ) {
+		return bboss_groups_check_has_invite_from_user( $user_id, $group_id, $inviter_id, $type );
+	}
+}
+if ( function_exists( 'bboss_groups_check_slug' ) && ! function_exists( 'groups_check_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_check_slug()}.
+	 *
+	 * @deprecated Use bboss_groups_check_slug() instead.
+	 */
+	function groups_check_slug( $slug ) {
+		return bboss_groups_check_slug( $slug );
+	}
+}
+if ( function_exists( 'bboss_groups_check_user_has_invite' ) && ! function_exists( 'groups_check_user_has_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_check_user_has_invite()}.
+	 *
+	 * @deprecated Use bboss_groups_check_user_has_invite() instead.
+	 */
+	function groups_check_user_has_invite( $user_id, $group_id, $type = 'sent' ) {
+		return bboss_groups_check_user_has_invite( $user_id, $group_id, $type );
+	}
+}
+if ( function_exists( 'bboss_groups_create_group' ) && ! function_exists( 'groups_create_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_create_group()}.
+	 *
+	 * @deprecated Use bboss_groups_create_group() instead.
+	 */
+	function groups_create_group( $args = '' ) {
+		return bboss_groups_create_group( $args );
+	}
+}
+if ( function_exists( 'bboss_groups_delete_all_group_invites' ) && ! function_exists( 'groups_delete_all_group_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_all_group_invites()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_all_group_invites() instead.
+	 */
+	function groups_delete_all_group_invites( $group_id ) {
+		return bboss_groups_delete_all_group_invites( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_delete_group' ) && ! function_exists( 'groups_delete_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_group()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_group() instead.
+	 */
+	function groups_delete_group( $group_id ) {
+		return bboss_groups_delete_group( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_delete_groupmeta' ) && ! function_exists( 'groups_delete_groupmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_groupmeta()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_groupmeta() instead.
+	 */
+	function groups_delete_groupmeta( $group_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
+		return bboss_groups_delete_groupmeta( $group_id, $meta_key, $meta_value, $delete_all );
+	}
+}
+if ( function_exists( 'bboss_groups_delete_invite' ) && ! function_exists( 'groups_delete_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_invite()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_invite() instead.
+	 */
+	function groups_delete_invite( $user_id, $group_id, $inviter_id = false ) {
+		return bboss_groups_delete_invite( $user_id, $group_id, $inviter_id );
+	}
+}
+if ( function_exists( 'bboss_groups_delete_membership_request' ) && ! function_exists( 'groups_delete_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_membership_request() instead.
+	 */
+	function groups_delete_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
+		return bboss_groups_delete_membership_request( $membership_id, $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_demote_member' ) && ! function_exists( 'groups_demote_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_demote_member()}.
+	 *
+	 * @deprecated Use bboss_groups_demote_member() instead.
+	 */
+	function groups_demote_member( $user_id, $group_id ) {
+		return bboss_groups_demote_member( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_edit_base_group_details' ) && ! function_exists( 'groups_edit_base_group_details' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_edit_base_group_details()}.
+	 *
+	 * @deprecated Use bboss_groups_edit_base_group_details() instead.
+	 */
+	function groups_edit_base_group_details( $args = array() ) {
+		return bboss_groups_edit_base_group_details( ...func_get_args() );
+	}
+}
+if ( function_exists( 'bboss_groups_edit_group_settings' ) && ! function_exists( 'groups_edit_group_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_edit_group_settings()}.
+	 *
+	 * @deprecated Use bboss_groups_edit_group_settings() instead.
+	 */
+	function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $document_status = false, $video_status = false, $album_status = false, $message_status = false ) {
+		return bboss_groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status );
+	}
+}
+if ( function_exists( 'bboss_groups_get_current_group' ) && ! function_exists( 'groups_get_current_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_current_group()}.
+	 *
+	 * @deprecated Use bboss_groups_get_current_group() instead.
+	 */
+	function groups_get_current_group() {
+		return bboss_groups_get_current_group();
+	}
+}
+if ( function_exists( 'bboss_groups_get_group' ) && ! function_exists( 'groups_get_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group() instead.
+	 */
+	function groups_get_group( $group_id ) {
+		return bboss_groups_get_group( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_group_admins' ) && ! function_exists( 'groups_get_group_admins' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_admins()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_admins() instead.
+	 */
+	function groups_get_group_admins( $group_id ) {
+		return bboss_groups_get_group_admins( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_group_members' ) && ! function_exists( 'groups_get_group_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_members()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_members() instead.
+	 */
+	function groups_get_group_members( $args = array() ) {
+		return bboss_groups_get_group_members( ...func_get_args() );
+	}
+}
+if ( function_exists( 'bboss_groups_get_group_mods' ) && ! function_exists( 'groups_get_group_mods' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_mods()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_mods() instead.
+	 */
+	function groups_get_group_mods( $group_id ) {
+		return bboss_groups_get_group_mods( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_groupmeta' ) && ! function_exists( 'groups_get_groupmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_groupmeta()}.
+	 *
+	 * @deprecated Use bboss_groups_get_groupmeta() instead.
+	 */
+	function groups_get_groupmeta( $group_id, $meta_key = '', $single = true ) {
+		return bboss_groups_get_groupmeta( $group_id, $meta_key, $single );
+	}
+}
+if ( function_exists( 'bboss_groups_get_groups' ) && ! function_exists( 'groups_get_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_groups()}.
+	 *
+	 * @deprecated Use bboss_groups_get_groups() instead.
+	 */
+	function groups_get_groups( $args = '' ) {
+		return bboss_groups_get_groups( $args );
+	}
+}
+if ( function_exists( 'bboss_groups_get_id' ) && ! function_exists( 'groups_get_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_id()}.
+	 *
+	 * @deprecated Use bboss_groups_get_id() instead.
+	 */
+	function groups_get_id( $group_slug ) {
+		return bboss_groups_get_id( $group_slug );
+	}
+}
+if ( function_exists( 'bboss_groups_get_id_by_previous_slug' ) && ! function_exists( 'groups_get_id_by_previous_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_id_by_previous_slug()}.
+	 *
+	 * @deprecated Use bboss_groups_get_id_by_previous_slug() instead.
+	 */
+	function groups_get_id_by_previous_slug( $group_slug ) {
+		return bboss_groups_get_id_by_previous_slug( $group_slug );
+	}
+}
+if ( function_exists( 'bboss_groups_get_invite_count_for_user' ) && ! function_exists( 'groups_get_invite_count_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invite_count_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invite_count_for_user() instead.
+	 */
+	function groups_get_invite_count_for_user( $user_id = 0 ) {
+		return bboss_groups_get_invite_count_for_user( $user_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_invited_to_group_ids' ) && ! function_exists( 'groups_get_invited_to_group_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invited_to_group_ids()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invited_to_group_ids() instead.
+	 */
+	function groups_get_invited_to_group_ids( $user_id = 0 ) {
+		return bboss_groups_get_invited_to_group_ids( $user_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_invites' ) && ! function_exists( 'groups_get_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invites()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invites() instead.
+	 */
+	function groups_get_invites( $args = array() ) {
+		return bboss_groups_get_invites( $args );
+	}
+}
+if ( function_exists( 'bboss_groups_get_invites_for_group' ) && ! function_exists( 'groups_get_invites_for_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invites_for_group()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invites_for_group() instead.
+	 */
+	function groups_get_invites_for_group( $user_id, $group_id, $sent = null ) {
+		return bboss_groups_get_invites_for_group( $user_id, $group_id, $sent );
+	}
+}
+if ( function_exists( 'bboss_groups_get_invites_for_user' ) && ! function_exists( 'groups_get_invites_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invites_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invites_for_user() instead.
+	 */
+	function groups_get_invites_for_user( $user_id = 0, $limit = false, $page = false, $exclude = false ) {
+		return bboss_groups_get_invites_for_user( $user_id, $limit, $page, $exclude );
+	}
+}
+if ( function_exists( 'bboss_groups_get_membership_requested_group_ids' ) && ! function_exists( 'groups_get_membership_requested_group_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_membership_requested_group_ids()}.
+	 *
+	 * @deprecated Use bboss_groups_get_membership_requested_group_ids() instead.
+	 */
+	function groups_get_membership_requested_group_ids( $user_id = 0 ) {
+		return bboss_groups_get_membership_requested_group_ids( $user_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_membership_requested_user_ids' ) && ! function_exists( 'groups_get_membership_requested_user_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_membership_requested_user_ids()}.
+	 *
+	 * @deprecated Use bboss_groups_get_membership_requested_user_ids() instead.
+	 */
+	function groups_get_membership_requested_user_ids( $group_id = 0 ) {
+		return bboss_groups_get_membership_requested_user_ids( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_requests' ) && ! function_exists( 'groups_get_requests' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_requests()}.
+	 *
+	 * @deprecated Use bboss_groups_get_requests() instead.
+	 */
+	function groups_get_requests( $args = array() ) {
+		return bboss_groups_get_requests( $args );
+	}
+}
+if ( function_exists( 'bboss_groups_get_slug' ) && ! function_exists( 'groups_get_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_slug()}.
+	 *
+	 * @deprecated Use bboss_groups_get_slug() instead.
+	 */
+	function groups_get_slug( $group_id ) {
+		return bboss_groups_get_slug( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_total_group_count' ) && ! function_exists( 'groups_get_total_group_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_total_group_count()}.
+	 *
+	 * @deprecated Use bboss_groups_get_total_group_count() instead.
+	 */
+	function groups_get_total_group_count() {
+		return bboss_groups_get_total_group_count();
+	}
+}
+if ( function_exists( 'bboss_groups_get_total_member_count' ) && ! function_exists( 'groups_get_total_member_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_total_member_count()}.
+	 *
+	 * @deprecated Use bboss_groups_get_total_member_count() instead.
+	 */
+	function groups_get_total_member_count( $group_id ) {
+		return bboss_groups_get_total_member_count( $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_get_user_groups' ) && ! function_exists( 'groups_get_user_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_user_groups()}.
+	 *
+	 * @deprecated Use bboss_groups_get_user_groups() instead.
+	 */
+	function groups_get_user_groups( $user_id = 0, $pag_num = 0, $pag_page = 0 ) {
+		return bboss_groups_get_user_groups( $user_id, $pag_num, $pag_page );
+	}
+}
+if ( function_exists( 'bboss_groups_invite_user' ) && ! function_exists( 'groups_invite_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_invite_user()}.
+	 *
+	 * @deprecated Use bboss_groups_invite_user() instead.
+	 */
+	function groups_invite_user( $args = '' ) {
+		return bboss_groups_invite_user( $args );
+	}
+}
+if ( function_exists( 'bboss_groups_is_user_admin' ) && ! function_exists( 'groups_is_user_admin' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_admin()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_admin() instead.
+	 */
+	function groups_is_user_admin( $user_id, $group_id ) {
+		return bboss_groups_is_user_admin( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_is_user_banned' ) && ! function_exists( 'groups_is_user_banned' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_banned()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_banned() instead.
+	 */
+	function groups_is_user_banned( $user_id, $group_id ) {
+		return bboss_groups_is_user_banned( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_is_user_creator' ) && ! function_exists( 'groups_is_user_creator' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_creator()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_creator() instead.
+	 */
+	function groups_is_user_creator( $user_id, $group_id ) {
+		return bboss_groups_is_user_creator( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_is_user_invited' ) && ! function_exists( 'groups_is_user_invited' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_invited()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_invited() instead.
+	 */
+	function groups_is_user_invited( $user_id, $group_id, $type = 'sent' ) {
+		return bboss_groups_is_user_invited( $user_id, $group_id, $type );
+	}
+}
+if ( function_exists( 'bboss_groups_is_user_member' ) && ! function_exists( 'groups_is_user_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_member()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_member() instead.
+	 */
+	function groups_is_user_member( $user_id, $group_id ) {
+		return bboss_groups_is_user_member( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_is_user_mod' ) && ! function_exists( 'groups_is_user_mod' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_mod()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_mod() instead.
+	 */
+	function groups_is_user_mod( $user_id, $group_id ) {
+		return bboss_groups_is_user_mod( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_is_user_pending' ) && ! function_exists( 'groups_is_user_pending' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_pending()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_pending() instead.
+	 */
+	function groups_is_user_pending( $user_id, $group_id ) {
+		return bboss_groups_is_user_pending( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_is_valid_status' ) && ! function_exists( 'groups_is_valid_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_valid_status()}.
+	 *
+	 * @deprecated Use bboss_groups_is_valid_status() instead.
+	 */
+	function groups_is_valid_status( $status ) {
+		return bboss_groups_is_valid_status( $status );
+	}
+}
+if ( function_exists( 'bboss_groups_join_group' ) && ! function_exists( 'groups_join_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_join_group()}.
+	 *
+	 * @deprecated Use bboss_groups_join_group() instead.
+	 */
+	function groups_join_group( $group_id, $user_id = 0 ) {
+		return bboss_groups_join_group( $group_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_groups_leave_group' ) && ! function_exists( 'groups_leave_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_leave_group()}.
+	 *
+	 * @deprecated Use bboss_groups_leave_group() instead.
+	 */
+	function groups_leave_group( $group_id, $user_id = 0 ) {
+		return bboss_groups_leave_group( $group_id, $user_id );
+	}
+}
+if ( function_exists( 'bboss_groups_post_update' ) && ! function_exists( 'groups_post_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_post_update()}.
+	 *
+	 * @deprecated Use bboss_groups_post_update() instead.
+	 */
+	function groups_post_update( $args = '' ) {
+		return bboss_groups_post_update( $args );
+	}
+}
+if ( function_exists( 'bboss_groups_promote_member' ) && ! function_exists( 'groups_promote_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_promote_member()}.
+	 *
+	 * @deprecated Use bboss_groups_promote_member() instead.
+	 */
+	function groups_promote_member( $user_id, $group_id, $status ) {
+		return bboss_groups_promote_member( $user_id, $group_id, $status );
+	}
+}
+if ( function_exists( 'bboss_groups_reject_invite' ) && ! function_exists( 'groups_reject_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_reject_invite()}.
+	 *
+	 * @deprecated Use bboss_groups_reject_invite() instead.
+	 */
+	function groups_reject_invite( $user_id, $group_id, $inviter_id = false ) {
+		return bboss_groups_reject_invite( $user_id, $group_id, $inviter_id );
+	}
+}
+if ( function_exists( 'bboss_groups_reject_membership_request' ) && ! function_exists( 'groups_reject_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_reject_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_reject_membership_request() instead.
+	 */
+	function groups_reject_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
+		return bboss_groups_reject_membership_request( $membership_id, $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_remove_data_for_user' ) && ! function_exists( 'groups_remove_data_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_remove_data_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_remove_data_for_user() instead.
+	 */
+	function groups_remove_data_for_user( $user_id ) {
+		return bboss_groups_remove_data_for_user( $user_id );
+	}
+}
+if ( function_exists( 'bboss_groups_remove_member' ) && ! function_exists( 'groups_remove_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_remove_member()}.
+	 *
+	 * @deprecated Use bboss_groups_remove_member() instead.
+	 */
+	function groups_remove_member( $user_id, $group_id ) {
+		return bboss_groups_remove_member( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_send_invites' ) && ! function_exists( 'groups_send_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_send_invites()}.
+	 *
+	 * @deprecated Use bboss_groups_send_invites() instead.
+	 */
+	function groups_send_invites( $args = array() ) {
+		return bboss_groups_send_invites( ...func_get_args() );
+	}
+}
+if ( function_exists( 'bboss_groups_send_membership_request' ) && ! function_exists( 'groups_send_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_send_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_send_membership_request() instead.
+	 */
+	function groups_send_membership_request( $args = array() ) {
+		return bboss_groups_send_membership_request( ...func_get_args() );
+	}
+}
+if ( function_exists( 'bboss_groups_total_groups_for_user' ) && ! function_exists( 'groups_total_groups_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_total_groups_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_total_groups_for_user() instead.
+	 */
+	function groups_total_groups_for_user( $user_id = 0 ) {
+		return bboss_groups_total_groups_for_user( $user_id );
+	}
+}
+if ( function_exists( 'bboss_groups_unban_member' ) && ! function_exists( 'groups_unban_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_unban_member()}.
+	 *
+	 * @deprecated Use bboss_groups_unban_member() instead.
+	 */
+	function groups_unban_member( $user_id, $group_id ) {
+		return bboss_groups_unban_member( $user_id, $group_id );
+	}
+}
+if ( function_exists( 'bboss_groups_uninvite_user' ) && ! function_exists( 'groups_uninvite_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_uninvite_user()}.
+	 *
+	 * @deprecated Use bboss_groups_uninvite_user() instead.
+	 */
+	function groups_uninvite_user( $user_id, $group_id, $inviter_id = false ) {
+		return bboss_groups_uninvite_user( $user_id, $group_id, $inviter_id );
+	}
+}
+if ( function_exists( 'bboss_groups_update_groupmeta' ) && ! function_exists( 'groups_update_groupmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_update_groupmeta()}.
+	 *
+	 * @deprecated Use bboss_groups_update_groupmeta() instead.
+	 */
+	function groups_update_groupmeta( $group_id, $meta_key, $meta_value, $prev_value = '' ) {
+		return bboss_groups_update_groupmeta( $group_id, $meta_key, $meta_value, $prev_value );
+	}
+}
+if ( function_exists( 'bboss_groups_update_last_activity' ) && ! function_exists( 'groups_update_last_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_update_last_activity()}.
+	 *
+	 * @deprecated Use bboss_groups_update_last_activity() instead.
+	 */
+	function groups_update_last_activity( $group_id = 0 ) {
+		return bboss_groups_update_last_activity( $group_id );
 	}
 }
 // @bbwt-com-end compat-layer

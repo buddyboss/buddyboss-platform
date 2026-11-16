@@ -247,3 +247,18 @@ function bboss_admin_integrations_page() {
 	do_action( 'bb_admin_header_actions' );
 	echo '</div>';
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_integrations_page' ) && ! function_exists( 'bb_admin_integrations_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_integrations_page()}.
+	 *
+	 * @deprecated Use bboss_admin_integrations_page() instead.
+	 */
+	function bb_admin_integrations_page() {
+		return bboss_admin_integrations_page();
+	}
+}
+// @bbwt-com-end compat-layer

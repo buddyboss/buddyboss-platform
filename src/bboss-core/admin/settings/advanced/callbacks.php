@@ -184,3 +184,68 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_handle_telemetr
 function bboss_advanced_sanitize_public_content( $value ) {
 	return wp_strip_all_tags( stripslashes( $value ) );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_advanced_capture_telemetry_before_save' ) && ! function_exists( 'bb_advanced_capture_telemetry_before_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_capture_telemetry_before_save()}.
+	 *
+	 * @deprecated Use bboss_advanced_capture_telemetry_before_save() instead.
+	 */
+	function bb_advanced_capture_telemetry_before_save( $feature_id, $settings ) {
+		return bboss_advanced_capture_telemetry_before_save( $feature_id, $settings );
+	}
+}
+if ( function_exists( 'bboss_advanced_get_pre_save_telemetry' ) && ! function_exists( 'bb_advanced_get_pre_save_telemetry' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_get_pre_save_telemetry()}.
+	 *
+	 * @deprecated Use bboss_advanced_get_pre_save_telemetry() instead.
+	 */
+	function bb_advanced_get_pre_save_telemetry( $set_value = null ) {
+		return bboss_advanced_get_pre_save_telemetry( $set_value );
+	}
+}
+if ( function_exists( 'bboss_advanced_handle_telemetry_save' ) && ! function_exists( 'bb_advanced_handle_telemetry_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_handle_telemetry_save()}.
+	 *
+	 * @deprecated Use bboss_advanced_handle_telemetry_save() instead.
+	 */
+	function bb_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) {
+		return bboss_advanced_handle_telemetry_save( $feature_id, $settings, $saved );
+	}
+}
+if ( function_exists( 'bboss_advanced_sanitize_activity_load_type' ) && ! function_exists( 'bb_advanced_sanitize_activity_load_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_sanitize_activity_load_type()}.
+	 *
+	 * @deprecated Use bboss_advanced_sanitize_activity_load_type() instead.
+	 */
+	function bb_advanced_sanitize_activity_load_type( $value ) {
+		return bboss_advanced_sanitize_activity_load_type( $value );
+	}
+}
+if ( function_exists( 'bboss_advanced_sanitize_public_content' ) && ! function_exists( 'bb_advanced_sanitize_public_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_sanitize_public_content()}.
+	 *
+	 * @deprecated Use bboss_advanced_sanitize_public_content() instead.
+	 */
+	function bb_advanced_sanitize_public_content( $value ) {
+		return bboss_advanced_sanitize_public_content( $value );
+	}
+}
+if ( function_exists( 'bboss_advanced_sanitize_telemetry_reporting' ) && ! function_exists( 'bb_advanced_sanitize_telemetry_reporting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_sanitize_telemetry_reporting()}.
+	 *
+	 * @deprecated Use bboss_advanced_sanitize_telemetry_reporting() instead.
+	 */
+	function bb_advanced_sanitize_telemetry_reporting( $value ) {
+		return bboss_advanced_sanitize_telemetry_reporting( $value );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -568,3 +568,88 @@ function bboss_group_navigation_save_settings( $feature_id, $settings, $saved ) 
 
 // bb_sanitize_group_nav_order() is defined in callbacks.php alongside other sanitize callbacks.
 add_action( 'bb_admin_save_feature_settings_after', 'bb_group_navigation_save_settings', 10, 3 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_build_group_nav_order_value' ) && ! function_exists( 'bb_build_group_nav_order_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_build_group_nav_order_value()}.
+	 *
+	 * @deprecated Use bboss_build_group_nav_order_value() instead.
+	 */
+	function bb_build_group_nav_order_value( $options = array(), $appearance = array() ) {
+		return bboss_build_group_nav_order_value( $options, $appearance );
+	}
+}
+if ( function_exists( 'bboss_clear_group_nav_items_cache' ) && ! function_exists( 'bb_clear_group_nav_items_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_clear_group_nav_items_cache()}.
+	 *
+	 * @deprecated Use bboss_clear_group_nav_items_cache() instead.
+	 */
+	function bb_clear_group_nav_items_cache() {
+		return bboss_clear_group_nav_items_cache();
+	}
+}
+if ( function_exists( 'bboss_get_group_default_tab_options' ) && ! function_exists( 'bb_get_group_default_tab_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_default_tab_options()}.
+	 *
+	 * @deprecated Use bboss_get_group_default_tab_options() instead.
+	 */
+	function bb_get_group_default_tab_options() {
+		return bboss_get_group_default_tab_options();
+	}
+}
+if ( function_exists( 'bboss_get_group_nav_items_for_settings' ) && ! function_exists( 'bb_get_group_nav_items_for_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_nav_items_for_settings()}.
+	 *
+	 * @deprecated Use bboss_get_group_nav_items_for_settings() instead.
+	 */
+	function bb_get_group_nav_items_for_settings() {
+		return bboss_get_group_nav_items_for_settings();
+	}
+}
+if ( function_exists( 'bboss_get_inactive_group_nav_slugs' ) && ! function_exists( 'bb_get_inactive_group_nav_slugs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_inactive_group_nav_slugs()}.
+	 *
+	 * @deprecated Use bboss_get_inactive_group_nav_slugs() instead.
+	 */
+	function bb_get_inactive_group_nav_slugs() {
+		return bboss_get_inactive_group_nav_slugs();
+	}
+}
+if ( function_exists( 'bboss_group_navigation_enrich_field_data' ) && ! function_exists( 'bb_group_navigation_enrich_field_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_navigation_enrich_field_data()}.
+	 *
+	 * @deprecated Use bboss_group_navigation_enrich_field_data() instead.
+	 */
+	function bb_group_navigation_enrich_field_data( $field_data, $field, $feature_id = '' ) {
+		return bboss_group_navigation_enrich_field_data( $field_data, $field, $feature_id );
+	}
+}
+if ( function_exists( 'bboss_group_navigation_save_settings' ) && ! function_exists( 'bb_group_navigation_save_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_navigation_save_settings()}.
+	 *
+	 * @deprecated Use bboss_group_navigation_save_settings() instead.
+	 */
+	function bb_group_navigation_save_settings( $feature_id, $settings, $saved ) {
+		return bboss_group_navigation_save_settings( $feature_id, $settings, $saved );
+	}
+}
+if ( function_exists( 'bboss_groups_register_navigation_panel_fields' ) && ! function_exists( 'bb_groups_register_navigation_panel_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_register_navigation_panel_fields()}.
+	 *
+	 * @deprecated Use bboss_groups_register_navigation_panel_fields() instead.
+	 */
+	function bb_groups_register_navigation_panel_fields() {
+		return bboss_groups_register_navigation_panel_fields();
+	}
+}
+// @bbwt-com-end compat-layer

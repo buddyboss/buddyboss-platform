@@ -254,3 +254,108 @@ function bboss_nouveau_notifications_delete_link( $link = '' ) {
 		'dashicons-trash'
 	);
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_dashiconified_link' ) && ! function_exists( 'bp_nouveau_notifications_dashiconified_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_dashiconified_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_dashiconified_link() instead.
+	 */
+	function bp_nouveau_notifications_dashiconified_link( $link = '', $bp_tooltip = '', $dashicon = '' ) {
+		return bboss_nouveau_notifications_dashiconified_link( $link, $bp_tooltip, $dashicon );
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_delete_link' ) && ! function_exists( 'bp_nouveau_notifications_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_delete_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_delete_link() instead.
+	 */
+	function bp_nouveau_notifications_delete_link( $link = '' ) {
+		return bboss_nouveau_notifications_delete_link( $link );
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_notifications_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_enqueue_scripts() instead.
+	 */
+	function bp_nouveau_notifications_enqueue_scripts() {
+		return bboss_nouveau_notifications_enqueue_scripts();
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_get_filters' ) && ! function_exists( 'bp_nouveau_notifications_get_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_get_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_get_filters() instead.
+	 */
+	function bp_nouveau_notifications_get_filters( $id = '' ) {
+		return bboss_nouveau_notifications_get_filters( $id );
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_init_filters' ) && ! function_exists( 'bp_nouveau_notifications_init_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_init_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_init_filters() instead.
+	 */
+	function bp_nouveau_notifications_init_filters() {
+		return bboss_nouveau_notifications_init_filters();
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_mark_read_link' ) && ! function_exists( 'bp_nouveau_notifications_mark_read_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_mark_read_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_mark_read_link() instead.
+	 */
+	function bp_nouveau_notifications_mark_read_link( $link = '' ) {
+		return bboss_nouveau_notifications_mark_read_link( $link );
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_mark_unread_link' ) && ! function_exists( 'bp_nouveau_notifications_mark_unread_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_mark_unread_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_mark_unread_link() instead.
+	 */
+	function bp_nouveau_notifications_mark_unread_link( $link = '' ) {
+		return bboss_nouveau_notifications_mark_unread_link( $link );
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_register_filter' ) && ! function_exists( 'bp_nouveau_notifications_register_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_register_filter()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_register_filter() instead.
+	 */
+	function bp_nouveau_notifications_register_filter( $args = array() ) {
+		return bboss_nouveau_notifications_register_filter( $args );
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_register_scripts' ) && ! function_exists( 'bp_nouveau_notifications_register_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_register_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_register_scripts() instead.
+	 */
+	function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
+		return bboss_nouveau_notifications_register_scripts( $scripts );
+	}
+}
+if ( function_exists( 'bboss_nouveau_notifications_sort' ) && ! function_exists( 'bp_nouveau_notifications_sort' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_sort()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_sort() instead.
+	 */
+	function bp_nouveau_notifications_sort( $filters = array() ) {
+		return bboss_nouveau_notifications_sort( $filters );
+	}
+}
+// @bbwt-com-end compat-layer

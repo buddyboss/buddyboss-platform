@@ -223,3 +223,18 @@ function bboss_nouveau_ajax_followunfollow_member() {
 		wp_send_json_error( $response );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_followunfollow_member' ) && ! function_exists( 'bp_nouveau_ajax_followunfollow_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_followunfollow_member()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_followunfollow_member() instead.
+	 */
+	function bp_nouveau_ajax_followunfollow_member() {
+		return bboss_nouveau_ajax_followunfollow_member();
+	}
+}
+// @bbwt-com-end compat-layer

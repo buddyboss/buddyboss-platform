@@ -273,3 +273,18 @@ function bboss_forums_register_core_meta_fields( $registry, $component ) {
 	);
 }
 add_action( 'bb_register_forums_meta_fields', 'bb_forums_register_core_meta_fields', 1, 2 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_forums_register_core_meta_fields' ) && ! function_exists( 'bb_forums_register_core_meta_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_forums_register_core_meta_fields()}.
+	 *
+	 * @deprecated Use bboss_forums_register_core_meta_fields() instead.
+	 */
+	function bb_forums_register_core_meta_fields( $registry, $component ) {
+		return bboss_forums_register_core_meta_fields( $registry, $component );
+	}
+}
+// @bbwt-com-end compat-layer

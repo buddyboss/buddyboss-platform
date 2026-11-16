@@ -738,3 +738,98 @@ function bboss_get_third_party_profile_nav_items() {
 
 	return $cached;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_build_member_nav_order_value' ) && ! function_exists( 'bb_build_member_nav_order_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_build_member_nav_order_value()}.
+	 *
+	 * @deprecated Use bboss_build_member_nav_order_value() instead.
+	 */
+	function bb_build_member_nav_order_value( $options = array(), $appearance = array() ) {
+		return bboss_build_member_nav_order_value( $options, $appearance );
+	}
+}
+if ( function_exists( 'bboss_get_inactive_member_nav_slugs' ) && ! function_exists( 'bb_get_inactive_member_nav_slugs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_inactive_member_nav_slugs()}.
+	 *
+	 * @deprecated Use bboss_get_inactive_member_nav_slugs() instead.
+	 */
+	function bb_get_inactive_member_nav_slugs() {
+		return bboss_get_inactive_member_nav_slugs();
+	}
+}
+if ( function_exists( 'bboss_get_member_default_tab_options' ) && ! function_exists( 'bb_get_member_default_tab_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_member_default_tab_options()}.
+	 *
+	 * @deprecated Use bboss_get_member_default_tab_options() instead.
+	 */
+	function bb_get_member_default_tab_options() {
+		return bboss_get_member_default_tab_options();
+	}
+}
+if ( function_exists( 'bboss_get_member_profile_nav_items_for_settings' ) && ! function_exists( 'bb_get_member_profile_nav_items_for_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_member_profile_nav_items_for_settings()}.
+	 *
+	 * @deprecated Use bboss_get_member_profile_nav_items_for_settings() instead.
+	 */
+	function bb_get_member_profile_nav_items_for_settings() {
+		return bboss_get_member_profile_nav_items_for_settings();
+	}
+}
+if ( function_exists( 'bboss_get_third_party_profile_nav_items' ) && ! function_exists( 'bb_get_third_party_profile_nav_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_third_party_profile_nav_items()}.
+	 *
+	 * @deprecated Use bboss_get_third_party_profile_nav_items() instead.
+	 */
+	function bb_get_third_party_profile_nav_items() {
+		return bboss_get_third_party_profile_nav_items();
+	}
+}
+if ( function_exists( 'bboss_member_navigation_enrich_field_data' ) && ! function_exists( 'bb_member_navigation_enrich_field_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_navigation_enrich_field_data()}.
+	 *
+	 * @deprecated Use bboss_member_navigation_enrich_field_data() instead.
+	 */
+	function bb_member_navigation_enrich_field_data( $field_data, $field, $feature_id = '' ) {
+		return bboss_member_navigation_enrich_field_data( $field_data, $field, $feature_id );
+	}
+}
+if ( function_exists( 'bboss_member_navigation_save_settings' ) && ! function_exists( 'bb_member_navigation_save_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_navigation_save_settings()}.
+	 *
+	 * @deprecated Use bboss_member_navigation_save_settings() instead.
+	 */
+	function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
+		return bboss_member_navigation_save_settings( $feature_id, $settings, $saved );
+	}
+}
+if ( function_exists( 'bboss_members_register_profile_navigation_panel_fields' ) && ! function_exists( 'bb_members_register_profile_navigation_panel_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_register_profile_navigation_panel_fields()}.
+	 *
+	 * @deprecated Use bboss_members_register_profile_navigation_panel_fields() instead.
+	 */
+	function bb_members_register_profile_navigation_panel_fields() {
+		return bboss_members_register_profile_navigation_panel_fields();
+	}
+}
+if ( function_exists( 'bboss_sanitize_member_nav_order' ) && ! function_exists( 'bb_sanitize_member_nav_order' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_sanitize_member_nav_order()}.
+	 *
+	 * @deprecated Use bboss_sanitize_member_nav_order() instead.
+	 */
+	function bb_sanitize_member_nav_order( $value ) {
+		return bboss_sanitize_member_nav_order( $value );
+	}
+}
+// @bbwt-com-end compat-layer

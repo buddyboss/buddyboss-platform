@@ -302,3 +302,97 @@ function bboss_friends_remove_notifications_data( $user_id = 0 ) {
 }
 add_action( 'friends_remove_data', 'bp_friends_remove_notifications_data', 10, 1 );
 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_add_friendship_accepted_notification' ) && ! function_exists( 'bp_friends_add_friendship_accepted_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_add_friendship_accepted_notification()}.
+	 *
+	 * @deprecated Use bboss_friends_add_friendship_accepted_notification() instead.
+	 */
+	function bp_friends_add_friendship_accepted_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
+		return bboss_friends_add_friendship_accepted_notification( $friendship_id, $initiator_user_id, $friend_user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_friendship_requested_notification' ) && ! function_exists( 'bp_friends_friendship_requested_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_friendship_requested_notification()}.
+	 *
+	 * @deprecated Use bboss_friends_friendship_requested_notification() instead.
+	 */
+	function bp_friends_friendship_requested_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
+		return bboss_friends_friendship_requested_notification( $friendship_id, $initiator_user_id, $friend_user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_mark_friendship_accepted_notifications_by_type' ) && ! function_exists( 'bp_friends_mark_friendship_accepted_notifications_by_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_mark_friendship_accepted_notifications_by_type()}.
+	 *
+	 * @deprecated Use bboss_friends_mark_friendship_accepted_notifications_by_type() instead.
+	 */
+	function bp_friends_mark_friendship_accepted_notifications_by_type() {
+		return bboss_friends_mark_friendship_accepted_notifications_by_type();
+	}
+}
+if ( function_exists( 'bboss_friends_mark_friendship_rejected_notifications_by_item_id' ) && ! function_exists( 'bp_friends_mark_friendship_rejected_notifications_by_item_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_mark_friendship_rejected_notifications_by_item_id()}.
+	 *
+	 * @deprecated Use bboss_friends_mark_friendship_rejected_notifications_by_item_id() instead.
+	 */
+	function bp_friends_mark_friendship_rejected_notifications_by_item_id( $friendship_id, $friendship ) {
+		return bboss_friends_mark_friendship_rejected_notifications_by_item_id( $friendship_id, $friendship );
+	}
+}
+if ( function_exists( 'bboss_friends_mark_friendship_request_notifications_by_type' ) && ! function_exists( 'bp_friends_mark_friendship_request_notifications_by_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_mark_friendship_request_notifications_by_type()}.
+	 *
+	 * @deprecated Use bboss_friends_mark_friendship_request_notifications_by_type() instead.
+	 */
+	function bp_friends_mark_friendship_request_notifications_by_type() {
+		return bboss_friends_mark_friendship_request_notifications_by_type();
+	}
+}
+if ( function_exists( 'bboss_friends_mark_friendship_withdrawn_notifications_by_item_id' ) && ! function_exists( 'bp_friends_mark_friendship_withdrawn_notifications_by_item_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_mark_friendship_withdrawn_notifications_by_item_id()}.
+	 *
+	 * @deprecated Use bboss_friends_mark_friendship_withdrawn_notifications_by_item_id() instead.
+	 */
+	function bp_friends_mark_friendship_withdrawn_notifications_by_item_id( $friendship_id, $friendship ) {
+		return bboss_friends_mark_friendship_withdrawn_notifications_by_item_id( $friendship_id, $friendship );
+	}
+}
+if ( function_exists( 'bboss_friends_remove_notifications_data' ) && ! function_exists( 'bp_friends_remove_notifications_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_remove_notifications_data()}.
+	 *
+	 * @deprecated Use bboss_friends_remove_notifications_data() instead.
+	 */
+	function bp_friends_remove_notifications_data( $user_id = 0 ) {
+		return bboss_friends_remove_notifications_data( $user_id );
+	}
+}
+if ( function_exists( 'bboss_friends_clear_friend_notifications' ) && ! function_exists( 'friends_clear_friend_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_friend_notifications()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_friend_notifications() instead.
+	 */
+	function friends_clear_friend_notifications() {
+		return bboss_friends_clear_friend_notifications();
+	}
+}
+if ( function_exists( 'bboss_friends_format_notifications' ) && ! function_exists( 'friends_format_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_format_notifications()}.
+	 *
+	 * @deprecated Use bboss_friends_format_notifications() instead.
+	 */
+	function friends_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
+		return bboss_friends_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -266,3 +266,18 @@ function bboss_admin_settings_register_groups_feature() {
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_groups_feature', 20 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_register_groups_feature' ) && ! function_exists( 'bb_admin_settings_register_groups_feature' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_groups_feature()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_groups_feature() instead.
+	 */
+	function bb_admin_settings_register_groups_feature() {
+		return bboss_admin_settings_register_groups_feature();
+	}
+}
+// @bbwt-com-end compat-layer

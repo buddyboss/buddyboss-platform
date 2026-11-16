@@ -1763,3 +1763,758 @@ function bboss_get_user_social_networks_urls_with_visibility( $html, $original_o
 
 	return $html;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_user_social_networks_urls_with_visibility' ) && ! function_exists( 'bb_get_user_social_networks_urls_with_visibility' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_user_social_networks_urls_with_visibility()}.
+	 *
+	 * @deprecated Use bboss_get_user_social_networks_urls_with_visibility() instead.
+	 */
+	function bb_get_user_social_networks_urls_with_visibility( $html, $original_option_values, $social_networks_id ) {
+		return bboss_get_user_social_networks_urls_with_visibility( $html, $original_option_values, $social_networks_id );
+	}
+}
+if ( function_exists( 'bboss_avatar_delete_link' ) && ! function_exists( 'bp_avatar_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_delete_link()}.
+	 *
+	 * @deprecated Use bboss_avatar_delete_link() instead.
+	 */
+	function bp_avatar_delete_link() {
+		return bboss_avatar_delete_link();
+	}
+}
+if ( function_exists( 'bboss_current_profile_group_id' ) && ! function_exists( 'bp_current_profile_group_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_current_profile_group_id()}.
+	 *
+	 * @deprecated Use bboss_current_profile_group_id() instead.
+	 */
+	function bp_current_profile_group_id() {
+		return bboss_current_profile_group_id();
+	}
+}
+if ( function_exists( 'bboss_edit_profile_button' ) && ! function_exists( 'bp_edit_profile_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_edit_profile_button()}.
+	 *
+	 * @deprecated Use bboss_edit_profile_button() instead.
+	 */
+	function bp_edit_profile_button() {
+		return bboss_edit_profile_button();
+	}
+}
+if ( function_exists( 'bboss_field_css_class' ) && ! function_exists( 'bp_field_css_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_css_class()}.
+	 *
+	 * @deprecated Use bboss_field_css_class() instead.
+	 */
+	function bp_field_css_class( $class = false ) {
+		return bboss_field_css_class( $class );
+	}
+}
+if ( function_exists( 'bboss_field_data_attribute' ) && ! function_exists( 'bp_field_data_attribute' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_data_attribute()}.
+	 *
+	 * @deprecated Use bboss_field_data_attribute() instead.
+	 */
+	function bp_field_data_attribute( $attribute = false ) {
+		return bboss_field_data_attribute( $attribute );
+	}
+}
+if ( function_exists( 'bboss_field_has_data' ) && ! function_exists( 'bp_field_has_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_has_data()}.
+	 *
+	 * @deprecated Use bboss_field_has_data() instead.
+	 */
+	function bp_field_has_data() {
+		return bboss_field_has_data();
+	}
+}
+if ( function_exists( 'bboss_field_has_public_data' ) && ! function_exists( 'bp_field_has_public_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_has_public_data()}.
+	 *
+	 * @deprecated Use bboss_field_has_public_data() instead.
+	 */
+	function bp_field_has_public_data() {
+		return bboss_field_has_public_data();
+	}
+}
+if ( function_exists( 'bboss_get_avatar_delete_link' ) && ! function_exists( 'bp_get_avatar_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_avatar_delete_link()}.
+	 *
+	 * @deprecated Use bboss_get_avatar_delete_link() instead.
+	 */
+	function bp_get_avatar_delete_link() {
+		return bboss_get_avatar_delete_link();
+	}
+}
+if ( function_exists( 'bboss_get_current_profile_group_id' ) && ! function_exists( 'bp_get_current_profile_group_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_current_profile_group_id()}.
+	 *
+	 * @deprecated Use bboss_get_current_profile_group_id() instead.
+	 */
+	function bp_get_current_profile_group_id() {
+		return bboss_get_current_profile_group_id();
+	}
+}
+if ( function_exists( 'bboss_get_field_css_class' ) && ! function_exists( 'bp_get_field_css_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_field_css_class()}.
+	 *
+	 * @deprecated Use bboss_get_field_css_class() instead.
+	 */
+	function bp_get_field_css_class( $class = false ) {
+		return bboss_get_field_css_class( $class );
+	}
+}
+if ( function_exists( 'bboss_get_field_data_attribute' ) && ! function_exists( 'bp_get_field_data_attribute' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_field_data_attribute()}.
+	 *
+	 * @deprecated Use bboss_get_field_data_attribute() instead.
+	 */
+	function bp_get_field_data_attribute( $attribute = false ) {
+		return bboss_get_field_data_attribute( $attribute );
+	}
+}
+if ( function_exists( 'bboss_get_profile_field_data' ) && ! function_exists( 'bp_get_profile_field_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_field_data()}.
+	 *
+	 * @deprecated Use bboss_get_profile_field_data() instead.
+	 */
+	function bp_get_profile_field_data( $args = '' ) {
+		return bboss_get_profile_field_data( $args );
+	}
+}
+if ( function_exists( 'bboss_get_profile_group_name' ) && ! function_exists( 'bp_get_profile_group_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_group_name()}.
+	 *
+	 * @deprecated Use bboss_get_profile_group_name() instead.
+	 */
+	function bp_get_profile_group_name() {
+		return bboss_get_profile_group_name();
+	}
+}
+if ( function_exists( 'bboss_get_profile_group_tabs' ) && ! function_exists( 'bp_get_profile_group_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_group_tabs()}.
+	 *
+	 * @deprecated Use bboss_get_profile_group_tabs() instead.
+	 */
+	function bp_get_profile_group_tabs() {
+		return bboss_get_profile_group_tabs();
+	}
+}
+if ( function_exists( 'bboss_get_profile_last_updated' ) && ! function_exists( 'bp_get_profile_last_updated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_last_updated()}.
+	 *
+	 * @deprecated Use bboss_get_profile_last_updated() instead.
+	 */
+	function bp_get_profile_last_updated() {
+		return bboss_get_profile_last_updated();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_alternate_name' ) && ! function_exists( 'bp_get_the_profile_field_alternate_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_alternate_name()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_alternate_name() instead.
+	 */
+	function bp_get_the_profile_field_alternate_name( $the_field = false ) {
+		return bboss_get_the_profile_field_alternate_name( $the_field );
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_description' ) && ! function_exists( 'bp_get_the_profile_field_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_description()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_description() instead.
+	 */
+	function bp_get_the_profile_field_description() {
+		return bboss_get_the_profile_field_description();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_edit_value' ) && ! function_exists( 'bp_get_the_profile_field_edit_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_edit_value()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_edit_value() instead.
+	 */
+	function bp_get_the_profile_field_edit_value() {
+		return bboss_get_the_profile_field_edit_value();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_errors_action' ) && ! function_exists( 'bp_get_the_profile_field_errors_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_errors_action()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_errors_action() instead.
+	 */
+	function bp_get_the_profile_field_errors_action() {
+		return bboss_get_the_profile_field_errors_action();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_id' ) && ! function_exists( 'bp_get_the_profile_field_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_id()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_id() instead.
+	 */
+	function bp_get_the_profile_field_id() {
+		return bboss_get_the_profile_field_id();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_ids' ) && ! function_exists( 'bp_get_the_profile_field_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_ids()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_ids() instead.
+	 */
+	function bp_get_the_profile_field_ids() {
+		return bboss_get_the_profile_field_ids();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_input_name' ) && ! function_exists( 'bp_get_the_profile_field_input_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_input_name()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_input_name() instead.
+	 */
+	function bp_get_the_profile_field_input_name() {
+		return bboss_get_the_profile_field_input_name();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_is_required' ) && ! function_exists( 'bp_get_the_profile_field_is_required' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_is_required()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_is_required() instead.
+	 */
+	function bp_get_the_profile_field_is_required() {
+		return bboss_get_the_profile_field_is_required();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_name' ) && ! function_exists( 'bp_get_the_profile_field_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_name()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_name() instead.
+	 */
+	function bp_get_the_profile_field_name() {
+		return bboss_get_the_profile_field_name();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_optional_label' ) && ! function_exists( 'bp_get_the_profile_field_optional_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_optional_label()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_optional_label() instead.
+	 */
+	function bp_get_the_profile_field_optional_label() {
+		return bboss_get_the_profile_field_optional_label();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_options' ) && ! function_exists( 'bp_get_the_profile_field_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_options()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_options() instead.
+	 */
+	function bp_get_the_profile_field_options( $args = array() ) {
+		return bboss_get_the_profile_field_options( $args );
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_required_label' ) && ! function_exists( 'bp_get_the_profile_field_required_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_required_label()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_required_label() instead.
+	 */
+	function bp_get_the_profile_field_required_label() {
+		return bboss_get_the_profile_field_required_label();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_type' ) && ! function_exists( 'bp_get_the_profile_field_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_type()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_type() instead.
+	 */
+	function bp_get_the_profile_field_type() {
+		return bboss_get_the_profile_field_type();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_value' ) && ! function_exists( 'bp_get_the_profile_field_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_value()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_value() instead.
+	 */
+	function bp_get_the_profile_field_value() {
+		return bboss_get_the_profile_field_value();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_visibility_level' ) && ! function_exists( 'bp_get_the_profile_field_visibility_level' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_visibility_level()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_visibility_level() instead.
+	 */
+	function bp_get_the_profile_field_visibility_level() {
+		return bboss_get_the_profile_field_visibility_level();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_field_visibility_level_label' ) && ! function_exists( 'bp_get_the_profile_field_visibility_level_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_visibility_level_label()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_visibility_level_label() instead.
+	 */
+	function bp_get_the_profile_field_visibility_level_label() {
+		return bboss_get_the_profile_field_visibility_level_label();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_group_description' ) && ! function_exists( 'bp_get_the_profile_group_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_description()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_description() instead.
+	 */
+	function bp_get_the_profile_group_description() {
+		return bboss_get_the_profile_group_description();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_group_edit_form_action' ) && ! function_exists( 'bp_get_the_profile_group_edit_form_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_edit_form_action()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_edit_form_action() instead.
+	 */
+	function bp_get_the_profile_group_edit_form_action() {
+		return bboss_get_the_profile_group_edit_form_action();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_group_field_ids' ) && ! function_exists( 'bp_get_the_profile_group_field_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_field_ids()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_field_ids() instead.
+	 */
+	function bp_get_the_profile_group_field_ids() {
+		return bboss_get_the_profile_group_field_ids();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_group_id' ) && ! function_exists( 'bp_get_the_profile_group_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_id()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_id() instead.
+	 */
+	function bp_get_the_profile_group_id() {
+		return bboss_get_the_profile_group_id();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_group_name' ) && ! function_exists( 'bp_get_the_profile_group_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_name()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_name() instead.
+	 */
+	function bp_get_the_profile_group_name() {
+		return bboss_get_the_profile_group_name();
+	}
+}
+if ( function_exists( 'bboss_get_the_profile_group_slug' ) && ! function_exists( 'bp_get_the_profile_group_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_slug()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_slug() instead.
+	 */
+	function bp_get_the_profile_group_slug() {
+		return bboss_get_the_profile_group_slug();
+	}
+}
+if ( function_exists( 'bboss_has_profile' ) && ! function_exists( 'bp_has_profile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_has_profile()}.
+	 *
+	 * @deprecated Use bboss_has_profile() instead.
+	 */
+	function bp_has_profile( $args = '' ) {
+		return bboss_has_profile( $args );
+	}
+}
+if ( function_exists( 'bboss_profile_field_data' ) && ! function_exists( 'bp_profile_field_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_field_data()}.
+	 *
+	 * @deprecated Use bboss_profile_field_data() instead.
+	 */
+	function bp_profile_field_data( $args = '' ) {
+		return bboss_profile_field_data( $args );
+	}
+}
+if ( function_exists( 'bboss_profile_fields' ) && ! function_exists( 'bp_profile_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_fields()}.
+	 *
+	 * @deprecated Use bboss_profile_fields() instead.
+	 */
+	function bp_profile_fields() {
+		return bboss_profile_fields();
+	}
+}
+if ( function_exists( 'bboss_profile_get_field_groups' ) && ! function_exists( 'bp_profile_get_field_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_get_field_groups()}.
+	 *
+	 * @deprecated Use bboss_profile_get_field_groups() instead.
+	 */
+	function bp_profile_get_field_groups() {
+		return bboss_profile_get_field_groups();
+	}
+}
+if ( function_exists( 'bboss_profile_get_settings_visibility_select' ) && ! function_exists( 'bp_profile_get_settings_visibility_select' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_get_settings_visibility_select()}.
+	 *
+	 * @deprecated Use bboss_profile_get_settings_visibility_select() instead.
+	 */
+	function bp_profile_get_settings_visibility_select( $args = '' ) {
+		return bboss_profile_get_settings_visibility_select( $args );
+	}
+}
+if ( function_exists( 'bboss_profile_get_visibility_radio_buttons' ) && ! function_exists( 'bp_profile_get_visibility_radio_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_get_visibility_radio_buttons()}.
+	 *
+	 * @deprecated Use bboss_profile_get_visibility_radio_buttons() instead.
+	 */
+	function bp_profile_get_visibility_radio_buttons( $args = '' ) {
+		return bboss_profile_get_visibility_radio_buttons( $args );
+	}
+}
+if ( function_exists( 'bboss_profile_group_has_fields' ) && ! function_exists( 'bp_profile_group_has_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_group_has_fields()}.
+	 *
+	 * @deprecated Use bboss_profile_group_has_fields() instead.
+	 */
+	function bp_profile_group_has_fields() {
+		return bboss_profile_group_has_fields();
+	}
+}
+if ( function_exists( 'bboss_profile_group_name' ) && ! function_exists( 'bp_profile_group_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_group_name()}.
+	 *
+	 * @deprecated Use bboss_profile_group_name() instead.
+	 */
+	function bp_profile_group_name( $deprecated = true ) {
+		return bboss_profile_group_name( $deprecated );
+	}
+}
+if ( function_exists( 'bboss_profile_group_tabs' ) && ! function_exists( 'bp_profile_group_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_group_tabs()}.
+	 *
+	 * @deprecated Use bboss_profile_group_tabs() instead.
+	 */
+	function bp_profile_group_tabs() {
+		return bboss_profile_group_tabs();
+	}
+}
+if ( function_exists( 'bboss_profile_groups' ) && ! function_exists( 'bp_profile_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_groups()}.
+	 *
+	 * @deprecated Use bboss_profile_groups() instead.
+	 */
+	function bp_profile_groups() {
+		return bboss_profile_groups();
+	}
+}
+if ( function_exists( 'bboss_profile_has_multiple_groups' ) && ! function_exists( 'bp_profile_has_multiple_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_has_multiple_groups()}.
+	 *
+	 * @deprecated Use bboss_profile_has_multiple_groups() instead.
+	 */
+	function bp_profile_has_multiple_groups() {
+		return bboss_profile_has_multiple_groups();
+	}
+}
+if ( function_exists( 'bboss_profile_last_updated' ) && ! function_exists( 'bp_profile_last_updated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_last_updated()}.
+	 *
+	 * @deprecated Use bboss_profile_last_updated() instead.
+	 */
+	function bp_profile_last_updated() {
+		return bboss_profile_last_updated();
+	}
+}
+if ( function_exists( 'bboss_profile_settings_visibility_select' ) && ! function_exists( 'bp_profile_settings_visibility_select' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_settings_visibility_select()}.
+	 *
+	 * @deprecated Use bboss_profile_settings_visibility_select() instead.
+	 */
+	function bp_profile_settings_visibility_select( $args = '' ) {
+		return bboss_profile_settings_visibility_select( $args );
+	}
+}
+if ( function_exists( 'bboss_profile_visibility_radio_buttons' ) && ! function_exists( 'bp_profile_visibility_radio_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_visibility_radio_buttons()}.
+	 *
+	 * @deprecated Use bboss_profile_visibility_radio_buttons() instead.
+	 */
+	function bp_profile_visibility_radio_buttons( $args = '' ) {
+		return bboss_profile_visibility_radio_buttons( $args );
+	}
+}
+if ( function_exists( 'bboss_the_profile_field' ) && ! function_exists( 'bp_the_profile_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field() instead.
+	 */
+	function bp_the_profile_field() {
+		return bboss_the_profile_field();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_description' ) && ! function_exists( 'bp_the_profile_field_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_description()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_description() instead.
+	 */
+	function bp_the_profile_field_description() {
+		return bboss_the_profile_field_description();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_edit_value' ) && ! function_exists( 'bp_the_profile_field_edit_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_edit_value()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_edit_value() instead.
+	 */
+	function bp_the_profile_field_edit_value() {
+		return bboss_the_profile_field_edit_value();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_id' ) && ! function_exists( 'bp_the_profile_field_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_id()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_id() instead.
+	 */
+	function bp_the_profile_field_id() {
+		return bboss_the_profile_field_id();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_ids' ) && ! function_exists( 'bp_the_profile_field_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_ids()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_ids() instead.
+	 */
+	function bp_the_profile_field_ids() {
+		return bboss_the_profile_field_ids();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_input_name' ) && ! function_exists( 'bp_the_profile_field_input_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_input_name()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_input_name() instead.
+	 */
+	function bp_the_profile_field_input_name() {
+		return bboss_the_profile_field_input_name();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_is_required' ) && ! function_exists( 'bp_the_profile_field_is_required' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_is_required()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_is_required() instead.
+	 */
+	function bp_the_profile_field_is_required() {
+		return bboss_the_profile_field_is_required();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_name' ) && ! function_exists( 'bp_the_profile_field_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_name()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_name() instead.
+	 */
+	function bp_the_profile_field_name() {
+		return bboss_the_profile_field_name();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_optional_label' ) && ! function_exists( 'bp_the_profile_field_optional_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_optional_label()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_optional_label() instead.
+	 */
+	function bp_the_profile_field_optional_label() {
+		return bboss_the_profile_field_optional_label();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_options' ) && ! function_exists( 'bp_the_profile_field_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_options()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_options() instead.
+	 */
+	function bp_the_profile_field_options( $args = array() ) {
+		return bboss_the_profile_field_options( $args );
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_required_label' ) && ! function_exists( 'bp_the_profile_field_required_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_required_label()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_required_label() instead.
+	 */
+	function bp_the_profile_field_required_label() {
+		return bboss_the_profile_field_required_label();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_type' ) && ! function_exists( 'bp_the_profile_field_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_type()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_type() instead.
+	 */
+	function bp_the_profile_field_type() {
+		return bboss_the_profile_field_type();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_value' ) && ! function_exists( 'bp_the_profile_field_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_value()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_value() instead.
+	 */
+	function bp_the_profile_field_value() {
+		return bboss_the_profile_field_value();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_visibility_level' ) && ! function_exists( 'bp_the_profile_field_visibility_level' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_visibility_level()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_visibility_level() instead.
+	 */
+	function bp_the_profile_field_visibility_level() {
+		return bboss_the_profile_field_visibility_level();
+	}
+}
+if ( function_exists( 'bboss_the_profile_field_visibility_level_label' ) && ! function_exists( 'bp_the_profile_field_visibility_level_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_visibility_level_label()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_visibility_level_label() instead.
+	 */
+	function bp_the_profile_field_visibility_level_label() {
+		return bboss_the_profile_field_visibility_level_label();
+	}
+}
+if ( function_exists( 'bboss_the_profile_group' ) && ! function_exists( 'bp_the_profile_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group() instead.
+	 */
+	function bp_the_profile_group() {
+		return bboss_the_profile_group();
+	}
+}
+if ( function_exists( 'bboss_the_profile_group_description' ) && ! function_exists( 'bp_the_profile_group_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_description()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_description() instead.
+	 */
+	function bp_the_profile_group_description() {
+		return bboss_the_profile_group_description();
+	}
+}
+if ( function_exists( 'bboss_the_profile_group_edit_form_action' ) && ! function_exists( 'bp_the_profile_group_edit_form_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_edit_form_action()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_edit_form_action() instead.
+	 */
+	function bp_the_profile_group_edit_form_action() {
+		return bboss_the_profile_group_edit_form_action();
+	}
+}
+if ( function_exists( 'bboss_the_profile_group_field_ids' ) && ! function_exists( 'bp_the_profile_group_field_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_field_ids()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_field_ids() instead.
+	 */
+	function bp_the_profile_group_field_ids() {
+		return bboss_the_profile_group_field_ids();
+	}
+}
+if ( function_exists( 'bboss_the_profile_group_id' ) && ! function_exists( 'bp_the_profile_group_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_id()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_id() instead.
+	 */
+	function bp_the_profile_group_id() {
+		return bboss_the_profile_group_id();
+	}
+}
+if ( function_exists( 'bboss_the_profile_group_name' ) && ! function_exists( 'bp_the_profile_group_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_name()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_name() instead.
+	 */
+	function bp_the_profile_group_name() {
+		return bboss_the_profile_group_name();
+	}
+}
+if ( function_exists( 'bboss_the_profile_group_slug' ) && ! function_exists( 'bp_the_profile_group_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_slug()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_slug() instead.
+	 */
+	function bp_the_profile_group_slug() {
+		return bboss_the_profile_group_slug();
+	}
+}
+if ( function_exists( 'bboss_unserialize_profile_field' ) && ! function_exists( 'bp_unserialize_profile_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_unserialize_profile_field()}.
+	 *
+	 * @deprecated Use bboss_unserialize_profile_field() instead.
+	 */
+	function bp_unserialize_profile_field( $value ) {
+		return bboss_unserialize_profile_field( $value );
+	}
+}
+// @bbwt-com-end compat-layer
