@@ -39,8 +39,8 @@ if ( function_exists( 'bp_core_load_buddypress_textdomain' ) && ! function_exist
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-loader — backward compatibility for third-party code that uses the
 // pre-rename (BuddyPress-style) function, class and constant names. buddyboss.com build only.
-if ( file_exists( __DIR__ . '/bb-compat/bb-compat-loader.php' ) ) {
-	require_once __DIR__ . '/bb-compat/bb-compat-loader.php';
+if ( file_exists( __DIR__ . '/bboss-compat/bboss-compat-loader.php' ) ) {
+	require_once __DIR__ . '/bboss-compat/bboss-compat-loader.php';
 }
 // @bbwt-com-end compat-layer
 
