@@ -140,6 +140,30 @@ class BB_Tests_Media_Extensions_Settings extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Defaults that share an extension with a different MIME type are all backfilled.
+	 */
+	public function test_backfill_keeps_same_extension_with_other_mime_type() {
+		$defaults = $this->defaults();
+
+		$defaults['bb_doc_5'] = array(
+			'extension'   => '.ai',
+			'mime_type'   => 'application/postscript',
+			'description' => 'Illustrator File',
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		);
+		$defaults['bb_doc_6'] = array_merge( $defaults['bb_doc_5'], array( 'mime_type' => 'application/pdf' ) );
+
+		bp_update_option( 'bp_document_extensions_support', array( 'bb_doc_1' => $defaults['bb_doc_1'] ) );
+
+		$result = bb_media_get_saved_extensions( 'bp_document_extensions_support', $defaults );
+
+		$this->assertArrayHasKey( 'bb_doc_5', $result );
+		$this->assertArrayHasKey( 'bb_doc_6', $result );
+	}
+
+	/**
 	 * A toggle-only save on a legacy list keeps the admin's states and adds no duplicates.
 	 */
 	public function test_toggle_save_on_legacy_list_writes_no_duplicates() {

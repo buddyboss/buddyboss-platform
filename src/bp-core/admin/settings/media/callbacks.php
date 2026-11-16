@@ -209,17 +209,19 @@ function bb_media_get_saved_extensions( $option_name, $default_extensions ) {
 		return $existing;
 	}
 
-	// Backfill a default extension that a *non-empty* saved list does not
-	// have yet, such as a default added in a later release. Match on the
-	// extension itself, not on the key: older sites stored some of today's
-	// defaults (e.g. .mp4, .mov) as custom entries under other keys, and a
-	// key-only check would list those extensions twice and save the
-	// duplicates on the next toggle save. Every saved entry, including one
+	// Backfill a default entry that a *non-empty* saved list does not have
+	// yet, such as a default added in a later release. Match on the
+	// extension and MIME type, not on the key: older sites stored some of
+	// today's defaults (e.g. .mp4, .mov) as custom entries under other keys,
+	// and a key-only check would list those types twice and save the
+	// duplicates on the next toggle save. The MIME type is part of the match
+	// because the defaults list some extensions more than once with
+	// different MIME types (e.g. .ai, .csv). Every saved entry, including one
 	// toggled off, is left untouched.
 	$saved_types = array();
 	foreach ( $existing as $ext ) {
 		if ( is_array( $ext ) && ! empty( $ext['extension'] ) ) {
-			$saved_types[ strtolower( trim( $ext['extension'] ) ) ] = true;
+			$saved_types[ bb_media_get_extension_type_key( $ext ) ] = true;
 		}
 	}
 
@@ -228,16 +230,30 @@ function bb_media_get_saved_extensions( $option_name, $default_extensions ) {
 			continue;
 		}
 
-		$type = strtolower( trim( $ext['extension'] ) );
-		if ( isset( $saved_types[ $type ] ) ) {
+		if ( isset( $saved_types[ bb_media_get_extension_type_key( $ext ) ] ) ) {
 			continue;
 		}
 
-		$existing[ $key ]     = $ext;
-		$saved_types[ $type ] = true;
+		$existing[ $key ] = $ext;
 	}
 
 	return $existing;
+}
+
+/**
+ * Build the comparison key for an extension entry (extension + MIME type).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $ext Extension entry with `extension` and `mime_type`.
+ *
+ * @return string Lower-cased "extension|mime_type".
+ */
+function bb_media_get_extension_type_key( $ext ) {
+	$extension = isset( $ext['extension'] ) ? strtolower( trim( (string) $ext['extension'] ) ) : '';
+	$mime_type = isset( $ext['mime_type'] ) ? strtolower( trim( (string) $ext['mime_type'] ) ) : '';
+
+	return $extension . '|' . $mime_type;
 }
 
 /**
