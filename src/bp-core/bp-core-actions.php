@@ -158,22 +158,80 @@ add_action(
 	function() {
 		$component = bp_get_option( 'bp-active-components' );
 
-		// Set the "Document" component active/inactive based on the media components.
-		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
-			$component['document'] = '1';
-			bp_update_option( 'bp-active-components', $component );
-		} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
-			unset( $component['document'] );
+		if ( ! is_array( $component ) ) {
+			return;
+		}
+
+		// The option lives on the root blog, while code availability depends on the plugins
+		// active on the current site. On multisite only the root blog decides, as in BP_Core.
+		if ( is_multisite() && ! bp_is_root_blog() ) {
+			return;
+		}
+
+		/*
+		 * Keep the "Document" and "Video" components in step with "Media".
+		 *
+		 * Both need Media, so they are switched off with it. They are only
+		 * switched on when their code is available — the components now ship
+		 * in the BuddyBoss Add-ons plugin, and adding one that cannot load
+		 * would just be scrubbed again by BP_Core on the next request. Media may
+		 * be stored as '1' (legacy) or 1 (Settings 2.0), so test truthiness.
+		 *
+		 * Each child is switched on automatically once per Media activation
+		 * (remembered in `bb_media_auto_enabled_components`), so an admin can
+		 * still turn Video or Documents off on their own afterwards. Its
+		 * directory page is created at the same time, as the Media toggle did
+		 * when it owned these components.
+		 */
+		$auto_enabled = bp_get_option( 'bb_media_auto_enabled_components', false );
+		if ( false === $auto_enabled ) {
+			// Seed it so later reads come from autoloaded options instead of a query per request.
+			$auto_enabled = array();
+			bp_update_option( 'bb_media_auto_enabled_components', $auto_enabled );
+		}
+
+		$auto_enabled  = (array) $auto_enabled;
+		$updated       = false;
+		$added         = array();
+		$added_or_seen = array();
+		foreach ( array( 'document', 'video' ) as $media_child ) {
+			if ( ! empty( $component['media'] ) ) {
+				if ( ! empty( $component[ $media_child ] ) ) {
+					// Already on: remember it so a later manual disable sticks.
+					$added_or_seen[] = $media_child;
+				} elseif (
+					! in_array( $media_child, $auto_enabled, true ) &&
+					bb_is_component_directory_available( $media_child )
+				) {
+					$component[ $media_child ] = '1';
+					$added[ $media_child ]     = 1;
+					$added_or_seen[]           = $media_child;
+					$updated                   = true;
+				}
+			} elseif ( isset( $component[ $media_child ] ) ) {
+				unset( $component[ $media_child ] );
+				$updated = true;
+			}
+		}
+
+		if ( $updated ) {
 			bp_update_option( 'bp-active-components', $component );
 		}
 
-		// Set the "Video" component active/inactive based on the media components.
-		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['video'] ) ) {
-			$component['video'] = '1';
-			bp_update_option( 'bp-active-components', $component );
-		} elseif ( isset( $component ) && isset( $component['video'] ) && empty( $component['media'] ) ) {
-			unset( $component['video'] );
-			bp_update_option( 'bp-active-components', $component );
+		$new_auto_enabled = empty( $component['media'] )
+			? array()
+			: array_values( array_unique( array_merge( $auto_enabled, $added_or_seen ) ) );
+		if ( $new_auto_enabled !== $auto_enabled ) {
+			bp_update_option( 'bb_media_auto_enabled_components', $new_auto_enabled );
+		}
+
+		if ( ! empty( $added ) ) {
+			// bp_core_add_page_mappings() uses post_exists(), which only loads in wp-admin.
+			if ( ! function_exists( 'post_exists' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/post.php';
+			}
+			bp_core_add_page_mappings( $added, 'keep', false );
+			add_action( 'shutdown', 'flush_rewrite_rules' );
 		}
 	},
 	10,
@@ -462,6 +520,66 @@ function bb_restricate_rss_feed_callback() {
 	}
 }
 add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
+
+/**
+ * Restrict RSS feeds once WordPress has parsed the request.
+ *
+ * The `init` check in bb_restricate_rss_feed_callback() runs before the query is parsed, so it can only
+ * recognise a feed from its URL and misses feed URLs such as `/members/rss2`. This catches every
+ * feed WordPress serves through its template loader. It runs before `bp_template_redirect`, whose
+ * Private Website redirect leaves feeds to this setting. Forum feeds are printed earlier and are
+ * restricted by bb_restricate_rss_feed_forums_request().
+ *
+ * @since BuddyBoss 3.6.1
+ */
+function bb_restricate_rss_feed_template_redirect() {
+	if ( is_user_logged_in() || ! is_feed() || true !== bp_enable_private_rss_feeds() ) {
+		return;
+	}
+
+	bb_restricate_rss_feed( true );
+}
+add_action( 'template_redirect', 'bb_restricate_rss_feed_template_redirect', 1 );
+
+/**
+ * Restrict forum feeds, which are printed while WordPress is still parsing the request.
+ *
+ * Forum, topic, reply and view feeds are output by bbp_request_feed_trap() on the `request`
+ * filter, before REST routing and before `template_redirect`. The `init` check exempts REST
+ * requests and cannot see feed URLs such as `/forums/rss2/`, and the `template_redirect`
+ * check never runs, so these feeds are checked here, just before the trap and on the same
+ * conditions it uses to decide whether it will print a feed.
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @param array $query_vars Request query variables.
+ *
+ * @return array
+ */
+function bb_restricate_rss_feed_forums_request( $query_vars ) {
+	if (
+		! isset( $query_vars['feed'] ) ||
+		is_user_logged_in() ||
+		true !== bp_enable_private_rss_feeds() ||
+		! function_exists( 'bbp_get_forum_post_type' )
+	) {
+		return $query_vars;
+	}
+
+	$is_forum_feed = ! empty( $query_vars[ bbp_get_view_rewrite_id() ] );
+
+	if ( ! $is_forum_feed && isset( $query_vars['post_type'] ) ) {
+		$forum_post_types = array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+		$is_forum_feed    = (bool) array_intersect( $forum_post_types, (array) $query_vars['post_type'] );
+	}
+
+	if ( $is_forum_feed ) {
+		bb_restricate_rss_feed( true );
+	}
+
+	return $query_vars;
+}
+add_filter( 'bbp_request', 'bb_restricate_rss_feed_forums_request', 9 );
 
 /**
  * Function will remove REST APIs endpoint.
@@ -1226,6 +1344,39 @@ function bb_telemetry_load() {
 }
 
 add_action( 'bp_init', 'bb_telemetry_load' );
+
+/**
+ * Force telemetry into "complete" mode on sites with a paid BuddyBoss product.
+ *
+ * Telemetry defaults to "disable" and is opt-in, which leaves most paid sites
+ * unreported. Paid products are expected to report, so the mode is raised for
+ * any site holding a licence key or running a paid add-on — not only for sites
+ * with the Pro plugin installed.
+ *
+ * Platform Pro registers `bb_pro_force_telemetry_complete()` on this same
+ * filter. Both return 'complete', so the two are idempotent; Pro's copy is kept
+ * for now so an older Platform paired with a newer Pro does not lose forced
+ * reporting. It can be dropped once this version is the supported floor.
+ *
+ * @since BuddyBoss 3.4.3
+ *
+ * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
+ *
+ * @return string Telemetry mode.
+ */
+function bb_force_telemetry_for_licensed_sites( $mode ) {
+	if ( 'complete' === $mode ) {
+		return $mode;
+	}
+
+	if ( bb_has_paid_product() ) {
+		return 'complete';
+	}
+
+	return $mode;
+}
+
+add_filter( 'bb_advanced_telemetry_reporting_value', 'bb_force_telemetry_for_licensed_sites' );
 
 /**
  * Initialize the Topics Manager.

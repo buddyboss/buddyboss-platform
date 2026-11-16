@@ -649,8 +649,26 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * These localizations require information that may not be loaded even by init.
 	 *
 	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 3.6.2 Adds the `invites_revoke` nonce.
 	 */
 	public function localize_scripts() {
+
+		// The activity editor's WYSIWYG toolbar tooltips (bold, ordered list, quote, etc.).
+		// Translatable via standard gettext/Loco Translate (domain 'buddyboss') — WPML String
+		// Translation picks these up on its own from the gettext calls below, the same way it
+		// does for every other 'buddyboss' string, so no separate wpml_register_single_string()
+		// registration is needed here.
+		$activity_editor_button_labels = array(
+			'bold'          => __( 'Bold', 'buddyboss' ),
+			'italic'        => __( 'Italic', 'buddyboss' ),
+			'unorderedlist' => __( 'Unordered list', 'buddyboss' ),
+			'orderedlist'   => __( 'Ordered list', 'buddyboss' ),
+			'quote'         => __( 'Quote', 'buddyboss' ),
+			'anchor'        => __( 'Link', 'buddyboss' ),
+			'pre'           => __( 'Code', 'buddyboss' ),
+			'h3'            => __( 'Heading 3', 'buddyboss' ),
+			'h4'            => __( 'Heading 4', 'buddyboss' ),
+		);
 
 		$params = array(
 			'ajaxurl'                    => bp_core_ajax_url(),
@@ -662,6 +680,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
 			'object_nav_parent'          => '#buddypress',
 			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss' ),
+			'activityEditorButtonLabels' => $activity_editor_button_labels,
 			'empty_field'                => __( 'New Field', 'buddyboss' ),
 			'close'                      => __( 'Close', 'buddyboss' ),
 			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss' ),
@@ -683,8 +702,16 @@ class BP_Nouveau extends BP_Theme_Compat {
 			),
 			'rest_url'                   => untrailingslashit( home_url( 'wp-json/buddyboss/v1' ) ),
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
+			// Shown in a hover pop-up card when its request fails.
+			'card_load_error'            => __( 'Failed to load data.', 'buddyboss' ),
 			'member_label'               => __( 'member', 'buddyboss' ),
 			'members_label'              => __( 'members', 'buddyboss' ),
+			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card.
+			// The cards previously read BP_Nouveau.activity.params.user_id, which carries the
+			// same value but is only registered when the Activity component is enabled — with
+			// Activity off the unguarded property read threw and killed every hover card on
+			// the site. Localizing it on the shared handle makes the guard component-agnostic.
+			'loggedin_user_id'           => bp_loggedin_user_id(),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
@@ -727,6 +754,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 			// Group sub objects nonce.
 			$object_nonces['group_members'] = wp_create_nonce( 'bp_nouveau_group_members' );
+		}
+
+		// Nonce for revoking a sent email invite from the member's Sent Invites screen.
+		if ( bp_is_active( 'invites' ) ) {
+			$object_nonces['invites_revoke'] = wp_create_nonce( 'bb_invites_revoke' );
 		}
 
 		// if ( bp_is_active( 'media' ) ) {
@@ -913,9 +945,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$nav_items = bp_nouveau_get_blogs_directory_nav_items();
 		} elseif ( bp_is_media_directory() ) {
 			$nav_items = bp_nouveau_get_media_directory_nav_items();
-		} elseif ( bp_is_document_directory() ) {
+		} elseif ( bp_is_document_directory() && function_exists( 'bp_nouveau_get_document_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_document_directory_nav_items();
-		} elseif ( bp_is_video_directory() ) {
+		} elseif ( bp_is_video_directory() && function_exists( 'bp_nouveau_get_video_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_video_directory_nav_items();
 		}
 

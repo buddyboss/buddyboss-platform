@@ -461,16 +461,41 @@ class BP_User_Query {
 				$search_terms_space   = '%' . $search_terms . '%';
 			}
 
-			$matched_user_ids = $wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT ID FROM {$wpdb->users} WHERE (display_name LIKE %s OR display_name LIKE %s)",
-					$search_terms_nospace,
-					$search_terms_space
-				)
+			$match_subquery = $wpdb->prepare(
+				"SELECT ID FROM {$wpdb->users} WHERE (display_name LIKE %s OR display_name LIKE %s)",
+				$search_terms_nospace,
+				$search_terms_space
 			);
 
-			$match_in_clause        = empty( $matched_user_ids ) ? 'NULL' : implode( ',', $matched_user_ids );
-			$sql['where']['search'] = "u.{$this->uid_name} IN ({$match_in_clause})";
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $match_subquery is the return of $wpdb->prepare() directly above; search visibility must read current values.
+			$matched_user_ids = $wpdb->get_col( $match_subquery );
+
+			// Kept so the clause below can name the match set by the query that produced it instead
+			// of by its ids. The rows still have to come back: the visibility filter runs over them.
+			$unfiltered_user_ids = $matched_user_ids;
+
+			// display_name always holds the member's full name, so this comparison can match on a
+			// name part the searcher is not allowed to see. The row would be redacted at render
+			// time, but its presence in the results is itself a disclosure — searching a guessed
+			// surname and getting one hit confirms it. Drop the matches that exist only in a hidden
+			// name part. See bb_xprofile_filter_user_search_matches().
+			if ( ! empty( $matched_user_ids ) ) {
+				$matched_user_ids = bb_xprofile_filter_user_search_matches(
+					$matched_user_ids,
+					array( $search_terms_nospace, $search_terms_space )
+				);
+			}
+
+			// Built from whichever of "who survived" and "who was removed" is smaller. The filter
+			// above normally removes a handful of members and keeps nearly everybody, so spelling
+			// out the survivors sent the whole match set to the database - 70,022 ids to exclude
+			// one of them. See bb_core_get_search_match_clause().
+			$sql['where']['search'] = bb_core_get_search_match_clause(
+				"u.{$this->uid_name}",
+				$unfiltered_user_ids,
+				$matched_user_ids,
+				$match_subquery
+			);
 		}
 
 		// Only use $member_type__in if $member_type is not set.

@@ -4046,6 +4046,8 @@ function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_gro
  *
  * @since BuddyBoss 1.0.0
  *
+ * @since BuddyBoss 3.5.0 The 'type' attribute also accepts a group type post ID.
+ *
  * @param $atts
  *
  * @return false|string
@@ -4062,14 +4064,14 @@ function bp_group_type_short_code_callback( $atts ) {
 				</div>
 				<div id="groups-dir-list" class="groups dir-list">
 					<?php
-					$atts['group_type'] = $atts['type'];
+					// Accepts a group type key, or a group type post ID for back-compat.
+					$group_type_key     = bb_group_type_shortcode_resolve_key( $atts['type'] );
+					$atts['group_type'] = $group_type_key;
 
-					if ( ! empty( $atts['type'] ) ) {
+					if ( ! empty( $group_type_key ) ) {
 
-						$name = str_replace( array( ' ', ',' ), array( '-', '-' ), strtolower( $atts['type'] ) );
-
-						// Set the "current" profile type, if one is provided, in member directories.
-						buddypress()->groups->current_directory_type = $name;
+						// Set the "current" group type, if one is provided, in group directories.
+						buddypress()->groups->current_directory_type = $group_type_key;
 						buddypress()->current_component              = 'groups';
 						buddypress()->is_directory                   = true;
 					}
@@ -5004,176 +5006,6 @@ function bb_get_all_members_for_groups( $args = array() ) {
 }
 
 /**
- * Function to check the user subscribed group or not.
- *
- * @since BuddyBoss 2.2.8
- *
- * @param int $group_id Group ID.
- * @param int $user_id  User ID.
- *
- * @return bool|int
- */
-function bb_is_member_subscribed_group( $group_id, $user_id ) {
-
-	if ( empty( $user_id ) ) {
-		$user_id = get_current_user_id();
-	}
-
-	if ( empty( $group_id ) || empty( $user_id ) ) {
-		return false;
-	}
-
-	if ( function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' ) ) {
-		$subscription_ids = bb_get_subscriptions(
-			array(
-				'type'    => 'group',
-				'item_id' => $group_id,
-				'user_id' => $user_id,
-				'fields'  => 'id',
-				'status'  => null,
-			),
-			true
-		);
-
-		if ( ! empty( $subscription_ids ) && ! empty( $subscription_ids['subscriptions'] ) ) {
-			return current( $subscription_ids['subscriptions'] );
-		}
-	}
-
-	return false;
-}
-
-/**
- * Function to get Group Subscription button.
- *
- * @since BuddyBoss 2.2.8
- *
- * @param array $args button args.
- * @param bool  $html Should return button html or not.
- *
- * @return string|array
- */
-function bb_get_group_subscription_button( $args, $html = true ) {
-	global $wp;
-
-	if ( ! bb_is_enabled_subscription( 'group' ) || ! is_user_logged_in() ) {
-		return ! empty( $html ) ? '' : array();
-	}
-
-	$r = bp_parse_args(
-		$args,
-		array(
-			'show_link_text' => false,
-			'button_attr'    => array(
-				'data-bp-content-id' => false,
-			),
-		),
-	);
-
-	$item_id = $r['button_attr']['data-bp-content-id'];
-	$user_id = get_current_user_id();
-	$group   = groups_get_group( $item_id );
-
-	if ( empty( $item_id ) || empty( $r ) ) {
-		return ! empty( $html ) ? '' : array();
-	}
-
-	// Check the current user's permission.
-	$is_group_member = groups_is_user_member( $user_id, $item_id );
-	if ( false === (bool) $is_group_member ) {
-		return ! empty( $html ) ? '' : array();
-	}
-
-	$button_icon         = '<i class="bb-icon-l bb-icon-bell"></i>';
-	$button_text         = __( 'Subscribe', 'buddyboss' );
-	$button_hover_text   = __( 'Unsubscribe', 'buddyboss' );
-	$subscription_status = 'not-subscribed';
-	$action              = 'subscribe';
-	if ( bb_is_member_subscribed_group( $item_id, $user_id ) ) {
-		$button_text         = __( 'Unsubscribe', 'buddyboss' );
-		$button_hover_text   = __( 'Subscribe', 'buddyboss' );
-		$subscription_status = 'subscribed';
-		$action              = 'unsubscribe';
-	}
-
-	$url = esc_url(
-		wp_nonce_url(
-			add_query_arg(
-				array(
-					'action'   => $action,
-					'group_id' => $item_id,
-				),
-				trailingslashit( home_url( $wp->request ) )
-			),
-			'bb-group-subscription-' . $item_id
-		)
-	);
-
-	$button = array(
-		'id'                => 'group_subscription',
-		'component'         => 'groups',
-		'must_be_logged_in' => true,
-		'block_self'        => false,
-		'wrapper_class'     => 'group-button ' . $subscription_status,
-		'wrapper_id'        => 'groupbutton-' . $item_id,
-		'link_href'         => $url,
-		'link_text'         => ( $r['show_link_text'] ) ? $button_icon . $button_text : $button_icon,
-		'link_class'        => 'group-button bp-toggle-action-button group-subscription ' . $subscription_status,
-		'is_tooltips'       => true,
-		'data-balloon'      => $button_text,
-		'data-balloon-pos'  => 'up',
-		'button_attr'       => array(
-			'data-title'           => ( $r['show_link_text'] ) ? $button_icon . $button_hover_text : $button_icon,
-			'data-title-displayed' => ( $r['show_link_text'] ) ? $button_icon . $button_text : $button_icon,
-			'data-bb-group-name'   => esc_attr( $group->name ),
-			'add_pre_post_text'    => false,
-			'href'                 => $url,
-			'data-bp-btn-action'   => $action,
-			'aria-label'           => $button_text,
-		),
-	);
-
-	$button = bp_parse_args( $button, $r );
-
-	/**
-	 * Filter to update group subscription button arguments.
-	 *
-	 * @since BuddyBoss 2.2.8
-	 *
-	 * @param array $button Button args.
-	 * @param array $r      Button args.
-	 */
-	$button = apply_filters( 'bb_group_subscription_button_args', $button, $r );
-
-	if ( ! empty( $html ) ) {
-		$button = sprintf(
-			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s" aria-label="%s">%s</a>',
-			esc_url( $button['link_href'] ),
-			esc_attr( $button['id'] ),
-			esc_attr( $button['link_class'] ),
-			esc_attr( $item_id ),
-			'group',
-			esc_url( $button['link_href'] ),
-			esc_attr( $action ),
-			esc_attr( $button['aria-label'] ),
-			wp_kses_post( $button['link_text'] )
-		);
-	}
-
-	/**
-	 * Filter to update group subscription link.
-	 *
-	 * @since BuddyBoss 2.2.8
-	 *
-	 * @param mixed $button Button args or HTML.
-	 * @param array $r      Button args.
-	 * @param bool  $html   Should return button html or not.
-	 */
-	return apply_filters( 'bb_get_group_subscription_button', $button, $r, $html );
-
-}
-
-/**
  * Function to display group action buttons.
  *
  * @since BuddyBoss 2.2.8
@@ -5181,22 +5013,22 @@ function bb_get_group_subscription_button( $args, $html = true ) {
  * @return void
  */
 function bb_group_single_header_actions() {
+	ob_start();
+	bp_nouveau_group_header_buttons();
+	bp_nouveau_group_header_buttons(
+		array(
+			'type'           => 'subscription',
+			'button_element' => 'button',
+		)
+	);
+	bb_nouveau_group_header_bubble_buttons();
+
+	// Trimmed so the wrapper stays truly empty and the CSS :empty divider check works.
+	$actions = trim( ob_get_clean() );
 	?>
-	<div class="group-actions-absolute">
-		<?php
-		bp_nouveau_group_header_buttons();
-		bp_nouveau_group_header_buttons(
-			array(
-				'type'           => 'subscription',
-				'button_element' => 'button',
-			)
-		);
-		bb_nouveau_group_header_bubble_buttons();
-		?>
-	</div>
+	<div class="group-actions-absolute"><?php echo $actions; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 	<?php
 }
-
 
 /**
  * Update the group member count.
@@ -5734,4 +5566,154 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 		</span>
 		<?php
 	}
+}
+
+/**
+ * Resolves a group type key from a provided value for use in the group shortcode.
+ *
+ * Accepts a group type key or a group type post ID and returns the corresponding key.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param string|int $type Group type key or post ID.
+ *
+ * @return string Group type key.
+ */
+function bb_group_type_shortcode_resolve_key( $type ) {
+	$type = trim( (string) $type );
+
+	if ( '' === $type ) {
+		return '';
+	}
+
+	$key = str_replace( array( ' ', ',' ), array( '-', '-' ), strtolower( $type ) );
+
+	// A registered key wins outright (this also covers a key that happens to be
+	// all-digits). Only when the value is not a registered key and is purely
+	// numeric do we treat it as a legacy group type post ID and resolve its key.
+	if ( null === bp_groups_get_group_type_object( $key ) && ctype_digit( $type ) ) {
+		$type_post = get_post( absint( $type ) );
+
+		if (
+			$type_post instanceof WP_Post
+			&& bp_groups_get_group_type_post_type() === $type_post->post_type
+		) {
+			$resolved_key = bp_group_get_group_type_key( $type_post->ID );
+
+			if ( ! empty( $resolved_key ) ) {
+				$key = sanitize_key( $resolved_key );
+			}
+		}
+	}
+
+	/**
+	 * Filter resolved group type key for shortcode usage.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param string $key  The resolved group type key.
+	 * @param string $type The original type value passed in.
+	 */
+	return apply_filters( 'bb_group_type_shortcode_resolve_key', $key, $type );
+}
+
+/**
+ * Whether group membership changes should be recorded for BuddyBoss Add-ons to replay.
+ *
+ * Group subscriptions moved to BuddyBoss Add-ons, which creates and removes a member's
+ * `group` subscription when the membership changes. While its module is not loaded
+ * (Add-ons not yet installed, inactive, below the required version or not licensed),
+ * those changes are recorded instead, so the module can replay them once it is back.
+ *
+ * Only sites that use group subscriptions record: a site that never had a `group`
+ * subscription and never loaded the module has nothing to keep in step. The answer is
+ * kept in `bb_group_subscription_gap_tracking`; the module sets it to 1 whenever it
+ * loads. A limit keeps a site that never brings the module back from growing without
+ * bound; the replay re-checks the current membership, so a change dropped past the
+ * limit cannot leave a former member subscribed.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return bool True when the change should be recorded.
+ */
+function bb_groups_should_record_subscription_gap() {
+	global $wpdb;
+
+	if ( did_action( 'bb_addons_group_subscription_loaded' ) ) {
+		return false;
+	}
+
+	$tracking = bp_get_option( 'bb_group_subscription_gap_tracking', '' );
+
+	if ( '' === $tracking ) {
+		$subscription_tbl = $wpdb->base_prefix . 'bb_notifications_subscriptions';
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $subscription_tbl ) ) );
+		$has_rows     = false;
+
+		if ( $table_exists ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$has_rows = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT 1 FROM {$subscription_tbl} WHERE type = %s LIMIT 1", 'group' ) );
+		}
+
+		$tracking = $has_rows ? 1 : 0;
+		bp_update_option( 'bb_group_subscription_gap_tracking', $tracking );
+	}
+
+	if ( ! $tracking ) {
+		return false;
+	}
+
+	/**
+	 * Filters the maximum number of recorded membership changes.
+	 *
+	 * A safety limit so a site that never brings the module back does not grow its
+	 * group meta without bound. Changes after the limit are not recorded.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param int $limit Maximum number of recorded changes. Default 100000.
+	 */
+	$limit = (int) apply_filters( 'bb_group_subscription_gap_limit', 100000 );
+
+	return (int) bp_get_option( 'bb_group_subscription_gap_count', 0 ) < $limit;
+}
+
+/**
+ * Record a group membership change for BuddyBoss Add-ons to replay.
+ *
+ * Each change is its own group meta row, so concurrent requests never overwrite
+ * one another, and the rows keep their order. See bb_groups_should_record_subscription_gap().
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param int    $group_id      ID of the group.
+ * @param int    $user_id       ID of the user.
+ * @param string $action        'save', 'remove' or 'delete', matching the membership hook.
+ * @param bool   $is_member_add Optional. For 'save': whether the membership row was inserted.
+ * @param int    $is_confirmed  Optional. For 'save': the membership's is_confirmed value.
+ * @param int    $is_banned     Optional. For 'save': the membership's is_banned value.
+ *
+ * @return void
+ */
+function bb_groups_record_subscription_gap( $group_id, $user_id, $action, $is_member_add = false, $is_confirmed = 0, $is_banned = 0 ) {
+	if ( empty( $group_id ) || empty( $user_id ) || ! bb_groups_should_record_subscription_gap() ) {
+		return;
+	}
+
+	groups_add_groupmeta(
+		(int) $group_id,
+		'_bb_group_subscription_gap',
+		array(
+			'action'        => $action,
+			'user_id'       => (int) $user_id,
+			'is_member_add' => (bool) $is_member_add,
+			'is_confirmed'  => (int) $is_confirmed,
+			'is_banned'     => (int) $is_banned,
+			'blog_id'       => get_current_blog_id(),
+		)
+	);
+
+	bp_update_option( 'bb_group_subscription_gap_count', (int) bp_get_option( 'bb_group_subscription_gap_count', 0 ) + 1 );
 }

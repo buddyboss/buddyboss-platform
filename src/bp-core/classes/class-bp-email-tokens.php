@@ -18,9 +18,14 @@ defined( 'ABSPATH' ) || exit;
 class BP_Email_Tokens {
 
 	/**
-	 * Message sender id.
+	 * Sender primed by `messages_message_sent` in this request.
+	 *
+	 * Only a fallback: emails identify their sender through the `sender.id` / `message_id`
+	 * tokens (see bb_get_message_sender_id()), because one request can render emails for
+	 * several senders.
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 3.6.2 No longer written from email tokens; read only as the last fallback.
 	 */
 	protected $_message_sender_id = false;
 
@@ -464,7 +469,7 @@ class BP_Email_Tokens {
 											);
 
 											if ( ! empty( $avatar ) ) {
-												$output .= sprintf( "<img src='%s' alt='%s' />", esc_url( $avatar ), esc_attr( bp_core_get_user_displayname( $user_id ) ) );
+												$output .= sprintf( "<img src='%s' alt='%s' />", esc_url( $avatar ), esc_attr( bp_core_get_user_displayname( $user_id, $this->bb_get_receiver_user_id( $tokens ) ) ) );
 											}
 										}
 										$output .= '</span>';
@@ -538,7 +543,7 @@ class BP_Email_Tokens {
 		$settings = bp_email_get_appearance_settings();
 
 		$activity    = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
-		$author_name = isset( $tokens['poster.name'] ) ?  $tokens['poster.name'] : bp_core_get_user_displayname( $activity->user_id );
+		$author_name = isset( $tokens['poster.name'] ) ?  $tokens['poster.name'] : bp_core_get_user_displayname( $activity->user_id, $this->bb_get_receiver_user_id( $tokens ) );
 
 		if ( empty( $activity ) ) {
 			return $output;
@@ -665,7 +670,7 @@ class BP_Email_Tokens {
 		}
 
 		$user_id     = $activity->user_id ?? $author_id;
-		$author_name = $tokens['poster.name'] ?? bp_core_get_user_displayname( $user_id );
+		$author_name = $tokens['poster.name'] ?? bp_core_get_user_displayname( $user_id, $this->bb_get_receiver_user_id( $tokens ) );
 
 		ob_start();
 
@@ -862,7 +867,7 @@ class BP_Email_Tokens {
 			return $output;
 		}
 		
-		$commenter_name       = isset( $tokens['poster.name'] ) ? $tokens['poster.name'] : bp_core_get_user_displayname( $activity_comment->user_id );
+		$commenter_name       = isset( $tokens['poster.name'] ) ? $tokens['poster.name'] : bp_core_get_user_displayname( $activity_comment->user_id, $this->bb_get_receiver_user_id( $tokens ) );
 		$activity_original_id = ! empty( $activity_comment->item_id ) ? $activity_comment->item_id : $activity_comment->secondary_item_id;
 		$activity_original    = new BP_Activity_Activity( $activity_original_id );
 		if ( empty( $activity_original ) ) {
@@ -1014,6 +1019,7 @@ class BP_Email_Tokens {
 	 * Generate the output for token message
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 3.6.2 Resolves the sender per email instead of caching the first sender of the request.
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array     $formatted_tokens
@@ -1048,7 +1054,8 @@ class BP_Email_Tokens {
 		$group        = $tokens['group'] ?? false;
 
 		if ( ! empty( $message_id ) ) {
-			$thread_id = bb_get_thread_id_by_message_id( $message_id );
+			// Same row the sender is resolved from below, so this is a single query per message.
+			$thread_id = $this->bb_get_stored_message( (int) $message_id )['thread_id'];
 		}
 
 		if ( empty( $group ) ) {
@@ -1085,17 +1092,14 @@ class BP_Email_Tokens {
 		$sender_name   = '';
 		$sender_link   = '';
 		$sender_avatar = '';
+		$sender_id     = $this->bb_get_message_sender_id( $tokens );
 
-		if ( empty( $this->_message_sender_id ) ) {
-			$this->_message_sender_id = ! empty( $tokens['sender.id'] ) ? $tokens['sender.id'] : 0;
-		}
-
-		if ( $this->_message_sender_id ) {
-			$sender_name   = $tokens['sender.name'] ?? bp_core_get_user_displayname( $this->_message_sender_id );
-			$sender_link   = bp_core_get_user_domain( $this->_message_sender_id );
+		if ( $sender_id ) {
+			$sender_name   = $tokens['sender.name'] ?? bp_core_get_user_displayname( $sender_id, $this->bb_get_receiver_user_id( $tokens ) );
+			$sender_link   = bp_core_get_user_domain( $sender_id );
 			$sender_avatar = bp_core_fetch_avatar(
 				array(
-					'item_id' => $this->_message_sender_id,
+					'item_id' => $sender_id,
 					'width'   => 100,
 					'height'  => 100,
 					'type'    => 'full',
@@ -1388,6 +1392,7 @@ class BP_Email_Tokens {
 	 * Generate the output for token sender.url
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 3.6.2 Resolves the sender per email instead of caching the first sender of the request.
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array     $formatted_tokens
@@ -1396,11 +1401,13 @@ class BP_Email_Tokens {
 	 * @return string html for the output
 	 */
 	public function token__sender_url( $bp_email, $formatted_tokens, $tokens ) {
-		if ( empty( $this->_message_sender_id ) ) {
+		$sender_id = $this->bb_get_message_sender_id( $tokens );
+
+		if ( empty( $sender_id ) ) {
 			return '';
 		}
 
-		return bp_core_get_user_domain( $this->_message_sender_id );
+		return bp_core_get_user_domain( $sender_id );
 	}
 
 	/**
@@ -1551,7 +1558,7 @@ class BP_Email_Tokens {
 	 */
 	public function token__reply_content( $bp_email, $formatted_tokens, $tokens ) {
 		$output           = '';
-		$receiver_user_id = isset( $tokens['receiver-user.id'] ) ? $tokens['receiver-user.id'] : 0;
+		$receiver_user_id = $this->bb_get_receiver_user_id( $tokens );
 
 		// `bbp_*` reply/topic helpers are loaded by the forums component.
 		// A queued forums-reply notification email can dispatch after
@@ -1671,6 +1678,12 @@ class BP_Email_Tokens {
 			return $this->token__group_discussion_content( $bp_email, $formatted_tokens, $tokens );
 		}
 
+		// One email body is rendered per recipient, so the author's name must be resolved for the
+		// recipient - not for whoever's request triggered the send. Without this the header line of
+		// the email is redacted while the discussion card below it still carries the full name.
+		// token__reply_content() already does exactly this.
+		$receiver_user_id = $this->bb_get_receiver_user_id( $tokens );
+
 		$settings = bp_email_get_appearance_settings();
 
 		ob_start();
@@ -1699,7 +1712,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'] ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'], $receiver_user_id ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -1983,28 +1996,20 @@ class BP_Email_Tokens {
 	 * @param array     $tokens           Token array.
 	 *
 	 * @return string html for the output.
+	 *
+	 * @since BuddyBoss 3.6.2 Reads the stored sender through the memoised message lookup.
 	 */
 	public function token__sender_name( $bp_email, $formatted_tokens, $tokens ) {
-		$output    = $tokens['sender.name'] ?? '';
-		$bp_prefix = bp_core_get_table_prefix();
+		$output = $tokens['sender.name'] ?? '';
 
 		if ( ! in_array( $bp_email->get( 'type' ), array( 'group-message-email', 'messages-unread' ), true ) || ! isset( $tokens['message_id'] ) ) {
 			return $output;
 		}
 
-		$settings = bp_email_get_appearance_settings();
+		$settings  = bp_email_get_appearance_settings();
+		$sender_id = $this->bb_get_stored_message( (int) $tokens['message_id'] )['sender_id'];
 
-		global $wpdb;
-
-		$table_name = $bp_prefix . 'bp_messages_messages';
-		$sender_id  = $wpdb->get_var(
-			$wpdb->prepare(
-				'SELECT sender_id FROM `' . $table_name . '` WHERE id = %d',
-				$tokens['message_id']
-			)
-		);
-
-		$sender_name = $tokens['sender.name'] ?? bp_core_get_user_displayname( $sender_id );
+		$sender_name = $tokens['sender.name'] ?? bp_core_get_user_displayname( $sender_id, $this->bb_get_receiver_user_id( $tokens ) );
 		if ( ! empty( $sender_id ) ) {
 			$output = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['highlight_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( $sender_name ) . '</a>';
 		}
@@ -2157,7 +2162,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id, $this->bb_get_receiver_user_id( $tokens ) ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -2330,6 +2335,9 @@ class BP_Email_Tokens {
 			return $output;
 		}
 
+		// Per-recipient, for the same reason as token__discussion_content().
+		$receiver_user_id = $this->bb_get_receiver_user_id( $tokens );
+
 		$settings = bp_email_get_appearance_settings();
 
 		ob_start();
@@ -2372,7 +2380,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo wp_kses_post( bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'] ) ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo wp_kses_post( bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'], $receiver_user_id ) ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -2440,6 +2448,7 @@ class BP_Email_Tokens {
 	 * Generate the output for token group activity.content
 	 *
 	 * @since BuddyBoss 2.2.9.1
+	 * @since BuddyBoss 3.6.1 Returns an empty string instead of reading properties on a missing activity object.
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.
@@ -2452,6 +2461,14 @@ class BP_Email_Tokens {
 
 		$settings = bp_email_get_appearance_settings();
 		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : '';
+
+		// Compacted queue rows are rehydrated by the chunk runner before the send
+		// callback, and the callback re-injects the object; when neither could
+		// (deleted activity, component off) bail instead of reading properties on
+		// a non-object below.
+		if ( ! is_object( $activity ) || empty( $activity->user_id ) ) {
+			return '';
+		}
 
 		ob_start();
 		?>
@@ -2478,7 +2495,7 @@ class BP_Email_Tokens {
 									</a>
 								</td>
 								<td width="88%" style="vertical-align: middle;">
-									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id, $this->bb_get_receiver_user_id( $tokens ) ); ?></div>
 								</td>
 							</tr>
 						</tbody>
@@ -2643,7 +2660,7 @@ class BP_Email_Tokens {
 		if ( ! empty( $tokens['commenter.name'] ) ) {
 			$commenter_name = $tokens['commenter.name'];
 		} elseif ( ! empty( $user_id ) ) {
-			$commenter_name = bp_core_get_user_displayname( $user_id );
+			$commenter_name = bp_core_get_user_displayname( $user_id, $this->bb_get_receiver_user_id( $tokens ) );
 		}
 
 		return $commenter_name;
@@ -2805,6 +2822,7 @@ class BP_Email_Tokens {
 	 * Generate the output of media/document/video/GIF preview for the notification.
 	 *
 	 * @since BuddyBoss 2.4.40
+	 * @since BuddyBoss 3.6.2 Message media previews use the signed receiver preview URL.
 	 *
 	 * @param int    $object_id Post ID.
 	 * @param array  $tokens    Token array.
@@ -2898,11 +2916,8 @@ class BP_Email_Tokens {
 						while ( bp_media() ) {
 							bp_the_media();
 
-							if ( 'message' === $type ) {
-								$media_url = home_url( '/' ) . 'bb-attachment-media-preview/' . base64_encode( 'forbidden_' . bp_get_media_attachment_id() ) . '/bb-media-activity-image/' . base64_encode( 'thread_' . $tokens['thread_id'] );
-							} else {
-								$media_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bb-media-activity-image', true, $receiver_user_id );
-							}
+							// Mail clients have no session, so message media also uses the receiver-signed preview URL.
+							$media_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bb-media-activity-image', true, $receiver_user_id );
 							?>
 							<div class="bb-activity-media-elem" style="<?php echo esc_attr( $media_elem_style ); ?>">
 								<a href="<?php echo esc_url( $image_url ); ?>">
@@ -2922,7 +2937,7 @@ class BP_Email_Tokens {
 				}
 			}
 
-			if ( ! empty( $video_ids ) ) {
+			if ( ! empty( $video_ids ) && bp_is_active( 'video' ) ) {
 				$video_ids       = explode( ',', $video_ids );
 				$total_video_ids = count( $video_ids );
 				$video_ids       = implode( ',', array_slice( $video_ids, 0, 5 ) );
@@ -2984,7 +2999,7 @@ class BP_Email_Tokens {
 				}
 			}
 
-			if ( ! empty( $document_ids ) ) {
+			if ( ! empty( $document_ids ) && bp_is_active( 'document' ) ) {
 				$document_ids       = explode( ',', $document_ids );
 				$total_document_ids = count( $document_ids );
 				$document_ids       = implode( ',', array_slice( $document_ids, 0, 5 ) );
@@ -3052,6 +3067,107 @@ class BP_Email_Tokens {
 
 		// Get the output buffer contents.
 		return ob_get_clean();
+	}
+
+	/**
+	 * The recipient this email body is being rendered for.
+	 *
+	 * Every token callback here runs once per recipient, but the request around it belongs to
+	 * whoever triggered the send - usually the author, who is never denied any part of their own
+	 * name. Resolving a member's display name without a viewer therefore renders the AUTHOR'S view
+	 * of it into every recipient's inbox, past the profile-field visibility the site enforces on
+	 * screen. `receiver-user.id` is set by every fan-out that sends these emails.
+	 *
+	 * When it is absent the fallback is the GUEST viewer, not 0. Throughout this API 0 does not mean
+	 * "logged out", it means "resolve the viewer from the current request" - which is the sender's
+	 * session, the one viewer this must never be. bp_send_email() does not inject the token, so a
+	 * caller that composes an email of its own reaches this, and the fallback has to be the safe
+	 * direction: the public view withholds a name part from a recipient permitted to see it, which
+	 * is recoverable, where the sender's view publishes one nobody else may see.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param array $tokens Email tokens.
+	 *
+	 * @return int Recipient user ID, or the guest viewer ID when the email carries no recipient token.
+	 */
+	protected function bb_get_receiver_user_id( $tokens ) {
+		$receiver_id = isset( $tokens['receiver-user.id'] ) ? (int) $tokens['receiver-user.id'] : 0;
+
+		return ( $receiver_id > 0 ) ? $receiver_id : bb_core_guest_viewer_id();
+	}
+
+	/**
+	 * Resolve the sender of the message an email is about.
+	 *
+	 * Several message emails can be rendered by one request — the delayed-notification
+	 * digest cron loops every thread, and queued batches drain several jobs — and this
+	 * object is shared by all of them. The sender is therefore resolved from the email's
+	 * own tokens on every call and never cached on the object. Order: the `sender.id`
+	 * token, then the sender stored for the `message_id` token, then the sender primed by
+	 * `messages_message_sent` for producers that pass neither.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param array $tokens Email tokens.
+	 *
+	 * @return int Sender user ID, or 0 when it cannot be determined.
+	 */
+	protected function bb_get_message_sender_id( $tokens ) {
+		if ( ! empty( $tokens['sender.id'] ) ) {
+			return (int) $tokens['sender.id'];
+		}
+
+		$sender_id = ! empty( $tokens['message_id'] ) ? $this->bb_get_stored_message( (int) $tokens['message_id'] )['sender_id'] : 0;
+		if ( $sender_id > 0 ) {
+			return $sender_id;
+		}
+
+		return (int) $this->_message_sender_id;
+	}
+
+	/**
+	 * Get the thread and sender of a stored message, memoised for the request.
+	 *
+	 * token__message() needs both for the same message, so they are read in one query. A
+	 * message's thread and sender never change, so the memo needs no invalidation.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param int $message_id Message ID.
+	 *
+	 * @return array {
+	 *     @type int $thread_id Thread ID, or 0 when the message does not exist.
+	 *     @type int $sender_id Sender user ID, or 0 when the message does not exist.
+	 * }
+	 */
+	protected function bb_get_stored_message( $message_id ) {
+		static $messages = array();
+
+		$empty = array(
+			'thread_id' => 0,
+			'sender_id' => 0,
+		);
+
+		if ( $message_id <= 0 ) {
+			return $empty;
+		}
+
+		if ( ! isset( $messages[ $message_id ] ) ) {
+			global $wpdb;
+
+			$table_name = bp_core_get_table_prefix() . 'bp_messages_messages';
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT thread_id, sender_id FROM `{$table_name}` WHERE id = %d", $message_id ) );
+
+			$messages[ $message_id ] = empty( $row ) ? $empty : array(
+				'thread_id' => (int) $row->thread_id,
+				'sender_id' => (int) $row->sender_id,
+			);
+		}
+
+		return $messages[ $message_id ];
 	}
 
 }
