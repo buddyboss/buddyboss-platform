@@ -152,16 +152,23 @@ function bb_compat_old_path_target( $uri ) {
 	if ( '' === $path || 0 !== strpos( $path, $base ) ) {
 		return '';
 	}
-	$rel = substr( $path, strlen( $base ) );
-	if ( '' === $rel || false !== strpos( $rel, '..' ) || ! preg_match( '#(^|/)b[pb]-#', $rel ) || file_exists( $dir . '/' . rawurldecode( $rel ) ) ) {
+	// Decode first, then validate the decoded value: no '..', NUL or backslash, and the renamed
+	// target must resolve inside the plugin directory.
+	$rel = rawurldecode( substr( $path, strlen( $base ) ) );
+	if ( '' === $rel || false !== strpos( $rel, '..' ) || false !== strpos( $rel, "\0" ) || false !== strpos( $rel, '\\' ) || ! preg_match( '#^[A-Za-z0-9_./-]+$#', $rel ) ) {
+		return '';
+	}
+	if ( ! preg_match( '#(^|/)b[pb]-#', $rel ) || file_exists( $dir . '/' . $rel ) ) {
 		return '';
 	}
 	$new = preg_replace( '#(^|/)((?:class|trait|interface|abstract-class)-)?b[pb]-(?!loader\.php$|performance-mu-loader\.php$)#', '$1$2bboss-', $rel );
-	if ( $new === $rel || ! is_file( $dir . '/' . rawurldecode( $new ) ) ) {
+	$real = $new === $rel ? false : realpath( $dir . '/' . $new );
+	$root = realpath( $dir );
+	if ( false === $real || false === $root || 0 !== strpos( $real, $root . '/' ) || ! is_file( $real ) ) {
 		return '';
 	}
 	$query = (string) wp_parse_url( $uri, PHP_URL_QUERY );
-	return $base . $new . ( '' !== $query ? '?' . $query : '' );
+	return $base . implode( '/', array_map( 'rawurlencode', explode( '/', $new ) ) ) . ( '' !== $query ? '?' . $query : '' );
 }
 
 /**
