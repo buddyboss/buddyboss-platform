@@ -506,7 +506,7 @@ function bp_notifications_get_unread_notification_count( $user_id = 0 ) {
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 	}
 
-	// get_total_count() already caches this under a hash of the final count 
+	// get_total_count() already caches this under a hash of the final count
 	// SQL plus the user's count incrementor (see bp_notifications_get_count_cache_key()),
 	// so a second cache layer isn't needed here.
 	$count = BP_Notifications_Notification::get_total_count(

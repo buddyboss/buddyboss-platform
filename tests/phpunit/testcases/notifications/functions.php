@@ -550,4 +550,129 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		$found = bp_notifications_get_grouped_notifications_for_user( $u );
 		$this->assertEquals( 2, $found[0]->total_count );
 	}
+
+	/**
+	 * Deleting a read notification must invalidate the read count.
+	 *
+	 * @group cache
+	 * @ticket PROD-10344
+	 */
+	public function test_deleting_read_notification_invalidates_read_count() {
+		$u = self::factory()->user->create();
+
+		$n1 = self::factory()->notification->create( array(
+			'component_name' => 'members',
+			'item_id'        => 101,
+			'user_id'        => $u,
+			'is_new'         => false,
+		) );
+		self::factory()->notification->create( array(
+			'component_name' => 'members',
+			'item_id'        => 102,
+			'user_id'        => $u,
+			'is_new'         => false,
+		) );
+
+		$args = array( 'user_id' => $u, 'is_new' => false, 'component_name' => 'members' );
+
+		// Prime the cache.
+		$this->assertSame( 2, BP_Notifications_Notification::get_total_count( $args ) );
+
+		BP_Notifications_Notification::delete_by_id( $n1 );
+
+		$this->assertSame( 1, BP_Notifications_Notification::get_total_count( $args ), 'The read count must not be served stale after a read notification is deleted.' );
+	}
+
+	/**
+	 * Marking by type (no user ID) must invalidate the counts of every affected user.
+	 *
+	 * @group cache
+	 * @ticket PROD-10344
+	 */
+	public function test_mark_all_notifications_by_type_invalidates_every_affected_user() {
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		foreach ( array( $u1, $u2 ) as $u ) {
+			self::factory()->notification->create( array(
+				'component_name'   => 'members',
+				'component_action' => 'prod_10344_type',
+				'item_id'          => 4242,
+				'user_id'          => $u,
+				'is_new'           => true,
+			) );
+		}
+
+		// Prime both users' caches.
+		$this->assertSame( 1, bp_notifications_get_unread_notification_count( $u1 ) );
+		$this->assertSame( 1, bp_notifications_get_unread_notification_count( $u2 ) );
+
+		bp_notifications_mark_all_notifications_by_type( 4242, 'members', 'prod_10344_type', false, 0 );
+
+		$this->assertSame( 0, bp_notifications_get_unread_notification_count( $u1 ), 'First user count must not be stale.' );
+		$this->assertSame( 0, bp_notifications_get_unread_notification_count( $u2 ), 'Second user count must not be stale.' );
+	}
+
+	/**
+	 * Marking notifications from a user must invalidate the recipients' counts.
+	 *
+	 * @group cache
+	 * @ticket PROD-10344
+	 */
+	public function test_mark_notifications_from_user_invalidates_recipients() {
+		$sender    = self::factory()->user->create();
+		$recipient = self::factory()->user->create();
+
+		self::factory()->notification->create( array(
+			'component_name'   => 'members',
+			'component_action' => 'prod_10344_from',
+			'item_id'          => $sender,
+			'user_id'          => $recipient,
+			'is_new'           => true,
+		) );
+
+		// Prime the cache.
+		$this->assertSame( 1, bp_notifications_get_unread_notification_count( $recipient ) );
+
+		bp_notifications_mark_notifications_from_user( $sender, 'members', 'prod_10344_from', false );
+
+		$this->assertSame( 0, bp_notifications_get_unread_notification_count( $recipient ), 'The recipient count must not be stale.' );
+	}
+
+	/**
+	 * Marking by item ID with no user ID (e.g. a group request accepted for all
+	 * admins) must invalidate every affected user, including read counts.
+	 *
+	 * @group cache
+	 * @ticket PROD-10344
+	 */
+	public function test_mark_notifications_by_item_id_without_user_invalidates_every_affected_user() {
+		$admin1    = self::factory()->user->create();
+		$admin2    = self::factory()->user->create();
+		$requester = self::factory()->user->create();
+
+		foreach ( array( $admin1, $admin2 ) as $u ) {
+			self::factory()->notification->create( array(
+				'component_name'    => 'members',
+				'component_action'  => 'prod_10344_request',
+				'item_id'           => 5151,
+				'secondary_item_id' => $requester,
+				'user_id'           => $u,
+				'is_new'            => true,
+			) );
+		}
+
+		$read_args = array( 'user_id' => $admin2, 'is_new' => false, 'component_name' => 'members' );
+
+		// Prime both users' caches, including a read count.
+		$this->assertSame( 1, bp_notifications_get_unread_notification_count( $admin1 ) );
+		$this->assertSame( 1, bp_notifications_get_unread_notification_count( $admin2 ) );
+		$this->assertSame( 0, BP_Notifications_Notification::get_total_count( $read_args ) );
+
+		bp_notifications_mark_notifications_by_item_id( null, 5151, 'members', 'prod_10344_request', $requester );
+
+		$this->assertSame( 0, bp_notifications_get_unread_notification_count( $admin1 ) );
+		$this->assertSame( 0, bp_notifications_get_unread_notification_count( $admin2 ), 'The other admin unread count must not be stale.' );
+		$this->assertSame( 1, BP_Notifications_Notification::get_total_count( $read_args ), 'The other admin read count must not be stale.' );
+	}
 }
