@@ -132,6 +132,55 @@ spl_autoload_register(
 
 bb_compat_import_constants();
 
+/**
+ * Old asset and endpoint URLs (decision 0015). Every `bp-*` / `bb-*` file and directory of
+ * Platform is `bboss-*` in this build. A request for a file that no longer exists under the plugin
+ * folder reaches WordPress through the permalink rewrite (Apache .htaccess, nginx try_files) and
+ * arrives here while plugins load. For such a request, the URL path of the renamed file when it
+ * exists; '' otherwise (including for any request that is not an old Platform path).
+ *
+ * @param string  Request URI (path and query).
+ * @return string Redirect target, or ''.
+ */
+function bb_compat_old_path_target( $uri ) {
+	if ( '' === (string) $uri || ! function_exists( 'plugins_url' ) ) {
+		return '';
+	}
+	$path = (string) wp_parse_url( $uri, PHP_URL_PATH );
+	$dir  = dirname( __DIR__ );
+	$base = rtrim( (string) wp_parse_url( plugins_url( '', $dir . '/bp-loader.php' ), PHP_URL_PATH ), '/' ) . '/';
+	if ( '' === $path || 0 !== strpos( $path, $base ) ) {
+		return '';
+	}
+	$rel = substr( $path, strlen( $base ) );
+	if ( '' === $rel || false !== strpos( $rel, '..' ) || ! preg_match( '#(^|/)b[pb]-#', $rel ) || file_exists( $dir . '/' . rawurldecode( $rel ) ) ) {
+		return '';
+	}
+	$new = preg_replace( '#(^|/)((?:class|trait|interface|abstract-class)-)?b[pb]-(?!loader\.php$|performance-mu-loader\.php$)#', '$1$2bboss-', $rel );
+	if ( $new === $rel || ! is_file( $dir . '/' . rawurldecode( $new ) ) ) {
+		return '';
+	}
+	$query = (string) wp_parse_url( $uri, PHP_URL_QUERY );
+	return $base . $new . ( '' !== $query ? '?' . $query : '' );
+}
+
+/**
+ * Permanent, method-preserving redirect to the renamed file, so hard-coded old URLs in add-ons,
+ * themes, cached pages and emails keep resolving. A request for an existing file never reaches PHP.
+ */
+function bb_compat_redirect_old_path() {
+	$to = empty( $_SERVER['REQUEST_URI'] ) || headers_sent() ? '' : bb_compat_old_path_target( (string) $_SERVER['REQUEST_URI'] );
+	if ( '' === $to ) {
+		return;
+	}
+	header( 'Location: ' . $to, true, 308 );
+	header( 'X-BB-Compat: old-path' );
+	exit;
+}
+if ( true ) {
+	bb_compat_redirect_old_path();
+}
+
 // Sibling-declared functions (B5): the renamed name delegates to the pre-rename one when another
 // BuddyBoss product declared it first; swept again after plugins and components have loaded.
 require_once __DIR__ . '/bboss-compat-siblings.php';

@@ -1,0 +1,7 @@
+<?php
+// @bbwt-com-start compat-layer
+// bbwt-rename:file-stub — this file now lives at src/bboss-core/admin/bboss-core-admin-schema.php (decisions 0009/0011/0015); kept so code that
+// requires the old path keeps working on buddyboss.com sites. Not part of the WordPress.org build.
+// Kept for: API plugin, class-bp-rest-components-endpoint.php activate_helper(): require_once.
+require_once __DIR__ . '/../../bboss-core/admin/bboss-core-admin-schema.php';
+// @bbwt-com-end compat-layer
