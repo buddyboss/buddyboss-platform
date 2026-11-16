@@ -9,7 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Apply WordPress defined filters.
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
 // pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
@@ -27,6 +26,7 @@ if ( function_exists( 'bp_rest_group_tabs_creator_pro' ) && ! function_exists( '
 }
 // @bbwt-com-end compat-layer
 
+// Apply WordPress defined filters.
 add_filter( 'bp_rest_group_tabs', 'bp_rest_group_tabs_creator_pro', 10, 1 );
 
 /* Filters *******************************************************************/

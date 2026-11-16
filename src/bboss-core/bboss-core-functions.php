@@ -9,13 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/** Versions ******************************************************************/
-
-/**
- * Output the BuddyPress version.
- *
- * @since BuddyPress 1.6.0
- */
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
 // pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
@@ -81,6 +74,13 @@ if ( function_exists( 'bp_core_get_post_id_by_slug' ) && ! function_exists( 'bbo
 }
 // @bbwt-com-end compat-layer
 
+/** Versions ******************************************************************/
+
+/**
+ * Output the BuddyPress version.
+ *
+ * @since BuddyPress 1.6.0
+ */
 function bboss_version() {
 	echo esc_html( bboss_get_version() );
 }

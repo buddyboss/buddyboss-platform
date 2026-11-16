@@ -12,12 +12,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Register the Invites component admin menu pointing to Settings 2.0.
- *
- * @since BuddyBoss 1.0.0
- * @since BuddyBoss 3.0.0 Updated to point to Settings 2.0 React list screen.
- */
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
 // pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
@@ -107,6 +101,12 @@ if ( function_exists( 'bp_register_invite_type_sections_filters_actions' ) && ! 
 }
 // @bbwt-com-end compat-layer
 
+/**
+ * Register the Invites component admin menu pointing to Settings 2.0.
+ *
+ * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 3.0.0 Updated to point to Settings 2.0 React list screen.
+ */
 function bboss_invites_add_admin_menu() {
 	global $submenu;
 

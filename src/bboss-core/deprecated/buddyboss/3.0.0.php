@@ -9,12 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// ──────────────────────────────────────────────────────────────────────────────
-// Search Settings 2.0 deprecated functions and hook compatibility.
-// Legacy settings API functions were removed from bboss-search-settings.php.
-// Search settings are now managed by Settings 2.0 (bboss-admin-settings-search.php).
-// ──────────────────────────────────────────────────────────────────────────────
-
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
 // pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
@@ -697,6 +691,12 @@ if ( function_exists( 'bp_search_get_settings_sections' ) && ! function_exists( 
 	}
 }
 // @bbwt-com-end compat-layer
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Search Settings 2.0 deprecated functions and hook compatibility.
+// Legacy settings API functions were removed from bboss-search-settings.php.
+// Search settings are now managed by Settings 2.0 (bboss-admin-settings-search.php).
+// ──────────────────────────────────────────────────────────────────────────────
 
 if ( ! function_exists( 'bboss_search_get_settings_sections' ) ) {
 	/**

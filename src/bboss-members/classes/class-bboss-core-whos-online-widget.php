@@ -9,11 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Who's Online Widget.
- *
- * @since BuddyPress 1.0.3
- */
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
 // pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
@@ -25,6 +20,11 @@ if ( function_exists( 'bp_get_total_online_member_count' ) && ! function_exists(
 }
 // @bbwt-com-end compat-layer
 
+/**
+ * Who's Online Widget.
+ *
+ * @since BuddyPress 1.0.3
+ */
 class BBoss_Core_Whos_Online_Widget extends WP_Widget {
 
 	/**

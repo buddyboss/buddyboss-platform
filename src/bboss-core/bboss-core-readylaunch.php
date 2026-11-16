@@ -11,16 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Register a widget for ReadyLaunch
- *
- * @since BuddyBoss 2.9.00
- *
- * @param string $widget_class Widget class name.
- * @param string $widget_file Widget file path.
- *
- * @return void
- */
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
 // pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
@@ -32,6 +22,16 @@ if ( function_exists( 'bb_rl_get_normalized_file_type' ) && ! function_exists( '
 }
 // @bbwt-com-end compat-layer
 
+/**
+ * Register a widget for ReadyLaunch
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @param string $widget_class Widget class name.
+ * @param string $widget_file Widget file path.
+ *
+ * @return void
+ */
 function bboss_rl_register_single_widget( $widget_class, $widget_file ) {
 	if ( ! file_exists( $widget_file ) ) {
 		return;

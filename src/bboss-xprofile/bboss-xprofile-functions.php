@@ -14,6 +14,17 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
+// pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
+if ( function_exists( 'bb_xprofile_safe_unserialize' ) && ! function_exists( 'bboss_xprofile_safe_unserialize' ) ) {
+	// Pluggable: bb_xprofile_safe_unserialize() was defined first (bp-custom.php, a plugin); bboss_xprofile_safe_unserialize() delegates to it.
+	function bboss_xprofile_safe_unserialize( $value ) {
+		return bb_xprofile_safe_unserialize( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 /*** Field Group Management **************************************************/
 
 /**
@@ -26,17 +37,6 @@ defined( 'ABSPATH' ) || exit;
  * @param array $args See {@link BBoss_XProfile_Group::get()} for description of arguments.
  * @return array $groups
  */
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
-// pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
-if ( function_exists( 'bb_xprofile_safe_unserialize' ) && ! function_exists( 'bboss_xprofile_safe_unserialize' ) ) {
-	// Pluggable: bb_xprofile_safe_unserialize() was defined first (bp-custom.php, a plugin); bboss_xprofile_safe_unserialize() delegates to it.
-	function bboss_xprofile_safe_unserialize( $value ) {
-		return bb_xprofile_safe_unserialize( $value );
-	}
-}
-// @bbwt-com-end compat-layer
-
 function bboss_xprofile_get_groups( $args = array() ) {
 
 	/**

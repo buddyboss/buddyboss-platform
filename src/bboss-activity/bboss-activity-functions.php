@@ -11,13 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Check whether the $bp global lists an activity directory page.
- *
- * @since BuddyPress 1.5.0
- *
- * @return bool True if activity directory page is found, otherwise false.
- */
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
 // pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
@@ -29,6 +22,13 @@ if ( function_exists( 'bb_activity_user_can_view' ) && ! function_exists( 'bboss
 }
 // @bbwt-com-end compat-layer
 
+/**
+ * Check whether the $bp global lists an activity directory page.
+ *
+ * @since BuddyPress 1.5.0
+ *
+ * @return bool True if activity directory page is found, otherwise false.
+ */
 function bboss_activity_has_directory() {
 	return (bool) ! empty( bboss()->pages->activity->id );
 }
