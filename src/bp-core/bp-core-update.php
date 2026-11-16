@@ -4863,16 +4863,21 @@ function bb_purge_activity_api_cache_for_comment_access() {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param array|null $defaults Optional. Default document list to save. Default null reads
+ *                             bp_media_allowed_document_type() when it is loaded.
+ *
  * @return void
  */
-function bb_repair_empty_document_extensions_on_upgrade() {
+function bb_repair_empty_document_extensions_on_upgrade( $defaults = null ) {
 	$saved = bp_get_option( 'bp_document_extensions_support', false );
 
 	if ( array() !== $saved ) {
 		return;
 	}
 
-	$defaults = function_exists( 'bp_media_allowed_document_type' ) ? bp_media_allowed_document_type() : array();
+	if ( null === $defaults ) {
+		$defaults = function_exists( 'bp_media_allowed_document_type' ) ? bp_media_allowed_document_type() : array();
+	}
 
 	if ( ! empty( $defaults ) && is_array( $defaults ) ) {
 		bp_update_option( 'bp_document_extensions_support', $defaults );

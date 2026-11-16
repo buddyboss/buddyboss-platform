@@ -159,15 +159,23 @@ function bb_media_sanitize_upload_limit( $value ) {
  *               function isn't loaded yet.
  */
 function bb_media_get_default_extensions( $option_name ) {
+	$defaults = array();
+
 	if ( 'bp_video_extensions_support' === $option_name && function_exists( 'bp_video_allowed_video_type' ) ) {
-		return bp_video_allowed_video_type();
+		$defaults = bp_video_allowed_video_type();
+	} elseif ( 'bp_document_extensions_support' === $option_name && function_exists( 'bp_media_allowed_document_type' ) ) {
+		$defaults = bp_media_allowed_document_type();
 	}
 
-	if ( 'bp_document_extensions_support' === $option_name && function_exists( 'bp_media_allowed_document_type' ) ) {
-		return bp_media_allowed_document_type();
-	}
-
-	return array();
+	/**
+	 * Filters the default extension list used by the Settings 2.0 extensions fields.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $defaults    Default extensions keyed by extension ID.
+	 * @param string $option_name The DB option name.
+	 */
+	return (array) apply_filters( 'bb_media_default_extensions', $defaults, $option_name );
 }
 
 /**
@@ -206,6 +214,23 @@ function bb_media_get_saved_extensions( $option_name, $default_extensions ) {
 	// array — respect that as-is rather than backfilling it back to the
 	// defaults.
 	if ( empty( $existing ) ) {
+		return $existing;
+	}
+
+	// Backfill only a list that already holds at least one default entry.
+	// A list with no default entry at all (e.g. a video list the admin
+	// reduced to custom types) is deliberate: the video upload allow-list
+	// reads the saved list as-is, so adding the defaults back on a toggle
+	// save would re-allow those uploads.
+	$has_default_entry = false;
+	foreach ( $existing as $key => $ext ) {
+		if ( isset( $default_extensions[ $key ] ) || ( is_array( $ext ) && ! empty( $ext['is_default'] ) ) ) {
+			$has_default_entry = true;
+			break;
+		}
+	}
+
+	if ( ! $has_default_entry ) {
 		return $existing;
 	}
 

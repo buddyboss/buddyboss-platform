@@ -164,9 +164,52 @@ class BB_Tests_Media_Extensions_Settings extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Default video list in the stored shape.
+	 *
+	 * @return array
+	 */
+	protected function video_defaults() {
+		$types    = array(
+			'bb_vid_1' => '.mp4',
+			'bb_vid_2' => '.webm',
+			'bb_vid_3' => '.ogg',
+			'bb_vid_4' => '.mov',
+		);
+		$defaults = array();
+		foreach ( $types as $key => $extension ) {
+			$defaults[ $key ] = array(
+				'extension'   => $extension,
+				'mime_type'   => 'video/' . ltrim( $extension, '.' ),
+				'description' => $extension,
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			);
+		}
+
+		return $defaults;
+	}
+
+	/**
+	 * Supplies the test default lists through the bb_media_default_extensions filter.
+	 *
+	 * @param array  $defaults    Defaults.
+	 * @param string $option_name Option name.
+	 * @return array
+	 */
+	public function filter_defaults( $defaults, $option_name ) {
+		if ( 'bp_video_extensions_support' === $option_name ) {
+			return $this->video_defaults();
+		}
+
+		return $this->defaults();
+	}
+
+	/**
 	 * A toggle-only save on a legacy list keeps the admin's states and adds no duplicates.
 	 */
 	public function test_toggle_save_on_legacy_list_writes_no_duplicates() {
+		add_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10, 2 );
 		bp_update_option( 'bp_document_extensions_support', $this->legacy_list() );
 
 		$saved = bb_media_sanitize_extensions(
@@ -177,10 +220,54 @@ class BB_Tests_Media_Extensions_Settings extends BP_UnitTestCase {
 			),
 			'bp_document_extensions_support'
 		);
+		remove_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10 );
 
 		$this->assertSame( array( 'bb_doc_1', '1', '2' ), array_map( 'strval', array_keys( $saved ) ) );
 		$this->assertSame( 0, $saved['bb_doc_1']['is_active'] );
 		$this->assertSame( 1, $saved['2']['is_active'] );
+	}
+
+	/**
+	 * A custom-only video list gets no default types added on a toggle save.
+	 *
+	 * Video uploads read the saved list as-is, so a backfill would re-allow them.
+	 */
+	public function test_toggle_save_on_custom_only_video_list_adds_no_defaults() {
+		add_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10, 2 );
+		bp_update_option(
+			'bp_video_extensions_support',
+			array(
+				'bb_vid_5' => array(
+					'extension'   => '.mkv',
+					'mime_type'   => 'video/x-matroska',
+					'description' => '',
+					'is_default'  => 0,
+					'is_active'   => 1,
+					'icon'        => '',
+				),
+			)
+		);
+
+		$saved = bb_media_sanitize_extensions( array( 'bb_vid_5' => 0 ), 'bp_video_extensions_support' );
+		remove_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10 );
+
+		$this->assertSame( array( 'bb_vid_5' ), array_keys( $saved ) );
+		$this->assertSame( 0, $saved['bb_vid_5']['is_active'] );
+	}
+
+	/**
+	 * A video list that still holds a default entry is backfilled with the missing defaults.
+	 */
+	public function test_toggle_save_on_video_list_with_default_entry_backfills() {
+		add_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10, 2 );
+		$defaults = $this->video_defaults();
+		bp_update_option( 'bp_video_extensions_support', array( 'bb_vid_1' => $defaults['bb_vid_1'] ) );
+
+		$saved = bb_media_sanitize_extensions( array( 'bb_vid_1' => 0 ), 'bp_video_extensions_support' );
+		remove_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10 );
+
+		$this->assertSame( array( 'bb_vid_1', 'bb_vid_2', 'bb_vid_3', 'bb_vid_4' ), array_keys( $saved ) );
+		$this->assertSame( 0, $saved['bb_vid_1']['is_active'] );
 	}
 
 	/**
@@ -191,16 +278,12 @@ class BB_Tests_Media_Extensions_Settings extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Repair, Add-ons defaults not loaded: the empty row is deleted so the Add-ons seed fills it later.
+	 * Repair, defaults not available: the empty row is deleted so the Add-ons seed fills it later.
 	 */
 	public function test_repair_deletes_empty_row_when_defaults_unavailable() {
-		if ( function_exists( 'bp_media_allowed_document_type' ) ) {
-			$this->markTestSkipped( 'The default document list is loaded in this run.' );
-		}
-
 		bp_update_option( 'bp_document_extensions_support', array() );
 
-		bb_repair_empty_document_extensions_on_upgrade();
+		bb_repair_empty_document_extensions_on_upgrade( array() );
 
 		$this->assertFalse( bp_get_option( 'bp_document_extensions_support', false ) );
 	}
@@ -212,54 +295,39 @@ class BB_Tests_Media_Extensions_Settings extends BP_UnitTestCase {
 		bp_update_option( 'bp_document_extensions_support', $this->legacy_list() );
 		bp_update_option( 'bp_video_extensions_support', array() );
 
-		bb_repair_empty_document_extensions_on_upgrade();
+		bb_repair_empty_document_extensions_on_upgrade( $this->defaults() );
 
 		$this->assertSame( $this->legacy_list(), bp_get_option( 'bp_document_extensions_support' ) );
 		$this->assertSame( array(), bp_get_option( 'bp_video_extensions_support' ) );
 
 		bp_delete_option( 'bp_document_extensions_support' );
-		bb_repair_empty_document_extensions_on_upgrade();
+		bb_repair_empty_document_extensions_on_upgrade( $this->defaults() );
 		$this->assertFalse( bp_get_option( 'bp_document_extensions_support', false ) );
 	}
 
 	/**
-	 * Repair, defaults loaded: the empty list is replaced with the defaults.
-	 *
-	 * Runs last: it declares a stand-in for the Add-ons default list function.
+	 * Repair, defaults available: the empty list is replaced with the defaults.
 	 */
 	public function test_repair_saves_defaults_when_available() {
-		if ( ! function_exists( 'bp_media_allowed_document_type' ) ) {
-			/**
-			 * Stand-in for the BuddyBoss Add-ons default document list.
-			 *
-			 * @return array
-			 */
-			function bp_media_allowed_document_type() {
-				return array(
-					'bb_doc_1' => array(
-						'extension'   => '.pdf',
-						'mime_type'   => 'application/pdf',
-						'description' => 'PDF',
-						'is_default'  => 1,
-						'is_active'   => 1,
-						'icon'        => '',
-					),
-				);
-			}
-		}
-
 		bp_update_option( 'bp_document_extensions_support', array() );
 
-		bb_repair_empty_document_extensions_on_upgrade();
+		bb_repair_empty_document_extensions_on_upgrade( $this->defaults() );
 
-		$this->assertSame( bp_media_allowed_document_type(), bp_get_option( 'bp_document_extensions_support' ) );
+		$this->assertSame( $this->defaults(), bp_get_option( 'bp_document_extensions_support' ) );
+
+		add_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10, 2 );
 
 		// A later deliberate "delete all" stays empty in the getter.
 		bp_update_option( 'bp_document_extensions_support', array() );
-		$this->assertSame( array(), bb_media_get_extension_data( 'bp_document_extensions_support' ) );
+		$empty = bb_media_get_extension_data( 'bp_document_extensions_support' );
 
 		// Never saved: the getter falls back to the defaults.
 		bp_delete_option( 'bp_document_extensions_support' );
-		$this->assertSame( array( 'bb_doc_1' ), array_keys( bb_media_get_extension_data( 'bp_document_extensions_support' ) ) );
+		$unsaved = array_keys( bb_media_get_extension_data( 'bp_document_extensions_support' ) );
+
+		remove_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10 );
+
+		$this->assertSame( array(), $empty );
+		$this->assertSame( array_keys( $this->defaults() ), $unsaved );
 	}
 }
