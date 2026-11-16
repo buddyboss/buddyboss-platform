@@ -1508,13 +1508,14 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param string $content Topic or reply content.
 	 * @param int    $post_id Topic or reply id.
+	 * @param bool   $force   Optional. Strip lazyload even when the post has no `_link_embed` meta. Default false.
 	 *
 	 * @return string $content
 	 */
-	public function bp_rest_forums_remove_lazyload( $content, $post_id ) {
+	public function bp_rest_forums_remove_lazyload( $content, $post_id, $force = false ) {
 		$link_embed = get_post_meta( $post_id, '_link_embed', true );
 
-		if ( empty( $link_embed ) ) {
+		if ( empty( $link_embed ) && ! $force ) {
 			return $content;
 		}
 
@@ -1523,6 +1524,75 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		$content = preg_replace( '/iframe(.*?)data-src=/is', 'iframe$1src=', $content );
 
 		return $content;
+	}
+
+	/**
+	 * Get the legacy oEmbed for a topic or reply that has no `_link_embed` meta.
+	 *
+	 * Topics and replies saved outside the frontend form (wp-admin, imports, scripts, or before link
+	 * previews existed) carry no `_link_embed` meta. The web then embeds the first embeddable URL in
+	 * the content (see bbp_topic_content_autoembed_paragraph()), so the API does the same here.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param int    $post_id Topic or reply id.
+	 * @param string $content Topic or reply content.
+	 *
+	 * @return array Embedded `url` and its `html`, or an empty array when there is nothing to embed.
+	 */
+	public function bb_rest_forums_get_legacy_embed( $post_id, $content ) {
+		// A saved `_link_embed` (including '0' for a removed preview) means the user already chose.
+		if ( empty( $post_id ) || empty( $content ) || metadata_exists( 'post', $post_id, '_link_embed' ) ) {
+			return array();
+		}
+
+		// Same exclusions as the web: content that already holds an iframe or a media download link.
+		if (
+			false !== strpos( $content, '<iframe' ) ||
+			strpos( $content, 'download_document_file' ) ||
+			strpos( $content, 'download_media_file' ) ||
+			strpos( $content, 'download_video_file' )
+		) {
+			return array();
+		}
+
+		// Like the web, embed only when a URL is visible in the text, not only inside a link's href.
+		if ( ! preg_match( '/(https?:\/\/[^\s<>"]+)/i', wp_strip_all_tags( $content ) ) ) {
+			return array();
+		}
+
+		// The web scans the content after bbp_make_clickable(), which keeps trailing punctuation out of the URL.
+		if ( ! preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', bbp_make_clickable( $content ), $embed_urls ) ) {
+			return array();
+		}
+
+		if ( ! function_exists( '_wp_oembed_get_object' ) ) {
+			require_once ABSPATH . WPINC . '/class-wp-oembed.php';
+		}
+
+		$oembed = _wp_oembed_get_object();
+
+		foreach ( array_unique( array_filter( $embed_urls[0] ) ) as $url ) {
+			// Content HTML encodes "&" in query strings; the provider and the App need the real URL.
+			$url = wp_specialchars_decode( $url, ENT_QUOTES );
+
+			// Only URLs of a registered oEmbed provider are fetched; other links are skipped without a request.
+			if ( ! $oembed->get_provider( $url, array( 'discover' => false ) ) ) {
+				continue;
+			}
+
+			// bp_core_parse_url() caches the oEmbed response in a transient.
+			$embed_data = bp_core_parse_url( $url );
+
+			if ( ! empty( $embed_data['wp_embed'] ) && ! empty( $embed_data['description'] ) ) {
+				return array(
+					'url'  => $url,
+					'html' => $this->bp_rest_forums_remove_lazyload( $embed_data['description'], $post_id, true ),
+				);
+			}
+		}
+
+		return array();
 	}
 
 	/**

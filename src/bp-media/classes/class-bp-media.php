@@ -1237,11 +1237,20 @@ class BP_Media {
 		// delete related activity.
 		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) && ! $bb_activity_comment_edit ) {
 
-			foreach ( $activity_ids as $activity_id ) {
+			// The same activity can be listed twice: once from the item's own
+			// activity and once from its attachment's parent activity.
+			foreach ( array_unique( $activity_ids ) as $activity_id ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
 
 				// Check access.
 				if ( bp_activity_user_can_delete( $activity ) ) {
+
+					// Keep an activity comment that still has text or other attachments.
+					if ( 'activity_comment' === $activity->type && bb_activity_comment_has_remaining_content( $activity ) ) {
+						bb_activity_comment_remove_deleted_attachment_meta( $activity->id, 'media', $media_ids );
+						continue;
+					}
+
 					/** This action is documented in bp-activity/bp-activity-actions.php */
 					do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 

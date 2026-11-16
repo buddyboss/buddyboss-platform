@@ -1169,7 +1169,7 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'delete-activity' ) || target.hasClass( 'acomment-delete' ) || target.hasClass( 'spam-activity' ) || target.hasClass( 'spam-activity-comment' ) ) {
 				var activity_comment_li = target.closest( '[data-bp-activity-comment-id]' ),
 					activity_comment_id = activity_comment_li.data( 'bp-activity-comment-id' ),
-					li_parent, comment_count_span, comment_count, show_all_a, deleted_comments_count = 0;
+					li_parent, comment_count_span, comment_count, show_all_a;
 
 				commentsList = target.closest( '.activity-comments' );
 				commentsList.addClass( 'active' );
@@ -1185,6 +1185,7 @@ window.bp = window.bp || {};
 
 				var ajaxData = {
 					action      : 'delete_activity',
+					bb_legacy_template : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 					'id'        : activity_id,
 					'_wpnonce'  : parent.getLinkParams( target.prop( 'href' ), '_wpnonce' ),
 					'is_single' : target.closest( '[data-bp-single]' ).length
@@ -1230,50 +1231,15 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.parent_activity_id && response.data.activity ) {
-								$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ).replaceWith( response.data.activity );
+								bp.Nouveau.replaceActivityItem(
+									$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ),
+									response.data.activity,
+									[ '.activity-inner > .bb-activity-media-wrap', '.activity-inner > .bb-activity-video-wrap', '.activity-state' ]
+								);
 							}
 
 							if ( activity_comment_id ) {
-								deleted_comments_count = 1;
-								var hidden_comments_count = activity_comment_li.find( '.acomments-view-more' ).data( 'child-count' );
-
-								// Move the form if needed.
-								activity_item.append( activity_comment_li.find( 'form' ) );
-
-								// Count child comments if there are some.
-								$.each(
-									activity_comment_li.find( 'li.comment-item' ),
-									function() {
-										deleted_comments_count += 1;
-									}
-								);
-
-								deleted_comments_count += hidden_comments_count !== undefined ? parseFloat( hidden_comments_count ) : 0;
-
-								// Update the button count.
-								comment_count_span = activity_state.find( 'span.comments-count' );
-								comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
-								comment_count      = Number( comment_count - deleted_comments_count );
-
-								if ( comments_text.length ) {
-									var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
-									comments_text.text( label.replace( '%d', comment_count ) );
-								} else {
-									comment_count_span.parent( '.has-comments' ).removeClass( 'has-comments' );
-								}
-
-								// Update the show all count.
-								show_all_a = activity_item.find( 'li.show-all a' );
-								if ( show_all_a.length ) {
-									show_all_a.html( BP_Nouveau.show_x_comments.replace( '%d', comment_count ) );
-								}
-
-								// Clean up the parent activity classes.
-								if ( 0 === comment_count ) {
-									activity_item.removeClass( 'has-comments' );
-									activity_state.removeClass( 'has-comments' );
-									comments_text.empty();
-								}
+								self.updateCommentCountOnDelete( activity_comment_li, activity_item, activity_state, comments_text );
 							}
 
 							// Deleting the activity from inside the "view more comments"
@@ -1376,6 +1342,7 @@ window.bp = window.bp || {};
 				parent.ajax(
 					{
 						action : 'get_single_activity_content',
+						bb_legacy_template : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						id     : item_id
 					},
 					'activity'
@@ -1765,6 +1732,7 @@ window.bp = window.bp || {};
 
 				comment_data = {
 					action                        : 'new_activity_comment',
+					bb_legacy_template            : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 					_wpnonce_new_activity_comment : $( '#_wpnonce_new_activity_comment' ).val(),
 					comment_id                    : item_id,
 					form_id                       : activity_id,
@@ -1803,7 +1771,11 @@ window.bp = window.bp || {};
 
 				comment_data.content = comment_data.content.replace( /&nbsp;/g, ' ' );
 
-				if ( form.hasClass( 'acomment-edit' ) ) {
+				// Read the edit state now: cancelling while the request is in flight resets the form.
+				var wasCommentEdit = form.hasClass( 'acomment-edit' );
+				var form_item_id   = form.attr( 'data-item-id' );
+
+				if ( wasCommentEdit ) {
 					comment_data.edit_comment = true;
 				}
 
@@ -1859,8 +1831,7 @@ window.bp = window.bp || {};
 							}
 							form.find( '#ac-input-' + form_activity_id ).html( '' );
 
-							if ( form.hasClass( 'acomment-edit' ) ) {
-								var form_item_id = form.attr( 'data-item-id' );
+							if ( wasCommentEdit ) {
 								form.closest( '.activity-comments' ).append( form );
 								if ( isInsideModal ) {
 									$( '#activity-modal' ).find( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
@@ -1915,7 +1886,7 @@ window.bp = window.bp || {};
 							// Trigger GIF autoplay check for newly added content
 							bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 
-							if ( ! form.hasClass( 'acomment-edit' ) ) {
+							if ( ! wasCommentEdit ) {
 								// Set the new count.
 								comment_count_span = activity_state.find( 'span.comments-count' );
 								comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
@@ -2462,6 +2433,90 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Take a deleted activity comment out of its parent activity's comment
+		 * count, comment label and "Show all X comments" link.
+		 *
+		 * Counts the comment itself, its rendered replies and the replies still
+		 * hidden behind "View more replies". Call it before the comment `li` is
+		 * removed from the DOM.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} activityCommentLi The comment `li` being removed.
+		 * @param {jQuery} activityItem      The parent activity `li`.
+		 * @param {jQuery} activityState     The parent activity's `.activity-state`.
+		 * @param {jQuery} commentsText      The parent activity's `.comments-count`.
+		 *
+		 * @return {number} The updated comment count.
+		 */
+		updateCommentCountOnDelete: function( activityCommentLi, activityItem, activityState, commentsText ) {
+			// Move the form if needed.
+			activityItem.append( activityCommentLi.find( 'form' ) );
+
+			return this.decreaseActivityCommentCount( activityItem, activityState, commentsText, this.getDeletedCommentsCount( activityCommentLi ) );
+		},
+
+		/**
+		 * Number of comments a comment delete removes: the comment itself, its
+		 * rendered replies and the replies still hidden behind "View more replies".
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} activityCommentLi The comment `li` being removed.
+		 *
+		 * @return {number} The number of deleted comments.
+		 */
+		getDeletedCommentsCount: function( activityCommentLi ) {
+			var hiddenCommentsCount = activityCommentLi.find( '.acomments-view-more' ).data( 'child-count' );
+
+			return 1 + activityCommentLi.find( 'li.comment-item' ).length + ( hiddenCommentsCount !== undefined ? parseFloat( hiddenCommentsCount ) : 0 );
+		},
+
+		/**
+		 * Lower an activity's comment count, comment label and "Show all X
+		 * comments" link by the given number of deleted comments.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} activityItem         The parent activity `li`.
+		 * @param {jQuery} activityState        The parent activity's `.activity-state`.
+		 * @param {jQuery} commentsText         The parent activity's `.comments-count`.
+		 * @param {number} deletedCommentsCount The number of deleted comments.
+		 *
+		 * @return {number} The updated comment count.
+		 */
+		decreaseActivityCommentCount: function( activityItem, activityState, commentsText, deletedCommentsCount ) {
+			var commentCountSpan, commentCount, showAllLink, label;
+
+			// Update the button count.
+			commentCountSpan = activityState.find( 'span.comments-count' );
+			commentCount     = commentCountSpan.text().length ? commentCountSpan.text().match( /\d+/ )[0] : 0;
+			commentCount     = Number( commentCount - deletedCommentsCount );
+
+			if ( commentsText.length ) {
+				label = commentCount > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
+				commentsText.text( label.replace( '%d', commentCount ) );
+			} else {
+				commentCountSpan.parent( '.has-comments' ).removeClass( 'has-comments' );
+			}
+
+			// Update the show all count.
+			showAllLink = activityItem.find( 'li.show-all a' );
+			if ( showAllLink.length ) {
+				showAllLink.html( BP_Nouveau.show_x_comments.replace( '%d', commentCount ) );
+			}
+
+			// Clean up the parent activity classes.
+			if ( 0 === commentCount ) {
+				activityItem.removeClass( 'has-comments' );
+				activityState.removeClass( 'has-comments' );
+				commentsText.empty();
+			}
+
+			return commentCount;
+		},
+
+		/**
 		 * [closeCommentForm description]
 		 *
 		 * @param  {[type]} event [description]
@@ -2720,7 +2775,7 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
@@ -2765,6 +2820,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -2977,7 +3034,7 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
@@ -3011,6 +3068,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -3143,6 +3202,10 @@ window.bp = window.bp || {};
 						dictMaxFilesExceeded 		: BP_Nouveau.video.video_dict_file_exceeded,
 						previewTemplate		 		: acCommentVideoTemplate,
 						dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
+						chunking                    : true,
+						chunkSize                   : 30*1024*1024,
+						retryChunks                 : true,
+						retryChunksLimit            : 3,
 					};
 
 					// init dropzone.
@@ -3237,8 +3300,13 @@ window.bp = window.bp || {};
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
 
-							if ( response.data.id ) {
-								file.id                  = response.id;
+							if ( true === file.upload.chunked ) {
+								// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+								response = JSON.parse( file.xhr.response );
+							}
+
+							if ( response.data && response.data.id ) {
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
@@ -3273,6 +3341,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -4216,6 +4286,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				action: 'activity_loadmore_comments',
+				bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				activity_id: activityId,
 				parent_comment_id: parentCommentId,
 				offset: $( e.currentTarget ).parents( '.activity-comments' ).find( 'ul[data-parent_comment_id ="' + parentCommentId + '"] > li.comment-item:not(.bb-recent-comment)' ).length,
@@ -4377,6 +4448,7 @@ window.bp = window.bp || {};
 
 					var data = {
 						action: 'activity_sync_from_modal',
+						bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						activity_id: activityId,
 					};
 
@@ -4386,7 +4458,11 @@ window.bp = window.bp || {};
 								return;
 							} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
 								// success
-								$pageActivityListItem.replaceWith( $.parseHTML( response.data.activity ) );
+								bp.Nouveau.replaceActivityItem(
+									$pageActivityListItem,
+									$.parseHTML( response.data.activity ),
+									[ '.activity-inner > .bb-activity-media-wrap', '.activity-inner > .bb-activity-video-wrap', '.activity-state', '.activity-comments ul[data-activity_id]' ]
+								);
 								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 								jQuery( window ).scroll();
 

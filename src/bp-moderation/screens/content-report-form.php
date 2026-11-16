@@ -13,7 +13,15 @@
 		<div class="modal-wrapper">
 			<div class="modal-container">
 				<header class="bb-model-header">
-					<h4><?php esc_html_e( 'Report', 'buddyboss' ); ?> <span class="bp-reported-type"></span></h4>
+					<h4>
+						<?php
+						printf(
+							/* translators: %s: reported content type. */
+							esc_html__( 'Report %s', 'buddyboss' ),
+							'<span class="bp-reported-type"></span>'
+						);
+						?>
+					</h4>
 					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close">
 						<span class="bb-icon-l bb-icon-times"></span>
 					</button>

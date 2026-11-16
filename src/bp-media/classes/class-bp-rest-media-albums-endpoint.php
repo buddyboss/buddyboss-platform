@@ -307,7 +307,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		$media_args = array(
 			'album_id'    => $request['id'],
 			'count_total' => true,
-			'video'       => true,
+			'video'       => bp_is_active( 'video' ),
 		);
 
 		if ( ! empty( $request['media_page'] ) ) {

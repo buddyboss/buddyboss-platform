@@ -509,7 +509,7 @@ class BP_Media_Album {
 				array(
 					'album_id'    => $album->id,
 					'count_total' => true,
-					'video'       => true,
+					'video'       => bp_is_active( 'video' ),
 				)
 			);
 

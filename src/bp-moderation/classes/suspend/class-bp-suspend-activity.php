@@ -531,12 +531,12 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			}
 
 			if ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
-				$related_contents[ BP_Suspend_Media::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Media::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $media_ids ) : $media_ids ) );
+				$related_contents[ BP_Suspend_Media::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Media::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Media::$type ], $media_ids ) : $media_ids ) );
 				unset( $media_ids );
 			}
 
 			if ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
-				$related_contents[ BP_Suspend_Video::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Video::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $video_ids ) : $video_ids ) );
+				$related_contents[ BP_Suspend_Video::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Video::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Video::$type ], $video_ids ) : $video_ids ) );
 				unset( $video_ids );
 			}
 

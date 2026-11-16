@@ -747,8 +747,15 @@ function xprofile_update_field_position( $field_id, $position, $field_group_id )
  * @since BuddyPress 2.0.0
  * @since BuddyBoss 3.5.0 Always runs; no longer skipped when profile sync is enabled,
  *                              so the resolved names respect the current viewer's field visibility.
+ * @since BuddyBoss 3.7.0 Skipped until the BuddyBoss tables are installed.
  */
 function xprofile_override_user_fullnames() {
+	// On the first request after activation the tables do not exist yet: they are
+	// created later in the same request, on bp_admin_init. Keep the WP display names.
+	if ( bp_is_install() ) {
+		return;
+	}
+
 	if ( bp_loggedin_user_id() ) {
 		buddypress()->loggedin_user->fullname = bp_core_get_user_displayname( bp_loggedin_user_id() );
 	}
