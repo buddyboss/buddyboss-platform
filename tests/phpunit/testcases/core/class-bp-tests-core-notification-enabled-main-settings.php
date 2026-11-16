@@ -1,5 +1,13 @@
 <?php
 /**
+ * BuddyBoss Core notification enabled main settings tests.
+ *
+ * @package BuddyBoss\Tests\Core
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+/**
  * Tests for reading and saving the `bb_enabled_notification` option when a row has no 'main' key.
  *
  * A Settings 2.0 save that only changes an email/web/app sub-type stored rows such as
@@ -10,7 +18,7 @@
  * @group core
  * @group notifications
  */
-class BP_Tests_Core_NotificationEnabledMainSettings extends BP_UnitTestCase {
+class BP_Tests_Core_Notification_Enabled_Main_Settings extends BP_UnitTestCase {
 
 	/**
 	 * Load the Settings 2.0 notification sanitizer, which is only included on admin requests.
