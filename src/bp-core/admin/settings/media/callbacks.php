@@ -221,10 +221,24 @@ function bb_media_get_saved_extensions( $option_name, $default_extensions ) {
 	// A list with no default entry at all (e.g. a video list the admin
 	// reduced to custom types) is deliberate: the video upload allow-list
 	// reads the saved list as-is, so adding the defaults back on a toggle
-	// save would re-allow those uploads.
+	// save would re-allow those uploads. A key match alone is not enough:
+	// the React modal names custom entries bb_vid_0, bb_vid_1, ... (and
+	// bb_doc_0, bb_doc_1, ...), which reuses default keys, so the entry
+	// must also be the same type as the default under that key.
 	$has_default_entry = false;
 	foreach ( $existing as $key => $ext ) {
-		if ( isset( $default_extensions[ $key ] ) || ( is_array( $ext ) && ! empty( $ext['is_default'] ) ) ) {
+		if ( ! is_array( $ext ) ) {
+			continue;
+		}
+
+		if (
+			! empty( $ext['is_default'] ) ||
+			(
+				isset( $default_extensions[ $key ] ) &&
+				is_array( $default_extensions[ $key ] ) &&
+				bb_media_get_extension_type_key( $ext ) === bb_media_get_extension_type_key( $default_extensions[ $key ] )
+			)
+		) {
 			$has_default_entry = true;
 			break;
 		}

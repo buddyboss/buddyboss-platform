@@ -230,16 +230,26 @@ class BB_Tests_Media_Extensions_Settings extends BP_UnitTestCase {
 	/**
 	 * A custom-only video list gets no default types added on a toggle save.
 	 *
-	 * Video uploads read the saved list as-is, so a backfill would re-allow them.
+	 * Uses the keys the React modal gives a custom-only list (bb_vid_0, bb_vid_1);
+	 * bb_vid_1 is also the key of a default type. Video uploads read the saved
+	 * list as-is, so a backfill would re-allow the default types.
 	 */
 	public function test_toggle_save_on_custom_only_video_list_adds_no_defaults() {
 		add_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10, 2 );
 		bp_update_option(
 			'bp_video_extensions_support',
 			array(
-				'bb_vid_5' => array(
+				'bb_vid_0' => array(
 					'extension'   => '.mkv',
 					'mime_type'   => 'video/x-matroska',
+					'description' => '',
+					'is_default'  => 0,
+					'is_active'   => 1,
+					'icon'        => '',
+				),
+				'bb_vid_1' => array(
+					'extension'   => '.avi',
+					'mime_type'   => 'video/x-msvideo',
 					'description' => '',
 					'is_default'  => 0,
 					'is_active'   => 1,
@@ -248,11 +258,45 @@ class BB_Tests_Media_Extensions_Settings extends BP_UnitTestCase {
 			)
 		);
 
-		$saved = bb_media_sanitize_extensions( array( 'bb_vid_5' => 0 ), 'bp_video_extensions_support' );
+		$saved = bb_media_sanitize_extensions(
+			array(
+				'bb_vid_0' => 0,
+				'bb_vid_1' => 1,
+			),
+			'bp_video_extensions_support'
+		);
 		remove_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10 );
 
-		$this->assertSame( array( 'bb_vid_5' ), array_keys( $saved ) );
-		$this->assertSame( 0, $saved['bb_vid_5']['is_active'] );
+		$this->assertSame( array( 'bb_vid_0', 'bb_vid_1' ), array_keys( $saved ) );
+		$this->assertSame( 0, $saved['bb_vid_0']['is_active'] );
+		$this->assertSame( '.avi', $saved['bb_vid_1']['extension'] );
+	}
+
+	/**
+	 * A custom-only document list keyed like the React modal (bb_doc_0, bb_doc_1) is not backfilled.
+	 */
+	public function test_custom_only_document_list_with_default_key_is_not_backfilled() {
+		$custom = array(
+			'bb_doc_0' => array(
+				'extension'   => '.xyz',
+				'mime_type'   => 'application/octet-stream',
+				'description' => 'Custom',
+				'is_default'  => 0,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_1' => array(
+				'extension'   => '.abc',
+				'mime_type'   => 'application/octet-stream',
+				'description' => 'Custom',
+				'is_default'  => 0,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+		);
+		bp_update_option( 'bp_document_extensions_support', $custom );
+
+		$this->assertSame( $custom, bb_media_get_saved_extensions( 'bp_document_extensions_support', $this->defaults() ) );
 	}
 
 	/**
