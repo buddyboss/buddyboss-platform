@@ -457,6 +457,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * Fetch main parent comment id based on specific comment id.
 	 *
 	 * @since BuddyBoss 2.3.50
+	 * @since BuddyBoss [BBVERSION] Stops on a parent chain that loops back to itself.
 	 *
 	 * @param int $comment_id Current comment id.
 	 *
@@ -465,6 +466,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	public function bb_get_parent_activity_or_comment_id( $comment_id ) {
 		static $cache                 = array();
 		static $parent_activity_cache = array();
+		static $resolving             = array();
 
 		$cache_key = 'bb_main_parent_comment_id_' . $comment_id;
 
@@ -497,7 +499,16 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 			return $cache[ $cache_key ];
 		} else {
-			$parent_comment      = $this->bb_get_parent_activity_or_comment_id( $result->secondary_item_id );
+			// A parent chain that loops back (corrupt secondary_item_id) would recurse forever;
+			// stop at the comment that is already being resolved.
+			if ( isset( $resolving[ (int) $comment_id ] ) ) {
+				return array( 'comment_id' => $comment_id );
+			}
+
+			$resolving[ (int) $comment_id ] = true;
+			$parent_comment                 = $this->bb_get_parent_activity_or_comment_id( $result->secondary_item_id );
+			unset( $resolving[ (int) $comment_id ] );
+
 			$cache[ $cache_key ] = array(
 				'comment_id' => ! empty( $parent_comment['comment_id'] ) ? $parent_comment['comment_id'] : 0,
 				'user_id'    => ! empty( $parent_comment['user_id'] ) ? $parent_comment['user_id'] : 0,

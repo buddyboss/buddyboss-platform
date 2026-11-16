@@ -1117,9 +1117,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 			$cached = wp_cache_get( $activity_id, 'bp_activity_comments' );
 			$this->assertIsArray( $cached, 'The tree must be cached for the single-activity request.' );
+			$this->assertIsArray( $cached['tree'], 'The cache entry wraps the tree with its builder version.' );
 			$this->assertStringContainsString(
 				'Quillfeather',
-				$cached[ $comment_id ]->action,
+				$cached['tree'][ $comment_id ]->action,
 				'Fixture: the cached node really does carry the priming viewer\'s name in its action string.'
 			);
 
