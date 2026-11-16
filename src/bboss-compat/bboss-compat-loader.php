@@ -132,6 +132,14 @@ spl_autoload_register(
 
 bb_compat_import_constants();
 
+// Sibling-declared functions (B5): the renamed name delegates to the pre-rename one when another
+// BuddyBoss product declared it first; swept again after plugins and components have loaded.
+require_once __DIR__ . '/bboss-compat-siblings.php';
+foreach ( array( 'plugins_loaded' => 1000, 'bp_include' => 1000, 'bp_loaded' => -1000, 'bp_init' => -1000, 'init' => -1000 ) as $bb_hook => $bb_priority ) {
+	add_action( $bb_hook, 'bb_compat_sibling_aliases', $bb_priority );
+}
+unset( $bb_hook, $bb_priority );
+
 // Old FUNCTION names are not declared here: each one is declared right after its renamed function,
 // in the same file and at the same nesting level, guarded on that declaration (decision 0013), so
 // it exists exactly when the renamed function does. Nothing is declared when Platform stands down
