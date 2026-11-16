@@ -193,12 +193,16 @@ function bb_media_get_default_extensions( $option_name ) {
  * saved" (get back the sentinel) apart from "saved empty" (get back the
  * real empty array) with a strict comparison.
  *
+ * A non-empty saved list that holds at least one entry with `is_default`
+ * set gets the default types it is missing (matched on extension + MIME
+ * type). A list with no `is_default` entry is returned as saved.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $option_name The DB option name.
  * @param array  $default_extensions Hard-coded defaults to use when the option was never saved.
  *
- * @return array The stored extensions, reconciled with the defaults (see below),
+ * @return array The stored extensions, reconciled with the defaults as described above,
  *               or the defaults outright when the option row doesn't exist yet.
  */
 function bb_media_get_saved_extensions( $option_name, $default_extensions ) {
@@ -217,28 +221,17 @@ function bb_media_get_saved_extensions( $option_name, $default_extensions ) {
 		return $existing;
 	}
 
-	// Backfill only a list that already holds at least one default entry.
-	// A list with no default entry at all (e.g. a video list the admin
-	// reduced to custom types) is deliberate: the video upload allow-list
-	// reads the saved list as-is, so adding the defaults back on a toggle
-	// save would re-allow those uploads. A key match alone is not enough:
-	// the React modal names custom entries bb_vid_0, bb_vid_1, ... (and
-	// bb_doc_0, bb_doc_1, ...), which reuses default keys, so the entry
-	// must also be the same type as the default under that key.
+	// Backfill only a list that already holds at least one default entry,
+	// i.e. an entry saved with `is_default` set. A list with none (e.g. a
+	// video list the admin reduced to custom types) is deliberate: the video
+	// upload allow-list reads the saved list as-is, so adding the defaults
+	// back on a toggle save would re-allow those uploads. The key is not a
+	// marker: the React modal names custom entries bb_vid_0, bb_vid_1, ...
+	// (bb_doc_0, ...), which reuses default keys, and a default type the
+	// admin adds back by hand is saved with `is_default` 0.
 	$has_default_entry = false;
-	foreach ( $existing as $key => $ext ) {
-		if ( ! is_array( $ext ) ) {
-			continue;
-		}
-
-		if (
-			! empty( $ext['is_default'] ) ||
-			(
-				isset( $default_extensions[ $key ] ) &&
-				is_array( $default_extensions[ $key ] ) &&
-				bb_media_get_extension_type_key( $ext ) === bb_media_get_extension_type_key( $default_extensions[ $key ] )
-			)
-		) {
+	foreach ( $existing as $ext ) {
+		if ( is_array( $ext ) && ! empty( $ext['is_default'] ) ) {
 			$has_default_entry = true;
 			break;
 		}

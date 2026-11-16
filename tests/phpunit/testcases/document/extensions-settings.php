@@ -273,6 +273,50 @@ class BB_Tests_Media_Extensions_Settings extends BP_UnitTestCase {
 	}
 
 	/**
+	 * A default type re-added by hand at its own default key does not turn the backfill on.
+	 *
+	 * After a "delete all", the admin adds .mkv (bb_vid_0) and then .mp4 video/mp4
+	 * (bb_vid_1, the default .mp4 key). The UI saves both with is_default 0, so the
+	 * list is still custom-only and no other default type may come back.
+	 */
+	public function test_readded_default_type_at_default_key_is_not_backfilled() {
+		add_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10, 2 );
+		bp_update_option(
+			'bp_video_extensions_support',
+			array(
+				'bb_vid_0' => array(
+					'extension'   => '.mkv',
+					'mime_type'   => 'video/x-matroska',
+					'description' => '',
+					'is_default'  => 0,
+					'is_active'   => 1,
+					'icon'        => '',
+				),
+				'bb_vid_1' => array(
+					'extension'   => '.mp4',
+					'mime_type'   => 'video/mp4',
+					'description' => '',
+					'is_default'  => 0,
+					'is_active'   => 1,
+					'icon'        => '',
+				),
+			)
+		);
+
+		$saved = bb_media_sanitize_extensions(
+			array(
+				'bb_vid_0' => 1,
+				'bb_vid_1' => 0,
+			),
+			'bp_video_extensions_support'
+		);
+		remove_filter( 'bb_media_default_extensions', array( $this, 'filter_defaults' ), 10 );
+
+		$this->assertSame( array( 'bb_vid_0', 'bb_vid_1' ), array_keys( $saved ) );
+		$this->assertSame( 0, $saved['bb_vid_1']['is_active'] );
+	}
+
+	/**
 	 * A custom-only document list keyed like the React modal (bb_doc_0, bb_doc_1) is not backfilled.
 	 */
 	public function test_custom_only_document_list_with_default_key_is_not_backfilled() {
